@@ -17,8 +17,8 @@ export async function evaluateInWorker(
 ): Promise<void> {
     const evaluationWorker = await spawn(new Worker('./workers/evaluation-worker'));
 
-    const timeout = setTimeout(() => {
-        Thread.terminate(evaluationWorker);
+    const timeout = setTimeout(async () => {
+        await Thread.terminate(evaluationWorker);
         timeoutCallback();
     }, waitTimeout);
 
@@ -30,6 +30,6 @@ export async function evaluateInWorker(
         errorCallback(error, code);
     } finally {
         clearTimeout(timeout);
-        Thread.terminate(evaluationWorker);
+        await Thread.terminate(evaluationWorker);
     }
 }

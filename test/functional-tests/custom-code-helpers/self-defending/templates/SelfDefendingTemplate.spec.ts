@@ -21,7 +21,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        before((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -60,7 +60,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        before((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -99,7 +99,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        before((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -139,7 +139,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        before((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(

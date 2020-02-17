@@ -134,7 +134,7 @@ describe('SelfDefendingTemplate', function () {
     });
 
     describe('Variant #4: obfuscated code with beautified self defending code', () => {
-        const expectedEvaluationResult: number = 1;
+        const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
             evaluationResult: number = 0;
@@ -158,13 +158,13 @@ describe('SelfDefendingTemplate', function () {
             evaluateInWorker(
                 obfuscatedCode,
                 () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
                     evaluationResult = 1;
+                    done();
+                },
+                () => {
+                    done();
+                },
+                () => {
                     done();
                 },
                 evaluationTimeout

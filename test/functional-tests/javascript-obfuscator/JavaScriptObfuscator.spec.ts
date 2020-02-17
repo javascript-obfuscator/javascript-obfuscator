@@ -886,7 +886,7 @@ describe('JavaScriptObfuscator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 ...baseParams,
-                                stringArrayEncoding: StringArrayEncoding.Rc4
+                                stringArrayEncoding: StringArrayEncoding.Base64
                             }
                         ).getObfuscatedCode();
 

@@ -18,11 +18,6 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     private static readonly baseIdentifierNameLength: number = 6;
 
     /**
-     * @type {Set<string>}
-     */
-    private readonly randomVariableNameSet: Set <string> = new Set();
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -49,11 +44,11 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const baseIdentifierName: string = hexadecimalNumber.substr(0, baseNameLength);
         const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 
-        if (this.randomVariableNameSet.has(identifierName)) {
+        if (!this.isValidIdentifierName(identifierName)) {
             return this.generateForGlobalScope(nameLength);
         }
 
-        this.randomVariableNameSet.add(identifierName);
+        this.preserveName(identifierName);
 
         return identifierName;
     }

@@ -8,9 +8,9 @@ import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
 import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';

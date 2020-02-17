@@ -157,8 +157,8 @@ describe('SelfDefendingTemplate', function () {
 
             evaluateInWorker(
                 obfuscatedCode,
-                () => {
-                    evaluationResult = 1;
+                (response: number) => {
+                    evaluationResult = response;
                     done();
                 },
                 () => {

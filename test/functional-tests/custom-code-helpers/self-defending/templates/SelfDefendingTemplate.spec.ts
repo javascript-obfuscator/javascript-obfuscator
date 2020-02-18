@@ -159,12 +159,15 @@ describe('SelfDefendingTemplate', function () {
                 obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
+                    console.log('response');
                     done();
                 },
                 () => {
+                    console.log('error');
                     done();
                 },
                 () => {
+                    console.log('timeout');
                     done();
                 },
                 evaluationTimeout

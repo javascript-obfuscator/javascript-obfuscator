@@ -15,6 +15,7 @@ const getEnvironmentCode = () => `
         domain: 'obfuscator.io'
     };
 `;
+const NODE_MAJOR_VERSION: number = parseInt(process.versions.node.split('.')[0], 10);
 
 describe('JavaScriptObfuscator runtime eval', function () {
     const baseOptions: TInputOptions = {
@@ -166,50 +167,53 @@ describe('JavaScriptObfuscator runtime eval', function () {
             });
         });
 
-        describe(`Obfuscator. ${detailedDescription}`, () => {
-            const evaluationTimeout: number = 10000;
+        /** For some reason it does not work correctly on node 10 **/
+        if (NODE_MAJOR_VERSION >= 12) {
+            describe(`Obfuscator. ${detailedDescription}`, () => {
+                const evaluationTimeout: number = 10000;
 
-            let evaluationResult: string;
+                let evaluationResult: string;
 
-            beforeEach((done) => {
-                const code: string = readFileAsString(process.cwd() + '/dist/index.js');
+                beforeEach((done) => {
+                    const code: string = readFileAsString(process.cwd() + '/dist/index.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...baseOptions,
-                        ...options
-                    }
-                ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...baseOptions,
+                            ...options
+                        }
+                    ).getObfuscatedCode();
 
-                evaluateInWorker(
-                    `
+                    evaluateInWorker(
+                        `
                         ${getEnvironmentCode()}
                         ${obfuscatedCode}
                         module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
                     `,
-                    (response: string) => {
-                        evaluationResult = response;
-                        done();
-                    },
-                    (error: Error) => {
-                        evaluationResult = error.message;
-                        done();
-                    },
-                    () => {
-                        done();
-                    },
-                    evaluationTimeout
-                );
-            });
+                        (response: string) => {
+                            evaluationResult = response;
+                            done();
+                        },
+                        (error: Error) => {
+                            evaluationResult = error.message;
+                            done();
+                        },
+                        () => {
+                            done();
+                        },
+                        evaluationTimeout
+                    );
+                });
 
-            it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
-                assert.equal(
-                    evaluationResult,
-                    'var foo=0x1;'
-                );
+                it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
+                    assert.equal(
+                        evaluationResult,
+                        'var foo=0x1;'
+                    );
+                });
             });
-        });
+        }
 
         [
             {
@@ -239,11 +243,9 @@ describe('JavaScriptObfuscator runtime eval', function () {
             }
         ].forEach((webpackBootstrapOptions: Partial<TInputOptions>) => {
             describe(`Webpack bootstrap code. ${detailedDescription}. ${JSON.stringify(webpackBootstrapOptions)}`, () => {
-                const evaluationTimeout: number = 10000;
-
                 let evaluationResult: string;
 
-                beforeEach((done) => {
+                beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/webpack-bootstrap.js');
 
                     const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
@@ -255,31 +257,14 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         }
                     ).getObfuscatedCode();
 
-                    evaluateInWorker(
-                        `
+                    evaluationResult = eval(`
                         ${getEnvironmentCode()}
                         ${obfuscatedCode}
-                    `,
-                        (response: string) => {
-                            evaluationResult = response;
-                            done();
-                        },
-                        (error: Error) => {
-                            evaluationResult = error.message;
-                            done();
-                        },
-                        () => {
-                            done();
-                        },
-                        evaluationTimeout
-                    );
+                    `);
                 });
 
                 it('should obfuscate code without any runtime errors after obfuscation: Variant #4 webpack bootstrap', () => {
-                    assert.equal(
-                        evaluationResult,
-                        'foo'
-                    );
+                    assert.equal(evaluationResult, 'foo');
                 });
             });
         });

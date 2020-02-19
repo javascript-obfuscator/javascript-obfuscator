@@ -21,7 +21,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        before((done) => {
+        before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -33,20 +33,14 @@ describe('SelfDefendingTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -60,7 +54,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        before((done) => {
+        before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -72,20 +66,14 @@ describe('SelfDefendingTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -99,7 +87,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        before((done) => {
+        before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -112,20 +100,14 @@ describe('SelfDefendingTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -139,7 +121,7 @@ describe('SelfDefendingTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        before((done) => {
+        before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -155,20 +137,14 @@ describe('SelfDefendingTemplate', function () {
                 .replace(/,/g, ', ')
                 .replace(/;/g, '; ');
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should enter code in infinity loop', () => {

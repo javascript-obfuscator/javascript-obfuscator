@@ -185,25 +185,24 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         }
                     ).getObfuscatedCode();
 
-                    evaluateInWorker(
+                    return evaluateInWorker(
                         `
-                        ${getEnvironmentCode()}
-                        ${obfuscatedCode}
-                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
-                    `,
-                        (response: string) => {
-                            evaluationResult = response;
-                            done();
-                        },
-                        (error: Error) => {
-                            evaluationResult = error.message;
-                            done();
-                        },
-                        () => {
-                            done();
-                        },
+                            ${getEnvironmentCode()}
+                            ${obfuscatedCode}
+                            module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                        `,
                         evaluationTimeout
-                    );
+                    )
+                        .then((result: string | null) => {
+                            if (!result) {
+                                return;
+                            }
+
+                            evaluationResult = result;
+                        })
+                        .catch((error) => {
+                            evaluationResult = error.message;
+                        });
                 });
 
                 it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {

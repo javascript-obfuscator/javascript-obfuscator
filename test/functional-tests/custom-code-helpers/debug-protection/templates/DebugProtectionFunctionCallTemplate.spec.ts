@@ -22,7 +22,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -34,20 +34,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled debug protection', () => {
@@ -61,7 +55,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -73,20 +67,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled debug protection', () => {
@@ -100,7 +88,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -113,20 +101,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled debug protection', () => {
@@ -140,7 +122,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -152,20 +134,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled debug protection', () => {
@@ -179,7 +155,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -191,20 +167,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
             ).getObfuscatedCode();
             obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '');
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should enter code in infinity loop', () => {
@@ -218,7 +188,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         let obfuscatedCode: string,
             evaluationResult: number = 0;
 
-        beforeEach((done) => {
+        beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/single-call.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -229,20 +199,14 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
         });
 
         it('should correctly evaluate code with enabled debug protection', () => {

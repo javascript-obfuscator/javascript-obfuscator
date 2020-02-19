@@ -174,7 +174,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
 
                 let evaluationResult: string;
 
-                beforeEach((done) => {
+                beforeEach(() => {
                     const code: string = readFileAsString(process.cwd() + '/dist/index.js');
 
                     const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(

@@ -15,7 +15,6 @@ const getEnvironmentCode = () => `
         domain: 'obfuscator.io'
     };
 `;
-const NODE_MAJOR_VERSION: number = parseInt(process.versions.node.split('.')[0], 10);
 
 describe('JavaScriptObfuscator runtime eval', function () {
     const baseOptions: TInputOptions = {
@@ -167,52 +166,49 @@ describe('JavaScriptObfuscator runtime eval', function () {
             });
         });
 
-        /** For some reason it does not work correctly on node 10 **/
-        if (NODE_MAJOR_VERSION >= 12) {
-            describe(`Obfuscator. ${detailedDescription}`, () => {
-                const evaluationTimeout: number = 10000;
+        describe(`Obfuscator. ${detailedDescription}`, () => {
+            const evaluationTimeout: number = 10000;
 
-                let evaluationResult: string;
+            let evaluationResult: string;
 
-                beforeEach(() => {
-                    const code: string = readFileAsString(process.cwd() + '/dist/index.js');
+            beforeEach(() => {
+                const code: string = readFileAsString(process.cwd() + '/dist/index.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...baseOptions,
-                            ...options
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...baseOptions,
+                        ...options
+                    }
+                ).getObfuscatedCode();
+
+                return evaluateInWorker(
+                    `
+                        ${getEnvironmentCode()}
+                        ${obfuscatedCode}
+                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                    `,
+                    evaluationTimeout
+                )
+                    .then((result: string | null) => {
+                        if (!result) {
+                            return;
                         }
-                    ).getObfuscatedCode();
 
-                    return evaluateInWorker(
-                        `
-                            ${getEnvironmentCode()}
-                            ${obfuscatedCode}
-                            module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
-                        `,
-                        evaluationTimeout
-                    )
-                        .then((result: string | null) => {
-                            if (!result) {
-                                return;
-                            }
-
-                            evaluationResult = result;
-                        })
-                        .catch((error) => {
-                            evaluationResult = error.message;
-                        });
-                });
-
-                it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
-                    assert.equal(
-                        evaluationResult,
-                        'var foo=0x1;'
-                    );
-                });
+                        evaluationResult = result;
+                    })
+                    .catch((error) => {
+                        evaluationResult = error.message;
+                    });
             });
-        }
+
+            it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
+                assert.equal(
+                    evaluationResult,
+                    'var foo=0x1;'
+                );
+            });
+        });
 
         [
             {

@@ -6,10 +6,7 @@ import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
-import { LoggingPrefix } from '../../enums/logger/LoggingPrefix';
-
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
-import { Logger } from '../../logger/Logger';
 
 export class SourceCodeReader {
     /**
@@ -106,26 +103,11 @@ export class SourceCodeReader {
 
     /**
      * @param {string} filePath
-     */
-    private static logFilePath (filePath: string): void {
-        const normalizedFilePath: string = path.normalize(filePath);
-
-        Logger.log(
-            Logger.colorInfo,
-            LoggingPrefix.CLI,
-            `Obfuscating file: ${normalizedFilePath}...`
-        );
-    }
-
-    /**
-     * @param {string} filePath
      * @returns {string}
      */
     private static readFile (filePath: string): IFileData {
-        SourceCodeReader.logFilePath(filePath);
-
         return {
-            filePath,
+            filePath: path.normalize(filePath),
             content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding)
         };
     }

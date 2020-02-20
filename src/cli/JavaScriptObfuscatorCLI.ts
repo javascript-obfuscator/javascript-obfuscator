@@ -21,9 +21,11 @@ import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSa
 
 import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
+import { Logger } from '../logger/Logger';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
 import { SourceCodeReader } from './utils/SourceCodeReader';
 import { Utils } from '../utils/Utils';
+import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
@@ -103,14 +105,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
         const inputFileName: string = path.basename(inputCodePath);
-        const inputFilePath: string = inputCodePath;
 
         return {
             ...DEFAULT_PRESET,
             ...configFileOptions,
             ...inputCLIOptions,
-            inputFileName,
-            inputFilePath
+            inputFileName
         };
     }
 
@@ -367,7 +367,23 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
             const outputCodePath: string = this.obfuscatedCodeWriter.getOutputCodePath(filePath);
 
-            this.processSourceCode(content, filePath, outputCodePath, index);
+            try {
+                Logger.log(
+                    Logger.colorInfo,
+                    LoggingPrefix.CLI,
+                    `Obfuscating file: ${filePath}...`
+                );
+
+                this.processSourceCode(content, filePath, outputCodePath, index);
+            } catch (error) {
+                Logger.log(
+                    Logger.colorInfo,
+                    LoggingPrefix.CLI,
+                    `Error in file: ${filePath}...`
+                );
+
+                throw error;
+            }
         });
     }
 

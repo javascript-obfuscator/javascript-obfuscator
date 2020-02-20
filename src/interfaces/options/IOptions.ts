@@ -20,7 +20,6 @@ export interface IOptions {
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;
     readonly inputFileName: string;
-    readonly inputFilePath: string;
     readonly log: boolean;
     readonly renameGlobals: boolean;
     readonly reservedNames: string[];

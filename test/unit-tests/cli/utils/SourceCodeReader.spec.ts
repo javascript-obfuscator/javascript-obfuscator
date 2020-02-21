@@ -545,6 +545,36 @@ describe('SourceCodeReader', () => {
                     });
                 });
             });
+
+            describe('Variant #5: `inputPath` is a valid path with dot', () => {
+                const tmpDirectoryWithDotPath: string = `${tmpDirectoryPath}.bar`;
+                const tmpFileName: string = 'foo.js';
+                const filePath: string = `${tmpDirectoryWithDotPath}/${tmpFileName}`;
+
+                const expectedResult: IFileData[] = [
+                    {
+                        filePath: filePath,
+                        content: fileContent
+                    }
+                ];
+
+                let result: IFileData[];
+
+                before(() => {
+                    mkdirp.sync(tmpDirectoryWithDotPath);
+                    fs.writeFileSync(filePath, fileContent);
+                    result = new SourceCodeReader(tmpDirectoryWithDotPath, {}).readSourceCode();
+                });
+
+                it('should return files data', () => {
+                    assert.deepEqual(result, expectedResult);
+                });
+
+                after(() => {
+                    fs.unlinkSync(filePath);
+                    rimraf.sync(tmpDirectoryWithDotPath);
+                });
+            });
         });
     });
 

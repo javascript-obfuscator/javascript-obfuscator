@@ -29,6 +29,13 @@ import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
+     * @type {string[]}
+     */
+    public static readonly availableInputExtensions: string[] = [
+        '.js'
+    ];
+
+    /**
      * @type {BufferEncoding}
      */
     public static readonly encoding: BufferEncoding = 'utf8';
@@ -36,7 +43,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @type {string}
      */
-    public static obfuscatedFilePrefix: string = '-obfuscated';
+    public static readonly obfuscatedFilePrefix: string = '-obfuscated';
 
     /**
      * @type {string}

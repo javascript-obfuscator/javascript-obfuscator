@@ -10,13 +10,6 @@ import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
 export class SourceCodeReader {
     /**
-     * @type {string[]}
-     */
-    public static readonly availableInputExtensions: string[] = [
-        '.js'
-    ];
-
-    /**
      * @type {string}
      */
     private readonly inputPath: string;
@@ -96,7 +89,7 @@ export class SourceCodeReader {
      * @returns {boolean}
      */
     private static isValidFile (filePath: string, excludePatterns: string[] = []): boolean {
-        return SourceCodeReader.availableInputExtensions.includes(path.extname(filePath))
+        return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
             && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
             && !SourceCodeReader.isExcludedPath(filePath, excludePatterns);
     }
@@ -130,7 +123,7 @@ export class SourceCodeReader {
             return this.readDirectoryRecursive(this.inputPath);
         }
 
-        const availableFilePaths: string = SourceCodeReader
+        const availableFilePaths: string = JavaScriptObfuscatorCLI
             .availableInputExtensions
             .map((extension: string) => `\`${extension}\``)
             .join(', ');

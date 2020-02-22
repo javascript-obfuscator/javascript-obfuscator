@@ -1,5 +1,7 @@
 import { assert } from 'chai';
 
+import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -487,31 +489,71 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
         describe('Variant #15: function default values', () => {
-            const match: string = `` +
-                `var ${variableMatch} *= *{};` +
-                `${variableMatch}\\['value'] *= *0x1;` +
-                `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
-            ``;
-            const regExp: RegExp = new RegExp(match);
+            // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+            describe('Variant #1: base', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['value'] *= *0x1;` +
+                    `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
+                    ``;
+                const regExp: RegExp = new RegExp(match);
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/function-default-values.js');
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-default-values.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore default parameter object if it references other parameter', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
 
-            it('shouldn ignore default parameter object if it references other parameter', () => {
-                assert.match(obfuscatedCode,  regExp);
+            describe('Variant #2: mangled name of object host node', () => {
+                const match1: string = `` +
+                    `var a *= *{};` +
+                    `a\\['bar'] *= *0x1;` +
+                    `function foo *\\(c *= *a\\) *{ *}` +
+                ``;
+                const match2: string = `` +
+                    `var b *= *{};` +
+                    `b\\['bark'] *= *0x1;` +
+                    `function baz *\\(c *= *b\\) *{ *}` +
+                ``;
+                const regExp1: RegExp = new RegExp(match1);
+                const regExp2: RegExp = new RegExp(match2);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-default-values-mangled-name.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: shouldn generate correct name for object host node', () => {
+                    assert.match(obfuscatedCode,  regExp1);
+                });
+
+                it('Match #2: shouldn generate correct name for object host node', () => {
+                    assert.match(obfuscatedCode,  regExp2);
+                });
             });
         });
 

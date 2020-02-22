@@ -76,7 +76,10 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): IObjectExpressionExtractorResult {
-        const lexicalScopeNode: TNodeWithLexicalScope | null = NodeLexicalScopeUtils.getLexicalScope(hostStatement) ?? null;
+        const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
+        const lexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithLexicalScope(hostNodeWithStatements)
+            ? hostNodeWithStatements
+            : NodeLexicalScopeUtils.getLexicalScope(hostNodeWithStatements) ?? null;
 
         if (!lexicalScopeNode) {
             throw new Error('Cannot find lexical scope node for the host statement node');
@@ -89,7 +92,6 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
             properties
         );
         const statementsToInsert: TStatement[] = [newObjectExpressionHostStatement];
-        const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
 
         NodeAppender.insertBefore(hostNodeWithStatements, statementsToInsert, hostStatement);
         NodeUtils.parentizeAst(newObjectExpressionHostStatement);

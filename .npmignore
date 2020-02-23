@@ -3,6 +3,7 @@
 .idea
 .nyc_output
 coverage
+examples
 images
 webpack
 test

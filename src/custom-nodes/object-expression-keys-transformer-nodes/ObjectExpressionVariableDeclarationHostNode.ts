@@ -4,17 +4,23 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { TStatement } from '../../types/node/TStatement';
 
+import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomNode {
+    /**
+     * @type {TNodeWithLexicalScope}
+     */
+    private lexicalScopeNode!: TNodeWithLexicalScope;
     /**
      * @ type {Property}
      */
@@ -22,35 +28,42 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customCodeHelperFormatter,
+            randomGenerator,
+            options
+        );
     }
 
-    public initialize (properties: ESTree.Property[]): void {
+    public initialize (lexicalScopeNode: TNodeWithLexicalScope, properties: ESTree.Property[]): void {
+        this.lexicalScopeNode = lexicalScopeNode;
         this.properties = properties;
     }
 
     /**
-     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+    protected getNodeStructure (): TStatement[] {
+        const variableDeclarationName: string = NodeGuards.isProgramNode(this.lexicalScopeNode)
+            ? this.identifierNamesGenerator.generateForGlobalScope()
+            : this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode);
+
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(
-                        this.identifierNamesGenerator.generate()
-                    ),
+                    NodeFactory.identifierNode(variableDeclarationName),
                     NodeFactory.objectExpressionNode(this.properties)
                 )
             ],

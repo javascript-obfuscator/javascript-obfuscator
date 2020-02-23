@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('DictionaryIdentifierNamesGenerator', () => {
-    describe('generate', () => {
+    describe('generateForGlobalScope', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             dictionaryIdentifierName: string;
 
@@ -33,7 +33,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 const expectedDictionaryIdentifierNameRegExp: RegExp = /[a|b]/;
 
                 beforeEach(() => {
-                    dictionaryIdentifierName = identifierNamesGenerator.generate();
+                    dictionaryIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Match #1: should return first identifier name', () => {
@@ -49,7 +49,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 const expectedDictionaryIdentifierNameRegExp: RegExp = /[A|B]/;
 
                 beforeEach(() => {
-                    dictionaryIdentifierName = identifierNamesGenerator.generate();
+                    dictionaryIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Match #1: should return third identifier name', () => {
@@ -79,7 +79,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 const expectedDictionaryIdentifierNameRegExp: RegExp = /[a|A]/;
 
                 beforeEach(() => {
-                    dictionaryIdentifierName = identifierNamesGenerator.generate();
+                    dictionaryIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Match #1: should return first identifier name', () => {
@@ -112,7 +112,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 const expectedFourthIterationIdentifierName: string = 'AA';
 
                 beforeEach(() => {
-                    dictionaryIdentifierName = identifierNamesGenerator.generate();
+                    dictionaryIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Match #1: should return first identifier name', () => {
@@ -148,7 +148,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #1: Should generate identifier names with prefix', () => {
-                const expectedDictionaryIdentifierNameRegExp: RegExp = /foo_[a|A]/;
+                const expectedDictionaryIdentifierNameRegExp: RegExp = /foo[a|A]/;
 
                 beforeEach(() => {
                     dictionaryIdentifierName = identifierNamesGenerator.generateWithPrefix();
@@ -185,7 +185,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                         IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
                     );
 
-                    testFunc = () => identifierNamesGenerator.generate();
+                    testFunc = () => identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Match #1: should return first identifier name', () => {
@@ -215,7 +215,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                         IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
                     );
 
-                    testFunc = () => identifierNamesGenerator.generate();
+                    testFunc = () => identifierNamesGenerator.generateForGlobalScope();
                 });
 
                 it('Should throw an error when identifiers dictionary is empty', () => {

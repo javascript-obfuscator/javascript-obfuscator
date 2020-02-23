@@ -58,9 +58,13 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         hostStatement: ESTree.Statement
     ): boolean {
         return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
-            objectExpressionNode,
-            hostStatement
-        );
+                objectExpressionNode,
+                hostStatement
+            )
+            || ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
+                objectExpressionNode,
+                hostStatement
+            );
     }
 
     /**
@@ -108,6 +112,23 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         });
 
         return isReferencedIdentifierName;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node} hostNode
+     * @returns {boolean}
+     */
+    private static isProhibitedSequenceExpression (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostNode: ESTree.Node,
+    ): boolean {
+        return NodeGuards.isExpressionStatementNode(hostNode)
+            && NodeGuards.isSequenceExpressionNode(hostNode.expression)
+            && hostNode.expression.expressions.some((expressionNode: ESTree.Expression) =>
+                NodeGuards.isCallExpressionNode(expressionNode)
+                && NodeGuards.isSuperNode(expressionNode.callee)
+            );
     }
 
     /**

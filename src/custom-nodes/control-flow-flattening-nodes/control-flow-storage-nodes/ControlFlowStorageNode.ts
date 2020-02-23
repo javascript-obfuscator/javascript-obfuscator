@@ -7,10 +7,10 @@ import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
+import { ICustomCodeHelperFormatter } from '../../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { ICustomNodeFormatter } from '../../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -29,18 +29,23 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customCodeHelperFormatter,
+            randomGenerator,
+            options
+        );
     }
 
     /**
@@ -51,10 +56,9 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+    protected getNodeStructure (): TStatement[] {
         const propertyNodes: ESTree.Property[] = Array
             .from<[string, ICustomNode]>(this.controlFlowStorage.getStorage())
             .map(([key, value]: [string, ICustomNode]) => {

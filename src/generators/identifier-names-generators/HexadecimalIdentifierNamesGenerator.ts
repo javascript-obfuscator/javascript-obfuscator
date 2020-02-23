@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -14,11 +16,6 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @type {number}
      */
     private static readonly baseIdentifierNameLength: number = 6;
-
-    /**
-     * @type {Set<string>}
-     */
-    private readonly randomVariableNameSet: Set <string> = new Set();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -35,7 +32,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generate (nameLength?: number): string {
+    public generateForGlobalScope (nameLength?: number): string {
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
@@ -47,13 +44,22 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const baseIdentifierName: string = hexadecimalNumber.substr(0, baseNameLength);
         const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 
-        if (this.randomVariableNameSet.has(identifierName)) {
-            return this.generate(nameLength);
+        if (!this.isValidIdentifierName(identifierName)) {
+            return this.generateForGlobalScope(nameLength);
         }
 
-        this.randomVariableNameSet.add(identifierName);
+        this.preserveName(identifierName);
 
         return identifierName;
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+        return this.generateForGlobalScope(nameLength);
     }
 
     /**
@@ -61,7 +67,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @returns {string}
      */
     public generateWithPrefix (nameLength?: number): string {
-        const identifierName: string = this.generate(nameLength);
+        const identifierName: string = this.generateForGlobalScope(nameLength);
 
         return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
     }

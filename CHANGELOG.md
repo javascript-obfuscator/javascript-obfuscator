@@ -1,5 +1,13 @@
 Change Log
 
+v0.25.0
+---
+* Improved `mangled` identifier names generator logic
+* Improved `selfDefending` helper logic
+* Fixed a bunch of conflicts between generated identifier names. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/550. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/549
+* Prevented transformation of object keys in sequence expression that has `super` call
+* Support of output directory paths with a dot symbol
+
 v0.24.6
 ---
 * Fixed support of exponentiation operator. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/534

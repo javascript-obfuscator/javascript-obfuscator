@@ -1,9 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNamesGenerator {
@@ -23,6 +27,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly preservedNamesSet: Set<string> = new Set();
 
     /**
+     * @type {Map<TNodeWithLexicalScope, Set<string>>}
+     */
+    protected readonly lexicalScopesPreservedNamesMap: Map<TNodeWithLexicalScope, Set<string>> = new Map();
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -35,11 +44,34 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generate (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+        return NodeGuards.isProgramNode(lexicalScopeNode)
+            ? this.generateForGlobalScope()
+            : this.generateForLexicalScope(lexicalScopeNode);
+    }
+
+    /**
      * @param {string} name
-     * @returns {void}
      */
     public preserveName (name: string): void {
         this.preservedNamesSet.add(name);
+    }
+
+    /**
+     * @param {string} name
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    public preserveNameForLexicalScope (name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
+        const preservedNamesForLexicalScopeSet: Set<string> =
+            this.lexicalScopesPreservedNamesMap.get(lexicalScopeNode) ?? new Set();
+
+        preservedNamesForLexicalScopeSet.add(name);
+
+        this.lexicalScopesPreservedNamesMap.set(lexicalScopeNode, preservedNamesForLexicalScopeSet);
     }
 
     /**
@@ -48,6 +80,32 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      */
     public isValidIdentifierName (name: string): boolean {
         return this.notReservedName(name) && !this.preservedNamesSet.has(name);
+    }
+
+    /**
+     * @param {string} name
+     * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
+     * @returns {boolean}
+     */
+    public isValidIdentifierNameInLexicalScopes (name: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean {
+        if (!this.isValidIdentifierName(name)) {
+            return false;
+        }
+
+        for (const lexicalScope of lexicalScopeNodes) {
+            const preservedNamesForLexicalScopeSet: Set<string> | null =
+                this.lexicalScopesPreservedNamesMap.get(lexicalScope) ?? null;
+
+            if (!preservedNamesForLexicalScopeSet) {
+                continue;
+            }
+
+            if (preservedNamesForLexicalScopeSet.has(name)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -67,7 +125,14 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generate (nameLength?: number): string;
+    public abstract generateForGlobalScope (nameLength?: number): string;
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
     /**
      * @param {number} nameLength

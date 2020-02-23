@@ -51,8 +51,12 @@ export class ObfuscatedCodeWriter {
         }
 
         const rawInputPathStats: fs.Stats = fs.lstatSync(this.inputPath);
+        const outputPathExtName: string = path.extname(normalizedRawOutputPath);
+
         const isDirectoryRawInputPath: boolean = rawInputPathStats.isDirectory();
-        const isDirectoryRawOutputPath: boolean = path.extname(normalizedRawOutputPath) === '';
+        const isDirectoryRawOutputPath: boolean = !JavaScriptObfuscatorCLI
+            .availableInputExtensions
+            .includes(outputPathExtName);
 
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {

@@ -36,7 +36,7 @@ export class NodeUtils {
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
         const structure: ESTree.Program = ASTParserFacade.parse(
-            { sourceCode: code },
+            code,
             {
                 ecmaVersion,
                 sourceType: 'script'

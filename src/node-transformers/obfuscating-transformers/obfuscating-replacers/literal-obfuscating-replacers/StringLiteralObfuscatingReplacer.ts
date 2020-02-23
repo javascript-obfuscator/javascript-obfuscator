@@ -9,8 +9,6 @@ import { IStringArrayStorage } from '../../../../interfaces/storages/string-arra
 import { IStringArrayStorageAnalyzer } from '../../../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
-import { initializable } from '../../../../decorators/Initializable';
-
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
@@ -35,12 +33,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @type {IStringArrayStorageAnalyzer}
      */
     private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
-
-    /**
-     * @type {string}
-     */
-    @initializable()
-    private stringArrayStorageCallsWrapperName!: string;
 
     /**
      * @param {IStringArrayStorage} stringArrayStorage
@@ -84,8 +76,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
 
     @postConstruct()
     public initialize (): void {
-        this.stringArrayStorageCallsWrapperName = this.stringArrayStorage.getStorageCallsWrapperName();
-
         if (this.options.shuffleStringArray) {
             this.stringArrayStorage.shuffleStorage();
         }
@@ -148,7 +138,9 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(decodeKey));
         }
 
-        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.stringArrayStorageCallsWrapperName);
+        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
+            this.stringArrayStorage.getStorageCallsWrapperName()
+        );
 
         return NodeFactory.callExpressionNode(
             stringArrayIdentifierNode,

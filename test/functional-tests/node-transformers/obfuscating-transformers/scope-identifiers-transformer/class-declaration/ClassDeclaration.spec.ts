@@ -482,15 +482,15 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             });
         });
 
-        describe('Variant #3: already renamed identifiers shouldn\'t be renamed twice', () => {
-            const classDeclarationRegExp: RegExp = /class *d *{/;
-            const variableDeclarationsRegExp: RegExp = /let e, *f, *g, *h;/;
-            const classReferenceRegExp: RegExp = /new d\(\);/;
+        describe('Variant #3: preserved identifier names shouldn\'t be used as identifier names', () => {
+            const classDeclarationRegExp: RegExp = /class *e *{/;
+            const variableDeclarationsRegExp: RegExp = /let f, *g, *h, *i;/;
+            const classReferenceRegExp: RegExp = /new e\(\);/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-using-of-preserved-identifiers.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -501,15 +501,15 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                 ).getObfuscatedCode();
             });
 
-            it('Match #1: shouldn\'t rename twice class declaration name', () => {
+            it('Match #1: shouldn\'t use preserved identifier name as class declaration name', () => {
                 assert.match(obfuscatedCode, classDeclarationRegExp);
             });
 
-            it('Match #2: should correctly rename variable declarations', () => {
+            it('Match #2: shouldn\'t use preserved identifier name as variable declarations', () => {
                 assert.match(obfuscatedCode, variableDeclarationsRegExp);
             });
 
-            it('Match #3: should correctly rename class reference identifier', () => {
+            it('Match #3: shouldn\'t use preserved identifier name as class reference identifier', () => {
                 assert.match(obfuscatedCode, classReferenceRegExp);
             });
         });

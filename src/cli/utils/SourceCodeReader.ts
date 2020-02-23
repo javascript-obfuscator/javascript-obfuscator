@@ -6,19 +6,9 @@ import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
-import { LoggingPrefix } from '../../enums/logger/LoggingPrefix';
-
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
-import { Logger } from '../../logger/Logger';
 
 export class SourceCodeReader {
-    /**
-     * @type {string[]}
-     */
-    public static readonly availableInputExtensions: string[] = [
-        '.js'
-    ];
-
     /**
      * @type {string}
      */
@@ -99,22 +89,9 @@ export class SourceCodeReader {
      * @returns {boolean}
      */
     private static isValidFile (filePath: string, excludePatterns: string[] = []): boolean {
-        return SourceCodeReader.availableInputExtensions.includes(path.extname(filePath))
+        return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
             && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
             && !SourceCodeReader.isExcludedPath(filePath, excludePatterns);
-    }
-
-    /**
-     * @param {string} filePath
-     */
-    private static logFilePath (filePath: string): void {
-        const normalizedFilePath: string = path.normalize(filePath);
-
-        Logger.log(
-            Logger.colorInfo,
-            LoggingPrefix.CLI,
-            `Obfuscating file: ${normalizedFilePath}...`
-        );
     }
 
     /**
@@ -122,10 +99,8 @@ export class SourceCodeReader {
      * @returns {string}
      */
     private static readFile (filePath: string): IFileData {
-        SourceCodeReader.logFilePath(filePath);
-
         return {
-            filePath,
+            filePath: path.normalize(filePath),
             content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding)
         };
     }
@@ -148,7 +123,7 @@ export class SourceCodeReader {
             return this.readDirectoryRecursive(this.inputPath);
         }
 
-        const availableFilePaths: string = SourceCodeReader
+        const availableFilePaths: string = JavaScriptObfuscatorCLI
             .availableInputExtensions
             .map((extension: string) => `\`${extension}\``)
             .join(', ');

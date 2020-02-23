@@ -19,6 +19,8 @@ import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 import { NodeUtils } from '../../../node/NodeUtils';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
+import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
 
 @injectable()
 export class ObjectExpressionToVariableDeclarationExtractor implements IObjectExpressionExtractor {
@@ -74,18 +76,29 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): IObjectExpressionExtractorResult {
+        const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
+        const lexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithLexicalScope(hostNodeWithStatements)
+            ? hostNodeWithStatements
+            : NodeLexicalScopeUtils.getLexicalScope(hostNodeWithStatements) ?? null;
+
+        if (!lexicalScopeNode) {
+            throw new Error('Cannot find lexical scope node for the host statement node');
+        }
+
         const properties: ESTree.Property[] = objectExpressionNode.properties;
 
-        const newObjectExpressionHostStatement: ESTree.VariableDeclaration = this.getObjectExpressionHostNode(properties);
-        const newObjectExpressionIdentifier: ESTree.Identifier = this.getObjectExpressionIdentifierNode(newObjectExpressionHostStatement);
-        const newObjectExpressionNode: ESTree.ObjectExpression = this.getObjectExpressionNode(newObjectExpressionHostStatement);
-
+        const newObjectExpressionHostStatement: ESTree.VariableDeclaration = this.getObjectExpressionHostNode(
+            lexicalScopeNode,
+            properties
+        );
         const statementsToInsert: TStatement[] = [newObjectExpressionHostStatement];
-        const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
 
         NodeAppender.insertBefore(hostNodeWithStatements, statementsToInsert, hostStatement);
         NodeUtils.parentizeAst(newObjectExpressionHostStatement);
         NodeUtils.parentizeNode(newObjectExpressionHostStatement, hostNodeWithStatements);
+
+        const newObjectExpressionIdentifier: ESTree.Identifier = this.getObjectExpressionIdentifierNode(newObjectExpressionHostStatement);
+        const newObjectExpressionNode: ESTree.ObjectExpression = this.getObjectExpressionNode(newObjectExpressionHostStatement);
 
         return {
             nodeToReplace: newObjectExpressionIdentifier,
@@ -95,16 +108,20 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
     }
 
     /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Property[]} properties
      * @returns {VariableDeclaration}
      */
-    private getObjectExpressionHostNode (properties: ESTree.Property[]): ESTree.VariableDeclaration {
+    private getObjectExpressionHostNode (
+        lexicalScopeNode: TNodeWithLexicalScope,
+        properties: ESTree.Property[]
+    ): ESTree.VariableDeclaration {
         const variableDeclarationHostNodeCustomNode: ICustomNode<TInitialData<ObjectExpressionVariableDeclarationHostNode>> =
             this.objectExpressionKeysTransformerCustomNodeFactory(
                 ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode
             );
 
-        variableDeclarationHostNodeCustomNode.initialize(properties);
+        variableDeclarationHostNodeCustomNode.initialize(lexicalScopeNode, properties);
 
         const statementNode: TStatement = variableDeclarationHostNodeCustomNode.getNode()[0];
 

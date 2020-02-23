@@ -11,7 +11,7 @@ import { ObfuscatingGuard } from '../../../enums/node-transformers/preparing-tra
 import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/BlackListObfuscatingGuard';
 import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
-import { CustomNodesTransformer } from '../../../node-transformers/preparing-transformers/CustomNodesTransformer';
+import { CustomCodeHelpersTransformer } from '../../../node-transformers/preparing-transformers/CustomCodeHelpersTransformer';
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
@@ -26,8 +26,8 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .whenTargetNamed(NodeTransformer.CommentsTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(CustomNodesTransformer)
-        .whenTargetNamed(NodeTransformer.CustomNodesTransformer);
+        .to(CustomCodeHelpersTransformer)
+        .whenTargetNamed(NodeTransformer.CustomCodeHelpersTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(EvalCallExpressionTransformer)

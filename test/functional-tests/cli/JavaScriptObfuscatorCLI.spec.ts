@@ -852,6 +852,94 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
         });
 
+        describe('Logging', () => {
+            describe('Obfuscating file message', () => {
+                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+
+                const inputFileName1: string = 'foo.js';
+                const inputFileName2: string = 'bar.js';
+                const inputFilePath1: string = `${directoryPath}/${inputFileName1}`;
+                const inputFilePath2: string = `${directoryPath}/${inputFileName2}`;
+
+                const outputFileName1: string = 'foo-obfuscated.js';
+                const outputFileName2: string = 'bar-obfuscated.js';
+                const outputFilePath1: string = `${directoryPath}/${outputFileName1}`;
+                const outputFilePath2: string = `${directoryPath}/${outputFileName2}`;
+
+                const expectedLoggingMessage1: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputFilePath1}...`;
+                const expectedLoggingMessage2: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputFilePath2}...`;
+
+                let consoleLogSpy: sinon.SinonSpy<any, void>,
+                    loggingMessageResult1: string,
+                    loggingMessageResult2: string;
+
+                before(() => {
+                    consoleLogSpy = sinon.spy(console, 'log');
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        directoryPath,
+                        '--rename-globals',
+                        'true'
+                    ]);
+
+                    loggingMessageResult1 = consoleLogSpy.getCall(1).args[0];
+                    loggingMessageResult2 = consoleLogSpy.getCall(0).args[0];
+                });
+
+                it('Variant #1: should log file name to the console', () => {
+                    assert.include(loggingMessageResult1, expectedLoggingMessage1);
+                });
+
+                it('Variant #2: should log file name to the console', () => {
+                    assert.include(loggingMessageResult2, expectedLoggingMessage2);
+                });
+
+                after(() => {
+                    rimraf.sync(outputFilePath1);
+                    rimraf.sync(outputFilePath2);
+                    consoleLogSpy.restore();
+                });
+            });
+
+            describe('Error message', () => {
+                const directoryPath: string = `${fixturesDirName}/directory-obfuscation-error`;
+
+                const inputFileName: string = 'foo.js';
+                const inputFilePath: string = `${directoryPath}/${inputFileName}`;
+
+                const expectedLoggingMessage1: string = `[javascript-obfuscator-cli] Error in file: ${inputFilePath}...`;
+
+                let consoleLogSpy: sinon.SinonSpy<any, void>,
+                    loggingMessageResult: string
+
+                before(() => {
+                    consoleLogSpy = sinon.spy(console, 'log');
+
+                    try {
+                        JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            directoryPath,
+                            '--rename-globals',
+                            'true'
+                        ]);
+                    } catch {}
+
+                    loggingMessageResult = consoleLogSpy.getCall(1).args[0];
+                });
+
+                it('Should log file name to the console', () => {
+                    assert.include(loggingMessageResult, expectedLoggingMessage1);
+                });
+
+                after(() => {
+                    consoleLogSpy.restore();
+                });
+            });
+        });
+
         after(() => {
             rimraf.sync(outputDirName);
         });

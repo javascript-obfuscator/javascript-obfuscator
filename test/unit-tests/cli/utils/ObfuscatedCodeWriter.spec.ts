@@ -86,25 +86,50 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         describe('Variant #4: raw input path is a directory path, raw output path is a directory path', () => {
-            const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawInputPath: string = `${tmpDirectoryPath}/input`;
-            const rawOutputPath: string = `${tmpDirectoryPath}/output`;
-            const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/${tmpDirectoryPath}/input/test-input.js`;
+            describe('Variant #1: base directory name', () => {
+                const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
+                const rawInputPath: string = `${tmpDirectoryPath}/input`;
+                const rawOutputPath: string = `${tmpDirectoryPath}/output`;
+                const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/${tmpDirectoryPath}/input/test-input.js`;
 
-            let outputCodePath: string;
+                let outputCodePath: string;
 
-            before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
-                    rawInputPath,
-                    {
-                        output: rawOutputPath
-                    }
-                );
-                outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                before(() => {
+                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                        rawInputPath,
+                        {
+                            output: rawOutputPath
+                        }
+                    );
+                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                });
+
+                it('should return output path that contains raw output path and actual file input path', () => {
+                    assert.equal(outputCodePath, expectedOutputCodePath);
+                });
             });
 
-            it('should return output path that contains raw output path and actual file input path', () => {
-                assert.equal(outputCodePath, expectedOutputCodePath);
+            describe('Variant #2: directory name with dot', () => {
+                const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
+                const rawInputPath: string = `${tmpDirectoryPath}/input`;
+                const rawOutputPath: string = `${tmpDirectoryPath}/output/foo.bar`;
+                const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/foo.bar/${tmpDirectoryPath}/input/test-input.js`;
+
+                let outputCodePath: string;
+
+                before(() => {
+                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                        rawInputPath,
+                        {
+                            output: rawOutputPath
+                        }
+                    );
+                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                });
+
+                it('should return output path that contains raw output path and actual file input path', () => {
+                    assert.equal(outputCodePath, expectedOutputCodePath);
+                });
             });
         });
 

@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('HexadecimalIdentifierNamesGenerator', () => {
-    describe('generate', () => {
+    describe('generateForGlobalScope', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             hexadecimalIdentifierName: string,
             regExp: RegExp;
@@ -26,7 +26,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             );
 
-            hexadecimalIdentifierName = identifierNamesGenerator.generate();
+            hexadecimalIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             regExp = /^_0x(\w){4,6}$/;
         });
 

@@ -3,7 +3,6 @@ import * as mkdirp from 'mkdirp';
 import * as rimraf from 'rimraf';
 
 import { assert } from 'chai';
-import * as sinon from 'sinon';
 
 import { IFileData } from '../../../../src/interfaces/cli/IFileData';
 
@@ -546,40 +545,35 @@ describe('SourceCodeReader', () => {
                     });
                 });
             });
-        });
 
-        describe('Variant #3: logging', () => {
-            const tmpFileName: string = 'test.js';
-            const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
-            const expectedConsoleLogCallResult: boolean = true;
-            const expectedLoggingMessage: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputPath}...`;
+            describe('Variant #5: `inputPath` is a valid path with dot', () => {
+                const tmpDirectoryWithDotPath: string = `${tmpDirectoryPath}.bar`;
+                const tmpFileName: string = 'foo.js';
+                const filePath: string = `${tmpDirectoryWithDotPath}/${tmpFileName}`;
 
-            let consoleLogSpy: sinon.SinonSpy<any, void>,
-                consoleLogCallResult: boolean,
-                loggingMessageResult: string;
+                const expectedResult: IFileData[] = [
+                    {
+                        filePath: filePath,
+                        content: fileContent
+                    }
+                ];
 
-            before(() => {
-                consoleLogSpy = sinon.spy(console, 'log');
+                let result: IFileData[];
 
-                fs.writeFileSync(inputPath, fileContent);
-                new SourceCodeReader(inputPath, {}).readSourceCode();
+                before(() => {
+                    mkdirp.sync(tmpDirectoryWithDotPath);
+                    fs.writeFileSync(filePath, fileContent);
+                    result = new SourceCodeReader(tmpDirectoryWithDotPath, {}).readSourceCode();
+                });
 
-                consoleLogCallResult = consoleLogSpy.called;
-                loggingMessageResult = consoleLogSpy.getCall(0).args[0];
-            });
+                it('should return files data', () => {
+                    assert.deepEqual(result, expectedResult);
+                });
 
-            it('should call `console.log`', () => {
-                assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
-            });
-
-            it('should log file name to the console', () => {
-                assert.include(loggingMessageResult, expectedLoggingMessage);
-            });
-
-
-            after(() => {
-                consoleLogSpy.restore();
-                fs.unlinkSync(inputPath);
+                after(() => {
+                    fs.unlinkSync(filePath);
+                    rimraf.sync(tmpDirectoryWithDotPath);
+                });
             });
         });
     });

@@ -454,18 +454,18 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
         });
     });
 
-    describe('Variant #13: already renamed identifiers shouldn\'t be renamed twice', () => {
+    describe('Variant #13: preserved identifier names shouldn\'t be used as identifier names', () => {
         describe('Variant #1', () => {
-            const variableDeclarationRegExp: RegExp = /var d *= *0x1;/;
-            const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
-            const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
-            const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
-            const functionDeclarationRegExp4: RegExp = /function *h *\(\) *{}/;
+            const variableDeclarationRegExp: RegExp = /var e *= *0x1;/;
+            const functionDeclarationRegExp1: RegExp = /function *f *\(\) *{}/;
+            const functionDeclarationRegExp2: RegExp = /function *g *\(\) *{}/;
+            const functionDeclarationRegExp3: RegExp = /function *h *\(\) *{}/;
+            const functionDeclarationRegExp4: RegExp = /function *i *\(\) *{}/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-using-of-preserved-identifiers-1.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -476,37 +476,37 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
                 ).getObfuscatedCode();
             });
 
-            it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+            it('Match #1: shouldn\'t use preserved identifier name as variable declaration name', () => {
                 assert.match(obfuscatedCode, variableDeclarationRegExp);
             });
 
-            it('Match #2: should correctly rename function declaration name', () => {
+            it('Match #2: shouldn\'t use preserved identifier name as function declaration name', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp1);
             });
 
-            it('Match #3: should correctly rename function declaration name', () => {
+            it('Match #3: shouldn\'t use preserved identifier name as function declaration name', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp2);
             });
 
-            it('Match #4: should correctly rename function declaration name', () => {
+            it('Match #4: shouldn\'t use preserved identifier name as function declaration name', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp3);
             });
 
-            it('Match #5: should correctly rename function declaration name', () => {
+            it('Match #5: shouldn\'t use preserved identifier name as function declaration name', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp4);
             });
         });
 
         describe('Variant #2', () => {
-            const variableDeclarationRegExp1: RegExp = /var d *= *0x1;/;
-            const variableDeclarationRegExp2: RegExp = /var e;/;
-            const functionDeclarationRegExp: RegExp = /function *f *\(\) *{/;
-            const variableDeclarationRegExp3: RegExp = /var g *= *function *\(\) *{}/;
+            const variableDeclarationRegExp1: RegExp = /var b *= *0x1;/;
+            const variableDeclarationRegExp2: RegExp = /var c;/;
+            const functionDeclarationRegExp: RegExp = /function *d *\(\) *{/;
+            const variableDeclarationRegExp3: RegExp = /var f *= *function *\(\) *{}/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-2.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-using-of-preserved-identifiers-2.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -517,19 +517,19 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
                 ).getObfuscatedCode();
             });
 
-            it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+            it('Match #1: shouldn\'t use preserved identifier name as variable declaration name', () => {
                 assert.match(obfuscatedCode, variableDeclarationRegExp1);
             });
 
-            it('Match #2: shouldn\'t rename twice variable declaration name', () => {
+            it('Match #2: shouldn\'t use preserved identifier name as variable declaration name', () => {
                 assert.match(obfuscatedCode, variableDeclarationRegExp2);
             });
 
-            it('Match #3: should correctly rename function declaration name', () => {
+            it('Match #3: shouldn\'t use preserved identifier name as function declaration name', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp);
             });
 
-            it('Match #4: should correctly rename variable declaration name', () => {
+            it('Match #4: shouldn\'t use preserved identifier name as variable declaration name', () => {
                 assert.match(obfuscatedCode, variableDeclarationRegExp3);
             });
         });

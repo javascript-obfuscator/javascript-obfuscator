@@ -53,11 +53,14 @@ import './unit-tests/utils/Utils.spec';
  */
 import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
-import './functional-tests/custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode.spec';
-import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';
-import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapper.spec';
-import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
-import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
+import './functional-tests/custom-code-helpers/console-output/ConsoleOutputDisableExpressionCodeHelper.spec';
+import './functional-tests/custom-code-helpers/domain-lock/DomainLockCodeHelper.spec';
+import './functional-tests/custom-code-helpers/self-defending/templates/SelfDefendingTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper.spec';
+import './functional-tests/custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper.spec';
+import './functional-tests/custom-code-helpers/string-array/StringArrayCodeHelper.spec';
+import './functional-tests/generators/identifier-names-generators/dictionary-identifier-names-generator/DictionaryIdentifierNamesGenerator.spec';
+import './functional-tests/generators/identifier-names-generators/mangled-identifier-names-generator/MangledIdentifierNamesGenerator.spec';
 import './functional-tests/issues/issue321.spec';
 import './functional-tests/issues/issue355.spec';
 import './functional-tests/issues/issue419.spec';
@@ -92,15 +95,16 @@ import './functional-tests/node-transformers/preparing-transformers/comments-tra
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
+import './functional-tests/node-transformers/preparing-transformers/variable-preserve-transformer/VariablePreserveTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
-import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
-import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';
-import './functional-tests/templates/GlobalVariableNoEvalTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-template/StringArrayTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
+import './functional-tests/custom-code-helpers/debug-protection/templates/DebugProtectionFunctionCallTemplate.spec';
+import './functional-tests/custom-code-helpers/domain-lock/templates/DomainLockNodeTemplate.spec';
+import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-template/StringArrayTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 
 /**
  * Performance tests

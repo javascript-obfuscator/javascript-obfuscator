@@ -6,4 +6,14 @@ export type ObfuscatorOptions = TInputOptions;
 
 export interface ObfuscatedCode extends IObfuscatedCode {}
 
+/**
+ * @param {string} sourceCode
+ * @param {ObfuscatorOptions} inputOptions
+ * @returns {ObfuscatedCode}
+ */
 export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscatedCode;
+
+/**
+ * @type {string | undefined}
+ */
+export const version: string;

@@ -8,6 +8,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -17,6 +18,14 @@ import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer.ParentificationTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.VariablePreserveTransformer
+    ];
+
     /**
      * @type {Set <FunctionExpression>}
      */
@@ -146,6 +155,9 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
          */
         const evalRootAstHostNode: ESTree.FunctionExpression = NodeFactory
             .functionExpressionNode([], NodeFactory.blockStatementNode(ast));
+
+        NodeUtils.parentizeAst(evalRootAstHostNode);
+        NodeUtils.parentizeNode(evalRootAstHostNode, parentNode);
 
         /**
          * we should store that host node and then extract AST-tree on the `finalizing` stage

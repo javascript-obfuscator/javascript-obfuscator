@@ -14,6 +14,6 @@ export interface ObfuscatedCode extends IObfuscatedCode {}
 export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscatedCode;
 
 /**
- * @type {string | undefined}
+ * @type {string}
  */
 export const version: string;

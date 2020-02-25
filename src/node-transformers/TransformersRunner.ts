@@ -7,7 +7,6 @@ import * as ESTree from 'estree';
 
 import { TNodeTransformerFactory } from '../types/container/node-transformers/TNodeTransformerFactory';
 import { TNormalizedNodeTransformers } from '../types/node-transformers/TNormalizedNodeTransformers';
-import { TTransformersRunnerData } from '../types/node-transformers/TTransformersRunnerData';
 import { TVisitorDirection } from '../types/node-transformers/TVisitorDirection';
 import { TVisitorFunction } from '../types/node-transformers/TVisitorFunction';
 import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
@@ -26,11 +25,6 @@ import { NodeMetadata } from '../node/NodeMetadata';
 
 @injectable()
 export class TransformersRunner implements ITransformersRunner {
-    /**
-     * @type {Map<NodeTransformer[], TTransformersRunnerData>}
-     */
-    private readonly cachedNodeTransformersData: Map<NodeTransformer[], TTransformersRunnerData> = new Map();
-
     /**
      * @type {TNodeTransformerFactory}
      */
@@ -70,19 +64,10 @@ export class TransformersRunner implements ITransformersRunner {
             return astTree;
         }
 
-        let normalizedNodeTransformers: TNormalizedNodeTransformers;
-        let nodeTransformerNamesGroups: NodeTransformer[][];
-
-        if (!this.cachedNodeTransformersData.has(nodeTransformerNames)) {
-            normalizedNodeTransformers = this.buildNormalizedNodeTransformers(nodeTransformerNames);
-            nodeTransformerNamesGroups = this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
-            this.cachedNodeTransformersData.set(nodeTransformerNames, [normalizedNodeTransformers, nodeTransformerNamesGroups]);
-        } else {
-            [
-                normalizedNodeTransformers,
-                nodeTransformerNamesGroups
-            ] = <TTransformersRunnerData>this.cachedNodeTransformersData.get(nodeTransformerNames);
-        }
+        const normalizedNodeTransformers: TNormalizedNodeTransformers =
+            this.buildNormalizedNodeTransformers(nodeTransformerNames, transformationStage);
+        const nodeTransformerNamesGroups: NodeTransformer[][] =
+            this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
 
         for (const nodeTransformerNamesGroup of nodeTransformerNamesGroups) {
             const enterVisitors: IVisitor[] = [];
@@ -120,15 +105,27 @@ export class TransformersRunner implements ITransformersRunner {
 
     /**
      * @param {NodeTransformer[]} nodeTransformerNames
+     * @param {TransformationStage} transformationStage
      * @returns {TNormalizedNodeTransformers}
      */
-    private buildNormalizedNodeTransformers (nodeTransformerNames: NodeTransformer[]): TNormalizedNodeTransformers {
+    private buildNormalizedNodeTransformers (
+        nodeTransformerNames: NodeTransformer[],
+        transformationStage: TransformationStage
+    ): TNormalizedNodeTransformers {
         return nodeTransformerNames
             .reduce<TNormalizedNodeTransformers>(
-                (acc: TNormalizedNodeTransformers, nodeTransformerName: NodeTransformer) => ({
-                    ...acc,
-                    [nodeTransformerName]: this.nodeTransformerFactory(nodeTransformerName)
-                }),
+                (acc: TNormalizedNodeTransformers, nodeTransformerName: NodeTransformer) => {
+                    const nodeTransformer: INodeTransformer = this.nodeTransformerFactory(nodeTransformerName);
+
+                    if (!nodeTransformer.getVisitor(transformationStage)) {
+                        return acc;
+                    }
+
+                    return {
+                        ...acc,
+                        [nodeTransformerName]: nodeTransformer
+                    };
+                },
                 {}
             );
     }

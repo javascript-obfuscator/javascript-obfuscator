@@ -86,8 +86,17 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
                 continue;
             }
 
+            const isBubblingDeclaration: boolean = variable
+                .identifiers
+                .some((identifier: ESTree.Node) =>
+                    identifier.parentNode
+                    && NodeGuards.isPropertyNode(identifier.parentNode)
+                    && identifier.parentNode.shorthand
+                );
+
             callback({
                 isGlobalDeclaration,
+                isBubblingDeclaration,
                 rootScope,
                 variable,
                 variableScope,

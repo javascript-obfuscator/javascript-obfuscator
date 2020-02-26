@@ -133,14 +133,18 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
         lexicalScopeNode: TNodeWithLexicalScope,
         isGlobalDeclaration: boolean
     ): void {
-        for (const identifier of variable.identifiers) {
-            if (!this.isReplaceableIdentifierNode(identifier, lexicalScopeNode, variable)) {
-                continue;
-            }
+        const firstIdentifier: ESTree.Identifier | null = variable.identifiers[0] ?? null;
 
-            this.storeIdentifierName(identifier, lexicalScopeNode, isGlobalDeclaration);
-            this.replaceIdentifierName(identifier, lexicalScopeNode, variable);
+        if (!firstIdentifier) {
+            return;
         }
+
+        if (!this.isReplaceableIdentifierNode(firstIdentifier, lexicalScopeNode, variable)) {
+            return;
+        }
+
+        this.storeIdentifierName(firstIdentifier, lexicalScopeNode, isGlobalDeclaration);
+        this.replaceIdentifierName(firstIdentifier, lexicalScopeNode, variable);
     }
 
     /**
@@ -173,7 +177,10 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
         const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
             .replace(identifierNode, lexicalScopeNode);
 
-        identifierNode.name = newIdentifier.name;
+        // rename of identifiers
+        variable.identifiers.forEach((identifier: ESTree.Identifier) => {
+            identifier.name = newIdentifier.name;
+        });
 
         // rename of references
         variable.references.forEach((reference: eslintScope.Reference) => {

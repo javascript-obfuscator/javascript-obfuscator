@@ -8,12 +8,11 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { ConditionalCommentObfuscatingGuard } from '../preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { NodeGuards } from '../../node/NodeGuards';
-import { ConditionalCommentObfuscatingGuard } from './obfuscating-guards/ConditionalCommentObfuscatingGuard';
 
 @injectable()
 export class CommentsTransformer extends AbstractNodeTransformer {
@@ -23,14 +22,6 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     private static readonly preservedWords: string[] = [
         '@license',
         '@preserve'
-    ];
-
-    /**
-     * @type {NodeTransformer.ParentificationTransformer[]}
-     */
-    public readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.ParentificationTransformer,
-        NodeTransformer.VariablePreserveTransformer
     ];
 
     /**

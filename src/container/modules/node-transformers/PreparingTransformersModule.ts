@@ -9,7 +9,6 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { ObfuscatingGuard } from '../../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
 
 import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/BlackListObfuscatingGuard';
-import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { CustomCodeHelpersTransformer } from '../../../node-transformers/preparing-transformers/CustomCodeHelpersTransformer';
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
@@ -21,10 +20,6 @@ import { VariablePreserveTransformer } from '../../../node-transformers/preparin
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // preparing transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(CommentsTransformer)
-        .whenTargetNamed(NodeTransformer.CommentsTransformer);
-
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(CustomCodeHelpersTransformer)
         .whenTargetNamed(NodeTransformer.CustomCodeHelpersTransformer);
@@ -61,14 +56,14 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .inSingletonScope()
         .whenTargetNamed(ObfuscatingGuard.ReservedStringObfuscatingGuard);
 
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(VariablePreserveTransformer)
+        .whenTargetNamed(NodeTransformer.VariablePreserveTransformer);
+
     // obfuscating guards factory
     bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard)
         .toFactory<IObfuscatingGuard>(InversifyContainerFacade
             .getCacheFactory<ObfuscatingGuard, IObfuscatingGuard>(
                 ServiceIdentifiers.INodeGuard
             ));
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(VariablePreserveTransformer)
-        .whenTargetNamed(NodeTransformer.VariablePreserveTransformer);
 });

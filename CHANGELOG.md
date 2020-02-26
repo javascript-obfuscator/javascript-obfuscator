@@ -1,5 +1,9 @@
 Change Log
 
+v0.25.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/563
+
 v0.25.1
 ---
 * Additional fixes of https://github.com/javascript-obfuscator/javascript-obfuscator/issues/550

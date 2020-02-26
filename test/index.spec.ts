@@ -91,7 +91,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/scope-iden
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/identifier-obfuscating-replacers/BaseIdentifierObfuscatingReplacer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
-import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';
+import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';

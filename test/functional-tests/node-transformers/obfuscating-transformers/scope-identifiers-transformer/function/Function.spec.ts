@@ -46,12 +46,12 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
             returnStatementIdentifierName = (<RegExpMatchArray>returnStatementIdentifierMatch)[1];
         });
 
-        it('should generate different names for function parameter identifier and function body identifier with same name', () => {
-            assert.notEqual(functionParamIdentifierName, functionBodyIdentifierName);
+        it('should generate same names for function parameter identifier and function body identifier with same name', () => {
+            assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
         });
 
-        it('should generate different names for function parameter identifier and variable declaration identifier with same name', () => {
-            assert.notEqual(functionParamIdentifierName, variableDeclarationIdentifierName);
+        it('should generate same names for function parameter identifier and variable declaration identifier with same name', () => {
+            assert.equal(functionParamIdentifierName, variableDeclarationIdentifierName);
         });
 
         it('should correctly transform both variable declaration identifier and return statement identifier with same name', () => {
@@ -112,12 +112,12 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
                 assert.equal(innerFunctionNameIdentifierName, functionObjectIdentifierName);
             });
 
-            it('shouldn\'t generate same names for function parameter identifiers', () => {
-                assert.notEqual(functionExpressionParamIdentifierName, innerFunctionNameIdentifierName);
+            it('should generate same names for function parameter identifiers', () => {
+                assert.equal(functionExpressionParamIdentifierName, innerFunctionNameIdentifierName);
             });
 
-            it('shouldn\'t generate same names for function expression parameter and function object identifiers', () => {
-                assert.notEqual(functionExpressionParamIdentifierName, functionObjectIdentifierName);
+            it('should generate same names for function expression parameter and function object identifiers', () => {
+                assert.equal(functionExpressionParamIdentifierName, functionObjectIdentifierName);
             });
         });
 

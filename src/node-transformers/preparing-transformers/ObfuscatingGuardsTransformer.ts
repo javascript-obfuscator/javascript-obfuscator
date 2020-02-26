@@ -10,6 +10,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { ObfuscatingGuard } from '../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
@@ -28,6 +29,14 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
         ObfuscatingGuard.BlackListObfuscatingGuard,
         ObfuscatingGuard.ConditionalCommentObfuscatingGuard,
         ObfuscatingGuard.ReservedStringObfuscatingGuard
+    ];
+
+    /**
+     * @type {NodeTransformer.ParentificationTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.VariablePreserveTransformer
     ];
 
     /**

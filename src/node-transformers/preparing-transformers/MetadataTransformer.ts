@@ -7,6 +7,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -18,6 +19,14 @@ import { NodeMetadata } from '../../node/NodeMetadata';
  */
 @injectable()
 export class MetadataTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer.ParentificationTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.VariablePreserveTransformer
+    ];
+
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

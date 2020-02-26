@@ -1,5 +1,9 @@
 Change Log
 
+v0.25.1
+---
+* Additional fixes of https://github.com/javascript-obfuscator/javascript-obfuscator/issues/550
+
 v0.25.0
 ---
 * Improved `mangled` identifier names generator logic

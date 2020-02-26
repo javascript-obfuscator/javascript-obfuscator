@@ -12,6 +12,7 @@ import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifi
 import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
@@ -24,6 +25,13 @@ import { NodeGuards } from '../../node/NodeGuards';
  */
 @injectable()
 export class VariablePreserveTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer.ParentificationTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ParentificationTransformer
+    ];
+
     /**
      * @type {IIdentifierObfuscatingReplacer}
      */
@@ -53,6 +61,8 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
             IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer
         );
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
+
+        this.preserveScopeVariableIdentifiers = this.preserveScopeVariableIdentifiers.bind(this);
     }
 
     /**
@@ -86,36 +96,25 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
         this.scopeIdentifiersTraverser.traverse(
             programNode,
             parentNode,
-            (data: IScopeIdentifiersTraverserCallbackData) => {
-                const {
-                    isGlobalDeclaration,
-                    variable,
-                    variableScope
-                } = data;
-
-                this.preserveScopeVariableIdentifiers(
-                    variable,
-                    variableScope,
-                    isGlobalDeclaration
-                );
-            }
+            this.preserveScopeVariableIdentifiers
         );
 
         return programNode;
     }
 
     /**
-     * @param {Variable} variable
-     * @param {Scope} variableScope
-     * @param {boolean} isGlobalDeclaration
+     * @param {IScopeIdentifiersTraverserCallbackData} data
      */
-    private preserveScopeVariableIdentifiers (
-        variable: eslintScope.Variable,
-        variableScope: eslintScope.Scope,
-        isGlobalDeclaration: boolean
-    ): void {
+    private preserveScopeVariableIdentifiers (data: IScopeIdentifiersTraverserCallbackData): void {
+        const {
+            isGlobalDeclaration,
+            isBubblingDeclaration,
+            variable,
+            variableScope
+        } = data;
+
         for (const identifier of variable.identifiers) {
-            if (isGlobalDeclaration) {
+            if (isGlobalDeclaration || isBubblingDeclaration) {
                 this.preserveIdentifierNameForRootLexicalScope(identifier);
             } else {
                 this.preserveIdentifierNameForLexicalScope(identifier, variableScope);

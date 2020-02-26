@@ -14,6 +14,7 @@ import { ICallsGraphData } from '../../interfaces/analyzers/calls-graph-analyzer
 import { IPrevailingKindOfVariablesAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
@@ -25,6 +26,14 @@ import { NodeGuards } from '../../node/NodeGuards';
  */
 @injectable()
 export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer.ParentificationTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.VariablePreserveTransformer
+    ];
+
     /**
      * @type {TCustomCodeHelperGroupStorage}
      */

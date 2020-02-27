@@ -15,6 +15,7 @@ v0.25.0
 * Fixed a bunch of conflicts between generated identifier names. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/550. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/549
 * Prevented transformation of object keys in sequence expression that has `super` call
 * Support of output directory paths with a dot symbol
+* Changed `--output` logic. Now `--output` value can describe if it's a file or a directory path. Check README.md for more info
 
 v0.24.6
 ---

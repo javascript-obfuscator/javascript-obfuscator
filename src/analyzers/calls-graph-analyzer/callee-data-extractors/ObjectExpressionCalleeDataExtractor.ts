@@ -79,7 +79,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
         memberExpression: ESTree.MemberExpression
     ): TObjectMembersCallsChain {
         // first step: processing memberExpression `property` property
-        if (NodeGuards.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
+        if (NodeGuards.isIdentifierNode(memberExpression.property) && !memberExpression.computed) {
             currentChain.unshift(memberExpression.property.name);
         } else if (
             NodeGuards.isLiteralNode(memberExpression.property) &&

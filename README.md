@@ -212,6 +212,8 @@ Usage:
 ```sh
 javascript-obfuscator input_file_name.js [options]
 javascript-obfuscator input_file_name.js --output output_file_name.js [options]
+javascript-obfuscator input_file_name.js --output output_folder_name [options]
+javascript-obfuscator input_folder_name --output output_folder_name [options]
 ```
 
 Obfuscation of single input file with `.js` extension.

@@ -304,30 +304,6 @@ export class NodeFactory {
     }
 
     /**
-     * @param {Expression} key
-     * @param {FunctionExpression} value
-     * @param {"constructor" | "method" | "get" | "set"} kind
-     * @param {boolean} computed
-     * @returns {MethodDefinition}
-     */
-    public static methodDefinitionNode (
-        key: ESTree.Expression,
-        value: ESTree.FunctionExpression,
-        kind: 'constructor' | 'method' | 'get' | 'set',
-        computed: boolean,
-    ): ESTree.MethodDefinition {
-        return {
-            type: NodeType.MethodDefinition,
-            key,
-            value,
-            kind,
-            computed,
-            static: false,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
      * @param {Property[]} properties
      * @returns {ObjectExpression}
      */

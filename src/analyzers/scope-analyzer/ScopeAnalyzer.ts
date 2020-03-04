@@ -49,8 +49,8 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             enter: (node: ESTree.Node): ESTree.Node => {
                 if (!node.range) {
                     node.range = [
-                        ScopeAnalyzer.emptyRangeValue,
-                        ScopeAnalyzer.emptyRangeValue
+                        node.parentNode?.range?.[0] ?? ScopeAnalyzer.emptyRangeValue,
+                        node.parentNode?.range?.[1] ?? ScopeAnalyzer.emptyRangeValue
                     ];
                 }
 

@@ -282,6 +282,29 @@ describe('NodeUtils', () => {
                 assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
             });
         });
+
+        describe('Variant #3: parentize AST-tree and keep root node parent node', () => {
+            beforeEach(() => {
+                programNode = NodeFactory.programNode([
+                    ifStatementNode
+                ]);
+
+                ifStatementNode.parentNode = programNode;
+                ifStatementNode = NodeUtils.parentizeAst(ifStatementNode);
+            });
+
+            it('should parentize `ifStatement` node', () => {
+                assert.deepEqual(ifStatementNode.parentNode, programNode);
+            });
+
+            it('should parentize `ifStatement blockStatement` node', () => {
+                assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
+            });
+
+            afterEach(() => {
+                ifStatementNode.parentNode = undefined;
+            });
+        });
     });
 
     describe('parentizeNode', () => {

@@ -1792,5 +1792,33 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #10: computed property key name', () => {
+            const match: string = `` +
+                `const ${variableMatch} *= *'foo';` +
+                `const ${variableMatch} *= *{};` +
+                `${variableMatch}\\[${variableMatch}] *= *'bar';` +
+                `const ${variableMatch} *= *${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/computed-key-1.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should correctly generate name for the computed key identifier', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('HexadecimalIdentifierNamesGenerator', () => {
-    describe('generateForGlobalScope', () => {
+    describe('generateNext', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             hexadecimalIdentifierName: string,
             regExp: RegExp;
@@ -26,7 +26,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             );
 
-            hexadecimalIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+            hexadecimalIdentifierName = identifierNamesGenerator.generateNext();
             regExp = /^_0x(\w){4,6}$/;
         });
 
@@ -35,7 +35,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         })
     });
 
-    describe('generateWithPrefix (): string', () => {
+    describe('generateForGlobalScope', () => {
         const regExp: RegExp = /^foo_0x(\w){4,6}$/;
 
         let identifierNamesGenerator: IIdentifierNamesGenerator,
@@ -52,7 +52,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             );
 
-            hexadecimalIdentifierName = identifierNamesGenerator.generateWithPrefix();
+            hexadecimalIdentifierName = identifierNamesGenerator.generateForGlobalScope();
         });
 
         it('should return hexadecimal name with prefix', () => {

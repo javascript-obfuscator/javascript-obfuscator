@@ -8,11 +8,12 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 //
 describe('Issue #437', () => {
     describe('Fixture code should not break on obfuscating', () => {
-        let doObfuscate: Function;
+        let testFunc: () => string;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/issue437.js');
-            doObfuscate = () => JavaScriptObfuscator.obfuscate(
+
+            testFunc = () => JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
@@ -22,7 +23,7 @@ describe('Issue #437', () => {
         });
 
         it('does not break on obfuscating', () => {
-            assert.doesNotThrow(doObfuscate);
+            assert.doesNotThrow(testFunc);
         });
     });
 });

@@ -69,12 +69,31 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         return null;
     }
 
-    public generateForGlobalScope (): string {
+    public generateNext (): string {
         const identifierName: string = this.generateNewDictionaryName();
 
         this.preserveName(identifierName);
 
         return identifierName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public generateForGlobalScope (): string {
+        const prefix: string = this.options.identifiersPrefix ?
+            `${this.options.identifiersPrefix}`
+            : '';
+        const identifierName: string = this.generateNewDictionaryName();
+        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
+
+        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
+            return this.generateForGlobalScope();
+        }
+
+        this.preserveName(identifierNameWithPrefix);
+
+        return identifierNameWithPrefix;
     }
 
     /**
@@ -95,25 +114,6 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
-    }
-
-    /**
-     * @returns {string}
-     */
-    public generateWithPrefix (): string {
-        const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}`
-            : '';
-        const identifierName: string = this.generateNewDictionaryName();
-        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
-
-        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
-            return this.generateWithPrefix();
-        }
-
-        this.preserveName(identifierNameWithPrefix);
-
-        return identifierNameWithPrefix;
     }
 
     /**

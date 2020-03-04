@@ -54,11 +54,18 @@ import './unit-tests/utils/Utils.spec';
 import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/custom-code-helpers/console-output/ConsoleOutputDisableExpressionCodeHelper.spec';
+import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';
+import './functional-tests/custom-code-helpers/debug-protection/templates/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/custom-code-helpers/domain-lock/DomainLockCodeHelper.spec';
+import './functional-tests/custom-code-helpers/domain-lock/templates/DomainLockNodeTemplate.spec';
+import './functional-tests/custom-code-helpers/self-defending/SelfDefendingCodeHelper.spec';
 import './functional-tests/custom-code-helpers/self-defending/templates/SelfDefendingTemplate.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayCodeHelper.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-template/StringArrayTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 import './functional-tests/generators/identifier-names-generators/dictionary-identifier-names-generator/DictionaryIdentifierNamesGenerator.spec';
 import './functional-tests/generators/identifier-names-generators/mangled-identifier-names-generator/MangledIdentifierNamesGenerator.spec';
 import './functional-tests/issues/issue321.spec';
@@ -99,12 +106,6 @@ import './functional-tests/node-transformers/preparing-transformers/variable-pre
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
-import './functional-tests/custom-code-helpers/debug-protection/templates/DebugProtectionFunctionCallTemplate.spec';
-import './functional-tests/custom-code-helpers/domain-lock/templates/DomainLockNodeTemplate.spec';
-import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';
-import './functional-tests/custom-code-helpers/string-array/templates/string-array-template/StringArrayTemplate.spec';
-import './functional-tests/custom-code-helpers/string-array/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
-import './functional-tests/custom-code-helpers/string-array/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 
 /**
  * Performance tests

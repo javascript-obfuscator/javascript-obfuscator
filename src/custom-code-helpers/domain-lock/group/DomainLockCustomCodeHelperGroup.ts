@@ -84,11 +84,11 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
         const domainLockFunctionName: string = domainLockFunctionLexicalScopeNode
             && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
         const callsControllerFunctionName: string = domainLockFunctionLexicalScopeNode
             && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
 
         // domainLock helper nodes append
         this.appendCustomNodeIfExist(

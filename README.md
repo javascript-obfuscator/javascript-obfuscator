@@ -270,6 +270,13 @@ For example:
 
 Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
 
+## Conflicts of identifier names between different files
+
+During obfuscation of the different files, the same names can be generated for the global identifiers between these files.
+To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersPrefix) option. 
+
+When using CLI this prefix will be added automatically.
+
 ## Antiviruses false positive virus alerts
 
 Some input source code that will obfuscated with some obfuscation options can trigger false positive alerts in a few antiviruses. If you will get this false positive triggers, try to play with obfuscation options.

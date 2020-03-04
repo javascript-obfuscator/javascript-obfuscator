@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('MangledIdentifierNamesGenerator', () => {
-    describe('generateForGlobalScope', () => {
+    describe('generateNext', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 
@@ -30,7 +30,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierName: string = 'a';
 
             beforeEach(() => {
-                mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                mangledIdentifierName = identifierNamesGenerator.generateNext();
             });
 
             it('should return mangled name', () => {
@@ -44,7 +44,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                    mangledIdentifierName = identifierNamesGenerator.generateNext();
                 }
             });
 
@@ -59,7 +59,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                    mangledIdentifierName = identifierNamesGenerator.generateNext();
                 }
             });
 
@@ -74,7 +74,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                    mangledIdentifierName = identifierNamesGenerator.generateNext();
                 }
             });
 
@@ -89,7 +89,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                    mangledIdentifierName = identifierNamesGenerator.generateNext();
                 }
             });
 
@@ -109,7 +109,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                    mangledIdentifierName = identifierNamesGenerator.generateNext();
 
                     if (i === expectedMangledIdentifierPosition1) {
                         mangledIdentifierName1 = mangledIdentifierName;
@@ -129,7 +129,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
     });
 
-    describe('generateWithPrefix (): string', () => {
+    describe('generateForGlobalScope', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 
@@ -149,7 +149,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierName: string = 'fooa';
 
             beforeEach(() => {
-                mangledIdentifierName = identifierNamesGenerator.generateWithPrefix();
+                mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             });
 
             it('should return mangled name with prefix', () => {
@@ -161,7 +161,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierName: string = 'foob';
 
             beforeEach(() => {
-                mangledIdentifierName = identifierNamesGenerator.generateWithPrefix();
+                mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             });
 
             it('should return mangled name with prefix', () => {
@@ -189,8 +189,8 @@ describe('MangledIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 );
 
-                firstMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
-                secondMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                firstMangledIdentifierName = identifierNamesGenerator.generateNext();
+                secondMangledIdentifierName = identifierNamesGenerator.generateNext();
             });
 
             it('should generate first identifier', () => {
@@ -220,8 +220,8 @@ describe('MangledIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 );
 
-                firstMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
-                secondMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                firstMangledIdentifierName = identifierNamesGenerator.generateNext();
+                secondMangledIdentifierName = identifierNamesGenerator.generateNext();
             });
 
             it('should generate first identifier', () => {

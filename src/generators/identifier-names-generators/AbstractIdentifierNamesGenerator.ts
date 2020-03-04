@@ -138,5 +138,5 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateWithPrefix (nameLength?: number): string;
+    public abstract generateNext (nameLength?: number): string;
 }

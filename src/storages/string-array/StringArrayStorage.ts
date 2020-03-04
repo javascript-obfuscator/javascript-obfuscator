@@ -162,7 +162,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     public getStorageId (): string {
         if (!this.stringArrayStorageName) {
             this.stringArrayStorageName = this.identifierNamesGenerator
-                .generateWithPrefix(StringArrayStorage.stringArrayNameLength);
+                .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
         }
 
         return this.stringArrayStorageName;
@@ -174,7 +174,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     public getStorageCallsWrapperName (): string {
         if (!this.stringArrayStorageCallsWrapperName) {
             this.stringArrayStorageCallsWrapperName = this.identifierNamesGenerator
-                .generateWithPrefix(StringArrayStorage.stringArrayNameLength);
+                .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
         }
 
         return this.stringArrayStorageCallsWrapperName;

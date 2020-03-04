@@ -82,10 +82,10 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
 
         const selfDefendingFunctionName: string = selfDefendingFunctionLexicalScopeNode
             ? this.identifierNamesGenerator.generate(selfDefendingFunctionLexicalScopeNode)
-            : this.identifierNamesGenerator.generateForGlobalScope();
+            : this.identifierNamesGenerator.generateNext();
         const callsControllerFunctionName: string = selfDefendingFunctionLexicalScopeNode
             ? this.identifierNamesGenerator.generate(selfDefendingFunctionLexicalScopeNode)
-            : this.identifierNamesGenerator.generateForGlobalScope();
+            : this.identifierNamesGenerator.generateNext();
 
         // selfDefendingUnicode helper nodes append
         this.appendCustomNodeIfExist(

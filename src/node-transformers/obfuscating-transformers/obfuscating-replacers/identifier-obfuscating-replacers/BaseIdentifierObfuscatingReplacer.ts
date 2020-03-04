@@ -72,7 +72,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             return;
         }
 
-        const newIdentifierName: string = this.identifierNamesGenerator.generateWithPrefix();
+        const newIdentifierName: string = this.identifierNamesGenerator.generateForGlobalScope();
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());

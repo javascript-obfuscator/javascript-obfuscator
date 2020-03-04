@@ -10,8 +10,8 @@ import { NodeMetadata } from './NodeMetadata';
 
 export class NodeUtils {
     /**
-     * @param {T} literalNode
-     * @returns {T}
+     * @param {ESTree.Literal} literalNode
+     * @returns {ESTree.Literal}
      */
     public static addXVerbatimPropertyTo (literalNode: ESTree.Literal): ESTree.Literal {
         literalNode['x-verbatim-property'] = {
@@ -32,7 +32,7 @@ export class NodeUtils {
 
     /**
      * @param {string} code
-     * @returns {Statement[]}
+     * @returns {ESTree.Statement[]}
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
         const structure: ESTree.Program = ASTParserFacade.parse(

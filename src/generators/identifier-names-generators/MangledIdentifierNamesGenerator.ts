@@ -58,13 +58,35 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForGlobalScope (nameLength?: number): string {
+    public generateNext (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
         this.previousMangledName = identifierName;
         this.preserveName(identifierName);
 
         return identifierName;
+    }
+
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForGlobalScope (nameLength?: number): string {
+        const prefix: string = this.options.identifiersPrefix ?
+            `${this.options.identifiersPrefix}`
+            : '';
+        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
+
+        this.previousMangledName = identifierName;
+
+        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
+            return this.generateForGlobalScope(nameLength);
+        }
+
+        this.preserveName(identifierNameWithPrefix);
+
+        return identifierNameWithPrefix;
     }
 
     /**
@@ -91,28 +113,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
-    }
-
-    /**
-     * @param {number} nameLength
-     * @returns {string}
-     */
-    public generateWithPrefix (nameLength?: number): string {
-        const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}`
-            : '';
-        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
-        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
-
-        this.previousMangledName = identifierName;
-
-        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
-            return this.generateWithPrefix(nameLength);
-        }
-
-        this.preserveName(identifierNameWithPrefix);
-
-        return identifierNameWithPrefix;
     }
 
     /**

@@ -11,6 +11,7 @@ import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
+import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class BasePropertiesExtractor implements IObjectExpressionExtractor {
@@ -110,6 +111,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
 
         this.filterExtractedObjectExpressionProperties(objectExpressionNode, removablePropertyIds);
         NodeAppender.insertAfter(hostNodeWithStatements, expressionStatements, hostStatement);
+        NodeUtils.parentizeAst(hostNodeWithStatements);
 
         return {
             nodeToReplace: objectExpressionNode,

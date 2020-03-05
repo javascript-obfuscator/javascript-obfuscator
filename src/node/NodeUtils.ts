@@ -89,9 +89,15 @@ export class NodeUtils {
      * @returns {T}
      */
     public static parentizeAst <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
+        const parentNode: ESTree.Node | null = astTree.parentNode ?? null;
+
         estraverse.replace(astTree, {
             enter: NodeUtils.parentizeNode
         });
+
+        if (parentNode) {
+            astTree.parentNode = parentNode;
+        }
 
         return astTree;
     }

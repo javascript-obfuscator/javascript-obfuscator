@@ -80,6 +80,8 @@ export class CommentsTransformer extends AbstractNodeTransformer {
             return rootNode;
         }
 
+        let isFirstNode: boolean = true;
+
         estraverse.traverse(rootNode, {
             enter: (node: ESTree.Node): void => {
                 if (node === rootNode) {
@@ -90,11 +92,12 @@ export class CommentsTransformer extends AbstractNodeTransformer {
                     comment.range && node.range && comment.range[0] < node.range[0]
                 );
 
-                if (commentIdx === -1) {
-                    return;
+                if (commentIdx >= 0) {
+                    (isFirstNode ? rootNode : node).leadingComments =
+                        comments.splice(commentIdx, comments.length - commentIdx).reverse();
                 }
 
-                node.leadingComments = comments.splice(commentIdx, comments.length - commentIdx).reverse();
+                isFirstNode = false;
             }
         });
 

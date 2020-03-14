@@ -1,5 +1,10 @@
 Change Log
 
+v0.26.0
+---
+* **Internal:** new code transformers mechanism
+* Supported obfuscation of files with hashbang operator, https://github.com/javascript-obfuscator/javascript-obfuscator/issues/471
+
 v0.25.5
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/575

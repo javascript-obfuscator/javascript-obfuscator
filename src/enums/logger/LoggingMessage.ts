@@ -3,6 +3,7 @@ export enum LoggingMessage {
     ObfuscationCompleted = 'Obfuscation completed. Total time: %s sec.',
     ObfuscationStarted = 'Obfuscation started...',
     RandomGeneratorSeed = 'Random generator seed: %s...',
-    TransformationStage = 'Transformation stage: %s...',
+    CodeTransformationStage = 'Code transformation stage: %s...',
+    NodeTransformationStage = 'AST transformation stage: %s...',
     Version = 'Version: %s'
 }

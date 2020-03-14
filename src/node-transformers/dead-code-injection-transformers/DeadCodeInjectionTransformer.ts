@@ -85,7 +85,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     public constructor (
         @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
             deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: INodeTransformersRunner,
+        @inject(ServiceIdentifiers.INodeTransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

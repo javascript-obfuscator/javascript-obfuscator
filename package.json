@@ -28,7 +28,7 @@
     "chalk": "3.0.0",
     "chance": "1.1.4",
     "class-validator": "0.11.0",
-    "commander": "4.1.1",
+    "commander": "5.0.0",
     "escodegen": "1.14.1",
     "eslint-scope": "5.0.0",
     "estraverse": "4.3.0",
@@ -45,7 +45,7 @@
     "tslib": "1.11.1"
   },
   "devDependencies": {
-    "@types/chai": "4.2.10",
+    "@types/chai": "4.2.11",
     "@types/chance": "1.0.9",
     "@types/escodegen": "0.0.6",
     "@types/eslint-scope": "3.7.0",
@@ -70,7 +70,7 @@
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.1.7",
     "eslint-plugin-unicorn": "17.2.0",
-    "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
+    "fo rk-ts-checker-notifier-webpack-plugin": "2.0.0",
     "fork-ts-checker-webpack-plugin": "4.1.0",
     "mocha": "7.1.0",
     "nyc": "15.0.0",

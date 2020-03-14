@@ -12,7 +12,7 @@ import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-a
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { LiteralObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/LiteralObfuscatingReplacer';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
@@ -61,12 +61,12 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.Obfuscating:
+    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
@@ -79,7 +79,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                     }
                 };
 
-            case TransformationStage.Finalizing:
+            case NodeTransformationStage.Finalizing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isLiteralNode(node)) {

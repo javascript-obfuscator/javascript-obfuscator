@@ -10,7 +10,7 @@ import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../enums/node-transformers/NodeTransformer';
-import { TransformationStage } from '../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../enums/node-transformers/NodeTransformationStage';
 
 @injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer {
@@ -42,10 +42,10 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public abstract getVisitor (transformationStage: TransformationStage): IVisitor | null;
+    public abstract getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null;
 
     /**
      * @param {Node} node

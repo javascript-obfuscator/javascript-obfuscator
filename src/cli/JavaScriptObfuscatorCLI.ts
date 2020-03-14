@@ -10,6 +10,8 @@ import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 
 import { initializable } from '../decorators/Initializable';
 
+import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
+
 import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
@@ -25,7 +27,6 @@ import { Logger } from '../logger/Logger';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
 import { SourceCodeReader } from './utils/SourceCodeReader';
 import { Utils } from '../utils/Utils';
-import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**

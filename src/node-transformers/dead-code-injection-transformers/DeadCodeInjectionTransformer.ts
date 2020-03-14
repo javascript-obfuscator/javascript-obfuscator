@@ -11,13 +11,13 @@ import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ITransformersRunner } from '../../interfaces/node-transformers/ITransformersRunner';
+import { INodeTransformersRunner } from '../../interfaces/node-transformers/INodeTransformersRunner';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { DeadCodeInjectionCustomNode } from '../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { BlockStatementDeadCodeInjectionNode } from '../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
@@ -72,20 +72,20 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory;
 
     /**
-     * @type {ITransformersRunner}
+     * @type {INodeTransformersRunner}
      */
-    private readonly transformersRunner: ITransformersRunner;
+    private readonly transformersRunner: INodeTransformersRunner;
 
     /**
      * @param {TDeadNodeInjectionCustomNodeFactory} deadCodeInjectionCustomNodeFactory
-     * @param {ITransformersRunner} transformersRunner
+     * @param {INodeTransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
             deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
+        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -209,12 +209,12 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.DeadCodeInjection:
+    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage.DeadCodeInjection:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
@@ -233,7 +233,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     }
                 };
 
-            case TransformationStage.Finalizing:
+            case NodeTransformationStage.Finalizing:
                 if (!this.deadCodeInjectionRootAstHostNodeSet.size) {
                     return null;
                 }
@@ -363,7 +363,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         this.transformersRunner.transform(
             hostNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
-            TransformationStage.Obfuscating
+            NodeTransformationStage.Obfuscating
         );
 
         return clonedBlockStatementNode;

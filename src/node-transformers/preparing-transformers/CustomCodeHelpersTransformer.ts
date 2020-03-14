@@ -16,7 +16,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -85,12 +85,12 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.Preparing:
+    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage.Preparing:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
@@ -102,7 +102,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
                     }
                 };
 
-            case TransformationStage.Finalizing:
+            case NodeTransformationStage.Finalizing:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                         if (NodeGuards.isProgramNode(node)) {

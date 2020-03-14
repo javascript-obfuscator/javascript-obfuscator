@@ -4,7 +4,7 @@ import * as ESTree from 'estree';
 import { IVisitor } from './IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 export interface INodeTransformer {
     /**
@@ -13,10 +13,10 @@ export interface INodeTransformer {
     runAfter?: NodeTransformer[];
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    getVisitor (transformationStage: TransformationStage): IVisitor | null;
+    getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null;
 
     /**
      * @param {Node} node

@@ -13,11 +13,11 @@ import { ILogger } from './interfaces/logger/ILogger';
 import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
 import { IOptions } from './interfaces/options/IOptions';
 import { IRandomGenerator } from './interfaces/utils/IRandomGenerator';
-import { ITransformersRunner } from './interfaces/node-transformers/ITransformersRunner';
+import { INodeTransformersRunner } from './interfaces/node-transformers/INodeTransformersRunner';
 
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
-import { TransformationStage } from './enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from './enums/node-transformers/NodeTransformationStage';
 
 import { ecmaVersion } from './constants/EcmaVersion';
 
@@ -94,19 +94,19 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {ITransformersRunner}
+     * @type {INodeTransformersRunner}
      */
-    private readonly transformersRunner: ITransformersRunner;
+    private readonly transformersRunner: INodeTransformersRunner;
 
     /**
-     * @param {ITransformersRunner} transformersRunner
+     * @param {INodeTransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {TObfuscatedCodeFactory} obfuscatedCodeFactory
      * @param {ILogger} logger
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
+        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.Factory__IObfuscatedCode) obfuscatedCodeFactory: TObfuscatedCodeFactory,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,
@@ -157,7 +157,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private transformAstTree (astTree: ESTree.Program): ESTree.Program {
-        astTree = this.runTransformationStage(astTree, TransformationStage.Initializing);
+        astTree = this.runTransformationStage(astTree, NodeTransformationStage.Initializing);
 
         const isEmptyAstTree: boolean = NodeGuards.isProgramNode(astTree)
             && !astTree.body.length
@@ -170,19 +170,19 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             return astTree;
         }
 
-        astTree = this.runTransformationStage(astTree, TransformationStage.Preparing);
+        astTree = this.runTransformationStage(astTree, NodeTransformationStage.Preparing);
 
         if (this.options.deadCodeInjection) {
-            astTree = this.runTransformationStage(astTree, TransformationStage.DeadCodeInjection);
+            astTree = this.runTransformationStage(astTree, NodeTransformationStage.DeadCodeInjection);
         }
 
         if (this.options.controlFlowFlattening) {
-            astTree = this.runTransformationStage(astTree, TransformationStage.ControlFlowFlattening);
+            astTree = this.runTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
         }
 
-        astTree = this.runTransformationStage(astTree, TransformationStage.Converting);
-        astTree = this.runTransformationStage(astTree, TransformationStage.Obfuscating);
-        astTree = this.runTransformationStage(astTree, TransformationStage.Finalizing);
+        astTree = this.runTransformationStage(astTree, NodeTransformationStage.Converting);
+        astTree = this.runTransformationStage(astTree, NodeTransformationStage.Obfuscating);
+        astTree = this.runTransformationStage(astTree, NodeTransformationStage.Finalizing);
 
         return astTree;
     }
@@ -224,16 +224,16 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
     /**
      * @param {Program} astTree
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {Program}
      */
-    private runTransformationStage (astTree: ESTree.Program, transformationStage: TransformationStage): ESTree.Program {
-        this.logger.info(LoggingMessage.TransformationStage, transformationStage);
+    private runTransformationStage (astTree: ESTree.Program, nodeTransformationStage: NodeTransformationStage): ESTree.Program {
+        this.logger.info(LoggingMessage.TransformationStage, nodeTransformationStage);
 
         return this.transformersRunner.transform(
             astTree,
             JavaScriptObfuscator.transformersList,
-            transformationStage
+            nodeTransformationStage
         );
     }
 }

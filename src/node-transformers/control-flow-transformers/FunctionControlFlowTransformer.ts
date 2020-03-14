@@ -19,7 +19,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
 import { ControlFlowReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
 import { NodeType } from '../../enums/node/NodeType';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
@@ -106,12 +106,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.ControlFlowFlattening:
+    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage.ControlFlowFlattening:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (

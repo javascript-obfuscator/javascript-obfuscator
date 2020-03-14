@@ -15,7 +15,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { BlockStatementControlFlowFlatteningNode } from '../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
@@ -97,12 +97,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.ControlFlowFlattening:
+    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage.ControlFlowFlattening:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isBlockStatementNode(node)) {

@@ -1,18 +1,18 @@
 import * as ESTree from 'estree';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
-import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
-export interface ITransformersRunner {
+export interface INodeTransformersRunner {
     /**
      * @param {T} astTree
      * @param {NodeTransformer[]} nodeTransformers
-     * @param {TransformationStage} transformationStage
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {T}
      */
     transform <T extends ESTree.Node = ESTree.Program> (
         astTree: T,
         nodeTransformers: NodeTransformer[],
-        transformationStage: TransformationStage
+        nodeTransformationStage: NodeTransformationStage
     ): T;
 }

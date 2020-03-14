@@ -25,14 +25,14 @@ import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 import { ISourceCode } from '../interfaces/source-code/ISourceCode';
-import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
+import { INodeTransformersRunner } from '../interfaces/node-transformers/INodeTransformersRunner';
 
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscatedCode } from '../source-code/ObfuscatedCode';
 import { SourceCode } from '../source-code/SourceCode';
-import { TransformersRunner } from '../node-transformers/TransformersRunner';
+import { NodeTransformersRunner } from '../node-transformers/NodeTransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -166,8 +166,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<ITransformersRunner>(ServiceIdentifiers.ITransformersRunner)
-            .to(TransformersRunner)
+            .bind<INodeTransformersRunner>(ServiceIdentifiers.ITransformersRunner)
+            .to(NodeTransformersRunner)
             .inSingletonScope();
 
         this.container

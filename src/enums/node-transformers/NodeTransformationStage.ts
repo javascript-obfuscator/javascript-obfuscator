@@ -1,4 +1,4 @@
-export enum TransformationStage {
+export enum NodeTransformationStage {
     Initializing = 'Initializing',
     Preparing = 'Preparing',
     DeadCodeInjection = 'DeadCodeInjection',

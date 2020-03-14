@@ -20,6 +20,7 @@ export enum ServiceIdentifiers {
     ICallsGraphAnalyzer = 'ICallsGraphAnalyzer',
     ICodeTransformer = 'ICodeTransformer',
     ICodeTransformerNamesGroupsBuilder = 'ICodeTransformerNamesGroupsBuilder',
+    ICodeTransformersRunner = 'ICodeTransformersRunner',
     ICryptUtils = 'ICryptUtils',
     ICustomCodeHelper = 'ICustomCodeHelper',
     ICustomCodeHelperGroup = 'ICustomCodeHelperGroup',

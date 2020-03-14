@@ -1,4 +1,4 @@
 export enum CodeTransformationStage {
-    BeforeNodeTransformers = 'BeforeNodeTransformers',
-    AfterNodeTransformers = 'AfterNodeTransformers',
+    PreparingTransformers = 'PreparingTransformers',
+    FinalizingTransformers = 'FinalizingTransformers',
 }

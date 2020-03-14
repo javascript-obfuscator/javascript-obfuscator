@@ -11,6 +11,11 @@ import { CodeTransformationStage } from '../enums/code-transformers/CodeTransfor
 @injectable()
 export abstract class AbstractCodeTransformer implements ICodeTransformer {
     /**
+     * @type {CodeTransformer[]}
+     */
+    public readonly runAfter: CodeTransformer[] | undefined;
+
+    /**
      * @type {IOptions}
      */
     protected readonly options: IOptions;
@@ -19,11 +24,6 @@ export abstract class AbstractCodeTransformer implements ICodeTransformer {
      * @type {IRandomGenerator}
      */
     protected readonly randomGenerator: IRandomGenerator;
-
-    /**
-     * @type {CodeTransformer[]}
-     */
-    public readonly abstract runAfter: CodeTransformer[];
 
     /**
      * @param {IRandomGenerator} randomGenerator

@@ -20,6 +20,7 @@ import { utilsModule } from './modules/utils/UtilsModule';
 
 import { TInputOptions } from '../types/options/TInputOptions';
 
+import { ICodeTransformersRunner } from '../interfaces/code-transformers/ICodeTransformersRunner';
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
@@ -28,12 +29,13 @@ import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 import { INodeTransformersRunner } from '../interfaces/node-transformers/INodeTransformersRunner';
 
+import { CodeTransformersRunner } from '../code-transformers/CodeTransformersRunner';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
+import { NodeTransformersRunner } from '../node-transformers/NodeTransformersRunner';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscatedCode } from '../source-code/ObfuscatedCode';
 import { SourceCode } from '../source-code/SourceCode';
-import { NodeTransformersRunner } from '../node-transformers/NodeTransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -164,6 +166,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
             .to(JavaScriptObfuscator)
+            .inSingletonScope();
+
+        this.container
+            .bind<ICodeTransformersRunner>(ServiceIdentifiers.ICodeTransformersRunner)
+            .to(CodeTransformersRunner)
             .inSingletonScope();
 
         this.container

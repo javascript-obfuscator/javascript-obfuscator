@@ -8,6 +8,7 @@ import { ITransformerNamesGroupsBuilder } from '../../../interfaces/utils/ITrans
 import { CodeTransformer } from '../../../enums/code-transformers/CodeTransformer';
 
 import { CodeTransformerNamesGroupsBuilder } from '../../../code-transformers/CodeTransformerNamesGroupsBuilder';
+import { HashbangOperatorTransformer } from '../../../code-transformers/preparing-transformers/HashbangOperatorTransformer';
 
 export const codeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // code transformers factory
@@ -19,4 +20,9 @@ export const codeTransformersModule: interfaces.ContainerModule = new ContainerM
     bind<ITransformerNamesGroupsBuilder<CodeTransformer, ICodeTransformer>>(ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder)
         .to(CodeTransformerNamesGroupsBuilder)
         .inSingletonScope();
+
+    // preparing code transformers
+    bind<ICodeTransformer>(ServiceIdentifiers.ICodeTransformer)
+        .to(HashbangOperatorTransformer)
+        .whenTargetNamed(CodeTransformer.HashbangOperatorTransformer);
 });

@@ -2,6 +2,7 @@ import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
+import { codeTransformersModule } from './modules/code-transformers/CodeTransformersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
 import { customCodeHelpersModule } from './modules/custom-code-helpers/CustomCodeHelpersModule';
@@ -166,7 +167,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<INodeTransformersRunner>(ServiceIdentifiers.ITransformersRunner)
+            .bind<INodeTransformersRunner>(ServiceIdentifiers.INodeTransformersRunner)
             .to(NodeTransformersRunner)
             .inSingletonScope();
 
@@ -194,6 +195,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
         // modules
         this.container.load(analyzersModule);
+        this.container.load(codeTransformersModule);
         this.container.load(controlFlowTransformersModule);
         this.container.load(convertingTransformersModule);
         this.container.load(customCodeHelpersModule);

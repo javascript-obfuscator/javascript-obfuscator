@@ -6,14 +6,14 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeTransformerFactory } from '../types/container/node-transformers/TNodeTransformerFactory';
-import { TNormalizedNodeTransformers } from '../types/node-transformers/TNormalizedNodeTransformers';
+import { TObject } from '../types/TObject';
 import { TVisitorDirection } from '../types/node-transformers/TVisitorDirection';
 import { TVisitorFunction } from '../types/node-transformers/TVisitorFunction';
 import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
 
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
-import { INodeTransformerNamesGroupsBuilder } from '../interfaces/utils/INodeTransformerNamesGroupsBuilder';
 import { INodeTransformersRunner } from '../interfaces/node-transformers/INodeTransformersRunner';
+import { ITransformerNamesGroupsBuilder } from '../interfaces/utils/ITransformerNamesGroupsBuilder';
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../enums/node-transformers/NodeTransformer';
@@ -31,19 +31,25 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
     private readonly nodeTransformerFactory: TNodeTransformerFactory;
 
     /**
-     * @type {INodeTransformerNamesGroupsBuilder}
+     * @type {ITransformerNamesGroupsBuilder}
      */
-    private readonly nodeTransformerNamesGroupsBuilder: INodeTransformerNamesGroupsBuilder;
+    private readonly nodeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<
+        NodeTransformer,
+        INodeTransformer
+    >;
 
     /**
      * @param {TNodeTransformerFactory} nodeTransformerFactory
-     * @param {INodeTransformerNamesGroupsBuilder} nodeTransformerNamesGroupsBuilder
+     * @param {ITransformerNamesGroupsBuilder} nodeTransformerNamesGroupsBuilder
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__INodeTransformer)
             nodeTransformerFactory: TNodeTransformerFactory,
         @inject(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)
-            nodeTransformerNamesGroupsBuilder: INodeTransformerNamesGroupsBuilder,
+            nodeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<
+                NodeTransformer,
+                INodeTransformer
+            >,
     ) {
         this.nodeTransformerFactory = nodeTransformerFactory;
         this.nodeTransformerNamesGroupsBuilder = nodeTransformerNamesGroupsBuilder;
@@ -64,7 +70,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             return astTree;
         }
 
-        const normalizedNodeTransformers: TNormalizedNodeTransformers =
+        const normalizedNodeTransformers: TObject<INodeTransformer> =
             this.buildNormalizedNodeTransformers(nodeTransformerNames, nodeTransformationStage);
         const nodeTransformerNamesGroups: NodeTransformer[][] =
             this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
@@ -106,15 +112,15 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
     /**
      * @param {NodeTransformer[]} nodeTransformerNames
      * @param {NodeTransformationStage} nodeTransformationStage
-     * @returns {TNormalizedNodeTransformers}
+     * @returns {TObject<INodeTransformer>}
      */
     private buildNormalizedNodeTransformers (
         nodeTransformerNames: NodeTransformer[],
         nodeTransformationStage: NodeTransformationStage
-    ): TNormalizedNodeTransformers {
+    ): TObject<INodeTransformer> {
         return nodeTransformerNames
-            .reduce<TNormalizedNodeTransformers>(
-                (acc: TNormalizedNodeTransformers, nodeTransformerName: NodeTransformer) => {
+            .reduce<TObject<INodeTransformer>>(
+                (acc: TObject<INodeTransformer>, nodeTransformerName: NodeTransformer) => {
                     const nodeTransformer: INodeTransformer = this.nodeTransformerFactory(nodeTransformerName);
 
                     if (!nodeTransformer.getVisitor(nodeTransformationStage)) {

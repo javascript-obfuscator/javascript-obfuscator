@@ -106,7 +106,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: INodeTransformersRunner,
+        @inject(ServiceIdentifiers.INodeTransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.Factory__IObfuscatedCode) obfuscatedCodeFactory: TObfuscatedCodeFactory,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,

@@ -1,17 +1,13 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { ITransformer } from '../ITransformer';
 import { IVisitor } from './IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
-export interface INodeTransformer {
-    /**
-     * @type {NodeTransformer[] | undefined}
-     */
-    runAfter?: NodeTransformer[];
-
+export interface INodeTransformer extends ITransformer <NodeTransformer> {
     /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}

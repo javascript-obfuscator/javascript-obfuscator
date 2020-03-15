@@ -1,0 +1,1 @@
+var foo = '#!/usr/bin/env node';

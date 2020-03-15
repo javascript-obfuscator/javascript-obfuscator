@@ -3,6 +3,8 @@ import 'reflect-metadata';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import { TInputOptions } from './types/options/TInputOptions';
+import { TObfuscationResultsObject } from './types/TObfuscationResultsObject';
+import { TObject } from './types/TObject';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
@@ -33,6 +35,34 @@ class JavaScriptObfuscatorFacade {
         inversifyContainerFacade.unload();
 
         return obfuscatedCode;
+    }
+
+    /**
+     * @param {TSourceCodesObject} sourceCodesObject
+     * @param {TInputOptions} inputOptions
+     * @returns {TObfuscationResultsObject<TSourceCodesObject>}
+     */
+    public static obfuscateMultiple <TSourceCodesObject extends TObject<string>> (
+        sourceCodesObject: TSourceCodesObject,
+        inputOptions: TInputOptions = {}
+    ): TObfuscationResultsObject<TSourceCodesObject> {
+        if (typeof sourceCodesObject !== 'object') {
+            throw new Error('Source codes object should be a plain object');
+        }
+
+        return Object
+            .keys(sourceCodesObject)
+            .reduce(
+                (acc: TObfuscationResultsObject<TSourceCodesObject>, sourceCodeIdentifier: keyof TSourceCodesObject) => {
+                    const sourceCode: string = sourceCodesObject[sourceCodeIdentifier];
+
+                    return {
+                        ...acc,
+                        [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, inputOptions)
+                    };
+                },
+                <TObfuscationResultsObject<TSourceCodesObject>>{}
+            );
     }
 }
 

@@ -1,5 +1,9 @@
 Change Log
 
+v0.27.0
+---
+* **Feature:** new method `obfuscateMultiple` to obfuscation of multiple source codes
+
 v0.26.0
 ---
 * **Internal:** new code transformers mechanism

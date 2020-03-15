@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
+import { TObject } from '../../../src/types/TObject';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
@@ -896,6 +897,60 @@ describe('JavaScriptObfuscator', () => {
                         assert.doesNotThrow(() => eval(obfuscatedCode));
                     });
                 });
+            });
+        });
+    });
+
+    describe('obfuscateMultiple', () => {
+        describe('multiple source codes', () => {
+            const regExp1: RegExp = /var _0x(\w){4,6} *= *0x1;/;
+            const regExp2: RegExp = /var _0x(\w){4,6} *= *'abc';/;
+
+            let obfuscatedCode1: string;
+            let obfuscatedCode2: string;
+
+            beforeEach(() => {
+                const sourceCode1: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                const sourceCode2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
+                const obfuscationResultsObject = JavaScriptObfuscator.obfuscateMultiple(
+                    {
+                        sourceCode1,
+                        sourceCode2
+                    },
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                );
+
+                obfuscatedCode1 = obfuscationResultsObject.sourceCode1.getObfuscatedCode();
+                obfuscatedCode2 = obfuscationResultsObject.sourceCode2.getObfuscatedCode();
+            });
+
+            it('Match #1: should return correct obfuscated code', () => {
+                assert.match(obfuscatedCode1, regExp1);
+            });
+
+            it('Match #2: should return correct obfuscated code', () => {
+                assert.match(obfuscatedCode2, regExp2);
+            });
+        });
+
+        describe('invalid source codes object', () => {
+            let testFunc: () => TObject<IObfuscatedCode>;
+
+            beforeEach(() => {
+                testFunc = () => JavaScriptObfuscator.obfuscateMultiple(
+                    'foo' as any,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                );
+            });
+
+            it('Should throw an error if source codes object is not a plain object', () => {
+                assert.throw(testFunc, Error);
             });
         });
     });

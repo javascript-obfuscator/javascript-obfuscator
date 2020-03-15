@@ -202,6 +202,18 @@ Method takes two parameters, `sourceCode` and `options` – the source code and 
 
 For available options, see [options](#options).
 
+### `obfuscateMultiple(sourceCodesObject, options)`
+
+Accepts `sourceCodesObject` that is a map which keys are identifiers of source codes and values are source codes:
+```
+{
+    foo: 'var foo = 1;',
+    bar: 'var bar = 2;'
+}
+```
+
+Returns a map object which keys are identifiers of source codes and values are `ObfuscationResult` objects.
+
 ## CLI usage
 
 See [CLI options](#cli-options).

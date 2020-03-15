@@ -89,7 +89,7 @@ describe('HashbangOperatorTransformer', () => {
         let obfuscatedCode: string;
 
         before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/hashbang-indent.fixture');
+            const code: string = readFileAsString(__dirname + '/fixtures/hashbang-indent.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,

@@ -47,11 +47,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     public static readonly obfuscatedFilePrefix: string = '-obfuscated';
 
     /**
-     * @type {string}
-     */
-    private static readonly baseIdentifiersPrefix: string = 'a';
-
-    /**
      * @type {string[]}
      */
     private readonly arguments: string[];
@@ -413,9 +408,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         );
 
         if (sourceCodeIndex !== null) {
-            const baseIdentifiersPrefix: string = this.inputCLIOptions.identifiersPrefix
-                ?? JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
-            const identifiersPrefix: string = `${baseIdentifiersPrefix}${sourceCodeIndex}`;
+            const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
+                this.inputCLIOptions.identifiersPrefix,
+                sourceCodeIndex
+            );
 
             options = {
                 ...options,

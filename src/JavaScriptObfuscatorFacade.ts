@@ -11,6 +11,7 @@ import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
+import { Utils } from './utils/Utils';
 
 class JavaScriptObfuscatorFacade {
     /**
@@ -53,12 +54,25 @@ class JavaScriptObfuscatorFacade {
         return Object
             .keys(sourceCodesObject)
             .reduce(
-                (acc: TObfuscationResultsObject<TSourceCodesObject>, sourceCodeIdentifier: keyof TSourceCodesObject) => {
+                (
+                    acc: TObfuscationResultsObject<TSourceCodesObject>,
+                    sourceCodeIdentifier: keyof TSourceCodesObject,
+                    index: number
+                ) => {
+                    const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
+                        inputOptions.identifiersPrefix,
+                        index
+                    );
+
                     const sourceCode: string = sourceCodesObject[sourceCodeIdentifier];
+                    const sourceCodeOptions: TInputOptions = {
+                        ...inputOptions,
+                        identifiersPrefix
+                    };
 
                     return {
                         ...acc,
-                        [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, inputOptions)
+                        [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, sourceCodeOptions)
                     };
                 },
                 <TObfuscationResultsObject<TSourceCodesObject>>{}

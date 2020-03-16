@@ -903,8 +903,8 @@ describe('JavaScriptObfuscator', () => {
 
     describe('obfuscateMultiple', () => {
         describe('multiple source codes', () => {
-            const regExp1: RegExp = /var _0x(\w){4,6} *= *0x1;/;
-            const regExp2: RegExp = /var _0x(\w){4,6} *= *'abc';/;
+            const regExp1: RegExp = /var a0_0x(\w){4,6} *= *0x1;/;
+            const regExp2: RegExp = /var a1_0x(\w){4,6} *= *'abc';/;
 
             let obfuscatedCode1: string;
             let obfuscatedCode2: string;

@@ -123,4 +123,40 @@ describe('Utils', () => {
             });
         });
     });
+
+    describe('getIdentifiersPrefixForMultipleSources', () => {
+        describe('Variant #1: should get identifiers prefix for identifiers prefix from options', () => {
+            const expectedIdentifiersPrefix: string = 'foo1';
+
+            let identifiersPrefix: string;
+
+            before(() => {
+                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources(
+                    'foo',
+                    1
+                );
+            });
+
+            it('should return correct identifiers prefix', () => {
+                assert.equal(identifiersPrefix, expectedIdentifiersPrefix);
+            });
+        });
+
+        describe('Variant #2: should get identifiers prefix for base identifiers prefix for multiple sources', () => {
+            const expectedIdentifiersPrefix: string = 'a1';
+
+            let identifiersPrefix: string;
+
+            before(() => {
+                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources(
+                    undefined,
+                    1
+                );
+            });
+
+            it('should return correct identifiers prefix', () => {
+                assert.equal(identifiersPrefix, expectedIdentifiersPrefix);
+            });
+        });
+    });
 });

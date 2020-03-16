@@ -2,6 +2,11 @@ export class Utils {
     /**
      * @type {string}
      */
+    public static readonly baseMultipleSourcesIdentifiersPrefix: string = 'a';
+
+    /**
+     * @type {string}
+     */
     public static readonly hexadecimalPrefix: string = '0x';
 
     /**
@@ -35,5 +40,21 @@ export class Utils {
         domain = domain.split(':')[0];
 
         return domain;
+    }
+
+    /**
+     * @param {string | undefined} identifiersPrefix
+     * @param {number} sourceCodeIndex
+     * @returns {string}
+     */
+    public static getIdentifiersPrefixForMultipleSources (
+        identifiersPrefix: string | undefined,
+        sourceCodeIndex: number
+    ): string {
+        const baseIdentifiersPrefix: string = !!identifiersPrefix
+            ? identifiersPrefix
+            : Utils.baseMultipleSourcesIdentifiersPrefix;
+
+        return `${baseIdentifiersPrefix}${sourceCodeIndex}`;
     }
 }

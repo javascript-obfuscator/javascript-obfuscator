@@ -1,5 +1,9 @@
 Change Log
 
+v0.27.2
+---
+* Fixed identifiers prefix generation for `obfuscateMultiple` method
+
 v0.27.1
 ---
 * Dependencies update, fixed https://www.npmjs.com/advisories/1488

@@ -713,14 +713,59 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
         describe('help output', () => {
             let callback: sinon.SinonSpy<any, void>,
-                stdoutWriteMock: StdoutWriteMock;
+                stdoutWriteMock: StdoutWriteMock,
+                stubExit: sinon.SinonStub;
 
             beforeEach(() => {
+                stubExit = sinon.stub(process, 'exit');
                 callback = sinon.spy(console, 'log');
                 stdoutWriteMock = new StdoutWriteMock(process.stdout.write);
             });
 
-            describe('`--help` option is set', () => {
+            describe('`--help` option is set without any additional parameters', () => {
+                let isConsoleLogCalled: boolean;
+
+                beforeEach(() => {
+                    stdoutWriteMock.mute();
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        '--help'
+                    ]);
+
+                    stdoutWriteMock.restore();
+                    isConsoleLogCalled = callback.called;
+                });
+
+                it('should print `console.log` help', () => {
+                    assert.equal(isConsoleLogCalled, true);
+                });
+            });
+
+            describe('`--help` option is set before file path', () => {
+                let isConsoleLogCalled: boolean;
+
+                beforeEach(() => {
+                    stdoutWriteMock.mute();
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        '--help',
+                        fixtureFilePath
+                    ]);
+
+                    stdoutWriteMock.restore();
+                    isConsoleLogCalled = callback.called;
+                });
+
+                it('should print `console.log` help', () => {
+                    assert.equal(isConsoleLogCalled, true);
+                });
+            });
+
+            describe('`--help` option is set after file path', () => {
                 let isConsoleLogCalled: boolean;
 
                 beforeEach(() => {
@@ -763,6 +808,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             afterEach(() => {
+                stubExit.restore();
                 callback.restore();
             });
         });

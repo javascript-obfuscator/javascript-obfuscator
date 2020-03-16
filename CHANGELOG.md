@@ -1,5 +1,9 @@
 Change Log
 
+v0.27.1
+---
+* Dependencies update, fixed https://www.npmjs.com/advisories/1488
+
 v0.27.0
 ---
 * **Feature:** new method `obfuscateMultiple` to obfuscation of multiple source codes

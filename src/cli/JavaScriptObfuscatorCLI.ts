@@ -11,6 +11,7 @@ import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 import { initializable } from '../decorators/Initializable';
 
 import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
+import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 
 import { DEFAULT_PRESET } from '../options/presets/Default';
 
@@ -465,7 +466,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
         this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
 
-        if (options.sourceMapMode === 'separate' && obfuscatedCode.getSourceMap()) {
+        if (options.sourceMapMode === SourceMapMode.Separate && obfuscatedCode.getSourceMap()) {
             this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscatedCode.getSourceMap());
         }
     }

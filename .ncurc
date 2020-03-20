@@ -1,6 +1,5 @@
 {
   "reject": [
-    "@types/node",
     "ts-node"
   ]
 }

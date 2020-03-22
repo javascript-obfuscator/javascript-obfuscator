@@ -99,7 +99,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         hostStatement: ESTree.Statement,
         memberExpressionHostNode: ESTree.Expression
     ): IObjectExpressionExtractorResult {
-        const properties: ESTree.Property[] = objectExpressionNode.properties;
+        const properties: (ESTree.Property | ESTree.SpreadElement)[] = objectExpressionNode.properties;
         const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
             .extractPropertiesToExpressionStatements(
                 properties,
@@ -121,13 +121,13 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
     }
 
     /**
-     * @param {Property[]} properties
+     * @param {(Property | SpreadElement)[]} properties
      * @param {Statement} hostStatement
      * @param {Expression} memberExpressionHostNode
      * @returns {[ExpressionStatement[], number[]]}
      */
     private extractPropertiesToExpressionStatements (
-        properties: ESTree.Property[],
+        properties: (ESTree.Property | ESTree.SpreadElement)[],
         hostStatement: ESTree.Statement,
         memberExpressionHostNode: ESTree.Expression
     ): [ESTree.ExpressionStatement[], number[]] {
@@ -136,7 +136,12 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         const removablePropertyIds: number[] = [];
 
         for (let i: number = 0; i < propertiesLength; i++) {
-            const property: ESTree.Property = properties[i];
+            const property: (ESTree.Property | ESTree.SpreadElement) = properties[i];
+
+            if (!NodeGuards.isPropertyNode(property)) {
+                continue;
+            }
+
             const propertyValue: ESTree.Expression | ESTree.Pattern = property.value;
 
             // invalid property nodes
@@ -193,6 +198,8 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         removablePropertyIds: number[]
     ): void {
         objectExpressionNode.properties = objectExpressionNode.properties
-            .filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
+            .filter((property: ESTree.Property | ESTree.SpreadElement, index: number) =>
+                !removablePropertyIds.includes(index)
+            );
     }
 }

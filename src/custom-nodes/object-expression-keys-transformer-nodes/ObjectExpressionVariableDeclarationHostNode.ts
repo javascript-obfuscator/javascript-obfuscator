@@ -22,9 +22,9 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
      */
     private lexicalScopeNode!: TNodeWithLexicalScope;
     /**
-     * @ type {Property}
+     * @ type {(Property | SpreadElement)[]}
      */
-    private properties!: ESTree.Property[];
+    private properties!: (ESTree.Property | ESTree.SpreadElement)[];
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -47,7 +47,11 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
         );
     }
 
-    public initialize (lexicalScopeNode: TNodeWithLexicalScope, properties: ESTree.Property[]): void {
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {(ESTree.Property | ESTree.SpreadElement)[]} properties
+     */
+    public initialize (lexicalScopeNode: TNodeWithLexicalScope, properties: (ESTree.Property | ESTree.SpreadElement)[]): void {
         this.lexicalScopeNode = lexicalScopeNode;
         this.properties = properties;
     }

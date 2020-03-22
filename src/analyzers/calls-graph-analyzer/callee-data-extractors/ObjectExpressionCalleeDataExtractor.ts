@@ -145,7 +145,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @returns {BlockStatement}
      */
     private findCalleeBlockStatement (
-        objectExpressionProperties: ESTree.Property[],
+        objectExpressionProperties: (ESTree.Property | ESTree.SpreadElement)[],
         objectMembersCallsChain: TObjectMembersCallsChain
     ): ESTree.BlockStatement | null {
         const nextItemInCallsChain: string | number | undefined = objectMembersCallsChain.shift();
@@ -155,6 +155,10 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
         }
 
         for (const propertyNode of objectExpressionProperties) {
+            if (!NodeGuards.isPropertyNode(propertyNode)) {
+                continue;
+            }
+
             if (!ObjectExpressionCalleeDataExtractor.isValidTargetPropertyNode(propertyNode, nextItemInCallsChain)) {
                 continue;
             }

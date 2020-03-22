@@ -346,9 +346,13 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
                 ) {
                     isLexicalScopeHasObjectPatternWithoutDeclaration = true;
 
-                    const properties: ESTree.Property[] = node.properties;
+                    const properties: (ESTree.Property | ESTree.RestElement)[] = node.properties;
 
                     for (const property of properties) {
+                        if (!NodeGuards.isPropertyNode(property)) {
+                            continue;
+                        }
+
                         if (property.computed || !property.shorthand) {
                             continue;
                         }

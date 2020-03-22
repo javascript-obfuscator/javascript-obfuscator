@@ -85,7 +85,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
             throw new Error('Cannot find lexical scope node for the host statement node');
         }
 
-        const properties: ESTree.Property[] = objectExpressionNode.properties;
+        const properties: (ESTree.Property | ESTree.SpreadElement)[] = objectExpressionNode.properties;
 
         const newObjectExpressionHostStatement: ESTree.VariableDeclaration = this.getObjectExpressionHostNode(
             lexicalScopeNode,
@@ -109,12 +109,12 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode
-     * @param {Property[]} properties
+     * @param {(Property | SpreadElement)[]} properties
      * @returns {VariableDeclaration}
      */
     private getObjectExpressionHostNode (
         lexicalScopeNode: TNodeWithLexicalScope,
-        properties: ESTree.Property[]
+        properties: (ESTree.Property | ESTree.SpreadElement)[]
     ): ESTree.VariableDeclaration {
         const variableDeclarationHostNodeCustomNode: ICustomNode<TInitialData<ObjectExpressionVariableDeclarationHostNode>> =
             this.objectExpressionKeysTransformerCustomNodeFactory(

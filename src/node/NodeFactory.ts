@@ -304,10 +304,10 @@ export class NodeFactory {
     }
 
     /**
-     * @param {Property[]} properties
-     * @returns {ObjectExpression}
+     * @param {(ESTree.Property | ESTree.SpreadElement)[]} properties
+     * @returns {ESTree.ObjectExpression}
      */
-    public static objectExpressionNode (properties: ESTree.Property[]): ESTree.ObjectExpression {
+    public static objectExpressionNode (properties: (ESTree.Property | ESTree.SpreadElement)[]): ESTree.ObjectExpression {
         return {
             type: NodeType.ObjectExpression,
             properties,

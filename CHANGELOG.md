@@ -1,5 +1,9 @@
 Change Log
 
+v0.27.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/593
+
 v0.27.2
 ---
 * Fixed identifiers prefix generation for `obfuscateMultiple` method

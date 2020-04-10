@@ -13,6 +13,7 @@ describe('CLIUtils', () => {
                 const configFilePath: string = `../../../${configDirName}/${configFileName}`;
                 const expectedResult: TInputOptions = {
                     compact: true,
+                    exclude: ['**/foo.js'],
                     selfDefending: false,
                     sourceMap: true
                 };

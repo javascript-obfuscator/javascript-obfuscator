@@ -97,24 +97,18 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
     /**
      * @param {TInputCLIOptions} inputOptions
-     * @param {string} inputCodePath
      * @returns {TInputOptions}
      */
-    private static buildOptions (
-        inputOptions: TInputCLIOptions,
-        inputCodePath: string
-    ): TInputOptions {
+    private static buildOptions (inputOptions: TInputCLIOptions): TInputOptions {
         const inputCLIOptions: TInputOptions = JavaScriptObfuscatorCLI.filterOptions(inputOptions);
         const configFilePath: string | undefined = inputOptions.config;
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
-        const inputFileName: string = path.basename(inputCodePath);
 
         return {
             ...DEFAULT_PRESET,
             ...configFileOptions,
-            ...inputCLIOptions,
-            inputFileName
+            ...inputCLIOptions
         };
     }
 
@@ -145,7 +139,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         this.configureCommands();
         this.configureHelp();
 
-        this.inputCLIOptions = this.commands.opts();
+        this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts());
         this.sourceCodeReader = new SourceCodeReader(
             this.inputPath,
             this.inputCLIOptions
@@ -403,22 +397,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         sourceCodeIndex: number | null
     ): void {
-        let options: TInputOptions = JavaScriptObfuscatorCLI.buildOptions(
-            this.inputCLIOptions,
-            inputCodePath
-        );
-
-        if (sourceCodeIndex !== null) {
-            const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
-                this.inputCLIOptions.identifiersPrefix,
-                sourceCodeIndex
-            );
-
-            options = {
-                ...options,
-                identifiersPrefix
-            };
-        }
+        const options: TInputOptions = {
+            ...this.inputCLIOptions,
+            inputFileName: path.basename(inputCodePath),
+            ...sourceCodeIndex !== null && {
+                identifiersPrefix: Utils.getIdentifiersPrefixForMultipleSources(
+                    this.inputCLIOptions.identifiersPrefix,
+                    sourceCodeIndex
+                )
+            }
+        };
 
         if (options.sourceMap) {
             this.processSourceCodeWithSourceMap(sourceCode, outputCodePath, options);

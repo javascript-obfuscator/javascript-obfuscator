@@ -814,51 +814,93 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         });
 
         describe('`--config` option is set', () => {
-            const outputSourceMapPath: string = `${outputFilePath}.map`;
+            describe('Base options', () => {
+                const outputSourceMapPath: string = `${outputFilePath}.map`;
 
-            let isFileExist: boolean,
-                sourceMapObject: any;
+                let isFileExist: boolean,
+                    sourceMapObject: any;
 
-            before(() => {
-                JavaScriptObfuscatorCLI.obfuscate([
-                    'node',
-                    'javascript-obfuscator',
-                    fixtureFilePath,
-                    '--output',
-                    outputFilePath,
-                    '--config',
-                    configFilePath
-                ]);
+                before(() => {
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--config',
+                        configFilePath
+                    ]);
 
-                try {
-                    const content: string = fs.readFileSync(outputSourceMapPath, {encoding: 'utf8'});
+                    try {
+                        const content: string = fs.readFileSync(outputSourceMapPath, {encoding: 'utf8'});
 
-                    isFileExist = true;
-                    sourceMapObject = JSON.parse(content);
-                } catch (e) {
-                    isFileExist = false;
-                }
+                        isFileExist = true;
+                        sourceMapObject = JSON.parse(content);
+                    } catch (e) {
+                        isFileExist = false;
+                    }
+                });
+
+                it('should create file with source map in the same directory as output file', () => {
+                    assert.equal(isFileExist, true);
+                });
+
+                it('source map from created file should contains property `version`', () => {
+                    assert.property(sourceMapObject, 'version');
+                });
+
+                it('source map from created file should contains property `sources`', () => {
+                    assert.property(sourceMapObject, 'sources');
+                });
+
+                it('source map from created file should contains property `names`', () => {
+                    assert.property(sourceMapObject, 'names');
+                });
+
+                after(() => {
+                    fs.unlinkSync(outputFilePath);
+                    fs.unlinkSync(outputSourceMapPath);
+                });
             });
 
-            it('should create file with source map in the same directory as output file', () => {
-                assert.equal(isFileExist, true);
-            });
+            describe('`--exclude` option', () => {
+                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const outputFileName1: string = 'foo-obfuscated.js';
+                const outputFileName2: string = 'bar-obfuscated.js';
 
-            it('source map from created file should contains property `version`', () => {
-                assert.property(sourceMapObject, 'version');
-            });
+                let outputFixturesFilePath1: string,
+                    outputFixturesFilePath2: string,
+                    isFileExist1: boolean,
+                    isFileExist2: boolean;
 
-            it('source map from created file should contains property `sources`', () => {
-                assert.property(sourceMapObject, 'sources');
-            });
+                before(() => {
+                    outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
+                    outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
 
-            it('source map from created file should contains property `names`', () => {
-                assert.property(sourceMapObject, 'names');
-            });
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        directoryPath,
+                        '--config',
+                        configFilePath
+                    ]);
 
-            after(() => {
-                fs.unlinkSync(outputFilePath);
-                fs.unlinkSync(outputSourceMapPath);
+                    isFileExist1 = fs.existsSync(outputFixturesFilePath1);
+                    isFileExist2 = fs.existsSync(outputFixturesFilePath2);
+                });
+
+                it(`shouldn't create file \`${outputFileName1}\` in \`${fixturesDirName}\` directory`, () => {
+                    assert.equal(isFileExist1, false);
+                });
+
+                it(`should create file \`${outputFileName2}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
+                    assert.equal(isFileExist2, true);
+                });
+
+                after(() => {
+                    rimraf.sync(outputFixturesFilePath1);
+                    rimraf.sync(outputFixturesFilePath2);
+                });
             });
         });
 

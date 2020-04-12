@@ -47,39 +47,55 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
-        describe('empty source code', () => {
-            let obfuscatedCode: string;
+        describe('Empty or invalid source code', () => {
+            describe('empty source code', () => {
+                let obfuscatedCode: string;
 
-            beforeEach(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                    ).getObfuscatedCode();
+                });
+
+                it('should return an empty obfuscated code', () => {
+                    assert.isNotOk(obfuscatedCode);
+                });
             });
 
-            it('should return an empty obfuscated code', () => {
-                assert.isNotOk(obfuscatedCode);
+            describe('empty source code with comments', () => {
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/comments-only.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            controlFlowFlattening: true,
+                            deadCodeInjection: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should return an empty obfuscated code', () => {
+                    assert.isNotOk(obfuscatedCode);
+                });
             });
-        });
 
-        describe('empty source code with comments', () => {
-            let obfuscatedCode: string;
+            describe('invalid source code type', () => {
+                let obfuscatedCode: string;
 
-            beforeEach(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/comments-only.js');
+                beforeEach(() => {
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        1 as unknown as string
+                    ).getObfuscatedCode();
+                });
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        controlFlowFlattening: true,
-                        deadCodeInjection: true
-                    }
-                ).getObfuscatedCode();
-            });
-
-            it('should return an empty obfuscated code', () => {
-                assert.isNotOk(obfuscatedCode);
+                it('should return an empty obfuscated code', () => {
+                    assert.isNotOk(obfuscatedCode);
+                });
             });
         });
 

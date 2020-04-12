@@ -142,6 +142,10 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {IObfuscatedCode}
      */
     public obfuscate (sourceCode: string): IObfuscatedCode {
+        if (typeof sourceCode !== 'string') {
+            sourceCode = '';
+        }
+
         const timeStart: number = Date.now();
         this.logger.info(LoggingMessage.Version, Utils.buildVersionMessage(process.env.VERSION, process.env.BUILD_TIMESTAMP));
         this.logger.info(LoggingMessage.ObfuscationStarted);

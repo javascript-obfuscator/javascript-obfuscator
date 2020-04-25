@@ -24,7 +24,11 @@ export class ValidationErrorsFormatter {
      * @returns {string}
      */
     private static formatWithNestedConstraints (error: ValidationError): string {
-        const constraints: TObject<string> = error.constraints;
+        const constraints: TObject<string> | undefined = error.constraints;
+
+        if (!constraints) {
+            return `\`${error.property}\` error\n`;
+        }
 
         const rootError: string = `\`${error.property}\` errors:\n`;
         const nestedErrors: string = Object

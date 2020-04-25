@@ -68,7 +68,27 @@ describe('ValidationErrorsFormatter', () => {
             });
         });
 
-        describe('Variant #3: two constraint groups', () => {
+        describe('Variant #3: one constraint group without constraints', () => {
+            const constraintGroupRegExp: RegExp = /`foo` *error/;
+            const validationErrors: ValidationError[] = [{
+                target: {},
+                property: 'foo',
+                value: null,
+                children: []
+            }];
+
+            let validationError: string;
+
+            before(() => {
+                validationError = ValidationErrorsFormatter.format(validationErrors);
+            });
+
+            it('Should return valid validation error', () => {
+                assert.match(validationError, constraintGroupRegExp);
+            });
+        });
+
+        describe('Variant #4: two constraint groups', () => {
             const regExpMatch: string = `` +
                 `\`foo\` *errors:\\n` +
                     `(?: *-)+ *constraint *group *#1 *text\\n+` +

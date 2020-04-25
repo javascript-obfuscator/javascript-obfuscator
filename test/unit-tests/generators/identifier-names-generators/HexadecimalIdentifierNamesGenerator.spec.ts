@@ -28,7 +28,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 );
 
                 hexadecimalIdentifierName = identifierNamesGenerator.generateNext();
-                regExp = /^_0x(\w){6}$/;
+                regExp = /^_0x(\w){4,6}$/;
             });
 
             it('should return hexadecimal name', () => {
@@ -50,8 +50,8 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                 );
 
-                hexadecimalIdentifierName = identifierNamesGenerator.generateNext(4);
-                regExp = /^_0x(\w){4}$/;
+                hexadecimalIdentifierName = identifierNamesGenerator.generateNext(3);
+                regExp = /^_0x(\w){3}$/;
             });
 
             it('should return hexadecimal name', () => {
@@ -61,7 +61,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
     });
 
     describe('generateForGlobalScope', () => {
-        const regExp: RegExp = /^foo_0x(\w){6}$/;
+        const regExp: RegExp = /^foo_0x(\w){4,6}$/;
 
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             hexadecimalIdentifierName: string;

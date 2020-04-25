@@ -613,6 +613,27 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('BigInt support', () => {
+            const regExp: RegExp = /return 0x20000000000001n *\+ *0xan *\+ *0xan;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/bigint-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support BigInt', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

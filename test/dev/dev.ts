@@ -7,13 +7,13 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var a, b;
-            ({a, ...b} = {a: 1, b: 2, c: 3});
+            var foo = 'abc';
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
-            renameGlobals: true
+            renameGlobals: true,
+            stringArray: true,
+            stringArrayThreshold: 1
         }
     ).getObfuscatedCode();
 

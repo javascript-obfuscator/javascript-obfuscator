@@ -11,6 +11,6 @@ export function StringArrayRotateFunctionTemplate (): string {
             };
             
             {code}
-        })({stringArrayName}, 0x{stringArrayRotationAmount});
+        })({stringArrayName}, {stringArrayRotationAmount});
     `;
 }

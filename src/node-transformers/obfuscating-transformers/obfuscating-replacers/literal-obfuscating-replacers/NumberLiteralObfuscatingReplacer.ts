@@ -8,7 +8,6 @@ import { IOptions } from '../../../../interfaces/options/IOptions';
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { NodeFactory } from '../../../../node/NodeFactory';
 import { NumberUtils } from '../../../../utils/NumberUtils';
-import { Utils } from '../../../../utils/Utils';
 
 @injectable()
 export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
@@ -33,8 +32,8 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     public replace (literalNode: ESTree.SimpleLiteral): ESTree.Node {
         const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
 
-        if (typeof literalValue !== 'number') {
-            throw new Error('`NumberLiteralObfuscatingReplacer` should accept only literals with `number` value');
+        if (typeof literalValue !== 'number' && typeof literalValue !== 'bigint') {
+            throw new Error('`NumberLiteralObfuscatingReplacer` should accept only literals with `number` and `bigint` value');
         }
 
         let rawValue: string;
@@ -42,10 +41,10 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         if (this.numberLiteralCache.has(literalValue)) {
             rawValue = <string>this.numberLiteralCache.get(literalValue);
         } else {
-            if (!NumberUtils.isCeil(literalValue)) {
-                rawValue = String(literalValue);
+            if (NumberUtils.isCeil(literalValue)) {
+                rawValue = NumberUtils.toHex(literalValue);
             } else {
-                rawValue = `${Utils.hexadecimalPrefix}${NumberUtils.toHex(literalValue)}`;
+                rawValue = String(literalValue);
             }
 
             this.numberLiteralCache.set(literalValue, rawValue);

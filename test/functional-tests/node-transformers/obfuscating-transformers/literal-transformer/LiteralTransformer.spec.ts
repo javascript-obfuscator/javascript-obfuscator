@@ -624,6 +624,29 @@ describe('LiteralTransformer', () => {
         });
     });
 
+    describe('transformation of literal node with bigint value', () => {
+        const regExp: RegExp = /^var test *= *0xan;$/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/bigint-value.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('should transform literal node', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
+
     describe('RegExp literal', () => {
         const regExp: RegExp = /^var regExp *= *\/\(\\d\+\)\/;$/;
 

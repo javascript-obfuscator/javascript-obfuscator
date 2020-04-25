@@ -1,7 +1,8 @@
 Change Log
 
-v0.27.5
+v0.28.0
 ---
+* Added BigInt support. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/588
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/554
 
 v0.27.4

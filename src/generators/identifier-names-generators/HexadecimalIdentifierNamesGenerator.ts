@@ -37,12 +37,11 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
-        const prefixLength: number = Utils.hexadecimalPrefix.length + 1;
-        const baseNameLength: number = nameLength
-            ? nameLength - prefixLength
-            : HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength;
+        const prefixLength: number = Utils.hexadecimalPrefix.length;
+        const baseNameLength: number = (nameLength ?? HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength)
+            + prefixLength;
         const baseIdentifierName: string = hexadecimalNumber.substr(0, baseNameLength);
-        const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
+        const identifierName: string = `_${baseIdentifierName}`;
 
         if (!this.isValidIdentifierName(identifierName)) {
             return this.generateNext(nameLength);

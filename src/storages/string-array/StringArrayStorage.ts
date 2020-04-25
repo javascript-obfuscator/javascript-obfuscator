@@ -42,7 +42,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     /**
      * @type {number}
      */
-    private static readonly stringArrayNameLength: number = 7;
+    private static readonly stringArrayNameLength: number = 4;
 
     /**
      * @type {IArrayUtils}

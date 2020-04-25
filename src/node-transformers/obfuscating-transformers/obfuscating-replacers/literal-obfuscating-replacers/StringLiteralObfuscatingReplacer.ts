@@ -15,7 +15,6 @@ import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { NodeMetadata } from '../../../../node/NodeMetadata';
 import { NodeFactory } from '../../../../node/NodeFactory';
 import { NumberUtils } from '../../../../utils/NumberUtils';
-import { Utils } from '../../../../utils/Utils';
 
 @injectable()
 export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer implements IInitializable {
@@ -129,7 +128,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private replaceWithStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Node {
         const { index, decodeKey } = stringArrayStorageItemData;
 
-        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${NumberUtils.toHex(index)}`;
+        const hexadecimalIndex: string = NumberUtils.toHex(index);
         const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
             StringLiteralObfuscatingReplacer.getHexadecimalLiteralNode(hexadecimalIndex)
         ];

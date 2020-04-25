@@ -118,6 +118,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                 break;
 
             case 'number':
+            case 'bigint':
                 newLiteralNode = this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer
                 ).replace(literalNode);

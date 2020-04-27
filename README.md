@@ -998,6 +998,12 @@ No. JSX support isn't planned.
 
 See: [`Kind of variables`](#kind-of-variables)
 
+### Why I got `null` value instead of `BigInt` number?
+
+`BigInt` obfuscation works correctly only in environments that support `BigInt` values. See [ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
+
+See: [`Kind of variables`](#kind-of-variables)
+
 ## Backers
 
 Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/javascript-obfuscator#backer)]

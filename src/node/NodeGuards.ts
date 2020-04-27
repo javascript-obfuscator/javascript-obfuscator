@@ -60,6 +60,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isBigIntLiteralNode (node: ESTree.Node): node is ESTree.BigIntLiteral {
+        return NodeGuards.isLiteralNode(node) && !!(<ESTree.BigIntLiteral>node).bigint;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }

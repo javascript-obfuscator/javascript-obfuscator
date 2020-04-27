@@ -30,17 +30,15 @@ declare module 'estree' {
 
     interface SimpleLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
+        'x-verbatim-property'?: escodegen.XVerbatimProperty;
+    }
+
+    interface BigIntLiteral extends SimpleLiteral {
+        bigint: string;
     }
 
     interface RegExpLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
-    }
-
-    interface SimpleLiteral extends BaseNode {
-        'x-verbatim-property'?: escodegen.XVerbatimProperty;
-    }
-
-    interface RegExpLiteral extends BaseNode {
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 }

@@ -1,5 +1,4 @@
 import * as acorn from 'acorn';
-import acornImportMeta from 'acorn-import-meta';
 import * as ESTree from 'estree';
 import chalk, { Chalk } from 'chalk';
 
@@ -71,7 +70,6 @@ export class ASTParserFacade {
         };
 
         const program: ESTree.Program = <any>acorn
-            .Parser.extend(acornImportMeta)
             .parse(sourceCode, config);
 
         if (comments.length) {

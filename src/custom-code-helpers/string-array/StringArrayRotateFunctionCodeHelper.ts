@@ -22,11 +22,6 @@ import { NumberUtils } from '../../utils/NumberUtils';
 @injectable()
 export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelper {
     /**
-     * @type {IEscapeSequenceEncoder}
-     */
-    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
      * @type {string}
      */
     @initializable()
@@ -37,6 +32,11 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      */
     @initializable()
     private stringArrayRotationAmount!: number;
+
+    /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

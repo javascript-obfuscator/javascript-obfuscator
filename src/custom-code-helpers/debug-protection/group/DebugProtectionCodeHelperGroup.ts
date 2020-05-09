@@ -29,15 +29,15 @@ import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
 @injectable()
 export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**
-     * @type {ObfuscationEvent}
-     */
-    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
-
-    /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
     protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+
+    /**
+     * @type {ObfuscationEvent}
+     */
+    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
      * @type {TCustomCodeHelperFactory}

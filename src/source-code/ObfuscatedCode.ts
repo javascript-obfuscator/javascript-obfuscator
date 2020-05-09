@@ -11,26 +11,26 @@ import { IOptions } from '../interfaces/options/IOptions';
 @injectable()
 export class ObfuscatedCode implements IObfuscatedCode {
     /**
-     * @type {ICryptUtils}
-     */
-    private readonly cryptUtils: ICryptUtils;
-
-    /**
      * @type {string}
      */
     @initializable()
     private obfuscatedCode!: string;
 
     /**
-     * @type {IOptions}
-     */
-    private readonly options: IOptions;
-
-    /**
      * @type {string}
      */
     @initializable()
     private sourceMap!: string;
+
+    /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
+
+    /**
+     * @type {IOptions}
+     */
+    private readonly options: IOptions;
 
     public constructor (
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,

@@ -19,15 +19,15 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
-     * @type {IOptions}
-     */
-    private readonly options: IOptions;
-
-    /**
      * @type {Chance.Chance}
      */
     @initializable()
     private randomGenerator!: Chance.Chance;
+
+    /**
+     * @type {IOptions}
+     */
+    private readonly options: IOptions;
 
     /**
      * @type {ISourceCode}

@@ -26,15 +26,15 @@ import { SelfDefendingUnicodeCodeHelper } from '../SelfDefendingUnicodeCodeHelpe
 @injectable()
 export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**
-     * @type {ObfuscationEvent}
-     */
-    protected appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
-
-    /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
     protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+
+    /**
+     * @type {ObfuscationEvent}
+     */
+    protected appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
      * @type {TCustomCodeHelperFactory}

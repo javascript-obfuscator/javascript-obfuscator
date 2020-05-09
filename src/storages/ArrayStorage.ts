@@ -10,16 +10,6 @@ import { initializable } from '../decorators/Initializable';
 @injectable()
 export abstract class ArrayStorage <V> implements IArrayStorage <V> {
     /**
-     * @type {IRandomGenerator}
-     */
-    protected readonly randomGenerator: IRandomGenerator;
-
-    /**
-     * @type {IOptions}
-     */
-    protected readonly options: IOptions;
-
-    /**
      * @type {V[]}
      */
     @initializable()
@@ -30,6 +20,16 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      */
     @initializable()
     protected storageId!: string;
+
+    /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @type {IOptions}
+     */
+    protected readonly options: IOptions;
 
     /**
      * @type {number}

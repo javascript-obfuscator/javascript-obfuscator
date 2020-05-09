@@ -26,15 +26,15 @@ import { StringArrayRotateFunctionCodeHelper } from '../StringArrayRotateFunctio
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**
-     * @type {ObfuscationEvent}
-     */
-    protected appendEvent: ObfuscationEvent = ObfuscationEvent.AfterObfuscation;
-
-    /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
     protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+
+    /**
+     * @type {ObfuscationEvent}
+     */
+    protected appendEvent: ObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
      * @type {TCustomCodeHelperFactory}

@@ -29,15 +29,15 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
     private callsControllerFunctionName!: string;
 
     /**
-     * @type {ICryptUtils}
-     */
-    private readonly cryptUtils: ICryptUtils;
-
-    /**
      * @type {string}
      */
     @initializable()
     private domainLockFunctionName!: string;
+
+    /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

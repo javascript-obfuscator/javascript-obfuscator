@@ -20,11 +20,6 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
     /**
-     * @type {IEscapeSequenceEncoder}
-     */
-    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
      * @type {string}
      */
     @initializable()
@@ -35,6 +30,11 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
      */
     @initializable()
     private selfDefendingFunctionName!: string;
+
+    /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

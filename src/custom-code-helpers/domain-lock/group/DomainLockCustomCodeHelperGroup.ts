@@ -27,15 +27,15 @@ import { NodeGuards } from '../../../node/NodeGuards';
 @injectable()
 export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**
-     * @type {ObfuscationEvent}
-     */
-    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
-
-    /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
     protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+
+    /**
+     * @type {ObfuscationEvent}
+     */
+    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
      * @type {TCustomCodeHelperFactory}

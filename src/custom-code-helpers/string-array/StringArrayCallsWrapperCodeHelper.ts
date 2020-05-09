@@ -29,11 +29,6 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper {
     /**
-     * @type {IEscapeSequenceEncoder}
-     */
-    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
      * @type {string}
      */
     @initializable()
@@ -44,6 +39,11 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      */
     @initializable()
     private stringArrayCallsWrapperName!: string;
+
+    /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

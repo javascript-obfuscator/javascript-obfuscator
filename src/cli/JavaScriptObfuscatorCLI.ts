@@ -48,16 +48,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     public static readonly obfuscatedFilePrefix: string = '-obfuscated';
 
     /**
-     * @type {string[]}
-     */
-    private readonly arguments: string[];
-
-    /**
-     * @type {string[]}
-     */
-    private readonly rawArguments: string[];
-
-    /**
      * @type {commander.CommanderStatic}
      */
     @initializable()
@@ -86,6 +76,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     @initializable()
     private obfuscatedCodeWriter!: ObfuscatedCodeWriter;
+
+    /**
+     * @type {string[]}
+     */
+    private readonly arguments: string[];
+
+    /**
+     * @type {string[]}
+     */
+    private readonly rawArguments: string[];
 
     /**
      * @param {string[]} argv

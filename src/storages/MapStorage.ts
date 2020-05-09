@@ -10,16 +10,6 @@ import { initializable } from '../decorators/Initializable';
 @injectable()
 export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     /**
-     * @type {IOptions}
-     */
-    protected readonly options: IOptions;
-
-    /**
-     * @type {IRandomGenerator}
-     */
-    protected readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @type {string}
      */
     @initializable()
@@ -30,6 +20,16 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      */
     @initializable()
     protected storage!: Map <K, V>;
+
+    /**
+     * @type {IOptions}
+     */
+    protected readonly options: IOptions;
+
+    /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
 
     /**
      * @param {IRandomGenerator} randomGenerator

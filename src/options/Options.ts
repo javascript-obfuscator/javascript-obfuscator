@@ -183,11 +183,6 @@ export class Options implements IOptions {
     public readonly rotateStringArray!: boolean;
 
     /**
-     * @type {string | number}
-     */
-    public readonly seed!: string | number;
-
-    /**
      * @type {boolean}
      */
     @IsBoolean()
@@ -280,6 +275,11 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly unicodeEscapeSequence!: boolean;
+
+    /**
+     * @type {string | number}
+     */
+    public readonly seed!: string | number;
 
     /**
      * @param {TInputOptions} inputOptions

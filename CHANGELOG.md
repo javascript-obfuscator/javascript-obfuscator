@@ -1,5 +1,9 @@
 Change Log
 
+v0.28.1
+---
+* Removed `acorn-import-meta` package
+
 v0.28.0
 ---
 * Added BigInt support. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/588

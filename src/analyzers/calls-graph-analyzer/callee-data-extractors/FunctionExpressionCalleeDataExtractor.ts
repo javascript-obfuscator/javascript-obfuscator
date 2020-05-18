@@ -16,17 +16,18 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
      * @param {Identifier} callee
      * @returns {ICalleeData}
      */
-    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData | null {
+    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier | ESTree.FunctionExpression): ICalleeData | null {
+        let calleeName: string | null = null;
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         if (NodeGuards.isIdentifierNode(callee)) {
+            calleeName = callee.name;
             calleeBlockStatement = this.getCalleeBlockStatement(
                 NodeStatementUtils.getParentNodeWithStatements(blockScopeBody[0]),
                 callee.name
             );
-        }
-
-        if (NodeGuards.isFunctionExpressionNode(callee)) {
+        } else if (NodeGuards.isFunctionExpressionNode(callee)) {
+            calleeName = null;
             calleeBlockStatement = callee.body;
         }
 
@@ -36,7 +37,7 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
 
         return {
             callee: calleeBlockStatement,
-            name: callee.name ?? null
+            name: calleeName
         };
     }
 

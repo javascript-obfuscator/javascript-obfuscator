@@ -60,6 +60,15 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
     }
 
     /**
+     * Have to override parent method to prevent a change of kinds of variables
+     *
+     * @returns {TStatement[]}
+     */
+    public getNode (): TStatement[] {
+        return this.getNodeStructure();
+    }
+
+    /**
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {

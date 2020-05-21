@@ -787,5 +787,60 @@ describe('DeadCodeInjectionTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #13 - prevailing kind of variables of inserted code', () => {
+            describe('Variant #1: base', () => {
+                const variableDeclarationsRegExp: RegExp = new RegExp(
+                    `const ${variableMatch} *= *\\[\\]; *` +
+                    `var ${variableMatch} *= *\\[\\]; *`,
+                    'g'
+                );
+                const invalidVariableDeclarationsRegExp: RegExp = new RegExp(
+                    `var ${variableMatch} *= *\\[\\]; *` +
+                    `var ${variableMatch} *= *\\[\\]; *`,
+                    'g'
+                );
+
+                const forLoopRegExp: RegExp = new RegExp(
+                    `for *\\(const ${variableMatch} of ${variableMatch}\\) *{`,
+                    'g'
+                );
+                const invalidForLoopRegExp: RegExp = new RegExp(
+                    `for *\\(var ${variableMatch} of ${variableMatch}\\) *{`,
+                    'g'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: shouldn\'t replace kinds of variables of inserted original code', () => {
+                    assert.match(obfuscatedCode, variableDeclarationsRegExp);
+                });
+
+                it('Match #2: shouldn\'t replace kinds of variables of inserted original code', () => {
+                    assert.notMatch(obfuscatedCode, invalidVariableDeclarationsRegExp);
+                });
+
+                it('Match #3: shouldn\'t replace kinds of variables of inserted original code', () => {
+                    assert.match(obfuscatedCode, forLoopRegExp);
+                });
+
+                it('Match #4: shouldn\'t replace kinds of variables of inserted original code', () => {
+                    assert.notMatch(obfuscatedCode, invalidForLoopRegExp);
+                });
+            });
+        });
     });
 });

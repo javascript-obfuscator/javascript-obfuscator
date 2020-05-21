@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.28.1",
+  "version": "0.28.2",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -41,7 +41,7 @@
     "reflect-metadata": "0.1.13",
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",
-    "tslib": "1.11.2"
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "@types/chai": "4.2.11",
@@ -54,18 +54,18 @@
     "@types/mkdirp": "1.0.0",
     "@types/mocha": "7.0.2",
     "@types/multimatch": "4.0.0",
-    "@types/node": "14.0.1",
+    "@types/node": "14.0.4",
     "@types/rimraf": "3.0.0",
-    "@types/sinon": "9.0.1",
+    "@types/sinon": "9.0.3",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.15.2",
-    "@typescript-eslint/eslint-plugin": "2.33.0",
-    "@typescript-eslint/parser": "2.33.0",
+    "@typescript-eslint/eslint-plugin": "2.34.0",
+    "@typescript-eslint/parser": "2.34.0",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
     "eslint": "7.0.0",
     "eslint-plugin-import": "2.20.2",
-    "eslint-plugin-jsdoc": "25.4.1",
+    "eslint-plugin-jsdoc": "25.4.2",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.1",
     "eslint-plugin-unicorn": "20.0.0",
@@ -80,7 +80,7 @@
     "threads": "1.4.1",
     "ts-loader": "7.0.4",
     "ts-node": "6.1.0",
-    "typescript": "3.8.3",
+    "typescript": "3.9.3",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
     "webpack-node-externals": "1.7.2"
@@ -123,6 +123,10 @@
     "Dmitry Zamotkin (https://github.com/zamotkin)"
   ],
   "license": "BSD-2-Clause",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/javascript-obfuscator"
+  },
   "collective": {
     "url": "https://opencollective.com/javascript-obfuscator"
   }

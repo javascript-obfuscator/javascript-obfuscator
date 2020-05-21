@@ -1,5 +1,9 @@
 Change Log
 
+v0.28.2
+---
+* Fixed change of kinds of variables for dead code with `deadCodeInjection` option
+
 v0.28.1
 ---
 * Removed `acorn-import-meta` package

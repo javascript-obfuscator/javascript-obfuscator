@@ -184,7 +184,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
                 const outputFileName3: string = 'baz-obfuscated.js';
-                const readFileEncoding: string = 'utf8';
+                const readFileEncoding = 'utf8';
                 const regExp1: RegExp = /^var a1_0x(\w){4,6} *= *0x1;$/;
                 const regExp2: RegExp = /^var a0_0x(\w){4,6} *= *0x2;$/;
 
@@ -249,7 +249,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 const identifiersPrefix: string = 'foo';
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
-                const readFileEncoding: string = 'utf8';
+                const readFileEncoding = 'utf8';
                 const regExp1: RegExp = /^var foo1_0x(\w){4,6} *= *0x1;$/;
                 const regExp2: RegExp = /^var foo0_0x(\w){4,6} *= *0x2;$/;
 
@@ -371,7 +371,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     const outputFileName1: string = 'foo-obfuscated.js';
                     const outputFileName2: string = 'bar-obfuscated.js';
                     const outputFileName3: string = 'baz-obfuscated.js';
-                    const readFileEncoding: string = 'utf8';
+                    const readFileEncoding = 'utf8';
                     const regExp1: RegExp = /^var a1_0x(\w){4,6} *= *0x1;$/;
                     const regExp2: RegExp = /^var a0_0x(\w){4,6} *= *0x2;$/;
 
@@ -438,7 +438,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     const outputFileName1: string = 'foo-obfuscated.js';
                     const outputFileName2: string = 'bar-obfuscated.js';
                     const outputFileName3: string = 'baz-obfuscated.js';
-                    const readFileEncoding: string = 'utf8';
+                    const readFileEncoding = 'utf8';
                     const regExp1: RegExp = /^var a0_0x(\w){4,6} *= *0x2;$/;
 
                     let outputFixturesFilePath1: string,

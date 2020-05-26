@@ -33,10 +33,10 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 
 #### You can support this project by donating:
-* (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
-* (Ether) 0x5Df9eBcFB2D0f3315d03Ac112104b9023C409dc1
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
+* PayPal credit card [https://www.paypal.com/donate](https://www.paypal.com/donate/?token=OheNQcL137W_OXDUjoLRyweYPQNw7LPUu4Yx_jvY3JU4OoAK0R7UNdf3KEqmp3ttdYrwm0&country.x=US&locale.x=US)
 * PayPal https://www.paypal.me/javascriptobfuscator
+* (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
 
 Huge thanks to all supporters!
 

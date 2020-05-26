@@ -34,7 +34,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 
 #### You can support this project by donating:
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
-* PayPal credit card [https://www.paypal.com/donate](https://www.paypal.com/donate/?token=OheNQcL137W_OXDUjoLRyweYPQNw7LPUu4Yx_jvY3JU4OoAK0R7UNdf3KEqmp3ttdYrwm0&country.x=US&locale.x=US)
+* PayPal credit card [https://www.paypal.com/donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=javascript-obfuscator@yandex.ru&lc=US&no_note=0&item_name=Support+javascript-obfuscator&cn=&curency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 * PayPal https://www.paypal.me/javascriptobfuscator
 * (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
 

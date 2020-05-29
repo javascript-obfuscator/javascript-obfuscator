@@ -104,6 +104,7 @@
     "test:full": "scripts/test-full",
     "test:coveralls": "scripts/test-coveralls",
     "test:mocha": "scripts/test-mocha",
+    "test:mocha-memory-performance": "scripts/test-mocha-memory-performance",
     "test:removeTmpDir": "scripts/test-remove-tmp-dir",
     "test": "scripts/test",
     "eslint": "scripts/eslint",

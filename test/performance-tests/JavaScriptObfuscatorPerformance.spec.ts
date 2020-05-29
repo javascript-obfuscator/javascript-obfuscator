@@ -30,7 +30,7 @@ describe('JavaScriptObfuscator performance', function () {
     });
 
     describe('performance: heap usage', () => {
-        it('should keep heap usage without memory leakd', () => {
+        it('should keep heap usage without memory leaks', () => {
             const sourceCode: string = readFileAsString('./test/fixtures/sample.js');
 
             const maxHeapUsed: number[] = [];

@@ -1,5 +1,9 @@
 Change Log
 
+v0.28.3
+---
+* Removed memory leak with `identifierNamesGenerator: 'mangled'`
+
 v0.28.2
 ---
 * Fixed change of kinds of variables for dead code with `deadCodeInjection` option

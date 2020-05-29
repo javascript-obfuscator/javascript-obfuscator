@@ -17,9 +17,9 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static readonly initMangledNameCharacter: string = '9';
 
     /**
-     * @type {Map<TNodeWithLexicalScope, string>}
+     * @type {WeakMap<TNodeWithLexicalScope, string>}
      */
-    private static readonly lastMangledNameInScopeMap: Map <TNodeWithLexicalScope, string> = new Map();
+    private static readonly lastMangledNameInScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
 
     /**
      * @type {string[]}

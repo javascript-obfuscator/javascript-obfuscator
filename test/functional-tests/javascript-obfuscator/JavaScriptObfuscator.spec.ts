@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
-import { TObject } from '../../../src/types/TObject';
+import { TDictionary } from '../../../src/types/TDictionary';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
@@ -974,7 +974,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('invalid source codes object', () => {
-            let testFunc: () => TObject<IObfuscatedCode>;
+            let testFunc: () => TDictionary<IObfuscatedCode>;
 
             beforeEach(() => {
                 testFunc = () => JavaScriptObfuscator.obfuscateMultiple(

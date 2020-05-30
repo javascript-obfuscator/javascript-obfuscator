@@ -1,4 +1,4 @@
-import { TObject } from '../../types/TObject';
+import { TDictionary } from '../../types/TDictionary';
 import { TStatement } from '../../types/node/TStatement';
 
 export interface ICustomCodeHelperFormatter {
@@ -7,7 +7,7 @@ export interface ICustomCodeHelperFormatter {
      * @param {TMapping} mapping
      * @returns {string}
      */
-    formatTemplate <TMapping extends TObject> (
+    formatTemplate <TMapping extends TDictionary> (
         template: string,
         mapping: TMapping
     ): string;

@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import { TInputOptions } from './types/options/TInputOptions';
 import { TObfuscationResultsObject } from './types/TObfuscationResultsObject';
-import { TObject } from './types/TObject';
+import { TDictionary } from './types/TDictionary';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
@@ -43,7 +43,7 @@ class JavaScriptObfuscatorFacade {
      * @param {TInputOptions} inputOptions
      * @returns {TObfuscationResultsObject<TSourceCodesObject>}
      */
-    public static obfuscateMultiple <TSourceCodesObject extends TObject<string>> (
+    public static obfuscateMultiple <TSourceCodesObject extends TDictionary<string>> (
         sourceCodesObject: TSourceCodesObject,
         inputOptions: TInputOptions = {}
     ): TObfuscationResultsObject<TSourceCodesObject> {

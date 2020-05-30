@@ -10,7 +10,14 @@
 
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
-The example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
+Key features:
+- *variables renaming*
+- *strings extraction and encryption*
+- *dead code injection*
+- *control flow flattening*
+- and [more](#options)...
+
+Example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
 
 #### Online version:
 [obfuscator.io](https://obfuscator.io)

@@ -17,7 +17,7 @@ Key features:
 - *control flow flattening*
 - and [more](#options)...
 
-Example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
+The example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
 
 #### Online version:
 [obfuscator.io](https://obfuscator.io)

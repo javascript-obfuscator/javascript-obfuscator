@@ -15,6 +15,7 @@ Key features:
 - **strings extraction and encryption**
 - **dead code injection**
 - **control flow flattening**
+- various **code transformations**
 - and [more](#javascript-obfuscator-options)...
 
 The example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)

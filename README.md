@@ -10,7 +10,7 @@
 
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
-Key features:
+**Key features:**
 - **variables renaming**
 - **strings extraction and encryption**
 - **dead code injection**

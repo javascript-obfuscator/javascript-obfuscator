@@ -1,12 +1,12 @@
-import { TObject } from '../../types/TObject';
+import { TDictionary } from '../../types/TDictionary';
 
 export class CLIUtils {
     /**
      * @param {string} configPath
-     * @returns {TObject}
+     * @returns {TDictionary}
      */
-    public static getUserConfig (configPath: string): TObject {
-        let config: TObject;
+    public static getUserConfig (configPath: string): TDictionary {
+        let config: TDictionary;
 
         try {
             config = require(configPath);

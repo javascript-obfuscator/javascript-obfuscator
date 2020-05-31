@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { TCodeTransformerFactory } from '../types/container/code-transformers/TCodeTransformerFactory';
-import { TObject } from '../types/TObject';
+import { TDictionary } from '../types/TDictionary';
 
 import { ICodeTransformer } from '../interfaces/code-transformers/ICodeTransformer';
 import { ICodeTransformersRunner } from '../interfaces/code-transformers/ICodeTransformersRunner';
@@ -59,7 +59,7 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
             return code;
         }
 
-        const normalizedCodeTransformers: TObject<ICodeTransformer> =
+        const normalizedCodeTransformers: TDictionary<ICodeTransformer> =
             this.buildNormalizedCodeTransformers(codeTransformerNames, codeTransformationStage);
         const codeTransformerNamesGroups: CodeTransformer[][] =
             this.codeTransformerNamesGroupsBuilder.build(normalizedCodeTransformers);
@@ -78,15 +78,15 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
     /**
      * @param {NodeTransformer[]} codeTransformerNames
      * @param {NodeTransformationStage} codeTransformationStage
-     * @returns {TObject<INodeTransformer>}
+     * @returns {TDictionary<INodeTransformer>}
      */
     private buildNormalizedCodeTransformers (
         codeTransformerNames: CodeTransformer[],
         codeTransformationStage: CodeTransformationStage
-    ): TObject<ICodeTransformer> {
+    ): TDictionary<ICodeTransformer> {
         return codeTransformerNames
-            .reduce<TObject<ICodeTransformer>>(
-                (acc: TObject<ICodeTransformer>, codeTransformerName: CodeTransformer) => {
+            .reduce<TDictionary<ICodeTransformer>>(
+                (acc: TDictionary<ICodeTransformer>, codeTransformerName: CodeTransformer) => {
                     const codeTransformer: ICodeTransformer = this.codeTransformerFactory(codeTransformerName);
 
                     return {

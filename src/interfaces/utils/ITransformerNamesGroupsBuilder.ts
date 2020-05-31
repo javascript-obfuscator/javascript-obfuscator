@@ -1,12 +1,12 @@
-import { TObject } from '../../types/TObject';
+import { TDictionary } from '../../types/TDictionary';
 
 export interface ITransformerNamesGroupsBuilder <
     TTransformerName extends string,
     TTransformer
 > {
     /**
-     * @param {TObject<TTransformer>} normalizedTransformers
+     * @param {TDictionary<TTransformer>} normalizedTransformers
      * @returns {TTransformerName[][]}
      */
-    build (normalizedTransformers: TObject<TTransformer>): TTransformerName[][];
+    build (normalizedTransformers: TDictionary<TTransformer>): TTransformerName[][];
 }

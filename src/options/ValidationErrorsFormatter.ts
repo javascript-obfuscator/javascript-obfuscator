@@ -1,6 +1,6 @@
 import { ValidationError } from 'class-validator';
 
-import { TObject } from '../types/TObject';
+import { TDictionary } from '../types/TDictionary';
 
 export class ValidationErrorsFormatter {
     /**
@@ -24,7 +24,7 @@ export class ValidationErrorsFormatter {
      * @returns {string}
      */
     private static formatWithNestedConstraints (error: ValidationError): string {
-        const constraints: TObject<string> | undefined = error.constraints;
+        const constraints: TDictionary<string> | undefined = error.constraints;
 
         if (!constraints) {
             return `\`${error.property}\` error\n`;

@@ -5,7 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 import format from 'string-template';
 
-import { TObject } from '../types/TObject';
+import { TDictionary } from '../types/TDictionary';
 import { TStatement } from '../types/node/TStatement';
 
 import { ICustomCodeHelperFormatter } from '../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
@@ -32,7 +32,7 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
      * @param {TMapping} mapping
      * @returns {string}
      */
-    public formatTemplate <TMapping extends TObject> (
+    public formatTemplate <TMapping extends TDictionary> (
         template: string,
         mapping: TMapping
     ): string {

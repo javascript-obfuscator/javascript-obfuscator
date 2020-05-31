@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { TObject } from '../types/TObject';
+import { TDictionary } from '../types/TDictionary';
 import { TTransformersRelationEdge } from '../types/utils/TTransformersRelationEdge';
 
 import { ILevelledTopologicalSorter } from '../interfaces/utils/ILevelledTopologicalSorter';
@@ -48,10 +48,10 @@ export abstract class AbstractTransformerNamesGroupsBuilder <
      *      ]
      *  ]
      *
-     * @param {TObject<TTransformer>} normalizedTransformers
+     * @param {TDictionary<TTransformer>} normalizedTransformers
      * @returns {TTransformerName[][]}
      */
-    public build (normalizedTransformers: TObject<TTransformer>): TTransformerName[][] {
+    public build (normalizedTransformers: TDictionary<TTransformer>): TTransformerName[][] {
         const transformerNames: TTransformerName[] = <TTransformerName[]>Object.keys(normalizedTransformers);
         const relationEdges: TTransformersRelationEdge<TTransformerName>[] = this.buildTransformersRelationEdges(
             transformerNames,
@@ -67,12 +67,12 @@ export abstract class AbstractTransformerNamesGroupsBuilder <
 
     /**
      * @param {TTransformerName[]} transformerNames
-     * @param {TObject<TTransformer>} normalizedTransformers
+     * @param {TDictionary<TTransformer>} normalizedTransformers
      * @returns {TTransformersRelationEdge<TTransformerName>[]}
      */
     private buildTransformersRelationEdges (
         transformerNames: TTransformerName[],
-        normalizedTransformers: TObject<TTransformer>
+        normalizedTransformers: TDictionary<TTransformer>
     ): TTransformersRelationEdge<TTransformerName>[] {
         const relationEdges: TTransformersRelationEdge<TTransformerName>[] = [];
 

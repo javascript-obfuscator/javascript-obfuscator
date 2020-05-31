@@ -6,7 +6,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeTransformerFactory } from '../types/container/node-transformers/TNodeTransformerFactory';
-import { TObject } from '../types/TObject';
+import { TDictionary } from '../types/TDictionary';
 import { TVisitorDirection } from '../types/node-transformers/TVisitorDirection';
 import { TVisitorFunction } from '../types/node-transformers/TVisitorFunction';
 import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
@@ -70,7 +70,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             return astTree;
         }
 
-        const normalizedNodeTransformers: TObject<INodeTransformer> =
+        const normalizedNodeTransformers: TDictionary<INodeTransformer> =
             this.buildNormalizedNodeTransformers(nodeTransformerNames, nodeTransformationStage);
         const nodeTransformerNamesGroups: NodeTransformer[][] =
             this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
@@ -112,15 +112,15 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
     /**
      * @param {NodeTransformer[]} nodeTransformerNames
      * @param {NodeTransformationStage} nodeTransformationStage
-     * @returns {TObject<INodeTransformer>}
+     * @returns {TDictionary<INodeTransformer>}
      */
     private buildNormalizedNodeTransformers (
         nodeTransformerNames: NodeTransformer[],
         nodeTransformationStage: NodeTransformationStage
-    ): TObject<INodeTransformer> {
+    ): TDictionary<INodeTransformer> {
         return nodeTransformerNames
-            .reduce<TObject<INodeTransformer>>(
-                (acc: TObject<INodeTransformer>, nodeTransformerName: NodeTransformer) => {
+            .reduce<TDictionary<INodeTransformer>>(
+                (acc: TDictionary<INodeTransformer>, nodeTransformerName: NodeTransformer) => {
                     const nodeTransformer: INodeTransformer = this.nodeTransformerFactory(nodeTransformerName);
 
                     if (!nodeTransformer.getVisitor(nodeTransformationStage)) {

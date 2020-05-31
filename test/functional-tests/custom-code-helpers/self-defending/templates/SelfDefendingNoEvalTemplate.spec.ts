@@ -1,17 +1,18 @@
 import { assert } from 'chai';
 
+import { ObfuscationTarget } from '../../../../../src/enums/ObfuscationTarget';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { evaluateInWorker } from '../../../../helpers/evaluateInWorker';
-import { beautifyCode } from '../../../../helpers/beautifyCode';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { beautifyCode } from '../../../../helpers/beautifyCode';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
-describe('SelfDefendingTemplate', function () {
+describe('SelfDefendingNoEvalTemplate', function () {
     const evaluationTimeout: number = 3500;
 
     this.timeout(10000);
@@ -30,7 +31,8 @@ describe('SelfDefendingTemplate', function () {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     selfDefending: true,
-                    identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                    identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                    target: ObfuscationTarget.BrowserNoEval
                 }
             ).getObfuscatedCode();
 
@@ -63,7 +65,8 @@ describe('SelfDefendingTemplate', function () {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     selfDefending: true,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    target: ObfuscationTarget.BrowserNoEval
                 }
             ).getObfuscatedCode();
 
@@ -97,7 +100,8 @@ describe('SelfDefendingTemplate', function () {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                    identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle']
+                    identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle'],
+                    target: ObfuscationTarget.BrowserNoEval
                 }
             ).getObfuscatedCode();
 
@@ -129,7 +133,8 @@ describe('SelfDefendingTemplate', function () {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    selfDefending: true
+                    selfDefending: true,
+                    target: ObfuscationTarget.BrowserNoEval
                 }
             ).getObfuscatedCode();
             obfuscatedCode = beautifyCode(obfuscatedCode);

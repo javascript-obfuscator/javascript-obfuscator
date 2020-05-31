@@ -1,15 +1,15 @@
 /**
- * SelfDefendingTemplate. Enters code in infinity loop.
+ * Notice, that second and third call to recursiveFunc1('indexOf') has cyrillic `е` character instead latin
  *
  * @returns {string}
  */
-export function SelfDefendingTemplate (): string {
+export function SelfDefendingNoEvalTemplate (): string {
     return `
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
+            {globalVariableTemplate}
+        
             const test = function () {
-                const regExp = test
-                    .constructor('return /" + this + "/')()
-                    .compile('^([^ ]+( +[^ ]+)+)+[^ ]}');
+                const regExp = new that.RegExp('^([^ ]+( +[^ ]+)+)+[^ ]}');
                 
                 return !regExp.test({selfDefendingFunctionName});
             };

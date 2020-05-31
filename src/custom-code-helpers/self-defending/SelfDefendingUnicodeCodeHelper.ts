@@ -6,16 +6,19 @@ import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helpers/ICustomCodeHelperObfuscator';
-import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { SelfDefendingTemplate } from './templates/SelfDefendingTemplate';
+import { SelfDefendingNoEvalTemplate } from './templates/SelfDefendingNoEvalTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
+import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 
 @injectable()
 export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
@@ -32,17 +35,11 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
     private selfDefendingFunctionName!: string;
 
     /**
-     * @type {IEscapeSequenceEncoder}
-     */
-    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {ICustomCodeHelperObfuscator} customCodeHelperObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
-     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
@@ -50,8 +47,7 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(
             identifierNamesGeneratorFactory,
@@ -60,8 +56,6 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
             randomGenerator,
             options
         );
-
-        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -85,9 +79,17 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected getCodeHelperTemplate (): string {
-        return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
+            ? this.getGlobalVariableTemplate()
+            : GlobalVariableNoEvalTemplate();
+        const selfDefendingTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
+            ? SelfDefendingTemplate()
+            : SelfDefendingNoEvalTemplate();
+
+        return this.customCodeHelperFormatter.formatTemplate(selfDefendingTemplate, {
             callControllerFunctionName: this.callsControllerFunctionName,
-            selfDefendingFunctionName: this.selfDefendingFunctionName
+            selfDefendingFunctionName: this.selfDefendingFunctionName,
+            globalVariableTemplate
         });
     }
 }

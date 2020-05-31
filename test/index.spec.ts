@@ -61,6 +61,7 @@ import './functional-tests/custom-code-helpers/domain-lock/DomainLockCodeHelper.
 import './functional-tests/custom-code-helpers/domain-lock/templates/DomainLockNodeTemplate.spec';
 import './functional-tests/custom-code-helpers/self-defending/SelfDefendingCodeHelper.spec';
 import './functional-tests/custom-code-helpers/self-defending/templates/SelfDefendingTemplate.spec';
+import './functional-tests/custom-code-helpers/self-defending/templates/SelfDefendingNoEvalTemplate.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayCodeHelper.spec';

@@ -1,5 +1,9 @@
 Change Log
 
+v0.28.5
+---
+* Added very basic untyped `deno` support based on `browser` bundle
+
 v0.28.4
 ---
 * Added correct `self-defending` code for `target: 'browser-no-eval'`. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/610

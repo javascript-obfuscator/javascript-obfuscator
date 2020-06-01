@@ -71,6 +71,11 @@ or
 $ npm install --save-dev javascript-obfuscator
 ```
 
+#### Deno
+```ts
+import { JavaScriptObfuscator } from 'https://deno.land/x/javascript-obfuscator/index.deno.ts';
+```
+
 #### In a Browser
 
 From CDN:

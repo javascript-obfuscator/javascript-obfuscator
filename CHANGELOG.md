@@ -1,5 +1,9 @@
 Change Log
 
+v1.0.0
+---
+* Looks like obfuscator is ready for the first stable release
+
 v0.28.5
 ---
 * Fixed error during code generation for `ObjectPattern` with single `RestElement`. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/607

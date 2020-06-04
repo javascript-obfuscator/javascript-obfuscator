@@ -547,6 +547,30 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        /**
+         * https://github.com/estools/escodegen/pull/408
+         */
+        describe('`ObjectPattern` with single `RestElement`', () => {
+            const regExp: RegExp = /const {\.\.\.foo} *= *{};/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-single-rest-element.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should not break on `ObjectPattern` with single `RestElement`', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('new.target MetaProperty', () => {
             const regExp: RegExp = /new\.target *=== *Foo/;
 

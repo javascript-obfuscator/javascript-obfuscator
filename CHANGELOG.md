@@ -1,5 +1,9 @@
 Change Log
 
+v0.28.5
+---
+* Fixed error during code generation for `ObjectPattern` with single `RestElement`. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/607
+
 v0.28.4
 ---
 * Added correct `self-defending` code for `target: 'browser-no-eval'`. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/610

@@ -9,7 +9,7 @@ const heapValueToMB = (value: number) => Math.round(value / 1024 / 1024 * 100) /
 describe('JavaScriptObfuscator memory', function () {
     const iterationsCount: number = 500;
     const gcDiffThreshold: number = 10;
-    const allowedHeapDiffThreshold: number = 50;
+    const allowedHeapDiffThreshold: number = 80;
 
     this.timeout(100000);
 

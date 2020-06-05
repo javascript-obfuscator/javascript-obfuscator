@@ -45,7 +45,7 @@ export const obfuscatingTransformersModule: interfaces.ContainerModule = new Con
         .to(StringLiteralObfuscatingReplacer)
         .whenTargetNamed(LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer);
 
-    // identifier obfuscating replacers
+    // identifier obfuscating replacer
     bind<IIdentifierObfuscatingReplacer>(ServiceIdentifiers.IIdentifierObfuscatingReplacer)
         .to(BaseIdentifierObfuscatingReplacer)
         .whenTargetNamed(IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);

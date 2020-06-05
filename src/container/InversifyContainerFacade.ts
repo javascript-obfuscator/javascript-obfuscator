@@ -10,6 +10,7 @@ import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
 import { finalizingTransformersModule } from './modules/node-transformers/FinalizingTransformersModule';
 import { generatorsModule } from './modules/generators/GeneratorsModule';
 import { initializingTransformersModule } from './modules/node-transformers/InitializingTransformersModule';
+import { manglePropertiesTransformersModule } from './modules/node-transformers/ManglePropertiesTransformersModule';
 import { nodeModule } from './modules/node/NodeModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
@@ -210,6 +211,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(finalizingTransformersModule);
         this.container.load(generatorsModule);
         this.container.load(initializingTransformersModule);
+        this.container.load(manglePropertiesTransformersModule);
         this.container.load(nodeModule);
         this.container.load(nodeTransformersModule);
         this.container.load(obfuscatingTransformersModule);

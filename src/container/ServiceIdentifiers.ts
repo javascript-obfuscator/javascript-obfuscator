@@ -33,6 +33,7 @@ export enum ServiceIdentifiers {
     IJavaScriptObfuscator = 'IJavaScriptObfuscator',
     ILevelledTopologicalSorter = 'ILevelledTopologicalSorter',
     ILogger = 'ILogger',
+    IManglePropertiesObfuscatingReplacer = 'IManglePropertiesObfuscatingReplacer',
     INodeGuard = 'INodeGuard',
     INodeTransformer = 'INodeTransformer',
     INodeTransformerNamesGroupsBuilder = 'INodeTransformerNamesGroupsBuilder',

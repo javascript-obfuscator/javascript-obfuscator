@@ -70,6 +70,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.FunctionControlFlowTransformer,
         NodeTransformer.LabeledStatementTransformer,
         NodeTransformer.LiteralTransformer,
+        NodeTransformer.ManglePropertiesTransformer,
         NodeTransformer.MemberExpressionTransformer,
         NodeTransformer.MetadataTransformer,
         NodeTransformer.MethodDefinitionTransformer,
@@ -208,6 +209,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
         }
 
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.MangleProperties);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Converting);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Obfuscating);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Finalizing);

@@ -7,6 +7,7 @@ export enum NodeTransformer {
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',
+    ManglePropertiesTransformer = 'ManglePropertiesTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
     MetadataTransformer = 'MetadataTransformer',
     MethodDefinitionTransformer = 'MethodDefinitionTransformer',

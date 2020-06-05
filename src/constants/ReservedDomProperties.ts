@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 
 /**
- * Took from `terser`
+ * Taken from `terser`
  * https://github.com/terser/terser/blob/master/tools/domprops.js
  */
 export const ReservedDomProperties: string[] = [

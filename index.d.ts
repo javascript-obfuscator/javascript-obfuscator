@@ -1,5 +1,5 @@
 import { TInputOptions } from './src/types/options/TInputOptions';
-import { TObject } from './src/types/TObject';
+import { TDictionary } from './src/types/TDictionary';
 
 import { IObfuscatedCode } from './src/interfaces/source-code/IObfuscatedCode';
 import { TObfuscationResultsObject } from './src/types/TObfuscationResultsObject';
@@ -20,7 +20,7 @@ export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions)
  * @param {TInputOptions} inputOptions
  * @returns {TObfuscationResultsObject<TSourceCodesObject>}
  */
-export function obfuscateMultiple <TSourceCodesObject extends TObject<string>> (
+export function obfuscateMultiple <TSourceCodesObject extends TDictionary<string>> (
     sourceCodesObject: TSourceCodesObject,
     inputOptions?: TInputOptions
 ): TObfuscationResultsObject<TSourceCodesObject>;

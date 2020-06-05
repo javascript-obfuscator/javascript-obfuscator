@@ -1,5 +1,9 @@
 Change Log
 
+v1.0.1
+---
+* Fixed .d.ts typings. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/623
+
 v1.0.0
 ---
 * Looks like obfuscator is ready for the first stable release

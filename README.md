@@ -329,6 +329,7 @@ Following options are available for the JS Obfuscator:
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
+    mangleProperties: false,
     renameGlobals: false,
     reservedNames: [],
     reservedStrings: [],
@@ -373,6 +374,7 @@ Following options are available for the JS Obfuscator:
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
+    --mangle-properties <boolean>
     --rename-globals <boolean>
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
@@ -661,6 +663,17 @@ Allows to set name of the input file with source code. This name will used inter
 Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
+
+### `mangleProperties`
+Type: `boolean` Default: `false`
+
+##### :warning: this option will break your code in most cases. Enable it only if you know what it does!
+
+Enables mangling property names. 
+
+Generated names are being controlled by [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+
+It is possible to control which properties will be mangled with [`reservedNames`](#reservedNames) option.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`

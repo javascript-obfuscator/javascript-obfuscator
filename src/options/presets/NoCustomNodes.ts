@@ -20,6 +20,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     identifiersDictionary: [],
     inputFileName: '',
     log: false,
+    mangleProperties: false,
     renameGlobals: false,
     reservedNames: [],
     reservedStrings: [],

@@ -250,6 +250,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
+                '--mangle-properties <boolean>', 'UNSAFE: Enables mangling property names',
+                BooleanSanitizer
+            )
+            .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',
                 'Disables obfuscation and generation of identifiers, which being matched by passed RegExp patterns (comma separated)',
                 ArraySanitizer

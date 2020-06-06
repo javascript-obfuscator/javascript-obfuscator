@@ -154,6 +154,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly mangleProperties!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly renameGlobals!: boolean;
 
     /**

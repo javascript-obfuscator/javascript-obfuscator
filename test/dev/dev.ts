@@ -20,14 +20,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
-            log: true,
-            identifierNamesGenerator: 'mangled',
-            renameGlobals: true,
-            splitStrings: true,
-            splitStringsChunkLength: 3,
-            stringArray: true,
-            stringArrayThreshold: 1
+            compact: false
         }
     ).getObfuscatedCode();
 

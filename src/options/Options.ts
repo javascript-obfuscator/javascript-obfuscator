@@ -154,13 +154,13 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly mangleProperties!: boolean;
+    public readonly renameGlobals!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly renameGlobals!: boolean;
+    public readonly renameProperties!: boolean;
 
     /**
      * @type {string[]}

@@ -8,10 +8,10 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
-describe('ManglePropertiesTransformer', () => {
+describe('RenamePropertiesTransformer', () => {
     describe('transformNode', () => {
         describe('Hexadecimal identifier names generator', () => {
-            describe('Variant #1: base properties mangle', () => {
+            describe('Variant #1: base properties rename', () => {
                 const property1RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x1/;
                 const property2RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x2/;
                 const property3RegExp: RegExp = /\['(_0x[a-f0-9]{4,6})']: *0x3/;
@@ -27,25 +27,25 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Match #1: should mangle property', () => {
+                it('Match #1: should rename property', () => {
                     assert.match(obfuscatedCode, property1RegExp);
                 });
 
-                it('Match #2: should mangle property', () => {
+                it('Match #2: should rename property', () => {
                     assert.match(obfuscatedCode, property2RegExp);
                 });
 
-                it('Match #3: should mangle property', () => {
+                it('Match #3: should rename property', () => {
                     assert.match(obfuscatedCode, property3RegExp);
                 });
 
-                it('Match #4: should mangle property', () => {
+                it('Match #4: should rename property', () => {
                     assert.match(obfuscatedCode, property4RegExp);
                 });
             });
@@ -68,30 +68,30 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Match #1: should mangle property', () => {
+                it('Match #1: should rename property', () => {
                     assert.match(obfuscatedCode, property1RegExp);
                 });
 
-                it('Match #2: should mangle property', () => {
+                it('Match #2: should rename property', () => {
                     assert.match(obfuscatedCode, property2RegExp);
                 });
 
-                it('Match #3: should mangle property', () => {
+                it('Match #3: should rename property', () => {
                     assert.match(obfuscatedCode, property3RegExp);
                 });
 
-                it('Match #4: should mangle property', () => {
+                it('Match #4: should rename property', () => {
                     assert.match(obfuscatedCode, property4RegExp);
                 });
             });
 
-            describe('Variant #2: base properties mangle with rename globals', () => {
+            describe('Variant #2: base properties rename with rename globals', () => {
                 const variable1RegExp: RegExp = /const d *= *'hawk'/;
                 const variable2RegExp: RegExp = /const e *= *{/;
                 const property1RegExp: RegExp = /'a': *0x1/;
@@ -109,7 +109,7 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                             renameGlobals: true
                         }
@@ -124,24 +124,24 @@ describe('ManglePropertiesTransformer', () => {
                     assert.match(obfuscatedCode, variable2RegExp);
                 });
 
-                it('Match #3: should mangle property', () => {
+                it('Match #3: should rename property', () => {
                     assert.match(obfuscatedCode, property1RegExp);
                 });
 
-                it('Match #4: should mangle property', () => {
+                it('Match #4: should rename property', () => {
                     assert.match(obfuscatedCode, property2RegExp);
                 });
 
-                it('Match #5: should mangle property', () => {
+                it('Match #5: should rename property', () => {
                     assert.match(obfuscatedCode, property3RegExp);
                 });
 
-                it('Match #6: should mangle property', () => {
+                it('Match #6: should rename property', () => {
                     assert.match(obfuscatedCode, property4RegExp);
                 });
             });
 
-            describe('Variant #3: properties mangle of nested objects', () => {
+            describe('Variant #3: properties rename of nested objects', () => {
                 const regExp: RegExp = new RegExp('' +
                     'const foo *= *{' +
                         '\'a\': *{' +
@@ -160,18 +160,18 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Should mangle property', () => {
+                it('Should rename property', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
 
-            describe('Variant #4: properties mangle of rest element', () => {
+            describe('Variant #4: properties rename of rest element', () => {
                 const regExp: RegExp = new RegExp('' +
                     'const foo *= *{' +
                         '\'a\': *0x1' +
@@ -189,13 +189,13 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Should mangle property', () => {
+                it('Should rename property', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -220,13 +220,13 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Should mangle non-reserved properties', () => {
+                it('Should rename non-reserved properties', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -251,14 +251,14 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                             reservedNames: ['^reserved$', '_$']
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Should mangle non-reserved properties', () => {
+                it('Should rename non-reserved properties', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -281,14 +281,14 @@ describe('ManglePropertiesTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            mangleProperties: true,
+                            renameProperties: true,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                             reservedNames: ['^reserved$', '_$']
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('Should mangle class method name', () => {
+                it('Should rename class method name', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IManglePropertiesReplacer } from '../../interfaces/node-transformers/mangle-properties-transformers/replacer/IManglePropertiesReplacer';
+import { IRenamePropertiesReplacer } from '../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
@@ -14,26 +14,25 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
-export class ManglePropertiesTransformer extends AbstractNodeTransformer {
+export class RenamePropertiesTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IManglePropertiesReplacer}
+     * @type {IRenamePropertiesReplacer}
      */
-    private readonly manglePropertiesObfuscatingReplacer: IManglePropertiesReplacer;
+    private readonly renamePropertiesReplacer: IRenamePropertiesReplacer;
 
     /**
-     * @param {IManglePropertiesReplacer} manglePropertiesObfuscatingReplacer
+     * @param {IRenamePropertiesReplacer} renamePropertiesReplacer
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.IManglePropertiesObfuscatingReplacer)
-            manglePropertiesObfuscatingReplacer: IManglePropertiesReplacer,
+        @inject(ServiceIdentifiers.IRenamePropertiesReplacer) renamePropertiesReplacer: IRenamePropertiesReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.manglePropertiesObfuscatingReplacer = manglePropertiesObfuscatingReplacer;
+        this.renamePropertiesReplacer = renamePropertiesReplacer;
     }
 
     /**
@@ -60,7 +59,7 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.MangleProperties:
+            case NodeTransformationStage.RenameProperties:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode) {
@@ -104,8 +103,8 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformPropertyNode (propertyNode: ESTree.Property): ESTree.Property {
         const propertyKeyNode: ESTree.Expression = propertyNode.key;
 
-        if (ManglePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
-            propertyNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
+        if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
+            propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
             propertyNode.shorthand = false;
         }
 
@@ -119,8 +118,8 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformMemberExpressionNode (memberExpressionNode: ESTree.MemberExpression): ESTree.MemberExpression {
         const propertyKeyNode: ESTree.Expression = memberExpressionNode.property;
 
-        if (ManglePropertiesTransformer.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
-            memberExpressionNode.property = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
+        if (RenamePropertiesTransformer.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
+            memberExpressionNode.property = this.renamePropertiesReplacer.replace(propertyKeyNode);
         }
 
         return memberExpressionNode;
@@ -133,8 +132,8 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformMethodDefinitionNode (methodDefinitionNode: ESTree.MethodDefinition): ESTree.MethodDefinition {
         const propertyKeyNode: ESTree.Expression = methodDefinitionNode.key;
 
-        if (ManglePropertiesTransformer.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
-            methodDefinitionNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
+        if (RenamePropertiesTransformer.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
+            methodDefinitionNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
         }
 
         return methodDefinitionNode;

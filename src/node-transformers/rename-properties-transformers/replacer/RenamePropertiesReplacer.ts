@@ -6,7 +6,7 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
-import { IManglePropertiesReplacer } from '../../../interfaces/node-transformers/mangle-properties-transformers/replacer/IManglePropertiesReplacer';
+import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { ReservedDomProperties } from '../../../constants/ReservedDomProperties';
@@ -15,7 +15,7 @@ import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeFactory } from '../../../node/NodeFactory';
 
 @injectable()
-export class ManglePropertiesReplacer implements IManglePropertiesReplacer {
+export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     /**
      * @type {IIdentifierNamesGenerator}
      */
@@ -25,7 +25,7 @@ export class ManglePropertiesReplacer implements IManglePropertiesReplacer {
      * @type {Map<string, string>}
      * @private
      */
-    private readonly mangledPropertyNamesMap: Map<string, string> = new Map();
+    private readonly propertyNamesMap: Map<string, string> = new Map();
 
     /**
      * @type {IOptions}
@@ -81,16 +81,16 @@ export class ManglePropertiesReplacer implements IManglePropertiesReplacer {
             return propertyName;
         }
 
-        let mangledPropertyName: string | null = this.mangledPropertyNamesMap.get(propertyName) ?? null;
+        let renamedPropertyName: string | null = this.propertyNamesMap.get(propertyName) ?? null;
 
-        if (mangledPropertyName !== null) {
-            return mangledPropertyName;
+        if (renamedPropertyName !== null) {
+            return renamedPropertyName;
         }
 
-        mangledPropertyName = this.identifierNamesGenerator.generateNext();
-        this.mangledPropertyNamesMap.set(propertyName, mangledPropertyName);
+        renamedPropertyName = this.identifierNamesGenerator.generateNext();
+        this.propertyNamesMap.set(propertyName, renamedPropertyName);
 
-        return mangledPropertyName;
+        return renamedPropertyName;
     }
 
     /**

@@ -89,7 +89,7 @@ import './functional-tests/node-transformers/converting-transformers/object-expr
 import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
-import './functional-tests/node-transformers/mangle-properties-transformers/mangle-properties-transformer/ManglePropertiesTransformer.spec';
+import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/catch-clause/CatchClause.spec';
@@ -101,11 +101,11 @@ import './functional-tests/node-transformers/obfuscating-transformers/scope-iden
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/identifier-obfuscating-replacers/BaseIdentifierObfuscatingReplacer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
-import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/variable-preserve-transformer/VariablePreserveTransformer.spec';
+import './functional-tests/node-transformers/rename-properties-transformers/rename-properties-transformer/RenamePropertiesTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';

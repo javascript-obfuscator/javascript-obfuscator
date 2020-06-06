@@ -238,7 +238,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--identifiers-prefix <string>',
-                'Sets prefix for all global identifiers.'
+                'Sets prefix for all global identifiers'
             )
             .option(
                 '--identifiers-dictionary <list> (comma separated, without whitespaces)',
@@ -247,10 +247,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
-                BooleanSanitizer
-            )
-            .option(
-                '--mangle-properties <boolean>', 'UNSAFE: Enables mangling property names',
                 BooleanSanitizer
             )
             .option(
@@ -264,7 +260,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--rename-globals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
+                '--rename-globals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration',
+                BooleanSanitizer
+            )
+            .option(
+                '--rename-properties <boolean>', 'UNSAFE: Enables rename of property names. This probably WILL break your code',
                 BooleanSanitizer
             )
             .option(

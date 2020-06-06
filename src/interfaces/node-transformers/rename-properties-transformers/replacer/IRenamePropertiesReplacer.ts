@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-export interface IManglePropertiesReplacer {
+export interface IRenamePropertiesReplacer {
     /**
      * @param {ESTree.Identifier | ESTree.Literal} node
      * @returns {ESTree.Identifier | ESTree.Literal}

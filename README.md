@@ -329,8 +329,8 @@ Following options are available for the JS Obfuscator:
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
-    mangleProperties: false,
     renameGlobals: false,
+    renameProperties: false,
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: true,
@@ -374,8 +374,8 @@ Following options are available for the JS Obfuscator:
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
-    --mangle-properties <boolean>
     --rename-globals <boolean>
+    --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
@@ -664,23 +664,23 @@ Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
 
-### `mangleProperties`
-Type: `boolean` Default: `false`
-
-##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
-
-Enables mangling property names. 
-
-To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
-
-To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
-
 ### `renameGlobals`
 Type: `boolean` Default: `false`
 
 ##### :warning: this option can break your code. Enable it only if you know what it does!
 
 Enables obfuscation of global variable and function names **with declaration**.
+
+### `renameProperties`
+Type: `boolean` Default: `false`
+
+##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
+
+Enables rename of property names. 
+
+To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+
+To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`

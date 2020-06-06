@@ -2,8 +2,8 @@ import * as ESTree from 'estree';
 
 export interface IManglePropertiesReplacer {
     /**
-     * @param {TNode} node
-     * @returns {TNode}
+     * @param {ESTree.Identifier | ESTree.Literal} node
+     * @returns {ESTree.Identifier | ESTree.Literal}
      */
-    replace <TNode extends ESTree.Identifier | ESTree.Literal> (node: TNode): TNode;
+    replace (node: ESTree.Identifier | ESTree.Literal): ESTree.Identifier | ESTree.Literal;
 }

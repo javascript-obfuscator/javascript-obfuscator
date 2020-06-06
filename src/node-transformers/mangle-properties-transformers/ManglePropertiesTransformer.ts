@@ -37,6 +37,24 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {TNode} propertyNode
+     * @param {ESTree.Expression} propertyKeyNode
+     * @returns {boolean}
+     */
+    private static isValidPropertyNode<
+        TNode extends ESTree.Property | ESTree.MemberExpression | ESTree.MethodDefinition
+    >(
+        propertyNode: TNode,
+        propertyKeyNode: ESTree.Expression
+    ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {
+        if (NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
+            return false;
+        }
+
+        return NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards.isLiteralNode(propertyKeyNode);
+    }
+
+    /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
@@ -86,11 +104,7 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformPropertyNode (propertyNode: ESTree.Property): ESTree.Property {
         const propertyKeyNode: ESTree.Expression = propertyNode.key;
 
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
-            return propertyNode;
-        }
-
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
             propertyNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
             propertyNode.shorthand = false;
         }
@@ -105,11 +119,7 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformMemberExpressionNode (memberExpressionNode: ESTree.MemberExpression): ESTree.MemberExpression {
         const propertyKeyNode: ESTree.Expression = memberExpressionNode.property;
 
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) && memberExpressionNode.computed) {
-            return memberExpressionNode;
-        }
-
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
             memberExpressionNode.property = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
         }
 
@@ -123,11 +133,7 @@ export class ManglePropertiesTransformer extends AbstractNodeTransformer {
     private transformMethodDefinitionNode (methodDefinitionNode: ESTree.MethodDefinition): ESTree.MethodDefinition {
         const propertyKeyNode: ESTree.Expression = methodDefinitionNode.key;
 
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) && methodDefinitionNode.computed) {
-            return methodDefinitionNode;
-        }
-
-        if (NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
             methodDefinitionNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
         }
 

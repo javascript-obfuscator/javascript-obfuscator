@@ -52,18 +52,18 @@ export class ManglePropertiesReplacer implements IManglePropertiesReplacer {
     }
 
     /**
-     * @param {string} node
-     * @returns {string}
+     * @param {ESTree.Identifier | ESTree.Literal} node
+     * @returns {ESTree.Identifier | ESTree.Literal}
      */
-    public replace <TNode extends ESTree.Identifier | ESTree.Literal> (node: TNode): TNode {
+    public replace (node: ESTree.Identifier | ESTree.Literal): ESTree.Identifier | ESTree.Literal {
         if (NodeGuards.isIdentifierNode(node)) {
-            return <TNode>NodeFactory.identifierNode(
+            return NodeFactory.identifierNode(
                 this.replacePropertyName(node.name)
             );
         }
 
         if (NodeGuards.isLiteralNode(node) && typeof node.value === 'string') {
-            return <TNode>NodeFactory.literalNode(
+            return NodeFactory.literalNode(
                 this.replacePropertyName(node.value)
             );
         }
@@ -81,14 +81,14 @@ export class ManglePropertiesReplacer implements IManglePropertiesReplacer {
             return propertyName;
         }
 
-        let mangledPropertyName: string;
+        let mangledPropertyName: string | null = this.mangledPropertyNamesMap.get(propertyName) ?? null;
 
-        if (this.mangledPropertyNamesMap.has(propertyName)) {
-            mangledPropertyName = <string>this.mangledPropertyNamesMap.get(propertyName);
-        } else {
-            mangledPropertyName = this.identifierNamesGenerator.generateNext();
-            this.mangledPropertyNamesMap.set(propertyName, mangledPropertyName);
+        if (mangledPropertyName !== null) {
+            return mangledPropertyName;
         }
+
+        mangledPropertyName = this.identifierNamesGenerator.generateNext();
+        this.mangledPropertyNamesMap.set(propertyName, mangledPropertyName);
 
         return mangledPropertyName;
     }

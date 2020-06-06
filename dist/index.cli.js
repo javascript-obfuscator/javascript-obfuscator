@@ -15982,7 +15982,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c;
+var ManglePropertiesTransformer_1, _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ManglePropertiesTransformer = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
@@ -15993,10 +15993,16 @@ const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRando
 const NodeTransformationStage_1 = __webpack_require__(/*! ../../enums/node-transformers/NodeTransformationStage */ "./src/enums/node-transformers/NodeTransformationStage.ts");
 const AbstractNodeTransformer_1 = __webpack_require__(/*! ../AbstractNodeTransformer */ "./src/node-transformers/AbstractNodeTransformer.ts");
 const NodeGuards_1 = __webpack_require__(/*! ../../node/NodeGuards */ "./src/node/NodeGuards.ts");
-let ManglePropertiesTransformer = class ManglePropertiesTransformer extends AbstractNodeTransformer_1.AbstractNodeTransformer {
+let ManglePropertiesTransformer = ManglePropertiesTransformer_1 = class ManglePropertiesTransformer extends AbstractNodeTransformer_1.AbstractNodeTransformer {
     constructor(manglePropertiesObfuscatingReplacer, randomGenerator, options) {
         super(randomGenerator, options);
         this.manglePropertiesObfuscatingReplacer = manglePropertiesObfuscatingReplacer;
+    }
+    static isValidPropertyNode(propertyNode, propertyKeyNode) {
+        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
+            return false;
+        }
+        return NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards_1.NodeGuards.isLiteralNode(propertyKeyNode);
     }
     getVisitor(nodeTransformationStage) {
         switch (nodeTransformationStage) {
@@ -16027,10 +16033,7 @@ let ManglePropertiesTransformer = class ManglePropertiesTransformer extends Abst
     }
     transformPropertyNode(propertyNode) {
         const propertyKeyNode = propertyNode.key;
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
-            return propertyNode;
-        }
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards_1.NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer_1.isValidPropertyNode(propertyNode, propertyKeyNode)) {
             propertyNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
             propertyNode.shorthand = false;
         }
@@ -16038,26 +16041,20 @@ let ManglePropertiesTransformer = class ManglePropertiesTransformer extends Abst
     }
     transformMemberExpressionNode(memberExpressionNode) {
         const propertyKeyNode = memberExpressionNode.property;
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) && memberExpressionNode.computed) {
-            return memberExpressionNode;
-        }
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards_1.NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer_1.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
             memberExpressionNode.property = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
         }
         return memberExpressionNode;
     }
     transformMethodDefinitionNode(methodDefinitionNode) {
         const propertyKeyNode = methodDefinitionNode.key;
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) && methodDefinitionNode.computed) {
-            return methodDefinitionNode;
-        }
-        if (NodeGuards_1.NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards_1.NodeGuards.isLiteralNode(propertyKeyNode)) {
+        if (ManglePropertiesTransformer_1.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
             methodDefinitionNode.key = this.manglePropertiesObfuscatingReplacer.replace(propertyKeyNode);
         }
         return methodDefinitionNode;
     }
 };
-ManglePropertiesTransformer = __decorate([
+ManglePropertiesTransformer = ManglePropertiesTransformer_1 = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IManglePropertiesObfuscatingReplacer)),
     __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
@@ -16117,17 +16114,16 @@ let ManglePropertiesReplacer = class ManglePropertiesReplacer {
         return node;
     }
     replacePropertyName(propertyName) {
+        var _a;
         if (this.isReservedName(propertyName)) {
             return propertyName;
         }
-        let mangledPropertyName;
-        if (this.mangledPropertyNamesMap.has(propertyName)) {
-            mangledPropertyName = this.mangledPropertyNamesMap.get(propertyName);
+        let mangledPropertyName = (_a = this.mangledPropertyNamesMap.get(propertyName)) !== null && _a !== void 0 ? _a : null;
+        if (mangledPropertyName !== null) {
+            return mangledPropertyName;
         }
-        else {
-            mangledPropertyName = this.identifierNamesGenerator.generateNext();
-            this.mangledPropertyNamesMap.set(propertyName, mangledPropertyName);
-        }
+        mangledPropertyName = this.identifierNamesGenerator.generateNext();
+        this.mangledPropertyNamesMap.set(propertyName, mangledPropertyName);
         return mangledPropertyName;
     }
     isReservedName(name) {

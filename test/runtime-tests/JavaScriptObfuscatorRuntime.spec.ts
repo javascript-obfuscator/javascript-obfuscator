@@ -167,7 +167,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         });
 
         describe(`Obfuscator. ${detailedDescription}`, () => {
-            const evaluationTimeout: number = 10000;
+            const evaluationTimeout: number = 30000;
 
             let evaluationResult: string;
 

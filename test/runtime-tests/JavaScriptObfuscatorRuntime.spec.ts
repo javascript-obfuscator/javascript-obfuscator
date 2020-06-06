@@ -25,6 +25,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
+        mangleProperties: true,
         reservedNames: ['generate', 'sha256'],
         rotateStringArray: true,
         selfDefending: true,
@@ -67,7 +68,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     code,
                     {
                         ...baseOptions,
-                        ...options
+                        ...options,
+                        mangleProperties: false
                     }
                 ).getObfuscatedCode();
 
@@ -178,7 +180,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     code,
                     {
                         ...baseOptions,
-                        ...options
+                        ...options,
+                        mangleProperties: false
                     }
                 ).getObfuscatedCode();
 
@@ -248,7 +251,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         {
                             ...baseOptions,
                             ...options,
-                            ...webpackBootstrapOptions
+                            ...webpackBootstrapOptions,
+                            reservedNames: ['^foo$']
                         }
                     ).getObfuscatedCode();
 

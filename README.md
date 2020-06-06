@@ -667,13 +667,13 @@ Enables logging of the information to the console.
 ### `mangleProperties`
 Type: `boolean` Default: `false`
 
-##### :warning: this option will break your code in most cases. Enable it only if you know what it does!
+##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
 
 Enables mangling property names. 
 
-Generated names are being controlled by [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
 
-It is possible to control which properties will be mangled with [`reservedNames`](#reservedNames) option.
+To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`

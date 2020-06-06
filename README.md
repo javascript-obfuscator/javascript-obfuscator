@@ -676,7 +676,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
 
-Enables rename of property names. 
+Enables renaming of property names. 
 
 To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
 

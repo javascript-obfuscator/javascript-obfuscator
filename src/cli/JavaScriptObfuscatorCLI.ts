@@ -264,7 +264,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--rename-properties <boolean>', 'UNSAFE: Enables rename of property names. This probably WILL break your code',
+                '--rename-properties <boolean>', 'UNSAFE: Enables renaming of property names. This probably WILL break your code',
                 BooleanSanitizer
             )
             .option(

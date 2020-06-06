@@ -2,7 +2,7 @@ Change Log
 
 v1.1.0
 ---
-* **New option:** `renameProperties` enables mangling property names
+* **New option:** `renameProperties` enables renaming of property names
 
 
 v1.0.1

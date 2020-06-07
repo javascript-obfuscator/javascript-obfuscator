@@ -65,8 +65,6 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
                         if (parentNode) {
                             return this.transformNode(node, parentNode);
                         }
-
-                        return node;
                     }
                 };
 

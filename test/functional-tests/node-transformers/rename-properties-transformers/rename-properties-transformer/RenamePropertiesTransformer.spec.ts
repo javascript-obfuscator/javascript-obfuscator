@@ -292,6 +292,31 @@ describe('RenamePropertiesTransformer', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
+
+            describe('Variant #8: integration with `splitStrings` option', () => {
+                const propertyRegExp: RegExp = /'a': *'long' *\+ *'Prop' *\+ *'erty' *\+ *'Valu' *\+ *'e'/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/split-strings-integration.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            splitStrings: true,
+                            splitStringsChunkLength: 4
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Should rename property before `splitStrings` option will applied', () => {
+                    assert.match(obfuscatedCode, propertyRegExp);
+                });
+            });
         });
     });
 });

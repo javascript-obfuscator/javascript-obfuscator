@@ -330,6 +330,7 @@ Following options are available for the JS Obfuscator:
     inputFileName: '',
     log: false,
     renameGlobals: false,
+    renameProperties: false,
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: true,
@@ -374,6 +375,7 @@ Following options are available for the JS Obfuscator:
     --identifiers-prefix <string>
     --log <boolean>
     --rename-globals <boolean>
+    --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
@@ -668,6 +670,45 @@ Type: `boolean` Default: `false`
 ##### :warning: this option can break your code. Enable it only if you know what it does!
 
 Enables obfuscation of global variable and function names **with declaration**.
+
+### `renameProperties`
+Type: `boolean` Default: `false`
+
+##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
+
+Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
+
+To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+
+To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
+
+Example: 
+```ts
+// input
+(function () {
+    const foo = {
+        prop1: 1,
+        prop2: 2,
+        calc: function () {
+            return this.prop1 + this.prop2;
+        }
+    };
+    
+    console.log(foo.calc());
+})();
+
+// output
+(function () {
+    const _0x46529b = {
+        '_0x10cec7': 0x1,
+        '_0xc1c0ca': 0x2,
+        '_0x4b961d': function () {
+            return this['_0x10cec7'] + this['_0xc1c0ca'];
+        }
+    };
+    console['log'](_0x46529b['_0x4b961d']());
+}());
+```
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -1010,6 +1051,10 @@ See: [`Kind of variables`](#kind-of-variables)
 `BigInt` obfuscation works correctly only in environments that support `BigInt` values. See [ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
 
 See: [`Kind of variables`](#kind-of-variables)
+
+### I enabled `renameProperties` option, and my code broke! What to do?
+
+Just disable this option.
 
 ## Backers
 

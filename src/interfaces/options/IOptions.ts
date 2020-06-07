@@ -22,6 +22,7 @@ export interface IOptions {
     readonly inputFileName: string;
     readonly log: boolean;
     readonly renameGlobals: boolean;
+    readonly renameProperties: boolean;
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
     readonly rotateStringArray: boolean;

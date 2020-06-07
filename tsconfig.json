@@ -8,6 +8,7 @@
     ],
     "target": "es2017",
     "module": "commonjs",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "noImplicitThis": false,
     "noUnusedLocals": true,

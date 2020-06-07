@@ -15,6 +15,7 @@ import { nodeTransformersModule } from './modules/node-transformers/NodeTransfor
 import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { optionsModule } from './modules/options/OptionsModule';
 import { preparingTransformersModule } from './modules/node-transformers/PreparingTransformersModule';
+import { renamePropertiesTransformersModule } from './modules/node-transformers/RenamePropertiesTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
@@ -215,6 +216,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(obfuscatingTransformersModule);
         this.container.load(optionsModule);
         this.container.load(preparingTransformersModule);
+        this.container.load(renamePropertiesTransformersModule);
         this.container.load(storagesModule);
         this.container.load(utilsModule);
     }

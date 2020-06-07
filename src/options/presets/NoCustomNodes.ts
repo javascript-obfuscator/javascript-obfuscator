@@ -21,6 +21,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     renameGlobals: false,
+    renameProperties: false,
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: false,

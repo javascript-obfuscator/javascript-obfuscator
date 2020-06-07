@@ -22,6 +22,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     renameGlobals: false,
+    renameProperties: false,
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: true,

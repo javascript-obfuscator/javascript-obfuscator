@@ -3,6 +3,7 @@ export enum NodeTransformationStage {
     Preparing = 'Preparing',
     DeadCodeInjection = 'DeadCodeInjection',
     ControlFlowFlattening = 'ControlFlowFlattening',
+    RenameProperties = 'RenameProperties',
     Converting = 'Converting',
     Obfuscating = 'Obfuscating',
     Finalizing = 'Finalizing'

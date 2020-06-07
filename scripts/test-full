@@ -3,6 +3,6 @@
 yarn run test:removeTmpDir &&
 yarn run test:compile &&
 yarn run test:dev &&
-NODE_OPTIONS="--max-old-space-size=4096" $(yarn bin)/nyc --reporter text-summary $(yarn bin)/mocha -- test-tmp/test/index.spec.js --exit &&
+$(yarn bin)/nyc --reporter text-summary $(yarn bin)/mocha -- test-tmp/test/index.spec.js --exit &&
 yarn run test:removeTmpDir &&
 yarn run test:mocha-memory-performance

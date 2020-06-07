@@ -9,7 +9,8 @@ import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identi
 import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
-import { ReservedDomProperties } from '../../../constants/ReservedDomProperties';
+// eslint-disable-next-line import/no-internal-modules
+import ReservedDomProperties from './ReservedDomProperties.json';
 
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeFactory } from '../../../node/NodeFactory';

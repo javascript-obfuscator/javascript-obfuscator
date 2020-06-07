@@ -682,6 +682,30 @@ To set format of renamed property names use [`identifierNamesGenerator`](#identi
 
 To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
 
+Example: 
+```ts
+// input
+const foo = {
+    prop1: 1,
+    prop2: 2,
+    calc: function () {
+        return this.prop1 + this.prop2;
+    }
+};
+
+console.log(foo.calc());
+
+// output
+const foo = {
+    '_0x5a9b25': 0x1,
+    '_0x8ea4ee': 0x2,
+    '_0x2fe16b': function () {
+        return this['_0x5a9b25'] + this['_0x8ea4ee'];
+    }
+};
+console['log'](foo['_0x2fe16b']());
+```
+
 ### `reservedNames`
 Type: `string[]` Default: `[]`
 
@@ -1023,6 +1047,10 @@ See: [`Kind of variables`](#kind-of-variables)
 `BigInt` obfuscation works correctly only in environments that support `BigInt` values. See [ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
 
 See: [`Kind of variables`](#kind-of-variables)
+
+### I enabled `renameProperties` option, and my code broke! What to do?
+
+Just disable this option.
 
 ## Backers
 

@@ -34,6 +34,10 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     private readonly options: IOptions;
 
     /**
+     * Properties list taken from `terser`
+     * https://github.com/terser/terser/blob/master/tools/domprops.js
+     * Copyright 2012-2018 (c) Mihai Bazon <mihai.bazon@gmail.com>
+     *
      * @type {Set<string>}
      */
     private readonly reservedDomPropertiesList: Set<string> = new Set(ReservedDomProperties);

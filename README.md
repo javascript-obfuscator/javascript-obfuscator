@@ -685,25 +685,29 @@ To control which properties will be renamed use [`reservedNames`](#reservedNames
 Example: 
 ```ts
 // input
-const foo = {
-    prop1: 1,
-    prop2: 2,
-    calc: function () {
-        return this.prop1 + this.prop2;
-    }
-};
-
-console.log(foo.calc());
+(function () {
+    const foo = {
+        prop1: 1,
+        prop2: 2,
+        calc: function () {
+            return this.prop1 + this.prop2;
+        }
+    };
+    
+    console.log(foo.calc());
+})();
 
 // output
-const foo = {
-    '_0x5a9b25': 0x1,
-    '_0x8ea4ee': 0x2,
-    '_0x2fe16b': function () {
-        return this['_0x5a9b25'] + this['_0x8ea4ee'];
-    }
-};
-console['log'](foo['_0x2fe16b']());
+(function () {
+    const _0x46529b = {
+        '_0x10cec7': 0x1,
+        '_0xc1c0ca': 0x2,
+        '_0x4b961d': function () {
+            return this['_0x10cec7'] + this['_0xc1c0ca'];
+        }
+    };
+    console['log'](_0x46529b['_0x4b961d']());
+}());
 ```
 
 ### `reservedNames`

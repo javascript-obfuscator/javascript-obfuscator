@@ -34,7 +34,8 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     private readonly options: IOptions;
 
     /**
-     * Properties list taken from `terser`
+     * Properties list taken from `UglifyJS` and `terser`
+     * https://github.com/mishoo/UglifyJS/blob/master/tools/domprops.json
      * https://github.com/terser/terser/blob/master/tools/domprops.js
      * Copyright 2012-2018 (c) Mihai Bazon <mihai.bazon@gmail.com>
      *

@@ -676,7 +676,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
 
-Enables renaming of property names. 
+Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
 
 To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
 

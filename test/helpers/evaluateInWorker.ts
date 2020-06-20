@@ -1,4 +1,4 @@
-import { spawn, Thread, Worker } from 'threads/dist';
+import { spawn, Thread, Worker } from 'threads';
 
 /**
  * @param {string} code

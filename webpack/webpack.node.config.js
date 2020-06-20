@@ -50,8 +50,12 @@ module.exports = {
             BUILD_TIMESTAMP: Date.now()
         }),
         new ForkTsCheckerWebpackPlugin({
-            tsconfig: 'src/tsconfig.node.json',
-            eslint: true
+            eslint: {
+                files: 'src/**/*.ts'
+            },
+            typescript: {
+                configFile: 'src/tsconfig.node.json'
+            }
         }),
         new ForkTsCheckerNotifierWebpackPlugin({
             skipFirstNotification: true

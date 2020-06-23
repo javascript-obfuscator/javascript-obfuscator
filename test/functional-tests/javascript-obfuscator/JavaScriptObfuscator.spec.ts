@@ -571,6 +571,30 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        /**
+         * https://github.com/estools/escodegen/pull/415
+         */
+        describe('Precedence of `SequenceExpression` in computed property', () => {
+            const regExp: RegExp = /class Foo *{ *\[\(bar, *baz\)]\(\) *{ *} * *}/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/precedence-of-sequence-expression-in-computed-property.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should generate a valid js code', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('new.target MetaProperty', () => {
             const regExp: RegExp = /new\.target *=== *Foo/;
 

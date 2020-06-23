@@ -1,5 +1,9 @@
 Change Log
 
+v1.1.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/638
+
 v1.1.0
 ---
 * **New option:** `renameProperties` enables renaming of property names

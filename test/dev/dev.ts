@@ -7,17 +7,9 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            (function () {
-                const foo = {
-                    prop1: 1,
-                    prop2: 2,
-                    calc: function () {
-                        return this.prop1 + this.prop2;
-                    }
-                };
-                
-                console.log(foo.calc());
-            })();
+            class Foo {
+                [(1, Symbol.asyncIterator)]() {}
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

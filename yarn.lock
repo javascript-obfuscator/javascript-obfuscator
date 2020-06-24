@@ -369,10 +369,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.3.tgz#6356df2647de9eac569f9a52eda3480fa9e70b4d"
   integrity sha512-01s+ac4qerwd6RHD+mVbOEsraDHSgUaefQlEdBbUolnQFjKwCr7luvAlEwW1RFojh67u0z4OUTjPn9LEl4zIkA==
 
-"@types/node@14.0.13":
-  version "14.0.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.13.tgz#ee1128e881b874c371374c1f72201893616417c9"
-  integrity sha512-rouEWBImiRaSJsVA+ITTFM6ZxibuAlTuNOCyxVbwreu6k6+ujs7DfnU9o+PShFhET78pMBl3eH+AGSI5eOTkPA==
+"@types/node@14.0.14":
+  version "14.0.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.14.tgz#24a0b5959f16ac141aeb0c5b3cd7a15b7c64cbce"
+  integrity sha512-syUgf67ZQpaJj01/tRTknkMNoBBLWJOBODF0Zm4NrXmiSuxjymFrxnTu1QVYRubhVkRcZLYZG8STTwJRdVm/WQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1908,10 +1908,10 @@ eslint-plugin-import@2.21.2:
     resolve "^1.17.0"
     tsconfig-paths "^3.9.0"
 
-eslint-plugin-jsdoc@28.0.0:
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-28.0.0.tgz#e726a79b4a0e16e8602022d55e0e705e91dc0f50"
-  integrity sha512-Etne7B8AQcgXrnDPXdfV4x+szHVEP+JVZ2cYNfZGn+HoaZigIOzxxJGU+QUhymz6vuz0fpzFM6fTt64XOvw69w==
+eslint-plugin-jsdoc@28.5.1:
+  version "28.5.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-28.5.1.tgz#5a95ee8705af389ba2062a1036be6077b5e62f3f"
+  integrity sha512-1XSWu8UnGwqO8mX3XKGofffL83VRt00ptq0m5OrTLFDN3At4x+/pJ8YHJONKhGC35TtjskcS9/RR6F9pjQ8c+w==
   dependencies:
     comment-parser "^0.7.5"
     debug "^4.1.1"
@@ -2339,10 +2339,10 @@ fork-ts-checker-notifier-webpack-plugin@3.0.0:
   dependencies:
     node-notifier "^6.0.0"
 
-fork-ts-checker-webpack-plugin@5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.0.4.tgz#92ae758e581239e1e37ddd5a6c9cb955764ef470"
-  integrity sha512-nSEqM3KhAjTf8VmuZym2k6WadIasvXybJExFegqMJDkTrOBOY8yGjsXG2FGFJls3DOHtXKzrr3Bv0ZD1LaM7cA==
+fork-ts-checker-webpack-plugin@5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.0.5.tgz#4cf77f925008464db4670750a6e9266a4d25a988"
+  integrity sha512-2vpP+irspLOpZ1pcH3K3yR76MWXVSOYKTGwhwFQGnWjOs5MxzPN+dyDh1tNoaD5DUFP5kr4lGQURE9Qk+DpiUQ==
   dependencies:
     "@babel/code-frame" "^7.8.3"
     chalk "^2.4.1"

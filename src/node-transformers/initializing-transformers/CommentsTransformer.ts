@@ -11,7 +11,6 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { ConditionalCommentObfuscatingGuard } from '../preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
@@ -33,6 +32,8 @@ export class CommentsTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
+
+        this.filterComment = this.filterComment.bind(this);
     }
 
     /**
@@ -50,25 +51,29 @@ export class CommentsTransformer extends AbstractNodeTransformer {
                     }
                 };
 
+            case NodeTransformationStage.Finalizing:
+                return {
+                    leave: (node: ESTree.Node): ESTree.Node | undefined => {
+                        if (NodeGuards.isProgramNode(node)) {
+                            return this.filterComments(node);
+                        }
+                    }
+                };
+
             default:
                 return null;
         }
     }
 
     /**
-     * Removes all comments from node except comments that contain
-     * `@license`, `@preserve` or `javascript-obfuscator` words
-     * Move comments to their nodes
-     *
-     * @param {Node} rootNode
-     * @returns {NodeGuards}
+     * Moves comments to their nodes
      */
     public transformNode (rootNode: ESTree.Program): ESTree.Node {
         if (!rootNode.comments || !rootNode.comments.length) {
             return rootNode;
         }
 
-        const comments: ESTree.Comment[] = this.transformComments(rootNode.comments);
+        const comments: ESTree.Comment[] = rootNode.comments.reverse();
 
         if (comments.length === 0) {
             return rootNode;
@@ -109,14 +114,33 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Comment[]} comments
-     * @returns {Comment[]}
+     * Removes all comments from node except comments that contain preserved words
+     *
+     * @param {Node} rootNode
+     * @returns {NodeGuards}
      */
-    private transformComments (comments: ESTree.Comment[]): ESTree.Comment[] {
-        return comments.filter((comment: ESTree.Comment) =>
-            CommentsTransformer.preservedWords
-                .some((preservedWord: string) => comment.value.includes(preservedWord)) ||
-            ConditionalCommentObfuscatingGuard.isConditionalComment(comment)
-        ).reverse();
+    public filterComments (rootNode: ESTree.Program): ESTree.Node {
+        estraverse.traverse(rootNode, {
+            enter: (node: ESTree.Node): void => {
+                if (node.leadingComments) {
+                    node.leadingComments = node.leadingComments?.filter(this.filterComment);
+                }
+
+                if (node.trailingComments) {
+                    node.trailingComments = node.trailingComments?.filter(this.filterComment);
+                }
+            }
+        });
+
+        return rootNode;
+    }
+
+    /**
+     * @param {ESTree.Comment} comment
+     * @returns {boolean}
+     */
+    private filterComment (comment: ESTree.Comment): boolean {
+        return CommentsTransformer.preservedWords
+            .some((preservedWord: string) => comment.value.includes(preservedWord));
     }
 }

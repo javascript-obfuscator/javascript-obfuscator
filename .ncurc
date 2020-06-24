@@ -1,3 +1,5 @@
 {
-  "reject": []
+  "reject": [
+    "@types/estree"
+  ]
 }

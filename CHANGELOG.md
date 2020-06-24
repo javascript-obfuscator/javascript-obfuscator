@@ -1,5 +1,9 @@
 Change Log
 
+v1.2.0
+---
+* Conditional comments will be removed from the code after obfuscation. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/641
+
 v1.1.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/638

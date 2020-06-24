@@ -9,6 +9,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 describe('ConditionalCommentObfuscatingGuard', () => {
     describe('check', () => {
         describe('Variant #1: `disable` conditional comment', () => {
+            const disableConditionalCommentRegExp: RegExp = /\/\/ *javascript-obfuscator:disable/;
             const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *2;/;
             const consoleLogRegExp: RegExp = /console.log\(_0x([a-f0-9]){4,6}\);/;
@@ -26,20 +27,26 @@ describe('ConditionalCommentObfuscatingGuard', () => {
                 ).getObfuscatedCode();
             });
 
-            it('match #1: should obfuscate variable declaration before `disable` conditional comment', () => {
+            it('match #1: should remove `disable` conditional comment from the code', () => {
+                assert.notMatch(obfuscatedCode, disableConditionalCommentRegExp);
+            });
+
+            it('match #2: should obfuscate variable declaration before `disable` conditional comment', () => {
                 assert.match(obfuscatedCode, obfuscatedVariableDeclarationRegExp);
             });
 
-            it('match #2: should ignore variable declaration after `disable` conditional comment', () => {
+            it('match #3: should ignore variable declaration after `disable` conditional comment', () => {
                 assert.match(obfuscatedCode, ignoredVariableDeclarationRegExp);
             });
 
-            it('match #3: should obfuscate variable name in `console.log`', () => {
+            it('match #4: should obfuscate variable name in `console.log`', () => {
                 assert.match(obfuscatedCode, consoleLogRegExp);
             });
         });
 
         describe('Variant #2: `disable` and `enable` conditional comments #1', () => {
+            const disableConditionalCommentRegExp: RegExp = /\/\/ *javascript-obfuscator:disable/;
+            const enableConditionalCommentRegExp: RegExp = /\/\/ *javascript-obfuscator:enable/;
             const obfuscatedVariableDeclaration1RegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
             const obfuscatedVariableDeclaration2RegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x3;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *2;/;
@@ -57,15 +64,23 @@ describe('ConditionalCommentObfuscatingGuard', () => {
                 ).getObfuscatedCode();
             });
 
-            it('match #1: should obfuscate variable declaration before `disable` conditional comment', () => {
+            it('match #1: should remove `disable` conditional comment from the code', () => {
+                assert.notMatch(obfuscatedCode, disableConditionalCommentRegExp);
+            });
+
+            it('match #2: should remove `enable` conditional comment from the code', () => {
+                assert.notMatch(obfuscatedCode, enableConditionalCommentRegExp);
+            });
+
+            it('match #3: should obfuscate variable declaration before `disable` conditional comment', () => {
                 assert.match(obfuscatedCode, obfuscatedVariableDeclaration1RegExp);
             });
 
-            it('match #2: should ignore variable declaration after `disable` conditional comment', () => {
+            it('match #4: should ignore variable declaration after `disable` conditional comment', () => {
                 assert.match(obfuscatedCode, ignoredVariableDeclarationRegExp);
             });
 
-            it('match #3: should obfuscate variable declaration after `enable` conditional comment', () => {
+            it('match #5: should obfuscate variable declaration after `enable` conditional comment', () => {
                 assert.match(obfuscatedCode, obfuscatedVariableDeclaration2RegExp);
             });
         });

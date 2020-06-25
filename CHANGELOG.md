@@ -1,5 +1,9 @@
 Change Log
 
+v1.2.1
+---
+* Support of old browsers when `selfDefending` is enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/615
+
 v1.2.0
 ---
 * Conditional comments will be removed from the code after obfuscation. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/641

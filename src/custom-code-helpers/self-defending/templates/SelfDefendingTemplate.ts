@@ -9,7 +9,7 @@ export function SelfDefendingTemplate (): string {
             const test = function () {
                 const regExp = test
                     .constructor('return /" + this + "/')()
-                    .compile('^([^ ]+( +[^ ]+)+)+[^ ]}');
+                    .constructor('^([^ ]+( +[^ ]+)+)+[^ ]}');
                 
                 return !regExp.test({selfDefendingFunctionName});
             };

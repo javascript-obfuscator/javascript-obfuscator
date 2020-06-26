@@ -90,6 +90,7 @@ import './functional-tests/node-transformers/converting-transformers/split-strin
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
 import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
+import './functional-tests/node-transformers/minification-transformers/variable-declarations-merge-transformer/VariableDeclarationsMergeTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/catch-clause/CatchClause.spec';

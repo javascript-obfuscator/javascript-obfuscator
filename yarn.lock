@@ -297,10 +297,10 @@
     "@types/estree" "*"
     "@types/json-schema" "*"
 
-"@types/estraverse@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@types/estraverse/-/estraverse-0.0.6.tgz#669f7cdf72ab797e6125f8d00fed33d4cf30c221"
-  integrity sha1-Zp9833KreX5hJfjQD+0z1M8wwiE=
+"@types/estraverse@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/estraverse/-/estraverse-5.1.0.tgz#7a16cf8a8ee7764c05ccef3b2701bbcde6d5d0ae"
+  integrity sha512-vH2ItsZq47KprWHdv8OMjlfpygPHp1P7X4zuJuTghXldyezatpaotNSujld/HNsxh9TUS7+JRB0HEldkv67qaw==
   dependencies:
     "@types/estree" "*"
 

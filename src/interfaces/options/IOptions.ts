@@ -21,6 +21,7 @@ export interface IOptions {
     readonly identifiersPrefix: string;
     readonly inputFileName: string;
     readonly log: boolean;
+    readonly minify: boolean;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;
     readonly reservedNames: string[];

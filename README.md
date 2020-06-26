@@ -329,6 +329,7 @@ Following options are available for the JS Obfuscator:
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
+    minify: true,
     renameGlobals: false,
     renameProperties: false,
     reservedNames: [],
@@ -374,6 +375,7 @@ Following options are available for the JS Obfuscator:
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
+    --minify <boolean>
     --rename-globals <boolean>
     --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
@@ -657,12 +659,19 @@ Use this option when you want to obfuscate multiple files. This option helps to 
 ### `inputFileName`
 Type: `string` Default: `''`
 
-Allows to set name of the input file with source code. This name will used internally for source map generation.
+Allows to set name of the input file with source code. This name will be used internally for source map generation.
 
 ### `log`
 Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
+
+### `minify`
+Type: `boolean` Default: `true`
+
+Enables code minification.
+
+##### :warning: this option doesn't affect identifier names.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -947,6 +956,7 @@ Performance will 50-100% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
@@ -977,6 +987,7 @@ Performance will 30-35% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
@@ -1005,6 +1016,7 @@ Performance will slightly slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,

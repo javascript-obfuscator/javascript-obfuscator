@@ -1,5 +1,9 @@
 Change Log
 
+v1.3.0
+---
+* **New option:** `minify` enables code minification.
+
 v1.2.1
 ---
 * Support of old browsers when `selfDefending` is enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/615

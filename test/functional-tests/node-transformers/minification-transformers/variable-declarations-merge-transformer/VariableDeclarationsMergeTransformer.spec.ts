@@ -114,6 +114,33 @@ describe('VariableDeclarationsMergeTransformer', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
+
+        describe('Variant #5: multiple variable declarations without declarators', () => {
+            const regExp: RegExp = new RegExp(
+                'var foo, *' +
+                    'bar, *' +
+                    'baz;'
+            );
+
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/multiple-declarations-without-declarators.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        minify: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should merge variable declarations', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
     });
 
     describe('object pattern as initializer', () => {

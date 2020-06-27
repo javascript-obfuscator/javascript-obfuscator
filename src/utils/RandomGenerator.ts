@@ -11,12 +11,15 @@ import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 
 import { initializable } from '../decorators/Initializable';
 
+import { alphabetString } from '../constants/AlphabetString';
+import { alphabetStringUppercase } from '../constants/AlphabetStringUppercase';
+
 @injectable()
 export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
      * @type {string}
      */
-    public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    public static readonly randomGeneratorPool: string = `${alphabetString}${alphabetStringUppercase}`;
 
     /**
      * @type {Chance.Chance}

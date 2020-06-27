@@ -6,6 +6,10 @@ import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { numbersString } from '../../constants/NumbersString';
+import { alphabetString } from '../../constants/AlphabetString';
+import { alphabetStringUppercase } from '../../constants/AlphabetStringUppercase';
+
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
@@ -24,7 +28,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {string[]}
      */
-    private static readonly nameSequence: string[] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    private static readonly nameSequence: string[] = `${numbersString}${alphabetString}${alphabetStringUppercase}`.split('');
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer

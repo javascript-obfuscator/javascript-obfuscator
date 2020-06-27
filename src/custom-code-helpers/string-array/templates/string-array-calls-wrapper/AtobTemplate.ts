@@ -1,3 +1,7 @@
+import { alphabetStringUppercase } from '../../../../constants/AlphabetStringUppercase';
+import { alphabetString } from '../../../../constants/AlphabetString';
+import { numbersString } from '../../../../constants/NumbersString';
+
 /**
  * @returns {string}
  */
@@ -6,7 +10,7 @@ export function AtobTemplate (): string {
         (function () {
             {globalVariableTemplate}
             
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+            const chars = '${alphabetStringUppercase}${alphabetString}${numbersString}+/=';
 
             that.atob || (
                 that.atob = function(input) {

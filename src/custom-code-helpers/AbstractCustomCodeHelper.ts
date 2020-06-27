@@ -16,7 +16,7 @@ import { GlobalVariableTemplate2 } from './common/templates/GlobalVariableTempla
 
 @injectable()
 export abstract class AbstractCustomCodeHelper <
-    TInitialData extends any[] = any[]
+    TInitialData extends unknown[] = unknown[]
 > implements ICustomCodeHelper <TInitialData> {
     /**
      * @type {string[]}

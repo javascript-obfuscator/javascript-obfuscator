@@ -1,4 +1,4 @@
-export interface IInitializable <T extends any[] = never[]> {
+export interface IInitializable <T extends unknown[] = never[]> {
     [key: string]: any;
 
     /**

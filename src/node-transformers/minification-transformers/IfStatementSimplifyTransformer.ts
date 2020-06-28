@@ -19,9 +19,9 @@ import { NodeFactory } from '../../node/NodeFactory';
 @injectable()
 export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
     /**
-     * @type {WeakSet<ESTree.BlockStatement>}
+     * @type {WeakSet<ESTree.Statement>}
      */
-    private readonly ifStatementBlockStatementsWithReturnStatementSet: WeakSet<ESTree.BlockStatement> = new Set();
+    private readonly branchStatementsWithReturnStatementSet: WeakSet<ESTree.Statement> = new Set();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -62,91 +62,131 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.IfStatement}
      */
-    // eslint-disable-next-line complexity
     public transformNode (
         ifStatementNode: ESTree.IfStatement,
         parentNode: ESTree.Node
     ): ESTree.Node {
-        if (this.isValidIfStatementBlockStatementForConvert(ifStatementNode.consequent)) {
-            const consequentExpression: ESTree.Expression | null = this.toExpression(ifStatementNode.consequent.body);
+        const consequentExpression: ESTree.Expression | null = this.convertBranchStatementToExpression(ifStatementNode.consequent);
 
-            if (!consequentExpression) {
-                return ifStatementNode;
+        if (!consequentExpression) {
+            return ifStatementNode;
+        }
+
+        const isConsequentWithReturnStatement: boolean = this.branchStatementsWithReturnStatementSet
+            .has(ifStatementNode.consequent);
+
+        if (!ifStatementNode.alternate) {
+            if (isConsequentWithReturnStatement) {
+                return NodeFactory.ifStatementNode(
+                    ifStatementNode.test,
+                    NodeFactory.returnStatementNode(consequentExpression)
+                );
             }
 
-            if (ifStatementNode.alternate) {
-                if (this.isValidIfStatementBlockStatementForConvert(ifStatementNode.alternate)) {
-                    const alternateExpression: ESTree.Expression | null = this.toExpression(ifStatementNode.alternate.body);
+            return NodeFactory.expressionStatementNode(
+                NodeFactory.logicalExpressionNode(
+                    '&&',
+                    ifStatementNode.test,
+                    consequentExpression,
+                )
+            );
+        }
 
-                    if (!alternateExpression) {
-                        return ifStatementNode;
+        const alternateExpression: ESTree.Expression | null = this.convertBranchStatementToExpression(ifStatementNode.alternate);
+
+        if (!alternateExpression) {
+            return ifStatementNode;
+        }
+
+        const isAlternateWithReturnStatement: boolean = this.branchStatementsWithReturnStatementSet
+            .has(ifStatementNode.alternate);
+
+        if (isConsequentWithReturnStatement && isAlternateWithReturnStatement) {
+            return NodeFactory.returnStatementNode(
+                NodeFactory.conditionalExpressionNode(
+                    ifStatementNode.test,
+                    consequentExpression,
+                    alternateExpression
+                )
+            );
+        }
+
+        if (isConsequentWithReturnStatement) {
+            return NodeFactory.ifStatementNode(
+                ifStatementNode.test,
+                NodeFactory.returnStatementNode(consequentExpression),
+                NodeFactory.expressionStatementNode(alternateExpression)
+            );
+        }
+
+        if (isAlternateWithReturnStatement) {
+            return NodeFactory.ifStatementNode(
+                ifStatementNode.test,
+                NodeFactory.expressionStatementNode(consequentExpression),
+                NodeFactory.returnStatementNode(alternateExpression)
+            );
+        }
+
+        return NodeFactory.expressionStatementNode(
+            NodeFactory.conditionalExpressionNode(
+                ifStatementNode.test,
+                consequentExpression,
+                alternateExpression
+            )
+        );
+    }
+
+    /**
+     * @param {ESTree.Statement} statementNode
+     * @returns {ESTree.Expression | null}
+     */
+    private convertBranchStatementToExpression (
+        statementNode: ESTree.Statement
+    ): ESTree.Expression | null {
+        if (!this.isValidBranchStatementStatementForConvert(statementNode)) {
+            return null;
+        }
+
+        const unwrappedExpressions: ESTree.Expression[] = statementNode
+            .body
+            .reduce<ESTree.Expression[]>(
+                (acc: ESTree.Expression[], statementBodyStatementNode: ESTree.Statement) => {
+                    if (NodeGuards.isExpressionStatementNode(statementBodyStatementNode)) {
+                        return [
+                            ...acc,
+                            statementBodyStatementNode.expression
+                        ];
                     }
 
                     if (
-                        this.ifStatementBlockStatementsWithReturnStatementSet.has(ifStatementNode.consequent)
-                        && this.ifStatementBlockStatementsWithReturnStatementSet.has(ifStatementNode.alternate)
+                        NodeGuards.isReturnStatementNode(statementBodyStatementNode)
+                        && statementBodyStatementNode.argument
                     ) {
-                        return NodeFactory.returnStatementNode(
-                            NodeFactory.conditionalExpressionNode(
-                                ifStatementNode.test,
-                                consequentExpression,
-                                alternateExpression
-                            )
-                        );
+                        return [
+                            ...acc,
+                            statementBodyStatementNode.argument
+                        ];
                     }
 
-                    if (this.ifStatementBlockStatementsWithReturnStatementSet.has(ifStatementNode.consequent)) {
-                        return NodeFactory.ifStatementNode(
-                            ifStatementNode.test,
-                            NodeFactory.returnStatementNode(consequentExpression),
-                            NodeFactory.expressionStatementNode(alternateExpression)
-                        );
-                    }
+                    return acc;
+                },
+                []
+            );
 
-                    if (this.ifStatementBlockStatementsWithReturnStatementSet.has(ifStatementNode.alternate)) {
-                        return NodeFactory.ifStatementNode(
-                            ifStatementNode.test,
-                            NodeFactory.expressionStatementNode(consequentExpression),
-                            NodeFactory.returnStatementNode(alternateExpression)
-                        );
-                    }
-
-                    return NodeFactory.expressionStatementNode(
-                        NodeFactory.conditionalExpressionNode(
-                            ifStatementNode.test,
-                            consequentExpression,
-                            alternateExpression
-                        )
-                    );
-                } else {
-                    return ifStatementNode;
-                }
-            }
-
-            return this.ifStatementBlockStatementsWithReturnStatementSet.has(ifStatementNode.consequent)
-                ? NodeFactory.ifStatementNode(
-                    ifStatementNode.test,
-                    NodeFactory.returnStatementNode(consequentExpression)
-                )
-                : NodeFactory.expressionStatementNode(
-                    NodeFactory.logicalExpressionNode(
-                        '&&',
-                        ifStatementNode.test,
-                        consequentExpression,
-                    )
-                );
-
+        if (!unwrappedExpressions.length) {
+            return null;
         }
 
-        return ifStatementNode;
+        return unwrappedExpressions.length === 1
+            ? unwrappedExpressions[0]
+            : NodeFactory.sequenceExpressionNode(unwrappedExpressions);
     }
 
     /**
      * @param {ESTree.Statement} statementNode
      * @returns {statementNode is ESTree.BlockStatement & {body: (ESTree.ExpressionStatement | ESTree.ReturnStatement)[]}}
-     * @private
      */
-    private isValidIfStatementBlockStatementForConvert (
+    private isValidBranchStatementStatementForConvert (
         statementNode: ESTree.Statement
     ): statementNode is ESTree.BlockStatement & {body: (ESTree.ExpressionStatement | ESTree.ReturnStatement)[]} {
         if (!NodeGuards.isBlockStatementNode(statementNode)) {
@@ -164,42 +204,10 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
 
                 break;
             } else if (NodeGuards.isReturnStatementNode(statement)) {
-                this.ifStatementBlockStatementsWithReturnStatementSet.add(statementNode);
+                this.branchStatementsWithReturnStatementSet.add(statementNode);
             }
         }
 
         return isValidStatementNode;
-    }
-
-    /**
-     * @param {(ESTree.ExpressionStatement | ESTree.ReturnStatement)[]} statementNodes
-     * @returns {ESTree.Expression | null}
-     */
-    private toExpression (
-        statementNodes: (ESTree.ExpressionStatement | ESTree.ReturnStatement)[]
-    ): ESTree.Expression | null {
-        const unwrappedExpressions: ESTree.Expression[] = statementNodes
-            .map((statementNode: ESTree.ExpressionStatement | ESTree.ReturnStatement) => {
-                if (NodeGuards.isExpressionStatementNode(statementNode)) {
-                    return statementNode.expression;
-                }
-
-                if (NodeGuards.isReturnStatementNode(statementNode)) {
-                    return statementNode.argument;
-                }
-
-                return statementNode;
-            })
-            .filter((expressionNode: ESTree.Expression | null | undefined): expressionNode is ESTree.Expression =>
-                !!expressionNode
-            );
-
-        if (!unwrappedExpressions.length) {
-            return null;
-        }
-
-        return unwrappedExpressions.length === 1
-            ? unwrappedExpressions[0]
-            : NodeFactory.sequenceExpressionNode(unwrappedExpressions);
     }
 }

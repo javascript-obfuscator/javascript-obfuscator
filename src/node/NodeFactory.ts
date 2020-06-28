@@ -115,6 +115,26 @@ export class NodeFactory {
     }
 
     /**
+     * @param {ESTree.Expression} test
+     * @param {ESTree.Expression} consequent
+     * @param {ESTree.Expression} alternate
+     * @returns {ESTree.ConditionalExpression}
+     */
+    public static conditionalExpressionNode (
+        test: ESTree.Expression,
+        consequent: ESTree.Expression,
+        alternate: ESTree.Expression
+    ): ESTree.ConditionalExpression {
+        return {
+            type: NodeType.ConditionalExpression,
+            test,
+            consequent,
+            alternate,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Identifier} label
      * @returns {ContinueStatement}
      */
@@ -195,15 +215,15 @@ export class NodeFactory {
     }
 
     /**
-     * @param {Expression} test
-     * @param {BlockStatement} consequent
-     * @param {BlockStatement} alternate
-     * @returns {IfStatement}
+     * @param {ESTree.Expression} test
+     * @param {ESTree.Statement} consequent
+     * @param {ESTree.Statement | null} alternate
+     * @returns {ESTree.IfStatement}
      */
     public static ifStatementNode (
         test: ESTree.Expression,
-        consequent: ESTree.BlockStatement,
-        alternate?: ESTree.BlockStatement
+        consequent: ESTree.Statement,
+        alternate?: ESTree.Statement | null
     ): ESTree.IfStatement {
         return {
             type: NodeType.IfStatement,
@@ -346,6 +366,18 @@ export class NodeFactory {
         return {
             type: NodeType.ReturnStatement,
             argument,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {ESTree.Expression[]} expressions
+     * @returns {ESTree.SequenceExpression}
+     */
+    public static sequenceExpressionNode (expressions: ESTree.Expression[]): ESTree.SequenceExpression {
+        return {
+            type: NodeType.SequenceExpression,
+            expressions,
             metadata: { ignoredNode: false }
         };
     }

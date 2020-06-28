@@ -4,6 +4,10 @@ v1.3.0
 ---
 * **New option:** `minify` enables code minification.
 
+v1.2.2
+---
+* Fixed performance regression of `Initializing` stage after `1.2.0`
+
 v1.2.1
 ---
 * Support of old browsers when `selfDefending` is enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/615

@@ -11,6 +11,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { ConditionalCommentObfuscatingGuard } from '../preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
@@ -32,8 +33,6 @@ export class CommentsTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-
-        this.filterComment = this.filterComment.bind(this);
     }
 
     /**
@@ -55,7 +54,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
                 return {
                     leave: (node: ESTree.Node): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
-                            return this.filterComments(node);
+                            return this.filterCommentsOnFinalizingTraverse(node);
                         }
                     }
                 };
@@ -69,6 +68,8 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * Moves comments to their nodes
      */
     public transformNode (rootNode: ESTree.Program): ESTree.Node {
+        rootNode = this.filterCommentsOnPrimaryTraverse(rootNode);
+
         if (!rootNode.comments || !rootNode.comments.length) {
             return rootNode;
         }
@@ -114,21 +115,42 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * Removes all comments from node except comments that contain
+     * preserved words or `javascript-obfuscator` words
+     *
+     * @param {ESTree.Program} rootNode
+     * @returns {ESTree.Program}
+     */
+    private filterCommentsOnPrimaryTraverse (rootNode: ESTree.Program): ESTree.Program {
+        rootNode.comments = rootNode.comments?.filter((comment: ESTree.Comment) =>
+            this.filterComment(comment, true)
+        );
+
+        return rootNode;
+    }
+
+    /**
      * Removes all comments from node except comments that contain preserved words
      *
-     * @param {Node} rootNode
-     * @returns {NodeGuards}
+     * @param {ESTree.Program} rootNode
+     * @returns {ESTree.Program}
      */
-    public filterComments (rootNode: ESTree.Program): ESTree.Node {
-        estraverse.traverse(rootNode, {
-            enter: (node: ESTree.Node): void => {
+    private filterCommentsOnFinalizingTraverse (rootNode: ESTree.Program): ESTree.Program {
+        estraverse.replace(rootNode, {
+            enter: (node: ESTree.Node): ESTree.Node => {
                 if (node.leadingComments) {
-                    node.leadingComments = node.leadingComments?.filter(this.filterComment);
+                    node.leadingComments = node.leadingComments?.filter((comment: ESTree.Comment) =>
+                        this.filterComment(comment, false)
+                    );
                 }
 
                 if (node.trailingComments) {
-                    node.trailingComments = node.trailingComments?.filter(this.filterComment);
+                    node.trailingComments = node.trailingComments?.filter((comment: ESTree.Comment) =>
+                        this.filterComment(comment, false)
+                    );
                 }
+
+                return node;
             }
         });
 
@@ -137,9 +159,14 @@ export class CommentsTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ESTree.Comment} comment
+     * @param {boolean} keepConditionalComment
      * @returns {boolean}
      */
-    private filterComment (comment: ESTree.Comment): boolean {
+    private filterComment (comment: ESTree.Comment, keepConditionalComment: boolean): boolean {
+        if (keepConditionalComment && ConditionalCommentObfuscatingGuard.isConditionalComment(comment)) {
+            return true;
+        }
+
         return CommentsTransformer.preservedWords
             .some((preservedWord: string) => comment.value.includes(preservedWord));
     }

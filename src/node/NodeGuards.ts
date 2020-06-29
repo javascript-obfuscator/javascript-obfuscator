@@ -385,6 +385,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isThrowStatementNode (node: ESTree.Node): node is ESTree.ThrowStatement {
+        return node.type === NodeType.ThrowStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isUnaryExpressionNode (node: ESTree.Node): node is ESTree.UnaryExpression {
         return node.type === NodeType.UnaryExpression;
     }

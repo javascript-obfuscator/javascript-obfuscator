@@ -16,7 +16,7 @@ export function Rc4Template (): string {
                     	     
             let i;
                     	        
-	        for (i = 0; i < 256; i++) {
+            for (i = 0; i < 256; i++) {
                 s[i] = i;
             }
  

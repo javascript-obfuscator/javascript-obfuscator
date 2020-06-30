@@ -352,14 +352,16 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        '!!\\[] *&& *bar\\(\\);'
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                        '}'
                     );
 
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-no-return-single-statement.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-no-return-single-statement.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -370,21 +372,25 @@ describe('IfStatementSimplifyTransformer', () => {
                         ).getObfuscatedCode();
                     });
 
-                    it('should simplify if statement', () => {
+                    it('should not simplify if statement', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });
 
                 describe('Variant #2: multiple statements', () => {
                     const regExp: RegExp = new RegExp(
-                        '!!\\[] *&& *\\(bar\\(\\) *, *baz\\(\\) *, *bark\\(\\)\\);'
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'bark\\(\\); *' +
+                            'return hawk\\(\\);' +
+                        '}'
                     );
 
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-no-return-multiple-statements.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-no-return-multiple-statements.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -395,7 +401,7 @@ describe('IfStatementSimplifyTransformer', () => {
                         ).getObfuscatedCode();
                     });
 
-                    it('should simplify if statement', () => {
+                    it('should not simplify if statement', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });

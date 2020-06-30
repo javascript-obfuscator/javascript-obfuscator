@@ -173,7 +173,123 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
             });
 
-            describe('With `ReturnStatement`', () => {
+            describe('With consequent `ReturnStatement`', () => {
+                describe('Variant #1: single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *' +
+                            'return *bar\\(\\); *' +
+                        'else *' +
+                            'baz\\(\\);'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/consequent-and-alternate-consequent-return-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *' +
+                            'return *bar\\(\\) *, *baz\\(\\) *, *bark\\(\\); *' +
+                        'else *' +
+                            'hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\);'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/consequent-and-alternate-consequent-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With alternate `ReturnStatement`', () => {
+                describe('Variant #1: single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *' +
+                            'bar\\(\\); *' +
+                        'else *' +
+                            'return *baz\\(\\);'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/consequent-and-alternate-alternate-return-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *' +
+                            'bar\\(\\) *, *baz\\(\\) *, *bark\\(\\); *' +
+                        'else *' +
+                            'return *hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\);'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/consequent-and-alternate-alternate-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With consequent and alternate `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
                         'return *!!\\[] *' +

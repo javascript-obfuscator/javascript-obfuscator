@@ -381,8 +381,7 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                            'bark\\(\\); *' +
-                            'return hawk\\(\\);' +
+                            'bark\\(\\), *hawk\\(\\);' +
                         '}'
                     );
 
@@ -401,7 +400,37 @@ describe('IfStatementSimplifyTransformer', () => {
                         ).getObfuscatedCode();
                     });
 
-                    it('should not simplify if statement', () => {
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With `ReturnStatement`', () => {
+                describe('Variant #1: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'return bark\\(\\), *hawk\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });

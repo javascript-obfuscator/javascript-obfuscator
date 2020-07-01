@@ -503,7 +503,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 describe('Variant #3: mixed statements #1', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
-                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                         '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *dog\\(\\);' +
@@ -565,9 +565,9 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('With consequent `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *{ *' +
+                        'if *\\(!!\\[]\\) *' +
                             'return *bar\\(\\); *' +
-                        '} *else *{ *' +
+                        'else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *bark\\(\\); *' +
                         '}'
                     );
@@ -630,9 +630,8 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '} *else *{ *' +
-                            'return *bark\\(\\); *' +
-                        '}'
+                        '} *else *' +
+                            'return *bark\\(\\);'
                     );
 
 

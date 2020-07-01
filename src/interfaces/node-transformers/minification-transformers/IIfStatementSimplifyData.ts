@@ -6,23 +6,20 @@ export interface IIfStatementSimplifyData {
      */
     leadingStatements: ESTree.Statement[];
 
-    /**
-     * @type {ESTree.Statement}
-     */
-    statement: ESTree.Statement;
+    trailingStatement: {
+        /**
+         * @type {ESTree.Statement | null}
+         */
+        statement: ESTree.Statement;
 
-    /**
-     * @type {ESTree.Expression}
-     */
-    expression: ESTree.Expression;
+        /**
+         * @type {ESTree.Expression | null}
+         */
+        expression: ESTree.Expression;
+    } | null;
 
     /**
      * @type {boolean}
      */
     hasReturnStatement: boolean;
-
-    /**
-     * @type {boolean}
-     */
-    hasSingleExpression: boolean;
 }

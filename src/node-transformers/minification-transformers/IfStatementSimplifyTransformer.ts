@@ -166,6 +166,38 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
         /**
          * Converts:
          * if (true) {
+         *     const foo = 1;
+         *     console.log(1);
+         *     return 1;
+         * }
+         *
+         * to:
+         * if (true) {
+         *     const foo = 1;
+         *     return console.log(1), 1;
+         * }
+         */
+        if (consequentSimplifyData.leadingStatements.length || alternateSimplifyData.leadingStatements.length) {
+            return NodeFactory.ifStatementNode(
+                ifStatementNode.test,
+                consequentSimplifyData.leadingStatements.length
+                    ? NodeFactory.blockStatementNode([
+                        ...consequentSimplifyData.leadingStatements,
+                        consequentSimplifyData.statement
+                    ])
+                    : consequentSimplifyData.statement,
+                alternateSimplifyData.leadingStatements.length
+                    ? NodeFactory.blockStatementNode([
+                        ...alternateSimplifyData.leadingStatements,
+                        alternateSimplifyData.statement
+                    ])
+                    : alternateSimplifyData.statement
+            );
+        }
+
+        /**
+         * Converts:
+         * if (true) {
          *     return 1;
          * } else {
          *     return 2;

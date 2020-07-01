@@ -436,5 +436,292 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
             });
         });
+
+        describe('Consequent and alternate', () => {
+            describe('No `ReturnStatement`', () => {
+                describe('Variant #1: single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            'eagle\\(\\), *pork\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *cow\\(\\); *' +
+                            'lion\\(\\), *pig\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #3: mixed statements #1', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            'eagle\\(\\), *dog\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #4: mixed statements #2', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            'eagle\\(\\), *pork\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *cow\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-2.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With consequent `ReturnStatement`', () => {
+                describe('Variant #1: single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'return *bar\\(\\); *' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *bark\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-return-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            'return *eagle\\(\\), *cat\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *pig\\(\\); *' +
+                            'lion\\(\\), *dog\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With alternate `ReturnStatement`', () => {
+                describe('Variant #1: single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                        '} *else *{ *' +
+                            'return *bark\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-return-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'bark\\(\\), *hawk\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *pork\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *dog\\(\\); *' +
+                            'return *pig\\(\\), *lion\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('With consequent and alternate `ReturnStatement`', () => {
+                describe('Variant #1: multiple statements', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *eagle\\(\\); *' +
+                            'return *hawk\\(\\), *lion\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *dog\\(\\), *' +
+                                '_0x([a-f0-9]){4,6} *= *hamster\\(\\); *' +
+                            'return *parrot\\(\\), *bull\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                minify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+        });
     });
 });

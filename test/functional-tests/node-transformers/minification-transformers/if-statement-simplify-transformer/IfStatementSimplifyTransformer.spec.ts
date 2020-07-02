@@ -352,9 +352,8 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *{ *' +
-                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '}'
+                        'if *\\(!!\\[]\\) *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\);'
                     );
 
 
@@ -441,11 +440,10 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *{ *' +
+                        'if *\\(!!\\[]\\) *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '} *else *{ *' +
-                            'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
-                        '}'
+                        'else *' +
+                            'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
 
@@ -502,9 +500,9 @@ describe('IfStatementSimplifyTransformer', () => {
 
                 describe('Variant #3: mixed statements #1', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *{ *' +
+                        'if *\\(!!\\[]\\) *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '} *else *{ *' +
+                        'else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *dog\\(\\);' +
                         '}'
@@ -536,9 +534,8 @@ describe('IfStatementSimplifyTransformer', () => {
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
                                 '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *pork\\(\\);' +
-                        '} *else *{ *' +
-                            'const *_0x([a-f0-9]){4,6} *= *cow\\(\\); *' +
-                        '}'
+                        '} *else *' +
+                            'const *_0x([a-f0-9]){4,6} *= *cow\\(\\);'
                     );
 
 
@@ -567,9 +564,8 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'return *bar\\(\\); *' +
-                        'else *{ *' +
-                            'const *_0x([a-f0-9]){4,6} *= *bark\\(\\); *' +
-                        '}'
+                        'else *' +
+                            'const *_0x([a-f0-9]){4,6} *= *bark\\(\\);'
                     );
 
 
@@ -628,9 +624,9 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('With alternate `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *{ *' +
+                        'if *\\(!!\\[]\\) *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '} *else *' +
+                        'else *' +
                             'return *bark\\(\\);'
                     );
 
@@ -719,6 +715,38 @@ describe('IfStatementSimplifyTransformer', () => {
                     it('should simplify if statement', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
+                });
+            });
+        });
+    });
+
+    describe('Cases', () => {
+        describe('Variable declarations merge transformer integration', () => {
+            describe('Variant #1: three statements', () => {
+                const regExp: RegExp = new RegExp(
+                    'if *\\(!!\\[]\\) *' +
+                        'const _0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
+                            '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
+                            '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{};'
+                );
+
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarations-merge-transformer-integration-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            minify: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should simplify if statement', () => {
+                    assert.match(obfuscatedCode, regExp);
                 });
             });
         });

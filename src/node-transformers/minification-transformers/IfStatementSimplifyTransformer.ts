@@ -9,17 +9,26 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeFactory } from '../../node/NodeFactory';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Simplifies `IfStatement` node
  */
 @injectable()
 export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.VariableDeclarationsMergeTransformer
+    ];
+
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -70,19 +79,23 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
             return ifStatementNode;
         }
 
-        // Variant #2: valid data for consequent expression only
+        let transformedNode: ESTree.Node;
+
         if (!ifStatementNode.alternate) {
-            return this.getConsequentNode(ifStatementNode, consequentSimplifyData);
+            // Variant #2: valid data for consequent expression only
+            transformedNode = this.getConsequentNode(ifStatementNode, consequentSimplifyData);
+        } else {
+            const alternateSimplifyData: IIfStatementSimplifyData | null = this.getIfStatementSimplifyData(ifStatementNode.alternate);
+
+            if (!alternateSimplifyData) {
+                return ifStatementNode;
+            }
+
+            // Variant #3: valid data for consequent and alternate expressions
+            transformedNode = this.getConsequentAndAlternateNode(ifStatementNode, consequentSimplifyData, alternateSimplifyData);
         }
 
-        const alternateSimplifyData: IIfStatementSimplifyData | null = this.getIfStatementSimplifyData(ifStatementNode.alternate);
-
-        if (!alternateSimplifyData) {
-            return ifStatementNode;
-        }
-
-        // Variant #3: valid data for consequent and alternate expressions
-        return this.getConsequentAndAlternateNode(ifStatementNode, consequentSimplifyData, alternateSimplifyData);
+        return NodeUtils.parentizeNode(transformedNode, parentNode);
     }
 
     /**
@@ -114,7 +127,7 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
         ) {
             return NodeFactory.ifStatementNode(
                 ifStatementNode.test,
-                this.getPartialBlockStatementNode(consequentSimplifyData)
+                this.getPartialIfStatementBranchNode(consequentSimplifyData)
             );
         }
 
@@ -186,8 +199,8 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
         ) {
             return NodeFactory.ifStatementNode(
                 ifStatementNode.test,
-                this.getPartialBlockStatementNode(consequentSimplifyData),
-                this.getPartialBlockStatementNode(alternateSimplifyData)
+                this.getPartialIfStatementBranchNode(consequentSimplifyData),
+                this.getPartialIfStatementBranchNode(alternateSimplifyData)
             );
         }
 
@@ -263,8 +276,17 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
     private getIfStatementSimplifyData (
         statementNode: ESTree.Statement | null | undefined
     ): IIfStatementSimplifyData | null {
-        if (!statementNode || !NodeGuards.isBlockStatementNode(statementNode)) {
+        if (!statementNode) {
             return null;
+        }
+
+        if (!NodeGuards.isBlockStatementNode(statementNode)) {
+            return {
+                leadingStatements: [statementNode],
+                trailingStatement: null,
+                hasReturnStatement: false,
+                hasSingleExpression: false
+            };
         }
 
         const {
@@ -279,7 +301,8 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
             return {
                 leadingStatements,
                 trailingStatement: null,
-                hasReturnStatement
+                hasReturnStatement,
+                hasSingleExpression: false
             };
         }
 
@@ -299,7 +322,8 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
                 statement,
                 expression
             },
-            hasReturnStatement
+            hasReturnStatement,
+            hasSingleExpression
         };
     }
 
@@ -374,16 +398,35 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
      * @param {IIfStatementSimplifyData} ifStatementSimplifyData
      * @returns {ESTree.BlockStatement}
      */
-    private getPartialBlockStatementNode (ifStatementSimplifyData: IIfStatementSimplifyData): ESTree.Statement {
+    private getPartialIfStatementBranchNode (ifStatementSimplifyData: IIfStatementSimplifyData): ESTree.Statement {
         // variant #1: all statements inside `IfStatement` branch are valid
         if (!ifStatementSimplifyData.leadingStatements.length && ifStatementSimplifyData.trailingStatement) {
             return ifStatementSimplifyData.trailingStatement.statement;
         }
 
         // variant #2: only last N statements inside `IfStatement` branch are valid
-        return NodeFactory.blockStatementNode([
-            ...ifStatementSimplifyData.leadingStatements,
+        const blockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
+            ...ifStatementSimplifyData.leadingStatements.length ? ifStatementSimplifyData.leadingStatements : [],
             ...ifStatementSimplifyData.trailingStatement ? [ifStatementSimplifyData.trailingStatement.statement] : []
         ]);
+
+        return blockStatementNode.body.length === 1
+            && !this.isProhibitedSingleStatementForIfStatementBranch(blockStatementNode.body[0])
+            ? blockStatementNode.body[0]
+            : blockStatementNode;
+
+    }
+
+    /**
+     * @param {ESTree.Statement} statement
+     * @returns {boolean}
+     */
+    private isProhibitedSingleStatementForIfStatementBranch (statement: ESTree.Statement): boolean {
+        // TODO: write tests
+        // function declaration is not allowed outside of block in `strict` mode
+        return NodeGuards.isFunctionDeclarationNode(statement)
+            // `IfStatement` may break the code
+            // TODO: catch this and write tests
+            || NodeGuards.isIfStatementNode(statement);
     }
 }

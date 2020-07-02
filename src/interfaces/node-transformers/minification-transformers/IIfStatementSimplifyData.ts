@@ -22,4 +22,9 @@ export interface IIfStatementSimplifyData {
      * @type {boolean}
      */
     hasReturnStatement: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    hasSingleExpression: boolean;
 }

@@ -32,7 +32,8 @@ export class CryptUtils implements ICryptUtils {
      * @returns {string}
      */
     public btoa (string: string): string {
-        const chars: string = `${alphabetStringUppercase}${alphabetString}${numbersString}+/=`;
+        // swapped lowercase and uppercase groups of alphabet to prevent easy decode!!!!
+        const chars: string = `${alphabetString}${alphabetStringUppercase}${numbersString}+/=`;
 
         let output: string = '';
 

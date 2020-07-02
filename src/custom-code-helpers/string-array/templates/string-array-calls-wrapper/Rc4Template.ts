@@ -6,7 +6,7 @@ export function Rc4Template (): string {
         const rc4 = function (str, key) {
             let s = [], j = 0, x, res = '', newStr = '';
            
-            str = atob(str);
+            str = {atobFunctionName}(str);
                 
             for (let k = 0, length = str.length; k < length; k++) {
                 newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);

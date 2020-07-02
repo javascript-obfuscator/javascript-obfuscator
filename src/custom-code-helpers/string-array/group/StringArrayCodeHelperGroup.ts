@@ -118,9 +118,10 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         const stringArrayName: string = this.stringArrayStorage.getStorageName();
         const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName();
         const stringArrayRotationAmount: number = this.stringArrayStorage.getRotationAmount();
+        const atobFunctionName: string = this.randomGenerator.getRandomString(6);
 
         stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayName);
-        stringArrayCallsWrapperCodeHelper.initialize(stringArrayName, stringArrayCallsWrapperName);
+        stringArrayCallsWrapperCodeHelper.initialize(stringArrayName, stringArrayCallsWrapperName, atobFunctionName);
         stringArrayRotateFunctionCodeHelper.initialize(stringArrayName, stringArrayRotationAmount);
 
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);

@@ -9,6 +9,8 @@ import { IInversifyContainerFacade } from '../../../src/interfaces/container/IIn
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
+import { swapLettersCase } from '../../helpers/swapLettersCase';
+
 describe('CryptUtils', () => {
     let cryptUtils: ICryptUtils;
 
@@ -20,7 +22,7 @@ describe('CryptUtils', () => {
     });
 
     describe('btoa', () => {
-        const expectedString: string = 'c3RyaW5n';
+        const expectedString: string = swapLettersCase('c3RyaW5n');
 
         let string: string;
 

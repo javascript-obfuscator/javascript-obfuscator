@@ -7,6 +7,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
+import { swapLettersCase } from '../../../../helpers/swapLettersCase';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -186,7 +187,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #8: base64 encoding', () => {
-            const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['dGVzdA=='\];/;
+            const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA==')}'];`);
             const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
             let obfuscatedCode: string;

@@ -12,7 +12,6 @@ import { IObfuscatedCode } from '../../../../../../src/interfaces/source-code/IO
 import { IRandomGenerator } from '../../../../../../src/interfaces/utils/IRandomGenerator';
 
 import { AtobTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/AtobTemplate';
-import { GlobalVariableTemplate1 } from '../../../../../../src/custom-code-helpers/common/templates/GlobalVariableTemplate1';
 import { Rc4Template } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/Rc4Template';
 import { StringArrayBase64DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 import { StringArrayCallsWrapperTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
@@ -27,6 +26,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 describe('StringArrayCallsWrapperTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
+    const atobFunctionName: string = 'atob';
 
     let cryptUtils: ICryptUtils,
         randomGenerator: IRandomGenerator;
@@ -47,12 +47,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         before(() => {
             const atobPolyfill = format(AtobTemplate(), {
-                globalVariableTemplate: GlobalVariableTemplate1()
+                atobFunctionName
             });
             const atobDecodeTemplate: string = format(
                 StringArrayBase64DecodeTemplate(randomGenerator),
                 {
                     atobPolyfill,
+                    atobFunctionName,
                     selfDefendingCode: '',
                     stringArrayCallsWrapperName
                 }
@@ -86,13 +87,16 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         before(() => {
             const atobPolyfill = format(AtobTemplate(), {
-                globalVariableTemplate: GlobalVariableTemplate1()
+                atobFunctionName
+            });
+            const rc4Polyfill = format(Rc4Template(), {
+                atobFunctionName
             });
             const rc4decodeCodeHelperTemplate: string = format(
                 StringArrayRC4DecodeTemplate(randomGenerator),
                 {
                     atobPolyfill,
-                    rc4Polyfill: Rc4Template(),
+                    rc4Polyfill,
                     selfDefendingCode: '',
                     stringArrayCallsWrapperName
                 }

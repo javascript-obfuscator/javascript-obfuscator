@@ -4,6 +4,10 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
+import { alphabetStringUppercase } from '../constants/AlphabetStringUppercase';
+import { alphabetString } from '../constants/AlphabetString';
+import { numbersString } from '../constants/NumbersString';
+
 import { RandomGenerator } from './RandomGenerator';
 import { Utils } from './Utils';
 
@@ -28,7 +32,8 @@ export class CryptUtils implements ICryptUtils {
      * @returns {string}
      */
     public btoa (string: string): string {
-        const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        // swapped lowercase and uppercase groups of alphabet to prevent easy decode!!!!
+        const chars: string = `${alphabetString}${alphabetStringUppercase}${numbersString}+/=`;
 
         let output: string = '';
 

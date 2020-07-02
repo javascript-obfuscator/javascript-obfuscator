@@ -1,5 +1,9 @@
 Change Log
 
+v1.3.0
+---
+* Improvements of `stringArrayEncoding`: `base64` and `rc4`
+
 v1.2.2
 ---
 * Fixed performance regression of `Initializing` stage after `1.2.0`

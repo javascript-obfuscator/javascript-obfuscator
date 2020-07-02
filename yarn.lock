@@ -5067,10 +5067,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-threads@1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/threads/-/threads-1.6.2.tgz#ef91053910a084aa99a1f460cb9978f577596d6f"
-  integrity sha512-SB3yJ3WcwGWYYsUg1Wg9IhQ88BUq1JwZlQsaBgmolSqet5wiBaFhg8cyfHFbHGRElZ/sl4bahrrSEz3Odmr1Vg==
+threads@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/threads/-/threads-1.6.3.tgz#89324a93509403c90a169344023151ae1fe4986b"
+  integrity sha512-tKwFIWRgfAT85KGkrpDt2jWPO8IVH0sLNfB/pXad/VW9eUIY2Zlz+QyeizypXhPHv9IHfqRzvk2t3mPw+imhWw==
   dependencies:
     callsites "^3.1.0"
     debug "^4.1.1"

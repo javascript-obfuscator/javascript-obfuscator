@@ -10,13 +10,11 @@ import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEn
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
-import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 import { Rc4Template } from './templates/string-array-calls-wrapper/Rc4Template';
 import { SelfDefendingTemplate } from './templates/string-array-calls-wrapper/SelfDefendingTemplate';
 import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
@@ -28,6 +26,12 @@ import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper {
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private atobFunctionName!: string;
+
     /**
      * @type {string}
      */
@@ -76,13 +80,16 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
+     * @param {string} atobFunctionName
      */
     public initialize (
         stringArrayName: string,
-        stringArrayCallsWrapperName: string
+        stringArrayCallsWrapperName: string,
+        atobFunctionName: string
     ): void {
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.atobFunctionName = atobFunctionName;
     }
 
     /**
@@ -117,10 +124,12 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @returns {string}
      */
     private getDecodeStringArrayTemplate (): string {
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? this.getGlobalVariableTemplate()
-            : GlobalVariableNoEvalTemplate();
-        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), { globalVariableTemplate });
+        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
+            atobFunctionName: this.atobFunctionName
+        });
+        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(Rc4Template(), {
+            atobFunctionName: this.atobFunctionName
+        });
 
         let decodeStringArrayTemplate: string = '';
         let selfDefendingCode: string = '';
@@ -144,8 +153,8 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
                     StringArrayRC4DecodeTemplate(this.randomGenerator),
                     {
                         atobPolyfill,
+                        rc4Polyfill,
                         selfDefendingCode,
-                        rc4Polyfill: Rc4Template(),
                         stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     }
                 );
@@ -157,6 +166,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
                     StringArrayBase64DecodeTemplate(this.randomGenerator),
                     {
                         atobPolyfill,
+                        atobFunctionName: this.atobFunctionName,
                         selfDefendingCode,
                         stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     }

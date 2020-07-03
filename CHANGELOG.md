@@ -3,6 +3,7 @@ Change Log
 v1.3.0
 ---
 * Improvements of `stringArrayEncoding`: `base64` and `rc4`
+* **CLI**: added config file extension validation (it still supports `.js` and `.json` extensions)
 
 v1.2.2
 ---

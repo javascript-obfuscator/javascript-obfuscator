@@ -126,80 +126,184 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #4 - break or continue statement in block statement', () => {
-            describe('Variant #1', () => {
+        describe('Variant #4 - prohibited node inside collected block statement', () => {
+            describe('Variant #1 - function declaration in block statement', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                     `\\};`,
                     'g'
                 );
-                const loopRegExp: RegExp = new RegExp(
-                    `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
+                const functionDeclarationRegExp: RegExp = new RegExp(
+                    `function *${variableMatch} *\\(${variableMatch}\\) *{}`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedFunctionDeclarationMatchesLength: number = 1;
+
+                let functionMatchesLength: number = 0,
+                    functionDeclarationMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-declaration-inside-block-statement.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionDeclarationRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (loopMatches) {
+                        functionDeclarationMatchesLength = loopMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(functionDeclarationMatchesLength, expectedFunctionDeclarationMatchesLength);
+                });
+            });
+
+            describe('Variant #2 - break or continue statement in block statement', () => {
+                describe('Variant #1', () => {
+                    const functionRegExp: RegExp = new RegExp(
+                        `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                            `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                        `\\};`,
+                        'g'
+                    );
+                    const loopRegExp: RegExp = new RegExp(
+                        `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
                         `(?:continue|break);` +
-                    `\\}`,
-                    'g'
-                );
-                const expectedFunctionMatchesLength: number = 4;
-                const expectedLoopMatchesLength: number = 2;
+                        `\\}`,
+                        'g'
+                    );
+                    const expectedFunctionMatchesLength: number = 4;
+                    const expectedLoopMatchesLength: number = 2;
 
-                let functionMatchesLength: number = 0,
-                    loopMatchesLength: number = 0;
+                    let functionMatchesLength: number = 0,
+                        loopMatchesLength: number = 0;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-1.js');
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-1.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                deadCodeInjection: true,
+                                deadCodeInjectionThreshold: 1,
+                                stringArray: true,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                        const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
+
+                        if (functionMatches) {
+                            functionMatchesLength = functionMatches.length;
                         }
-                    ).getObfuscatedCode();
-                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
 
-                    if (functionMatches) {
-                        functionMatchesLength = functionMatches.length;
-                    }
+                        if (loopMatches) {
+                            loopMatchesLength = loopMatches.length;
+                        }
+                    });
 
-                    if (loopMatches) {
-                        loopMatchesLength = loopMatches.length;
-                    }
+                    it('match #1: shouldn\'t add dead code', () => {
+                        assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                    });
+
+                    it('match #2: shouldn\'t add dead code', () => {
+                        assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                    });
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
-                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
-                });
+                describe('Variant #2', () => {
+                    const functionRegExp: RegExp = new RegExp(
+                        `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                            `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                        `\\};`,
+                        'g'
+                    );
+                    const loopRegExp: RegExp = new RegExp(
+                        `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *` +
+                            `(?:continue|break);`,
+                        'g'
+                    );
+                    const expectedFunctionMatchesLength: number = 4;
+                    const expectedLoopMatchesLength: number = 2;
 
-                it('match #2: shouldn\'t add dead code', () => {
-                    assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                    let functionMatchesLength: number = 0,
+                        loopMatchesLength: number = 0;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-2.js');
+
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                deadCodeInjection: true,
+                                deadCodeInjectionThreshold: 1,
+                                stringArray: true,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                        const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
+
+                        if (functionMatches) {
+                            functionMatchesLength = functionMatches.length;
+                        }
+
+                        if (loopMatches) {
+                            loopMatchesLength = loopMatches.length;
+                        }
+                    });
+
+                    it('match #1: shouldn\'t add dead code', () => {
+                        assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                    });
+
+                    it('match #2: shouldn\'t add dead code', () => {
+                        assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                    });
                 });
             });
 
-            describe('Variant #2', () => {
+            describe('Variant #3 - await expression in block statement', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                     `\\};`,
                     'g'
                 );
-                const loopRegExp: RegExp = new RegExp(
-                    `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *` +
-                        `(?:continue|break);`,
+                const awaitExpressionRegExp: RegExp = new RegExp(
+                    `await *${variableMatch}\\(\\)`,
                     'g'
                 );
                 const expectedFunctionMatchesLength: number = 4;
-                const expectedLoopMatchesLength: number = 2;
+                const expectedAwaitExpressionMatchesLength: number = 1;
 
                 let functionMatchesLength: number = 0,
-                    loopMatchesLength: number = 0;
+                    awaitExpressionMatchesLength: number = 0;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-2.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/await-expression.js');
 
                     const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
@@ -212,14 +316,14 @@ describe('DeadCodeInjectionTransformer', () => {
                         }
                     ).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
+                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
                     }
 
-                    if (loopMatches) {
-                        loopMatchesLength = loopMatches.length;
+                    if (awaitExpressionMatches) {
+                        awaitExpressionMatchesLength = awaitExpressionMatches.length;
                     }
                 });
 
@@ -228,114 +332,63 @@ describe('DeadCodeInjectionTransformer', () => {
                 });
 
                 it('match #2: shouldn\'t add dead code', () => {
-                    assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                    assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
+                });
+            });
+
+            describe('Variant #4 - super expression in block statement', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const superExpressionRegExp: RegExp = new RegExp(
+                    `super *\\(\\);`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedSuperExpressionMatchesLength: number = 1;
+
+                let functionMatchesLength: number = 0,
+                    superExpressionMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/super-expression.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(superExpressionRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (superExpressionMatches) {
+                        superExpressionMatchesLength = superExpressionMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(superExpressionMatchesLength, expectedSuperExpressionMatchesLength);
                 });
             });
         });
 
-        describe('Variant #5 - await expression in block statement', () => {
-            const functionRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *function *\\(\\) *\\{` +
-                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
-                `\\};`,
-                'g'
-            );
-            const awaitExpressionRegExp: RegExp = new RegExp(
-                `await *${variableMatch}\\(\\)`,
-                'g'
-            );
-            const expectedFunctionMatchesLength: number = 4;
-            const expectedAwaitExpressionMatchesLength: number = 1;
-
-            let functionMatchesLength: number = 0,
-                awaitExpressionMatchesLength: number = 0;
-
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/await-expression.js');
-
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
-                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
-
-                if (functionMatches) {
-                    functionMatchesLength = functionMatches.length;
-                }
-
-                if (awaitExpressionMatches) {
-                    awaitExpressionMatchesLength = awaitExpressionMatches.length;
-                }
-            });
-
-            it('match #1: shouldn\'t add dead code', () => {
-                assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
-            });
-
-            it('match #2: shouldn\'t add dead code', () => {
-                assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
-            });
-        });
-
-        describe('Variant #6 - super expression in block statement', () => {
-            const functionRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *function *\\(\\) *\\{` +
-                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
-                `\\};`,
-                'g'
-            );
-            const superExpressionRegExp: RegExp = new RegExp(
-                `super *\\(\\);`,
-                'g'
-            );
-            const expectedFunctionMatchesLength: number = 4;
-            const expectedSuperExpressionMatchesLength: number = 1;
-
-            let functionMatchesLength: number = 0,
-                superExpressionMatchesLength: number = 0;
-
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/super-expression.js');
-
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
-                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(superExpressionRegExp);
-
-                if (functionMatches) {
-                    functionMatchesLength = functionMatches.length;
-                }
-
-                if (superExpressionMatches) {
-                    superExpressionMatchesLength = superExpressionMatches.length;
-                }
-            });
-
-            it('match #1: shouldn\'t add dead code', () => {
-                assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
-            });
-
-            it('match #2: shouldn\'t add dead code', () => {
-                assert.equal(superExpressionMatchesLength, expectedSuperExpressionMatchesLength);
-            });
-        });
-
-        describe('Variant #7 - chance of `IfStatement` variant', () => {
+        describe('Variant #5 - chance of `IfStatement` variant', () => {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
             const expectedDistribution: number = 0.25;
@@ -437,7 +490,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #8 - block scope of block statement is `ProgramNode`', () => {
+        describe('Variant #6 - block scope of block statement is `ProgramNode`', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(!!\\[\\]\\) *{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -466,7 +519,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #9 - correct obfuscation of dead-code block statements', () => {
+        describe('Variant #7 - correct obfuscation of dead-code block statements', () => {
             const variableName: string = 'importantVariableName';
 
             let obfuscatedCode: string;
@@ -490,7 +543,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #10 - unique names for dead code identifiers', () => {
+        describe('Variant #8 - unique names for dead code identifiers', () => {
             /**
              * Code:
              *
@@ -679,7 +732,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #11 - block statements with empty body', () => {
+        describe('Variant #9 - block statements with empty body', () => {
             const regExp: RegExp = new RegExp(
                 `function *${variableMatch} *\\(\\) *{ *} *` +
                 `${variableMatch} *\\(\\); *`,
@@ -715,7 +768,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #12 - block statement with scope-hoisting', () => {
+        describe('Variant #10 - block statement with scope-hoisting', () => {
             describe('Variant #1: collecting of block statements', () => {
                 const regExp: RegExp = new RegExp(
                     `${variableMatch} *\\(\\); *` +
@@ -788,7 +841,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('Variant #13 - prevailing kind of variables of inserted code', () => {
+        describe('Variant #11 - prevailing kind of variables of inserted code', () => {
             describe('Variant #1: base', () => {
                 const variableDeclarationsRegExp: RegExp = new RegExp(
                     `const ${variableMatch} *= *\\[\\]; *` +

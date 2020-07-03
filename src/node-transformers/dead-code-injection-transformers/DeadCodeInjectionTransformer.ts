@@ -100,7 +100,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private static isProhibitedNodeInsideCollectedBlockStatement (targetNode: ESTree.Node): boolean {
-        return NodeGuards.isBreakStatementNode(targetNode)
+        return NodeGuards.isFunctionDeclarationNode(targetNode) // can break code on strict mode
+            || NodeGuards.isBreakStatementNode(targetNode)
             || NodeGuards.isContinueStatementNode(targetNode)
             || NodeGuards.isAwaitExpressionNode(targetNode)
             || NodeGuards.isSuperNode(targetNode);

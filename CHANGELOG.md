@@ -1,8 +1,14 @@
 Change Log
 
-v1.3.0
+v1.4.0
 ---
 * **New option:** `minify` enables code minification.
+
+v1.3.0
+---
+* Improvements of `stringArrayEncoding`: `base64` and `rc4`
+* **CLI**: added config file extension validation (it still supports `.js` and `.json` extensions)
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/499
 
 v1.2.2
 ---

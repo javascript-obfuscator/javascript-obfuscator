@@ -18,7 +18,7 @@ export function StringArrayBase64DecodeTemplate (
             {atobPolyfill}
             
             {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
-                const string = atob(str);
+                const string = {atobFunctionName}(str);
                 let newStringChars = [];
                 
                 for (let i = 0, length = string.length; i < length; i++) {

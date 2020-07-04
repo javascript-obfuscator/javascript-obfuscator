@@ -425,8 +425,24 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
         // TODO: write tests
         // function declaration is not allowed outside of block in `strict` mode
         return NodeGuards.isFunctionDeclarationNode(statement)
-            // `IfStatement` may break the code
-            // TODO: catch this and write tests
+            /**
+             * Without ignore it can break following code:
+             * Input:
+             * if (condition1) {
+             *     if (condition2) {
+             *         var foo = bar();
+             *     }
+             * } else {
+             *     var baz = bark();
+             * }
+             *
+             * Invalid output:
+             * if (condition1)
+             *     if (condition2)
+             *         var foo = bar();
+             *     else
+             *         var baz = bark();
+             */
             || NodeGuards.isIfStatementNode(statement);
     }
 }

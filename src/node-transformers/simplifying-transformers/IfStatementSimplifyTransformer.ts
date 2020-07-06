@@ -3,8 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IIfStatementSimplifyData } from '../../interfaces/node-transformers/minification-transformers/IIfStatementSimplifyData';
-import { IIfStatementIteratedStatementsData } from '../../interfaces/node-transformers/minification-transformers/IIfStatementIteratedStatementsData';
+import { IIfStatementSimplifyData } from '../../interfaces/node-transformers/simplifying-transformers/IIfStatementSimplifyData';
+import { IIfStatementIteratedStatementsData } from '../../interfaces/node-transformers/simplifying-transformers/IIfStatementIteratedStatementsData';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
@@ -46,7 +46,7 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Minification:
+            case NodeTransformationStage.Simplifying:
                 return {
                     leave: (
                         node: ESTree.Node,

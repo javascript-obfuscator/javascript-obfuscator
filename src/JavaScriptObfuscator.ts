@@ -218,8 +218,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Converting);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Obfuscating);
 
-        if (this.options.minify) {
-            astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Minification);
+        if (this.options.simplify) {
+            astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Simplifying);
         }
 
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Finalizing);

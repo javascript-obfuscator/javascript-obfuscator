@@ -250,10 +250,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--minify <boolean>', 'Enables code minification',
-                BooleanSanitizer
-            )
-            .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',
                 'Disables obfuscation and generation of identifiers, which being matched by passed RegExp patterns (comma separated)',
                 ArraySanitizer
@@ -287,6 +283,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--shuffle-string-array <boolean>', 'Randomly shuffles string array items',
+                BooleanSanitizer
+            )
+            .option(
+                '--simplify <boolean>', 'Enables additional code obfuscation through simplification',
                 BooleanSanitizer
             )
             .option(

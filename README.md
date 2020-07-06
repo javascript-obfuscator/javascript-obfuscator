@@ -329,7 +329,6 @@ Following options are available for the JS Obfuscator:
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
-    minify: true,
     renameGlobals: false,
     renameProperties: false,
     reservedNames: [],
@@ -338,6 +337,7 @@ Following options are available for the JS Obfuscator:
     seed: 0,
     selfDefending: false,
     shuffleStringArray: true,
+    simplify: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
@@ -375,7 +375,6 @@ Following options are available for the JS Obfuscator:
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
-    --minify <boolean>
     --rename-globals <boolean>
     --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
@@ -384,6 +383,7 @@ Following options are available for the JS Obfuscator:
     --seed <string|number>
     --self-defending <boolean>
     --shuffle-string-array <boolean>
+    --simplify <boolean>
     --source-map <boolean>
     --source-map-base-url <string>
     --source-map-file-name <string>
@@ -666,12 +666,10 @@ Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
 
-### `minify`
+### `simplify`
 Type: `boolean` Default: `true`
 
-Enables code minification.
-
-##### :warning: this option doesn't affect identifier names.
+Enables additional code obfuscation through simplification.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -956,11 +954,11 @@ Performance will 50-100% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
-    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 5,
     stringArray: true,
@@ -987,11 +985,11 @@ Performance will 30-35% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
-    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 10,
     stringArray: true,
@@ -1016,11 +1014,11 @@ Performance will slightly slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
-    minify: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: false,

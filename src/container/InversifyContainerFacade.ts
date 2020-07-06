@@ -10,13 +10,13 @@ import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
 import { finalizingTransformersModule } from './modules/node-transformers/FinalizingTransformersModule';
 import { generatorsModule } from './modules/generators/GeneratorsModule';
 import { initializingTransformersModule } from './modules/node-transformers/InitializingTransformersModule';
-import { minificationTransformersModule } from './modules/node-transformers/MinificationTransformersModule';
 import { nodeModule } from './modules/node/NodeModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { optionsModule } from './modules/options/OptionsModule';
 import { preparingTransformersModule } from './modules/node-transformers/PreparingTransformersModule';
 import { renamePropertiesTransformersModule } from './modules/node-transformers/RenamePropertiesTransformersModule';
+import { simplifyingTransformersModule } from './modules/node-transformers/SimplifyingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
@@ -212,13 +212,13 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(finalizingTransformersModule);
         this.container.load(generatorsModule);
         this.container.load(initializingTransformersModule);
-        this.container.load(minificationTransformersModule);
         this.container.load(nodeModule);
         this.container.load(nodeTransformersModule);
         this.container.load(obfuscatingTransformersModule);
         this.container.load(optionsModule);
         this.container.load(preparingTransformersModule);
         this.container.load(renamePropertiesTransformersModule);
+        this.container.load(simplifyingTransformersModule);
         this.container.load(storagesModule);
         this.container.load(utilsModule);
     }

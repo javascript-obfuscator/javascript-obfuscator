@@ -25,7 +25,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -50,7 +50,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -78,7 +78,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -104,7 +104,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -135,7 +135,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -162,7 +162,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -192,7 +192,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -220,7 +220,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -250,7 +250,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -278,7 +278,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -307,7 +307,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -334,7 +334,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -366,7 +366,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -394,7 +394,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -424,7 +424,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -456,7 +456,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -488,7 +488,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -518,7 +518,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -548,7 +548,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -578,7 +578,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -610,7 +610,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -640,7 +640,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -672,7 +672,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -707,7 +707,7 @@ describe('IfStatementSimplifyTransformer', () => {
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
-                                minify: true
+                                simplify: true
                             }
                         ).getObfuscatedCode();
                     });
@@ -740,7 +740,7 @@ describe('IfStatementSimplifyTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            minify: true
+                            simplify: true
                         }
                     ).getObfuscatedCode();
                 });
@@ -771,7 +771,7 @@ describe('IfStatementSimplifyTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            minify: true
+                            simplify: true
                         }
                     ).getObfuscatedCode();
                 });
@@ -800,7 +800,7 @@ describe('IfStatementSimplifyTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            minify: true
+                            simplify: true
                         }
                     ).getObfuscatedCode();
                 });

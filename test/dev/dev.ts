@@ -20,7 +20,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            minify: true
+            simplify: true
         }
     ).getObfuscatedCode();
 

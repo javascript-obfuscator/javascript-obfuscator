@@ -2,7 +2,7 @@ Change Log
 
 v1.4.0
 ---
-* **New option:** `minify` enables code minification.
+* **New option:** `simplify` enables additional code obfuscation through simplification.
 
 v1.3.0
 ---

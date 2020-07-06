@@ -154,12 +154,6 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly minify!: boolean;
-
-    /**
-     * @type {boolean}
-     */
-    @IsBoolean()
     public readonly renameGlobals!: boolean;
 
     /**
@@ -205,6 +199,12 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly shuffleStringArray!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly simplify!: boolean;
 
     /**
      * @type {boolean}

@@ -44,7 +44,7 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Minification:
+            case NodeTransformationStage.Simplifying:
                 return {
                     enter: (
                         node: ESTree.Node,

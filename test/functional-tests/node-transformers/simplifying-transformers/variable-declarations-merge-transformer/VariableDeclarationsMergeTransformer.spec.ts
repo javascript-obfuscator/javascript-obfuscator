@@ -23,7 +23,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        minify: true
+                        simplify: true
                     }
                 ).getObfuscatedCode();
             });
@@ -50,7 +50,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        minify: true
+                        simplify: true
                     }
                 ).getObfuscatedCode();
             });
@@ -77,7 +77,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        minify: true
+                        simplify: true
                     }
                 ).getObfuscatedCode();
             });
@@ -105,7 +105,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        minify: true
+                        simplify: true
                     }
                 ).getObfuscatedCode();
             });
@@ -132,7 +132,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        minify: true
+                        simplify: true
                     }
                 ).getObfuscatedCode();
             });
@@ -159,7 +159,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    minify: true
+                    simplify: true
                 }
             ).getObfuscatedCode();
         });
@@ -188,7 +188,7 @@ describe('VariableDeclarationsMergeTransformer', () => {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    minify: true
+                    simplify: true
                 }
             ).getObfuscatedCode();
         });

@@ -42,7 +42,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      */
     private static isValidPropertyNode<
         TNode extends ESTree.Property | ESTree.MemberExpression | ESTree.MethodDefinition
-    >(
+    > (
         propertyNode: TNode,
         propertyKeyNode: ESTree.Expression
     ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {

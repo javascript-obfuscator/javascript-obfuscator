@@ -780,6 +780,35 @@ describe('IfStatementSimplifyTransformer', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
+
+            describe('Variant #2: `FunctionDeclaration` as prohibited single statement', () => {
+                const regExp: RegExp = new RegExp(
+                    'if *\\(!!\\[]\\) *{ *' +
+                        'function _0x([a-f0-9]){4,6} *\\(\\) *{} *' +
+                    '} *else *{ *' +
+                        'function _0x([a-f0-9]){4,6} *\\(\\) *{} *' +
+                    '}'
+                );
+
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-declaration-as-prohibited-single-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            minify: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not simplify if statement', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
         });
     });
 });

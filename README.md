@@ -666,13 +666,6 @@ Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
 
-### `simplify`
-Type: `boolean` Default: `true`
-
-Enables additional code obfuscation through simplification.
-
-##### :warning: in the future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
-
 ### `renameGlobals`
 Type: `boolean` Default: `false`
 
@@ -780,6 +773,13 @@ Type: `boolean` Default: `true`
 ##### :warning: [`stringArray`](#stringarray) must be enabled
 
 Randomly shuffles the `stringArray` array items.
+
+### `simplify`
+Type: `boolean` Default: `true`
+
+Enables additional code obfuscation through simplification.
+
+##### :warning: in the future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
 
 ### `sourceMap`
 Type: `boolean` Default: `false`

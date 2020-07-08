@@ -671,6 +671,8 @@ Type: `boolean` Default: `true`
 
 Enables additional code obfuscation through simplification.
 
+##### :warning: in the future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
+
 ### `renameGlobals`
 Type: `boolean` Default: `false`
 

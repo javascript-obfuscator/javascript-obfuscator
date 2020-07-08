@@ -25,6 +25,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
+        simplify: true,
         renameProperties: true,
         reservedNames: ['generate', 'sha256'],
         rotateStringArray: true,
@@ -256,10 +257,14 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         }
                     ).getObfuscatedCode();
 
-                    evaluationResult = eval(`
-                        ${getEnvironmentCode()}
-                        ${obfuscatedCode}
-                    `);
+                    try {
+                        evaluationResult = eval(`
+                            ${getEnvironmentCode()}
+                            ${obfuscatedCode}
+                        `);
+                    } catch (e) {
+                        throw new Error(`Evaluation error: ${e.message}. Code: ${obfuscatedCode}`);
+                    }
                 });
 
                 it('should obfuscate code without any runtime errors after obfuscation: Variant #4 webpack bootstrap', () => {

@@ -1,5 +1,9 @@
 Change Log
 
+v1.4.0
+---
+* **New option:** `simplify` enables additional code obfuscation through simplification.
+
 v1.3.0
 ---
 * Improvements of `stringArrayEncoding`: `base64` and `rc4`

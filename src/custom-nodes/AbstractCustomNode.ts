@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
 @injectable()
 export abstract class AbstractCustomNode <
-    TInitialData extends any[] = any[]
+    TInitialData extends unknown[] = unknown[]
 > implements ICustomNode <TInitialData> {
     /**
      * @type {TStatement[] | null}

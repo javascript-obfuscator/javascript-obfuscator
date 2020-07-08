@@ -127,7 +127,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
                         return acc;
                     }
 
-                    return {
+                    return <TDictionary<INodeTransformer>>{
                         ...acc,
                         [nodeTransformerName]: nodeTransformer
                     };

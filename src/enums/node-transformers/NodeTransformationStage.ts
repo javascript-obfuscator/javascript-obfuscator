@@ -6,5 +6,6 @@ export enum NodeTransformationStage {
     RenameProperties = 'RenameProperties',
     Converting = 'Converting',
     Obfuscating = 'Obfuscating',
+    Simplifying = 'Simplifying',
     Finalizing = 'Finalizing'
 }

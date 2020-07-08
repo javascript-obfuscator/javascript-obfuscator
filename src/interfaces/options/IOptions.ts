@@ -29,6 +29,7 @@ export interface IOptions {
     readonly seed: string | number;
     readonly selfDefending: boolean;
     readonly shuffleStringArray: boolean;
+    readonly simplify: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;

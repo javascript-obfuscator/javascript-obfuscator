@@ -28,6 +28,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     seed: 0,
     selfDefending: false,
     shuffleStringArray: false,
+    simplify: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',

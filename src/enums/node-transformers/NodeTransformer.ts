@@ -5,6 +5,7 @@ export enum NodeTransformer {
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
+    IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
@@ -18,5 +19,6 @@ export enum NodeTransformer {
     ScopeIdentifiersTransformer = 'ScopeIdentifiersTransformer',
     SplitStringTransformer = 'SplitStringTransformer',
     TemplateLiteralTransformer = 'TemplateLiteralTransformer',
+    VariableDeclarationsMergeTransformer = 'VariableDeclarationsMergeTransformer',
     VariablePreserveTransformer = 'VariablePreserveTransformer'
 }

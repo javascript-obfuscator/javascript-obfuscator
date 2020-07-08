@@ -1,3 +1,7 @@
+import * as ESTree from 'estree';
+
+import { ICallsGraphData } from '../analyzers/calls-graph-analyzer/ICallsGraphData';
+
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 export interface IObfuscationEventEmitter {
@@ -6,7 +10,7 @@ export interface IObfuscationEventEmitter {
      * @param args
      * @returns {boolean}
      */
-    emit (event: ObfuscationEvent, ...args: any[]): boolean;
+    emit (event: ObfuscationEvent, ...args: [ESTree.Program, ICallsGraphData[]]): boolean;
 
     /**
      * @param event

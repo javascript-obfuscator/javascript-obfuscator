@@ -337,6 +337,7 @@ Following options are available for the JS Obfuscator:
     seed: 0,
     selfDefending: false,
     shuffleStringArray: true,
+    simplify: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
@@ -382,6 +383,7 @@ Following options are available for the JS Obfuscator:
     --seed <string|number>
     --self-defending <boolean>
     --shuffle-string-array <boolean>
+    --simplify <boolean>
     --source-map <boolean>
     --source-map-base-url <string>
     --source-map-file-name <string>
@@ -657,12 +659,19 @@ Use this option when you want to obfuscate multiple files. This option helps to 
 ### `inputFileName`
 Type: `string` Default: `''`
 
-Allows to set name of the input file with source code. This name will used internally for source map generation.
+Allows to set name of the input file with source code. This name will be used internally for source map generation.
 
 ### `log`
 Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
+
+### `simplify`
+Type: `boolean` Default: `true`
+
+Enables additional code obfuscation through simplification.
+
+##### :warning: in the future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -951,6 +960,7 @@ Performance will 50-100% slower than without obfuscation
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 5,
     stringArray: true,
@@ -981,6 +991,7 @@ Performance will 30-35% slower than without obfuscation
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 10,
     stringArray: true,
@@ -1009,6 +1020,7 @@ Performance will slightly slower than without obfuscation
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
+    simplify: true,
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: false,

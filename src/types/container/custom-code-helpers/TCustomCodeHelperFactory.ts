@@ -3,5 +3,5 @@ import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICust
 import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeHelper';
 
 export type TCustomCodeHelperFactory = <
-    TInitialData extends any[] = any[]
+    TInitialData extends unknown[] = unknown[]
 > (customCodeHelperName: CustomCodeHelper) => ICustomCodeHelper<TInitialData>;

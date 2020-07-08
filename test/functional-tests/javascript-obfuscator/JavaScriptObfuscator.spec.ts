@@ -789,6 +789,8 @@ describe('JavaScriptObfuscator', () => {
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         disableConsoleOutput: false,
+                        simplify: true,
+                        renameProperties: true,
                         rotateStringArray: true,
                         stringArray: true,
                         stringArrayEncoding: StringArrayEncoding.Rc4,

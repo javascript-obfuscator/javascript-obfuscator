@@ -286,6 +286,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
+                '--simplify <boolean>', 'Enables additional code obfuscation through simplification',
+                BooleanSanitizer
+            )
+            .option(
                 '--source-map <boolean>',
                 'Enables source map generation',
                 BooleanSanitizer

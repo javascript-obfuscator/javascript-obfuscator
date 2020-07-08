@@ -172,6 +172,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
+        return node.type === NodeType.IfStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isImportDeclarationNode (node: ESTree.Node): node is ESTree.ImportDeclaration {
         return node.type === NodeType.ImportDeclaration;
     }

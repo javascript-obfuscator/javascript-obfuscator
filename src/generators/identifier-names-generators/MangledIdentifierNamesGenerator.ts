@@ -1,8 +1,9 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
+import { IInitializable } from '../../interfaces/IInitializable';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -14,7 +15,12 @@ import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGener
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 @injectable()
-export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
+export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator implements IInitializable {
+    /**
+     * @type {string[]}
+     */
+    protected static nameSequence: string[];
+
     /**
      * @type {string}
      */
@@ -37,11 +43,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     ]);
 
     /**
-     * @type {string[]}
-     */
-    protected nameSequence: string[] = `${numbersString}${alphabetString}${alphabetStringUppercase}`.split('');
-
-    /**
      * @type {string}
      */
     private previousMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
@@ -55,6 +56,15 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
+    }
+
+    @postConstruct()
+    public initialize (): void {
+        if (!MangledIdentifierNamesGenerator.nameSequence) {
+            MangledIdentifierNamesGenerator.nameSequence = [
+                ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
+            ];
+        }
     }
 
     /**
@@ -134,7 +144,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     private generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
-            const nameSequence: string[] = this.nameSequence;
+            const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
             const nameSequenceLength: number = nameSequence.length;
             const nameLength: number = name.length;
 
@@ -161,7 +171,9 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 --index;
             } while (index >= 0);
 
-            return `a${zeroSequence(nameLength)}`;
+            const firstLetterCharacter: string = nameSequence[numbersString.length];
+
+            return `${firstLetterCharacter}${zeroSequence(nameLength)}`;
         };
 
         let newMangledName: string = generateNewMangledName(previousMangledName);

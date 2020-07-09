@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
@@ -31,9 +31,15 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
         super(randomGenerator, options);
 
         this.arrayUtils = arrayUtils;
-        this.nameSequence = [
-            ...`${numbersString}`,
-            ...this.arrayUtils.shuffle([...`${alphabetString}${alphabetStringUppercase}`])
-        ];
+    }
+
+    @postConstruct()
+    public initialize (): void {
+        if (!MangledIdentifierNamesGenerator.nameSequence) {
+            MangledIdentifierNamesGenerator.nameSequence = [
+                ...`${numbersString}`,
+                ...this.arrayUtils.shuffle([...`${alphabetString}${alphabetStringUppercase}`])
+            ];
+        }
     }
 }

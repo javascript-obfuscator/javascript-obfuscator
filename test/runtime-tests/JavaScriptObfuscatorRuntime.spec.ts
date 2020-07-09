@@ -57,6 +57,14 @@ describe('JavaScriptObfuscator runtime eval', function () {
         {
             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
             renameGlobals: true
+        },
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
+            renameGlobals: false
+        },
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
+            renameGlobals: true
         }
     ].forEach((options: Partial<TInputOptions>) => {
         const detailedDescription: string = `Identifier names generator: ${options.identifierNamesGenerator}, rename globals: ${options.renameGlobals?.toString()}`;

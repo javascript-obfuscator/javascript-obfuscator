@@ -161,7 +161,9 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 --index;
             } while (index >= 0);
 
-            return `a${zeroSequence(nameLength)}`;
+            const firstLetterCharacter: string = nameSequence[numbersString.length];
+
+            return `${firstLetterCharacter}${zeroSequence(nameLength)}`;
         };
 
         let newMangledName: string = generateNewMangledName(previousMangledName);

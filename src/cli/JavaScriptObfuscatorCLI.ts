@@ -232,7 +232,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--identifier-names-generator <string>',
                 'Sets identifier names generator. ' +
-                'Values: hexadecimal, mangled, dictionary. ' +
+                'Values: hexadecimal, mangled, mangled-shuffled, dictionary. ' +
                 'Default: hexadecimal',
                 IdentifierNamesGeneratorSanitizer
             )

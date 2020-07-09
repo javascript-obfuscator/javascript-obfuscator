@@ -643,6 +643,7 @@ Available values:
 * `dictionary`: identifier names from [`identifiersDictionary`](#identifiersDictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
+* `mangled-shuffled`: same as `mangled` but with shuffled alphabet
 
 ### `identifiersDictionary`
 Type: `string[]` Default: `[]`
@@ -779,7 +780,35 @@ Type: `boolean` Default: `true`
 
 Enables additional code obfuscation through simplification.
 
-##### :warning: in the future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
+##### :warning: in future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option. 
+
+Example:
+```ts
+// input
+if (condition1) {
+    const foo = 1;
+    const bar = 2;
+  
+    console.log(foo);
+  
+    return bar;
+} else if (condition2) {
+    console.log(1);
+    console.log(2);
+    console.log(3);
+  
+    return 4;
+} else {
+    return 5;
+}
+
+// output
+if (condition1) {
+    const foo = 0x1, bar = 0x2;
+    return console['log'](foo), bar;
+} else
+    return condition2 ? (console['log'](0x1), console['log'](0x2), console['log'](0x3), 0x4) : 0x5;
+```
 
 ### `sourceMap`
 Type: `boolean` Default: `false`

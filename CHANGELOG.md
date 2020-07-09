@@ -1,8 +1,12 @@
 Change Log
 
+v1.5.0
+---
+* New `mangled-shuffled` identifier names generator based on `mangled` identifier names generator
+
 v1.4.0
 ---
-* **New option:** `simplify` enables additional code obfuscation through simplification.
+* **New option:** `simplify` enables additional code obfuscation through simplification
 
 v1.3.0
 ---

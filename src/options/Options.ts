@@ -117,7 +117,8 @@ export class Options implements IOptions {
     @IsIn([
         IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+        IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+        IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
     ])
     public readonly identifierNamesGenerator!: TypeFromEnum<typeof IdentifierNamesGenerator>;
 

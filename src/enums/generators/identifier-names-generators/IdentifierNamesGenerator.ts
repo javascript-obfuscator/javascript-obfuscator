@@ -4,8 +4,10 @@ export const IdentifierNamesGenerator: Readonly<{
     DictionaryIdentifierNamesGenerator: 'dictionary';
     HexadecimalIdentifierNamesGenerator: 'hexadecimal';
     MangledIdentifierNamesGenerator: 'mangled';
+    MangledShuffledIdentifierNamesGenerator: 'mangled-shuffled';
 }> = MakeEnum({
     DictionaryIdentifierNamesGenerator: 'dictionary',
     HexadecimalIdentifierNamesGenerator: 'hexadecimal',
-    MangledIdentifierNamesGenerator: 'mangled'
+    MangledIdentifierNamesGenerator: 'mangled',
+    MangledShuffledIdentifierNamesGenerator: 'mangled-shuffled'
 });

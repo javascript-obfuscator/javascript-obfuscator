@@ -703,6 +703,27 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('mangled shuffled identifier names generator', () => {
+            const regExp: RegExp = /var [a-zA-Z] *= *0x1/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/mangle.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should mangle obfuscated code', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('dictionary identifier names generator', () => {
             const regExp1: RegExp = /var [abc] *= *0x1; *var [abc] *= *0x2; *var [abc] *= *0x3;/;
             const regExp2: RegExp = /var [ABC] *= *0x4; *var [ABC] *= *0x5; *var [ABC] *= *0x6;/;

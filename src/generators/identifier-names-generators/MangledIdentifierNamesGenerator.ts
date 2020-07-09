@@ -26,11 +26,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static readonly lastMangledNameInScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
 
     /**
-     * @type {string[]}
-     */
-    private static readonly nameSequence: string[] = `${numbersString}${alphabetString}${alphabetStringUppercase}`.split('');
-
-    /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
      *
      * @type {Set<string>}
@@ -40,6 +35,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         'if', 'in', 'int', 'let', 'long', 'new', 'null', 'this', 'true', 'try',
         'var', 'void', 'with'
     ]);
+
+    /**
+     * @type {string[]}
+     */
+    protected nameSequence: string[] = `${numbersString}${alphabetString}${alphabetStringUppercase}`.split('');
 
     /**
      * @type {string}
@@ -134,7 +134,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     private generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
-            const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
+            const nameSequence: string[] = this.nameSequence;
             const nameSequenceLength: number = nameSequence.length;
             const nameLength: number = name.length;
 

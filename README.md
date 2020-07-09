@@ -643,6 +643,7 @@ Available values:
 * `dictionary`: identifier names from [`identifiersDictionary`](#identifiersDictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
+* `mangled-shuffled`: same as `mangled` but with shuffled alphabet
 
 ### `identifiersDictionary`
 Type: `string[]` Default: `[]`

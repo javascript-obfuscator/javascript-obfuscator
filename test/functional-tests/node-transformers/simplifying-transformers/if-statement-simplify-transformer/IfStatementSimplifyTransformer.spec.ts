@@ -353,7 +353,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
-                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\);'
+                            'var _0x([a-f0-9]){4,6} *= *baz\\(\\);'
                     );
 
 
@@ -441,9 +441,9 @@ describe('IfStatementSimplifyTransformer', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
-                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                         'else *' +
-                            'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                            'var *_0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
 
@@ -501,7 +501,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 describe('Variant #3: mixed statements #1', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
-                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                         'else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *dog\\(\\);' +
@@ -535,7 +535,7 @@ describe('IfStatementSimplifyTransformer', () => {
                                 '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *pork\\(\\);' +
                         '} *else *' +
-                            'const *_0x([a-f0-9]){4,6} *= *cow\\(\\);'
+                            'var *_0x([a-f0-9]){4,6} *= *cow\\(\\);'
                     );
 
 
@@ -565,7 +565,7 @@ describe('IfStatementSimplifyTransformer', () => {
                         'if *\\(!!\\[]\\) *' +
                             'return *bar\\(\\); *' +
                         'else *' +
-                            'const *_0x([a-f0-9]){4,6} *= *bark\\(\\);'
+                            'var *_0x([a-f0-9]){4,6} *= *bark\\(\\);'
                     );
 
 
@@ -625,7 +625,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
-                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                         'else *' +
                             'return *bark\\(\\);'
                     );
@@ -725,7 +725,7 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('Variant #1: three statements', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *' +
-                        'const _0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
+                        'var _0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
                             '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
                             '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{};'
                 );
@@ -795,6 +795,60 @@ describe('IfStatementSimplifyTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/function-declaration-as-prohibited-single-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not simplify if statement', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('Variant #3: `let` `VariableDeclaration` as prohibited single statement', () => {
+                const regExp: RegExp = new RegExp(
+                    'if *\\(!!\\[]\\) *{ *' +
+                        'let foo *= *0x1; *' +
+                    '}'
+                );
+
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/let-variable-declaration-as-prohibited-single-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not simplify if statement', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('Variant #4: `const` `VariableDeclaration` as prohibited single statement', () => {
+                const regExp: RegExp = new RegExp(
+                    'if *\\(!!\\[]\\) *{ *' +
+                        'const foo *= *0x1; *' +
+                    '}'
+                );
+
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/const-variable-declaration-as-prohibited-single-statement.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,

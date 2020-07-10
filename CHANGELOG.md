@@ -2,6 +2,7 @@ Change Log
 
 v1.5.1
 ---
+* Fixed runtime error when `IfStatement` contains only single `let` or `const` variable declaration when `simlify` option enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/661
 * Fixed wrong `source-map: 'inline'` encoding after `1.3.0`
 
 v1.5.0

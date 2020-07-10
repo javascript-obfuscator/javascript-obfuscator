@@ -422,8 +422,9 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private isProhibitedSingleStatementForIfStatementBranch (statement: ESTree.Statement): boolean {
-        // TODO: write tests
-        // function declaration is not allowed outside of block in `strict` mode
+        /**
+         * Function declaration is not allowed outside of block in `strict` mode
+         */
         return NodeGuards.isFunctionDeclarationNode(statement)
             /**
              * Without ignore it can break following code:
@@ -443,6 +444,19 @@ export class IfStatementSimplifyTransformer extends AbstractNodeTransformer {
              *     else
              *         var baz = bark();
              */
-            || NodeGuards.isIfStatementNode(statement);
+            || NodeGuards.isIfStatementNode(statement)
+
+            /**
+             * `let` and `const` variable declarations are not allowed outside of `IfStatement` block statement
+             * Input:
+             * if (condition1) {
+             *     const foo = 1;
+             * }
+             *
+             * Invalid output with runtime error:
+             * if (condition1)
+             *     const foo = 1;
+             */
+            || (NodeGuards.isVariableDeclarationNode(statement) && statement.kind !== 'var');
     }
 }

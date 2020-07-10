@@ -1,5 +1,5 @@
 function foo () {
     if (true) {
-        const bar = baz();
+        var bar = baz();
     }
 }

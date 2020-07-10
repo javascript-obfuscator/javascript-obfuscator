@@ -22,7 +22,7 @@ describe('CryptUtils', () => {
     });
 
     describe('btoa', () => {
-        const expectedString: string = swapLettersCase('c3RyaW5n');
+        const expectedString: string = swapLettersCase('C3rYAw5N');
 
         let string: string;
 

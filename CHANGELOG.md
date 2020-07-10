@@ -1,5 +1,9 @@
 Change Log
 
+v1.5.1
+---
+* Fixed wrong `source-map: 'inline'` encoding after `1.3.0`
+
 v1.5.0
 ---
 * New `mangled-shuffled` identifier names generator based on `mangled` identifier names generator

@@ -210,7 +210,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         evaluationResult = result;
                     })
                     .catch((error: Error) => {
-                        evaluationResult = `${error.message}. ${error.stack}`;
+                        evaluationResult = `${error.message}. ${error.stack}. Code: ${obfuscatedCode}`;
                     });
             });
 

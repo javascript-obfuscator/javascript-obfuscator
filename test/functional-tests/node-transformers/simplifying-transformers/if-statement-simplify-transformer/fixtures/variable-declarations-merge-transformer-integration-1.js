@@ -1,7 +1,7 @@
 function foo() {
     if (true) {
-        const bar = function () {};
-        const baz = function () {};
-        const bark = function () {};
+        var bar = function () {};
+        var baz = function () {};
+        var bark = function () {};
     }
 }

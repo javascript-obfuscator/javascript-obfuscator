@@ -22,6 +22,7 @@ export enum ServiceIdentifiers {
     ICodeTransformerNamesGroupsBuilder = 'ICodeTransformerNamesGroupsBuilder',
     ICodeTransformersRunner = 'ICodeTransformersRunner',
     ICryptUtils = 'ICryptUtils',
+    ICryptUtilsSwappedAlphabet = 'ICryptUtilsSwappedAlphabet',
     ICustomCodeHelper = 'ICustomCodeHelper',
     ICustomCodeHelperGroup = 'ICustomCodeHelperGroup',
     IControlFlowReplacer = 'IControlFlowReplacer',

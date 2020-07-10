@@ -1,15 +1,12 @@
-import { alphabetStringUppercase } from '../../../../constants/AlphabetStringUppercase';
-import { alphabetString } from '../../../../constants/AlphabetString';
-import { numbersString } from '../../../../constants/NumbersString';
+import { base64alphabetSwapped } from '../../../../constants/Base64AlphabetSwapped';
 
 /**
  * @returns {string}
  */
 export function AtobTemplate (): string {
-    // swapped lowercase and uppercase groups of alphabet to prevent easy decode!!!!
     return `
         var {atobFunctionName} = function (input) {
-            const chars = '${alphabetString}${alphabetStringUppercase}${numbersString}+/=';
+            const chars = '${base64alphabetSwapped}';
 
             const str = String(input).replace(/=+$/, '');
             let output = '';

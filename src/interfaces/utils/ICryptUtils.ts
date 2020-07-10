@@ -1,6 +1,7 @@
 export interface ICryptUtils {
     /**
-     * @param string
+     * @param {string} string
+     * @returns {string}
      */
     btoa (string: string): string;
 

@@ -44,6 +44,7 @@ import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/storages/string-array/StringArrayStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
+import './unit-tests/utils/CryptUtilsSwappedAlphabet.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
 import './unit-tests/utils/LevelledTopologicalSorter.spec';
 import './unit-tests/utils/NumberUtils.spec';

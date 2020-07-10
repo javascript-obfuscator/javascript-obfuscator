@@ -6,6 +6,6 @@ function foo () {
         eagle()
         pork();
     } else {
-        const horse = cow();
+        var horse = cow();
     }
 }

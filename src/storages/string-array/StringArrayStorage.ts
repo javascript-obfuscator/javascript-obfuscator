@@ -5,7 +5,7 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
-import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
+import { ICryptUtilsSwappedAlphabet } from '../../interfaces/utils/ICryptUtilsSwappedAlphabet';
 import { IEncodedValue } from '../../interfaces/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -50,9 +50,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @type {ICryptUtils}
+     * @type {ICryptUtilsSwappedAlphabet}
      */
-    private readonly cryptUtils: ICryptUtils;
+    private readonly cryptUtilsSwappedAlphabet: ICryptUtilsSwappedAlphabet;
 
     /**
      * @type {IEscapeSequenceEncoder}
@@ -94,7 +94,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
-     * @param {ICryptUtils} cryptUtils
+     * @param {ICryptUtilsSwappedAlphabet} cryptUtilsSwappedAlphabet
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
     public constructor (
@@ -103,14 +103,14 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
+        @inject(ServiceIdentifiers.ICryptUtilsSwappedAlphabet) cryptUtilsSwappedAlphabet: ICryptUtilsSwappedAlphabet,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
     ) {
         super(randomGenerator, options);
 
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.arrayUtils = arrayUtils;
-        this.cryptUtils = cryptUtils;
+        this.cryptUtilsSwappedAlphabet = cryptUtilsSwappedAlphabet;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
 
         this.rc4Keys = this.randomGenerator.getRandomGenerator()
@@ -275,7 +275,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
              */
             case StringArrayEncoding.Rc4: {
                 const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                const encodedValue: string = this.cryptUtils.btoa(this.cryptUtils.rc4(value, decodeKey));
+                const encodedValue: string = this.cryptUtilsSwappedAlphabet.btoa(this.cryptUtilsSwappedAlphabet.rc4(value, decodeKey));
 
                 const encodedValueSources: string[] = this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? [];
                 let encodedValueSourcesLength: number = encodedValueSources.length;
@@ -298,7 +298,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
 
             case StringArrayEncoding.Base64: {
                 const decodeKey: null = null;
-                const encodedValue: string = this.cryptUtils.btoa(value);
+                const encodedValue: string = this.cryptUtilsSwappedAlphabet.btoa(value);
 
                 return { encodedValue, decodeKey };
             }

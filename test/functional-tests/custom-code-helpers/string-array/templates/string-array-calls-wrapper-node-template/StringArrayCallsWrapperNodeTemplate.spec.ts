@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtils } from '../../../../../../src/interfaces/utils/ICryptUtils';
+import { ICryptUtilsSwappedAlphabet } from '../../../../../../src/interfaces/utils/ICryptUtilsSwappedAlphabet';
 import { IInversifyContainerFacade } from '../../../../../../src/interfaces/container/IInversifyContainerFacade';
 import { IObfuscatedCode } from '../../../../../../src/interfaces/source-code/IObfuscatedCode';
 import { IRandomGenerator } from '../../../../../../src/interfaces/utils/IRandomGenerator';
@@ -28,15 +28,17 @@ describe('StringArrayCallsWrapperTemplate', () => {
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
     const atobFunctionName: string = 'atob';
 
-    let cryptUtils: ICryptUtils,
+    let cryptUtilsSwappedAlphabet: ICryptUtilsSwappedAlphabet,
         randomGenerator: IRandomGenerator;
 
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
-        randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
+        cryptUtilsSwappedAlphabet = inversifyContainerFacade
+            .get<ICryptUtilsSwappedAlphabet>(ServiceIdentifiers.ICryptUtilsSwappedAlphabet);
+        randomGenerator = inversifyContainerFacade
+            .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });
 
     describe('Variant #1: `base64` encoding', () => {
@@ -65,7 +67,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             });
 
             decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtils.btoa('test1')}'];
+                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa('test1')}'];
             
                 ${stringArrayCallsWrapperTemplate}
                 
@@ -108,7 +110,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             });
 
             decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtils.btoa(cryptUtils.rc4('test1', key))}'];
+                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'];
             
                 ${stringArrayCallsWrapperTemplate}
                 

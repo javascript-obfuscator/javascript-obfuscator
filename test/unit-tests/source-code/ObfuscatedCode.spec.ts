@@ -89,7 +89,7 @@ describe('ObfuscatedCode', () => {
         });
 
         describe('source map is set, source map mode is `inline`', () => {
-            const regExp: RegExp = /data:application\/json;base64/;
+            const regExp: RegExp = /data:application\/json;base64,dGVzdA==/;
 
             before(() => {
                 obfuscatedCode = getObfuscatedCode(

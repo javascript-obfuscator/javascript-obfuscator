@@ -14,6 +14,11 @@ import { MangledIdentifierNamesGenerator } from './MangledIdentifierNamesGenerat
 @injectable()
 export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNamesGenerator {
     /**
+     * @type {string[]}
+     */
+    protected static shuffledNameSequence: string[];
+
+    /**
      * @type {IArrayUtils}
      */
     private readonly arrayUtils: IArrayUtils;
@@ -35,11 +40,33 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
 
     @postConstruct()
     public initialize (): void {
-        if (!MangledIdentifierNamesGenerator.nameSequence) {
-            MangledIdentifierNamesGenerator.nameSequence = [
-                ...`${numbersString}`,
-                ...this.arrayUtils.shuffle([...`${alphabetString}${alphabetStringUppercase}`])
-            ];
+        this.initializeNameSequence([
+            ...`${numbersString}`,
+            ...this.arrayUtils.shuffle([...`${alphabetString}${alphabetStringUppercase}`])
+        ]);
+    }
+
+    /**
+     * @param {string[]} nameSequence
+     */
+    protected initializeNameSequence (nameSequence: string[]): void {
+        if (!this.getNameSequence()) {
+            MangledShuffledIdentifierNamesGenerator.shuffledNameSequence = nameSequence;
         }
+    }
+
+    /**
+     * @returns {string[]}
+     */
+    protected getNameSequence (): string[] {
+        return MangledShuffledIdentifierNamesGenerator.shuffledNameSequence;
+    }
+
+    /**
+     * @param {string} previousMangledName
+     * @returns {string}
+     */
+    protected generateNewMangledName (previousMangledName: string): string {
+        return super.generateNewMangledName(previousMangledName);
     }
 }

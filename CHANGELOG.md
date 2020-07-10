@@ -1,5 +1,9 @@
 Change Log
 
+v1.5.2
+---
+* Prevented mutation of the name sequences of `mangled` identifier name generators
+
 v1.5.1
 ---
 * Fixed runtime error when `IfStatement` contains only single `let` or `const` variable declaration when `simlify` option enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/661

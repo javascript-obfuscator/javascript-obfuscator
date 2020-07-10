@@ -60,11 +60,9 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
     @postConstruct()
     public initialize (): void {
-        if (!MangledIdentifierNamesGenerator.nameSequence) {
-            MangledIdentifierNamesGenerator.nameSequence = [
-                ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
-            ];
-        }
+        this.initializeNameSequence([
+            ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
+        ]);
     }
 
     /**
@@ -139,12 +137,28 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * @param {string[]} nameSequence
+     */
+    protected initializeNameSequence (nameSequence: string[]): void {
+        if (!this.getNameSequence()) {
+            MangledIdentifierNamesGenerator.nameSequence = nameSequence;
+        }
+    }
+
+    /**
+     * @returns {string[]}
+     */
+    protected getNameSequence (): string[] {
+        return MangledIdentifierNamesGenerator.nameSequence;
+    }
+
+    /**
      * @param {string} previousMangledName
      * @returns {string}
      */
-    private generateNewMangledName (previousMangledName: string): string {
+    protected generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
-            const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
+            const nameSequence: string[] = this.getNameSequence();
             const nameSequenceLength: number = nameSequence.length;
             const nameLength: number = name.length;
 

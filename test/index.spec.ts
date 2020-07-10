@@ -72,6 +72,7 @@ import './functional-tests/custom-code-helpers/string-array/templates/string-arr
 import './functional-tests/custom-code-helpers/string-array/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 import './functional-tests/generators/identifier-names-generators/dictionary-identifier-names-generator/DictionaryIdentifierNamesGenerator.spec';
 import './functional-tests/generators/identifier-names-generators/mangled-identifier-names-generator/MangledIdentifierNamesGenerator.spec';
+import './functional-tests/generators/identifier-names-generators/mangled-shuffled-identifier-names-generator/MangledShuffledIdentifierNamesGenerator.spec';
 import './functional-tests/issues/issue321.spec';
 import './functional-tests/issues/issue355.spec';
 import './functional-tests/issues/issue419.spec';

@@ -1,9 +1,8 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
-import { IInitializable } from '../../interfaces/IInitializable';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -15,12 +14,7 @@ import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGener
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 @injectable()
-export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator implements IInitializable {
-    /**
-     * @type {string[]}
-     */
-    protected static nameSequence: string[];
-
+export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**
      * @type {string}
      */
@@ -30,6 +24,13 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @type {WeakMap<TNodeWithLexicalScope, string>}
      */
     private static readonly lastMangledNameInScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
+
+    /**
+     * @type {string[]}
+     */
+    private static readonly nameSequence: string[] = [
+        ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
+    ];
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
@@ -56,13 +57,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-    }
-
-    @postConstruct()
-    public initialize (): void {
-        this.initializeNameSequence([
-            ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
-        ]);
     }
 
     /**
@@ -134,15 +128,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     public isValidIdentifierName (mangledName: string): boolean {
         return super.isValidIdentifierName(mangledName)
             && !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName);
-    }
-
-    /**
-     * @param {string[]} nameSequence
-     */
-    protected initializeNameSequence (nameSequence: string[]): void {
-        if (!this.getNameSequence()) {
-            MangledIdentifierNamesGenerator.nameSequence = nameSequence;
-        }
     }
 
     /**

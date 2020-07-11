@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { TInputOptions } from '../../src/types/options/TInputOptions';
 
+import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { evaluateInWorker } from '../helpers/evaluateInWorker';
@@ -17,10 +18,10 @@ const getEnvironmentCode = () => `
 
 describe('JavaScriptObfuscator runtime eval', function () {
     const baseOptions: TInputOptions = {
-        /*controlFlowFlattening: true,
+        controlFlowFlattening: true,
         controlFlowFlatteningThreshold: 1,
         deadCodeInjection: true,
-        deadCodeInjectionThreshold: 1,*/
+        deadCodeInjectionThreshold: 1,
         debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
@@ -29,13 +30,13 @@ describe('JavaScriptObfuscator runtime eval', function () {
         reservedNames: ['generate', 'sha256'],
         rotateStringArray: true,
         selfDefending: true,
-        /*splitStrings: true,*/
-        /*splitStringsChunkLength: 5,*/
+        splitStrings: true,
+        splitStringsChunkLength: 5,
         stringArray: true,
-        /*stringArrayEncoding: StringArrayEncoding.Rc4,*/
-        /*stringArrayThreshold: 1,*/
-        /*transformObjectKeys: true,*/
-        /*unicodeEscapeSequence: true*/
+        stringArrayEncoding: StringArrayEncoding.Rc4,
+        stringArrayThreshold: 1,
+        transformObjectKeys: true,
+        unicodeEscapeSequence: true
     };
 
     this.timeout(200000);

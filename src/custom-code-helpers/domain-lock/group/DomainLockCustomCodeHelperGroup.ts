@@ -22,7 +22,6 @@ import { CallsControllerFunctionCodeHelper } from '../../calls-controller/CallsC
 import { DomainLockCodeHelper } from '../DomainLockCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
-import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -82,11 +81,9 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
             .getLexicalScope(domainLockFunctionHostNode) ?? null;
 
         const domainLockFunctionName: string = domainLockFunctionLexicalScopeNode
-            && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
             : this.identifierNamesGenerator.generateNext();
         const callsControllerFunctionName: string = domainLockFunctionLexicalScopeNode
-            && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
             : this.identifierNamesGenerator.generateNext();
 

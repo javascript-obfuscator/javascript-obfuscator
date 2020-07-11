@@ -22,7 +22,6 @@ import { CallsControllerFunctionCodeHelper } from '../../calls-controller/CallsC
 import { ConsoleOutputDisableCodeHelper } from '../ConsoleOutputDisableCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
-import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -82,13 +81,11 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
             .getLexicalScope(consoleOutputDisableHostNode) ?? null;
 
         const consoleOutputDisableFunctionName: string = consoleOutputDisableLexicalScopeNode
-            && NodeGuards.isProgramNode(consoleOutputDisableLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(consoleOutputDisableLexicalScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
         const callsControllerFunctionName: string = consoleOutputDisableLexicalScopeNode
-            && NodeGuards.isProgramNode(consoleOutputDisableLexicalScopeNode)
             ? this.identifierNamesGenerator.generate(consoleOutputDisableLexicalScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
 
         // consoleOutputDisableExpression helper nodes append
         this.appendCustomNodeIfExist(

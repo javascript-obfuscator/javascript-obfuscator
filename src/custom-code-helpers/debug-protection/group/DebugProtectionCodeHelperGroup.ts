@@ -84,13 +84,11 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
             .getLexicalScope(debugProtectionFunctionCallHostNode) ?? null;
 
         const debugProtectionFunctionName: string = debugProtectionFunctionCallScopeNode
-            && NodeGuards.isProgramNode(debugProtectionFunctionCallScopeNode)
             ? this.identifierNamesGenerator.generate(debugProtectionFunctionCallScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
         const callsControllerFunctionName: string = debugProtectionFunctionCallScopeNode
-            && NodeGuards.isProgramNode(debugProtectionFunctionCallScopeNode)
             ? this.identifierNamesGenerator.generate(debugProtectionFunctionCallScopeNode)
-            : this.randomGenerator.getRandomString(5);
+            : this.identifierNamesGenerator.generateNext();
 
         // debugProtectionFunctionCall helper nodes append
         this.appendCustomNodeIfExist(

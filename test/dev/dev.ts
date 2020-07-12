@@ -1,6 +1,5 @@
 'use strict';
 
-import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 
 (function () {
@@ -8,21 +7,13 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const example1 = 0;
-            const example2 = 1;
-            const example3 = 100;
-            const example4 = 125793;
-            const example5 = -15232103;
+            const foo = 100;
             
-            console.log(example1);
-            console.log(example2);
-            console.log(example3);
-            console.log(example4);
-            console.log(example5);
+            console.log(foo);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+            numbersToExpressions: true
         }
     ).getObfuscatedCode();
 

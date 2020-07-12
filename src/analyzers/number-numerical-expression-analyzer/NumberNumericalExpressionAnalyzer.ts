@@ -7,15 +7,17 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { NumberUtils } from '../../utils/NumberUtils';
+
 /**
- * Rework of https://gist.github.com/da411d/0e59f79dcf4603cdabf0024a10eeb6fe
+ * Based on https://gist.github.com/da411d/0e59f79dcf4603cdabf0024a10eeb6fe
  */
 @injectable()
 export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpressionAnalyzer {
     /**
      * @type {number}
      */
-    private static readonly additionalParts: number = 5;
+    private static readonly additionalParts: number = 3;
 
     /**
      * @type {IRandomGenerator}
@@ -40,6 +42,10 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
             throw new Error('Given value is NaN');
         }
 
+        if (NumberUtils.isUnsafeNumber(number)) {
+            return [number];
+        }
+
         const additionParts: number[] = this.generateAdditionParts(number);
 
         return additionParts.map((addition: number) => this.mixWithMultiplyParts(addition));
@@ -52,8 +58,10 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     private generateAdditionParts (number: number): number[] {
         const additionParts = [];
 
-        const from: number = Math.min(-10000, -Math.abs(number * 2));
-        const to: number = Math.max(10000, Math.abs(number * 2));
+        const upperNumberLimit: number = Math.min(Math.abs(number * 2), Number.MAX_SAFE_INTEGER);
+
+        const from: number = Math.min(-10000, -upperNumberLimit);
+        const to: number = Math.max(10000, upperNumberLimit);
 
         let temporarySum = 0;
 
@@ -61,14 +69,27 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
             if (i < NumberNumericalExpressionAnalyzer.additionalParts - 1) {
                 // trailing parts
 
-                const addition: number = this.randomGenerator.getRandomInteger(from, to);
+                let addition: number = this.randomGenerator.getRandomInteger(from, to);
+                const isUnsafeCombination: boolean = NumberUtils.isUnsafeNumber(temporarySum + addition);
+
+                // we have to flip sign if total expression sum overflows over safe integer limits
+                if (isUnsafeCombination) {
+                    addition = -addition;
+                }
 
                 additionParts.push(addition);
                 temporarySum += addition;
             } else {
-                // last part
+                const combination: number = number - temporarySum;
+                const isUnsafeCombination: boolean = NumberUtils.isUnsafeNumber(combination);
 
-                additionParts.push(number - temporarySum);
+                // last part
+                if (isUnsafeCombination) {
+                    additionParts.push(0 - temporarySum);
+                    additionParts.push(number);
+                } else {
+                    additionParts.push(combination);
+                }
             }
         }
 
@@ -80,36 +101,20 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
      * @returns {number | number[]}
      */
     private mixWithMultiplyParts (number: number): number | number[] {
-        const dividers: number[] = this.getDividers(number);
-
         const shouldMixWithMultiplyParts: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
-        if (!shouldMixWithMultiplyParts || !dividers.length) {
+        if (!shouldMixWithMultiplyParts) {
             return number;
         }
 
-        const divider = dividers[
-            this.randomGenerator.getRandomInteger(0, dividers.length - 1)
-        ];
+        const factors: number[] = NumberUtils.getFactors(number);
 
-        return [divider, number / divider];
-    }
-
-    /**
-     * @param {number} number
-     * @returns {number[]}
-     */
-    private getDividers (number: number): number[] {
-        const dividers: number[] = [];
-
-        number = Math.abs(number);
-
-        for (let i = 2; i < number; i++) {
-            if (number % i === 0){
-                dividers.push(i);
-            }
+        if (!factors.length) {
+            return number;
         }
 
-        return dividers;
+        const factor: number = factors[this.randomGenerator.getRandomInteger(0, factors.length - 1)];
+
+        return [factor, number / factor];
     }
 }

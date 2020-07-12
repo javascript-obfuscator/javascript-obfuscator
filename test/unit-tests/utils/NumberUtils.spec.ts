@@ -128,4 +128,418 @@ describe('NumberUtils', () => {
             });
         });
     });
+
+    describe('isPositive', () => {
+        describe('Variant #1: positive integer', () => {
+            const number: number = 2;
+            const expectedResult: boolean = true;
+
+            let result: boolean;
+
+            before(() => {
+                result = NumberUtils.isPositive(number);
+            });
+
+            it('should return true', () => {
+                assert.equal(result, expectedResult);
+            });
+        });
+
+        describe('Variant #2: positive zero', () => {
+            const number: number = 0;
+            const expectedResult: boolean = true;
+
+            let result: boolean;
+
+            before(() => {
+                result = NumberUtils.isPositive(number);
+            });
+
+            it('should return true', () => {
+                assert.equal(result, expectedResult);
+            });
+        });
+
+        describe('Variant #3: negative integer', () => {
+            const number: number = -2;
+            const expectedResult: boolean = false;
+
+            let result: boolean;
+
+            before(() => {
+                result = NumberUtils.isPositive(number);
+            });
+
+            it('should return false', () => {
+                assert.equal(result, expectedResult);
+            });
+        });
+
+        describe('Variant #4: negative zero', () => {
+            const number: number = -0;
+            const expectedResult: boolean = false;
+
+            let result: boolean;
+
+            before(() => {
+                result = NumberUtils.isPositive(number);
+            });
+
+            it('should return false', () => {
+                assert.equal(result, expectedResult);
+            });
+        });
+
+        describe('Variant #5: NaN', () => {
+            const number: number = NaN;
+
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => NumberUtils.isPositive(number);
+            });
+
+            it('should throw an error', () => {
+                assert.throw(testFunc, 'Given value is NaN');
+            });
+        });
+    });
+
+    describe('isUnsafeNumber', () => {
+        describe('Positive number', () => {
+            describe('Variant #1: positive small safe integer', () => {
+                const number: number = 100;
+                const expectedResult: boolean = false
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return false', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #2: positive big safe integer', () => {
+                const number: number = Number.MAX_SAFE_INTEGER;
+                const expectedResult: boolean = false
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return false', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #3: positive unsafe integer', () => {
+                const number: number = Number.MAX_SAFE_INTEGER + 1;
+                const expectedResult: boolean = true
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return true', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+        });
+
+        describe('Negative number', () => {
+            describe('Variant #1: negative small safe integer', () => {
+                const number: number = -100;
+                const expectedResult: boolean = false
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return false', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #2: negative big safe integer', () => {
+                const number: number = Number.MIN_SAFE_INTEGER;
+                const expectedResult: boolean = false
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return false', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #3: negative unsafe integer', () => {
+                const number: number = Number.MIN_SAFE_INTEGER - 1;
+                const expectedResult: boolean = true
+
+                let result: boolean;
+
+                before(() => {
+                    result = NumberUtils.isUnsafeNumber(number);
+                });
+
+                it('should return true', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+        });
+
+        describe('NaN', () => {
+            const number: number = NaN;
+
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => NumberUtils.isUnsafeNumber(number);
+            });
+
+            it('should throw an error', () => {
+                assert.throw(testFunc, 'Given value is NaN');
+            });
+        });
+    });
+
+    describe('getFactors', () => {
+        describe('Positive numbers', () => {
+            describe('Variant #1: positive number `1`', () => {
+                const number: number = 1;
+                const expectedFactors: number[] = [
+                    -1,
+                    1
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #2: positive number `2`', () => {
+                const number: number = 2;
+                const expectedFactors: number[] = [
+                    -2,
+                    -1,
+                    1,
+                    2
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #3: positive number `100`', () => {
+                const number: number = 100;
+                const expectedFactors: number[] = [
+                    -100,
+                    -50,
+                    -25,
+                    -20,
+                    -10,
+                    -5,
+                    -4,
+                    -2,
+                    -1,
+                    1,
+                    2,
+                    4,
+                    5,
+                    10,
+                    20,
+                    25,
+                    50,
+                    100
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #4: positive number `9007199254740991`', () => {
+                const number: number = 9007199254740991;
+                const expectedFactors: number[] = [
+                    Number.MIN_SAFE_INTEGER,
+                    -1416003655831,
+                    -129728784761,
+                    -441650591,
+                    -20394401,
+                    -69431,
+                    -6361,
+                    -1,
+                    1,
+                    6361,
+                    69431,
+                    20394401,
+                    441650591,
+                    129728784761,
+                    1416003655831,
+                    Number.MAX_SAFE_INTEGER
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+        })
+
+        describe('Negative numbers', () => {
+            describe('Variant #1: negative number `-1`', () => {
+                const number: number = -1;
+                const expectedFactors: number[] = [
+                    -1,
+                    1
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #2: negative number `-2`', () => {
+                const number: number = -2;
+                const expectedFactors: number[] = [
+                    -2,
+                    -1,
+                    1,
+                    2
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #3: negative number `-100`', () => {
+                const number: number = -100;
+                const expectedFactors: number[] = [
+                    -100,
+                    -50,
+                    -25,
+                    -20,
+                    -10,
+                    -5,
+                    -4,
+                    -2,
+                    -1,
+                    1,
+                    2,
+                    4,
+                    5,
+                    10,
+                    20,
+                    25,
+                    50,
+                    100
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+
+            describe('Variant #4: negative number `-9007199254740991`', () => {
+                const number: number = -9007199254740991;
+                const expectedFactors: number[] = [
+                    Number.MIN_SAFE_INTEGER,
+                    -1416003655831,
+                    -129728784761,
+                    -441650591,
+                    -20394401,
+                    -69431,
+                    -6361,
+                    -1,
+                    1,
+                    6361,
+                    69431,
+                    20394401,
+                    441650591,
+                    129728784761,
+                    1416003655831,
+                    Number.MAX_SAFE_INTEGER
+                ];
+
+                let factors: number[];
+
+                before(() => {
+                    factors = NumberUtils.getFactors(number);
+                });
+
+                it('should return factors of a number', () => {
+                    assert.deepEqual(factors, expectedFactors);
+                });
+            });
+        })
+
+        describe('zero number', () => {
+            const number: number = 0;
+
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => NumberUtils.getFactors(number);
+            });
+
+            it('should throw an error', () => {
+                assert.throw(testFunc, Error);
+            });
+        })
+    });
 });

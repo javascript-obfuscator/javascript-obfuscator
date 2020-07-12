@@ -2,7 +2,9 @@ import { assert } from 'chai';
 
 import { NumberUtils } from '../../../src/utils/NumberUtils';
 
-describe('NumberUtils', () => {
+describe('NumberUtils', function () {
+    this.timeout(30000);
+
     describe('toHex', () => {
         describe('Variant #1: number `0`', () => {
             const number: number = 0;

@@ -25,6 +25,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
+        numbersToExpressions: true,
         simplify: true,
         renameProperties: true,
         reservedNames: ['generate', 'sha256'],

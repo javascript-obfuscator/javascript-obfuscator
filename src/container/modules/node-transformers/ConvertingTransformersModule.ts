@@ -8,14 +8,15 @@ import { IObjectExpressionExtractor } from '../../../interfaces/node-transformer
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 import { ObjectExpressionExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
+import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
 import { ObjectExpressionToVariableDeclarationExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/ObjectExpressionToVariableDeclarationExtractor';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
+import { NumberToNumericalExpressionTransformer } from '../../../node-transformers/converting-transformers/NumberToNumericalExpressionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
 import { ObjectExpressionTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionTransformer';
 import { SplitStringTransformer } from '../../../node-transformers/converting-transformers/SplitStringTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
-import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
@@ -26,6 +27,11 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MethodDefinitionTransformer)
         .whenTargetNamed(NodeTransformer.MethodDefinitionTransformer);
+
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(NumberToNumericalExpressionTransformer)
+        .whenTargetNamed(NodeTransformer.NumberToNumericalExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObjectExpressionKeysTransformer)

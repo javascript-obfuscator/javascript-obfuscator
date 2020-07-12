@@ -329,6 +329,7 @@ Following options are available for the JS Obfuscator:
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
+    numbersToExpressions: false,
     renameGlobals: false,
     renameProperties: false,
     reservedNames: [],
@@ -375,6 +376,7 @@ Following options are available for the JS Obfuscator:
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
+    --numbers-to-expressions <boolean>
     --rename-globals <boolean>
     --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
@@ -666,6 +668,20 @@ Allows to set name of the input file with source code. This name will be used in
 Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
+
+### `numbersToExpressions`
+Type: `boolean` Default: `false`
+
+Enables numbers conversion to expressions
+
+Example: 
+```ts
+// input
+const foo = 1234;
+
+// output
+const foo=-0xd93+-0x10b4+0x41*0x67+0x84e*0x3+-0xff8;
+```
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -985,6 +1001,7 @@ Performance will 50-100% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    numbersToExpressions: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
@@ -1016,6 +1033,7 @@ Performance will 30-35% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    numbersToExpressions: false,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
@@ -1045,6 +1063,7 @@ Performance will slightly slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
+    numbersToExpressions: false,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,

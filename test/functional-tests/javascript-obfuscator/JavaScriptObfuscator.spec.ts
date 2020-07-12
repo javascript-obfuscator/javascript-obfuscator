@@ -810,6 +810,7 @@ describe('JavaScriptObfuscator', () => {
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         disableConsoleOutput: false,
+                        numbersToExpressions: true,
                         simplify: true,
                         renameProperties: true,
                         rotateStringArray: true,

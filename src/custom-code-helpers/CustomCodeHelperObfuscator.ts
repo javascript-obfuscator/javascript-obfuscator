@@ -47,6 +47,8 @@ export class CustomCodeHelperObfuscator implements ICustomCodeHelperObfuscator {
                 ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
                 identifiersDictionary: this.options.identifiersDictionary,
+                numbersToExpressions: this.options.numbersToExpressions,
+                simplify: this.options.simplify,
                 seed: this.randomGenerator.getRawSeed(),
                 ...additionalOptions
             }

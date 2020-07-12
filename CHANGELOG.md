@@ -1,5 +1,9 @@
 Change Log
 
+v1.6.0
+---
+* **New option:** `numbersToExpressions` enables numbers conversion to expressions
+
 v1.5.2
 ---
 * Prevented mutation of the name sequences of `mangled` identifier name generators

@@ -6,6 +6,7 @@ require('source-map-support').install();
  * Unit tests
  */
 import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
+import './unit-tests/analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer.spec';
 import './unit-tests/analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer.spec';
 import './unit-tests/analyzers/scope-analyzer/ScopeAnalyzer.spec';
 import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer.spec';
@@ -87,6 +88,7 @@ import './functional-tests/node-transformers/control-flow-transformers/control-f
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/string-litertal-control-flow-replacer/StringLiteralControlFlowReplacer.spec';
 import './functional-tests/node-transformers/converting-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/numbers-to-numerical-expressions-transformer/NumbersToNumericalExpressionsTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';

@@ -164,4 +164,26 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
             assert.match(obfuscatedCode,  regExp);
         });
     });
+
+    describe('Variant #4: parent node is member expression', () => {
+        const regExp: RegExp = /\((?:-?0x[a-zA-Z0-9]+(?: *[+\-*] *)?)*?\)\['toString']\(\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/member-expression.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    numbersToExpressions: true
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('should replace member expression with literal object with expression', () => {
+            assert.match(obfuscatedCode,  regExp);
+        });
+    });
 });

@@ -7,7 +7,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 0;
+            const foo = 0..toString();
             const bar = 'abc';
             
             console.log(foo, bar);

@@ -20,6 +20,11 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     private static readonly additionalParts: number = 3;
 
     /**
+     * @type {Map<number, number[]>}
+     */
+    private readonly numberFactorsMap: Map<number, number[]> = new Map();
+
+    /**
      * @type {IRandomGenerator}
      */
     private readonly randomGenerator: IRandomGenerator;
@@ -103,11 +108,16 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     private mixWithMultiplyParts (number: number): number | number[] {
         const shouldMixWithMultiplyParts: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
-        if (!shouldMixWithMultiplyParts) {
+        if (!shouldMixWithMultiplyParts || number === 0) {
             return number;
         }
 
-        const factors: number[] = NumberUtils.getFactors(number);
+        let factors: number[] | null = this.numberFactorsMap.get(number) ?? null;
+
+        if (!factors) {
+           factors = NumberUtils.getFactors(number);
+           this.numberFactorsMap.set(number, factors);
+        }
 
         if (!factors.length) {
             return number;

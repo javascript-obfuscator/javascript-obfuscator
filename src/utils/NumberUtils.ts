@@ -82,12 +82,13 @@ export class NumberUtils {
 
         const factors: number[] = [];
 
+        const root: number = Math.sqrt(number);
         const isEven: boolean = number % 2 === 0;
         const incrementValue: number = isEven ? 1 : 2;
 
         for (
             let currentFactor = 1;
-            Math.pow(currentFactor, 2) <= number;
+            currentFactor <= root;
             currentFactor += incrementValue
         ) {
             if (number % currentFactor !== 0) {

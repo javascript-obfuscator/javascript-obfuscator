@@ -8,9 +8,17 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function foo (arg1, arg2, arg3) {
-                console.log(arg1, arg2, arg3);
-            }
+            const example1 = 0;
+            const example2 = 1;
+            const example3 = 100;
+            const example4 = 125793;
+            const example5 = -15232103;
+            
+            console.log(example1);
+            console.log(example2);
+            console.log(example3);
+            console.log(example4);
+            console.log(example5);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

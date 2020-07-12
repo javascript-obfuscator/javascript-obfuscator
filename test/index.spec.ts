@@ -6,6 +6,7 @@ require('source-map-support').install();
  * Unit tests
  */
 import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
+import './unit-tests/analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer.spec';
 import './unit-tests/analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer.spec';
 import './unit-tests/analyzers/scope-analyzer/ScopeAnalyzer.spec';
 import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer.spec';

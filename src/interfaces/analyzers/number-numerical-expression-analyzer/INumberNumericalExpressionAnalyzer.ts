@@ -1,6 +1,8 @@
 import { TNumberNumericalExpressionData } from '../../../types/analyzers/number-numerical-expression-analyzer/TNumberNumericalExpressionData';
 
-export interface INumberNumericalExpressionAnalyzer {
+import { IAnalyzer } from '../IAnalyzer';
+
+export interface INumberNumericalExpressionAnalyzer extends IAnalyzer<[number], TNumberNumericalExpressionData> {
     /**
      * @param {number} number
      * @returns {TNumberNumericalExpressionData}

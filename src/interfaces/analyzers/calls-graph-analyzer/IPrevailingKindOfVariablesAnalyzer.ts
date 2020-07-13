@@ -2,7 +2,7 @@ import * as ESTree from 'estree';
 
 import { IAnalyzer } from '../IAnalyzer';
 
-export interface IPrevailingKindOfVariablesAnalyzer extends IAnalyzer<void> {
+export interface IPrevailingKindOfVariablesAnalyzer extends IAnalyzer<[ESTree.Program], void> {
     /**
      * @param {Program} astTree
      */

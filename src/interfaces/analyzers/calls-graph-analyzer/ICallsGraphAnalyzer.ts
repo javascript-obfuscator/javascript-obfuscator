@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 import { IAnalyzer } from '../IAnalyzer';
 import { ICallsGraphData } from './ICallsGraphData';
 
-export interface ICallsGraphAnalyzer extends IAnalyzer<ICallsGraphData[]> {
+export interface ICallsGraphAnalyzer extends IAnalyzer<[ESTree.Program], ICallsGraphData[]> {
     /**
      * @param {Program} astTree
      * @returns {ICallsGraphData[]}

@@ -1,9 +1,7 @@
-import * as ESTree from 'estree';
-
-export interface IAnalyzer <T> {
+export interface IAnalyzer <TArgs extends unknown[], TData extends unknown> {
     /**
-     * @param {Program} astTree
-     * @returns {T}
+     * @param {TArgs} args
+     * @returns {TData}
      */
-    analyze (astTree: ESTree.Program): T;
+    analyze (...args: TArgs): TData;
 }

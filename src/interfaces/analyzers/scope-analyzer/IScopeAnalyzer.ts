@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 
 import { IAnalyzer } from '../IAnalyzer';
 
-export interface IScopeAnalyzer extends IAnalyzer<void> {
+export interface IScopeAnalyzer extends IAnalyzer<[ESTree.Node], void> {
     /**
      * @param {Program} astTree
      */

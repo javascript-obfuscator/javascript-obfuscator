@@ -106,85 +106,92 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     `,
     {
         compact: false,
-        controlFlowFlattening: true
+        controlFlowFlattening: true,
+        numbersToExpressions: true,
+        simplify: true,
+        shuffleStringArray: true,
+        splitStrings: true
     }
 );
 
 console.log(obfuscationResult.getObfuscatedCode());
 /*
-var _0x2218 = [
-    '8|3|1|2|0|4|6|9|7|5',
-    'bqndd',
-    'dySIh',
-    'kTiiG',
+var _0x2302 = [
+    'oAFaE',
+    'foo\x20',
+    'RDjIM',
+    'ZhYJQ',
+    'split',
+    'vWUAR',
+    'YIYCI',
+    'map',
     'log',
-    'tuvgv'
+    '8|7|0|2|9|'
 ];
-(function (_0x38b423, _0x1d6bd4) {
-    var _0x39a849 = function (_0x5794c7) {
-        while (--_0x5794c7) {
-            _0x38b423['push'](_0x38b423['shift']());
+(function (_0x27f028, _0xd47344) {
+    var _0x335bc0 = function (_0x29965a) {
+        while (--_0x29965a) {
+            _0x27f028['push'](_0x27f028['shift']());
         }
     };
-    _0x39a849(++_0x1d6bd4);
-}(_0x2218, 0x114));
-var _0x8221 = function (_0xcac13e, _0x3627d7) {
-    _0xcac13e = _0xcac13e - 0x0;
-    var _0x1eae4d = _0x2218[_0xcac13e];
-    return _0x1eae4d;
+    _0x335bc0(++_0xd47344);
+}(_0x2302, 0xaee + -0x1 * 0xa63 + -0x7 * -0x1f));
+var _0x2384 = function (_0x27f028, _0xd47344) {
+    _0x27f028 = _0x27f028 - (0xaee + -0x1 * 0xa63 + -0x1 * 0x8b);
+    var _0x335bc0 = _0x2302[_0x27f028];
+    return _0x335bc0;
 };
 (function () {
-    var _0x5336d5 = {
-        'bqndd': _0x8221('0x0'),
-        'islRd': function _0x2abb6c(_0x2f45f8, _0x4d47b0) {
-            return _0x2f45f8 + _0x4d47b0;
-        },
-        'kTiiG': function _0x32525a(_0x44ba8d, _0x2c5e0c) {
-            return _0x44ba8d + _0x2c5e0c;
-        },
-        'dySIh': 'foo\x20',
-        'tuvgv': function _0x28d015(_0x35d81a, _0x2d2463) {
-            return _0x35d81a - _0x2d2463;
-        }
-    };
-    var _0x5000ba = _0x5336d5[_0x8221('0x1')]['split']('|'), _0x5c972f = 0x0;
+    var _0x38ee09 = {
+            'RDjIM': _0x2384('0x3') + '5|4|6|1|3',
+            'ZhYJQ': function (_0x257a32, _0x35b48d) {
+                return _0x257a32 + _0x35b48d;
+            },
+            'oAFaE': function (_0x1c49a8, _0x53ffa5) {
+                return _0x1c49a8 - _0x53ffa5;
+            },
+            'vWUAR': function (_0x2c7ad4, _0x33512e) {
+                return _0x2c7ad4 + _0x33512e;
+            },
+            'YIYCI': _0x2384('0x5')
+        }, _0x147d16 = _0x38ee09[_0x2384('0x6')][_0x2384('0x8')]('|'), _0x28f080 = -0x239b + -0x49 * 0x65 + 0x4068;
     while (!![]) {
-        switch (_0x5000ba[_0x5c972f++]) {
+        switch (_0x147d16[_0x28f080++]) {
         case '0':
-            var _0x586faa = _0x5336d5['islRd'](_0x5336d5['kTiiG'](_0x5336d5[_0x8221('0x2')], 0x1), 0x1);
+            var _0x263e6c = _0x38ee09[_0x2384('0x7')]('5', -'2');
             continue;
         case '1':
-            var _0xab6a82 = _0x5336d5[_0x8221('0x3')]('5', -'2');
+            console[_0x2384('0x2')](_0x225580);
             continue;
         case '2':
-            var _0x19ab9d = [
+            var _0x225580 = [
                 '10',
                 '10',
                 '10',
                 '10',
                 '10'
-            ]['map'](parseInt);
+            ][_0x2384('0x1')](parseInt);
             continue;
         case '3':
-            var _0x321653 = _0x5336d5[_0x8221('0x3')]('5', 0x3);
+            console[_0x2384('0x2')](_0x1a047b);
             continue;
         case '4':
-            console['log'](_0x2c1b0c);
+            console[_0x2384('0x2')](_0x382090);
             continue;
         case '5':
-            console[_0x8221('0x4')](_0x586faa);
+            console[_0x2384('0x2')](_0x450071);
             continue;
         case '6':
-            console[_0x8221('0x4')](_0x321653);
+            console['log'](_0x263e6c);
             continue;
         case '7':
-            console[_0x8221('0x4')](_0x19ab9d);
+            var _0x382090 = _0x38ee09['ZhYJQ']('5', -0x2093 + 0x103 + 0x1 * 0x1f93);
             continue;
         case '8':
-            var _0x2c1b0c = _0x5336d5[_0x8221('0x5')]('5', 0x3);
+            var _0x450071 = _0x38ee09[_0x2384('0x4')]('5', 0x377 + 0x1b9 * 0x9 + -0x1 * 0x12f5);
             continue;
         case '9':
-            console[_0x8221('0x4')](_0xab6a82);
+            var _0x1a047b = _0x38ee09[_0x2384('0x9')](_0x38ee09[_0x2384('0x0')] + (-0xbf6 + -0x24a * 0x2 + 0x23 * 0x79), 0x1 * 0xb68 + 0x6bd + 0x81 * -0x24);
             continue;
         }
         break;

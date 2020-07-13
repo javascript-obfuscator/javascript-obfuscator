@@ -352,10 +352,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mocha@7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-7.0.2.tgz#b17f16cf933597e10d6d78eae3251e692ce8b0ce"
-  integrity sha512-ZvO2tAcjmMi8V/5Z3JsyofMe3hasRcaw88cto5etSVMwVQfeivGAlEYmaQgceUSVYFofVjT+ioHsATjdWcFt1w==
+"@types/mocha@8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-8.0.0.tgz#b0ba1c5b4cb3880c51a6b488ad007a657d1be888"
+  integrity sha512-jWeYcTo3sCH/rMgsdYXDTO85GNRyTCII5dayMIu/ZO4zbEot1E3iNGaOwpLReLUHjeNQFkgeNNVYlY4dX6azQQ==
 
 "@types/multimatch@4.0.0":
   version "4.0.0"
@@ -1923,10 +1923,10 @@ eslint-plugin-import@2.22.0:
     resolve "^1.17.0"
     tsconfig-paths "^3.9.0"
 
-eslint-plugin-jsdoc@29.1.3:
-  version "29.1.3"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-29.1.3.tgz#288c3faf142fbf78e6abff6a838db23af8d6749f"
-  integrity sha512-HEB8jPsWBGu++LffL4K8VZ7VXz0HELI1I3Qkv/+5oSekgrAo6I0AVgl5abecLbTQQZo0OaEcmTptiIspwDOu1w==
+eslint-plugin-jsdoc@29.1.4:
+  version "29.1.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-29.1.4.tgz#ca5b6e1952ecc1efb743c1ec572d3db15edc3859"
+  integrity sha512-pKpD8/R4FysNclNFUEVWRherkyZt9Rt6iwYPIQa1CeHzHQiLazqCvEYhQtohd5GSrhGWgigvtlCAeOcdgxNByw==
   dependencies:
     comment-parser "^0.7.5"
     debug "^4.1.1"

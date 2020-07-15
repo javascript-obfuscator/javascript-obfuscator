@@ -1,32 +1,33 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
-
-import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStatementSimplifyData } from '../../interfaces/node-transformers/simplifying-transformers/IStatementSimplifyData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
-import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { AbstractStatementSimplifyTransformer } from './AbstractStatementSimplifyTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeStatementUtils } from '../../node/NodeStatementUtils';
+import { NodeFactory } from '../../node/NodeFactory';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
- * replaces:
- *     var foo = 1;
- *     var bar = 2;
- *
- * on:
- *     var foo = 1,
- *         bar = 2;
+ * Simplifies `BlockStatement` node
  */
 @injectable()
-export class VariableDeclarationsMergeTransformer extends AbstractNodeTransformer {
+export class BlockStatementSimplifyTransformer extends AbstractStatementSimplifyTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.VariableDeclarationsMergeTransformer
+    ];
+
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -49,8 +50,8 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
                     leave: (
                         node: ESTree.Node,
                         parentNode: ESTree.Node | null
-                    ): ESTree.Node | estraverse.VisitorOption | undefined => {
-                        if (parentNode && NodeGuards.isVariableDeclarationNode(node)) {
+                    ): ESTree.Node | undefined => {
+                        if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -62,30 +63,25 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param {ESTree.VariableDeclaration} variableDeclarationNode
+     * @param {ESTree.Statement} statementNode
      * @param {ESTree.Node} parentNode
-     * @returns {ESTree.VariableDeclaration | estraverse.VisitorOption}
+     * @returns {ESTree.Node}
      */
     public transformNode (
-        variableDeclarationNode: ESTree.VariableDeclaration,
+        statementNode: ESTree.Statement,
         parentNode: ESTree.Node
-    ): ESTree.VariableDeclaration | estraverse.VisitorOption {
-        if (!NodeGuards.isNodeWithStatements(parentNode)) {
-            return variableDeclarationNode;
+    ): ESTree.Node {
+        const simplifyData: IStatementSimplifyData | null = this.getStatementSimplifyData(statementNode);
+
+        if (!simplifyData) {
+            return statementNode;
         }
 
-        const prevStatement: TStatement | null = NodeStatementUtils.getPreviousSiblingStatement(variableDeclarationNode);
+        const partialStatementNode: ESTree.Statement = this.getPartialStatement(simplifyData);
+        const transformedNode: ESTree.Node = NodeGuards.isBlockStatementNode(partialStatementNode)
+            ? partialStatementNode
+            : NodeFactory.blockStatementNode([partialStatementNode]);
 
-        if (!prevStatement || !NodeGuards.isVariableDeclarationNode(prevStatement)) {
-            return variableDeclarationNode;
-        }
-
-        if (variableDeclarationNode.kind !== prevStatement.kind) {
-            return variableDeclarationNode;
-        }
-
-        prevStatement.declarations.push(...variableDeclarationNode.declarations);
-
-        return estraverse.VisitorOption.Remove;
+        return NodeUtils.parentizeNode(transformedNode, parentNode);
     }
 }

@@ -141,6 +141,38 @@ describe('VariableDeclarationsMergeTransformer', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
+
+        describe('Variant #6: declarations inside nested function expressions', () => {
+            const regExp: RegExp = new RegExp(
+                'var foo *= *function *\\(\\) *{ *}, *' +
+                    'bar *= *function *\\(\\) *{ *' +
+                        'var _0x([a-f0-9]){4,6} *= *function *\\(\\) *{ *}, *' +
+                            '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{ *' +
+                                'var _0x([a-f0-9]){4,6} *= *0x1, *' +
+                                    '_0x([a-f0-9]){4,6} *= *0x2; *' +
+                            '}; *' +
+                    '};'
+            );
+
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/declarations-inside-nested-function-expressions.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        simplify: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should merge variable declarations', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
     });
 
     describe('object pattern as initializer', () => {

@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-export interface IIfStatementIteratedStatementsData {
+export interface IIteratedStatementsSimplifyData {
     /**
      * @type {number | null}
      */

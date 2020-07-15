@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-export interface IIfStatementSimplifyData {
+export interface IStatementSimplifyData {
     /**
      * @type {ESTree.Statement[]}
      */

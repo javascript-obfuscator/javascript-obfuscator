@@ -7,17 +7,19 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 0..toString();
-            const bar = 'abc';
-            
-            console.log(foo, bar);
+            var foo = function () {};
+            var bar = function () {
+                var baz = function () {};
+                var bark = function () {
+                    var hawk = 1;
+                    var dog = 2;
+                };
+            };
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            numbersToExpressions: true,
-            stringArray: true,
-            stringArrayThreshold: 1
+            simplify: true
         }
     ).getObfuscatedCode();
 

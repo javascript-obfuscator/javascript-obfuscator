@@ -23,6 +23,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @type {NodeTransformer[]}
      */
     public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ExpressionStatementsMergeTransformer,
         NodeTransformer.VariableDeclarationsMergeTransformer
     ];
 
@@ -110,17 +111,19 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
         const unwrappedExpressions: ESTree.Expression[] = [];
 
         let hasReturnStatement: boolean = false;
-        let startIndex: number | null = 0;
+        let startIndex: number | null = null;
 
-        for (let i = 0; i < statementNodeBodyLength; i++) {
+        for (let i = statementNodeBodyLength - 1; i >= 0; i--) {
             const statementBodyStatementNode: ESTree.Statement = statementNode.body[i];
 
-            if (startIndex === null) {
-                startIndex = i;
-            }
-
             if (NodeGuards.isExpressionStatementNode(statementBodyStatementNode)) {
-                unwrappedExpressions.push(statementBodyStatementNode.expression);
+                if (NodeGuards.isSequenceExpressionNode(statementBodyStatementNode.expression)) {
+                    unwrappedExpressions.unshift(...statementBodyStatementNode.expression.expressions);
+                } else {
+                    unwrappedExpressions.unshift(statementBodyStatementNode.expression);
+                }
+
+                startIndex = i;
                 continue;
             }
 
@@ -128,13 +131,13 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
                 NodeGuards.isReturnStatementNode(statementBodyStatementNode)
                 && statementBodyStatementNode.argument
             ) {
-                unwrappedExpressions.push(statementBodyStatementNode.argument);
+                unwrappedExpressions.unshift(statementBodyStatementNode.argument);
                 hasReturnStatement = true;
+                startIndex = i;
                 continue;
             }
 
-            startIndex = null;
-            unwrappedExpressions.length = 0;
+            break;
         }
 
         return {

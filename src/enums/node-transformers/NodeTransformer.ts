@@ -5,6 +5,7 @@ export enum NodeTransformer {
     CustomCodeHelpersTransformer = 'CustomCodeHelpersTransformer',
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
+    ExpressionStatementsMergeTransformer = 'ExpressionStatementsMergeTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',

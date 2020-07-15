@@ -63,6 +63,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     private static readonly nodeTransformersList: NodeTransformer[] = [
         NodeTransformer.BlockStatementControlFlowTransformer,
+        NodeTransformer.BlockStatementSimplifyTransformer,
         NodeTransformer.CommentsTransformer,
         NodeTransformer.CustomCodeHelpersTransformer,
         NodeTransformer.DeadCodeInjectionTransformer,

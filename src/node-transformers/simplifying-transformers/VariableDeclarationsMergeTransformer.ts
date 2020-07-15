@@ -46,7 +46,7 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Simplifying:
                 return {
-                    enter: (
+                    leave: (
                         node: ESTree.Node,
                         parentNode: ESTree.Node | null
                     ): ESTree.Node | estraverse.VisitorOption | undefined => {

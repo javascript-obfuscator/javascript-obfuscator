@@ -2,7 +2,7 @@ Change Log
 
 v1.7.0
 ---
-* `simplify` option now affects all block statements
+* `simplify` option now affects all block statements. Improved variable declarations merging.
 
 v1.6.0
 ---

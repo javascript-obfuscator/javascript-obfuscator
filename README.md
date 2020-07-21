@@ -1117,8 +1117,6 @@ See: [`Kind of variables`](#kind-of-variables)
 
 `BigInt` obfuscation works correctly only in environments that support `BigInt` values. See [ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
 
-See: [`Kind of variables`](#kind-of-variables)
-
 ### I enabled `renameProperties` option, and my code broke! What to do?
 
 Just disable this option.

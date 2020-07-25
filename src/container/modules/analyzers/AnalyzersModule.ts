@@ -37,8 +37,7 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
 
     // scope analyzer
     bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer)
-        .to(ScopeAnalyzer)
-        .inSingletonScope();
+        .to(ScopeAnalyzer);
 
     // string array storage analyzer
     bind<IStringArrayStorageAnalyzer>(ServiceIdentifiers.IStringArrayStorageAnalyzer)

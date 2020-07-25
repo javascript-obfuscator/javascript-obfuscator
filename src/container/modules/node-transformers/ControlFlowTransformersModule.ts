@@ -11,8 +11,8 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 import { BlockStatementControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer';
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
-import { DeadCodeInjectionTransformer } from '../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer';
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
+import { FunctionSplittingTransformer } from '../../../node-transformers/control-flow-transformers/FunctionSplittingTransformer';
 import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer';
 import { StringLiteralControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/StringLiteralControlFlowReplacer';
 
@@ -23,12 +23,12 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
         .whenTargetNamed(NodeTransformer.BlockStatementControlFlowTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(DeadCodeInjectionTransformer)
-        .whenTargetNamed(NodeTransformer.DeadCodeInjectionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)
         .whenTargetNamed(NodeTransformer.FunctionControlFlowTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(FunctionSplittingTransformer)
+        .whenTargetNamed(NodeTransformer.FunctionSplittingTransformer);
 
     // control flow replacers
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)

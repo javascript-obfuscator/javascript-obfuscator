@@ -7,6 +7,7 @@ export enum NodeTransformer {
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
     ExpressionStatementsMergeTransformer = 'ExpressionStatementsMergeTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
+    FunctionSplittingTransformer = 'FunctionSplittingTransformer',
     IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',

@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -44,7 +44,7 @@
     "tslib": "2.0.0"
   },
   "devDependencies": {
-    "@types/chai": "4.2.11",
+    "@types/chai": "4.2.12",
     "@types/chance": "1.1.0",
     "@types/escodegen": "0.0.6",
     "@types/eslint-scope": "3.7.0",
@@ -54,7 +54,7 @@
     "@types/mkdirp": "1.0.1",
     "@types/mocha": "8.0.0",
     "@types/multimatch": "4.0.0",
-    "@types/node": "14.0.24",
+    "@types/node": "14.0.26",
     "@types/rimraf": "3.0.0",
     "@types/sinon": "9.0.4",
     "@types/string-template": "1.0.2",
@@ -67,10 +67,10 @@
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-jsdoc": "30.0.3",
     "eslint-plugin-no-null": "1.0.2",
-    "eslint-plugin-prefer-arrow": "1.2.1",
+    "eslint-plugin-prefer-arrow": "1.2.2",
     "eslint-plugin-unicorn": "21.0.0",
     "fork-ts-checker-notifier-webpack-plugin": "3.0.0",
-    "fork-ts-checker-webpack-plugin": "5.0.7",
+    "fork-ts-checker-webpack-plugin": "5.0.11",
     "mocha": "8.0.1",
     "nyc": "15.1.0",
     "pjson": "1.0.9",
@@ -81,7 +81,7 @@
     "ts-loader": "8.0.1",
     "ts-node": "8.10.2",
     "typescript": "3.9.7",
-    "webpack": "4.43.0",
+    "webpack": "4.44.0",
     "webpack-cli": "3.3.12",
     "webpack-node-externals": "2.5.0"
   },

@@ -221,7 +221,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--domain-lock <list> (comma separated, without whitespaces)',
-                'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
+                'Allows to run the obfuscated source code only on specific domains and/or sub-domains (comma separated)',
                 ArraySanitizer
             )
             .option(

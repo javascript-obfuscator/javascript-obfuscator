@@ -633,10 +633,10 @@ Type: `string[]` Default: `[]`
 
 ##### :warning: This option does not work with `target: 'node'`
 
-Locks the obfuscated source code so it only runs on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
+Allows to run the obfuscated source code only on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
 
 ##### Multiple domains and sub-domains
-It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on any sub-domain from example.com, use `.example.com`.
+It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
 
 ### `exclude`
 Type: `string[]` Default: `[]`

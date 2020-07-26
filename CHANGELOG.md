@@ -1,5 +1,9 @@
 Change Log
 
+v1.8.0
+---
+* `domainLock` option patterns with leading dot character (`.example.com`) now cover root domains (`example.com`) in addition to all sub-domains (`sub.example.com`). https://github.com/javascript-obfuscator/javascript-obfuscator/issues/640
+
 v1.7.0
 ---
 * `simplify` option now affects all block statements. Improved variable declarations merging.

@@ -83,8 +83,11 @@ export function DomainLockTemplate (): string {
                         
             for (let i = 0; i < domains.length; i++) {
                 const domain = domains[i];
-                const position = currentDomain.length - domain.length;
-                const lastIndex = currentDomain.indexOf(domain, position);
+                const domainNormalized = domain[0] === String.fromCharCode(46)
+                    ? domain.slice(1)
+                    : domain;
+                const position = currentDomain.length - domainNormalized.length;
+                const lastIndex = currentDomain.indexOf(domainNormalized, position);
                 const endsWith = lastIndex !== -1 && lastIndex === position;
                 
                 if (endsWith) {

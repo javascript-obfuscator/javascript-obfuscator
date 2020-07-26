@@ -160,9 +160,39 @@ describe('DomainLockTemplate', () => {
         });
     });
 
-    describe('Variant #3: current domain matches with all domains of `domainsString`', () => {
+    describe('Variant #3: current domain matches with root domain of `domainsString`', () => {
+        const domainsString: string = ['.example.com'].join(';');
+        const currentDomain: string = 'example.com';
+
+        let testFunc: () => void;
+
+        before(() => {
+            const [
+                hiddenDomainsString,
+                diff
+            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+            testFunc = () => getFunctionFromTemplate(
+                {
+                    domainLockFunctionName: 'domainLockFunction',
+                    diff: diff,
+                    domains: hiddenDomainsString,
+                    globalVariableTemplate: GlobalVariableTemplate1(),
+                    singleCallControllerFunctionName
+                },
+                singleCallControllerFunctionName,
+                getDocumentDomainTemplate(currentDomain)
+            );
+        });
+
+        it('should correctly run code inside template', () => {
+            assert.doesNotThrow(testFunc);
+        });
+    });
+
+    describe('Variant #4: current root domain matches with `domainsString`', () => {
         describe('Variant #1', () => {
-            const domainsString: string = ['example.com', '.example.com'].join(';');
+            const domainsString: string = ['example.com'].join(';');
             const currentDomain: string = 'example.com';
 
             let testFunc: () => void;
@@ -282,7 +312,7 @@ describe('DomainLockTemplate', () => {
         });
     });
 
-    describe('Variant #4: current domain matches with base domain of `domainsString` item', () => {
+    describe('Variant #5: current domain matches with base domain of `domainsString` item', () => {
         const domainsString: string = ['www.test.com', '.example.com'].join(';');
         const currentDomain: string = 'subdomain.example.com';
 
@@ -312,7 +342,7 @@ describe('DomainLockTemplate', () => {
         });
     });
 
-    describe('Variant #5: current domain doesn\'t match with `domainsString`', () => {
+    describe('Variant #6: current domain doesn\'t match with `domainsString`', () => {
         describe('Variant #1', () => {
             const domainsString: string = ['www.example.com'].join(';');
             const currentDomain: string = 'www.test.com';
@@ -401,9 +431,39 @@ describe('DomainLockTemplate', () => {
                 assert.throws(testFunc);
             });
         });
+
+        describe('Variant #4', () => {
+            const domainsString: string = ['.example.com'].join(';');
+            const currentDomain: string = 'example1.com';
+
+            let testFunc: () => void;
+
+            before(() => {
+                const [
+                    hiddenDomainsString,
+                    diff
+                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleCallControllerFunctionName
+                    },
+                    singleCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
+            });
+
+            it('should throw an error', () => {
+                assert.throws(testFunc);
+            });
+        });
     });
 
-    describe('Variant #6: location.hostname', () => {
+    describe('Variant #7: location.hostname', () => {
         describe('Variant #1: current location.hostname matches with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
             const currentHostName: string = 'www.example.com';
@@ -465,7 +525,7 @@ describe('DomainLockTemplate', () => {
         });
     });
 
-    describe('Variant #7: domain and location.hostname presented', () => {
+    describe('Variant #8: domain and location.hostname presented', () => {
         describe('Variant #1: current domain matches with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
             const currentHostName: string = 'www.example.com';

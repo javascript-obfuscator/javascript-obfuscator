@@ -461,6 +461,36 @@ describe('DomainLockTemplate', () => {
                 assert.throws(testFunc);
             });
         });
+
+        describe('Variant #4', () => {
+            const domainsString: string = ['example.com'].join(';');
+            const currentDomain: string = 'sub.example.com';
+
+            let testFunc: () => void;
+
+            before(() => {
+                const [
+                    hiddenDomainsString,
+                    diff
+                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleCallControllerFunctionName
+                    },
+                    singleCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
+            });
+
+            it('should throw an error', () => {
+                assert.throws(testFunc);
+            });
+        });
     });
 
     describe('Variant #7: location.hostname', () => {

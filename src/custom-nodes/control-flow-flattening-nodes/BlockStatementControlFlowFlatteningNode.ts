@@ -6,6 +6,8 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
+import { StringSeparator } from '../../enums/StringSeparator';
+
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -79,6 +81,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     protected getNodeStructure (): TStatement[] {
         const controllerIdentifierName: string = this.randomGenerator.getRandomString(6);
         const indexIdentifierName: string = this.randomGenerator.getRandomString(6);
+
         const structure: ESTree.BlockStatement = NodeFactory.blockStatementNode([
             NodeFactory.variableDeclarationNode(
                 [
@@ -87,12 +90,12 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                         NodeFactory.callExpressionNode(
                             NodeFactory.memberExpressionNode(
                                 NodeFactory.literalNode(
-                                    this.originalKeysIndexesInShuffledArray.join('|')
+                                    this.originalKeysIndexesInShuffledArray.join(StringSeparator.VerticalLine)
                                 ),
                                 NodeFactory.identifierNode('split')
                             ),
                             [
-                                NodeFactory.literalNode('|')
+                                NodeFactory.literalNode(StringSeparator.VerticalLine)
                             ]
                         )
                     )

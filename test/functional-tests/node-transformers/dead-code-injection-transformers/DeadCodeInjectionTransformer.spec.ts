@@ -336,7 +336,58 @@ describe('DeadCodeInjectionTransformer', () => {
                 });
             });
 
-            describe('Variant #4 - super expression in block statement', () => {
+            describe('Variant #4 - yield expression in block statement', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const yieldExpressionRegExp: RegExp = new RegExp(
+                    `yield *${variableMatch}\\(\\)`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedAwaitExpressionMatchesLength: number = 1;
+
+                let functionMatchesLength: number = 0,
+                    yieldExpressionMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/yield-expression.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const yieldExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(yieldExpressionRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (yieldExpressionMatches) {
+                        yieldExpressionMatchesLength = yieldExpressionMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(yieldExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
+                });
+            });
+
+            describe('Variant #5 - super expression in block statement', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +

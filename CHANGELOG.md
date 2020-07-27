@@ -1,5 +1,9 @@
 Change Log
 
+v1.8.1
+---
+* Fixed runtime error `Uncaught SyntaxError: yield is a reserved identifier` when `deadCodeInjection` is enabled 
+
 v1.8.0
 ---
 * `domainLock` option patterns with leading dot character (`.example.com`) now cover root domains (`example.com`) in addition to all sub-domains (`sub.example.com`). https://github.com/javascript-obfuscator/javascript-obfuscator/issues/640

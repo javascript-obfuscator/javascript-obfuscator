@@ -421,4 +421,12 @@ export class NodeGuards {
     public static isWhileStatementNode (node: ESTree.Node): node is ESTree.WhileStatement {
         return node.type === NodeType.WhileStatement;
     }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isYieldExpressionNode (node: ESTree.Node): node is ESTree.YieldExpression {
+        return node.type === NodeType.YieldExpression;
+    }
 }

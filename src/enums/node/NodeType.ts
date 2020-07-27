@@ -49,5 +49,6 @@ export enum NodeType {
     UpdateExpression = 'UpdateExpression',
     VariableDeclaration = 'VariableDeclaration',
     VariableDeclarator = 'VariableDeclarator',
-    WhileStatement = 'WhileStatement'
+    WhileStatement = 'WhileStatement',
+    YieldExpression = 'YieldExpression'
 }

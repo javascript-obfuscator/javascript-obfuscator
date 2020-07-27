@@ -1,4 +1,5 @@
 export enum StringSeparator {
-    Dot = '.',
     Comma = ',',
+    Dot = '.',
+    VerticalLine = '|'
 }

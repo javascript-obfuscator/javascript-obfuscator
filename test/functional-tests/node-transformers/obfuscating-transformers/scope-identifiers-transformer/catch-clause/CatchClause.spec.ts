@@ -4,8 +4,10 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 
 import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
+import { stubNodeTransformers } from '../../../../../helpers/stubNodeTransformers';
 
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { ObjectPatternPropertiesTransformer } from '../../../../../../src/node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 
 describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
     let obfuscatedCode: string;
@@ -44,6 +46,8 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
     });
 
     describe('Variant #2: object pattern as parameter', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
         const functionBodyMatch: RegExp = /return *name;/;
 

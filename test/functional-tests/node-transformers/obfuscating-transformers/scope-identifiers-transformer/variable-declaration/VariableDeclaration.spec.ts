@@ -4,10 +4,12 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 
 import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
+import { stubNodeTransformers } from '../../../../../helpers/stubNodeTransformers';
 
 import { IdentifierNamesGenerator } from '../../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { ObjectPatternPropertiesTransformer } from '../../../../../../src/node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 
 describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     describe('Variant #1: default behaviour', () => {
@@ -315,6 +317,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
 
     describe('Variant #9: object pattern as variable declarator', () => {
         describe('Variant #1: single level object pattern', () => {
+            stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
             const objectPatternVariableDeclaratorRegExp: RegExp = /var \{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
             const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
 
@@ -611,6 +615,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #17: object rest', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const objectRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
         const objectRestRegExp: RegExp = /var \{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
 
@@ -637,6 +643,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #18: destructing assignment without declaration #1', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const variablesDeclaration: RegExp = /var a, *b, *_0x[a-f0-9]{4,6};/;
         const destructingAssignmentRegExp: RegExp = /\({ *a, *b *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
         const identifierAssignmentRegExp: RegExp = /_0x[a-f0-9]{4,6} *= *0x3;/;
@@ -709,6 +717,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #20: destructing assignment without declaration #3', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const variablesDeclaration: RegExp = /var a, *_0x[a-f0-9]{4,6};/;
         const destructingAssignmentRegExp: RegExp = /\({ *a, *\.\.\._0x[a-f0-9]{4,6} *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
         const variablesUsageRegExp: RegExp = /console\['log']\(a, *_0x[a-f0-9]{4,6}\);/;

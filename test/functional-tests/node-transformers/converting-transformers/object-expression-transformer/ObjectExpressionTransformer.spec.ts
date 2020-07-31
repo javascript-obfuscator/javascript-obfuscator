@@ -3,8 +3,10 @@ import { assert } from 'chai';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { stubNodeTransformers } from '../../../../helpers/stubNodeTransformers';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { ObjectPatternPropertiesTransformer } from '../../../../../src/node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 
 describe('ObjectExpressionTransformer', () => {
     describe('default behaviour', () => {
@@ -144,6 +146,8 @@ describe('ObjectExpressionTransformer', () => {
     });
 
     describe('object rest', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const objectRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
         const objectRestRegExp: RegExp = /var \{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
 
@@ -201,6 +205,8 @@ describe('ObjectExpressionTransformer', () => {
     });
 
     describe('object spread: unicode escape sequence', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const object1RegExp: RegExp = /const _0x[a-f0-9]{4,6} *= *\{\};/;
         const object2RegExp: RegExp = /_0x[a-f0-9]{4,6}\['\\x61'\] *= *0x1;/;
         const object3RegExp: RegExp = /const \{a\} *= *_0x[a-f0-9]{4,6};/;

@@ -17,6 +17,7 @@ export enum NodeTransformer {
     ObfuscatingGuardsTransformer = 'ObfuscatingGuardsTransformer',
     ObjectExpressionKeysTransformer = 'ObjectExpressionKeysTransformer',
     ObjectExpressionTransformer = 'ObjectExpressionTransformer',
+    ObjectPatternPropertiesTransformer = 'ObjectPatternPropertiesTransformer',
     ParentificationTransformer = 'ParentificationTransformer',
     RenamePropertiesTransformer = 'RenamePropertiesTransformer',
     ScopeIdentifiersTransformer = 'ScopeIdentifiersTransformer',

@@ -15,6 +15,7 @@ import { MethodDefinitionTransformer } from '../../../node-transformers/converti
 import { NumberToNumericalExpressionTransformer } from '../../../node-transformers/converting-transformers/NumberToNumericalExpressionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
 import { ObjectExpressionTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionTransformer';
+import { ObjectPatternPropertiesTransformer } from '../../../node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 import { SplitStringTransformer } from '../../../node-transformers/converting-transformers/SplitStringTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
 
@@ -40,6 +41,10 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObjectExpressionTransformer)
         .whenTargetNamed(NodeTransformer.ObjectExpressionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ObjectPatternPropertiesTransformer)
+        .whenTargetNamed(NodeTransformer.ObjectPatternPropertiesTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(SplitStringTransformer)

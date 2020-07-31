@@ -3,8 +3,10 @@ import { assert } from 'chai';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { stubNodeTransformers } from '../../../../helpers/stubNodeTransformers';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { ObjectPatternPropertiesTransformer } from '../../../../../src/node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 
 describe('VariableDeclarationsMergeTransformer', () => {
     describe('base behaviour', () => {
@@ -176,6 +178,8 @@ describe('VariableDeclarationsMergeTransformer', () => {
     });
 
     describe('object pattern as initializer', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const regExp: RegExp = new RegExp(
             'var foo *= *0x1, *' +
             '{bar} *= *{\'bar\': *0x2}, *' +

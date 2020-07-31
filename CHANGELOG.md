@@ -1,5 +1,9 @@
 Change Log
 
+v1.9.0
+---
+* Improved obfuscation of destructured variables. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/688
+
 v1.8.1
 ---
 * Fixed runtime error `Uncaught SyntaxError: yield is a reserved identifier` when `deadCodeInjection` is enabled 

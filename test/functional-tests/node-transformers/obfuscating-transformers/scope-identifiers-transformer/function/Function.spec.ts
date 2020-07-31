@@ -3,9 +3,11 @@ import { assert } from 'chai';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
+import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
+import { stubNodeTransformers } from '../../../../../helpers/stubNodeTransformers';
 
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
-import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
+import { ObjectPatternPropertiesTransformer } from '../../../../../../src/node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 
 describe('ScopeIdentifiersTransformer Function identifiers', () => {
     describe('identifiers transformation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
@@ -273,6 +275,8 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
     });
 
     describe('object pattern as parameter', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         describe('Variant #1: simple', () => {
             const functionParameterRegExp: RegExp = /function *\(\{ *bar *\}\) *\{/;
             const functionBodyRegExp: RegExp = /return *bar;/;
@@ -711,6 +715,8 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
     });
 
     describe('object rest parameter', () => {
+        stubNodeTransformers([ObjectPatternPropertiesTransformer]);
+
         const functionRegExp: RegExp = /function *func *\(\{foo, *..._0x[a-f0-9]{4,6}\}\) *\{/;
         const returnRegExp: RegExp = /return *foo *\+ *_0x[a-f0-9]{4,6};/;
 

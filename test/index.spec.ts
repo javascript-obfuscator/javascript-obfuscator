@@ -91,6 +91,7 @@ import './functional-tests/node-transformers/converting-transformers/method-defi
 import './functional-tests/node-transformers/converting-transformers/numbers-to-numerical-expressions-transformer/NumbersToNumericalExpressionsTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/object-pattern-properties-transformer/ObjectPatternPropertiesTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';

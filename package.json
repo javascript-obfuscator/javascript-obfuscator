@@ -70,7 +70,7 @@
     "eslint-plugin-prefer-arrow": "1.2.2",
     "eslint-plugin-unicorn": "21.0.0",
     "fork-ts-checker-notifier-webpack-plugin": "3.0.0",
-    "fork-ts-checker-webpack-plugin": "5.0.12",
+    "fork-ts-checker-webpack-plugin": "5.0.13",
     "mocha": "8.1.0",
     "nyc": "15.1.0",
     "pjson": "1.0.9",

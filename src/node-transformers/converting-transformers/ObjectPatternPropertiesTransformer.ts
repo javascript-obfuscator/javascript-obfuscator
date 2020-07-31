@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
@@ -11,6 +13,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -60,6 +63,15 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
     public transformNode (propertyNode: ESTree.Property, parentNode: ESTree.Node): ESTree.Node {
         if (!NodeGuards.isObjectPatternNode(parentNode) || !propertyNode.shorthand) {
             return propertyNode;
+        }
+
+        if (!this.options.renameGlobals) {
+            const lexicalScope: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(propertyNode);
+            const shouldNotTransformGlobalPropertyNode: boolean = !!lexicalScope && NodeGuards.isProgramNode(lexicalScope);
+
+            if (shouldNotTransformGlobalPropertyNode) {
+                return propertyNode;
+            }
         }
 
         propertyNode.shorthand = false;

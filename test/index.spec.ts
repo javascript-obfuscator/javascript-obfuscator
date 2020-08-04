@@ -58,6 +58,7 @@ import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spe
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/code-transformers/preparing-transformers/hashbang-operator-transformer/HashbangOperatorTransformer.spec';
 import './functional-tests/custom-code-helpers/console-output/ConsoleOutputDisableExpressionCodeHelper.spec';
+import './functional-tests/custom-code-helpers/console-output/templates/ConsoleOutputDisableExpressionTemplate.spec';
 import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';
 import './functional-tests/custom-code-helpers/debug-protection/templates/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/custom-code-helpers/domain-lock/DomainLockCodeHelper.spec';

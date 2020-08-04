@@ -3,36 +3,20 @@
  */
 export function ConsoleOutputDisableExpressionTemplate (): string {
     return `
-        const {consoleLogDisableFunctionName} = {callControllerFunctionName}(this, function () {
-            const func = function () {};
-            
+        const {consoleLogDisableFunctionName} = {callControllerFunctionName}(this, function () {            
             {globalVariableTemplate}
                         
-            if (!that.console) {
-                that.console = (function (func){
-                    const c = {};
-                    
-                    c.log = func;
-                    c.warn = func;
-                    c.debug = func;
-                    c.info = func;
-                    c.error = func;
-                    c.exception = func;
-                    c.table = func;
-                    c.trace = func;
-                    
-                    return c;
-                })(func);
-            } else {
-                that.console.log = func;
-                that.console.warn = func;
-                that.console.debug = func;
-                that.console.info = func;
-                that.console.error = func;
-                that.console.exception = func;
-                that.console.table = func;
-                that.console.trace = func;
-            }
+            const _console = (that.console = that.console || {});
+            const methods = ['log', 'warn', 'info', 'error', 'exception', 'table', 'trace'];
+            
+            for (var i = 0; i < methods.length; i++){
+                const func = {consoleLogDisableFunctionName}.constructor();
+                const methodName = methods[i];
+                const originalFunction = _console[methodName] || func;
+
+                func.toString = originalFunction.toString.bind(originalFunction);
+                _console[methodName] = func;
+            };
         });
         
         {consoleLogDisableFunctionName}();

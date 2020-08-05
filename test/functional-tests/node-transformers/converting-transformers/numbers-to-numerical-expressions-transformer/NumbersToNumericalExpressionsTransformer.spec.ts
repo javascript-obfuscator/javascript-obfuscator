@@ -39,7 +39,37 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         });
     });
 
-    describe('Variant #2: safe integers', () => {
+    describe('Variant #2: float number', () => {
+        const number: number = 50.5;
+        const samplesCount: number = 15;
+
+        let areValidExpressions: boolean = true;
+
+        before(() => {
+            for (let i = 0; i < samplesCount; i++) {
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    `${number};`,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }
+                ).getObfuscatedCode();
+
+                const result: number = eval(obfuscatedCode);
+
+                if (result !== number) {
+                    areValidExpressions = false;
+                    break;
+                }
+            }
+        });
+
+        it('should correctly transform numbers to expressions', () => {
+            assert.isTrue(areValidExpressions);
+        });
+    });
+
+    describe('Variant #3: safe integers', () => {
         describe('Variant #1: max safe integer', () => {
             const number: number = Number.MAX_SAFE_INTEGER;
             const samplesCount: number = 15;
@@ -143,7 +173,7 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         });
     });
 
-    describe('Variant #3: parent node is non-computed object property', () => {
+    describe('Variant #4: parent node is non-computed object property', () => {
         const regExp: RegExp = /const foo *= *{1: *'bar'};/;
 
         let obfuscatedCode: string;
@@ -165,7 +195,7 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         });
     });
 
-    describe('Variant #4: parent node is member expression', () => {
+    describe('Variant #5: parent node is member expression', () => {
         const regExp: RegExp = /\((?:-?0x[a-zA-Z0-9]+(?: *[+\-*] *)?)*?\)\['toString']\(\);/;
 
         let obfuscatedCode: string;

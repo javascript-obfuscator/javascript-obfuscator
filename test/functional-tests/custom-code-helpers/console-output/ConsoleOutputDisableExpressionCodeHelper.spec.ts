@@ -7,10 +7,7 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 describe('ConsoleOutputDisableExpressionCodeHelper', () => {
-    const consoleLogRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['log'\] *= *_0x([a-f0-9]){4,6};/u;
-    const consoleErrorRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['error'\] *= *_0x([a-f0-9]){4,6};/u;
-    const consoleWarnRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['warn'\] *= *_0x([a-f0-9]){4,6};/u;
-    const consoleTableRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['table'\] *= *_0x([a-f0-9]){4,6};/u;
+    const consoleGetterRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['console'] *= *_0x([a-f0-9]){4,6}\['console'] *\|| *{};/;
 
     describe('`disableConsoleOutput` option is set', () => {
         let obfuscatedCode: string;
@@ -28,19 +25,7 @@ describe('ConsoleOutputDisableExpressionCodeHelper', () => {
         });
 
         it('match #1: should correctly append code helper into the obfuscated code', () => {
-            assert.match(obfuscatedCode, consoleLogRegExp);
-        });
-
-        it('match #2: should correctly append code helper into the obfuscated code', () => {
-            assert.match(obfuscatedCode, consoleErrorRegExp);
-        });
-
-        it('match #3: should correctly append code helper into the obfuscated code', () => {
-            assert.match(obfuscatedCode, consoleWarnRegExp);
-        });
-
-        it('match #4: should correctly append code helper into the obfuscated code', () => {
-            assert.match(obfuscatedCode, consoleTableRegExp);
+            assert.match(obfuscatedCode, consoleGetterRegExp);
         });
     });
 
@@ -60,15 +45,7 @@ describe('ConsoleOutputDisableExpressionCodeHelper', () => {
         });
 
         it('match #1: shouldn\'t append code helper into the obfuscated code', () => {
-            assert.notMatch(obfuscatedCode, consoleLogRegExp);
-        });
-
-        it('match #2: shouldn\'t append code helper into the obfuscated code', () => {
-            assert.notMatch(obfuscatedCode, consoleErrorRegExp);
-        });
-
-        it('match #3: shouldn\'t append code helper into the obfuscated code', () => {
-            assert.notMatch(obfuscatedCode, consoleWarnRegExp);
+            assert.notMatch(obfuscatedCode, consoleGetterRegExp);
         });
     });
 });

@@ -15,8 +15,8 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            simplify: true,
-            renameGlobals: false
+            stringArray: true,
+            stringArrayThreshold: 1
         }
     ).getObfuscatedCode();
 

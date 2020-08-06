@@ -1089,7 +1089,7 @@ Performance will slightly slower than without obfuscation
 
 ### What javascript versions are supported?
 
-`es3`, `es5`, `es2015`, `es2016` and `es2017`
+`es3`, `es5`, `es2015`, `es2016`, `es2017`, `es2018`, `es2019` and partially `es2020`
 
 ### I want to use feature that described in `README.md` but it's not working!
 

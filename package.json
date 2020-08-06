@@ -43,6 +43,9 @@
     "string-template": "1.0.0",
     "tslib": "2.0.0"
   },
+  "resolutions": {
+    "eslint-scope/esrecurse/estraverse": "5.2.0"
+  },
   "devDependencies": {
     "@types/chai": "4.2.12",
     "@types/chance": "1.1.0",

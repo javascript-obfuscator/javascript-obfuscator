@@ -10,6 +10,7 @@ export enum NodeType {
     BreakStatement = 'BreakStatement',
     CallExpression = 'CallExpression',
     CatchClause = 'CatchClause',
+    ChainExpression = 'ChainExpression',
     ClassDeclaration = 'ClassDeclaration',
     ConditionalExpression = 'ConditionalExpression',
     ContinueStatement = 'ContinueStatement',

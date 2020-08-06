@@ -682,6 +682,32 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('Optional chaining support', () => {
+            const regExp: RegExp = new RegExp(
+                'const _0x(\\w){4,6} *= *{ *' +
+                    '\'bar\': *\\(\\) *=> *{} *' +
+                '}; *' +
+                '_0x(\\w){4,6}\\?\\.\\[\'bar\']\\?\\.\\(\\);'
+            );
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/optional-chaining-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support optional chaining', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

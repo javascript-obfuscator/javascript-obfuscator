@@ -43,6 +43,7 @@ export enum NodeType {
     SwitchCase = 'SwitchCase',
     SwitchStatement = 'SwitchStatement',
     TaggedTemplateExpression = 'TaggedTemplateExpression',
+    TemplateElement = 'TemplateElement',
     TemplateLiteral = 'TemplateLiteral',
     ThrowStatement = 'ThrowStatement',
     TryStatement = 'TryStatement',

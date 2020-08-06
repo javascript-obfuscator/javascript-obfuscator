@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
@@ -444,6 +445,40 @@ export class NodeFactory {
             operator,
             argument: argumentExpr,
             prefix: false,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {ESTree.TemplateElement["value"]} value
+     * @param {boolean} tail
+     * @returns {ESTree.TemplateElement}
+     */
+    public static templateElement (
+        value: ESTree.TemplateElement['value'],
+        tail: boolean
+    ): ESTree.TemplateElement {
+        return {
+            type: NodeType.TemplateElement,
+            value,
+            tail,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {ESTree.Expression[]} expressions
+     * @param {ESTree.TemplateElement[]} quasis
+     * @returns {ESTree.TemplateLiteral}
+     */
+    public static templateLiteral (
+        expressions: ESTree.Expression[],
+        quasis: ESTree.TemplateElement[]
+    ): ESTree.TemplateLiteral {
+        return {
+            type: NodeType.TemplateLiteral,
+            expressions,
+            quasis,
             metadata: { ignoredNode: false }
         };
     }

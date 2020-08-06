@@ -3,6 +3,7 @@ Change Log
 v1.10.0
 ---
 * **Feature:** Optional chaining support!
+* Added `TaggedTemplateLiteral` obfuscation. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/696
 * Improved `disableConsoleOutput` template. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/691
 
 v1.9.0

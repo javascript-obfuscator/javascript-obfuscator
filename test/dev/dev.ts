@@ -13,7 +13,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
                 }
             };
             
-            console.log(foo?.bar?.baz);
+            console.log(foo.bar.baz);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

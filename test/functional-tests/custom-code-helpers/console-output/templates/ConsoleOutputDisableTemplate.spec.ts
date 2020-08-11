@@ -7,7 +7,7 @@ import * as sinon from 'sinon';
 
 import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { ConsoleOutputDisableExpressionTemplate } from '../../../../../src/custom-code-helpers/console-output/templates/ConsoleOutputDisableExpressionTemplate';
+import { ConsoleOutputDisableTemplate } from '../../../../../src/custom-code-helpers/console-output/templates/ConsoleOutputDisableTemplate';
 import { GlobalVariableTemplate1 } from '../../../../../src/custom-code-helpers/common/templates/GlobalVariableTemplate1';
 
 import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
@@ -52,7 +52,7 @@ function getFunctionFromTemplate (
     callsControllerFunctionName: string,
     consoleMethod: keyof Console
 ): Function {
-    const formattedTemplate: string = format(ConsoleOutputDisableExpressionTemplate(), templateData);
+    const formattedTemplate: string = format(ConsoleOutputDisableTemplate(), templateData);
 
     return Function(`
         var ${callsControllerFunctionName} = (function(){            
@@ -70,7 +70,7 @@ function getFunctionFromTemplate (
     `);
 }
 
-describe('ConsoleOutputDisableExpressionTemplate', () => {
+describe('ConsoleOutputDisableTemplate', () => {
     const callControllerFunctionName: string = 'callsController';
     const consoleLogDisableFunctionName: string = 'consoleLogDisable';
 

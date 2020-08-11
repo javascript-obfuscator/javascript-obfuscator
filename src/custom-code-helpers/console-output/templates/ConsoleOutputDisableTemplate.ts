@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function ConsoleOutputDisableExpressionTemplate (): string {
+export function ConsoleOutputDisableTemplate (): string {
     return `
         const {consoleLogDisableFunctionName} = {callControllerFunctionName}(this, function () {
             {globalVariableTemplate}

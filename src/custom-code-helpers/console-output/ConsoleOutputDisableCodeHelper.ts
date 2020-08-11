@@ -11,7 +11,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
-import { ConsoleOutputDisableExpressionTemplate } from './templates/ConsoleOutputDisableExpressionTemplate';
+import { ConsoleOutputDisableTemplate } from './templates/ConsoleOutputDisableTemplate';
 import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 
 import { initializable } from '../../decorators/Initializable';
@@ -82,7 +82,7 @@ export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
 
-        return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableExpressionTemplate(), {
+        return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             consoleLogDisableFunctionName: this.consoleOutputDisableFunctionName,
             globalVariableTemplate

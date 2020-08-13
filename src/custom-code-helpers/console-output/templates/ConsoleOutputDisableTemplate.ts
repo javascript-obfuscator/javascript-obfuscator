@@ -14,7 +14,9 @@ export function ConsoleOutputDisableTemplate (): string {
                 const methodName = methods[index];
                 const originalFunction = consoleObject[methodName] || func;
 
+                func.__proto__ = {callControllerFunctionName}.bind({callControllerFunctionName});
                 func.toString = originalFunction.toString.bind(originalFunction);
+                
                 consoleObject[methodName] = func;
             }
         });

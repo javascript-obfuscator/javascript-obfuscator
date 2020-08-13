@@ -44,13 +44,15 @@ const getPartialConsoleObjectGlobalVariableTemplate: () => string = () => `
 /**
  * @param templateData
  * @param {string} callsControllerFunctionName
- * @param {string} consoleMethod
+ * @param {keyof Console} consoleMethod
+ * @param {string} additionalCode
  * @returns {Function}
  */
 function getFunctionFromTemplate (
     templateData: any,
     callsControllerFunctionName: string,
-    consoleMethod: keyof Console
+    consoleMethod: keyof Console,
+    additionalCode: string = ''
 ): Function {
     const formattedTemplate: string = format(ConsoleOutputDisableTemplate(), templateData);
 
@@ -67,6 +69,8 @@ function getFunctionFromTemplate (
 
         console.${consoleMethod}(1);
         console.${consoleMethod}.toString();
+        
+        ${additionalCode}
     `);
 }
 
@@ -181,6 +185,31 @@ describe('ConsoleOutputDisableTemplate', () => {
 
                 it(`should not replace \`console.${consoleMethodName}\` call with an empty function`, () => {
                     assert.isNotNull(processStdoutWriteSpy.getCall(0));
+                });
+            });
+        });
+    });
+
+    describe('`bind` call', () => {
+        consoleMethods.forEach((consoleMethodName: keyof Console, index: number) => {
+            describe(`Variant #${index + 1}: \`console.${consoleMethodName}\` call`, () => {
+                let testFunc: () => void;
+
+                beforeEach(() => {
+                    testFunc = () => getFunctionFromTemplate(
+                        {
+                            consoleLogDisableFunctionName,
+                            callControllerFunctionName,
+                            globalVariableTemplate: GlobalVariableTemplate1(),
+                        },
+                        callControllerFunctionName,
+                        consoleMethodName,
+                        `console.${consoleMethodName}.bind();`
+                    )();
+                });
+
+                it(`should does not throw error during \`console.${consoleMethodName}.bind\` call`, () => {
+                    assert.doesNotThrow(testFunc);
                 });
             });
         });

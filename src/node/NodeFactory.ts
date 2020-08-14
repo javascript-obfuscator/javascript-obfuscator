@@ -165,6 +165,37 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Literal} source
+     * @returns {ExportAllDeclaration}
+     */
+    public static exportAllDeclarationNode (
+        source: ESTree.Literal
+    ): ESTree.ExportAllDeclaration {
+        return {
+            type: NodeType.ExportAllDeclaration,
+            source,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {ExportSpecifier[]} specifiers
+     * @param {Literal} source
+     * @returns {ExportNamedDeclaration}
+     */
+    public static exportNamedDeclarationNode (
+        specifiers: ESTree.ExportSpecifier[],
+        source: ESTree.Literal
+    ): ESTree.ExportNamedDeclaration {
+        return {
+            type: NodeType.ExportNamedDeclaration,
+            specifiers,
+            source,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Expression} expression
      * @returns {ExpressionStatement}
      */

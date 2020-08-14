@@ -106,6 +106,47 @@ describe('NodeLiteralUtils', () => {
                     });
                 });
             });
+
+            describe('Variant #4: export named declaration node', () => {
+                describe('Variant #1: base export named declaration literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let exportNamedDeclarationNode: ESTree.ExportNamedDeclaration;
+
+                    before(() => {
+                        exportNamedDeclarationNode = NodeFactory.exportNamedDeclarationNode(
+                            [],
+                            literalNode
+                        );
+
+                        literalNode.parentNode = exportNamedDeclarationNode;
+                    });
+
+                    it('should return false for export named declaration literal node', () => {
+                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportNamedDeclarationNode), true);
+                    });
+                });
+            });
+
+            describe('Variant #5: export all declaration node', () => {
+                describe('Variant #1: base export all declaration literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let exportAllDeclarationNode: ESTree.ExportAllDeclaration;
+
+                    before(() => {
+                        exportAllDeclarationNode = NodeFactory.exportAllDeclarationNode(
+                            literalNode
+                        );
+
+                        literalNode.parentNode = exportAllDeclarationNode;
+                    });
+
+                    it('should return false for export all declaration literal node', () => {
+                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportAllDeclarationNode), true);
+                    });
+                });
+            });
         });
 
         describe('Number literal node', () => {

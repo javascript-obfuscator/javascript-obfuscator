@@ -17,6 +17,10 @@ export class NodeLiteralUtils {
             return true;
         }
 
+        if (NodeGuards.isExportAllDeclarationNode(parentNode) || NodeGuards.isExportNamedDeclarationNode(parentNode)) {
+            return true;
+        }
+
         return false;
     }
 }

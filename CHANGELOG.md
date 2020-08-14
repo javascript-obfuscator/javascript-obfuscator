@@ -1,5 +1,9 @@
 Change Log
 
+v1.10.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/707
+
 v1.10.0
 ---
 * **Feature:** Optional chaining support!

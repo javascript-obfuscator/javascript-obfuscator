@@ -1820,5 +1820,34 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #11: `get` and `set` property kinds', () => {
+            const match: string = `` +
+                `const ${variableMatch} *= *{ *` +
+                    `get \'baz\' *\\(\\) *{ *return 0x2; *}, *` +
+                    `set \'bark\' *\\(${variableMatch}\\) *{ *this\\[\'bark\'] *= *${variableMatch}; *} *` +
+                `}; *` +
+                `${variableMatch}\\[\'bar\'] *= *0x1;` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/get-set-property-kind.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should keep property nodes with `get` and `set` kind in the object', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

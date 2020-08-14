@@ -40,6 +40,14 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
     }
 
     /**
+     * @param {Property} node
+     * @returns {boolean}
+     */
+    private static isProhibitedPropertyNode (node: ESTree.Property): boolean {
+        return node.kind !== 'init';
+    }
+
+    /**
      * @param {Node} node
      * @returns {propertyValueNode is Pattern}
      */
@@ -49,6 +57,15 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
             || NodeGuards.isArrayPatternNode(node)
             || NodeGuards.isAssignmentPatternNode(node)
             || NodeGuards.isRestElementNode(node);
+    }
+
+    /**
+     * @param {Property} property
+     * @returns {boolean}
+     */
+    private static shouldCreateLiteralNode (property: ESTree.Property): boolean {
+        return !property.computed
+            || (property.computed && !!property.key && NodeGuards.isLiteralNode(property.key));
     }
 
     /**
@@ -138,13 +155,14 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         for (let i: number = 0; i < propertiesLength; i++) {
             const property: (ESTree.Property | ESTree.SpreadElement) = properties[i];
 
-            if (!NodeGuards.isPropertyNode(property)) {
+            // invalid property node
+            if (!NodeGuards.isPropertyNode(property) || BasePropertiesExtractor.isProhibitedPropertyNode(property)) {
                 continue;
             }
 
             const propertyValue: ESTree.Expression | ESTree.Pattern = property.value;
 
-            // invalid property nodes
+            // invalid property node value
             if (BasePropertiesExtractor.isProhibitedPattern(propertyValue)) {
                 continue;
             }
@@ -161,8 +179,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
             /**
              * Stage 2: creating new expression statement node with member expression based on removed property
              */
-            const shouldCreateLiteralNode: boolean = !property.computed
-                || (property.computed && !!property.key && NodeGuards.isLiteralNode(property.key));
+            const shouldCreateLiteralNode: boolean = BasePropertiesExtractor.shouldCreateLiteralNode(property);
             const memberExpressionProperty: ESTree.Expression = shouldCreateLiteralNode
                 ? NodeFactory.literalNode(propertyKeyName)
                 : NodeFactory.identifierNode(propertyKeyName);

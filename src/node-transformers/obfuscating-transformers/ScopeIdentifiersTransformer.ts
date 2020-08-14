@@ -194,6 +194,7 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @param {Variable} variable
      * @returns {boolean}
      */
+    // eslint-disable-next-line complexity
     private isReplaceableIdentifierNode (
         identifierNode: ESTree.Identifier,
         lexicalScopeNode: TNodeWithLexicalScope,
@@ -203,7 +204,8 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
 
         return !!parentNode
             && !NodeMetadata.isIgnoredNode(identifierNode)
-            && !this.isProhibitedPropertyNode(identifierNode, parentNode)
+            && !this.isProhibitedPropertyIdentifierNode(identifierNode, parentNode)
+            && !this.isProhibitedPropertyAssignmentPatternIdentifierNode(identifierNode, parentNode)
             && !this.isProhibitedClassDeclarationNameIdentifierNode(variable, identifierNode, parentNode)
             && !this.isProhibitedExportNamedClassDeclarationIdentifierNode(identifierNode, parentNode)
             && !this.isProhibitedExportNamedFunctionDeclarationIdentifierNode(identifierNode, parentNode)
@@ -291,18 +293,33 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    private isProhibitedPropertyNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        const isProhibitedPropertyIdentifier = NodeGuards.isPropertyNode(parentNode)
+    private isProhibitedPropertyIdentifierNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): node is ESTree.Identifier {
+        return NodeGuards.isPropertyNode(parentNode)
             && !parentNode.computed
-            && parentNode.key === node;
-        const isProhibitedPropertyAssignmentPatternIdentifier = NodeGuards.isAssignmentPatternNode(parentNode)
+            && NodeGuards.isIdentifierNode(parentNode.key)
+            && NodeGuards.isIdentifierNode(node)
+            && parentNode.key.name === node.name;
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    private isProhibitedPropertyAssignmentPatternIdentifierNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): node is ESTree.Identifier {
+        return NodeGuards.isAssignmentPatternNode(parentNode)
             && parentNode.left === node
             && !!parentNode.parentNode
             && NodeGuards.isPropertyNode(parentNode.parentNode)
-            && parentNode.left === parentNode.parentNode.key;
-
-        return isProhibitedPropertyIdentifier
-            || isProhibitedPropertyAssignmentPatternIdentifier;
+            && NodeGuards.isIdentifierNode(parentNode.left)
+            && NodeGuards.isIdentifierNode(parentNode.parentNode.key)
+            && parentNode.left.name === parentNode.parentNode.key.name;
     }
 
     /**

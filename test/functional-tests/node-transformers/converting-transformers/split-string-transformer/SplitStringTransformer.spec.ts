@@ -229,4 +229,73 @@ describe('SplitStringTransformer', () => {
             );
         });
     });
+
+    describe('Variant #13: import declaration source literal', () => {
+        const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/import-declaration-source.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('Should not split `ImportDeclaration` source literal', () => {
+            assert.match(obfuscatedCode, importDeclarationRegExp);
+        });
+    });
+
+    describe('Variant #14: export all declaration source literal', () => {
+        const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/export-all-declaration-source.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('Should not split `ExportAllDeclaration` source literal', () => {
+            assert.match(obfuscatedCode, exportAllDeclarationRegExp);
+        });
+    });
+
+    describe('Variant #15: export named declaration source literal', () => {
+        const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/export-named-declaration-source.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('Should not split `ExportNamedDeclaration` source literal', () => {
+            assert.match(obfuscatedCode, exportNamedDeclarationRegExp);
+        });
+    });
 });

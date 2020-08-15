@@ -1,5 +1,9 @@
 Change Log
 
+v1.10.2
+---
+* Fixed obfuscation of literals of `ExportNamedDeclaration` and `ExportAllDeclaration` nodes
+
 v1.10.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/707

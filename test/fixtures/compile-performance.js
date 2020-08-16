@@ -17747,7 +17747,7 @@
                 this.injector = injector;
                 this.checks = [];
             }
-            PreActivation.prototype.traverse = function (parentOutletMap) {
+            PreActivation.prototype.traverseScopeVariables = function (parentOutletMap) {
                 var futureRoot = this.future._root;
                 var currRoot = this.curr ? this.curr._root : null;
                 this.traverseChildRoutes(futureRoot, currRoot, parentOutletMap, [futureRoot.value]);

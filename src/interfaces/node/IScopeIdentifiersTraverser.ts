@@ -1,17 +1,17 @@
 import * as ESTree from 'estree';
 
-import { TScopeIdentifiersTraverserCallback } from '../../types/node/TScopeIdentifiersTraverserCallback';
+import { TScopeIdentifiersTraverserVariableCallback } from '../../types/node/TScopeIdentifiersTraverserVariableCallback';
 
 export interface IScopeIdentifiersTraverser {
     /**
      * @param {Program} programNode
      * @param {Node | null} parentNode
-     * @param {TScopeIdentifiersTraverserCallback} callback
+     * @param {TScopeIdentifiersTraverserVariableCallback} callback
      */
-    traverse (
+    traverseScopeVariables (
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback
+        callback: TScopeIdentifiersTraverserVariableCallback
     ): void;
 
 }

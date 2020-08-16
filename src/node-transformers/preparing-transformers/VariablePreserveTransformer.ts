@@ -9,7 +9,7 @@ import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transforme
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
-import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
+import { IScopeIdentifiersTraverserVariableCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserVariableCallbackData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
@@ -93,7 +93,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.scopeIdentifiersTraverser.traverse(
+        this.scopeIdentifiersTraverser.traverseScopeVariables(
             programNode,
             parentNode,
             this.preserveScopeVariableIdentifiers
@@ -103,9 +103,9 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {IScopeIdentifiersTraverserCallbackData} data
+     * @param {IScopeIdentifiersTraverserVariableCallbackData} data
      */
-    private preserveScopeVariableIdentifiers (data: IScopeIdentifiersTraverserCallbackData): void {
+    private preserveScopeVariableIdentifiers (data: IScopeIdentifiersTraverserVariableCallbackData): void {
         const {
             isGlobalDeclaration,
             isBubblingDeclaration,

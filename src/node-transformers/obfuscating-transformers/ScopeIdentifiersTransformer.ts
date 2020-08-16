@@ -12,7 +12,7 @@ import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transforme
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
-import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
+import { IScopeIdentifiersTraverserVariableCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserVariableCallbackData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
@@ -89,10 +89,10 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.scopeIdentifiersTraverser.traverse(
+        this.scopeIdentifiersTraverser.traverseScopeVariables(
             programNode,
             parentNode,
-            (data: IScopeIdentifiersTraverserCallbackData) => {
+            (data: IScopeIdentifiersTraverserVariableCallbackData) => {
                 const {
                     isGlobalDeclaration,
                     variable,

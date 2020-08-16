@@ -5,7 +5,7 @@ import * as eslintScope from 'eslint-scope';
 import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
-import { TScopeIdentifiersTraverserCallback } from '../types/node/TScopeIdentifiersTraverserCallback';
+import { TScopeIdentifiersTraverserVariableCallback } from '../types/node/TScopeIdentifiersTraverserVariableCallback';
 
 import { IScopeAnalyzer } from '../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
 import { IScopeIdentifiersTraverser } from '../interfaces/node/IScopeIdentifiersTraverser';
@@ -47,29 +47,29 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
     /**
      * @param {Program} programNode
      * @param {Node | null} parentNode
-     * @param {TScopeIdentifiersTraverserCallback} callback
+     * @param {TScopeIdentifiersTraverserVariableCallback} callback
      */
-    public traverse (
+    public traverseScopeVariables (
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback
+        callback: TScopeIdentifiersTraverserVariableCallback
     ): void {
         this.scopeAnalyzer.analyze(programNode);
 
         const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
 
-        this.traverseScopeVariables(globalScope, globalScope, callback);
+        this.traverseScopeVariablesRecursive(globalScope, globalScope, callback);
     }
 
     /**
      * @param {Scope} rootScope
      * @param {Scope} currentScope
-     * @param {TScopeIdentifiersTraverserCallback} callback
+     * @param {TScopeIdentifiersTraverserVariableCallback} callback
      */
-    private traverseScopeVariables (
+    private traverseScopeVariablesRecursive (
         rootScope: eslintScope.Scope,
         currentScope: eslintScope.Scope,
-        callback: TScopeIdentifiersTraverserCallback
+        callback: TScopeIdentifiersTraverserVariableCallback
     ): void {
         const variableScope: eslintScope.Scope = currentScope.variableScope;
         const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
@@ -105,7 +105,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
         }
 
         for (const childScope of currentScope.childScopes) {
-            this.traverseScopeVariables(rootScope, childScope, callback);
+            this.traverseScopeVariablesRecursive(rootScope, childScope, callback);
         }
     }
 }

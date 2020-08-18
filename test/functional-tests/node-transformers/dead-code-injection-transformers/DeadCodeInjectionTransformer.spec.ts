@@ -12,6 +12,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade
 describe('DeadCodeInjectionTransformer', () => {
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
     const hexMatch: string = '0x[a-f0-9]';
+    const stringArrayCallMatch: string = `${variableMatch}\\('${hexMatch}'\\)`;
 
     describe('transformNode', function () {
         this.timeout(100000);
@@ -448,31 +449,31 @@ describe('DeadCodeInjectionTransformer', () => {
             const functionMatch: string = `var ${variableMatch} *= *function *\\(\\) *\\{`;
 
             const match1: string = `` +
-                `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `console.*` +
+                `if *\\(${stringArrayCallMatch} *=== *${stringArrayCallMatch}\\) *\\{` +
+                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `alert.*` +
+                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
             ``;
             const match2: string = `` +
-                `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `console.*` +
+                `if *\\(${stringArrayCallMatch} *!== *${stringArrayCallMatch}\\) *\\{` +
+                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `alert.*` +
+                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
             ``;
             const match3: string = `` +
-                `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `alert.*` +
+                `if *\\(${stringArrayCallMatch} *=== *${stringArrayCallMatch}\\) *\\{` +
+                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `console.*` +
+                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
             ``;
             const match4: string = `` +
-                `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `alert.*` +
+                `if *\\(${stringArrayCallMatch} *!== *${stringArrayCallMatch}\\) *\\{` +
+                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `console.*` +
+                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
             ``;
 

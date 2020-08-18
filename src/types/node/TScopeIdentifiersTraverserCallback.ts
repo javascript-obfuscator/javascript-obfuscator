@@ -1,3 +1,1 @@
-import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
-
-export type TScopeIdentifiersTraverserCallback = (data: IScopeIdentifiersTraverserCallbackData) => void;
+export type TScopeIdentifiersTraverserCallback <TData> = (data: TData) => void;

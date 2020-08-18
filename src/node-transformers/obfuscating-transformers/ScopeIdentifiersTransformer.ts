@@ -89,7 +89,7 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.scopeIdentifiersTraverser.traverse(
+        this.scopeIdentifiersTraverser.traverseScopeIdentifiers(
             programNode,
             parentNode,
             (data: IScopeIdentifiersTraverserCallbackData) => {

@@ -48,7 +48,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
         NodeTransformer.LabeledStatementTransformer,
-        NodeTransformer.ScopeIdentifiersTransformer
+        NodeTransformer.ScopeIdentifiersTransformer,
+        NodeTransformer.ScopeThroughIdentifiersTransformer
     ];
 
     /**

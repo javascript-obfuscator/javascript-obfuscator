@@ -21,7 +21,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
- * Renames all through identifiers for Dead Code Injection
+ * Renames all through identifiers. Now used directly from Dead Code Injection transformer
  */
 @injectable()
 export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
@@ -62,7 +62,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.DeadCodeInjection:
+            case NodeTransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {

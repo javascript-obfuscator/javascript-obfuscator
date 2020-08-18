@@ -17,6 +17,7 @@ import { LiteralTransformer } from '../../../node-transformers/obfuscating-trans
 import { NumberLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/NumberLiteralObfuscatingReplacer';
 import { StringLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer';
 import { ScopeIdentifiersTransformer } from '../../../node-transformers/obfuscating-transformers/ScopeIdentifiersTransformer';
+import { ScopeThroughIdentifiersTransformer } from '../../../node-transformers/obfuscating-transformers/ScopeThroughIdentifiersTransformer';
 
 export const obfuscatingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // obfuscating transformers
@@ -31,6 +32,10 @@ export const obfuscatingTransformersModule: interfaces.ContainerModule = new Con
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ScopeIdentifiersTransformer)
         .whenTargetNamed(NodeTransformer.ScopeIdentifiersTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ScopeThroughIdentifiersTransformer)
+        .whenTargetNamed(NodeTransformer.ScopeThroughIdentifiersTransformer);
 
     // literal obfuscating replacers
     bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscatingReplacer)

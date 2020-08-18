@@ -366,12 +366,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         this.transformersRunner.transform(
             hostNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
-            NodeTransformationStage.DeadCodeInjection
-        );
-
-        this.transformersRunner.transform(
-            hostNode,
-            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
             NodeTransformationStage.Obfuscating
         );
 

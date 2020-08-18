@@ -6,15 +6,10 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
 import { DeadCodeInjectionTransformer } from '../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer';
-import { ScopeThroughIdentifiersTransformer } from '../../../node-transformers/dead-code-injection-transformers/ScopeThroughIdentifiersTransformer';
 
 export const deadCodeInjectionTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // dead code injection
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(DeadCodeInjectionTransformer)
         .whenTargetNamed(NodeTransformer.DeadCodeInjectionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(ScopeThroughIdentifiersTransformer)
-        .whenTargetNamed(NodeTransformer.ScopeThroughIdentifiersTransformer);
 });

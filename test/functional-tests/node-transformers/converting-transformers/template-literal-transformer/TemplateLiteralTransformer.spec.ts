@@ -149,7 +149,7 @@ describe('TemplateLiteralTransformer', () => {
     });
 
     describe('Variant #6: tagged template literal', () => {
-        it('shouldn transform es6 tagged template literal to es5', () => {
+        it('shouldn\'t transform es6 tagged template literal to es5', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/tagged-template-literal.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -162,7 +162,7 @@ describe('TemplateLiteralTransformer', () => {
 
             assert.match(
                 obfuscatedCode,
-                /tag`\${'foo\\x20' *\+ *\(0x1 *\+ *0x1\) *\+ *'\\x20bar'}`;/
+                /tag`foo *\${0x1 *\+ *0x1} *bar`;/
             );
         });
     });

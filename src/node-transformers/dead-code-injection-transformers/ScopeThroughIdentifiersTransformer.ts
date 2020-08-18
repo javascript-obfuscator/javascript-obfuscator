@@ -1,6 +1,8 @@
 import { inject, injectable, } from 'inversify';
-import * as ESTree from 'estree';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as eslintScope from 'eslint-scope';
+import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
@@ -9,29 +11,20 @@ import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transforme
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
-import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
+import { IScopeThroughIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeThroughIdentifiersTraverserCallbackData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
- * Preserve non-replaceable variables
+ * Renames all through identifiers for Dead Code Injection
  */
 @injectable()
-export class VariablePreserveTransformer extends AbstractNodeTransformer {
-    /**
-     * @type {NodeTransformer.ParentificationTransformer[]}
-     */
-    public readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.ParentificationTransformer
-    ];
-
+export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
     /**
      * @type {IIdentifierObfuscatingReplacer}
      */
@@ -61,8 +54,6 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
             IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer
         );
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
-
-        this.preserveScopeVariableIdentifiers = this.preserveScopeVariableIdentifiers.bind(this);
     }
 
     /**
@@ -71,9 +62,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Preparing:
-            case NodeTransformationStage.Converting:
-            case NodeTransformationStage.Obfuscating:
+            case NodeTransformationStage.DeadCodeInjection:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
@@ -93,58 +82,65 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.scopeIdentifiersTraverser.traverseScopeIdentifiers(
+        this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
             programNode,
             parentNode,
-            this.preserveScopeVariableIdentifiers
+            (data: IScopeThroughIdentifiersTraverserCallbackData) => {
+                const {
+                    reference,
+                    variableLexicalScopeNode
+                } = data;
+
+                this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
+            }
         );
 
         return programNode;
     }
 
     /**
-     * @param {IScopeIdentifiersTraverserCallbackData} data
+     * @param {Reference} reference
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private preserveScopeVariableIdentifiers (data: IScopeIdentifiersTraverserCallbackData): void {
-        const {
-            isGlobalDeclaration,
-            isBubblingDeclaration,
-            variable,
-            variableScope
-        } = data;
-
-        for (const identifier of variable.identifiers) {
-            if (isGlobalDeclaration || isBubblingDeclaration) {
-                this.preserveIdentifierNameForRootLexicalScope(identifier);
-            } else {
-                this.preserveIdentifierNameForLexicalScope(identifier, variableScope);
-            }
-        }
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     */
-    private preserveIdentifierNameForRootLexicalScope (identifierNode: ESTree.Identifier): void {
-        this.identifierObfuscatingReplacer.preserveName(identifierNode);
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     * @param {Scope} variableScope
-     */
-    private preserveIdentifierNameForLexicalScope (
-        identifierNode: ESTree.Identifier,
-        variableScope: eslintScope.Scope
+    private transformScopeThroughIdentifiers (
+        reference: eslintScope.Reference,
+        lexicalScopeNode: TNodeWithLexicalScope,
     ): void {
-        const lexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithLexicalScope(variableScope.block)
-            ? variableScope.block
-            : null;
-
-        if (!lexicalScopeNode) {
+        if (reference.resolved) {
             return;
         }
 
-        this.identifierObfuscatingReplacer.preserveNameForLexicalScope(identifierNode, lexicalScopeNode);
+        const identifier: ESTree.Identifier = reference.identifier;
+
+        this.storeIdentifierName(identifier, lexicalScopeNode);
+        this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
+    }
+
+    /**
+     * @param {Identifier} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    private storeIdentifierName (
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope
+    ): void {
+        this.identifierObfuscatingReplacer.storeLocalName(identifierNode, lexicalScopeNode);
+    }
+
+    /**
+     * @param {Identifier} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {Variable} reference
+     */
+    private replaceIdentifierName (
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope,
+        reference: eslintScope.Reference
+    ): void {
+        const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+            .replace(identifierNode, lexicalScopeNode);
+
+        // rename of identifier
+        reference.identifier.name = newIdentifier.name;
     }
 }

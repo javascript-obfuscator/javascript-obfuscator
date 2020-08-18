@@ -1,17 +1,30 @@
 import * as ESTree from 'estree';
 
-import { TScopeIdentifiersTraverserVariableCallback } from '../../types/node/TScopeIdentifiersTraverserVariableCallback';
+import { TScopeIdentifiersTraverserCallback } from '../../types/node/TScopeIdentifiersTraverserCallback';
+import { IScopeIdentifiersTraverserCallbackData } from './IScopeIdentifiersTraverserCallbackData';
+import { IScopeThroughIdentifiersTraverserCallbackData } from './IScopeThroughIdentifiersTraverserCallbackData';
 
 export interface IScopeIdentifiersTraverser {
     /**
      * @param {Program} programNode
      * @param {Node | null} parentNode
-     * @param {TScopeIdentifiersTraverserVariableCallback} callback
+     * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    traverseScopeVariables (
+    traverseScopeIdentifiers (
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserVariableCallback
+        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
+    ): void;
+
+    /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
+     * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
+     */
+    traverseScopeThroughIdentifiers (
+        node: ESTree.Node,
+        parentNode: ESTree.Node | null,
+        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
     ): void;
 
 }

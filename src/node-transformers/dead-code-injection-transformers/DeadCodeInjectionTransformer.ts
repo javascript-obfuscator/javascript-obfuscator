@@ -48,7 +48,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
         NodeTransformer.LabeledStatementTransformer,
-        NodeTransformer.ScopeIdentifiersTransformer
+        NodeTransformer.ScopeIdentifiersTransformer,
+        NodeTransformer.ScopeThroughIdentifiersTransformer
     ];
 
     /**
@@ -361,6 +362,12 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
         NodeUtils.parentizeAst(hostNode);
         NodeUtils.parentizeNode(hostNode, hostNode);
+
+        this.transformersRunner.transform(
+            hostNode,
+            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
+            NodeTransformationStage.DeadCodeInjection
+        );
 
         this.transformersRunner.transform(
             hostNode,

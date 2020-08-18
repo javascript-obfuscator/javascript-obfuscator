@@ -5,10 +5,12 @@ import * as eslintScope from 'eslint-scope';
 import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
-import { TScopeIdentifiersTraverserVariableCallback } from '../types/node/TScopeIdentifiersTraverserVariableCallback';
+import { TScopeIdentifiersTraverserCallback } from '../types/node/TScopeIdentifiersTraverserCallback';
 
 import { IScopeAnalyzer } from '../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
 import { IScopeIdentifiersTraverser } from '../interfaces/node/IScopeIdentifiersTraverser';
+import { IScopeIdentifiersTraverserCallbackData } from '../interfaces/node/IScopeIdentifiersTraverserCallbackData';
+import { IScopeThroughIdentifiersTraverserCallbackData } from '../interfaces/node/IScopeThroughIdentifiersTraverserCallbackData';
 
 import { NodeGuards } from './NodeGuards';
 
@@ -47,29 +49,46 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
     /**
      * @param {Program} programNode
      * @param {Node | null} parentNode
-     * @param {TScopeIdentifiersTraverserVariableCallback} callback
+     * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    public traverseScopeVariables (
+    public traverseScopeIdentifiers (
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserVariableCallback
+        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
     ): void {
         this.scopeAnalyzer.analyze(programNode);
 
         const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
 
-        this.traverseScopeVariablesRecursive(globalScope, globalScope, callback);
+        this.traverseScopeIdentifiersRecursive(globalScope, globalScope, callback);
+    }
+
+    /**
+     * @param {Program} programNode
+     * @param {Node | null} parentNode
+     * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
+     */
+    public traverseScopeThroughIdentifiers (
+        programNode: ESTree.Program,
+        parentNode: ESTree.Node | null,
+        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
+    ): void {
+        this.scopeAnalyzer.analyze(programNode);
+
+        const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
+
+        this.traverseScopeThroughIdentifiersRecursive(globalScope, globalScope, callback);
     }
 
     /**
      * @param {Scope} rootScope
      * @param {Scope} currentScope
-     * @param {TScopeIdentifiersTraverserVariableCallback} callback
+     * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    private traverseScopeVariablesRecursive (
+    private traverseScopeIdentifiersRecursive (
         rootScope: eslintScope.Scope,
         currentScope: eslintScope.Scope,
-        callback: TScopeIdentifiersTraverserVariableCallback
+        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
     ): void {
         const variableScope: eslintScope.Scope = currentScope.variableScope;
         const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
@@ -105,7 +124,38 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
         }
 
         for (const childScope of currentScope.childScopes) {
-            this.traverseScopeVariablesRecursive(rootScope, childScope, callback);
+            this.traverseScopeIdentifiersRecursive(rootScope, childScope, callback);
+        }
+    }
+
+    /**
+     * @param {Scope} rootScope
+     * @param {Scope} currentScope
+     * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
+     */
+    private traverseScopeThroughIdentifiersRecursive (
+        rootScope: eslintScope.Scope,
+        currentScope: eslintScope.Scope,
+        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
+    ): void {
+        const variableScope: eslintScope.Scope = currentScope.variableScope;
+        const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
+            ? variableScope.block
+            : null;
+
+        if (!variableLexicalScopeNode) {
+            return;
+        }
+
+        for (const reference of currentScope.through) {
+            callback({
+                reference,
+                variableLexicalScopeNode
+            });
+        }
+
+        for (const childScope of currentScope.childScopes) {
+            this.traverseScopeThroughIdentifiersRecursive(rootScope, childScope, callback);
         }
     }
 }

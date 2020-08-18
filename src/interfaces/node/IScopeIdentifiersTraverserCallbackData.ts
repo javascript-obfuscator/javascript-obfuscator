@@ -2,7 +2,7 @@ import * as eslintScope from 'eslint-scope';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
-export interface IScopeIdentifiersTraverserVariableCallbackData {
+export interface IScopeIdentifiersTraverserCallbackData {
     isGlobalDeclaration: boolean;
     isBubblingDeclaration: boolean;
     rootScope: eslintScope.Scope;

@@ -612,10 +612,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: Can freeze your browser if you open the Developer Tools.
 
-This option makes it almost impossible to use the `console` tab of the Developer Tools (both on WebKit-based and Mozilla Firefox).
-
-* WebKit-based: blocks the site window, but you still can navigate through Developer Tools panel.
-* Firefox: does *not* block the site window, but still won't let you use DevTools.
+This option makes it almost impossible to use the `debugger` function of the Developer Tools (both on WebKit-based and Mozilla Firefox).
 
 ### `debugProtectionInterval`
 Type: `boolean` Default: `false`

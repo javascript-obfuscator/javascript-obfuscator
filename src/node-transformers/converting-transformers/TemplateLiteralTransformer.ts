@@ -66,37 +66,10 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      */
     public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         if (NodeGuards.isTaggedTemplateExpressionNode(parentNode)) {
-            return this.transformTaggedTemplateLiteralNodeNode(templateLiteralNode, parentNode);
-        } else {
-            return this.transformTemplateLiteralNodeNode(templateLiteralNode, parentNode);
+            return templateLiteralNode;
         }
-    }
 
-    /**
-     * @param {ESTree.TemplateLiteral} templateLiteralNode
-     * @param {ESTree.Node} parentNode
-     * @returns {ESTree.Node}
-     */
-    private transformTaggedTemplateLiteralNodeNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
-        return NodeFactory.templateLiteral(
-            [this.transformTemplateLiteralNodeNode(templateLiteralNode, parentNode)],
-            [
-                NodeFactory.templateElement(
-                    {
-                        raw: '',
-                        cooked: ''
-                    },
-                    false
-                ),
-                NodeFactory.templateElement(
-                    {
-                        raw: '',
-                        cooked: ''
-                    },
-                    true
-                )
-            ]
-        );
+        return this.transformTemplateLiteralNode(templateLiteralNode, parentNode);
     }
 
     /**
@@ -104,7 +77,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Expression}
      */
-    private transformTemplateLiteralNodeNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Expression {
+    private transformTemplateLiteralNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Expression {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
 
         let nodes: ESTree.Expression[] = [];

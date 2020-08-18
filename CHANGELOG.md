@@ -3,6 +3,7 @@ Change Log
 v1.11.0
 ---
 * Improved rename of `deadCodeInjection` dead code identifiers. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/708
+* **Reverted** `TaggedTemplateLiteral` obfuscation. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/716
 
 v1.10.2
 ---

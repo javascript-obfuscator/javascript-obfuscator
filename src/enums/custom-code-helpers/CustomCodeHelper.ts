@@ -8,5 +8,7 @@ export enum CustomCodeHelper {
     SelfDefendingUnicode = 'SelfDefendingUnicode',
     StringArrayCallsWrapper = 'StringArrayCallsWrapper',
     StringArray = 'StringArray',
-    StringArrayRotateFunction = 'StringArrayRotateFunction'
+    StringArrayRotateFunction = 'StringArrayRotateFunction',
+    TaggedTemplateLiteralCodeHelper = 'TaggedTemplateLiteralCodeHelper',
+    TemplateObjectCodeHelper = 'TemplateObjectCodeHelper'
 }

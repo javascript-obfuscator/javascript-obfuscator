@@ -28,6 +28,8 @@ import { SelfDefendingUnicodeCodeHelper } from '../../../custom-code-helpers/sel
 import { StringArrayCallsWrapperCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper';
 import { StringArrayCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCodeHelper';
 import { StringArrayRotateFunctionCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper';
+import { TaggedTemplateLiteralCodeHelper } from '../../../custom-code-helpers/tagged-template-expression/TaggedTemplateLiteralCodeHelper';
+import { TemplateObjectCodeHelper } from '../../../custom-code-helpers/tagged-template-expression/TemplateObjectCodeHelper';
 
 export const customCodeHelpersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom code helpers
@@ -70,6 +72,14 @@ export const customCodeHelpersModule: interfaces.ContainerModule = new Container
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayRotateFunctionCodeHelper)
         .whenTargetNamed(CustomCodeHelper.StringArrayRotateFunction);
+
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(TaggedTemplateLiteralCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.TaggedTemplateLiteralCodeHelper);
+
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(TemplateObjectCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.TemplateObjectCodeHelper);
 
     // code helper groups
     bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)

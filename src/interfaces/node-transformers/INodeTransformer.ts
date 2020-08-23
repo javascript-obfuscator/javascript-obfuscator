@@ -18,7 +18,7 @@ export interface INodeTransformer extends ITransformer <NodeTransformer> {
      * @param {Node} node
      * @param {Node | null} parentNode
      */
-    analyzeNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
+    prepareNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
 
     /**
      * @param {Node} node

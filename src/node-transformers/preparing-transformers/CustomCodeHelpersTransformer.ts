@@ -94,7 +94,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
-                            this.analyzeNode(node, parentNode);
+                            this.prepareNode(node, parentNode);
                             this.appendCustomNodesBeforeObfuscation(node, parentNode);
 
                             return this.transformNode(node, parentNode);
@@ -120,7 +120,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    public analyzeNode (node: ESTree.Program, parentNode: ESTree.Node | null): void {
+    public prepareNode (node: ESTree.Program, parentNode: ESTree.Node | null): void {
         this.callsGraphData = this.callsGraphAnalyzer.analyze(node);
         this.prevailingKindOfVariablesAnalyzer.analyze(node);
     }

@@ -5,7 +5,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 
-import { ControlFlowReplacer } from '../../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
+import { ControlFlowReplacer } from '../../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';

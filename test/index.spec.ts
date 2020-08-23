@@ -85,6 +85,7 @@ import './functional-tests/node-transformers/control-flow-transformers/control-f
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/string-litertal-control-flow-replacer/StringLiteralControlFlowReplacer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/function-control-flow-transformer/FunctionControlFlowTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/boolean-literal-transformer/BooleanLiteralTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/number-literal-transformer/NumberLiteralTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/numbers-to-numerical-expressions-transformer/NumbersToNumericalExpressionsTransformer.spec';
@@ -114,7 +115,6 @@ import './functional-tests/node-transformers/simplifying-transformers/block-stat
 import './functional-tests/node-transformers/simplifying-transformers/expression-statements-merge-transformer/ExpressionStatementsMergeTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/if-statement-simplify-transformer/IfStatementSimplifyTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/variable-declarations-merge-transformer/VariableDeclarationsMergeTransformer.spec';
-import './functional-tests/node-transformers/string-array-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
 import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';

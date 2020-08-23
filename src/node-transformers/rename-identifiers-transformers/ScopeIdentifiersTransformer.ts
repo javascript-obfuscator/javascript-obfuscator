@@ -7,7 +7,7 @@ import * as estraverse from 'estraverse';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/identifier-replacer/IIdentifierReplacer';
+import { IIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';

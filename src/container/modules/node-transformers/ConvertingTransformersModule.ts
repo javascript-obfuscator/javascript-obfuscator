@@ -10,6 +10,7 @@ import { ObjectExpressionExtractor } from '../../../enums/node-transformers/conv
 
 import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
 import { BooleanLiteralTransformer } from '../../../node-transformers/converting-transformers/BooleanLiteralTransformer';
+import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
 import { NumberLiteralTransformer } from '../../../node-transformers/converting-transformers/NumberLiteralTransformer';
 import { NumberToNumericalExpressionTransformer } from '../../../node-transformers/converting-transformers/NumberToNumericalExpressionTransformer';
@@ -25,6 +26,10 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BooleanLiteralTransformer)
         .whenTargetNamed(NodeTransformer.BooleanLiteralTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(MemberExpressionTransformer)
+        .whenTargetNamed(NodeTransformer.MemberExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MethodDefinitionTransformer)

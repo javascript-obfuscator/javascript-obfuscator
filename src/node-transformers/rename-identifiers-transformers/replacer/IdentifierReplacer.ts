@@ -7,7 +7,7 @@ import { TIdentifierNamesGeneratorFactory } from '../../../types/container/gener
 import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
-import { IIdentifierReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/identifier-replacer/IIdentifierReplacer';
+import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { NodeFactory } from '../../../node/NodeFactory';

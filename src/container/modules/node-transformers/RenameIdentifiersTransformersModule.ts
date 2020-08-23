@@ -1,12 +1,12 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IIdentifierReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/identifier-replacer/IIdentifierReplacer';
+import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
-import { IdentifierReplacer } from '../../../node-transformers/rename-identifiers-transformers/identifier-replacer/IdentifierReplacer';
+import { IdentifierReplacer } from '../../../node-transformers/rename-identifiers-transformers/replacer/IdentifierReplacer';
 import { LabeledStatementTransformer } from '../../../node-transformers/rename-identifiers-transformers/LabeledStatementTransformer';
 import { ScopeIdentifiersTransformer } from '../../../node-transformers/rename-identifiers-transformers/ScopeIdentifiersTransformer';
 import { ScopeThroughIdentifiersTransformer } from '../../../node-transformers/rename-identifiers-transformers/ScopeThroughIdentifiersTransformer';

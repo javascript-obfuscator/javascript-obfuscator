@@ -12,7 +12,6 @@ import { IStringArrayStorageItemData } from '../../interfaces/storages/string-ar
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -25,13 +24,6 @@ import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
 export class StringArrayTransformer extends AbstractNodeTransformer {
-    /**
-     * @type {NodeTransformer[]}
-     */
-    public readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.MemberExpressionTransformer
-    ];
-
     /**
      * @type {IEscapeSequenceEncoder}
      */

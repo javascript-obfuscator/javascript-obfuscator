@@ -17,7 +17,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
-import { ControlFlowReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
+import { ControlFlowReplacer } from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
 import { NodeType } from '../../enums/node/NodeType';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 

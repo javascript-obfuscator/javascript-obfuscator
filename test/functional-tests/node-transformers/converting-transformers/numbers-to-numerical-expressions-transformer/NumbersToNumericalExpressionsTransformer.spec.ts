@@ -174,7 +174,7 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
     });
 
     describe('Variant #4: parent node is non-computed object property', () => {
-        const regExp: RegExp = /const foo *= *{1: *'bar'};/;
+        const regExp: RegExp = /const foo *= *{0x1: *'bar'};/;
 
         let obfuscatedCode: string;
 

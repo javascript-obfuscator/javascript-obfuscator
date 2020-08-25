@@ -9,11 +9,13 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { ObjectExpressionExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
 import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
-import { ObjectExpressionToVariableDeclarationExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/ObjectExpressionToVariableDeclarationExtractor';
+import { BooleanLiteralTransformer } from '../../../node-transformers/converting-transformers/BooleanLiteralTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
+import { NumberLiteralTransformer } from '../../../node-transformers/converting-transformers/NumberLiteralTransformer';
 import { NumberToNumericalExpressionTransformer } from '../../../node-transformers/converting-transformers/NumberToNumericalExpressionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
+import { ObjectExpressionToVariableDeclarationExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/ObjectExpressionToVariableDeclarationExtractor';
 import { ObjectExpressionTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionTransformer';
 import { ObjectPatternPropertiesTransformer } from '../../../node-transformers/converting-transformers/ObjectPatternPropertiesTransformer';
 import { SplitStringTransformer } from '../../../node-transformers/converting-transformers/SplitStringTransformer';
@@ -22,6 +24,10 @@ import { TemplateLiteralTransformer } from '../../../node-transformers/convertin
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(BooleanLiteralTransformer)
+        .whenTargetNamed(NodeTransformer.BooleanLiteralTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MemberExpressionTransformer)
         .whenTargetNamed(NodeTransformer.MemberExpressionTransformer);
 
@@ -29,6 +35,9 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
         .to(MethodDefinitionTransformer)
         .whenTargetNamed(NodeTransformer.MethodDefinitionTransformer);
 
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(NumberLiteralTransformer)
+        .whenTargetNamed(NodeTransformer.NumberLiteralTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(NumberToNumericalExpressionTransformer)

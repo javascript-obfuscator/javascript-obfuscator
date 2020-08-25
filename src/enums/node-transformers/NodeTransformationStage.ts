@@ -1,11 +1,12 @@
 export enum NodeTransformationStage {
+    ControlFlowFlattening = 'ControlFlowFlattening',
+    Converting = 'Converting',
+    DeadCodeInjection = 'DeadCodeInjection',
+    Finalizing = 'Finalizing',
     Initializing = 'Initializing',
     Preparing = 'Preparing',
-    DeadCodeInjection = 'DeadCodeInjection',
-    ControlFlowFlattening = 'ControlFlowFlattening',
+    RenameIdentifiers = 'RenameIdentifiers',
     RenameProperties = 'RenameProperties',
-    Converting = 'Converting',
-    Obfuscating = 'Obfuscating',
     Simplifying = 'Simplifying',
-    Finalizing = 'Finalizing'
+    StringArray = 'StringArray'
 }

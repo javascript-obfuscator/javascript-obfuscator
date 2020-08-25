@@ -7,14 +7,30 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
-export class MemberExpressionTransformer extends AbstractNodeTransformer {
+export class NumberLiteralTransformer extends AbstractNodeTransformer {
+    /**
+     * Have to run it after NumberToNumericalExpressionTransformer to keep logic simple
+     *
+     * @type {NodeTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.NumberToNumericalExpressionTransformer
+    ];
+
+    /**
+     * @type {Map<string, string>}
+     */
+    private readonly numberLiteralCache: Map <number, string> = new Map();
+
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -35,7 +51,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
             case NodeTransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && NodeGuards.isMemberExpressionNode(node)) {
+                        if (parentNode && NodeGuards.isLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -47,31 +63,37 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * replaces:
-     *     object.identifier = 1;
+     * Replaces:
+     *     var foo = 1;
      *
      * on:
-     *     object['identifier'] = 1;
+     *     var foo = 0x1;
      *
-     * and skip:
-     *     object[identifier] = 1;
-     *
-     * Literal node will be obfuscated by StringArrayTransformer
-     *
-     * @param {MemberExpression} memberExpressionNode
+     * @param {Literal} literalNode
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
-            if (memberExpressionNode.computed) {
-                return memberExpressionNode;
-            }
-
-            memberExpressionNode.computed = true;
-            memberExpressionNode.property = NodeFactory.literalNode(memberExpressionNode.property.name);
+    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+        if (typeof literalNode.value !== 'number' && typeof literalNode.value !== 'bigint') {
+            return literalNode;
         }
 
-        return memberExpressionNode;
+        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
+
+        let rawValue: string;
+
+        if (this.numberLiteralCache.has(literalValue)) {
+            rawValue = <string>this.numberLiteralCache.get(literalValue);
+        } else {
+            if (NumberUtils.isCeil(literalValue)) {
+                rawValue = NumberUtils.toHex(literalValue);
+            } else {
+                rawValue = String(literalValue);
+            }
+
+            this.numberLiteralCache.set(literalValue, rawValue);
+        }
+
+        return NodeFactory.literalNode(literalValue, rawValue);
     }
 }

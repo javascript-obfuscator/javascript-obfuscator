@@ -10,11 +10,12 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeUtils } from '../../node/NodeUtils';
+import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
-export class MemberExpressionTransformer extends AbstractNodeTransformer {
+export class BooleanLiteralTransformer extends AbstractNodeTransformer {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -35,7 +36,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
             case NodeTransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && NodeGuards.isMemberExpressionNode(node)) {
+                        if (parentNode && NodeGuards.isLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -47,31 +48,51 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * replaces:
-     *     object.identifier = 1;
+     * Replaces:
+     *     var foo = true;
+     *     var bar = false;
      *
      * on:
-     *     object['identifier'] = 1;
+     *     var foo = !![];
+     *     var bar = ![];
      *
-     * and skip:
-     *     object[identifier] = 1;
-     *
-     * Literal node will be obfuscated by StringArrayTransformer
-     *
-     * @param {MemberExpression} memberExpressionNode
+     * @param {Literal} literalNode
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
-            if (memberExpressionNode.computed) {
-                return memberExpressionNode;
-            }
-
-            memberExpressionNode.computed = true;
-            memberExpressionNode.property = NodeFactory.literalNode(memberExpressionNode.property.name);
+    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+        if (typeof literalNode.value !== 'boolean') {
+            return literalNode;
         }
 
-        return memberExpressionNode;
+        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
+
+        const unaryExpressionNode: ESTree.UnaryExpression = literalValue
+            ? this.getTrueUnaryExpressionNode()
+            : this.getFalseUnaryExpressionNode();
+
+        NodeUtils.parentizeNode(unaryExpressionNode, parentNode);
+
+        return unaryExpressionNode;
+    }
+
+    /**
+     * @return {ESTree.UnaryExpression}
+     */
+    private getTrueUnaryExpressionNode (): ESTree.UnaryExpression {
+        return NodeFactory.unaryExpressionNode(
+            '!',
+            this.getFalseUnaryExpressionNode()
+        );
+    }
+
+    /**
+     * @return {ESTree.UnaryExpression}
+     */
+    private getFalseUnaryExpressionNode (): ESTree.UnaryExpression {
+        return NodeFactory.unaryExpressionNode(
+            '!',
+            NodeFactory.arrayExpressionNode()
+        );
     }
 }

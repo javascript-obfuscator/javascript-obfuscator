@@ -7,38 +7,20 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function foo () {
-                function bar () {
-                    const a = [];
-                    const b = [];
-                    while (true) {
-                        for (const a of b) {}
-                    }
-                    return a;
-                }
-            
-                function baz () {
-                    const a = 1;
-                }
-            
-                function bark () {
-                    const a = 1;
-                    
-                    if (true) {
-                        console.log(a);
-                    }
-                }
-            
-                function hawk () {
-                    const a = 1;
-                }
+            function func () {
+                var obj = {foo: 'bar'};
+                
+                console.log(obj.foo);
             }
+            
+            func();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            deadCodeInjection: true,
-            deadCodeInjectionThreshold: 1
+            transformObjectKeys: true,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1
         }
     ).getObfuscatedCode();
 

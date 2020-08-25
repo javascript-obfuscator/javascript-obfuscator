@@ -1,4 +1,5 @@
 export enum NodeTransformer {
+    BooleanLiteralTransformer = 'BooleanLiteralTransformer',
     BlockStatementControlFlowTransformer = 'BlockStatementControlFlowTransformer',
     BlockStatementSimplifyTransformer = 'BlockStatementSimplifyTransformer',
     CommentsTransformer = 'CommentsTransformer',
@@ -9,10 +10,10 @@ export enum NodeTransformer {
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
-    LiteralTransformer = 'LiteralTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
     MetadataTransformer = 'MetadataTransformer',
     MethodDefinitionTransformer = 'MethodDefinitionTransformer',
+    NumberLiteralTransformer = 'NumberLiteralTransformer',
     NumberToNumericalExpressionTransformer = 'NumberToNumericalExpressionTransformer',
     ObfuscatingGuardsTransformer = 'ObfuscatingGuardsTransformer',
     ObjectExpressionKeysTransformer = 'ObjectExpressionKeysTransformer',
@@ -23,6 +24,7 @@ export enum NodeTransformer {
     ScopeIdentifiersTransformer = 'ScopeIdentifiersTransformer',
     ScopeThroughIdentifiersTransformer = 'ScopeThroughIdentifiersTransformer',
     SplitStringTransformer = 'SplitStringTransformer',
+    StringArrayTransformer = 'StringArrayTransformer',
     TemplateLiteralTransformer = 'TemplateLiteralTransformer',
     VariableDeclarationsMergeTransformer = 'VariableDeclarationsMergeTransformer',
     VariablePreserveTransformer = 'VariablePreserveTransformer'

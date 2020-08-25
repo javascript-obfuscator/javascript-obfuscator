@@ -25,7 +25,7 @@
     "@nuxtjs/opencollective": "0.2.2",
     "acorn": "8.0.1",
     "chalk": "4.1.0",
-    "chance": "1.1.6",
+    "chance": "1.1.7",
     "class-validator": "0.12.2",
     "commander": "6.0.0",
     "escodegen": "2.0.0",

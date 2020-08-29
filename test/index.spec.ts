@@ -14,6 +14,7 @@ import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/IdentifierNamesGeneratorSanitizer.spec';
 import './unit-tests/cli/sanitizers/ObfuscationTargetSanitizer.spec';
+import './unit-tests/cli/sanitizers/OptionsPresetSanitizer.spec.spec';
 import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';

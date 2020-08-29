@@ -6,7 +6,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 describe('NumbersToNumericalExpressionsTransformer', function () {
-    this.timeout(60000);
+    this.timeout(90000);
 
     describe('Variant #1: base', () => {
         const initialNumber: number = -50;

@@ -338,6 +338,7 @@ Following options are available for the JS Obfuscator:
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    optionsPreset: 'default',
     renameGlobals: false,
     renameProperties: false,
     reservedNames: [],
@@ -385,6 +386,7 @@ Following options are available for the JS Obfuscator:
     --identifiers-prefix <string>
     --log <boolean>
     --numbers-to-expressions <boolean>
+    --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]
     --rename-globals <boolean>
     --rename-properties <boolean>
     --reserved-names '<list>' (comma separated)
@@ -687,6 +689,19 @@ const foo = 1234;
 // output
 const foo=-0xd93+-0x10b4+0x41*0x67+0x84e*0x3+-0xff8;
 ```
+
+### `optionsPreset`
+Type: `string` Default: `default`
+
+Allows to set [options preset](#preset-options).
+
+Available values: 
+* `default`;
+* `low-obfuscation`;
+* `medium-obfuscation`;
+* `high-obfuscation`.
+
+All addition options will be merged with selected options preset.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -1038,7 +1053,7 @@ Performance will 30-35% slower than without obfuscation
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
-    numbersToExpressions: false,
+    numbersToExpressions: true,
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
@@ -1072,6 +1087,32 @@ Performance will slightly slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    shuffleStringArray: true,
+    simplify: true,
+    splitStrings: false,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
+}
+```
+
+### Default preset, High performance
+
+```javascript
+{
+    compact: true,
+    controlFlowFlattening: false,
+    deadCodeInjection: false,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: false,
+    identifierNamesGenerator: 'hexadecimal',
+    log: false,
+    numbersToExpressions: false,
+    renameGlobals: false,
+    rotateStringArray: true,
+    selfDefending: false,
     shuffleStringArray: true,
     simplify: true,
     splitStrings: false,

@@ -19,6 +19,7 @@ import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 import { IdentifierNamesGeneratorSanitizer } from './sanitizers/IdentifierNamesGeneratorSanitizer';
 import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
+import { OptionsPresetSanitizer } from './sanitizers/OptionsPresetSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
@@ -252,6 +253,13 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--numbers-to-expressions <boolean>', 'Enables numbers conversion to expressions',
                 BooleanSanitizer
+            )
+            .option(
+                '--options-preset <string>',
+                'Allows to set options preset. ' +
+                'Values: default, low-obfuscation, medium-obfuscation, high-obfuscation. ' +
+                'Default: default',
+                OptionsPresetSanitizer
             )
             .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',

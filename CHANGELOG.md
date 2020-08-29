@@ -1,5 +1,9 @@
 Change Log
 
+v1.12.0
+---
+* **New option:** `optionsPreset` allows to set options preset
+
 v1.11.0
 ---
 * Improved rename of `deadCodeInjection` dead code identifiers. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/708

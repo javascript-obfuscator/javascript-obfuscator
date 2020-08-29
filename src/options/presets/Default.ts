@@ -2,6 +2,7 @@ import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
@@ -22,6 +23,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    optionsPreset: OptionsPreset.Default,
     renameGlobals: false,
     renameProperties: false,
     reservedNames: [],

@@ -28,16 +28,30 @@ import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
 
 import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
+import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';
+import { LOW_OBFUSCATION_PRESET } from './presets/LowObfuscation';
+import { MEDIUM_OBFUSCATION_PRESET } from './presets/MediumObfuscation';
+import { HIGH_OBFUSCATION_PRESET } from './presets/HighObfuscation';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
 
 @injectable()
 export class Options implements IOptions {
+    /**
+     * @type {Map<TypeFromEnum<typeof OptionsPreset>, TInputOptions>}
+     */
+    private static readonly optionPresetsMap: Map<TypeFromEnum<typeof OptionsPreset>, TInputOptions> = new Map([
+        [OptionsPreset.Default, DEFAULT_PRESET],
+        [OptionsPreset.LowObfuscation, LOW_OBFUSCATION_PRESET],
+        [OptionsPreset.MediumObfuscation, MEDIUM_OBFUSCATION_PRESET],
+        [OptionsPreset.HighObfuscation, HIGH_OBFUSCATION_PRESET]
+    ]);
+
     /**
      * @type {ValidatorOptions}
      */
@@ -156,6 +170,17 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly numbersToExpressions!: boolean;
+
+    /**
+     * @type {OptionsPreset}
+     */
+    @IsIn([
+        OptionsPreset.Default,
+        OptionsPreset.LowObfuscation,
+        OptionsPreset.MediumObfuscation,
+        OptionsPreset.HighObfuscation
+    ])
+    public readonly optionsPreset!: TypeFromEnum<typeof OptionsPreset>;
 
     /**
      * @type {boolean}
@@ -308,7 +333,11 @@ export class Options implements IOptions {
         @inject(ServiceIdentifiers.TInputOptions) inputOptions: TInputOptions,
         @inject(ServiceIdentifiers.IOptionsNormalizer) optionsNormalizer: IOptionsNormalizer
     ) {
-        Object.assign(this, DEFAULT_PRESET, inputOptions);
+        const optionsPreset: TInputOptions = Options.optionPresetsMap
+            .get(inputOptions.optionsPreset ?? OptionsPreset.Default)
+            ?? DEFAULT_PRESET;
+
+        Object.assign(this, optionsPreset, inputOptions);
 
         const errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 

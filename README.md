@@ -927,12 +927,22 @@ This option can slow down your script.
 
 Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
-Each `stringArray` value will be encoded by the randomly picked encoding from the passed list.
+Each `stringArray` value will be encoded by the randomly picked encoding from the passed list. This makes possible to use multiple encodings.
 
 Available values:
 * `'none'` (`boolean`): doesn't encode `stringArray` value
 * `'base64'` (`string`): encodes `stringArray` value using `base64`
 * `'rc4'` (`string`): encodes `stringArray` value using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It's recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option when using `rc4` encoding to prevent very large size of obfuscated code.
+
+For example with the following option values some `stringArray` value won't be encoded, and some values will be encoded with `base64` and `rc4` encoding:
+
+```ts
+stringArrayEncoding: [
+    'none',
+    'base64',
+    'rc4'
+]
+```
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

@@ -280,8 +280,64 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #10: none and rc4 encoding', () => {
-        describe('Variant #1: single string literal', () => {
+    describe('Variant #10: none and base64 encoding', () => {
+        describe('Variant #1: string array values', () => {
+            const samplesCount: number = 100;
+            const expectedMatchesChance: number = 0.5;
+            const expectedMatchesDelta: number = 0.15;
+
+            const noneEncodingRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
+            const base64EncodingRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['DgvZDa=='\];/;
+
+            let noneEncodingMatchesCount: number = 0;
+            let base64EncodingMatchesCount: number = 0;
+            let obfuscatedCode: string;
+
+            let noneEncodingMatchesChance: number;
+            let base64EncodingMatchesChance: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+                for (let i = 0; i < samplesCount; i++) {
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayEncoding: [
+                                StringArrayEncoding.None,
+                                StringArrayEncoding.Base64
+                            ],
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    if (obfuscatedCode.match(noneEncodingRegExp)) {
+                        noneEncodingMatchesCount = noneEncodingMatchesCount + 1;
+                    }
+
+                    if (obfuscatedCode.match(base64EncodingRegExp)) {
+                        base64EncodingMatchesCount = base64EncodingMatchesCount + 1;
+                    }
+
+                    noneEncodingMatchesChance = noneEncodingMatchesCount / samplesCount;
+                    base64EncodingMatchesChance = base64EncodingMatchesCount / samplesCount;
+                }
+            });
+
+            it('should add literal node value to the string array without encoding', () => {
+                assert.closeTo(noneEncodingMatchesChance, expectedMatchesChance, expectedMatchesDelta);
+            });
+
+            it('should add literal node value to the string array encoded using base64', () => {
+                assert.closeTo(base64EncodingMatchesChance, expectedMatchesChance, expectedMatchesDelta);
+            });
+        });
+    });
+
+    describe('Variant #11: none and rc4 encoding', () => {
+        describe('Variant #1: string array calls wrapper call', () => {
             const samplesCount: number = 100;
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
@@ -336,7 +392,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #11: base64 and rc4 encoding', () => {
+    describe('Variant #12: base64 and rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
             const samplesCount: number = 100;
             const expectedMatchesChance: number = 0.5;
@@ -392,7 +448,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #12: `stringArrayThreshold` option value', () => {
+    describe('Variant #13: `stringArrayThreshold` option value', () => {
         const samples: number = 1000;
         const stringArrayThreshold: number = 0.5;
         const delta: number = 0.1;
@@ -435,7 +491,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #13: string array calls wrapper name', () => {
+    describe('Variant #14: string array calls wrapper name', () => {
         const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
 
         let obfuscatedCode: string;
@@ -459,7 +515,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #14: `reservedStrings` option is enabled', () => {
+    describe('Variant #15: `reservedStrings` option is enabled', () => {
         describe('Variant #1: base `reservedStrings` values', () => {
             describe('Variant #1: single reserved string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
@@ -631,7 +687,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #15: object expression key literal', () => {
+    describe('Variant #16: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
             const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
@@ -689,7 +745,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #16: import declaration source literal', () => {
+    describe('Variant #17: import declaration source literal', () => {
         const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -712,7 +768,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #17: export all declaration source literal', () => {
+    describe('Variant #18: export all declaration source literal', () => {
         const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -735,7 +791,7 @@ describe('StringArrayTransformer', () => {
         });
     });
 
-    describe('Variant #18: export named declaration source literal', () => {
+    describe('Variant #19: export named declaration source literal', () => {
         const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;

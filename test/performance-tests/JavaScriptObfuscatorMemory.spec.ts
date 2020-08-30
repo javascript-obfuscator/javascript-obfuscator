@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { readFileAsString } from '../helpers/readFileAsString';
 
+import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
+
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 
 const heapValueToMB = (value: number) => Math.round(value / 1024 / 1024 * 100) / 100;
@@ -41,7 +43,7 @@ describe('JavaScriptObfuscator memory', function () {
                         splitStrings: true,
                         splitStringsChunkLength: 2,
                         stringArray: true,
-                        stringArrayEncoding: 'base64',
+                        stringArrayEncoding: [StringArrayEncoding.Base64],
                         stringArrayThreshold: 0.75,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false

@@ -355,7 +355,7 @@ Following options are available for the JS Obfuscator:
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
-    stringArrayEncoding: false,
+    stringArrayEncoding: [],
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -403,7 +403,7 @@ Following options are available for the JS Obfuscator:
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
-    --string-array-encoding <boolean|string> [true, false, base64, rc4]
+    --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
@@ -919,7 +919,7 @@ Type: `boolean` Default: `true`
 Removes string literals and place them in a special array. For instance, the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
     
 ### `stringArrayEncoding`
-Type: `boolean|string` Default: `false`
+Type: `string[]` Default: `[]`
 
 ##### :warning: `stringArray` option must be enabled
 
@@ -927,11 +927,22 @@ This option can slow down your script.
 
 Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
+Each `stringArray` value will be encoded by the randomly picked encoding from the passed list. This makes possible to use multiple encodings.
+
 Available values:
-* `true` (`boolean`): encode `stringArray` values using `base64`
-* `false` (`boolean`): don't encode `stringArray` values
-* `'base64'` (`string`): encode `stringArray` values using `base64`
-* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option with `rc4` encoding to prevent very large size of obfuscated code.
+* `'none'` (`boolean`): doesn't encode `stringArray` value
+* `'base64'` (`string`): encodes `stringArray` value using `base64`
+* `'rc4'` (`string`): encodes `stringArray` value using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It's recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option when using `rc4` encoding to prevent very large size of obfuscated code.
+
+For example with the following option values some `stringArray` value won't be encoded, and some values will be encoded with `base64` and `rc4` encoding:
+
+```ts
+stringArrayEncoding: [
+    'none',
+    'base64',
+    'rc4'
+]
+```
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
@@ -1030,7 +1041,7 @@ Performance will 50-100% slower than without obfuscation
     splitStrings: true,
     splitStringsChunkLength: 5,
     stringArray: true,
-    stringArrayEncoding: 'rc4',
+    stringArrayEncoding: ['rc4'],
     stringArrayThreshold: 1,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1062,7 +1073,7 @@ Performance will 30-35% slower than without obfuscation
     splitStrings: true,
     splitStringsChunkLength: 10,
     stringArray: true,
-    stringArrayEncoding: 'base64',
+    stringArrayEncoding: ['base64'],
     stringArrayThreshold: 0.75,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1091,7 +1102,7 @@ Performance will slightly slower than without obfuscation
     simplify: true,
     splitStrings: false,
     stringArray: true,
-    stringArrayEncoding: false,
+    stringArrayEncoding: [],
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }
@@ -1117,7 +1128,7 @@ Performance will slightly slower than without obfuscation
     simplify: true,
     splitStrings: false,
     stringArray: true,
-    stringArrayEncoding: false,
+    stringArrayEncoding: [],
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }

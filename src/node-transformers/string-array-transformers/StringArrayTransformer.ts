@@ -152,7 +152,8 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const stringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.stringArrayStorageAnalyzer
             .getItemDataForLiteralNode(literalNode);
         const cacheKey: string = `${literalValue}-${Boolean(stringArrayStorageItemData)}`;
-        const useCachedValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
+        const useCachedValue: boolean = this.nodesCache.has(cacheKey)
+            && stringArrayStorageItemData?.encoding !== StringArrayEncoding.Rc4;
 
         if (useCachedValue) {
             return <ESTree.Node>this.nodesCache.get(cacheKey);
@@ -182,7 +183,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Node {
-        const { index, decodeKey } = stringArrayStorageItemData;
+        const { index, encoding, decodeKey } = stringArrayStorageItemData;
 
         const hexadecimalIndex: string = NumberUtils.toHex(index);
         const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
@@ -194,7 +195,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         }
 
         const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
-            this.stringArrayStorage.getStorageCallsWrapperName()
+            this.stringArrayStorage.getStorageCallsWrapperName(encoding)
         );
 
         return NodeFactory.callExpressionNode(

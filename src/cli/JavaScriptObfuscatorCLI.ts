@@ -337,10 +337,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--string-array-encoding <string|boolean>',
-                'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed. ' +
-                'Values: true, false, base64, rc4. ' +
-                'Default: false',
+                '--string-array-encoding <list> (comma separated, without whitespaces)',
+                'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed. ' +
+                'Values: none, base64, rc4. ' +
+                'Default: none',
                 StringArrayEncodingSanitizer
             )
             .option(

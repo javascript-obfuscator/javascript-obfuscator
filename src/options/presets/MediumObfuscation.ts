@@ -13,6 +13,8 @@ export const MEDIUM_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     optionsPreset: OptionsPreset.MediumObfuscation,
     splitStrings: true,
     splitStringsChunkLength: 10,
-    stringArrayEncoding: StringArrayEncoding.Base64,
+    stringArrayEncoding: [
+        StringArrayEncoding.Base64
+    ],
     transformObjectKeys: true
 });

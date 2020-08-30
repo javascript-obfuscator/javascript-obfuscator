@@ -289,10 +289,12 @@ export class Options implements IOptions {
     public readonly stringArray!: boolean;
 
     /**
-     * @type {TStringArrayEncoding}
+     * @type {TStringArrayEncoding[]}
      */
-    @IsIn([true, false, StringArrayEncoding.Base64, StringArrayEncoding.Rc4])
-    public readonly stringArrayEncoding!: TStringArrayEncoding;
+    @IsArray()
+    @ArrayUnique()
+    @IsIn([StringArrayEncoding.None, StringArrayEncoding.Base64, StringArrayEncoding.Rc4], { each: true })
+    public readonly stringArrayEncoding!: TStringArrayEncoding[];
 
     /**
      * @type {number}

@@ -10,16 +10,10 @@ import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEn
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
-
 import { initializable } from '../../decorators/Initializable';
 
-import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
-import { Rc4Template } from './templates/string-array-calls-wrapper/Rc4Template';
 import { SelfDefendingTemplate } from './templates/string-array-calls-wrapper/SelfDefendingTemplate';
-import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 import { StringArrayCallsWrapperTemplate } from './templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
-import { StringArrayRC4DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayRC4DecodeTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -30,19 +24,13 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @type {string}
      */
     @initializable()
-    private atobFunctionName!: string;
+    protected stringArrayName!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private stringArrayName!: string;
-
-    /**
-     * @type {string}
-     */
-    @initializable()
-    private stringArrayCallsWrapperName!: string;
+    protected stringArrayCallsWrapperName!: string;
 
     /**
      * @type {IEscapeSequenceEncoder}
@@ -80,16 +68,13 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
-     * @param {string} atobFunctionName
      */
     public initialize (
         stringArrayName: string,
-        stringArrayCallsWrapperName: string,
-        atobFunctionName: string
+        stringArrayCallsWrapperName: string
     ): void {
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
-        this.atobFunctionName = atobFunctionName;
     }
 
     /**
@@ -123,56 +108,27 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @returns {string}
      */
-    private getDecodeStringArrayTemplate (): string {
-        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
-            atobFunctionName: this.atobFunctionName
-        });
-        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(Rc4Template(), {
-            atobFunctionName: this.atobFunctionName
-        });
+    protected getDecodeStringArrayTemplate (): string {
+        return '';
+    }
 
-        let decodeStringArrayTemplate: string = '';
-        let selfDefendingCode: string = '';
-
-        if (this.options.selfDefending) {
-            selfDefendingCode = this.customCodeHelperFormatter.formatTemplate(
-                SelfDefendingTemplate(
-                    this.randomGenerator,
-                    this.escapeSequenceEncoder
-                ),
-                {
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                    stringArrayName: this.stringArrayName
-                }
-            );
+    /**
+     * @returns {string}
+     */
+    protected getSelfDefendingTemplate (): string {
+        if (!this.options.selfDefending) {
+            return '';
         }
 
-        switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.Rc4:
-                decodeStringArrayTemplate = this.customCodeHelperFormatter.formatTemplate(
-                    StringArrayRC4DecodeTemplate(this.randomGenerator),
-                    {
-                        atobPolyfill,
-                        rc4Polyfill,
-                        selfDefendingCode,
-                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                    }
-                );
-
-                break;
-
-            case StringArrayEncoding.Base64:
-                decodeStringArrayTemplate = this.customCodeHelperFormatter.formatTemplate(
-                    StringArrayBase64DecodeTemplate(this.randomGenerator),
-                    {
-                        atobPolyfill,
-                        atobFunctionName: this.atobFunctionName,
-                        selfDefendingCode,
-                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                    }
-                );
-        }
-
-        return decodeStringArrayTemplate;
+        return this.customCodeHelperFormatter.formatTemplate(
+            SelfDefendingTemplate(
+                this.randomGenerator,
+                this.escapeSequenceEncoder
+            ),
+            {
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
+            }
+        );
     }
 }

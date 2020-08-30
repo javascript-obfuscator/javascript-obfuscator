@@ -9,76 +9,62 @@ import { StringArrayEncodingSanitizer } from '../../../../src/cli/sanitizers/Str
 describe('StringArrayEncodingSanitizer', () => {
     describe('Variant #1: string array encoding `base64`', () => {
         const inputValue: string = 'base64';
-        const expectedValue: TStringArrayEncoding = true;
+        const expectedValue: TStringArrayEncoding[] = [StringArrayEncoding.Base64];
 
-        let value: TStringArrayEncoding;
-
-        before(() => {
-            value = StringArrayEncodingSanitizer(inputValue);
-        });
-
-        it('should sanitize value', () => {
-            assert.equal(value, expectedValue);
-        });
-    });
-
-    describe('Variant #2: string array encoding `true`', () => {
-        const inputValue: string = 'true';
-        const expectedValue: TStringArrayEncoding = true;
-
-        let value: TStringArrayEncoding;
+        let value: TStringArrayEncoding[];
 
         before(() => {
             value = StringArrayEncodingSanitizer(inputValue);
         });
 
         it('should sanitize value', () => {
-            assert.equal(value, expectedValue);
+            assert.deepEqual(value, expectedValue);
         });
     });
 
-    describe('Variant #3: string array encoding `1`', () => {
-        const inputValue: string = '1';
-        const expectedValue: TStringArrayEncoding = true;
+    describe('Variant #2: string array encoding `base64, rc4`', () => {
+        const inputValue: string = 'base64,rc4';
+        const expectedValue: TStringArrayEncoding[] = [
+            StringArrayEncoding.Base64,
+            StringArrayEncoding.Rc4
+        ];
 
-        let value: TStringArrayEncoding;
+        let value: TStringArrayEncoding[];
 
         before(() => {
             value = StringArrayEncodingSanitizer(inputValue);
         });
 
         it('should sanitize value', () => {
-            assert.equal(value, expectedValue);
+            assert.deepEqual(value, expectedValue);
         });
     });
 
-    describe('Variant #4: string array encoding `rc4`', () => {
-        const inputValue: string = 'rc4';
-        const expectedValue: TStringArrayEncoding = StringArrayEncoding.Rc4;
-
-        let value: TStringArrayEncoding;
-
-        before(() => {
-            value = StringArrayEncodingSanitizer(inputValue);
-        });
-
-        it('should sanitize value', () => {
-            assert.equal(value, expectedValue);
-        });
-    });
-
-    describe('Variant #5: string array encoding `foo`', () => {
+    describe('Variant #3: string array encoding `foo`', () => {
         const inputValue: string = 'foo';
-        const expectedValue: TStringArrayEncoding = false;
 
-        let value: TStringArrayEncoding;
+        let testFunc: () => TStringArrayEncoding[];
 
         before(() => {
-            value = StringArrayEncodingSanitizer(inputValue);
+            testFunc = () => StringArrayEncodingSanitizer(inputValue);
         });
 
-        it('should sanitize value', () => {
-            assert.equal(value, expectedValue);
+        it('should throw an error for invalid encoding', () => {
+            assert.throws(testFunc, 'Invalid value');
+        });
+    });
+
+    describe('Variant #4: string array encoding `base64,foo`', () => {
+        const inputValue: string = 'base64,foo';
+
+        let testFunc: () => TStringArrayEncoding[];
+
+        before(() => {
+            testFunc = () => StringArrayEncodingSanitizer(inputValue);
+        });
+
+        it('should throw an error for invalid encoding', () => {
+            assert.throws(testFunc, 'Invalid value');
         });
     });
 });

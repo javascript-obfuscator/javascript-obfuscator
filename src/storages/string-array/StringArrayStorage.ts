@@ -1,6 +1,8 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
+
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 
@@ -85,9 +87,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private stringArrayStorageName!: string;
 
     /**
-     * @type {string}
+     * @type {Map<TStringArrayEncoding | null, string>}
      */
-    private stringArrayStorageCallsWrapperName!: string;
+    private readonly stringArrayStorageCallsWrapperNamesMap: Map<TStringArrayEncoding | null, string> = new Map();
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -136,7 +138,6 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
 
     /**
      * @param {string} value
-     * @returns {IStringArrayStorageItemData}
      */
     public get (value: string): IStringArrayStorageItemData {
         return this.getOrSetIfDoesNotExist(value);
@@ -169,15 +170,25 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     }
 
     /**
+     * @param {TStringArrayEncoding | null} stringArrayEncoding
      * @returns {string}
      */
-    public getStorageCallsWrapperName (): string {
-        if (!this.stringArrayStorageCallsWrapperName) {
-            this.stringArrayStorageCallsWrapperName = this.identifierNamesGenerator
-                .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+    public getStorageCallsWrapperName (stringArrayEncoding: TStringArrayEncoding | null): string {
+        const storageCallsWrapperName: string | null = this.stringArrayStorageCallsWrapperNamesMap.get(stringArrayEncoding) ?? null;
+
+        if (storageCallsWrapperName) {
+            return storageCallsWrapperName;
         }
 
-        return this.stringArrayStorageCallsWrapperName;
+        const newStorageCallsWrapperName: string = this.identifierNamesGenerator
+            .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+
+        this.stringArrayStorageCallsWrapperNamesMap.set(
+            stringArrayEncoding,
+            newStorageCallsWrapperName
+        );
+
+        return newStorageCallsWrapperName;
     }
 
     public rotateStorage (): void {
@@ -234,7 +245,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @returns {IStringArrayStorageItemData}
      */
     private getOrSetIfDoesNotExist (value: string): IStringArrayStorageItemData {
-        const { encodedValue, decodeKey }: IEncodedValue = this.getEncodedValue(value);
+        const { encodedValue, encoding, decodeKey }: IEncodedValue = this.getEncodedValue(value);
         const storedStringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.storage.get(encodedValue);
 
         if (storedStringArrayStorageItemData) {
@@ -243,6 +254,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
 
         const stringArrayStorageItemData: IStringArrayStorageItemData = {
             encodedValue,
+            encoding,
             decodeKey,
             value,
             index: this.getLength()
@@ -258,7 +270,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @returns {IEncodedValue}
      */
     private getEncodedValue (value: string): IEncodedValue {
-        switch (this.options.stringArrayEncoding) {
+        const encoding: TStringArrayEncoding | null = this.options.stringArrayEncoding.length
+            ? this.randomGenerator
+                .getRandomGenerator()
+                .pickone(this.options.stringArrayEncoding)
+            : null;
+
+        switch (encoding) {
             /**
              * For rc4 there is a possible chance of a collision between encoded values that were received from
              * different source values with different keys
@@ -293,21 +311,21 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
                     return this.getEncodedValue(value);
                 }
 
-                return { encodedValue, decodeKey };
+                return { encodedValue, encoding, decodeKey };
             }
 
             case StringArrayEncoding.Base64: {
                 const decodeKey: null = null;
                 const encodedValue: string = this.cryptUtilsSwappedAlphabet.btoa(value);
 
-                return { encodedValue, decodeKey };
+                return { encodedValue, encoding, decodeKey };
             }
 
             default: {
                 const decodeKey: null = null;
                 const encodedValue: string = value;
 
-                return { encodedValue, decodeKey };
+                return { encodedValue, encoding, decodeKey };
             }
         }
     }

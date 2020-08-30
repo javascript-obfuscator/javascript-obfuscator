@@ -543,7 +543,7 @@ describe('OptionsNormalizer', () => {
                     ...getDefaultOptions(),
                     shuffleStringArray: true,
                     stringArray: false,
-                    stringArrayEncoding: StringArrayEncoding.Rc4,
+                    stringArrayEncoding: [StringArrayEncoding.Rc4],
                     stringArrayThreshold: 0.5,
                     rotateStringArray: true
                 });
@@ -552,7 +552,7 @@ describe('OptionsNormalizer', () => {
                     ...getDefaultOptions(),
                     shuffleStringArray: false,
                     stringArray: false,
-                    stringArrayEncoding: false,
+                    stringArrayEncoding: [StringArrayEncoding.None],
                     stringArrayThreshold: 0,
                     rotateStringArray: false
                 };
@@ -567,12 +567,14 @@ describe('OptionsNormalizer', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
-                    stringArrayEncoding: true
+                    stringArrayEncoding: []
                 });
 
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
-                    stringArrayEncoding: StringArrayEncoding.Base64
+                    stringArrayEncoding: [
+                        StringArrayEncoding.None
+                    ]
                 };
             });
 

@@ -3,21 +3,24 @@ import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
+import { ArraySanitizer } from './ArraySanitizer';
+
 /**
  * @param {string} value
- * @returns {TStringArrayEncoding}
+ * @returns {TStringArrayEncoding[]}
  */
-export const StringArrayEncodingSanitizer: TCLISanitizer <TStringArrayEncoding> = (value: string): TStringArrayEncoding => {
-    switch (value) {
-        case 'true':
-        case '1':
-        case StringArrayEncoding.Base64:
-            return true;
+export const StringArrayEncodingSanitizer: TCLISanitizer <TStringArrayEncoding[]> = (value: string): TStringArrayEncoding[] => {
+    const valuesAsArray: TStringArrayEncoding[] = <TStringArrayEncoding[]>ArraySanitizer(value);
 
-        case StringArrayEncoding.Rc4:
-            return StringArrayEncoding.Rc4;
+    const isCorrectStringArrayEncodings: boolean = valuesAsArray.every((item: TStringArrayEncoding) =>
+        Object
+            .values(StringArrayEncoding)
+            .includes(item)
+    );
 
-        default:
-            return false;
+    if (!isCorrectStringArrayEncodings) {
+        throw new ReferenceError('Invalid value of `--string-array-encoding` option');
     }
+
+    return valuesAsArray;
 };

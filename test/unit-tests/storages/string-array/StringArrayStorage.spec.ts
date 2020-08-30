@@ -54,7 +54,7 @@ describe('StringArrayStorage', () => {
 
         before(() => {
             const stringArrayStorage: IStringArrayStorage = getStorageInstance({
-                stringArrayEncoding: StringArrayEncoding.Rc4
+                stringArrayEncoding: [StringArrayEncoding.Rc4]
             });
 
             for (let i = 0; i < samplesCount; i++) {

@@ -841,7 +841,10 @@ describe('JavaScriptObfuscator', () => {
                         renameProperties: true,
                         rotateStringArray: true,
                         stringArray: true,
-                        stringArrayEncoding: StringArrayEncoding.Rc4,
+                        stringArrayEncoding: [
+                            StringArrayEncoding.Base64,
+                            StringArrayEncoding.Rc4
+                        ],
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false
@@ -932,7 +935,7 @@ describe('JavaScriptObfuscator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             ...baseParams,
-                            stringArrayEncoding: StringArrayEncoding.Rc4
+                            stringArrayEncoding: [StringArrayEncoding.Rc4]
                         }
                     ).getObfuscatedCode();
 
@@ -955,7 +958,7 @@ describe('JavaScriptObfuscator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 ...baseParams,
-                                stringArrayEncoding: StringArrayEncoding.Rc4
+                                stringArrayEncoding: [StringArrayEncoding.Rc4]
                             }
                         ).getObfuscatedCode();
 
@@ -977,7 +980,7 @@ describe('JavaScriptObfuscator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 ...baseParams,
-                                stringArrayEncoding: StringArrayEncoding.Rc4
+                                stringArrayEncoding: [StringArrayEncoding.Rc4]
                             }
                         ).getObfuscatedCode();
                     });
@@ -1000,7 +1003,7 @@ describe('JavaScriptObfuscator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 ...baseParams,
-                                stringArrayEncoding: StringArrayEncoding.Rc4
+                                stringArrayEncoding: [StringArrayEncoding.Rc4]
                             }
                         ).getObfuscatedCode();
 
@@ -1022,7 +1025,7 @@ describe('JavaScriptObfuscator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 ...baseParams,
-                                stringArrayEncoding: StringArrayEncoding.Base64
+                                stringArrayEncoding: [StringArrayEncoding.Base64]
                             }
                         ).getObfuscatedCode();
 

@@ -1,5 +1,9 @@
 Change Log
 
+v2.0.0
+---
+* **Breaking change:** `stringArrayEncoding` option now accepts an array of encodings. Each string will be randomly encoded with passed encoding.
+
 v1.12.0
 ---
 * **New option:** `optionsPreset` allows to set options preset

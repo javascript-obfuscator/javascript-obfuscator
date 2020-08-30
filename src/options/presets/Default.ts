@@ -4,6 +4,7 @@ import { IdentifierNamesGenerator } from '../../enums/generators/identifier-name
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
+import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,
@@ -40,7 +41,9 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
-    stringArrayEncoding: false,
+    stringArrayEncoding: [
+        StringArrayEncoding.None
+    ],
     stringArrayThreshold: 0.75,
     target: ObfuscationTarget.Browser,
     transformObjectKeys: false,

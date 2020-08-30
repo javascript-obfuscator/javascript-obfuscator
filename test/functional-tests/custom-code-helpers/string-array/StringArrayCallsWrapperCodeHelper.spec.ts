@@ -72,7 +72,7 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
                     identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                     stringArray: true,
                     stringArrayThreshold: 1,
-                    stringArrayEncoding: StringArrayEncoding.Base64
+                    stringArrayEncoding: [StringArrayEncoding.Base64]
                 }
             ).getObfuscatedCode();
         });

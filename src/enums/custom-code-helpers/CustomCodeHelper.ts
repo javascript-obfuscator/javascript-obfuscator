@@ -6,7 +6,9 @@ export enum CustomCodeHelper {
     DebugProtectionFunction = 'DebugProtectionFunction',
     DomainLock = 'DomainLock',
     SelfDefendingUnicode = 'SelfDefendingUnicode',
-    StringArrayCallsWrapper = 'StringArrayCallsWrapper',
     StringArray = 'StringArray',
+    StringArrayCallsWrapper = 'StringArrayCallsWrapper',
+    StringArrayCallsWrapperBase64 = 'StringArrayCallsWrapperBase64',
+    StringArrayCallsWrapperRc4 = 'StringArrayCallsWrapperRc4',
     StringArrayRotateFunction = 'StringArrayRotateFunction'
 }

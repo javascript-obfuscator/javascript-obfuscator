@@ -2,6 +2,8 @@ import { TOptionsNormalizerRule } from '../../types/options/TOptionsNormalizerRu
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
+import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+
 /**
  * @param {IOptions} options
  * @returns {IOptions}
@@ -12,7 +14,9 @@ export const StringArrayThresholdRule: TOptionsNormalizerRule = (options: IOptio
             ...options,
             rotateStringArray: false,
             stringArray: false,
-            stringArrayEncoding: false,
+            stringArrayEncoding: [
+                StringArrayEncoding.None
+            ],
             stringArrayThreshold: 0
         };
     }

@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helpers/ICustomCodeHelperObfuscator';
@@ -45,6 +46,12 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     private stringArrayCallsWrapperName!: string;
 
     /**
+     * @type {TStringArrayEncoding}
+     */
+    @initializable()
+    private stringArrayEncoding!: TStringArrayEncoding;
+
+    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -80,15 +87,18 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
+     * @param {TStringArrayEncoding} stringArrayEncoding
      * @param {string} atobFunctionName
      */
     public initialize (
         stringArrayName: string,
         stringArrayCallsWrapperName: string,
+        stringArrayEncoding: TStringArrayEncoding,
         atobFunctionName: string
     ): void {
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.stringArrayEncoding = stringArrayEncoding;
         this.atobFunctionName = atobFunctionName;
     }
 
@@ -147,7 +157,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
             );
         }
 
-        switch (this.options.stringArrayEncoding) {
+        switch (this.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:
                 decodeStringArrayTemplate = this.customCodeHelperFormatter.formatTemplate(
                     StringArrayRC4DecodeTemplate(this.randomGenerator),

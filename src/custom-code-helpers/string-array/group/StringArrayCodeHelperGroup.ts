@@ -85,12 +85,14 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         );
 
         // stringArrayCallsWrapper helper nodes append
-        this.appendCustomNodeIfExist(
-            CustomCodeHelper.StringArrayCallsWrapper,
-            (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
-                NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
-            }
-        );
+        for (const stringArrayEncoding of this.options.stringArrayEncoding) {
+            this.appendCustomNodeIfExist(
+                <any>`${CustomCodeHelper.StringArrayCallsWrapper}-${stringArrayEncoding}`,
+                (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
+                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
+                }
+            );
+        }
 
         // stringArrayRotateFunction helper nodes append
         this.appendCustomNodeIfExist(
@@ -108,24 +110,44 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             return;
         }
 
+        /**
+         * Stage 1: String Array code helper
+         */
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
-        const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.StringArrayCallsWrapper);
-        const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
-
         const stringArrayName: string = this.stringArrayStorage.getStorageName();
-        const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName();
-        const stringArrayRotationAmount: number = this.stringArrayStorage.getRotationAmount();
-        const atobFunctionName: string = this.randomGenerator.getRandomString(6);
 
         stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayName);
-        stringArrayCallsWrapperCodeHelper.initialize(stringArrayName, stringArrayCallsWrapperName, atobFunctionName);
-        stringArrayRotateFunctionCodeHelper.initialize(stringArrayName, stringArrayRotationAmount);
-
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
-        this.customCodeHelpers.set(CustomCodeHelper.StringArrayCallsWrapper, stringArrayCallsWrapperCodeHelper);
+
+        /**
+         * Stage 2: String Array calls wrapper code helper
+         */
+        const atobFunctionName: string = this.randomGenerator.getRandomString(6);
+
+        for (const stringArrayEncoding of this.options.stringArrayEncoding) {
+            const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
+                this.customCodeHelperFactory(CustomCodeHelper.StringArrayCallsWrapper);
+            const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+
+            stringArrayCallsWrapperCodeHelper.initialize(
+                stringArrayName,
+                stringArrayCallsWrapperName,
+                stringArrayEncoding,
+                atobFunctionName
+            );
+
+            this.customCodeHelpers.set(<any>`${CustomCodeHelper.StringArrayCallsWrapper}-${stringArrayEncoding}`, stringArrayCallsWrapperCodeHelper);
+        }
+
+        /**
+         * Stage 3: String Array rotate function
+         */
+        const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>> =
+            this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
+        const stringArrayRotationAmount: number = this.stringArrayStorage.getRotationAmount();
+
+        stringArrayRotateFunctionCodeHelper.initialize(stringArrayName, stringArrayRotationAmount);
 
         if (this.options.rotateStringArray) {
             this.customCodeHelpers.set(CustomCodeHelper.StringArrayRotateFunction, stringArrayRotateFunctionCodeHelper);

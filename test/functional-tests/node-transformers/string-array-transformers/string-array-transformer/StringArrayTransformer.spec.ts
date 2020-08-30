@@ -199,7 +199,7 @@ describe('StringArrayTransformer', () => {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
-                    stringArrayEncoding: StringArrayEncoding.Base64,
+                    stringArrayEncoding: [StringArrayEncoding.Base64],
                     stringArrayThreshold: 1
                 }
             ).getObfuscatedCode();
@@ -228,7 +228,7 @@ describe('StringArrayTransformer', () => {
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
-                        stringArrayEncoding: StringArrayEncoding.Rc4,
+                        stringArrayEncoding: [StringArrayEncoding.Rc4],
                         stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();
@@ -257,7 +257,7 @@ describe('StringArrayTransformer', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         seed: 1, // set seed to prevent rare case when all encoded values are the same
                         stringArray: true,
-                        stringArrayEncoding: StringArrayEncoding.Rc4,
+                        stringArrayEncoding: [StringArrayEncoding.Rc4],
                         stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();

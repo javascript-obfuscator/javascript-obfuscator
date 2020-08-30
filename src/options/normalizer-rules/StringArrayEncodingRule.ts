@@ -9,12 +9,14 @@ import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
  * @returns {IOptions}
  */
 export const StringArrayEncodingRule: TOptionsNormalizerRule = (options: IOptions): IOptions => {
-    if (options.stringArrayEncoding === true) {
+    if (!options.stringArrayEncoding.length) {
         options = {
             ...options,
-            stringArrayEncoding: StringArrayEncoding.Base64
+            stringArrayEncoding: [
+                StringArrayEncoding.None
+            ]
         };
     }
-
+    
     return options;
 };

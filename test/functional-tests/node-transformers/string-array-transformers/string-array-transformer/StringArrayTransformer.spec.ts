@@ -11,7 +11,9 @@ import { swapLettersCase } from '../../../../helpers/swapLettersCase';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
-describe('StringArrayTransformer', () => {
+describe('StringArrayTransformer', function () {
+    this.timeout(60000);
+
     describe('Variant #1: default behaviour', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;

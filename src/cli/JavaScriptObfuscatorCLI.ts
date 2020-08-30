@@ -338,7 +338,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--string-array-encoding <list> (comma separated, without whitespaces)',
-                'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed. ' +
+                'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed. ' +
                 'Values: none, base64, rc4. ' +
                 'Default: none',
                 StringArrayEncodingSanitizer

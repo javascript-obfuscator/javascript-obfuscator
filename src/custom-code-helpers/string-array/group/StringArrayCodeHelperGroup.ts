@@ -5,6 +5,7 @@ import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-h
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
+import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
 import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
@@ -16,15 +17,25 @@ import { initializable } from '../../../decorators/Initializable';
 
 import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeHelper';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
+import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
 import { StringArrayCallsWrapperCodeHelper } from '../StringArrayCallsWrapperCodeHelper';
+import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
 import { StringArrayRotateFunctionCodeHelper } from '../StringArrayRotateFunctionCodeHelper';
 
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
+    /**
+     * @type {Map<TStringArrayEncoding, CustomCodeHelper>}
+     */
+    private static readonly stringArrayCallsWrapperCodeHelperMap: Map<TStringArrayEncoding, CustomCodeHelper> = new Map([
+        [StringArrayEncoding.None, CustomCodeHelper.StringArrayCallsWrapper],
+        [StringArrayEncoding.Base64, CustomCodeHelper.StringArrayCallsWrapperBase64],
+        [StringArrayEncoding.Rc4, CustomCodeHelper.StringArrayCallsWrapperRc4]
+    ]);
+
     /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
@@ -86,8 +97,10 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
 
         // stringArrayCallsWrapper helper nodes append
         for (const stringArrayEncoding of this.options.stringArrayEncoding) {
+            const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
+
             this.appendCustomNodeIfExist(
-                <any>`${CustomCodeHelper.StringArrayCallsWrapper}-${stringArrayEncoding}`,
+                stringArrayCallsWrapperCodeHelperName,
                 (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
                     NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
                 }
@@ -110,9 +123,7 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             return;
         }
 
-        /**
-         * Stage 1: String Array code helper
-         */
+        // stringArray helper initialize
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
         const stringArrayName: string = this.stringArrayStorage.getStorageName();
@@ -120,29 +131,22 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayName);
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
 
-        /**
-         * Stage 2: String Array calls wrapper code helper
-         */
-        const atobFunctionName: string = this.randomGenerator.getRandomString(6);
-
+        // stringArrayCallsWrapper helper initialize
         for (const stringArrayEncoding of this.options.stringArrayEncoding) {
+            const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
             const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
-                this.customCodeHelperFactory(CustomCodeHelper.StringArrayCallsWrapper);
+                this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
             const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
 
             stringArrayCallsWrapperCodeHelper.initialize(
                 stringArrayName,
-                stringArrayCallsWrapperName,
-                stringArrayEncoding,
-                atobFunctionName
+                stringArrayCallsWrapperName
             );
 
-            this.customCodeHelpers.set(<any>`${CustomCodeHelper.StringArrayCallsWrapper}-${stringArrayEncoding}`, stringArrayCallsWrapperCodeHelper);
+            this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);
         }
 
-        /**
-         * Stage 3: String Array rotate function
-         */
+        // stringArrayRotateFunction helper initialize
         const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
         const stringArrayRotationAmount: number = this.stringArrayStorage.getRotationAmount();
@@ -152,5 +156,15 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         if (this.options.rotateStringArray) {
             this.customCodeHelpers.set(CustomCodeHelper.StringArrayRotateFunction, stringArrayRotateFunctionCodeHelper);
         }
+    }
+
+    /**
+     * @param {TStringArrayEncoding} stringArrayEncoding
+     * @returns {CustomCodeHelper}
+     */
+    private getStringArrayCallsWrapperCodeHelperName (stringArrayEncoding: TStringArrayEncoding): CustomCodeHelper {
+        return StringArrayCodeHelperGroup
+                .stringArrayCallsWrapperCodeHelperMap.get(stringArrayEncoding)
+            ?? CustomCodeHelper.StringArrayCallsWrapper;
     }
 }

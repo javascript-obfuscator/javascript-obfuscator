@@ -1,7 +1,5 @@
 'use strict';
 
-import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 
 (function () {
@@ -21,11 +19,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayEncoding: [
-                StringArrayEncoding.Rc4,
-                StringArrayEncoding.Base64,
-                StringArrayEncoding.None
-            ]
+            stringArrayEncoding: []
         }
     ).getObfuscatedCode();
 

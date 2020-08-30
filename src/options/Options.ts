@@ -30,6 +30,7 @@ import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-g
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';
 import { LOW_OBFUSCATION_PRESET } from './presets/LowObfuscation';
@@ -292,9 +293,7 @@ export class Options implements IOptions {
      */
     @IsArray()
     @ArrayUnique()
-    @IsString({
-        each: true
-    })
+    @IsIn([StringArrayEncoding.None, StringArrayEncoding.Base64, StringArrayEncoding.Rc4], { each: true })
     public readonly stringArrayEncoding!: TStringArrayEncoding[];
 
     /**

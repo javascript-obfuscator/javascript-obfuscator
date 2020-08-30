@@ -26,6 +26,8 @@ import { DomainLockCodeHelper } from '../../../custom-code-helpers/domain-lock/D
 import { CallsControllerFunctionCodeHelper } from '../../../custom-code-helpers/calls-controller/CallsControllerFunctionCodeHelper';
 import { SelfDefendingUnicodeCodeHelper } from '../../../custom-code-helpers/self-defending/SelfDefendingUnicodeCodeHelper';
 import { StringArrayCallsWrapperCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper';
+import { StringArrayCallsWrapperBase64CodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperBase64CodeHelper';
+import { StringArrayCallsWrapperRc4CodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperRc4CodeHelper';
 import { StringArrayCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCodeHelper';
 import { StringArrayRotateFunctionCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper';
 
@@ -62,6 +64,14 @@ export const customCodeHelpersModule: interfaces.ContainerModule = new Container
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCallsWrapperCodeHelper)
         .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapper);
+
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(StringArrayCallsWrapperBase64CodeHelper)
+        .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapperBase64);
+
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(StringArrayCallsWrapperRc4CodeHelper)
+        .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapperRc4);
 
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCodeHelper)

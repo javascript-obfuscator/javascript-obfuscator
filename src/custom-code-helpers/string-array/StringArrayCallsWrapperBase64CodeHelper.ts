@@ -1,9 +1,9 @@
 import { injectable, } from 'inversify';
 
 import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
+import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 
 import { StringArrayCallsWrapperCodeHelper } from './StringArrayCallsWrapperCodeHelper';
-import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 
 @injectable()
 export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWrapperCodeHelper {

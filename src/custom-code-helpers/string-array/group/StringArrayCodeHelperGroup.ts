@@ -96,13 +96,15 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         );
 
         // stringArrayCallsWrapper helper nodes append
-        for (const stringArrayEncoding of this.options.stringArrayEncoding) {
+        const stringArrayEncodingsLength: number = this.options.stringArrayEncoding.length;
+        for (let i = 0; i < stringArrayEncodingsLength; i++) {
+            const stringArrayEncoding: TStringArrayEncoding = this.options.stringArrayEncoding[i];
             const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
 
             this.appendCustomNodeIfExist(
                 stringArrayCallsWrapperCodeHelperName,
                 (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
-                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
+                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), i + 1);
                 }
             );
         }

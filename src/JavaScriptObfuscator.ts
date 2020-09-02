@@ -217,12 +217,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
         }
 
-        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Converting);
-
         if (this.options.renameProperties) {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameProperties);
         }
 
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Converting);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameIdentifiers);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.StringArray);
 

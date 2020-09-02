@@ -294,7 +294,12 @@ describe('RenamePropertiesTransformer', () => {
             });
 
             describe('Variant #8: integration with `splitStrings` option', () => {
-                const propertyRegExp: RegExp = /'a': *'long' *\+ *'Prop' *\+ *'erty' *\+ *'Valu' *\+ *'e'/;
+                const propertyRegExp: RegExp = new RegExp(
+                    'const foo *= *{' +
+                        '\'a\': *\'long\' *\\+ *\'Prop\' *\\+ *\'erty\' *\\+ *\'Valu\' *\\+ *\'e\'' +
+                    '};' +
+                    'foo\\[\'a\'];'
+                );
 
                 let obfuscatedCode: string;
 

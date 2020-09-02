@@ -10,18 +10,17 @@ import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 
 import { initializable } from '../decorators/Initializable';
 
+import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
+import { ObfuscationTarget } from '../enums/ObfuscationTarget';
+import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
-import { IdentifierNamesGeneratorSanitizer } from './sanitizers/IdentifierNamesGeneratorSanitizer';
-import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
-import { OptionsPresetSanitizer } from './sanitizers/OptionsPresetSanitizer';
-import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
-import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
 import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
@@ -233,9 +232,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--identifier-names-generator <string>',
                 'Sets identifier names generator. ' +
-                'Values: hexadecimal, mangled, mangled-shuffled, dictionary. ' +
-                'Default: hexadecimal',
-                IdentifierNamesGeneratorSanitizer
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(IdentifierNamesGenerator)}. ` +
+                `Default: ${IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator}`
             )
             .option(
                 '--identifiers-prefix <string>',
@@ -257,9 +255,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--options-preset <string>',
                 'Allows to set options preset. ' +
-                'Values: default, low-obfuscation, medium-obfuscation, high-obfuscation. ' +
-                'Default: default',
-                OptionsPresetSanitizer
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(OptionsPreset)}. ` +
+                `Default: ${OptionsPreset.Default}`
             )
             .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',
@@ -317,9 +314,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--source-map-mode <string>',
                 'Specify source map output mode. ' +
-                'Values: inline, separate. ' +
-                'Default: separate',
-                SourceMapModeSanitizer
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(SourceMapMode)}. ` +
+                `Default: ${SourceMapMode.Separate}`
             )
             .option(
                 '--split-strings <boolean>',
@@ -338,10 +334,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--string-array-encoding <list> (comma separated, without whitespaces)',
-                'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed. ' +
-                'Values: none, base64, rc4. ' +
-                'Default: none',
-                StringArrayEncodingSanitizer
+                'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed). ' +
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(StringArrayEncoding)}. ` +
+                `Default: ${StringArrayEncoding.None}`,
+                ArraySanitizer
             )
             .option(
                 '--string-array-threshold <number>',
@@ -351,9 +347,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--target <string>',
                 'Allows to set target environment for obfuscated code. ' +
-                'Values: browser, browser-no-eval, node. ' +
-                'Default: browser',
-                ObfuscationTargetSanitizer
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(ObfuscationTarget)}. ` +
+                `Default: ${ObfuscationTarget.Browser}`
             )
             .option(
                 '--transform-object-keys <boolean>',

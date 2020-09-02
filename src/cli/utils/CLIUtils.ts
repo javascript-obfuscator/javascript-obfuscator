@@ -2,6 +2,8 @@ import * as path from 'path';
 
 import { TDictionary } from '../../types/TDictionary';
 
+import { StringSeparator } from '../../enums/StringSeparator';
+
 export class CLIUtils {
     /**
      * @type {string[]}
@@ -36,5 +38,13 @@ export class CLIUtils {
         }
 
         return config;
+    }
+
+    /**
+     * @param {TDictionary} optionEnum
+     * @returns {string}
+     */
+    public static stringifyOptionAvailableValues (optionEnum: TDictionary): string {
+        return Object.values(optionEnum).join(`${StringSeparator.Comma} `);
     }
 }

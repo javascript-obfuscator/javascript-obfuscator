@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 
+import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
+
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
@@ -80,6 +82,22 @@ describe('CLIUtils', () => {
 
             it('should throw an error if `configFilePath` is not a valid path', () => {
                 assert.throws(testFunc, /Cannot open config file/);
+            });
+        });
+    });
+
+    describe('stringifyOptionAvailableValues', () => {
+        describe('Variant #1: should stringify option available values', () => {
+            const expectedResult: string = 'none, base64, rc4';
+
+            let result: Object;
+
+            before(() => {
+                result = CLIUtils.stringifyOptionAvailableValues(StringArrayEncoding);
+            });
+
+            it('should return option available values as string', () => {
+                assert.deepEqual(result, expectedResult);
             });
         });
     });

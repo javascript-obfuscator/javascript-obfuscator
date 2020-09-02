@@ -3,6 +3,7 @@ Change Log
 v2.0.0
 ---
 * **Breaking change:** `stringArrayEncoding` option now accepts an array of encodings. Each string will be randomly encoded with passed encoding.
+* Fixed regression bug with combination of `splitStrings` and `renameProperties` option. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/729
 
 v1.12.0
 ---

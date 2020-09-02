@@ -1,5 +1,9 @@
 Change Log
 
+v1.12.1
+---
+* Fixed regression bug with combination of `splitStrings` and `renameProperties` option. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/729
+
 v1.12.0
 ---
 * **New option:** `optionsPreset` allows to set options preset

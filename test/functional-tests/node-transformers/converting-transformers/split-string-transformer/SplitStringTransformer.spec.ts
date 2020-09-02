@@ -163,7 +163,45 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #10: Integration with `transformObjectKeys` option', () => {
+    describe('Variant #10: string with emoji', () => {
+        it('should correctly split string with emoji', () => {
+            const regExp: RegExp = /^'a' *\+ *'b' *\+ *'\ud83d' *\+ *'\ude34' *\+ *'\ud83d' *\+ *'\ude04' *\+ *'c' *\+ *'d';$/;
+
+            const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }
+            ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode,  regExp);
+        });
+
+        it('should correctly evaluate splitted string with emoji', () => {
+            const expectedResultString: string = 'ab😴😄cd';
+
+            const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }
+            ).getObfuscatedCode();
+
+            const resultString: string = eval(obfuscatedCode);
+
+            assert.equal(resultString, expectedResultString);
+        });
+    });
+
+    describe('Variant #11: Integration with `transformObjectKeys` option', () => {
         it('should correctly transform string when `transformObjectKeys` option is enabled', () => {
             const regExp: RegExp = new RegExp(`` +
                 `var _0x[a-f0-9]{4,6} *= *{};` +
@@ -189,7 +227,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #11: Integration with `reservedStrings` option', () => {
+    describe('Variant #12: Integration with `reservedStrings` option', () => {
         it('should correctly ignore strings from `reservedStrings` option', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/ignore-reserved-strings.js');
 
@@ -210,7 +248,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #12: Large string', () => {
+    describe('Variant #13: Large string', () => {
         it('Should does not throw `Maximum call stack size exceeded` error on a large string', () => {
             const code: string = `var foo = '${'a'.repeat(10000)}';`;
 
@@ -230,7 +268,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #13: import declaration source literal', () => {
+    describe('Variant #14: import declaration source literal', () => {
         const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -253,7 +291,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #14: export all declaration source literal', () => {
+    describe('Variant #15: export all declaration source literal', () => {
         const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -276,7 +314,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #15: export named declaration source literal', () => {
+    describe('Variant #16: export named declaration source literal', () => {
         const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;

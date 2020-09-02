@@ -114,7 +114,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
 
         // pass #2: split large chunks on a chunks with length of `splitStringsChunkLength`
         const secondPassChunksNode: ESTree.Node = estraverse.replace(firstPassChunksNode, {
-            // eslint-disable-next-line no-shadow
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (parentNode && NodeGuards.isLiteralNode(node)) {
                     return this.transformLiteralNodeByChunkLength(

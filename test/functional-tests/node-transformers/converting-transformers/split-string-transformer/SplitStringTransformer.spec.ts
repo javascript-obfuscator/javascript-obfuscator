@@ -164,40 +164,80 @@ describe('SplitStringTransformer', () => {
     });
 
     describe('Variant #10: string with emoji', () => {
-        it('should correctly split string with emoji', () => {
-            const regExp: RegExp = /^'a' *\+ *'b' *\+ *'\ud83d' *\+ *'\ude34' *\+ *'\ud83d' *\+ *'\ude04' *\+ *'c' *\+ *'d';$/;
+        describe('Variant #1: single emoji', () => {
+            it('should correctly split string with emoji', () => {
+                const regExp: RegExp = /^'a' *\+ *'b' *\+ *'\ud83d' *\+ *'\udc4b' *\+ *'\ud83c' *\+ *'\udffc' *\+ *'c' *\+ *'d';$/;
 
-            const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 1
-                }
-            ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 1
+                    }
+                ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  regExp);
+                assert.match(obfuscatedCode,  regExp);
+            });
+
+            it('should correctly evaluate splitted string with emoji', () => {
+                const expectedResultString: string = 'ab👋🏼cd';
+
+                const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 1
+                    }
+                ).getObfuscatedCode();
+
+                const resultString: string = eval(obfuscatedCode);
+
+                assert.equal(resultString, expectedResultString);
+            });
         });
 
-        it('should correctly evaluate splitted string with emoji', () => {
-            const expectedResultString: string = 'ab😴😄cd';
+        describe('Variant #2: multiple emoji', () => {
+            it('should correctly split string with emoji', () => {
+                const regExp: RegExp = /^'a' *\+ *'b' *\+ *'\ud83d' *\+ *'\ude34' *\+ *'\ud83d' *\+ *'\ude04' *\+ *'c' *\+ *'d';$/;
 
-            const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-2.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 1
-                }
-            ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 1
+                    }
+                ).getObfuscatedCode();
 
-            const resultString: string = eval(obfuscatedCode);
+                assert.match(obfuscatedCode,  regExp);
+            });
 
-            assert.equal(resultString, expectedResultString);
+            it('should correctly evaluate splitted string with emoji', () => {
+                const expectedResultString: string = 'ab😴😄cd';
+
+                const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-2.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 1
+                    }
+                ).getObfuscatedCode();
+
+                const resultString: string = eval(obfuscatedCode);
+
+                assert.equal(resultString, expectedResultString);
+            });
         });
     });
 

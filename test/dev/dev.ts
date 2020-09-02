@@ -7,7 +7,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var string1 = 'ab😴😄cd';
+            var string1 = '👋🏼';
             
             console.log(string1);
         `,
@@ -17,7 +17,8 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             stringArray: true,
             stringArrayThreshold: 1,
             splitStrings: true,
-            splitStringsChunkLength: 1
+            splitStringsChunkLength: 1,
+            unicodeEscapeSequence: true
         }
     ).getObfuscatedCode();
 

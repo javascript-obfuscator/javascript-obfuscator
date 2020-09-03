@@ -101,15 +101,18 @@ export class NodeFactory {
     /**
      * @param {Expression} callee
      * @param {(Expression | SpreadElement)[]} args
+     * @param {boolean} optional
      * @returns {CallExpression}
      */
     public static callExpressionNode (
         callee: ESTree.Expression,
-        args: (ESTree.Expression | ESTree.SpreadElement)[] = []
+        args: (ESTree.Expression | ESTree.SpreadElement)[] = [],
+        optional: boolean = false,
     ): ESTree.CallExpression {
         return {
             type: NodeType.CallExpression,
             callee,
+            optional,
             arguments: args,
             metadata: { ignoredNode: false }
         };
@@ -339,17 +342,20 @@ export class NodeFactory {
      * @param {Expression | Super} object
      * @param {Expression} property
      * @param {boolean} computed
+     * @param {boolean} optional
      * @returns {MemberExpression}
      */
     public static memberExpressionNode (
         object: ESTree.Expression | ESTree.Super,
         property: ESTree.Expression,
-        computed: boolean = false
+        computed: boolean = false,
+        optional: boolean = false,
     ): ESTree.MemberExpression {
         return {
             type: NodeType.MemberExpression,
             computed,
             object,
+            optional,
             property,
             metadata: { ignoredNode: false }
         };

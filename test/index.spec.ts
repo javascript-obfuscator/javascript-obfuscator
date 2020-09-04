@@ -31,6 +31,7 @@ import './unit-tests/node/node-literal-utils/NodeLiteralUtils.spec';
 import './unit-tests/node/node-metadata/NodeMetadata.spec';
 import './unit-tests/node/node-statement-utils/NodeStatementUtils.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
+import './unit-tests/options/Options.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-code/ObfuscatedCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';

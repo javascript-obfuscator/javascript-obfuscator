@@ -21,6 +21,7 @@ import {
 } from 'class-validator';
 
 import { TInputOptions } from '../types/options/TInputOptions';
+import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { IOptions } from '../interfaces/options/IOptions';
@@ -43,9 +44,9 @@ import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfusca
 @injectable()
 export class Options implements IOptions {
     /**
-     * @type {Map<TypeFromEnum<typeof OptionsPreset>, TInputOptions>}
+     * @type {Map<TOptionsPreset, TInputOptions>}
      */
-    private static readonly optionPresetsMap: Map<TypeFromEnum<typeof OptionsPreset>, TInputOptions> = new Map([
+    private static readonly optionPresetsMap: Map<TOptionsPreset, TInputOptions> = new Map([
         [OptionsPreset.Default, DEFAULT_PRESET],
         [OptionsPreset.LowObfuscation, LOW_OBFUSCATION_PRESET],
         [OptionsPreset.MediumObfuscation, MEDIUM_OBFUSCATION_PRESET],
@@ -172,7 +173,7 @@ export class Options implements IOptions {
     public readonly numbersToExpressions!: boolean;
 
     /**
-     * @type {OptionsPreset}
+     * @type {TOptionsPreset}
      */
     @IsIn([
         OptionsPreset.Default,
@@ -180,7 +181,7 @@ export class Options implements IOptions {
         OptionsPreset.MediumObfuscation,
         OptionsPreset.HighObfuscation
     ])
-    public readonly optionsPreset!: TypeFromEnum<typeof OptionsPreset>;
+    public readonly optionsPreset!: TOptionsPreset;
 
     /**
      * @type {boolean}
@@ -335,9 +336,9 @@ export class Options implements IOptions {
         @inject(ServiceIdentifiers.TInputOptions) inputOptions: TInputOptions,
         @inject(ServiceIdentifiers.IOptionsNormalizer) optionsNormalizer: IOptionsNormalizer
     ) {
-        const optionsPreset: TInputOptions = Options.optionPresetsMap
-            .get(inputOptions.optionsPreset ?? OptionsPreset.Default)
-            ?? DEFAULT_PRESET;
+        const optionsPreset: TInputOptions = Options.getOptionsByPreset(
+            inputOptions.optionsPreset ?? OptionsPreset.Default
+        );
 
         Object.assign(this, optionsPreset, inputOptions);
 
@@ -348,5 +349,19 @@ export class Options implements IOptions {
         }
 
         Object.assign(this, optionsNormalizer.normalize(this));
+    }
+
+    /**
+     * @param {TOptionsPreset} optionsPreset
+     * @returns {TInputOptions}
+     */
+    public static getOptionsByPreset (optionsPreset: TOptionsPreset): TInputOptions {
+        const options: TInputOptions | null = Options.optionPresetsMap.get(optionsPreset) ?? null;
+
+        if (!options) {
+            throw new Error(`Options for preset name \`${optionsPreset}\` are not found`);
+        }
+
+        return options;
     }
 }

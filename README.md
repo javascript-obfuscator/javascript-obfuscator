@@ -229,6 +229,10 @@ Accepts `sourceCodesObject` that is a map which keys are identifiers of source c
 
 Returns a map object which keys are identifiers of source codes and values are `ObfuscationResult` objects.
 
+### `getOptionsByPreset(optionsPreset)`
+
+Returns an options object for the passed options preset name.
+
 ## CLI usage
 
 See [CLI options](#cli-options).

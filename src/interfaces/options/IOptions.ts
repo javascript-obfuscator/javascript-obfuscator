@@ -1,10 +1,10 @@
 import { TypeFromEnum } from '@gradecam/tsenum';
 
+import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
-import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export interface IOptions {
@@ -23,7 +23,7 @@ export interface IOptions {
     readonly inputFileName: string;
     readonly log: boolean;
     readonly numbersToExpressions: boolean;
-    readonly optionsPreset: TypeFromEnum<typeof OptionsPreset>;
+    readonly optionsPreset: TOptionsPreset;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;
     readonly reservedNames: string[];

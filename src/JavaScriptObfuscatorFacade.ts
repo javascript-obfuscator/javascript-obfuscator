@@ -2,15 +2,17 @@ import 'reflect-metadata';
 
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
+import { TDictionary } from './types/TDictionary';
 import { TInputOptions } from './types/options/TInputOptions';
 import { TObfuscationResultsObject } from './types/TObfuscationResultsObject';
-import { TDictionary } from './types/TDictionary';
+import { TOptionsPreset } from './types/options/TOptionsPreset';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
+import { Options } from './options/Options';
 import { Utils } from './utils/Utils';
 
 class JavaScriptObfuscatorFacade {
@@ -77,6 +79,14 @@ class JavaScriptObfuscatorFacade {
                 },
                 <TObfuscationResultsObject<TSourceCodesObject>>{}
             );
+    }
+
+    /**
+     * @param {TOptionsPreset} optionsPreset
+     * @returns {TInputOptions}
+     */
+    public static getOptionsByPreset (optionsPreset: TOptionsPreset): TInputOptions {
+        return Options.getOptionsByPreset(optionsPreset);
     }
 }
 

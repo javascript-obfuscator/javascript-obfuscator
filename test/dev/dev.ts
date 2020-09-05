@@ -7,18 +7,18 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var string1 = '👋🏼';
-            
-            console.log(string1);
+            console.log("\\ud83d\\ude03\\ud83d\\ude03\\ud83d\\ude03");
+            console.log("😃😃😃");
+            console.log("abc efgx");
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            stringArray: true,
+            unicodeEscapeSequence: false,
+            stringArray: false,
             stringArrayThreshold: 1,
             splitStrings: true,
-            splitStringsChunkLength: 1,
-            unicodeEscapeSequence: true
+            splitStringsChunkLength: 1
         }
     ).getObfuscatedCode();
 

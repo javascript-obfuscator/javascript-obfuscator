@@ -148,10 +148,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         }
 
         const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
+        const literalRawValue: ESTree.SimpleLiteral['raw'] = literalNode.raw;
 
         const stringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.stringArrayStorageAnalyzer
             .getItemDataForLiteralNode(literalNode);
-        const cacheKey: string = `${literalValue}-${Boolean(stringArrayStorageItemData)}`;
+        const cacheKey: string = `${literalRawValue}-${Boolean(stringArrayStorageItemData)}`;
         const useCachedValue: boolean = this.nodesCache.has(cacheKey)
             && stringArrayStorageItemData?.encoding !== StringArrayEncoding.Rc4;
 
@@ -161,7 +162,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
         const resultNode: ESTree.Node = stringArrayStorageItemData
             ? this.getStringArrayCallNode(stringArrayStorageItemData)
-            : this.getLiteralNode(literalValue);
+            : this.getLiteralNode(literalValue, literalRawValue ?? literalValue);
 
         this.nodesCache.set(cacheKey, resultNode);
 
@@ -172,10 +173,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {string} value
+     * @param {string} rawValue
      * @returns {Node}
      */
-    private getLiteralNode (value: string): ESTree.Node {
-        return NodeFactory.literalNode(value);
+    private getLiteralNode (value: string, rawValue: string): ESTree.Node {
+        return NodeFactory.literalNode(value, rawValue);
     }
 
     /**
@@ -217,8 +219,10 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
+        const valueToEncode: string = NodeLiteralUtils.getUnwrappedLiteralNodeRawValue(literalNode);
+
         return NodeFactory.literalNode(
-            this.escapeSequenceEncoder.encode(literalNode.value, this.options.unicodeEscapeSequence)
+            this.escapeSequenceEncoder.encode(valueToEncode, this.options.unicodeEscapeSequence)
         );
     }
 }

@@ -5,6 +5,16 @@ import { IEscapeSequenceEncoder } from '../interfaces/utils/IEscapeSequenceEncod
 @injectable()
 export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
     /**
+     * @type {string}
+     */
+    private static readonly unicodeLeadingCharacter: string = '\\u';
+
+    /**
+     * @type {string}
+     */
+    private static readonly hexLeadingCharacter: string = '\\x';
+
+    /**
      * @type {Map<string, string>}
      */
     private readonly stringsCache: Map <string, string> = new Map();
@@ -21,6 +31,24 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
             return <string>this.stringsCache.get(cacheKey);
         }
 
+        const encodedString: string = this.isEscapedString(string)
+            ? this.encodeEscapedString(string)
+            : this.encodeBaseString(string, encodeAllSymbols);
+
+        this.stringsCache.set(cacheKey, encodedString);
+        this.stringsCache.set(`${encodedString}-${String(encodeAllSymbols)}`, encodedString);
+
+        return encodedString;
+    }
+
+    /**
+     * Base string
+     *
+     * @param {string} string
+     * @param {boolean} encodeAllSymbols
+     * @returns {string}
+     */
+    public encodeBaseString (string: string, encodeAllSymbols: boolean): string {
         const radix: number = 16;
         const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
         const escapeSequenceRegExp: RegExp = new RegExp('[\'\"\\\\\\s]');
@@ -29,25 +57,44 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
         let prefix: string;
         let template: string;
 
-        const result: string = string.replace(replaceRegExp, (character: string): string => {
+        return string.replace(replaceRegExp, (character: string): string => {
             if (!encodeAllSymbols && !escapeSequenceRegExp.exec(character)) {
                 return character;
             }
 
             if (regExp.exec(character)) {
-                prefix = '\\x';
+                prefix = EscapeSequenceEncoder.hexLeadingCharacter;
                 template = '00';
             } else {
-                prefix = '\\u';
+                prefix = EscapeSequenceEncoder.unicodeLeadingCharacter;
                 template = '0000';
             }
 
             return `${prefix}${(template + character.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         });
+    }
 
-        this.stringsCache.set(cacheKey, result);
-        this.stringsCache.set(`${result}-${String(encodeAllSymbols)}`, result);
+    /**
+     * String with escaped unicode escape sequence
+     *
+     * Example:
+     * \\ud83d\\ude03
+     *
+     * @param {string} string
+     * @returns {string}
+     */
+    public encodeEscapedString (string: string): string {
+        return string;
+    }
 
-        return result;
+    /**
+     * @param {string} string
+     * @returns {boolean}
+     */
+    private isEscapedString (string: string): boolean {
+        const unicodeLeadingCharacterRegExp: RegExp = new RegExp(`\\\\${EscapeSequenceEncoder.unicodeLeadingCharacter}`);
+        const hexLeadingCharacterRegExp: RegExp = new RegExp(`\\\\${EscapeSequenceEncoder.hexLeadingCharacter}`);
+
+        return unicodeLeadingCharacterRegExp.test(string) || hexLeadingCharacterRegExp.test(string);
     }
 }

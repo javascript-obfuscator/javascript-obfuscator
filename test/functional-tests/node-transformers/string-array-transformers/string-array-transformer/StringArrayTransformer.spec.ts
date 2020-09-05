@@ -815,4 +815,110 @@ describe('StringArrayTransformer', function () {
             assert.match(obfuscatedCode, exportNamedDeclarationRegExp);
         });
     });
+
+    describe('Variant #20: already escaped string with unicode escape sequence', () => {
+        describe('Variant #1: unicode escape sequence', () => {
+            describe('Variant #1: `unicodeEscapeSequence` option is disabled', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\ud83d\\ude03\\ud83d\\ude03\\ud83d\\ude03'];/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/escaped-with-unicode-escape-sequence-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            unicodeEscapeSequence: false
+
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should keep unicode escape sequence on the string after adding to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+            });
+
+            describe('Variant #2: `unicodeEscapeSequence` option is enabled', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\ud83d\\ude03\\ud83d\\ude03\\ud83d\\ude03'];/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/escaped-with-unicode-escape-sequence-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            unicodeEscapeSequence: true
+
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should keep unicode escape sequence on the string after adding to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+            });
+        });
+
+        describe('Variant #2: hex escape sequence', () => {
+            describe('Variant #1: `unicodeEscapeSequence` option is disabled', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\x48\\x65\\x6c\\x6c\\x6f'];/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/escaped-with-unicode-escape-sequence-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            unicodeEscapeSequence: false
+
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should keep unicode escape sequence on the string after adding to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+            });
+
+            describe('Variant #2: `unicodeEscapeSequence` option is enabled', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\x48\\x65\\x6c\\x6c\\x6f'];/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/escaped-with-unicode-escape-sequence-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            unicodeEscapeSequence: true
+
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should keep unicode escape sequence on the string after adding to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+            });
+        });
+    });
 });

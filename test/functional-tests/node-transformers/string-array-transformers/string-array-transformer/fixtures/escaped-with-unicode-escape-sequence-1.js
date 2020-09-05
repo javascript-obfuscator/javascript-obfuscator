@@ -1,0 +1,1 @@
+var test = '\ud83d\ude03\ud83d\ude03\ud83d\ude03';

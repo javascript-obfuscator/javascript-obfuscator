@@ -111,10 +111,11 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
             return;
         }
 
-        this.stringArrayStorageData.set(
-            literalNode,
-            this.stringArrayStorage.getOrThrow(literalNode.value)
-        );
+        // we have to use `raw` value here because it can contains unicode escape sequence
+        const key: string = NodeLiteralUtils.getUnwrappedLiteralNodeRawValue(literalNode);
+        const stringArrayStorageItemData: IStringArrayStorageItemData = this.stringArrayStorage.getOrThrow(key);
+
+        this.stringArrayStorageData.set(literalNode, stringArrayStorageItemData);
     }
 
     /**

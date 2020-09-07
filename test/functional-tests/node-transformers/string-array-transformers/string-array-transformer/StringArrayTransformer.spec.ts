@@ -63,7 +63,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #3: `stringArrayIntermediateCalls` option is enabled', () => {
+    describe('Variant #3: `stringArrayIntermediateVariablesCount` option is enabled', () => {
         describe('Variant #1: correct amount of intermediate calls', () => {
             const stringArrayCallRegExp: RegExp = new RegExp(
                     'return _0x([a-f0-9]){4,6};' +
@@ -85,7 +85,7 @@ describe('StringArrayTransformer', function () {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        stringArrayIntermediateCalls: 3
+                        stringArrayIntermediateVariablesCount: 3
                     }
                 ).getObfuscatedCode();
             });
@@ -100,7 +100,7 @@ describe('StringArrayTransformer', function () {
             let evaluationResult: number;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/intermediate-calls-eval.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-eval.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
@@ -108,7 +108,7 @@ describe('StringArrayTransformer', function () {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        stringArrayIntermediateCalls: 5
+                        stringArrayIntermediateVariablesCount: 5
                     }
                 ).getObfuscatedCode();
 
@@ -395,7 +395,7 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #2: `stringArrayIntermediateCalls` option is enabled', () => {
+        describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
             const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
                     'return _0x([a-f0-9]){4,6};' +
                 '};' +
@@ -422,7 +422,7 @@ describe('StringArrayTransformer', function () {
                             StringArrayEncoding.None,
                             StringArrayEncoding.Base64
                         ],
-                        stringArrayIntermediateCalls: 3,
+                        stringArrayIntermediateVariablesCount: 3,
                         stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();

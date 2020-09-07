@@ -337,7 +337,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         return {
             name: this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength),
             intermediateNames: Array.from(
-                {length: this.options.stringArrayIntermediateCalls},
+                {length: this.options.stringArrayIntermediateVariablesCount},
                 () => this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength)
             )
         };

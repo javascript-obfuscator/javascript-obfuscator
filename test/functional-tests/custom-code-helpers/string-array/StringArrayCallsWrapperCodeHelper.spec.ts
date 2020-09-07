@@ -53,7 +53,7 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
         });
     });
 
-    describe('`stringArrayIntermediateCalls` option is set', () => {
+    describe('`stringArrayIntermediateVariablesCount` option is set', () => {
         const stringArrayCallRegExp: RegExp = new RegExp(
                 'return _0x([a-f0-9]){4,6};' +
             '};' +
@@ -74,7 +74,7 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1,
-                    stringArrayIntermediateCalls: 3
+                    stringArrayIntermediateVariablesCount: 3
                 }
             ).getObfuscatedCode();
         });

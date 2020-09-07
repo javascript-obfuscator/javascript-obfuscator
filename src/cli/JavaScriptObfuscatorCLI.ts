@@ -340,7 +340,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--string-array-intermediate-calls <number>',
+                '--string-array-intermediate-variables-count <number>',
                 'Sets the passed amount of intermediate variables for the string array.',
                 parseInt
             )

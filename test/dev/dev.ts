@@ -19,7 +19,7 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayIntermediateCalls: 2,
+            stringArrayIntermediateVariablesCount: 2,
             stringArrayEncoding: [
                 StringArrayEncoding.Rc4
             ]

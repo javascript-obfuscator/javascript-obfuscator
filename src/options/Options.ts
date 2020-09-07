@@ -302,7 +302,7 @@ export class Options implements IOptions {
      */
     @IsNumber()
     @Min(0)
-    public readonly stringArrayIntermediateCalls!: number;
+    public readonly stringArrayIntermediateVariablesCount!: number;
 
     /**
      * @type {number}

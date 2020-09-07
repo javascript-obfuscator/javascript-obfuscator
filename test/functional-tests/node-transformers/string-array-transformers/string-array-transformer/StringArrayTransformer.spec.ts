@@ -63,7 +63,65 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #3: string contains non-latin and non-digit characters and `unicodeEscapeSequence` is disabled', () => {
+    describe('Variant #3: `stringArrayIntermediateVariablesCount` option is enabled', () => {
+        describe('Variant #1: correct amount of intermediate calls', () => {
+            const stringArrayCallRegExp: RegExp = new RegExp(
+                    'return _0x([a-f0-9]){4,6};' +
+                '};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var test *= *_0x([a-f0-9]){4}\\(\'0x0\'\\);'
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIntermediateVariablesCount: 3
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should add intermediate calls to the string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallRegExp);
+            });
+        });
+
+        describe('Variant #2: correct evaluation of the intermediate calls', () => {
+            const expectedEvaluationResult: number = 15;
+            let evaluationResult: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-eval.js');
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIntermediateVariablesCount: 5
+                    }
+                ).getObfuscatedCode();
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should correctly evaluate intermediate calls', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+    });
+
+    describe('Variant #4: string contains non-latin and non-digit characters and `unicodeEscapeSequence` is disabled', () => {
         let testFunc: () => void;
 
         before(() => {
@@ -84,7 +142,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #4: same literal node values', () => {
+    describe('Variant #5: same literal node values', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
@@ -112,7 +170,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #5: `unicodeEscapeSequence` option is enabled', () => {
+    describe('Variant #6: `unicodeEscapeSequence` option is enabled', () => {
         const regExp: RegExp = /^var test *= *'\\x74\\x65\\x73\\x74';$/;
 
         let obfuscatedCode: string;
@@ -135,7 +193,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #6: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
+    describe('Variant #7: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('\\x30\\x78\\x30'\);/;
 
@@ -164,7 +222,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #7: short literal node value', () => {
+    describe('Variant #8: short literal node value', () => {
         const regExp: RegExp = /var test *= *'te';/;
 
         let obfuscatedCode: string;
@@ -187,7 +245,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #8: base64 encoding', () => {
+    describe('Variant #9: base64 encoding', () => {
         const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA==')}'];`);
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
@@ -216,7 +274,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #9: rc4 encoding', () => {
+    describe('Variant #10: rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
             const regExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
 
@@ -282,7 +340,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #10: none and base64 encoding', () => {
+    describe('Variant #11: none and base64 encoding', () => {
         describe('Variant #1: string array values', () => {
             const samplesCount: number = 100;
             const expectedMatchesChance: number = 0.5;
@@ -336,9 +394,47 @@ describe('StringArrayTransformer', function () {
                 assert.closeTo(base64EncodingMatchesChance, expectedMatchesChance, expectedMatchesDelta);
             });
         });
+
+        describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
+            const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                    'return _0x([a-f0-9]){4,6};' +
+                '};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
+                'var test *= *_0x([a-f0-9]){4}\\(\'0x0\'\\);'
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [
+                            StringArrayEncoding.None,
+                            StringArrayEncoding.Base64
+                        ],
+                        stringArrayIntermediateVariablesCount: 3,
+                        stringArrayThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
+                assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+            });
+        });
     });
 
-    describe('Variant #11: none and rc4 encoding', () => {
+    describe('Variant #12: none and rc4 encoding', () => {
         describe('Variant #1: string array calls wrapper call', () => {
             const samplesCount: number = 100;
             const expectedMatchesChance: number = 0.5;
@@ -394,7 +490,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #12: base64 and rc4 encoding', () => {
+    describe('Variant #13: base64 and rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
             const samplesCount: number = 100;
             const expectedMatchesChance: number = 0.5;
@@ -450,7 +546,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #13: `stringArrayThreshold` option value', () => {
+    describe('Variant #14: `stringArrayThreshold` option value', () => {
         const samples: number = 1000;
         const stringArrayThreshold: number = 0.5;
         const delta: number = 0.1;
@@ -493,7 +589,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #14: string array calls wrapper name', () => {
+    describe('Variant #15: string array calls wrapper name', () => {
         const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
 
         let obfuscatedCode: string;
@@ -517,7 +613,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #15: `reservedStrings` option is enabled', () => {
+    describe('Variant #16: `reservedStrings` option is enabled', () => {
         describe('Variant #1: base `reservedStrings` values', () => {
             describe('Variant #1: single reserved string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
@@ -689,7 +785,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #16: object expression key literal', () => {
+    describe('Variant #17: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
             const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
@@ -747,7 +843,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #17: import declaration source literal', () => {
+    describe('Variant #18: import declaration source literal', () => {
         const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -770,7 +866,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #18: export all declaration source literal', () => {
+    describe('Variant #19: export all declaration source literal', () => {
         const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -793,7 +889,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #19: export named declaration source literal', () => {
+    describe('Variant #20: export named declaration source literal', () => {
         const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;

@@ -1,5 +1,9 @@
 Change Log
 
+v2.2.0
+---
+* **New option:** `stringArrayIntermediateVariablesCount` sets the passed amount of intermediate variables for the `string array`
+
 v2.1.0
 ---
 * **New API:** `getOptionsByPreset` allows to get options for the passed options preset name 

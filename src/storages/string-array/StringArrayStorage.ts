@@ -1,17 +1,17 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
-
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
+import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICryptUtilsSwappedAlphabet } from '../../interfaces/utils/ICryptUtilsSwappedAlphabet';
 import { IEncodedValue } from '../../interfaces/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
+import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
@@ -87,9 +87,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private stringArrayStorageName!: string;
 
     /**
-     * @type {Map<TStringArrayEncoding | null, string>}
+     * @type {Map<TStringArrayEncoding | null, IStringArrayCallsWrapperNames>}
      */
-    private readonly stringArrayStorageCallsWrapperNamesMap: Map<TStringArrayEncoding | null, string> = new Map();
+    private readonly stringArrayStorageCallsWrapperNamesMap: Map<TStringArrayEncoding | null, IStringArrayCallsWrapperNames> = new Map();
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -171,24 +171,24 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
 
     /**
      * @param {TStringArrayEncoding | null} stringArrayEncoding
-     * @returns {string}
+     * @returns {IStringArrayCallsWrapperNames}
      */
-    public getStorageCallsWrapperName (stringArrayEncoding: TStringArrayEncoding | null): string {
-        const storageCallsWrapperName: string | null = this.stringArrayStorageCallsWrapperNamesMap.get(stringArrayEncoding) ?? null;
+    public getStorageCallsWrapperNames (stringArrayEncoding: TStringArrayEncoding | null): IStringArrayCallsWrapperNames {
+        const storageCallsWrapperName: IStringArrayCallsWrapperNames | null = this.stringArrayStorageCallsWrapperNamesMap
+            .get(stringArrayEncoding) ?? null;
 
         if (storageCallsWrapperName) {
             return storageCallsWrapperName;
         }
 
-        const newStorageCallsWrapperName: string = this.identifierNamesGenerator
-            .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+        const newStorageCallsWrapperNames: IStringArrayCallsWrapperNames = this.getStringArrayCallsWrapperNames();
 
         this.stringArrayStorageCallsWrapperNamesMap.set(
             stringArrayEncoding,
-            newStorageCallsWrapperName
+            newStorageCallsWrapperNames
         );
 
-        return newStorageCallsWrapperName;
+        return newStorageCallsWrapperNames;
     }
 
     public rotateStorage (): void {
@@ -328,5 +328,18 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
                 return { encodedValue, encoding, decodeKey };
             }
         }
+    }
+
+    /**
+     * @returns {IStringArrayCallsWrapperNames}
+     */
+    private getStringArrayCallsWrapperNames (): IStringArrayCallsWrapperNames {
+        return {
+            name: this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength),
+            intermediateNames: Array.from(
+                {length: this.options.stringArrayIntermediateVariablesCount},
+                () => this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength)
+            )
+        };
     }
 }

@@ -544,6 +544,7 @@ describe('OptionsNormalizer', () => {
                     shuffleStringArray: true,
                     stringArray: false,
                     stringArrayEncoding: [StringArrayEncoding.Rc4],
+                    stringArrayIntermediateVariablesCount: 5,
                     stringArrayThreshold: 0.5,
                     rotateStringArray: true
                 });
@@ -553,6 +554,7 @@ describe('OptionsNormalizer', () => {
                     shuffleStringArray: false,
                     stringArray: false,
                     stringArrayEncoding: [StringArrayEncoding.None],
+                    stringArrayIntermediateVariablesCount: 0,
                     stringArrayThreshold: 0,
                     rotateStringArray: false
                 };
@@ -590,6 +592,7 @@ describe('OptionsNormalizer', () => {
                     rotateStringArray: true,
                     shuffleStringArray: true,
                     stringArray: true,
+                    stringArrayIntermediateVariablesCount: 5,
                     stringArrayThreshold: 0
                 });
 
@@ -598,6 +601,7 @@ describe('OptionsNormalizer', () => {
                     rotateStringArray: false,
                     shuffleStringArray: false,
                     stringArray: false,
+                    stringArrayIntermediateVariablesCount: 0,
                     stringArrayThreshold: 0
                 };
             });

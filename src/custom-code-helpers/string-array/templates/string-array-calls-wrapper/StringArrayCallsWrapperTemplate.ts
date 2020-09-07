@@ -12,5 +12,7 @@ export function StringArrayCallsWrapperTemplate (): string {
         
             return value;
         };
+        
+        {intermediateTemplate}
     `;
 }

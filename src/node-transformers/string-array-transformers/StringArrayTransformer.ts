@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
@@ -194,8 +195,16 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             callExpressionArgs.push(StringArrayTransformer.getRc4KeyLiteralNode(decodeKey));
         }
 
+        const stringArrayCallsWrapperNames: IStringArrayCallsWrapperNames =
+            this.stringArrayStorage.getStorageCallsWrapperNames(encoding);
+        const stringArrayCallsWrapperName: string = stringArrayCallsWrapperNames.intermediateNames.length
+            ? this.randomGenerator
+                .getRandomGenerator()
+                .pickone(stringArrayCallsWrapperNames.intermediateNames)
+            : stringArrayCallsWrapperNames.name;
+
         const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
-            this.stringArrayStorage.getStorageCallsWrapperName(encoding)
+            stringArrayCallsWrapperName
         );
 
         return NodeFactory.callExpressionNode(

@@ -18,6 +18,7 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ],
+            stringArrayIntermediateVariablesCount: 0,
             stringArrayThreshold: 0
         };
     }

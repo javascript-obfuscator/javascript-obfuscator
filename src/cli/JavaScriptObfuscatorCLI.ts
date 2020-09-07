@@ -340,6 +340,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
+                '--string-array-intermediate-variables-count <number>',
+                'Sets the passed amount of intermediate variables for the string array.',
+                parseInt
+            )
+            .option(
                 '--string-array-threshold <number>',
                 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)',
                 parseFloat

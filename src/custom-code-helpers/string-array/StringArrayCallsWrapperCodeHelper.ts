@@ -9,11 +9,13 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { SelfDefendingTemplate } from './templates/string-array-calls-wrapper/SelfDefendingTemplate';
 import { StringArrayCallsWrapperTemplate } from './templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
+import { StringArrayCallsWrapperIntermediateTemplate } from './templates/string-array-calls-wrapper/StringArrayCallsWrapperIntermediateTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -27,10 +29,10 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     protected stringArrayName!: string;
 
     /**
-     * @type {string}
+     * @type {IStringArrayCallsWrapperNames}
      */
     @initializable()
-    protected stringArrayCallsWrapperName!: string;
+    protected stringArrayCallsWrapperNames!: IStringArrayCallsWrapperNames;
 
     /**
      * @type {IEscapeSequenceEncoder}
@@ -67,14 +69,14 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
 
     /**
      * @param {string} stringArrayName
-     * @param {string} stringArrayCallsWrapperName
+     * @param {IStringArrayCallsWrapperNames} stringArrayCallsWrapperNames
      */
     public initialize (
         stringArrayName: string,
-        stringArrayCallsWrapperName: string
+        stringArrayCallsWrapperNames: IStringArrayCallsWrapperNames
     ): void {
         this.stringArrayName = stringArrayName;
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.stringArrayCallsWrapperNames = stringArrayCallsWrapperNames;
     }
 
     /**
@@ -90,13 +92,15 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      */
     protected getCodeHelperTemplate (): string {
         const decodeCodeHelperTemplate: string = this.getDecodeStringArrayTemplate();
+        const intermediateTemplate: string = this.getIntermediateTemplate();
 
         const preservedNames: string[] = [`^${this.stringArrayName}$`];
 
         return this.customCodeHelperObfuscator.obfuscateTemplate(
             this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeCodeHelperTemplate,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                intermediateTemplate,
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name,
                 stringArrayName: this.stringArrayName
             }),
             {
@@ -126,9 +130,34 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
                 this.escapeSequenceEncoder
             ),
             {
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name,
                 stringArrayName: this.stringArrayName
             }
         );
+    }
+
+    /**
+     * @returns {string}
+     */
+    private getIntermediateTemplate (): string {
+        const stringArrayCallsWrapperIntermediateNamesLength: number = this.stringArrayCallsWrapperNames
+            .intermediateNames
+            .length;
+
+        let intermediateTemplate: string = '';
+
+        for (let i = 0; i < stringArrayCallsWrapperIntermediateNamesLength; i++) {
+            const intermediateName: string = this.stringArrayCallsWrapperNames.intermediateNames[i];
+
+            intermediateTemplate += this.customCodeHelperFormatter.formatTemplate(
+                StringArrayCallsWrapperIntermediateTemplate(),
+                {
+                    intermediateName,
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name
+                }
+            );
+        }
+
+        return intermediateTemplate;
     }
 }

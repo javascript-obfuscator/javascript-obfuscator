@@ -64,7 +64,7 @@ import './functional-tests/custom-code-helpers/string-array/StringArrayCallsWrap
 import './functional-tests/custom-code-helpers/string-array/StringArrayCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper.spec';
 import './functional-tests/custom-code-helpers/string-array/group/StringArrayCodeHelperGroup.spec';
-import './functional-tests/custom-code-helpers/string-array/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/custom-code-helpers/string-array/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperTemplate.spec';
 import './functional-tests/custom-code-helpers/string-array/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 import './functional-tests/custom-code-helpers/string-array/templates/string-array-template/StringArrayTemplate.spec';
 import './functional-tests/generators/identifier-names-generators/dictionary-identifier-names-generator/DictionaryIdentifierNamesGenerator.spec';

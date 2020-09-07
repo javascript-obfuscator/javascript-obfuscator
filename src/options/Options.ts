@@ -298,6 +298,13 @@ export class Options implements IOptions {
     public readonly stringArrayEncoding!: TStringArrayEncoding[];
 
     /**
+     * @type {boolean}
+     */
+    @IsNumber()
+    @Min(0)
+    public readonly stringArrayIntermediateCalls!: number;
+
+    /**
      * @type {number}
      */
     @IsNumber()

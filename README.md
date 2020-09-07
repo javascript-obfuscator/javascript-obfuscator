@@ -360,6 +360,7 @@ Following options are available for the JS Obfuscator:
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIntermediateCalls: true,
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -408,6 +409,7 @@ Following options are available for the JS Obfuscator:
     --split-strings-chunk-length <number>
     --string-array <boolean>
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
+    --string-array-intermediate-calls <number>
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
@@ -947,6 +949,44 @@ stringArrayEncoding: [
     'rc4'
 ]
 ```
+
+### `stringArrayIntermediateCalls`
+Type: `number` Default: `0`
+
+##### :warning: [`stringArray`](#stringarray) option must be enabled
+
+Sets the passed amount of intermediate variables for the `string array`. 
+
+Example:
+```ts
+// Input
+const foo = 'foo';
+const bar = 'bar';
+const baz = 'baz';
+
+console.log(foo, bar, baz);
+
+// Output, stringArrayIntermediateCalls: 5
+const _0x513c = [
+    'foo',
+    'bar',
+    'baz',
+    'log'
+];
+const _0x19a1 = function (_0x513ce6, _0x135380) {
+    _0x513ce6 = _0x513ce6 - 0x0;
+    let _0x19a103 = _0x513c[_0x513ce6];
+    return _0x19a103;
+};
+const _0x3745 = _0x19a1;
+const _0x261a = _0x19a1;
+const _0x2f15 = _0x19a1;
+const _0x4a63 = _0x19a1;
+const _0x2e9d = _0x19a1;
+const foo = _0x4a63('0x0');
+const bar = _0x3745('0x1');
+const baz = _0x2e9d('0x2');
+```
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
@@ -1046,6 +1086,7 @@ Performance will 50-100% slower than without obfuscation
     splitStringsChunkLength: 5,
     stringArray: true,
     stringArrayEncoding: ['rc4'],
+    stringArrayIntermediateCalls: 10,
     stringArrayThreshold: 1,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1078,6 +1119,7 @@ Performance will 30-35% slower than without obfuscation
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: ['base64'],
+    stringArrayIntermediateCalls: 5,
     stringArrayThreshold: 0.75,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1107,6 +1149,7 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIntermediateCalls: 0,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }
@@ -1133,6 +1176,7 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIntermediateCalls: 0,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }

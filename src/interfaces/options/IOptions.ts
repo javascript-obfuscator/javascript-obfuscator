@@ -41,6 +41,7 @@ export interface IOptions {
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding[];
+    readonly stringArrayIntermediateCalls: number;
     readonly stringArrayThreshold: number;
     readonly target: TypeFromEnum<typeof ObfuscationTarget>;
     readonly transformObjectKeys: boolean;

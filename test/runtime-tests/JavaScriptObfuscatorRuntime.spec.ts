@@ -39,6 +39,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
             StringArrayEncoding.Base64,
             StringArrayEncoding.Rc4
         ],
+        stringArrayIntermediateCalls: 20,
         stringArrayThreshold: 1,
         transformObjectKeys: true,
         unicodeEscapeSequence: true

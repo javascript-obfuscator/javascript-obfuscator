@@ -719,7 +719,10 @@ describe('JavaScriptObfuscator', () => {
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();
             });
@@ -845,6 +848,7 @@ describe('JavaScriptObfuscator', () => {
                             StringArrayEncoding.Base64,
                             StringArrayEncoding.Rc4
                         ],
+                        stringArrayIntermediateCalls: 10,
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false
@@ -938,7 +942,6 @@ describe('JavaScriptObfuscator', () => {
                             stringArrayEncoding: [StringArrayEncoding.Rc4]
                         }
                     ).getObfuscatedCode();
-
                 });
 
                 it('does not break on run', () => {

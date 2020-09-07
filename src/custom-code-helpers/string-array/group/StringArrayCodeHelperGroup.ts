@@ -11,6 +11,7 @@ import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analy
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IStringArrayCallsWrapperNames } from '../../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
 import { IStringArrayStorage } from '../../../interfaces/storages/string-array-storage/IStringArrayStorage';
 
 import { initializable } from '../../../decorators/Initializable';
@@ -138,11 +139,12 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
             const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
                 this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
-            const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+            const stringArrayCallsWrapperNames: IStringArrayCallsWrapperNames =
+                this.stringArrayStorage.getStorageCallsWrapperNames(stringArrayEncoding);
 
             stringArrayCallsWrapperCodeHelper.initialize(
                 stringArrayName,
-                stringArrayCallsWrapperName
+                stringArrayCallsWrapperNames
             );
 
             this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);

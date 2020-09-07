@@ -16,5 +16,6 @@ export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     stringArrayEncoding: [
         StringArrayEncoding.Rc4
     ],
+    stringArrayIntermediateCalls: 10,
     stringArrayThreshold: 1
 });

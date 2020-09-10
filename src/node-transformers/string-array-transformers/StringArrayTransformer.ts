@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { TStatement } from '../../types/node/TStatement';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayIntermediateCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayIntermediateCallsWrapperDataByEncoding';
 import { TStringArrayTransformerCustomNodeFactory } from '../../types/container/custom-nodes/TStringArrayTransformerCustomNodeFactory';
@@ -17,6 +18,7 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { ILiteralNodesCacheStorage } from '../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayIntermediateCallsWrapperData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayIntermediateCallsWrapperData';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
@@ -32,7 +34,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
-import { NumberUtils } from '../../utils/NumberUtils';
+import { StringArrayCallNode } from '../../custom-nodes/string-array-nodes/StringArrayCallNode';
 import { StringArrayIntermediateCallsWrapperNode } from '../../custom-nodes/string-array-nodes/StringArrayIntermediateCallsWrapperNode';
 
 @injectable()
@@ -118,30 +120,6 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.stringArrayTransformerCustomNodeFactory = stringArrayTransformerCustomNodeFactory;
-    }
-
-    /**
-     * @param {string} hexadecimalIndex
-     * @returns {Literal}
-     */
-    private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
-        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
-
-        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
-
-        return hexadecimalLiteralNode;
-    }
-
-    /**
-     * @param {string} literalValue
-     * @returns {Literal}
-     */
-    private static getRc4KeyLiteralNode (literalValue: string): ESTree.Literal {
-        const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(literalValue);
-
-        NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
-
-        return rc4KeyLiteralNode;
     }
 
     /**
@@ -248,27 +226,21 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Node {
+        const stringArrayCallsWrapperName: string = this.getStringArrayCallsWrapperName(stringArrayStorageItemData);
         const { index, decodeKey } = stringArrayStorageItemData;
 
-        const hexadecimalIndex: string = NumberUtils.toHex(index);
-        const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
-            StringArrayTransformer.getHexadecimalLiteralNode(hexadecimalIndex)
-        ];
+        const stringArrayCallCustomNode: ICustomNode<TInitialData<StringArrayCallNode>> =
+            this.stringArrayTransformerCustomNodeFactory(StringArrayTransformerCustomNode.StringArrayCallNode);
 
-        if (decodeKey) {
-            callExpressionArgs.push(StringArrayTransformer.getRc4KeyLiteralNode(decodeKey));
+        stringArrayCallCustomNode.initialize(stringArrayCallsWrapperName, index, decodeKey);
+
+        const statementNode: TStatement = stringArrayCallCustomNode.getNode()[0];
+
+        if (!NodeGuards.isExpressionStatementNode(statementNode)) {
+            throw new Error('`stringArrayCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
         }
 
-        const stringArrayCallsWrapperName: string = this.getStringArrayCallsWrapperName(stringArrayStorageItemData);
-
-        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
-            stringArrayCallsWrapperName
-        );
-
-        return NodeFactory.callExpressionNode(
-            stringArrayIdentifierNode,
-            callExpressionArgs
-        );
+        return statementNode.expression;
     }
 
     /**
@@ -280,7 +252,6 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
         const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(encoding);
 
-        // Name of the string array calls wrapper itself
         if (!this.options.stringArrayIntermediateVariablesCount) {
             return stringArrayCallsWrapperName;
         }
@@ -291,13 +262,12 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             throw new Error('Cannot find current lexical scope node');
         }
 
-        const stringArrayIntermediateCallsWrapperDataByEncoding: TStringArrayIntermediateCallsWrapperDataByEncoding = currentLexicalScopeNode
-            ? this.stringArrayIntermediateCallsWrapperDataByEncodingMap.get(currentLexicalScopeNode) ?? {}
-            : {};
+        const stringArrayIntermediateCallsWrapperDataByEncoding: TStringArrayIntermediateCallsWrapperDataByEncoding =
+            this.stringArrayIntermediateCallsWrapperDataByEncodingMap.get(currentLexicalScopeNode) ?? {};
         const stringArrayIntermediateCallsWrapperNames: string[] = stringArrayIntermediateCallsWrapperDataByEncoding[encoding]?.names ?? [];
         const isFilledIntermediateCallsWrapperNamesList: boolean = stringArrayIntermediateCallsWrapperNames.length === this.options.stringArrayIntermediateVariablesCount;
 
-        if (currentLexicalScopeNode && !isFilledIntermediateCallsWrapperNamesList) {
+        if (!isFilledIntermediateCallsWrapperNamesList) {
             const nextIntermediateCallsWrapperName: string = this.identifierNamesGenerator.generateForLexicalScope(currentLexicalScopeNode);
 
             stringArrayIntermediateCallsWrapperNames.push(nextIntermediateCallsWrapperName);
@@ -348,6 +318,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                 ? lexicalScopeNode
                 : lexicalScopeNode.body;
 
+        // invalid lexical scope node
         if (
             !lexicalScopeBodyNode.parentNode
             || !NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)
@@ -362,9 +333,10 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             return lexicalScopeNode;
         }
 
-        const stringArrayIntermediateCallsWrapperDataList =
+        const stringArrayIntermediateCallsWrapperDataList: (IStringArrayIntermediateCallsWrapperData | undefined)[] =
             Object.values(stringArrayIntermediateCallsWrapperDataByEncoding);
 
+        // iterates over data for each encoding type
         for (const stringArrayIntermediateCallsWrapperData of stringArrayIntermediateCallsWrapperDataList) {
             if (!stringArrayIntermediateCallsWrapperData) {
                 continue;
@@ -372,6 +344,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
             const {encoding, names} = stringArrayIntermediateCallsWrapperData;
 
+            // iterates over each name of intermediate calls wrapper name
             for (const stringArrayIntermediateCallsWrapperName of names) {
                 const stringArrayRootCallsWrapperName: string = this.getStringArrayRootCallsWrapperName(encoding);
                 const stringArrayIntermediateCallsWrapperNode: ICustomNode<TInitialData<StringArrayIntermediateCallsWrapperNode>> =

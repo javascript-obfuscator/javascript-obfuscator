@@ -7,7 +7,7 @@ export interface IStringArrayIntermediateCallsWrapperData {
     encoding: TStringArrayEncoding;
 
     /**
-     * @type {string}
+     * @type {string[]}
      */
-    name: string;
+    names: string[];
 }

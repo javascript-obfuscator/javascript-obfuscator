@@ -280,13 +280,16 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const stringArrayIntermediateCallsWrapperDataByEncoding: TStringArrayIntermediateCallsWrapperDataByEncoding = currentLexicalScopeNode
             ? this.stringArrayIntermediateCallsWrapperDataByEncodingMap.get(currentLexicalScopeNode) ?? {}
             : {};
-        let stringArrayIntermediateCallsWrapperName: string = stringArrayIntermediateCallsWrapperDataByEncoding[encoding]?.name ?? '';
+        const stringArrayIntermediateCallsWrapperNames: string[] = stringArrayIntermediateCallsWrapperDataByEncoding[encoding]?.names ?? [];
+        const isFilledIntermediateCallsWrapperNamesList: boolean = stringArrayIntermediateCallsWrapperNames.length === this.options.stringArrayIntermediateVariablesCount;
 
-        if (currentLexicalScopeNode && !stringArrayIntermediateCallsWrapperName) {
-            stringArrayIntermediateCallsWrapperName = this.identifierNamesGenerator.generateForLexicalScope(currentLexicalScopeNode);
+        if (currentLexicalScopeNode && !isFilledIntermediateCallsWrapperNamesList) {
+            const nextIntermediateCallsWrapperName: string = this.identifierNamesGenerator.generateForLexicalScope(currentLexicalScopeNode);
+
+            stringArrayIntermediateCallsWrapperNames.push(nextIntermediateCallsWrapperName);
             stringArrayIntermediateCallsWrapperDataByEncoding[encoding] = {
                 encoding,
-                name: stringArrayIntermediateCallsWrapperName
+                names: stringArrayIntermediateCallsWrapperNames
             };
 
             this.stringArrayIntermediateCallsWrapperDataByEncodingMap.set(
@@ -295,7 +298,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             );
         }
 
-        return stringArrayIntermediateCallsWrapperName;
+        return this.randomGenerator.getRandomGenerator().pickone(stringArrayIntermediateCallsWrapperNames);
     }
 
     /**
@@ -353,23 +356,26 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                 continue;
             }
 
-            const {encoding, name} = stringArrayIntermediateCallsWrapperData;
-            const stringArrayRootCallsWrapperName: string = this.getStringArrayRootCallsWrapperName(encoding);
+            const {encoding, names} = stringArrayIntermediateCallsWrapperData;
 
-            NodeAppender.prepend(
-                lexicalScopeBodyNode,
-                [
-                    NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode(name),
-                                NodeFactory.identifierNode(stringArrayRootCallsWrapperName)
-                            )
-                        ],
-                        'var',
-                    )
-                ]
-            );
+            for (const stringArrayIntermediateCallsWrapperName of names) {
+                const stringArrayRootCallsWrapperName: string = this.getStringArrayRootCallsWrapperName(encoding);
+
+                NodeAppender.prepend(
+                    lexicalScopeBodyNode,
+                    [
+                        NodeFactory.variableDeclarationNode(
+                            [
+                                NodeFactory.variableDeclaratorNode(
+                                    NodeFactory.identifierNode(stringArrayIntermediateCallsWrapperName),
+                                    NodeFactory.identifierNode(stringArrayRootCallsWrapperName)
+                                )
+                            ],
+                            'var',
+                        )
+                    ]
+                );
+            }
         }
 
         return lexicalScopeNode;

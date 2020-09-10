@@ -25,10 +25,9 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayIntermediateVariablesCount: 5,
+            stringArrayIntermediateVariablesCount: 10,
             stringArrayEncoding: [
-                StringArrayEncoding.None,
-                StringArrayEncoding.Rc4
+                StringArrayEncoding.None
             ]
         }
     ).getObfuscatedCode();

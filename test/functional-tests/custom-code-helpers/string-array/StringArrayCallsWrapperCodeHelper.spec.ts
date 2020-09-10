@@ -53,37 +53,6 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
         });
     });
 
-    describe('`stringArrayIntermediateVariablesCount` option is set', () => {
-        const stringArrayCallRegExp: RegExp = new RegExp(
-                'return _0x([a-f0-9]){4,6};' +
-            '};' +
-            'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
-            'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
-            'var _0x([a-f0-9]){4} *= *_0x([a-f0-9]){4};' +
-            'var test *= *_0x([a-f0-9]){4}\\(\'0x0\'\\);'
-        );
-
-        let obfuscatedCode: string;
-
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1,
-                    stringArrayIntermediateVariablesCount: 3
-                }
-            ).getObfuscatedCode();
-        });
-
-        it('should correctly append `StringArrayCallsWrapperIntermediateTemplate` template into the obfuscated code', () => {
-            assert.match(obfuscatedCode, stringArrayCallRegExp);
-        });
-    });
-
     describe('Preserve string array name', () => {
         const callsWrapperRegExp: RegExp = new RegExp(`` +
             `var b *= *function *\\(c, *d\\) *{ *` +

@@ -505,7 +505,9 @@ describe('StringArrayTransformer', function () {
                             'return _0x([a-f0-9]){4,6};' +
                         '};' +
                         'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        // this one may be added or not depends on:
+                        // if all literal values encoded with a single encoding or not
+                        '(?:var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
                         'var foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
                         'var bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
                         'var baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
@@ -581,7 +583,9 @@ describe('StringArrayTransformer', function () {
                     const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
                         'function test *\\( *\\) *{' +
                             'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                            // this one may be added or not depends on:
+                            // if all literal values encoded with a single encoding or not
+                            '(?:var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
                             'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
                             'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
                             'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +

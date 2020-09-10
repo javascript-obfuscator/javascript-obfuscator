@@ -15,7 +15,7 @@ import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
-export class StringArrayIntermediateCallsWrapperNode extends AbstractCustomNode {
+export class StringArrayScopeCallsWrapperNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
@@ -26,7 +26,7 @@ export class StringArrayIntermediateCallsWrapperNode extends AbstractCustomNode 
      * @type {string}
      */
     @initializable()
-    private stringArrayIntermediateCallsWrapperName!: string;
+    private stringArrayScopeCallsWrapperName!: string;
 
 
     /**
@@ -51,14 +51,14 @@ export class StringArrayIntermediateCallsWrapperNode extends AbstractCustomNode 
     }
 
     /**
-     * @param {string} stringArrayIntermediateCallsWrapperName
+     * @param {string} stringArrayScopeCallsWrapperName
      * @param {string} stringArrayCallsWrapperName
      */
     public initialize (
-        stringArrayIntermediateCallsWrapperName: string,
+        stringArrayScopeCallsWrapperName: string,
         stringArrayCallsWrapperName: string
     ): void {
-        this.stringArrayIntermediateCallsWrapperName = stringArrayIntermediateCallsWrapperName;
+        this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
     }
 
@@ -69,7 +69,7 @@ export class StringArrayIntermediateCallsWrapperNode extends AbstractCustomNode 
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(this.stringArrayIntermediateCallsWrapperName),
+                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperName),
                     NodeFactory.identifierNode(this.stringArrayCallsWrapperName)
                 )
             ],

@@ -63,7 +63,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #3: `stringArrayIntermediateVariablesCount` option is enabled', () => {
+    describe('Variant #3: `stringArrayWrappersCount` option is enabled', () => {
         describe('Variant #1: root scope', () => {
             describe('Variant #1: option value value is lower then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
@@ -79,7 +79,7 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -87,12 +87,12 @@ describe('StringArrayTransformer', function () {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             stringArray: true,
                             stringArrayThreshold: 1,
-                            stringArrayIntermediateVariablesCount: 2
+                            stringArrayWrappersCount: 2
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('should add intermediate calls to the string array calls wrapper', () => {
+                it('should add scope calls wrappers', () => {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
@@ -112,7 +112,7 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -120,12 +120,12 @@ describe('StringArrayTransformer', function () {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             stringArray: true,
                             stringArrayThreshold: 1,
-                            stringArrayIntermediateVariablesCount: 5
+                            stringArrayWrappersCount: 5
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('should add intermediate calls to the string array calls wrapper', () => {
+                it('should add scope calls wrappers', () => {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
@@ -146,7 +146,7 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -154,12 +154,12 @@ describe('StringArrayTransformer', function () {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             stringArray: true,
                             stringArrayThreshold: 1,
-                            stringArrayIntermediateVariablesCount: 2
+                            stringArrayWrappersCount: 2
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('should add intermediate calls to the string array calls wrapper', () => {
+                it('should add scope calls wrappers', () => {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
@@ -179,7 +179,7 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -187,12 +187,12 @@ describe('StringArrayTransformer', function () {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             stringArray: true,
                             stringArrayThreshold: 1,
-                            stringArrayIntermediateVariablesCount: 5
+                            stringArrayWrappersCount: 5
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('should add intermediate calls to the string array calls wrapper', () => {
+                it('should add scope calls wrappers', () => {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
@@ -212,7 +212,7 @@ describe('StringArrayTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-var.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-var.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -220,22 +220,22 @@ describe('StringArrayTransformer', function () {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        stringArrayIntermediateVariablesCount: 2
+                        stringArrayWrappersCount: 2
                     }
                 ).getObfuscatedCode();
             });
 
-            it('should add intermediate calls to the string array calls wrapper with a correct variables kind', () => {
+            it('should add scope calls wrappers with a correct variables kind', () => {
                 assert.match(obfuscatedCode, stringArrayCallRegExp);
             });
         });
 
-        describe('Variant #4: correct evaluation of the intermediate calls', () => {
-            const expectedEvaluationResult: string = '12345';
+        describe('Variant #4: correct evaluation of the scope calls wrappers', () => {
+            const expectedEvaluationResult: string = 'aaabbbcccdddeee';
             let evaluationResult: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-eval.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-eval.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
@@ -243,15 +243,55 @@ describe('StringArrayTransformer', function () {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        stringArrayIntermediateVariablesCount: 5
+                        stringArrayWrappersCount: 5
                     }
                 ).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
 
-            it('should correctly evaluate intermediate calls', () => {
+            it('should correctly evaluate scope calls wrappers', () => {
                 assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #5: `stringArrayWrappersChainedCalls` option is enabled', () => {
+            describe('Variant #1: correct evaluation of the string array wrappers chained calls', () => {
+                const samplesCount: number = 50;
+                const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                let isEvaluationSuccessful: boolean = true;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-eval.js');
+
+                    for (let i = 0; i < samplesCount; i++) {
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.None,
+                                    StringArrayEncoding.Rc4
+                                ],
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 5
+                            }
+                        ).getObfuscatedCode();
+
+                        const evaluationResult: string = eval(obfuscatedCode);
+
+                        if (evaluationResult !== expectedEvaluationResult) {
+                            isEvaluationSuccessful = false;
+                            break;
+                        }
+                    }
+                });
+
+                it('should correctly evaluate string array wrappers chained calls', () => {
+                    assert.equal(isEvaluationSuccessful, true);
+                });
             });
         });
     });
@@ -530,10 +570,10 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
+        describe('Variant #2: `stringArrayWrappersCount` option is enabled', () => {
             describe('Variant #1: root scope', () => {
-                describe('Variant #1: `1` intermediate variable for each encoding type', () => {
-                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                describe('Variant #1: `1` scope calls wrapper for each encoding type', () => {
+                    const stringArrayWrappersRegExp: RegExp = new RegExp(
                             'return _0x([a-f0-9]){4,6};' +
                         '};' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -548,7 +588,7 @@ describe('StringArrayTransformer', function () {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -559,19 +599,19 @@ describe('StringArrayTransformer', function () {
                                     StringArrayEncoding.None,
                                     StringArrayEncoding.Base64
                                 ],
-                                stringArrayIntermediateVariablesCount: 1,
+                                stringArrayWrappersCount: 1,
                                 stringArrayThreshold: 1
                             }
                         ).getObfuscatedCode();
                     });
 
-                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayWrappersRegExp);
                     });
                 });
 
-                describe('Variant #2: `2` intermediate variables for each encoding type', () => {
-                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                describe('Variant #2: `2` scope calls wrappers for each encoding type', () => {
+                    const stringArrayWrappersRegExp: RegExp = new RegExp(
                             'return _0x([a-f0-9]){4,6};' +
                         '};' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -587,7 +627,7 @@ describe('StringArrayTransformer', function () {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -598,21 +638,21 @@ describe('StringArrayTransformer', function () {
                                     StringArrayEncoding.None,
                                     StringArrayEncoding.Base64
                                 ],
-                                stringArrayIntermediateVariablesCount: 2,
+                                stringArrayWrappersCount: 2,
                                 stringArrayThreshold: 1
                             }
                         ).getObfuscatedCode();
                     });
 
-                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayWrappersRegExp);
                     });
                 });
             });
 
             describe('Variant #2: function scope', () => {
-                describe('Variant #1: `1` intermediate variable for each encoding type', () => {
-                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                describe('Variant #1: `1` scope calls wrapper for each encoding type', () => {
+                    const stringArrayWrappersRegExp: RegExp = new RegExp(
                         'function test *\\( *\\) *{' +
                             'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                             // this one may be added or not depends on:
@@ -627,7 +667,7 @@ describe('StringArrayTransformer', function () {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -638,19 +678,19 @@ describe('StringArrayTransformer', function () {
                                     StringArrayEncoding.None,
                                     StringArrayEncoding.Base64
                                 ],
-                                stringArrayIntermediateVariablesCount: 1,
+                                stringArrayWrappersCount: 1,
                                 stringArrayThreshold: 1
                             }
                         ).getObfuscatedCode();
                     });
 
-                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayWrappersRegExp);
                     });
                 });
 
-                describe('Variant #2: `2` intermediate variables for each encoding type', () => {
-                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                describe('Variant #2: `2` scope calls wrappers for each encoding type', () => {
+                    const stringArrayWrappersRegExp: RegExp = new RegExp(
                         'function test *\\( *\\) *{' +
                             'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                             'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -666,7 +706,7 @@ describe('StringArrayTransformer', function () {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-const.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -677,14 +717,14 @@ describe('StringArrayTransformer', function () {
                                     StringArrayEncoding.None,
                                     StringArrayEncoding.Base64
                                 ],
-                                stringArrayIntermediateVariablesCount: 2,
+                                stringArrayWrappersCount: 2,
                                 stringArrayThreshold: 1
                             }
                         ).getObfuscatedCode();
                     });
 
-                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayWrappersRegExp);
                     });
                 });
             });
@@ -746,13 +786,13 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
-            describe('Variant #1: correct evaluation of the intermediate calls', () => {
-                const expectedEvaluationResult: string = '12345';
+        describe('Variant #2: `stringArrayWrappersCount` option is enabled', () => {
+            describe('Variant #1: correct evaluation of the scope calls wrappers', () => {
+                const expectedEvaluationResult: string = 'aaabbbcccdddeee';
                 let evaluationResult: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-eval.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-eval.js');
 
                     const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
@@ -764,14 +804,14 @@ describe('StringArrayTransformer', function () {
                                 StringArrayEncoding.None,
                                 StringArrayEncoding.Rc4
                             ],
-                            stringArrayIntermediateVariablesCount: 5
+                            stringArrayWrappersCount: 5
                         }
                     ).getObfuscatedCode();
 
                     evaluationResult = eval(obfuscatedCode);
                 });
 
-                it('should correctly evaluate intermediate calls', () => {
+                it('should correctly evaluate scope calls wrappers', () => {
                     assert.equal(evaluationResult, expectedEvaluationResult);
                 });
             });
@@ -833,13 +873,13 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
-            describe('Variant #1: correct evaluation of the intermediate calls', () => {
-                const expectedEvaluationResult: string = '12345';
+        describe('Variant #2: `stringArrayWrappersCount` option is enabled', () => {
+            describe('Variant #1: correct evaluation of the scope calls wrappers', () => {
+                const expectedEvaluationResult: string = 'aaabbbcccdddeee';
                 let evaluationResult: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count-eval.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-eval.js');
 
                     const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
@@ -851,14 +891,14 @@ describe('StringArrayTransformer', function () {
                                 StringArrayEncoding.Base64,
                                 StringArrayEncoding.Rc4
                             ],
-                            stringArrayIntermediateVariablesCount: 5
+                            stringArrayWrappersCount: 5
                         }
                     ).getObfuscatedCode();
 
                     evaluationResult = eval(obfuscatedCode);
                 });
 
-                it('should correctly evaluate intermediate calls', () => {
+                it('should correctly evaluate scope calls wrappers', () => {
                     assert.equal(evaluationResult, expectedEvaluationResult);
                 });
             });

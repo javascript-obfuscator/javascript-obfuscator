@@ -17,7 +17,8 @@ export const StringArrayThresholdRule: TOptionsNormalizerRule = (options: IOptio
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ],
-            stringArrayIntermediateVariablesCount: 0,
+            stringArrayWrappersChainedCalls: false,
+            stringArrayWrappersCount: 0,
             stringArrayThreshold: 0
         };
     }

@@ -65,14 +65,14 @@ describe('LiteralNodesCacheStorage', () => {
         const literalNode: ESTree.Literal =  NodeFactory.literalNode('foo');
         const key: string = 'key';
 
-        describe('Encoding is not `rc4` and `stringArrayIntermediateVariablesCount` option is disabled', () => {
+        describe('Encoding is not `rc4` and `stringArrayWrappersCount` option is disabled', () => {
             const expectedResult: boolean = true;
 
             let result: boolean;
 
             before(() => {
                 const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance({
-                    stringArrayIntermediateVariablesCount: 0
+                    stringArrayWrappersCount: 0
                 });
 
                 literalNodesCacheStorage.set(key, literalNode);
@@ -94,14 +94,14 @@ describe('LiteralNodesCacheStorage', () => {
             });
         });
 
-        describe('Encoding is `rc4` and `stringArrayIntermediateVariablesCount` option is disabled', () => {
+        describe('Encoding is `rc4` and `stringArrayWrappersCount` option is disabled', () => {
             const expectedResult: boolean = false
 
             let result: boolean;
 
             before(() => {
                 const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance({
-                    stringArrayIntermediateVariablesCount: 0
+                    stringArrayWrappersCount: 0
                 });
 
                 literalNodesCacheStorage.set(key, literalNode);
@@ -123,7 +123,7 @@ describe('LiteralNodesCacheStorage', () => {
             });
         });
 
-        describe('Encoding is not `rc4` and `stringArrayIntermediateVariablesCount` option is enabled', () => {
+        describe('Encoding is not `rc4` and `stringArrayWrappersCount` option is enabled', () => {
             const expectedResult: boolean = false;
 
             let result: boolean;
@@ -132,7 +132,7 @@ describe('LiteralNodesCacheStorage', () => {
                 const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance({
                     stringArray: true,
                     stringArrayThreshold: 1,
-                    stringArrayIntermediateVariablesCount: 5
+                    stringArrayWrappersCount: 5
                 });
 
                 literalNodesCacheStorage.set(key, literalNode);

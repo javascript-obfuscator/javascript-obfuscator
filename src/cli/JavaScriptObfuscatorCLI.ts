@@ -340,9 +340,14 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--string-array-intermediate-variables-count <number>',
-                'Sets the maximum count of intermediate variables for the string array inside each lexical scope',
+                '--string-array-wrappers-count <number>',
+                'Sets the count of wrappers for the string array inside each root or function scope',
                 parseInt
+            )
+            .option(
+                '--string-array-wrappers-chained-calls <boolean>',
+                'Enables the chained calls between string array wrappers',
+                BooleanSanitizer
             )
             .option(
                 '--string-array-threshold <number>',

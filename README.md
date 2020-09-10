@@ -360,7 +360,7 @@ Following options are available for the JS Obfuscator:
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayIntermediateVariablesCount: true,
+    stringArrayWrappersCount: true,
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -409,7 +409,8 @@ Following options are available for the JS Obfuscator:
     --split-strings-chunk-length <number>
     --string-array <boolean>
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
-    --string-array-intermediate-variables-count <number>
+    --string-array-wrappers-count <number>
+    --string-array-wrappers-chained-calls <boolean>
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
@@ -950,13 +951,13 @@ stringArrayEncoding: [
 ]
 ```
 
-### `stringArrayIntermediateVariablesCount`
+### `stringArrayWrappersCount`
 Type: `number` Default: `0`
 
 ##### :warning: [`stringArray`](#stringarray) option must be enabled
 
-Sets the maximum count of intermediate variables for the `string array` inside each lexical scope.
-The actual count of intermediate variables inside each scope cannot be higher than a number of `literal` nodes within this scope.
+Sets the count of wrappers for the `string array` inside each root or function scope.
+The actual count of wrappers inside each scope is limited by a count of `literal` nodes within this scope.
 
 Example:
 ```ts
@@ -972,7 +973,7 @@ function test () {
 
 const eagle = 'eagle';
 
-// Output, stringArrayIntermediateVariablesCount: 5
+// Output, stringArrayWrappersCount: 5
 const _0x3018 = [
     'foo',
     'bar',
@@ -1000,6 +1001,61 @@ function test() {
     const _0x1fb6ef = _0x500eda('0x4');
 }
 const eagle = _0x26ca42('0x5');
+```
+
+### `stringArrayWrappersChainedCalls`
+Type: `boolean` Default: `false`
+
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+
+Enables the chained calls between `string array` wrappers.
+
+Example:
+```ts
+// Input
+const foo = 'foo';
+const bar = 'bar';
+        
+function test () {
+    const baz = 'baz';
+    const bark = 'bark';
+
+    function test1() {
+        const hawk = 'hawk';
+        const eagle = 'eagle';
+    } 
+}
+
+// Output, stringArrayWrappersCount: 5, stringArrayWrappersChainedCalls: true
+const _0x4714 = [
+    'foo',
+    'bar',
+    'baz',
+    'bark',
+    'hawk',
+    'eagle'
+];
+const _0x2bdb = function (_0x471439, _0x2bdb71) {
+    _0x471439 = _0x471439 - 0x0;
+    let _0x6e47e6 = _0x4714[_0x471439];
+    return _0x6e47e6;
+};
+const _0x1c3d52 = _0x2bdb;
+const _0xd81c2a = _0x2bdb;
+const foo = _0xd81c2a('0x0');
+const bar = _0x1c3d52('0x1');
+function test() {
+    const _0x21a0b4 = _0x1c3d52;
+    const _0x12842d = _0xd81c2a;
+    const _0x6e47e6 = _0x12842d('0x2');
+    const _0x4f3aef = _0x12842d('0x3');
+    function _0x40f1dc() {
+        const _0x468540 = _0x12842d;
+        const _0x1f4b05 = _0x21a0b4;
+        const _0x40a980 = _0x1f4b05('0x4');
+        const _0x4d1285 = _0x468540('0x5');
+    }
+}
 ```
     
 ### `stringArrayThreshold`
@@ -1100,7 +1156,8 @@ Performance will 50-100% slower than without obfuscation
     splitStringsChunkLength: 5,
     stringArray: true,
     stringArrayEncoding: ['rc4'],
-    stringArrayIntermediateVariablesCount: 10,
+    stringArrayWrappersCount: 5,
+    stringArrayWrappersChainedCalls: true,
     stringArrayThreshold: 1,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1133,7 +1190,8 @@ Performance will 30-35% slower than without obfuscation
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: ['base64'],
-    stringArrayIntermediateVariablesCount: 5,
+    stringArrayWrappersCount: 2,
+    stringArrayWrappersChainedCalls: true,
     stringArrayThreshold: 0.75,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1163,7 +1221,8 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayIntermediateVariablesCount: 0,
+    stringArrayWrappersCount: 0,
+    stringArrayWrappersChainedCalls: false,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }
@@ -1190,7 +1249,8 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayIntermediateVariablesCount: 0,
+    stringArrayWrappersCount: 0,
+    stringArrayWrappersChainedCalls: false,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }

@@ -300,9 +300,15 @@ export class Options implements IOptions {
     /**
      * @type {boolean}
      */
+    @IsBoolean()
+    public readonly stringArrayWrappersChainedCalls!: boolean;
+
+    /**
+     * @type {boolean}
+     */
     @IsNumber()
     @Min(0)
-    public readonly stringArrayIntermediateVariablesCount!: number;
+    public readonly stringArrayWrappersCount!: number;
 
     /**
      * @type {number}

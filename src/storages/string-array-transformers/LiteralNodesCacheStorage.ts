@@ -47,7 +47,7 @@ export class LiteralNodesCacheStorage extends MapStorage <string, ESTree.Node> i
         stringArrayStorageItemData: IStringArrayStorageItemData | undefined
     ): boolean {
         // for each function scope different nodes will be created, so cache have no sense
-        return !this.options.stringArrayIntermediateVariablesCount
+        return !this.options.stringArrayWrappersCount
             // different nodes will be created with different rc4 keys, so cache have no sense
             && stringArrayStorageItemData?.encoding !== StringArrayEncoding.Rc4
             && this.storage.has(key);

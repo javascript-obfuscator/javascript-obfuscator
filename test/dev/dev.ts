@@ -14,17 +14,20 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
             function test () {
                 const baz = 'baz';
                 const bark = 'bark';
-                const hawk = 'hawk';
-            }
             
-            const eagle = 'eagle';
+                function test1() {
+                    const hawk = 'hawk';
+                    const eagle = 'eagle';
+                } 
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayIntermediateVariablesCount: 5,
+            stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersCount: 5,
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ]

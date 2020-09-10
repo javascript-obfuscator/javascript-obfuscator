@@ -1,4 +1,4 @@
 export enum StringArrayTransformerCustomNode {
     StringArrayCallNode = 'StringArrayCallNode',
-    StringArrayIntermediateCallsWrapperNode = 'StringArrayIntermediateCallsWrapperNode'
+    StringArrayScopeCallsWrapperNode = 'StringArrayScopeCallsWrapperNode'
 }

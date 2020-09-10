@@ -848,7 +848,8 @@ describe('JavaScriptObfuscator', () => {
                             StringArrayEncoding.Base64,
                             StringArrayEncoding.Rc4
                         ],
-                        stringArrayIntermediateVariablesCount: 10,
+                        stringArrayWrappersChainedCalls: true,
+                        stringArrayWrappersCount: 10,
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false

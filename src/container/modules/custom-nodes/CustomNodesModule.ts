@@ -19,7 +19,7 @@ import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-flatt
 import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/LogicalExpressionFunctionNode';
 import { StringArrayCallNode } from '../../../custom-nodes/string-array-nodes/StringArrayCallNode';
-import { StringArrayIntermediateCallsWrapperNode } from '../../../custom-nodes/string-array-nodes/StringArrayIntermediateCallsWrapperNode';
+import { StringArrayScopeCallsWrapperNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperNode';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
@@ -77,8 +77,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayIntermediateCallsWrapperNode)
-        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayIntermediateCallsWrapperNode);
+        .toConstructor(StringArrayScopeCallsWrapperNode)
+        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperNode);
 
     // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)

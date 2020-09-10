@@ -39,7 +39,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
             StringArrayEncoding.Base64,
             StringArrayEncoding.Rc4
         ],
-        stringArrayIntermediateVariablesCount: 20,
+        stringArrayWrappersCount: 5,
         stringArrayThreshold: 1,
         transformObjectKeys: true,
         unicodeEscapeSequence: true
@@ -47,7 +47,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
 
     this.timeout(200000);
 
-    [
+    const options: Partial<TInputOptions>[] = [
         {
             identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
             renameGlobals: false
@@ -71,8 +71,13 @@ describe('JavaScriptObfuscator runtime eval', function () {
         {
             identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
             renameGlobals: true
+        },
+        {
+            stringArrayWrappersChainedCalls: true
         }
-    ].forEach((options: Partial<TInputOptions>) => {
+    ];
+
+    options.forEach((options: Partial<TInputOptions>) => {
         const detailedDescription: string = `Identifier names generator: ${options.identifierNamesGenerator}, rename globals: ${options.renameGlobals?.toString()}`;
 
         describe(`Astring. ${detailedDescription}`, () => {

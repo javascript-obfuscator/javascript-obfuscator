@@ -11,9 +11,9 @@ import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEn
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
-import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
-import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
+import { IStringArrayCallsWrapperNames } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
@@ -275,6 +275,10 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
                 .getRandomGenerator()
                 .pickone(this.options.stringArrayEncoding)
             : null;
+
+        if (!encoding) {
+            throw new Error('`stringArrayEncoding` option array is empty');
+        }
 
         switch (encoding) {
             /**

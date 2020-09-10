@@ -1,7 +1,7 @@
 import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
 import { IMapStorage } from '../IMapStorage';
-import { IStringArrayCallsWrapperNames } from './IStringArrayCallsWrapperNames';
+import { IStringArrayCallsWrapperNames } from '../../node-transformers/string-array-transformers/IStringArrayCallsWrapperNames';
 import { IStringArrayStorageItemData } from './IStringArrayStorageItem';
 
 export interface IStringArrayStorage extends IMapStorage <string, IStringArrayStorageItemData> {

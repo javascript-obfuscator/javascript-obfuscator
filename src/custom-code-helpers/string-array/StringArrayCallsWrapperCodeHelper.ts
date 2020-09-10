@@ -9,7 +9,7 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
+import { IStringArrayCallsWrapperNames } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames';
 
 import { initializable } from '../../decorators/Initializable';
 

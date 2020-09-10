@@ -9,7 +9,7 @@ import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 import { IStringArrayStorageAnalyzer } from '../../../../src/interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
-import { IStringArrayStorageItemData } from '../../../../src/interfaces/storages/string-array-storage/IStringArrayStorageItem';
+import { IStringArrayStorageItemData } from '../../../../src/interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
 

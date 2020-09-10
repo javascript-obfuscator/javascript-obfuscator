@@ -11,8 +11,8 @@ import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analy
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStringArrayCallsWrapperNames } from '../../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
-import { IStringArrayStorage } from '../../../interfaces/storages/string-array-storage/IStringArrayStorage';
+import { IStringArrayCallsWrapperNames } from '../../../interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames';
+import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../../decorators/Initializable';
 

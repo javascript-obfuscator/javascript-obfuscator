@@ -31,6 +31,7 @@ export enum ServiceIdentifiers {
     IIdentifierReplacer = 'IIdentifierReplacer',
     IJavaScriptObfuscator = 'IJavaScriptObfuscator',
     ILevelledTopologicalSorter = 'ILevelledTopologicalSorter',
+    ILiteralNodesCacheStorage = 'ILiteralNodesCacheStorage',
     ILogger = 'ILogger',
     INodeGuard = 'INodeGuard',
     INodeTransformer = 'INodeTransformer',

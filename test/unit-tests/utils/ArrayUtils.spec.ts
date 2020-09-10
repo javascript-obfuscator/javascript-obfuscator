@@ -113,6 +113,53 @@ describe('ArrayUtils', () => {
         });
     });
 
+    describe('getLastElement', () => {
+        describe('empty array', () => {
+            const array: string[] = [];
+            const expectedLastElement: null = null;
+
+            let lastElement: string | null;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElement(array);
+            });
+
+            it('should return null if array is empty', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+
+        describe('array length: `1`', () => {
+            const array: string[] = ['foo'];
+            const expectedLastElement: string = 'foo';
+
+            let lastElement: string | null;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElement(array);
+            });
+
+            it('should return first element for array with length: `1`', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+
+        describe('array length: `3`', () => {
+            const array: string[] = ['foo', 'bar', 'baz'];
+            const expectedLastElement: string = 'baz';
+
+            let lastElement: string | null;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElement(array);
+            });
+
+            it('should return last element for array with length: `3`', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+    });
+
     describe('rotate', () => {
         let array: number[],
             rotatedArray: number[];

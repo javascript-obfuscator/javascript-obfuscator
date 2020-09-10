@@ -2,18 +2,18 @@ import 'reflect-metadata';
 
 import { assert } from 'chai';
 
-import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
 
-import { TInputOptions } from '../../../../src/types/options/TInputOptions';
+import { TInputOptions } from '../../../../../src/types/options/TInputOptions';
 
-import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IStringArrayStorage } from '../../../../src/interfaces/storages/string-array-storage/IStringArrayStorage';
+import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IStringArrayStorage } from '../../../../../src/interfaces/storages/string-array-transformers/IStringArrayStorage';
 
-import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
-import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
 
 /**
  * @returns {IMapStorage<string, V>}

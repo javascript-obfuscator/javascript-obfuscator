@@ -1,7 +1,7 @@
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 export interface IEncodedValue {
-    encoding: TStringArrayEncoding | null;
+    encoding: TStringArrayEncoding;
     encodedValue: string;
     decodeKey: string | null;
 }

@@ -293,7 +293,7 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
             sourceCode = '';
         }
         const timeStart = Date.now();
-        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.2.0", 1599686797505));
+        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.2.0", 1599726508600));
         this.logger.info(LoggingMessage_1.LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage_1.LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getInputSeed());
         sourceCode = this.runCodeTransformationStage(sourceCode, CodeTransformationStage_1.CodeTransformationStage.PreparingTransformers);
@@ -1475,7 +1475,7 @@ class JavaScriptObfuscatorCLI {
     configureCommands() {
         this.commands
             .usage('<inputPath> [options]')
-            .version(Utils_1.Utils.buildVersionMessage("2.2.0", 1599686797505), '-v, --version')
+            .version(Utils_1.Utils.buildVersionMessage("2.2.0", 1599726508600), '-v, --version')
             .option('-o, --output <path>', 'Output path for obfuscated code')
             .option('--compact <boolean>', 'Disable one line output code compacting', BooleanSanitizer_1.BooleanSanitizer)
             .option('--config <boolean>', 'Name of js / json config file')
@@ -5168,7 +5168,7 @@ let StringArrayCallsWrapperBase64CodeHelper = class StringArrayCallsWrapperBase6
             atobPolyfill,
             atobFunctionName,
             selfDefendingCode,
-            stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
         });
     }
 };
@@ -5201,7 +5201,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringArrayCallsWrapperCodeHelper = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
@@ -5212,11 +5212,9 @@ const ICustomCodeHelperObfuscator_1 = __webpack_require__(/*! ../../interfaces/c
 const IEscapeSequenceEncoder_1 = __webpack_require__(/*! ../../interfaces/utils/IEscapeSequenceEncoder */ "./src/interfaces/utils/IEscapeSequenceEncoder.ts");
 const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
 const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
-const IStringArrayCallsWrapperNames_1 = __webpack_require__(/*! ../../interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames */ "./src/interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames.ts");
 const Initializable_1 = __webpack_require__(/*! ../../decorators/Initializable */ "./src/decorators/Initializable.ts");
 const SelfDefendingTemplate_1 = __webpack_require__(/*! ./templates/string-array-calls-wrapper/SelfDefendingTemplate */ "./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/SelfDefendingTemplate.ts");
 const StringArrayCallsWrapperTemplate_1 = __webpack_require__(/*! ./templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate */ "./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate.ts");
-const StringArrayCallsWrapperIntermediateTemplate_1 = __webpack_require__(/*! ./templates/string-array-calls-wrapper/StringArrayCallsWrapperIntermediateTemplate */ "./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperIntermediateTemplate.ts");
 const AbstractCustomCodeHelper_1 = __webpack_require__(/*! ../AbstractCustomCodeHelper */ "./src/custom-code-helpers/AbstractCustomCodeHelper.ts");
 const NodeUtils_1 = __webpack_require__(/*! ../../node/NodeUtils */ "./src/node/NodeUtils.ts");
 let StringArrayCallsWrapperCodeHelper = class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper_1.AbstractCustomCodeHelper {
@@ -5224,21 +5222,19 @@ let StringArrayCallsWrapperCodeHelper = class StringArrayCallsWrapperCodeHelper 
         super(identifierNamesGeneratorFactory, customCodeHelperFormatter, customCodeHelperObfuscator, randomGenerator, options);
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
-    initialize(stringArrayName, stringArrayCallsWrapperNames) {
+    initialize(stringArrayName, stringArrayCallsWrapperName) {
         this.stringArrayName = stringArrayName;
-        this.stringArrayCallsWrapperNames = stringArrayCallsWrapperNames;
+        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
     }
     getNodeStructure(codeHelperTemplate) {
         return NodeUtils_1.NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
     getCodeHelperTemplate() {
         const decodeCodeHelperTemplate = this.getDecodeStringArrayTemplate();
-        const intermediateTemplate = this.getIntermediateTemplate();
         const preservedNames = [`^${this.stringArrayName}$`];
         return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate_1.StringArrayCallsWrapperTemplate(), {
             decodeCodeHelperTemplate,
-            intermediateTemplate,
-            stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name,
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
             stringArrayName: this.stringArrayName
         }), {
             reservedNames: preservedNames
@@ -5252,23 +5248,9 @@ let StringArrayCallsWrapperCodeHelper = class StringArrayCallsWrapperCodeHelper 
             return '';
         }
         return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate_1.SelfDefendingTemplate(this.randomGenerator, this.escapeSequenceEncoder), {
-            stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name,
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
             stringArrayName: this.stringArrayName
         });
-    }
-    getIntermediateTemplate() {
-        const stringArrayCallsWrapperIntermediateNamesLength = this.stringArrayCallsWrapperNames
-            .intermediateNames
-            .length;
-        let intermediateTemplate = '';
-        for (let i = 0; i < stringArrayCallsWrapperIntermediateNamesLength; i++) {
-            const intermediateName = this.stringArrayCallsWrapperNames.intermediateNames[i];
-            intermediateTemplate += this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperIntermediateTemplate_1.StringArrayCallsWrapperIntermediateTemplate(), {
-                intermediateName,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name
-            });
-        }
-        return intermediateTemplate;
     }
 };
 __decorate([
@@ -5277,8 +5259,8 @@ __decorate([
 ], StringArrayCallsWrapperCodeHelper.prototype, "stringArrayName", void 0);
 __decorate([
     Initializable_1.initializable(),
-    __metadata("design:type", typeof (_a = typeof IStringArrayCallsWrapperNames_1.IStringArrayCallsWrapperNames !== "undefined" && IStringArrayCallsWrapperNames_1.IStringArrayCallsWrapperNames) === "function" ? _a : Object)
-], StringArrayCallsWrapperCodeHelper.prototype, "stringArrayCallsWrapperNames", void 0);
+    __metadata("design:type", String)
+], StringArrayCallsWrapperCodeHelper.prototype, "stringArrayCallsWrapperName", void 0);
 StringArrayCallsWrapperCodeHelper = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
@@ -5287,7 +5269,7 @@ StringArrayCallsWrapperCodeHelper = __decorate([
     __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
-    __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _d : Object, typeof (_e = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object, typeof (_g = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _g : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object, typeof (_f = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _f : Object])
 ], StringArrayCallsWrapperCodeHelper);
 exports.StringArrayCallsWrapperCodeHelper = StringArrayCallsWrapperCodeHelper;
 
@@ -5330,7 +5312,7 @@ let StringArrayCallsWrapperRc4CodeHelper = class StringArrayCallsWrapperRc4CodeH
             atobPolyfill,
             rc4Polyfill,
             selfDefendingCode,
-            stringArrayCallsWrapperName: this.stringArrayCallsWrapperNames.name
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
         });
     }
 };
@@ -5591,8 +5573,8 @@ let StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = class StringArra
         for (const stringArrayEncoding of this.options.stringArrayEncoding) {
             const stringArrayCallsWrapperCodeHelperName = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
             const stringArrayCallsWrapperCodeHelper = this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
-            const stringArrayCallsWrapperNames = this.stringArrayStorage.getStorageCallsWrapperNames(stringArrayEncoding);
-            stringArrayCallsWrapperCodeHelper.initialize(stringArrayName, stringArrayCallsWrapperNames);
+            const stringArrayCallsWrapperName = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+            stringArrayCallsWrapperCodeHelper.initialize(stringArrayName, stringArrayCallsWrapperName);
             this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);
         }
         const stringArrayRotateFunctionCodeHelper = this.customCodeHelperFactory(CustomCodeHelper_1.CustomCodeHelper.StringArrayRotateFunction);
@@ -5843,27 +5825,6 @@ exports.StringArrayBase64DecodeTemplate = StringArrayBase64DecodeTemplate;
 
 /***/ }),
 
-/***/ "./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperIntermediateTemplate.ts":
-/*!**********************************************************************************************************************************!*\
-  !*** ./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperIntermediateTemplate.ts ***!
-  \**********************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StringArrayCallsWrapperIntermediateTemplate = void 0;
-function StringArrayCallsWrapperIntermediateTemplate() {
-    return `
-        const {intermediateName} = {stringArrayCallsWrapperName};
-    `;
-}
-exports.StringArrayCallsWrapperIntermediateTemplate = StringArrayCallsWrapperIntermediateTemplate;
-
-
-/***/ }),
-
 /***/ "./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate.ts":
 /*!**********************************************************************************************************************!*\
   !*** ./src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate.ts ***!
@@ -5886,8 +5847,6 @@ function StringArrayCallsWrapperTemplate() {
         
             return value;
         };
-        
-        {intermediateTemplate}
     `;
 }
 exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
@@ -8362,20 +8321,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /*!***************************************************************************************************************!*\
   !*** ./src/interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer.ts ***!
   \***************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/***/ }),
-
-/***/ "./src/interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames.ts":
-/*!*****************************************************************************************************!*\
-  !*** ./src/interfaces/node-transformers/string-array-transformers/IStringArrayCallsWrapperNames.ts ***!
-  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13293,8 +13238,8 @@ const NumberUtils_1 = __webpack_require__(/*! ../../utils/NumberUtils */ "./src/
 let StringArrayTransformer = StringArrayTransformer_1 = class StringArrayTransformer extends AbstractNodeTransformer_1.AbstractNodeTransformer {
     constructor(randomGenerator, options, literalNodesCacheStorage, stringArrayStorage, stringArrayStorageAnalyzer, arrayUtils, escapeSequenceEncoder, identifierNamesGeneratorFactory) {
         super(randomGenerator, options);
-        this.stringArrayFunctionsCallsWrapperNamesMap = new Map();
-        this.visitedFunctionNodesStack = [];
+        this.stringArrayIntermediateCallsWrapperDataByEncodingMap = new Map();
+        this.visitedLexicalScopeNodesStack = [];
         this.literalNodesCacheStorage = literalNodesCacheStorage;
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
@@ -13320,17 +13265,17 @@ let StringArrayTransformer = StringArrayTransformer_1 = class StringArrayTransfo
                         if (NodeGuards_1.NodeGuards.isProgramNode(node)) {
                             this.prepareNode(node);
                         }
-                        if (NodeGuards_1.NodeGuards.isFunctionNode(node)) {
-                            this.onFunctionNodeEnter(node);
+                        if (NodeGuards_1.NodeGuards.isNodeWithLexicalScope(node)) {
+                            this.onLexicalScopeNodeEnter(node);
                         }
                         if (parentNode && NodeGuards_1.NodeGuards.isLiteralNode(node) && !NodeMetadata_1.NodeMetadata.isReplacedLiteral(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     },
                     leave: (node) => {
-                        if (NodeGuards_1.NodeGuards.isFunctionNode(node)) {
-                            this.onFunctionNodeLeave();
-                            return this.transformFunctionNode(node);
+                        if (NodeGuards_1.NodeGuards.isNodeWithLexicalScope(node)) {
+                            this.onLexicalScopeNodeLeave();
+                            return this.transformLexicalScopeNode(node);
                         }
                     }
                 };
@@ -13392,67 +13337,66 @@ let StringArrayTransformer = StringArrayTransformer_1 = class StringArrayTransfo
     getStringArrayCallsWrapperName(stringArrayStorageItemData) {
         var _a, _b, _c;
         const { encoding } = stringArrayStorageItemData;
-        const stringArrayCallsWrapperNames = this.stringArrayStorage.getStorageCallsWrapperNames(encoding);
+        const stringArrayCallsWrapperName = this.stringArrayStorage.getStorageCallsWrapperName(encoding);
         if (!this.options.stringArrayIntermediateVariablesCount) {
-            return stringArrayCallsWrapperNames.name;
+            return stringArrayCallsWrapperName;
         }
-        const currentFunctionNode = this.arrayUtils.getLastElement(this.visitedFunctionNodesStack);
-        if (!currentFunctionNode) {
-            return this.getStringArrayIntermediateCallsWrapperName(encoding);
+        const currentLexicalScopeNode = this.arrayUtils.getLastElement(this.visitedLexicalScopeNodesStack);
+        if (!currentLexicalScopeNode) {
+            throw new Error('Cannot find current lexical scope node');
         }
-        const stringArrayIntermediateCallsWrapperNames = currentFunctionNode
-            ? (_a = this.stringArrayFunctionsCallsWrapperNamesMap.get(currentFunctionNode)) !== null && _a !== void 0 ? _a : {} : {};
-        let stringArrayIntermediateCallsWrapperName = (_c = (_b = stringArrayIntermediateCallsWrapperNames[encoding]) === null || _b === void 0 ? void 0 : _b.name) !== null && _c !== void 0 ? _c : '';
-        if (currentFunctionNode && !stringArrayIntermediateCallsWrapperName) {
-            stringArrayIntermediateCallsWrapperName = this.identifierNamesGenerator.generateForLexicalScope(currentFunctionNode);
-            stringArrayIntermediateCallsWrapperNames[encoding] = {
+        const stringArrayIntermediateCallsWrapperDataByEncoding = currentLexicalScopeNode
+            ? (_a = this.stringArrayIntermediateCallsWrapperDataByEncodingMap.get(currentLexicalScopeNode)) !== null && _a !== void 0 ? _a : {} : {};
+        let stringArrayIntermediateCallsWrapperName = (_c = (_b = stringArrayIntermediateCallsWrapperDataByEncoding[encoding]) === null || _b === void 0 ? void 0 : _b.name) !== null && _c !== void 0 ? _c : '';
+        if (currentLexicalScopeNode && !stringArrayIntermediateCallsWrapperName) {
+            stringArrayIntermediateCallsWrapperName = this.identifierNamesGenerator.generateForLexicalScope(currentLexicalScopeNode);
+            stringArrayIntermediateCallsWrapperDataByEncoding[encoding] = {
                 encoding,
                 name: stringArrayIntermediateCallsWrapperName
             };
-            this.stringArrayFunctionsCallsWrapperNamesMap.set(currentFunctionNode, stringArrayIntermediateCallsWrapperNames);
+            this.stringArrayIntermediateCallsWrapperDataByEncodingMap.set(currentLexicalScopeNode, stringArrayIntermediateCallsWrapperDataByEncoding);
         }
         return stringArrayIntermediateCallsWrapperName;
     }
-    getStringArrayIntermediateCallsWrapperName(encoding) {
-        const stringArrayCallsWrapperNames = this.stringArrayStorage.getStorageCallsWrapperNames(encoding);
-        return stringArrayCallsWrapperNames.intermediateNames.length
-            ? this.randomGenerator
-                .getRandomGenerator()
-                .pickone(stringArrayCallsWrapperNames.intermediateNames)
-            : stringArrayCallsWrapperNames.name;
+    getStringArrayRootCallsWrapperName(encoding) {
+        return this.stringArrayStorage.getStorageCallsWrapperName(encoding);
     }
-    onFunctionNodeEnter(functionNode) {
-        this.visitedFunctionNodesStack.push(functionNode);
+    onLexicalScopeNodeEnter(lexicalScopeNode) {
+        this.visitedLexicalScopeNodesStack.push(lexicalScopeNode);
     }
-    onFunctionNodeLeave() {
-        this.visitedFunctionNodesStack.pop();
+    onLexicalScopeNodeLeave() {
+        this.visitedLexicalScopeNodesStack.pop();
     }
-    transformFunctionNode(functionNode) {
+    transformLexicalScopeNode(lexicalScopeNode) {
         var _a;
         if (!this.options.stringArrayIntermediateVariablesCount) {
-            return functionNode;
+            return lexicalScopeNode;
         }
-        if (!NodeGuards_1.NodeGuards.isBlockStatementNode(functionNode.body)) {
-            return functionNode;
+        const lexicalScopeBodyNode = NodeGuards_1.NodeGuards.isProgramNode(lexicalScopeNode)
+            ? lexicalScopeNode
+            : lexicalScopeNode.body;
+        if (!lexicalScopeBodyNode.parentNode
+            || !NodeGuards_1.NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)) {
+            return lexicalScopeNode;
         }
-        const stringArrayFunctionCallsWrapperNamesMap = (_a = this.stringArrayFunctionsCallsWrapperNamesMap.get(functionNode)) !== null && _a !== void 0 ? _a : null;
-        if (!stringArrayFunctionCallsWrapperNamesMap) {
-            return functionNode;
+        const stringArrayIntermediateCallsWrapperDataByEncoding = (_a = this.stringArrayIntermediateCallsWrapperDataByEncodingMap.get(lexicalScopeNode)) !== null && _a !== void 0 ? _a : null;
+        if (!stringArrayIntermediateCallsWrapperDataByEncoding) {
+            return lexicalScopeNode;
         }
-        const stringArrayFunctionCallsWrapperNames = Object.values(stringArrayFunctionCallsWrapperNamesMap);
-        for (const stringArrayFunctionCallsWrapperName of stringArrayFunctionCallsWrapperNames) {
-            if (!stringArrayFunctionCallsWrapperName) {
+        const stringArrayIntermediateCallsWrapperDataList = Object.values(stringArrayIntermediateCallsWrapperDataByEncoding);
+        for (const stringArrayIntermediateCallsWrapperData of stringArrayIntermediateCallsWrapperDataList) {
+            if (!stringArrayIntermediateCallsWrapperData) {
                 continue;
             }
-            const { encoding, name } = stringArrayFunctionCallsWrapperName;
-            const stringArrayCallsWrapperName = this.getStringArrayIntermediateCallsWrapperName(encoding);
-            NodeAppender_1.NodeAppender.prepend(functionNode.body, [
+            const { encoding, name } = stringArrayIntermediateCallsWrapperData;
+            const stringArrayRootCallsWrapperName = this.getStringArrayRootCallsWrapperName(encoding);
+            NodeAppender_1.NodeAppender.prepend(lexicalScopeBodyNode, [
                 NodeFactory_1.NodeFactory.variableDeclarationNode([
-                    NodeFactory_1.NodeFactory.variableDeclaratorNode(NodeFactory_1.NodeFactory.identifierNode(name), NodeFactory_1.NodeFactory.identifierNode(stringArrayCallsWrapperName))
+                    NodeFactory_1.NodeFactory.variableDeclaratorNode(NodeFactory_1.NodeFactory.identifierNode(name), NodeFactory_1.NodeFactory.identifierNode(stringArrayRootCallsWrapperName))
                 ], 'var')
             ]);
         }
-        return functionNode;
+        return lexicalScopeNode;
     }
     encodeLiteralNodeToEscapeSequence(literalNode, parentNode) {
         if (typeof literalNode.value !== 'string') {
@@ -15883,16 +15827,17 @@ let StringArrayStorage = StringArrayStorage_1 = class StringArrayStorage extends
         }
         return this.stringArrayStorageName;
     }
-    getStorageCallsWrapperNames(stringArrayEncoding) {
+    getStorageCallsWrapperName(stringArrayEncoding) {
         var _a;
         const storageCallsWrapperName = (_a = this.stringArrayStorageCallsWrapperNamesMap
             .get(stringArrayEncoding)) !== null && _a !== void 0 ? _a : null;
         if (storageCallsWrapperName) {
             return storageCallsWrapperName;
         }
-        const newStorageCallsWrapperNames = this.getStringArrayCallsWrapperNames();
-        this.stringArrayStorageCallsWrapperNamesMap.set(stringArrayEncoding, newStorageCallsWrapperNames);
-        return newStorageCallsWrapperNames;
+        const newStorageCallsWrapperName = this.identifierNamesGenerator
+            .generateForGlobalScope(StringArrayStorage_1.stringArrayNameLength);
+        this.stringArrayStorageCallsWrapperNamesMap.set(stringArrayEncoding, newStorageCallsWrapperName);
+        return newStorageCallsWrapperName;
     }
     rotateStorage() {
         if (!this.getLength()) {
@@ -15970,12 +15915,6 @@ let StringArrayStorage = StringArrayStorage_1 = class StringArrayStorage extends
                 return { encodedValue, encoding, decodeKey };
             }
         }
-    }
-    getStringArrayCallsWrapperNames() {
-        return {
-            name: this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage_1.stringArrayNameLength),
-            intermediateNames: Array.from({ length: this.options.stringArrayIntermediateVariablesCount }, () => this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage_1.stringArrayNameLength))
-        };
     }
 };
 StringArrayStorage.minimumRotationAmount = 100;

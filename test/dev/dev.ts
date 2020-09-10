@@ -8,17 +8,27 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'foo';
-            const bar = 'foo';
+            function test () {
+                const foo = 'foo';
+                const bar = 'bar';
+                const baz = 'baz';
+            }
+            
+            console.log('ddd');
+            console.log('eee');
+            console.log('yyy');
+            
+            test();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayIntermediateVariablesCount: 0,
+            stringArrayIntermediateVariablesCount: 5,
             stringArrayEncoding: [
-                StringArrayEncoding.None
+                StringArrayEncoding.None,
+                StringArrayEncoding.Rc4
             ]
         }
     ).getObfuscatedCode();

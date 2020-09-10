@@ -341,7 +341,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--string-array-intermediate-variables-count <number>',
-                'Sets the passed amount of intermediate variables for the string array.',
+                'Sets the maximum count of intermediate variables for the string array inside each lexical scope',
                 parseInt
             )
             .option(

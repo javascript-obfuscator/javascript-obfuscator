@@ -2,7 +2,7 @@ Change Log
 
 v2.2.0
 ---
-* **New option:** `stringArrayIntermediateVariablesCount` sets the passed amount of intermediate variables for the `string array`
+* **New option:** `stringArrayIntermediateVariablesCount` sets the maximum count of intermediate variables for the `string array` inside each lexical scope
 
 v2.1.0
 ---

@@ -955,37 +955,51 @@ Type: `number` Default: `0`
 
 ##### :warning: [`stringArray`](#stringarray) option must be enabled
 
-Sets the passed amount of intermediate variables for the `string array`. 
+Sets the maximum count of intermediate variables for the `string array` inside each lexical scope.
+The actual count of intermediate variables inside each scope cannot be higher than a number of `literal` nodes within this scope.
 
 Example:
 ```ts
 // Input
 const foo = 'foo';
 const bar = 'bar';
-const baz = 'baz';
+        
+function test () {
+    const baz = 'baz';
+    const bark = 'bark';
+    const hawk = 'hawk';
+}
 
-console.log(foo, bar, baz);
+const eagle = 'eagle';
 
 // Output, stringArrayIntermediateVariablesCount: 5
-const _0x513c = [
+const _0x3018 = [
     'foo',
     'bar',
     'baz',
-    'log'
+    'bark',
+    'hawk',
+    'eagle'
 ];
-const _0x19a1 = function (_0x513ce6, _0x135380) {
-    _0x513ce6 = _0x513ce6 - 0x0;
-    let _0x19a103 = _0x513c[_0x513ce6];
-    return _0x19a103;
+const _0x380f = function (_0x30182a, _0x380f29) {
+    _0x30182a = _0x30182a - 0x0;
+    let _0x4e002c = _0x3018[_0x30182a];
+    return _0x4e002c;
 };
-const _0x3745 = _0x19a1;
-const _0x261a = _0x19a1;
-const _0x2f15 = _0x19a1;
-const _0x4a63 = _0x19a1;
-const _0x2e9d = _0x19a1;
-const foo = _0x4a63('0x0');
-const bar = _0x3745('0x1');
-const baz = _0x2e9d('0x2');
+const _0xe4db7c = _0x380f;
+const _0x26ca42 = _0x380f;
+const _0x58c610 = _0x380f;
+const foo = _0x58c610('0x0');
+const bar = _0x26ca42('0x1');
+function test() {
+    const _0x500eda = _0x380f;
+    const _0x1d1760 = _0x380f;
+    const _0x4ca8b0 = _0x380f;
+    const _0x4e002c = _0x4ca8b0('0x2');
+    const _0x573b1c = _0x1d1760('0x3');
+    const _0x1fb6ef = _0x500eda('0x4');
+}
+const eagle = _0x26ca42('0x5');
 ```
     
 ### `stringArrayThreshold`

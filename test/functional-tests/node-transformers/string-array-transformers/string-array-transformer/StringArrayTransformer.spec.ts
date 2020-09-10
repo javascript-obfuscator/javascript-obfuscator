@@ -500,80 +500,156 @@ describe('StringArrayTransformer', function () {
 
         describe('Variant #2: `stringArrayIntermediateVariablesCount` option is enabled', () => {
             describe('Variant #1: root scope', () => {
-                const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
-                        'return _0x([a-f0-9]){4,6};' +
-                    '};' +
-                    'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    // this one may be added or not depends on:
-                    // if all literal values encoded with a single encoding or not
-                    '(?:var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                    'var foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                    'var bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                    'var baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
-                );
+                describe('Variant #1: `1` intermediate variable for each encoding type', () => {
+                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                            'return _0x([a-f0-9]){4,6};' +
+                        '};' +
+                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'var foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
+                        'var bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
+                        'var baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    );
 
-                let obfuscatedCode: string;
+                    let obfuscatedCode: string;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayIntermediateVariablesCount: 2,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.None,
+                                    StringArrayEncoding.Base64
+                                ],
+                                stringArrayIntermediateVariablesCount: 1,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    });
                 });
 
-                it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                    assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
-                });
-            });
-
-            describe('Variant #2: function scope', () => {
-                const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
-                    'function test *\\( *\\) *{' +
+                describe('Variant #2: `2` intermediate variables for each encoding type', () => {
+                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                            'return _0x([a-f0-9]){4,6};' +
+                        '};' +
                         'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                         'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                         // this one may be added or not depends on:
                         // if all literal values encoded with a single encoding or not
                         '(?:var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                        'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
-                    '}'
-                );
+                        'var foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
+                        'var bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
+                        'var baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    );
 
-                let obfuscatedCode: string;
+                    let obfuscatedCode: string;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayIntermediateVariablesCount: 2,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.None,
+                                    StringArrayEncoding.Base64
+                                ],
+                                stringArrayIntermediateVariablesCount: 2,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    });
+                });
+            });
+
+            describe('Variant #2: function scope', () => {
+                describe('Variant #1: `1` intermediate variable for each encoding type', () => {
+                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                        'function test *\\( *\\) *{' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.None,
+                                    StringArrayEncoding.Base64
+                                ],
+                                stringArrayIntermediateVariablesCount: 1,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    });
                 });
 
-                it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
-                    assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                describe('Variant #2: `2` intermediate variables for each encoding type', () => {
+                    const stringArrayIntermediateCallRegExp: RegExp = new RegExp(
+                        'function test *\\( *\\) *{' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                            // this one may be added or not depends on:
+                            // if all literal values encoded with a single encoding or not
+                            '(?:var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                            'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/intermediate-variables-count.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.None,
+                                    StringArrayEncoding.Base64
+                                ],
+                                stringArrayIntermediateVariablesCount: 2,
+                                stringArrayThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add intermediate variables for both `none` and `base64` string array wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayIntermediateCallRegExp);
+                    });
                 });
             });
         });

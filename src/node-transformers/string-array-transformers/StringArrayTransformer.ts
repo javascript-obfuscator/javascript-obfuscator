@@ -3,11 +3,14 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayIntermediateCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayIntermediateCallsWrapperDataByEncoding';
+import { TStringArrayTransformerCustomNodeFactory } from '../../types/container/custom-nodes/TStringArrayTransformerCustomNodeFactory';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -20,6 +23,7 @@ import { IStringArrayStorageItemData } from '../../interfaces/storages/string-ar
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { StringArrayTransformerCustomNode } from '../../enums/custom-nodes/StringArrayTransformerCustomNode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeAppender } from '../../node/NodeAppender';
@@ -29,6 +33,7 @@ import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 import { NumberUtils } from '../../utils/NumberUtils';
+import { StringArrayIntermediateCallsWrapperNode } from '../../custom-nodes/string-array-nodes/StringArrayIntermediateCallsWrapperNode';
 
 @injectable()
 export class StringArrayTransformer extends AbstractNodeTransformer {
@@ -71,6 +76,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
 
     /**
+     * @type {TStringArrayTransformerCustomNodeFactory}
+     */
+    private readonly stringArrayTransformerCustomNodeFactory: TStringArrayTransformerCustomNodeFactory;
+
+    /**
      * @type {TNodeWithLexicalScope[]}
      */
     private readonly visitedLexicalScopeNodesStack: TNodeWithLexicalScope[] = [];
@@ -78,32 +88,36 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {IArrayUtils} arrayUtils
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {ILiteralNodesCacheStorage} literalNodesCacheStorage
      * @param {IStringArrayStorage} stringArrayStorage
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
-     * @param {IArrayUtils} arrayUtils
-     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {TStringArrayTransformerCustomNodeFactory} stringArrayTransformerCustomNodeFactory
      */
     public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.ILiteralNodesCacheStorage) literalNodesCacheStorage: ILiteralNodesCacheStorage,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
-        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
-        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IStringArrayTransformerCustomNode)
+            stringArrayTransformerCustomNodeFactory: TStringArrayTransformerCustomNodeFactory
     ) {
         super(randomGenerator, options);
 
+        this.arrayUtils = arrayUtils;
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
         this.literalNodesCacheStorage = literalNodesCacheStorage;
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
-        this.arrayUtils = arrayUtils;
-        this.escapeSequenceEncoder = escapeSequenceEncoder;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
+        this.stringArrayTransformerCustomNodeFactory = stringArrayTransformerCustomNodeFactory;
     }
 
     /**
@@ -360,20 +374,19 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
             for (const stringArrayIntermediateCallsWrapperName of names) {
                 const stringArrayRootCallsWrapperName: string = this.getStringArrayRootCallsWrapperName(encoding);
+                const stringArrayIntermediateCallsWrapperNode: ICustomNode<TInitialData<StringArrayIntermediateCallsWrapperNode>> =
+                    this.stringArrayTransformerCustomNodeFactory(
+                        StringArrayTransformerCustomNode.StringArrayIntermediateCallsWrapperNode
+                    );
+
+                stringArrayIntermediateCallsWrapperNode.initialize(
+                    stringArrayIntermediateCallsWrapperName,
+                    stringArrayRootCallsWrapperName
+                );
 
                 NodeAppender.prepend(
                     lexicalScopeBodyNode,
-                    [
-                        NodeFactory.variableDeclarationNode(
-                            [
-                                NodeFactory.variableDeclaratorNode(
-                                    NodeFactory.identifierNode(stringArrayIntermediateCallsWrapperName),
-                                    NodeFactory.identifierNode(stringArrayRootCallsWrapperName)
-                                )
-                            ],
-                            'var',
-                        )
-                    ]
+                    stringArrayIntermediateCallsWrapperNode.getNode()
                 );
             }
         }

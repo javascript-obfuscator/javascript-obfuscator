@@ -268,7 +268,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const isFilledScopeCallsWrapperNamesList: boolean = stringArrayScopeCallsWrapperNames.length === this.options.stringArrayWrappersCount;
 
         if (!isFilledScopeCallsWrapperNamesList) {
-            const nextScopeCallsWrapperName: string = this.identifierNamesGenerator.generateForLexicalScope(currentLexicalScopeNode);
+            const nextScopeCallsWrapperName: string = this.identifierNamesGenerator.generateNext();
 
             stringArrayScopeCallsWrapperNames.push(nextScopeCallsWrapperName);
             stringArrayScopeCallsWrapperDataByEncoding[encoding] = {

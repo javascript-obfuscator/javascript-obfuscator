@@ -60,14 +60,16 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
-     * We can only ignore limited nameLength, it has no sense here
+     * Generates next name based on a global previous mangled name
+     * We can ignore nameLength parameter here, it hasn't sense with this generator
+     *
      * @param {number} nameLength
      * @returns {string}
      */
     public generateNext (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
-        this.previousMangledName = identifierName;
+        this.updatePreviousMangledName(identifierName);
         this.preserveName(identifierName);
 
         return identifierName;
@@ -84,7 +86,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
-        this.previousMangledName = identifierName;
+        this.updatePreviousMangledName(identifierName);
 
         if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
             return this.generateForGlobalScope(nameLength);
@@ -116,6 +118,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(lexicalScopeNode, identifierName);
 
+        this.updatePreviousMangledName(identifierName);
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
@@ -135,6 +138,13 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     protected getNameSequence (): string[] {
         return MangledIdentifierNamesGenerator.nameSequence;
+    }
+
+    /**
+     * @param {string} name
+     */
+    protected updatePreviousMangledName (name: string): void {
+        this.previousMangledName = name;
     }
 
     /**

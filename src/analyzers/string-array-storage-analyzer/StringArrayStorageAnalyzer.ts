@@ -6,9 +6,9 @@ import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
-import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
+import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';

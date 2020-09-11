@@ -1,5 +1,5 @@
 /**
- * Notice, that second and third call to recursiveFunc1('indexOf') has cyrillic `е` character instead latin
+ * SelfDefendingTemplate. Enters code in infinity loop.
  *
  * @returns {string}
  */

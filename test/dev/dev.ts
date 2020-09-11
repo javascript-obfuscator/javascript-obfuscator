@@ -1,7 +1,6 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -10,19 +9,24 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
         `
             const foo = 'foo';
             const bar = 'bar';
-            const baz = 'baz';
+                    
+            function test () {
+                const baz = 'baz';
+                const bark = 'bark';
             
-            console.log(foo, bar, baz);
+                function test1() {
+                    const hawk = 'hawk';
+                    const eagle = 'eagle';
+                } 
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayIntermediateVariablesCount: 2,
-            stringArrayEncoding: [
-                StringArrayEncoding.Rc4
-            ]
+            stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersCount: 1
         }
     ).getObfuscatedCode();
 

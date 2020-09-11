@@ -5,36 +5,33 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
-import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helpers/ICustomCodeHelperObfuscator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { StringArrayTemplate } from './templates/string-array/StringArrayTemplate';
-
-import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
-export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
+export class StringArrayScopeCallsWrapperNode extends AbstractCustomNode {
     /**
-     * @type {IStringArrayStorage}
+     * @type {string}
      */
     @initializable()
-    private stringArrayStorage!: IStringArrayStorage;
+    private stringArrayCallsWrapperName!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private stringArrayName!: string;
+    private stringArrayScopeCallsWrapperName!: string;
+
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
-     * @param {ICustomCodeHelperObfuscator} customCodeHelperObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -42,46 +39,45 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
-        @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(
             identifierNamesGeneratorFactory,
             customCodeHelperFormatter,
-            customCodeHelperObfuscator,
             randomGenerator,
             options
         );
     }
 
     /**
-     * @param {IStringArrayStorage} stringArrayStorage
-     * @param {string} stringArrayName
+     * @param {string} stringArrayScopeCallsWrapperName
+     * @param {string} stringArrayCallsWrapperName
      */
     public initialize (
-        stringArrayStorage: IStringArrayStorage,
-        stringArrayName: string
+        stringArrayScopeCallsWrapperName: string,
+        stringArrayCallsWrapperName: string
     ): void {
-        this.stringArrayStorage = stringArrayStorage;
-        this.stringArrayName = stringArrayName;
+        this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
+        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
     }
 
     /**
-     * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
-        return NodeUtils.convertCodeToStructure(codeHelperTemplate);
-    }
+    protected getNodeStructure (): TStatement[] {
+        const structure: TStatement = NodeFactory.variableDeclarationNode(
+            [
+                NodeFactory.variableDeclaratorNode(
+                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperName),
+                    NodeFactory.identifierNode(this.stringArrayCallsWrapperName)
+                )
+            ],
+            'const',
+        );
 
-    /**
-     * @returns {string}
-     */
-    protected getCodeHelperTemplate (): string {
-        return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
-            stringArrayName: this.stringArrayName,
-            stringArray: this.stringArrayStorage.toString()
-        });
+        NodeUtils.parentizeAst(structure);
+
+        return [structure];
     }
 }

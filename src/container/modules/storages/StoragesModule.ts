@@ -4,18 +4,24 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
+import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStringArrayStorage } from '../../../interfaces/storages/string-array-storage/IStringArrayStorage';
+import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { ControlFlowStorage } from '../../../storages/custom-nodes/ControlFlowStorage';
 import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage';
-import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
+import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
+import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
 
 export const storagesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // storages
     bind<TCustomCodeHelperGroupStorage>(ServiceIdentifiers.TCustomNodeGroupStorage)
         .to(CustomCodeHelperGroupStorage)
+        .inSingletonScope();
+
+    bind<ILiteralNodesCacheStorage>(ServiceIdentifiers.ILiteralNodesCacheStorage)
+        .to(LiteralNodesCacheStorage)
         .inSingletonScope();
 
     bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)

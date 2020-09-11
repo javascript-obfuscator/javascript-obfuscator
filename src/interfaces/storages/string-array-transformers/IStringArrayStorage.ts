@@ -1,7 +1,6 @@
 import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
 import { IMapStorage } from '../IMapStorage';
-import { IStringArrayCallsWrapperNames } from './IStringArrayCallsWrapperNames';
 import { IStringArrayStorageItemData } from './IStringArrayStorageItem';
 
 export interface IStringArrayStorage extends IMapStorage <string, IStringArrayStorageItemData> {
@@ -17,9 +16,9 @@ export interface IStringArrayStorage extends IMapStorage <string, IStringArraySt
 
     /**
      * @param {TStringArrayEncoding | null} stringArrayEncoding
-     * @returns {IStringArrayCallsWrapperNames}
+     * @returns {string}
      */
-    getStorageCallsWrapperNames (stringArrayEncoding: TStringArrayEncoding | null): IStringArrayCallsWrapperNames;
+    getStorageCallsWrapperName (stringArrayEncoding: TStringArrayEncoding | null): string;
 
     rotateStorage (): void;
 

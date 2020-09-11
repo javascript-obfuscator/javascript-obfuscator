@@ -1797,7 +1797,7 @@
             function BuiltinType(name, modifiers) {
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, modifiers);
-                this.name = name;
+                this.names = name;
             }
             BuiltinType.prototype.visitType = function (visitor, context) {
                 return visitor.visitBuiltintType(this, context);
@@ -1952,11 +1952,11 @@
                 if (type === void 0) { type = null; }
                 _super.call(this, type);
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__facade_lang__["g" /* isString */])(name)) {
-                    this.name = name;
+                    this.names = name;
                     this.builtin = null;
                 }
                 else {
-                    this.name = null;
+                    this.names = null;
                     this.builtin = name;
                 }
             }
@@ -1971,7 +1971,7 @@
             function WriteVarExpr(name, value, type) {
                 if (type === void 0) { type = null; }
                 _super.call(this, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__facade_lang__["a" /* isPresent */])(type) ? type : value.type);
-                this.name = name;
+                this.names = name;
                 this.value = value;
             }
             WriteVarExpr.prototype.visitExpression = function (visitor, context) {
@@ -2004,7 +2004,7 @@
                 if (type === void 0) { type = null; }
                 _super.call(this, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__facade_lang__["a" /* isPresent */])(type) ? type : value.type);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
                 this.value = value;
             }
             WritePropExpr.prototype.visitExpression = function (visitor, context) {
@@ -2026,11 +2026,11 @@
                 this.receiver = receiver;
                 this.args = args;
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__facade_lang__["g" /* isString */])(method)) {
-                    this.name = method;
+                    this.names = method;
                     this.builtin = null;
                 }
                 else {
-                    this.name = null;
+                    this.names = null;
                     this.builtin = method;
                 }
             }
@@ -2130,7 +2130,7 @@
         var FnParam = (function () {
             function FnParam(name, type) {
                 if (type === void 0) { type = null; }
-                this.name = name;
+                this.names = name;
                 this.type = type;
             }
             return FnParam;
@@ -2172,7 +2172,7 @@
                 if (type === void 0) { type = null; }
                 _super.call(this, type);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
             }
             ReadPropExpr.prototype.visitExpression = function (visitor, context) {
                 return visitor.visitReadPropExpr(this, context);
@@ -2254,7 +2254,7 @@
                 if (type === void 0) { type = null; }
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, modifiers);
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.type = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__facade_lang__["a" /* isPresent */])(type) ? type : value.type;
             }
@@ -2269,7 +2269,7 @@
                 if (type === void 0) { type = null; }
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, modifiers);
-                this.name = name;
+                this.names = name;
                 this.params = params;
                 this.statements = statements;
                 this.type = type;
@@ -2319,7 +2319,7 @@
                 if (type === void 0) { type = null; }
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, type, modifiers);
-                this.name = name;
+                this.names = name;
             }
             return ClassField;
         }(AbstractClassPart));
@@ -2329,7 +2329,7 @@
                 if (type === void 0) { type = null; }
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, type, modifiers);
-                this.name = name;
+                this.names = name;
                 this.params = params;
                 this.body = body;
             }
@@ -2341,7 +2341,7 @@
                 if (type === void 0) { type = null; }
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, type, modifiers);
-                this.name = name;
+                this.names = name;
                 this.body = body;
             }
             return ClassGetter;
@@ -2351,7 +2351,7 @@
             function ClassStmt(name, parent, fields, getters, constructorMethod, methods, modifiers) {
                 if (modifiers === void 0) { modifiers = null; }
                 _super.call(this, modifiers);
-                this.name = name;
+                this.names = name;
                 this.parent = parent;
                 this.fields = fields;
                 this.getters = getters;
@@ -4378,7 +4378,7 @@
             function CompileAnimationEntryMetadata(name, definitions) {
                 if (name === void 0) { name = null; }
                 if (definitions === void 0) { definitions = null; }
-                this.name = name;
+                this.names = name;
                 this.definitions = definitions;
             }
             return CompileAnimationEntryMetadata;
@@ -4470,7 +4470,7 @@
             function CompileIdentifierMetadata(_a) {
                 var _b = _a === void 0 ? {} : _a, reference = _b.reference, name = _b.name, moduleUrl = _b.moduleUrl, prefix = _b.prefix, value = _b.value;
                 this.reference = reference;
-                this.name = name;
+                this.names = name;
                 this.prefix = prefix;
                 this.moduleUrl = moduleUrl;
                 this.value = value;
@@ -4726,7 +4726,7 @@
             function CompilePipeMetadata(_a) {
                 var _b = _a === void 0 ? {} : _a, type = _b.type, name = _b.name, pure = _b.pure;
                 this.type = type;
-                this.name = name;
+                this.names = name;
                 this.pure = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["j" /* normalizeBool */])(pure);
             }
             Object.defineProperty(CompilePipeMetadata.prototype, "identifier", {
@@ -6666,7 +6666,7 @@
          */
         var AttrAst = (function () {
             function AttrAst(name, value, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.sourceSpan = sourceSpan;
             }
@@ -6678,7 +6678,7 @@
          */
         var BoundElementPropertyAst = (function () {
             function BoundElementPropertyAst(name, type, securityContext, value, unit, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.type = type;
                 this.securityContext = securityContext;
                 this.value = value;
@@ -6695,7 +6695,7 @@
          */
         var BoundEventAst = (function () {
             function BoundEventAst(name, target, handler, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.target = target;
                 this.handler = handler;
                 this.sourceSpan = sourceSpan;
@@ -6722,7 +6722,7 @@
          */
         var ReferenceAst = (function () {
             function ReferenceAst(name, value, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.sourceSpan = sourceSpan;
             }
@@ -6736,7 +6736,7 @@
          */
         var VariableAst = (function () {
             function VariableAst(name, value, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.sourceSpan = sourceSpan;
             }
@@ -6750,7 +6750,7 @@
          */
         var ElementAst = (function () {
             function ElementAst(name, attrs, inputs, outputs, references, directives, providers, hasViewContainer, children, ngContentIndex, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.attrs = attrs;
                 this.inputs = inputs;
                 this.outputs = outputs;
@@ -7949,7 +7949,7 @@
         }());
         var Attribute = (function () {
             function Attribute(name, value, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.sourceSpan = sourceSpan;
             }
@@ -7958,7 +7958,7 @@
         }());
         var Element = (function () {
             function Element(name, attrs, children, sourceSpan, startSourceSpan, endSourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.attrs = attrs;
                 this.children = children;
                 this.sourceSpan = sourceSpan;
@@ -12945,7 +12945,7 @@
             __extends(EmptyError, _super);
             function EmptyError() {
                 var err = _super.call(this, 'no elements in sequence');
-                this.name = err.name = 'EmptyError';
+                this.names = err.name = 'EmptyError';
                 this.stack = err.stack;
                 this.message = err.message;
             }
@@ -15615,7 +15615,7 @@
         }());
         var BoundElementOrDirectiveProperty = (function () {
             function BoundElementOrDirectiveProperty(name, expression, isLiteral, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.expression = expression;
                 this.isLiteral = isLiteral;
                 this.sourceSpan = sourceSpan;
@@ -15624,7 +15624,7 @@
         }());
         var ElementOrDirectiveRef = (function () {
             function ElementOrDirectiveRef(name, value, sourceSpan) {
-                this.name = name;
+                this.names = name;
                 this.value = value;
                 this.sourceSpan = sourceSpan;
             }
@@ -18826,7 +18826,7 @@
             __extends(ArgumentOutOfRangeError, _super);
             function ArgumentOutOfRangeError() {
                 var err = _super.call(this, 'argument out of range');
-                this.name = err.name = 'ArgumentOutOfRangeError';
+                this.names = err.name = 'ArgumentOutOfRangeError';
                 this.stack = err.stack;
                 this.message = err.message;
             }
@@ -20017,7 +20017,7 @@
             function PropertyRead(span, receiver, name) {
                 _super.call(this, span);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
             }
             PropertyRead.prototype.visit = function (visitor, context) {
                 if (context === void 0) { context = null; }
@@ -20030,7 +20030,7 @@
             function PropertyWrite(span, receiver, name, value) {
                 _super.call(this, span);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
                 this.value = value;
             }
             PropertyWrite.prototype.visit = function (visitor, context) {
@@ -20044,7 +20044,7 @@
             function SafePropertyRead(span, receiver, name) {
                 _super.call(this, span);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
             }
             SafePropertyRead.prototype.visit = function (visitor, context) {
                 if (context === void 0) { context = null; }
@@ -20084,7 +20084,7 @@
             function BindingPipe(span, exp, name, args) {
                 _super.call(this, span);
                 this.exp = exp;
-                this.name = name;
+                this.names = name;
                 this.args = args;
             }
             BindingPipe.prototype.visit = function (visitor, context) {
@@ -20174,7 +20174,7 @@
             function MethodCall(span, receiver, name, args) {
                 _super.call(this, span);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
                 this.args = args;
             }
             MethodCall.prototype.visit = function (visitor, context) {
@@ -20188,7 +20188,7 @@
             function SafeMethodCall(span, receiver, name, args) {
                 _super.call(this, span);
                 this.receiver = receiver;
-                this.name = name;
+                this.names = name;
                 this.args = args;
             }
             SafeMethodCall.prototype.visit = function (visitor, context) {
@@ -20230,7 +20230,7 @@
             function TemplateBinding(key, keyIsVar, name, expression) {
                 this.key = key;
                 this.keyIsVar = keyIsVar;
-                this.name = name;
+                this.names = name;
                 this.expression = expression;
             }
             return TemplateBinding;
@@ -25905,7 +25905,7 @@
          */
         var NgProbeToken = (function () {
             function NgProbeToken(name, token) {
-                this.name = name;
+                this.names = name;
                 this.token = token;
             }
             return NgProbeToken;
@@ -28493,7 +28493,7 @@
             __extends(ObjectUnsubscribedError, _super);
             function ObjectUnsubscribedError() {
                 var err = _super.call(this, 'object unsubscribed');
-                this.name = err.name = 'ObjectUnsubscribedError';
+                this.names = err.name = 'ObjectUnsubscribedError';
                 this.stack = err.stack;
                 this.message = err.message;
             }
@@ -29530,7 +29530,7 @@
             __extends(AnimationEntryAst, _super);
             function AnimationEntryAst(name, stateDeclarations, stateTransitions) {
                 _super.call(this);
-                this.name = name;
+                this.names = name;
                 this.stateDeclarations = stateDeclarations;
                 this.stateTransitions = stateTransitions;
             }
@@ -29673,7 +29673,7 @@
         var animationCompilationCache = new Map();
         var CompiledAnimationTriggerResult = (function () {
             function CompiledAnimationTriggerResult(name, statesMapStatement, statesVariableName, fnStatement, fnVariable) {
-                this.name = name;
+                this.names = name;
                 this.statesMapStatement = statesMapStatement;
                 this.statesVariableName = statesVariableName;
                 this.fnStatement = fnStatement;
@@ -30637,7 +30637,7 @@
             function IcuPlaceholder(value, name, sourceSpan) {
                 if (name === void 0) { name = ''; }
                 this.value = value;
-                this.name = name;
+                this.names = name;
                 this.sourceSpan = sourceSpan;
             }
             IcuPlaceholder.prototype.visit = function (visitor, context) { return visitor.visitIcuPlaceholder(this, context); };
@@ -31239,7 +31239,7 @@
                 var _this = this;
                 if (unescapedAttrs === void 0) { unescapedAttrs = {}; }
                 if (children === void 0) { children = []; }
-                this.name = name;
+                this.names = name;
                 this.children = children;
                 this.attrs = {};
                 Object.keys(unescapedAttrs).forEach(function (k) {
@@ -32494,7 +32494,7 @@
                     compileResult.dependencies.forEach(function (dep) {
                         dep.placeholder.reference =
                             _this._assertComponentKnown(dep.comp.reference, true).proxyComponentFactory;
-                        dep.placeholder.name = "compFactory_" + dep.comp.name;
+                        dep.placeholder.names = "compFactory_" + dep.comp.name;
                     });
                     if (!this._compilerConfig.useJit) {
                         ngModuleFactory =
@@ -32624,13 +32624,13 @@
                         var vfd = dep;
                         depTemplate = _this._assertComponentLoaded(vfd.comp.reference, false);
                         vfd.placeholder.reference = depTemplate.proxyViewFactory;
-                        vfd.placeholder.name = "viewFactory_" + vfd.comp.name;
+                        vfd.placeholder.names = "viewFactory_" + vfd.comp.name;
                     }
                     else if (dep instanceof __WEBPACK_IMPORTED_MODULE_14__view_compiler_view_compiler__["b" /* ComponentFactoryDependency */]) {
                         var cfd = dep;
                         depTemplate = _this._assertComponentLoaded(cfd.comp.reference, true);
                         cfd.placeholder.reference = depTemplate.proxyComponentFactory;
-                        cfd.placeholder.name = "compFactory_" + cfd.comp.name;
+                        cfd.placeholder.names = "compFactory_" + cfd.comp.name;
                     }
                 });
                 var statements = stylesCompileResult.componentStylesheet.statements.concat(compileResult.statements);
@@ -32649,7 +32649,7 @@
                     var nestedCompileResult = externalStylesheetsByModuleUrl.get(dep.moduleUrl);
                     var nestedStylesArr = _this._resolveAndEvalStylesCompileResult(nestedCompileResult, externalStylesheetsByModuleUrl);
                     dep.valuePlaceholder.reference = nestedStylesArr;
-                    dep.valuePlaceholder.name = "importedStyles" + i;
+                    dep.valuePlaceholder.names = "importedStyles" + i;
                 });
             };
             RuntimeCompiler.prototype._resolveAndEvalStylesCompileResult = function (result, externalStylesheetsByModuleUrl) {
@@ -35232,7 +35232,7 @@
          */
         var AnimationEntryMetadata = (function () {
             function AnimationEntryMetadata(name, definitions) {
-                this.name = name;
+                this.names = name;
                 this.definitions = definitions;
             }
             return AnimationEntryMetadata;
@@ -36381,7 +36381,7 @@
 
         var EventListener = (function () {
             function EventListener(name, callback) {
-                this.name = name;
+                this.names = name;
                 this.callback = callback;
             }
             ;
@@ -41662,7 +41662,7 @@
                 this.parentOutletMap = parentOutletMap;
                 this.location = location;
                 this.resolver = resolver;
-                this.name = name;
+                this.names = name;
                 this.activateEvents = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
                 this.deactivateEvents = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
                 parentOutletMap.registerOutlet(name ? name : __WEBPACK_IMPORTED_MODULE_2__shared__["a" /* PRIMARY_OUTLET */], this);
@@ -45392,7 +45392,7 @@
                 this.errors = errors;
                 var err = Error.call(this, errors ?
                 errors.length + " errors occurred during unsubscription:\n  " + errors.map(function (err, i) { return ((i + 1) + ") " + err.toString()); }).join('\n  ') : '');
-                this.name = err.name = 'UnsubscriptionError';
+                this.names = err.name = 'UnsubscriptionError';
                 this.stack = err.stack;
                 this.message = err.message;
             }
@@ -51293,7 +51293,7 @@
                 }
                 var appCompileResult = this._ngModuleCompiler.compile(ngModule, providers);
                 appCompileResult.dependencies.forEach(function (dep) {
-                    dep.placeholder.name = _componentFactoryName(dep.comp);
+                    dep.placeholder.names = _componentFactoryName(dep.comp);
                     dep.placeholder.moduleUrl = _ngfactoryModuleUrl(dep.comp.moduleUrl);
                 });
                 targetStatements.push.apply(targetStatements, appCompileResult.statements);
@@ -51340,7 +51340,7 @@
                 }
                 else if (dep instanceof __WEBPACK_IMPORTED_MODULE_3__view_compiler_view_compiler__["b" /* ComponentFactoryDependency */]) {
                     var cfd = dep;
-                    cfd.placeholder.name = _componentFactoryName(cfd.comp);
+                    cfd.placeholder.names = _componentFactoryName(cfd.comp);
                     cfd.placeholder.moduleUrl = _ngfactoryModuleUrl(cfd.comp.moduleUrl);
                 }
             });
@@ -53455,7 +53455,7 @@
          */
         var AnimationOutput = (function () {
             function AnimationOutput(name, phase, fullPropertyName) {
-                this.name = name;
+                this.names = name;
                 this.phase = phase;
                 this.fullPropertyName = fullPropertyName;
             }
@@ -60428,7 +60428,7 @@
         var NOT_SUPPORTED = 'NOT_SUPPORTED';
         var UpgradeNg1ComponentAdapterBuilder = (function () {
             function UpgradeNg1ComponentAdapterBuilder(name) {
-                this.name = name;
+                this.names = name;
                 this.inputs = [];
                 this.inputsRename = [];
                 this.outputs = [];

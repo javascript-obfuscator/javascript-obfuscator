@@ -36,7 +36,8 @@ import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-code/ObfuscatedCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
-import './unit-tests/storages/string-array/StringArrayStorage.spec';
+import './unit-tests/storages/string-array-transformers/literal-nodes-cache/LiteralNodesCacheStorage.spec';
+import './unit-tests/storages/string-array-transformers/string-array/StringArrayStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
 import './unit-tests/utils/CryptUtilsSwappedAlphabet.spec';
@@ -116,7 +117,7 @@ import './functional-tests/node-transformers/simplifying-transformers/variable-d
 import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
-import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
+import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';
 
 /**
  * Performance tests

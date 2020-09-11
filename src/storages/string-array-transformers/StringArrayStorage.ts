@@ -11,9 +11,8 @@ import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEn
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayCallsWrapperNames } from '../../interfaces/storages/string-array-storage/IStringArrayCallsWrapperNames';
-import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
-import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
@@ -87,9 +86,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private stringArrayStorageName!: string;
 
     /**
-     * @type {Map<TStringArrayEncoding | null, IStringArrayCallsWrapperNames>}
+     * @type {Map<TStringArrayEncoding | null, string>}
      */
-    private readonly stringArrayStorageCallsWrapperNamesMap: Map<TStringArrayEncoding | null, IStringArrayCallsWrapperNames> = new Map();
+    private readonly stringArrayStorageCallsWrapperNamesMap: Map<TStringArrayEncoding | null, string> = new Map();
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -173,22 +172,23 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @param {TStringArrayEncoding | null} stringArrayEncoding
      * @returns {IStringArrayCallsWrapperNames}
      */
-    public getStorageCallsWrapperNames (stringArrayEncoding: TStringArrayEncoding | null): IStringArrayCallsWrapperNames {
-        const storageCallsWrapperName: IStringArrayCallsWrapperNames | null = this.stringArrayStorageCallsWrapperNamesMap
+    public getStorageCallsWrapperName (stringArrayEncoding: TStringArrayEncoding | null): string {
+        const storageCallsWrapperName: string | null = this.stringArrayStorageCallsWrapperNamesMap
             .get(stringArrayEncoding) ?? null;
 
         if (storageCallsWrapperName) {
             return storageCallsWrapperName;
         }
 
-        const newStorageCallsWrapperNames: IStringArrayCallsWrapperNames = this.getStringArrayCallsWrapperNames();
+        const newStorageCallsWrapperName: string = this.identifierNamesGenerator
+            .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
 
         this.stringArrayStorageCallsWrapperNamesMap.set(
             stringArrayEncoding,
-            newStorageCallsWrapperNames
+            newStorageCallsWrapperName
         );
 
-        return newStorageCallsWrapperNames;
+        return newStorageCallsWrapperName;
     }
 
     public rotateStorage (): void {
@@ -276,6 +276,10 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
                 .pickone(this.options.stringArrayEncoding)
             : null;
 
+        if (!encoding) {
+            throw new Error('`stringArrayEncoding` option array is empty');
+        }
+
         switch (encoding) {
             /**
              * For rc4 there is a possible chance of a collision between encoded values that were received from
@@ -328,18 +332,5 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
                 return { encodedValue, encoding, decodeKey };
             }
         }
-    }
-
-    /**
-     * @returns {IStringArrayCallsWrapperNames}
-     */
-    private getStringArrayCallsWrapperNames (): IStringArrayCallsWrapperNames {
-        return {
-            name: this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength),
-            intermediateNames: Array.from(
-                {length: this.options.stringArrayIntermediateVariablesCount},
-                () => this.identifierNamesGenerator.generateForGlobalScope(StringArrayStorage.stringArrayNameLength)
-            )
-        };
     }
 }

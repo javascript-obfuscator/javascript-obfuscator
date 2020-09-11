@@ -2,7 +2,8 @@ Change Log
 
 v2.2.0
 ---
-* **New option:** `stringArrayIntermediateVariablesCount` sets the passed amount of intermediate variables for the `string array`
+* **New option (enabled by default):** `stringArrayWrappersCount` sets the count of wrappers for the `string array` inside each root or function scope
+* **New option (enabled by default):** `stringArrayWrappersChainedCalls` enables the chained calls between `string array` wrappers
 
 v2.1.0
 ---

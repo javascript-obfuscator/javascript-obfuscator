@@ -1,8 +1,9 @@
 import { assert } from 'chai';
 import { TypeFromEnum } from '@gradecam/tsenum';
 
-import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TDictionary } from '../../../src/types/TDictionary';
+import { TInputOptions } from '../../../src/types/options/TInputOptions';
+import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
@@ -11,9 +12,11 @@ import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
 
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
+import { HIGH_OBFUSCATION_PRESET } from '../../../src/options/presets/HighObfuscation';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { OptionsPreset } from '../../../src/enums/options/presets/OptionsPreset';
 
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
@@ -848,7 +851,8 @@ describe('JavaScriptObfuscator', () => {
                             StringArrayEncoding.Base64,
                             StringArrayEncoding.Rc4
                         ],
-                        stringArrayIntermediateVariablesCount: 10,
+                        stringArrayWrappersChainedCalls: true,
+                        stringArrayWrappersCount: 10,
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false
@@ -1092,6 +1096,36 @@ describe('JavaScriptObfuscator', () => {
 
             it('Should throw an error if source codes object is not a plain object', () => {
                 assert.throw(testFunc, Error);
+            });
+        });
+    });
+
+    describe('getOptionsByPreset', () => {
+        describe('Variant #1: base behaviour', () => {
+            const optionsPresetName: TOptionsPreset = OptionsPreset.HighObfuscation;
+
+            let options: TInputOptions;
+
+            before(() => {
+                options = JavaScriptObfuscator.getOptionsByPreset(optionsPresetName);
+            });
+
+            it('Should return options for passed options preset name', () => {
+                assert.deepEqual(options, HIGH_OBFUSCATION_PRESET);
+            });
+        });
+
+        describe('Variant #2: unknown options preset name', () => {
+            const optionsPresetName: TOptionsPreset = 'foobar' as TOptionsPreset;
+
+            let testFunc: () => TInputOptions;
+
+            before(() => {
+                testFunc = () => JavaScriptObfuscator.getOptionsByPreset(optionsPresetName);
+            });
+
+            it('Should throws an error when unknown option preset is passed', () => {
+                assert.throws(testFunc, 'Options for preset name `foobar` are not found');
             });
         });
     });

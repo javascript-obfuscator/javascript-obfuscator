@@ -360,7 +360,8 @@ Following options are available for the JS Obfuscator:
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayWrappersCount: true,
+    stringArrayWrappersCount: 1,
+    stringArrayWrappersChainedCalls: true,
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -952,7 +953,7 @@ stringArrayEncoding: [
 ```
 
 ### `stringArrayWrappersCount`
-Type: `number` Default: `0`
+Type: `number` Default: `1`
 
 ##### :warning: [`stringArray`](#stringarray) option must be enabled
 
@@ -1004,7 +1005,7 @@ const eagle = _0x26ca42('0x5');
 ```
 
 ### `stringArrayWrappersChainedCalls`
-Type: `boolean` Default: `false`
+Type: `boolean` Default: `true`
 
 ##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
 
@@ -1221,8 +1222,8 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayWrappersCount: 0,
-    stringArrayWrappersChainedCalls: false,
+    stringArrayWrappersCount: 1,
+    stringArrayWrappersChainedCalls: true,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }
@@ -1249,8 +1250,8 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
-    stringArrayWrappersCount: 0,
-    stringArrayWrappersChainedCalls: false,
+    stringArrayWrappersCount: 1,
+    stringArrayWrappersChainedCalls: true,
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }

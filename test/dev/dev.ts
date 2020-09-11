@@ -1,7 +1,6 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -27,10 +26,7 @@ import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
             stringArray: true,
             stringArrayThreshold: 1,
             stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersCount: 5,
-            stringArrayEncoding: [
-                StringArrayEncoding.None
-            ]
+            stringArrayWrappersCount: 1
         }
     ).getObfuscatedCode();
 

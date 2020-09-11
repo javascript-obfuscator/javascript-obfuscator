@@ -2,8 +2,8 @@ Change Log
 
 v2.2.0
 ---
-* **New option:** `stringArrayWrappersCount` sets the count of wrappers for the `string array` inside each root or function scope
-* **New option:** `stringArrayWrappersChainedCalls` enables the chained calls between `string array` wrappers
+* **New option (enabled by default):** `stringArrayWrappersCount` sets the count of wrappers for the `string array` inside each root or function scope
+* **New option (enabled by default):** `stringArrayWrappersChainedCalls` enables the chained calls between `string array` wrappers
 
 v2.1.0
 ---

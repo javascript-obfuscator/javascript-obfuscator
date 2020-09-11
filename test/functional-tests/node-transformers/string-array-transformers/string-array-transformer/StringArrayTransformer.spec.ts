@@ -12,7 +12,7 @@ import { swapLettersCase } from '../../../../helpers/swapLettersCase';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('StringArrayTransformer', function () {
-    this.timeout(60000);
+    this.timeout(120000);
 
     describe('Variant #1: default behaviour', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
@@ -517,7 +517,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #11: none and base64 encoding', () => {
         describe('Variant #1: string array values', () => {
-            const samplesCount: number = 100;
+            const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
 
@@ -733,7 +733,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #12: none and rc4 encoding', () => {
         describe('Variant #1: string array calls wrapper call', () => {
-            const samplesCount: number = 100;
+            const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
 
@@ -820,7 +820,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #13: base64 and rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
-            const samplesCount: number = 100;
+            const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
 

@@ -10,6 +10,7 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { MangledIdentifierNamesGenerator } from '../../../../src/generators/identifier-names-generators/MangledIdentifierNamesGenerator';
 
 describe('MangledIdentifierNamesGenerator', () => {
     describe('generateNext', () => {
@@ -170,7 +171,65 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
     });
 
-    describe('isValidIdentifierName (identifierName: string): boolean', () => {
+    describe('isIncrementedMangledName', () => {
+        const names: [nameA: string, nameB: string, result: boolean][] = [
+            ['aa', 'aa', false],
+
+            ['a', '9', true],
+            ['9', 'a', false],
+
+            ['b', 'a', true],
+            ['a', 'b', false],
+
+            ['A', 'z', true],
+            ['z', 'A', false],
+
+            ['B', 'A', true],
+            ['A', 'B', false],
+
+            ['a0', 'Z', true],
+            ['Z', 'a0', false],
+
+            ['a9', 'a0', true],
+            ['a0', 'a9', false],
+
+            ['z0', 'a0', true],
+            ['a0', 'z0', false],
+
+            ['a0', 'a', true],
+            ['a', 'a0', false],
+
+            ['A0', 'a0', true],
+            ['a0', 'A0', false],
+
+            ['z1', 'a0', true],
+            ['a0', 'z1', false],
+
+            ['aa0', 'ZZ', true],
+            ['ZZ', 'aa0', false],
+
+            ['aaA', 'aa0', true],
+            ['aa0', 'aaA', false]
+        ];
+
+        names.forEach(([nameA, nameB, expectedResult], index: number) => {
+            describe(`Variant #${index + 1}: \`${nameA}\` and \`${nameB}\``, () => {
+                let result: boolean;
+
+                beforeEach(() => {
+                    console.time();
+                    result = MangledIdentifierNamesGenerator.isIncrementedMangledName(nameA, nameB);
+                    console.timeEnd();
+                });
+
+                it('should compare mangled names', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+        })
+    });
+
+    describe('isValidIdentifierName', () => {
         describe('Variant #1: reserved name as simple string', () => {
             const expectedFirstIdentifier: string = 'a';
             const expectedSecondIdentifier: string = 'd';

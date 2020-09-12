@@ -60,14 +60,68 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
-     * We can only ignore limited nameLength, it has no sense here
+     * @param {string} nextName
+     * @param {string} prevName
+     * @returns {boolean}
+     */
+    public static isIncrementedMangledName (nextName: string, prevName: string): boolean {
+        if (nextName === prevName) {
+            return false;
+        }
+
+        const nextNameLength: number = nextName.length;
+        const prevNameLength: number = prevName.length;
+
+        if (nextNameLength !== prevNameLength) {
+            return nextNameLength > prevNameLength;
+        }
+
+        for (let i: number = 0; i < nextNameLength; i++) {
+            const nextNameCharacter: string = nextName[i];
+            const prevNameCharacter: string = prevName[i];
+
+            if (nextNameCharacter === prevNameCharacter) {
+                continue;
+            }
+
+            const isUpperCaseNextNameCharacter: boolean = MangledIdentifierNamesGenerator.isUpperCaseCharacter(nextNameCharacter);
+            const isUpperCasePrevNameCharacter: boolean = MangledIdentifierNamesGenerator.isUpperCaseCharacter(prevNameCharacter);
+
+            if (
+                isUpperCaseNextNameCharacter
+                && !isUpperCasePrevNameCharacter
+            ) {
+                return true;
+            } else if (
+                !isUpperCaseNextNameCharacter
+                && isUpperCasePrevNameCharacter
+            ) {
+                return false;
+            }
+        }
+
+        return nextName > prevName;
+    }
+
+    /**
+     * @param {string} character
+     * @returns {boolean}
+     */
+    private static isUpperCaseCharacter (string: string): boolean {
+        return /^[A-Z]*$/.test(string);
+    }
+
+    /**
+     * Generates next name based on a global previous mangled name
+     * We can ignore nameLength parameter here, it hasn't sense with this generator
+     *
      * @param {number} nameLength
      * @returns {string}
      */
     public generateNext (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
-        this.previousMangledName = identifierName;
+        this.updatePreviousMangledName(identifierName);
         this.preserveName(identifierName);
 
         return identifierName;
@@ -84,7 +138,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
-        this.previousMangledName = identifierName;
+        this.updatePreviousMangledName(identifierName);
 
         if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
             return this.generateForGlobalScope(nameLength);
@@ -116,6 +170,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(lexicalScopeNode, identifierName);
 
+        this.updatePreviousMangledName(identifierName);
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
@@ -135,6 +190,17 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     protected getNameSequence (): string[] {
         return MangledIdentifierNamesGenerator.nameSequence;
+    }
+
+    /**
+     * @param {string} name
+     */
+    protected updatePreviousMangledName (name: string): void {
+        if (!MangledIdentifierNamesGenerator.isIncrementedMangledName(name, this.previousMangledName)) {
+            return;
+        }
+
+        this.previousMangledName = name;
     }
 
     /**

@@ -256,41 +256,214 @@ describe('StringArrayTransformer', function () {
         });
 
         describe('Variant #5: `stringArrayWrappersChainedCalls` option is enabled', () => {
-            describe('Variant #1: correct evaluation of the string array wrappers chained calls', () => {
-                const samplesCount: number = 50;
-                const expectedEvaluationResult: string = 'aaabbbcccdddeee';
-                let isEvaluationSuccessful: boolean = true;
+            describe('Variant #1: correct chained calls', () => {
+                describe('Variant #1: `Mangled` identifier names generator', () => {
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const q *= *b;' +
+                        'const foo *= *q\\(\'0x0\'\\);' +
+                        'function test\\(c, *d\\) *{' +
+                            'const r *= *q;' +
+                            'const e *= *r\\(\'0x1\'\\);' +
+                            'const f *= *r\\(\'0x2\'\\);' +
+                            'function g\\(h, *i\\) *{' +
+                                'const s *= *r;' +
+                                'const j *= *s\\(\'0x3\'\\);' +
+                                'const k *= *s\\(\'0x4\'\\);' +
+                                'function l\\(m, *n *\\) *{' +
+                                    'const t *= *s;' +
+                                    'const o *= *t\\(\'0x3\'\\);' +
+                                    'const p *= *t\\(\'0x4\'\\);' +
+                                    'return o *\\+ *p;' +
+                                '}' +
+                                'return j *\\+ *k;' +
+                            '}' +
+                            'return e *\\+ *f *\\+ *g\\(\\);' +
+                        '}'
+                    );
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-eval.js');
+                    let obfuscatedCode: string;
 
-                    for (let i = 0; i < samplesCount; i++) {
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
                                 stringArrayThreshold: 1,
-                                stringArrayEncoding: [
-                                    StringArrayEncoding.None,
-                                    StringArrayEncoding.Rc4
-                                ],
                                 stringArrayWrappersChainedCalls: true,
-                                stringArrayWrappersCount: 5
+                                stringArrayWrappersCount: 1
                             }
                         ).getObfuscatedCode();
+                    });
 
-                        const evaluationResult: string = eval(obfuscatedCode);
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+                });
+            });
 
-                        if (evaluationResult !== expectedEvaluationResult) {
-                            isEvaluationSuccessful = false;
-                            break;
-                        }
-                    }
+            describe('Variant #2: correct evaluation of the string array wrappers chained calls', () => {
+                describe('Variant #1: base', () => {
+                    describe('Variant #1: `Hexadecimal` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-1.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+
+                    describe('Variant #2: `Mangled` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-1.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
                 });
 
-                it('should correctly evaluate string array wrappers chained calls', () => {
-                    assert.equal(isEvaluationSuccessful, true);
+                describe('Variant #2: advanced', () => {
+                    describe('Variant #1: `Hexadecimal` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-2.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+
+                    describe('Variant #2: `Mangled` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-chained-calls-2.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
                 });
             });
         });

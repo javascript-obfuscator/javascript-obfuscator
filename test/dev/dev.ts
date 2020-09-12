@@ -13,23 +13,33 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
             function test (a, b) {
                 const bar = 'bbb';
                 
-                return a + b;
-            }
-            
-            function test1 (a, b) {
-                const bar = 'bbb';
+                function test1 (a, b) {
+                    const baz = 'ccc';
+                    
+                    function test2 (a, b) {
+                        const bark = 'ddd';
+                        
+                        return bark;
+                    }
+                    
+                    return baz + test2();
+                }
                 
-                return a + b;
+                return bar + test1();
             }
             
-            test();
+            function test3 (a, b) {
+                const hawk = 'eee';
+                
+                return hawk;
+            }
             
-            var baz = 5;
+            foo + test() + test3();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
             renameGlobals: true,
             stringArray: true,
             stringArrayThreshold: 1,

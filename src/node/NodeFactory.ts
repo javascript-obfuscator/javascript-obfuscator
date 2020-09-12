@@ -35,6 +35,25 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Pattern[]} params
+     * @param {boolean} expression
+     * @param {BlockStatement | Expression} body
+     * @returns {ArrowFunctionExpression}
+     */
+    public static arrowFunctionExpressionNode (
+        params: ESTree.Pattern[],
+        expression: boolean,
+        body: ESTree.BlockStatement | ESTree.Expression
+    ): ESTree.ArrowFunctionExpression {
+        return {
+            type: NodeType.ArrowFunctionExpression,
+            params,
+            expression,
+            body
+        };
+    }
+
+    /**
      * @param {AssignmentOperator} operator
      * @param {Pattern | MemberExpression} left
      * @param {Expression} right

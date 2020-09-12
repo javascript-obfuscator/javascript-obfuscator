@@ -1,6 +1,7 @@
 import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
+import { TNodeWithLexicalScopeAndStatements } from '../types/node/TNodeWithLexicalScopeAndStatements';
 import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { NodeType } from '../enums/node/NodeType';
@@ -268,6 +269,31 @@ export class NodeGuards {
      */
     public static isNodeWithBlockLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
         return NodeGuards.isNodeWithLexicalScope(node) || NodeGuards.isBlockStatementNode(node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {node is TNodeWithLexicalScopeAndStatements}
+     */
+    public static isNodeWithLexicalScopeAndStatements (node: ESTree.Node): node is TNodeWithLexicalScopeAndStatements {
+        if (!NodeGuards.isNodeWithLexicalScope(node)) {
+            return false;
+        }
+
+        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement | ESTree.Expression =
+            NodeGuards.isProgramNode(node)
+                ? node
+                : node.body;
+
+        // invalid lexical scope node
+        if (
+            !lexicalScopeBodyNode.parentNode
+            || !NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

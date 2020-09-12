@@ -257,4 +257,99 @@ describe('NodeGuards', () => {
             });
         });
     });
+
+    describe('isNodeWithLexicalScopeAndStatements', () => {
+        describe('truthful checks', () => {
+            const expectedResult: boolean = true;
+
+            describe('Variant #1: program node', () => {
+                const node: ESTree.Program = NodeFactory.programNode();
+
+                let result: boolean;
+
+                before(() => {
+                    NodeUtils.parentizeAst(node);
+                    result = NodeGuards.isNodeWithLexicalScopeAndStatements(node);
+                });
+
+                it('should check if node with a lexical scope and statements', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #2: function declaration node', () => {
+                const functionDeclarationNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
+                    'foo',
+                    [],
+                    NodeFactory.blockStatementNode([])
+                );
+                const programNode: ESTree.Program = NodeFactory.programNode([
+                    functionDeclarationNode
+                ]);
+
+                let result: boolean;
+
+                before(() => {
+                    NodeUtils.parentizeAst(programNode);
+                    result = NodeGuards.isNodeWithLexicalScopeAndStatements(functionDeclarationNode);
+                });
+
+                it('should check if node with a lexical scope and statements', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #3: arrow function expression node', () => {
+                const arrowFunctionExpressionNode: ESTree.ArrowFunctionExpression = NodeFactory.arrowFunctionExpressionNode(
+                    [],
+                    false,
+                    NodeFactory.blockStatementNode([])
+                );
+                const programNode: ESTree.Program = NodeFactory.programNode([
+                    NodeFactory.expressionStatementNode(
+                        arrowFunctionExpressionNode
+                    )
+                ]);
+
+                let result: boolean;
+
+                before(() => {
+                    NodeUtils.parentizeAst(programNode);
+                    result = NodeGuards.isNodeWithLexicalScopeAndStatements(arrowFunctionExpressionNode);
+                });
+
+                it('should check if node with a lexical scope and statements', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+        });
+
+        describe('false checks', () => {
+            const expectedResult: boolean = false;
+
+            describe('Variant #1: arrow function expression node without statements', () => {
+                const arrowFunctionExpressionNode: ESTree.ArrowFunctionExpression = NodeFactory.arrowFunctionExpressionNode(
+                    [],
+                    true,
+                    NodeFactory.literalNode('foo')
+                );
+                const programNode: ESTree.Program = NodeFactory.programNode([
+                    NodeFactory.expressionStatementNode(
+                        arrowFunctionExpressionNode
+                    )
+                ]);
+
+                let result: boolean;
+
+                before(() => {
+                    NodeUtils.parentizeAst(programNode);
+                    result = NodeGuards.isNodeWithLexicalScopeAndStatements(arrowFunctionExpressionNode);
+                });
+
+                it('should check if node with a lexical scope and statements', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+        });
+    });
 });

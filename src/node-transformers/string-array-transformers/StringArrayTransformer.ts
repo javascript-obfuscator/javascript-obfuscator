@@ -124,31 +124,6 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    private static isValidLexicalScopeNode (node: ESTree.Node): node is TNodeWithLexicalScopeAndStatements {
-        if (!NodeGuards.isNodeWithLexicalScope(node)) {
-            return false;
-        }
-
-        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement | ESTree.Expression =
-            NodeGuards.isProgramNode(node)
-                ? node
-                : node.body;
-
-        // invalid lexical scope node
-        if (
-            !lexicalScopeBodyNode.parentNode
-            || !NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
@@ -161,7 +136,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                             this.prepareNode(node);
                         }
 
-                        if (StringArrayTransformer.isValidLexicalScopeNode(node)) {
+                        if (NodeGuards.isNodeWithLexicalScopeAndStatements(node)) {
                             this.onLexicalScopeNodeEnter(node);
                         }
 
@@ -170,7 +145,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                         }
                     },
                     leave: (node: ESTree.Node): ESTree.Node | undefined => {
-                        if (StringArrayTransformer.isValidLexicalScopeNode(node)) {
+                        if (NodeGuards.isNodeWithLexicalScopeAndStatements(node)) {
                             this.onLexicalScopeNodeLeave();
 
                             return this.transformLexicalScopeNode(node);

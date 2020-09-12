@@ -129,6 +129,37 @@ describe('StringArrayTransformer', function () {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
+
+            describe('Variant #3: correct wrappers order', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'const f *= *b;' +
+                    'const g *= *b;' +
+                    'const foo *= *[f|g]\\(\'0x0\'\\);' +
+                    'const bar *= *[f|g]\\(\'0x1\'\\);' +
+                    'const baz *= *[f|g]\\(\'0x2\'\\);'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
         });
 
         describe('Variant #2: function scope', () => {
@@ -188,6 +219,39 @@ describe('StringArrayTransformer', function () {
                             stringArray: true,
                             stringArrayThreshold: 1,
                             stringArrayWrappersCount: 5
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
+
+            describe('Variant #3: correct wrappers order', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'function test *\\( *\\) *{' +
+                        'const h *= *b;' +
+                        'const i *= *b;' +
+                        'const c *= *[h|i]\\(\'0x3\'\\);' +
+                        'const d *= *[h|i]\\(\'0x4\'\\);' +
+                        'const e *= *[h|i]\\(\'0x5\'\\);' +
+                    '}'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
                         }
                     ).getObfuscatedCode();
                 });

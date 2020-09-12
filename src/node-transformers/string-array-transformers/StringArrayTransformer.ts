@@ -353,9 +353,14 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             }
 
             const {encoding, names} = stringArrayScopeCallsWrapperData;
+            const namesLength: number = names.length;
 
-            // iterates over each name of scope wrapper name
-            for (const stringArrayScopeCallsWrapperName of names) {
+            /**
+             * Iterates over each name of scope wrapper name
+             * Reverse iteration appends wrappers at index `0` at the correct order
+             */
+            for (let i = namesLength - 1; i >= 0; i--) {
+                const stringArrayScopeCallsWrapperName: string = names[i];
                 const upperStringArrayCallsWrapperName: string = this.getUpperStringArrayCallsWrapperName(encoding);
 
                 const stringArrayScopeCallsWrapperNode: ICustomNode<TInitialData<StringArrayScopeCallsWrapperNode>> =

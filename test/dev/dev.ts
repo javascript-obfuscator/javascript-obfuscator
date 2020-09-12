@@ -8,7 +8,15 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            [].map(v => 'vvv');
+            const foo = 'foo'
+            const bar = 'bar';
+            const baz = 'baz';
+            
+            function test () {
+                const bark = 'bark'
+                const hawk = 'hawk';
+                const eagle = 'eagle';
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
@@ -19,7 +27,7 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
             transformObjectKeys: true,
             stringArrayThreshold: 1,
             stringArrayWrappersChainedCalls: false,
-            stringArrayWrappersCount: 1
+            stringArrayWrappersCount: 2
         }
     ).getObfuscatedCode();
 

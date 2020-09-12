@@ -69,7 +69,7 @@
     "coveralls": "3.1.0",
     "eslint": "7.8.1",
     "eslint-plugin-import": "2.22.0",
-    "eslint-plugin-jsdoc": "30.4.0",
+    "eslint-plugin-jsdoc": "30.4.1",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.2",
     "eslint-plugin-unicorn": "21.0.0",

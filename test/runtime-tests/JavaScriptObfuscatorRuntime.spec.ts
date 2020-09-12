@@ -39,6 +39,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
             StringArrayEncoding.Base64,
             StringArrayEncoding.Rc4
         ],
+        stringArrayWrappersChainedCalls: true,
         stringArrayWrappersCount: 5,
         stringArrayThreshold: 1,
         transformObjectKeys: true,
@@ -71,9 +72,6 @@ describe('JavaScriptObfuscator runtime eval', function () {
         {
             identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
             renameGlobals: true
-        },
-        {
-            stringArrayWrappersChainedCalls: true
         }
     ];
 

@@ -129,6 +129,37 @@ describe('StringArrayTransformer', function () {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
+
+            describe('Variant #3: correct wrappers order', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'const f *= *b;' +
+                    'const g *= *b;' +
+                    'const foo *= *[f|g]\\(\'0x0\'\\);' +
+                    'const bar *= *[f|g]\\(\'0x1\'\\);' +
+                    'const baz *= *[f|g]\\(\'0x2\'\\);'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
         });
 
         describe('Variant #2: function scope', () => {
@@ -196,9 +227,102 @@ describe('StringArrayTransformer', function () {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
+
+            describe('Variant #3: correct wrappers order', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'function test *\\( *\\) *{' +
+                        'const h *= *b;' +
+                        'const i *= *b;' +
+                        'const c *= *[h|i]\\(\'0x3\'\\);' +
+                        'const d *= *[h|i]\\(\'0x4\'\\);' +
+                        'const e *= *[h|i]\\(\'0x5\'\\);' +
+                    '}'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
         });
 
-        describe('Variant #3: prevailing kind of variables', () => {
+        describe('Variant #3: prohibited scopes', () => {
+            describe('Variant #1: if statement scope', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'var c *= *b;' +
+                    'if *\\(!!\\[]\\) *{' +
+                        'var foo *= *c\\(\'0x0\'\\);' +
+                    '}'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-prohibited-scope-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not add scope calls wrappers to a prohibited scope', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
+
+            describe('Variant #2: arrow function scope without statements', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'var c *= *b;' +
+                    '\\[]\\[c\\(\'0x0\'\\)]\\(\\(\\) *=> *c\\(\'0x1\'\\)\\);'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-wrappers-count-prohibited-scope-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not add scope calls wrappers to a prohibited scope', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
+        });
+
+        describe('Variant #4: prevailing kind of variables', () => {
             const stringArrayCallRegExp: RegExp = new RegExp(
                     'return _0x([a-f0-9]){4,6};' +
                 '};' +
@@ -230,7 +354,7 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #4: correct evaluation of the scope calls wrappers', () => {
+        describe('Variant #5: correct evaluation of the scope calls wrappers', () => {
             const expectedEvaluationResult: string = 'aaabbbcccdddeee';
             let evaluationResult: string;
 
@@ -255,7 +379,7 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #5: `stringArrayWrappersChainedCalls` option is enabled', () => {
+        describe('Variant #6: `stringArrayWrappersChainedCalls` option is enabled', () => {
             describe('Variant #1: correct chained calls', () => {
                 describe('Variant #1: `Mangled` identifier names generator', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(

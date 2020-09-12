@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { TNodeWithLexicalScopeAndStatements } from '../../types/node/TNodeWithLexicalScopeAndStatements';
 import { TStatement } from '../../types/node/TStatement';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayScopeCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperDataByEncoding';
@@ -123,6 +124,31 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isValidLexicalScopeNode (node: ESTree.Node): node is TNodeWithLexicalScopeAndStatements {
+        if (!NodeGuards.isNodeWithLexicalScope(node)) {
+            return false;
+        }
+
+        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement | ESTree.Expression =
+            NodeGuards.isProgramNode(node)
+                ? node
+                : node.body;
+
+        // invalid lexical scope node
+        if (
+            !lexicalScopeBodyNode.parentNode
+            || !NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
@@ -135,7 +161,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                             this.prepareNode(node);
                         }
 
-                        if (NodeGuards.isNodeWithLexicalScope(node)) {
+                        if (StringArrayTransformer.isValidLexicalScopeNode(node)) {
                             this.onLexicalScopeNodeEnter(node);
                         }
 
@@ -144,7 +170,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                         }
                     },
                     leave: (node: ESTree.Node): ESTree.Node | undefined => {
-                        if (NodeGuards.isNodeWithLexicalScope(node)) {
+                        if (StringArrayTransformer.isValidLexicalScopeNode(node)) {
                             this.onLexicalScopeNodeLeave();
 
                             return this.transformLexicalScopeNode(node);
@@ -297,26 +323,18 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
-     * @returns {TNodeWithLexicalScope}
+     * @param {TNodeWithLexicalScopeAndStatements} lexicalScopeNode
+     * @returns {TNodeWithLexicalScopeAndStatements}
      */
-    private transformLexicalScopeNode (lexicalScopeNode: TNodeWithLexicalScope): TNodeWithLexicalScope {
+    private transformLexicalScopeNode (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): TNodeWithLexicalScopeAndStatements {
         if (!this.options.stringArrayWrappersCount) {
             return lexicalScopeNode;
         }
 
-        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement | ESTree.Expression =
+        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement =
             NodeGuards.isProgramNode(lexicalScopeNode)
                 ? lexicalScopeNode
                 : lexicalScopeNode.body;
-
-        // invalid lexical scope node
-        if (
-            !lexicalScopeBodyNode.parentNode
-            || !NodeGuards.isNodeWithLexicalScopeStatements(lexicalScopeBodyNode, lexicalScopeBodyNode.parentNode)
-        ) {
-            return lexicalScopeNode;
-        }
 
         const stringArrayScopeCallsWrapperDataByEncoding: TStringArrayScopeCallsWrapperDataByEncoding | null =
             this.stringArrayScopeCallsWrapperDataByEncodingMap.get(lexicalScopeNode) ?? null;
@@ -335,9 +353,14 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             }
 
             const {encoding, names} = stringArrayScopeCallsWrapperData;
+            const namesLength: number = names.length;
 
-            // iterates over each name of scope wrapper name
-            for (const stringArrayScopeCallsWrapperName of names) {
+            /**
+             * Iterates over each name of scope wrapper name
+             * Reverse iteration appends wrappers at index `0` at the correct order
+             */
+            for (let i = namesLength - 1; i >= 0; i--) {
+                const stringArrayScopeCallsWrapperName: string = names[i];
                 const upperStringArrayCallsWrapperName: string = this.getUpperStringArrayCallsWrapperName(encoding);
 
                 const stringArrayScopeCallsWrapperNode: ICustomNode<TInitialData<StringArrayScopeCallsWrapperNode>> =

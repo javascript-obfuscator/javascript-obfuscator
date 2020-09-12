@@ -8,43 +8,26 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'aaa';
-
-            function test (a, b) {
-                const bar = 'bbb';
-                
-                function test1 (a, b) {
-                    const baz = 'ccc';
-                    
-                    function test2 (a, b) {
-                        const bark = 'ddd';
-                        
-                        return bark;
-                    }
-                    
-                    return baz + test2();
-                }
-                
-                return bar + test1();
-            }
+            const foo = 'foo'
+            const bar = 'bar';
+            const baz = 'baz';
             
-            function test3 (a, b) {
-                const hawk = 'eee';
-                
-                return hawk;
+            function test () {
+                const bark = 'bark'
+                const hawk = 'hawk';
+                const eagle = 'eagle';
             }
-            
-            foo + test() + test3();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
             renameGlobals: true,
             stringArray: true,
+            transformObjectKeys: true,
             stringArrayThreshold: 1,
-            stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersCount: 1
+            stringArrayWrappersChainedCalls: false,
+            stringArrayWrappersCount: 2
         }
     ).getObfuscatedCode();
 

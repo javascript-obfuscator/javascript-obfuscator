@@ -6,6 +6,7 @@ npm-debug.log
 *.js.map
 /coverage
 /node_modules
+/test/fixtures/compile-performance-obfuscated.js
 /test-tmp
 /tmp
 /test/benchmark/**/**

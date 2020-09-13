@@ -86,6 +86,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.ScopeIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
+        NodeTransformer.StringArrayScopeCallsWrapperTransformer,
         NodeTransformer.StringArrayTransformer,
         NodeTransformer.TemplateLiteralTransformer,
         NodeTransformer.VariableDeclarationsMergeTransformer,

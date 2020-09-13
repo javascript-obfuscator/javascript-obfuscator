@@ -116,15 +116,15 @@ describe('ArrayUtils', () => {
     describe('getLastElement', () => {
         describe('empty array', () => {
             const array: string[] = [];
-            const expectedLastElement: null = null;
+            const expectedLastElement: undefined = undefined;
 
-            let lastElement: string | null;
+            let lastElement: string | undefined;
 
             before(() => {
                 lastElement = arrayUtils.getLastElement(array);
             });
 
-            it('should return null if array is empty', () => {
+            it('should return undefined if array is empty', () => {
                 assert.equal(lastElement, expectedLastElement);
             });
         });
@@ -133,7 +133,7 @@ describe('ArrayUtils', () => {
             const array: string[] = ['foo'];
             const expectedLastElement: string = 'foo';
 
-            let lastElement: string | null;
+            let lastElement: string | undefined;
 
             before(() => {
                 lastElement = arrayUtils.getLastElement(array);
@@ -148,7 +148,7 @@ describe('ArrayUtils', () => {
             const array: string[] = ['foo', 'bar', 'baz'];
             const expectedLastElement: string = 'baz';
 
-            let lastElement: string | null;
+            let lastElement: string | undefined;
 
             before(() => {
                 lastElement = arrayUtils.getLastElement(array);

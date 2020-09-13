@@ -17,6 +17,8 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
                 const hawk = 'hawk';
                 const eagle = 'eagle';
             }
+            
+            console.log(foo, bar, baz);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

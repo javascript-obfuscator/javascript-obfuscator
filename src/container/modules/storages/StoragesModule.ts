@@ -7,12 +7,16 @@ import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCo
 import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IStringArrayScopeCallsWrapperDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperDataStorage';
 import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IVisitedLexicalScopeNodesStackStorage } from '../../../interfaces/storages/string-array-transformers/IVisitedLexicalScopeNodesStackStorage';
 
 import { ControlFlowStorage } from '../../../storages/custom-nodes/ControlFlowStorage';
 import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage';
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
+import { StringArrayScopeCallsWrapperDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperDataStorage';
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
+import { VisitedLexicalScopeNodesStackStorage } from '../../../storages/string-array-transformers/VisitedLexicalScopeNodesStackStorage';
 
 export const storagesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // storages
@@ -26,6 +30,14 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
 
     bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)
         .to(StringArrayStorage)
+        .inSingletonScope();
+
+    bind<IStringArrayScopeCallsWrapperDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrapperDataStorage)
+        .to(StringArrayScopeCallsWrapperDataStorage)
+        .inSingletonScope();
+
+    bind<IVisitedLexicalScopeNodesStackStorage>(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)
+        .to(VisitedLexicalScopeNodesStackStorage)
         .inSingletonScope();
 
     bind<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage)

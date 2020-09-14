@@ -67,12 +67,12 @@ export class ArrayUtils implements IArrayUtils {
 
     /**
      * @param {T[]} array
-     * @returns {T | null}
+     * @returns {T | undefined}
      */
-    public getLastElement <T> (array: T[]): T | null {
+    public getLastElement <T> (array: T[]): T | undefined {
         const arrayLength: number = array.length;
 
-        return array[arrayLength - 1] ?? null;
+        return array[arrayLength - 1] ?? undefined;
     }
 
     /**

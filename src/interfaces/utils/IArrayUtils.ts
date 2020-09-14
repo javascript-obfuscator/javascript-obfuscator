@@ -13,9 +13,9 @@ export interface IArrayUtils {
 
     /**
      * @param {T[]} array
-     * @returns {T | null}
+     * @returns {T | undefined}
      */
-    getLastElement <T> (array: T[]): T | null;
+    getLastElement <T> (array: T[]): T | undefined;
 
     /**
      * @param array

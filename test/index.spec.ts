@@ -38,6 +38,7 @@ import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/storages/string-array-transformers/literal-nodes-cache/LiteralNodesCacheStorage.spec';
 import './unit-tests/storages/string-array-transformers/string-array/StringArrayStorage.spec';
+import './unit-tests/storages/string-array-transformers/visited-lexical-scope-nodes-stack/VisitedLexicalScopeNodesStackStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
 import './unit-tests/utils/CryptUtilsSwappedAlphabet.spec';

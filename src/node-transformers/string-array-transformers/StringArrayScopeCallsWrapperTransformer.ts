@@ -79,6 +79,10 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
      * @returns {IVisitor | null}
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        if (!this.options.stringArrayWrappersCount) {
+            return null;
+        }
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.StringArray:
                 return {
@@ -106,10 +110,6 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
      * @returns {TNodeWithLexicalScopeAndStatements}
      */
     public transformNode (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): TNodeWithLexicalScopeAndStatements {
-        if (!this.options.stringArrayWrappersCount) {
-            return lexicalScopeNode;
-        }
-
         const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement =
             NodeGuards.isProgramNode(lexicalScopeNode)
                 ? lexicalScopeNode

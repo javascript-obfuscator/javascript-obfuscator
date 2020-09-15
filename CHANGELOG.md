@@ -1,5 +1,9 @@
 Change Log
 
+v2.3.0
+---
+* **New option:** `stringArrayWrappersType` allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option 
+
 v2.2.0
 ---
 * **New option (enabled by default):** `stringArrayWrappersCount` sets the count of wrappers for the `string array` inside each root or function scope

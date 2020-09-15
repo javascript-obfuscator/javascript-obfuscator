@@ -2,8 +2,9 @@ import { assert } from 'chai';
 
 import { TInputOptions } from '../../src/types/options/TInputOptions';
 
-import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { evaluateInWorker } from '../helpers/evaluateInWorker';
 import { readFileAsString } from '../helpers/readFileAsString';
@@ -41,6 +42,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         ],
         stringArrayWrappersChainedCalls: true,
         stringArrayWrappersCount: 5,
+        stringArrayWrappersType: StringArrayWrappersType.Function,
         stringArrayThreshold: 1,
         transformObjectKeys: true,
         unicodeEscapeSequence: true

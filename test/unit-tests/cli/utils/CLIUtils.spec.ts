@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 
-import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 

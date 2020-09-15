@@ -11,7 +11,7 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { IStringArrayStorageAnalyzer } from '../../../../src/interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../../../src/interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
-import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 import { NodeFactory } from '../../../../src/node/NodeFactory';

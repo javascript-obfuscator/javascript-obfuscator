@@ -15,7 +15,8 @@ import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
-import { StringArrayEncoding } from '../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { DEFAULT_PRESET } from '../options/presets/Default';
 
@@ -348,6 +349,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 '--string-array-wrappers-chained-calls <boolean>',
                 'Enables the chained calls between string array wrappers',
                 BooleanSanitizer
+            )
+            .option(
+                '--string-array-wrappers-type <string>',
+                'Allows to select a type of the wrappers that are appending by the `--string-array-wrappers-count` option. ' +
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(StringArrayWrappersType)}. ` +
+                `Default: ${StringArrayWrappersType.Variable}`
             )
             .option(
                 '--string-array-threshold <number>',

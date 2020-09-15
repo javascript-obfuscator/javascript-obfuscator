@@ -2,6 +2,7 @@ import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
+import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
@@ -43,6 +44,7 @@ export interface IOptions {
     readonly stringArrayEncoding: TStringArrayEncoding[];
     readonly stringArrayWrappersChainedCalls: boolean;
     readonly stringArrayWrappersCount: number;
+    readonly stringArrayWrappersType: TStringArrayWrappersType;
     readonly stringArrayThreshold: number;
     readonly target: TypeFromEnum<typeof ObfuscationTarget>;
     readonly transformObjectKeys: boolean;

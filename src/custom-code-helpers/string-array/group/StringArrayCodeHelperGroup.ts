@@ -17,7 +17,7 @@ import { initializable } from '../../../decorators/Initializable';
 
 import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeHelper';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
-import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGroup';
 import { NodeAppender } from '../../../node/NodeAppender';

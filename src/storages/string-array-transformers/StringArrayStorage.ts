@@ -14,7 +14,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
-import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { MapStorage } from '../MapStorage';
 

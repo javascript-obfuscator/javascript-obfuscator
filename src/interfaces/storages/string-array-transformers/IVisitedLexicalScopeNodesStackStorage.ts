@@ -1,21 +1,20 @@
-import { TNodeWithLexicalScopeAndStatements } from '../../../types/node/TNodeWithLexicalScopeAndStatements';
+import { TNodeWithLexicalScopeStatements } from '../../../types/node/TNodeWithLexicalScopeStatements';
 
 import { IArrayStorage } from '../IArrayStorage';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IVisitedLexicalScopeNodesStackStorage extends IArrayStorage<TNodeWithLexicalScopeAndStatements> {
+export interface IVisitedLexicalScopeNodesStackStorage extends IArrayStorage<TNodeWithLexicalScopeStatements> {
     /**
-     * @returns {TNodeWithLexicalScopeAndStatements | undefined}
+     * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    getLastElement (): TNodeWithLexicalScopeAndStatements | undefined;
+    getLastElement (): TNodeWithLexicalScopeStatements | undefined;
 
     /**
-     * @returns {TNodeWithLexicalScopeAndStatements | undefined}
+     * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    pop (): TNodeWithLexicalScopeAndStatements | undefined;
+    pop (): TNodeWithLexicalScopeStatements | undefined;
 
     /**
-     * @param {TNodeWithLexicalScopeAndStatements} lexicalScopeNode
+     * @param {TNodeWithLexicalScopeStatements} lexicalScopeBodyNode
      */
-    push (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): void;
+    push (lexicalScopeBodyNode: TNodeWithLexicalScopeStatements): void;
 }

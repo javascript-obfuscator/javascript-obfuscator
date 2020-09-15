@@ -4,8 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TInitialData } from '../../types/TInitialData';
-import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
-import { TNodeWithLexicalScopeAndStatements } from '../../types/node/TNodeWithLexicalScopeAndStatements';
+import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayScopeCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperDataByEncoding';
 import { TStringArrayTransformerCustomNodeFactory } from '../../types/container/custom-nodes/TStringArrayTransformerCustomNodeFactory';
@@ -89,13 +88,13 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
         switch (nodeTransformationStage) {
             case NodeTransformationStage.StringArray:
                 return {
-                    enter: (node: ESTree.Node): void => {
-                        if (NodeGuards.isNodeWithLexicalScopeAndStatements(node)) {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
+                        if (parentNode && NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode)) {
                             this.onLexicalScopeNodeEnter(node);
                         }
                     },
-                    leave: (node: ESTree.Node): ESTree.Node | undefined => {
-                        if (NodeGuards.isNodeWithLexicalScopeAndStatements(node)) {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
+                        if (parentNode && NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode)) {
                             this.onLexicalScopeNodeLeave();
 
                             return this.transformNode(node);
@@ -109,20 +108,17 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     }
 
     /**
-     * @param {TNodeWithLexicalScopeAndStatements} lexicalScopeNode
-     * @returns {TNodeWithLexicalScopeAndStatements}
+     * @param {TNodeWithLexicalScopeStatements} lexicalScopeBodyNode
+     * @returns {TNodeWithLexicalScopeStatements}
      */
-    public transformNode (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): TNodeWithLexicalScopeAndStatements {
-        const lexicalScopeBodyNode: ESTree.Program | ESTree.BlockStatement =
-            NodeGuards.isProgramNode(lexicalScopeNode)
-                ? lexicalScopeNode
-                : lexicalScopeNode.body;
-
+    public transformNode (
+        lexicalScopeBodyNode: TNodeWithLexicalScopeStatements
+    ): TNodeWithLexicalScopeStatements {
         const stringArrayScopeCallsWrapperDataByEncoding: TStringArrayScopeCallsWrapperDataByEncoding | null =
-            this.stringArrayScopeCallsWrapperDataStorage.get(lexicalScopeNode) ?? null;
+            this.stringArrayScopeCallsWrapperDataStorage.get(lexicalScopeBodyNode) ?? null;
 
         if (!stringArrayScopeCallsWrapperDataByEncoding) {
-            return lexicalScopeNode;
+            return lexicalScopeBodyNode;
         }
 
         const stringArrayScopeCallsWrapperDataList: (IStringArrayScopeCallsWrapperData | undefined)[] =
@@ -157,7 +153,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
             }
         }
 
-        return lexicalScopeNode;
+        return lexicalScopeBodyNode;
     }
 
     /**
@@ -179,14 +175,15 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
             return rootStringArrayCallsWrapperName;
         }
 
-        const parentLexicalScope: TNodeWithLexicalScope | undefined = this.visitedLexicalScopeNodesStackStorage.getLastElement();
+        const parentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | undefined =
+            this.visitedLexicalScopeNodesStackStorage.getLastElement();
 
-        if (!parentLexicalScope) {
+        if (!parentLexicalScopeBodyNode) {
             return rootStringArrayCallsWrapperName;
         }
 
         const parentLexicalScopeDataByEncoding = this.stringArrayScopeCallsWrapperDataStorage
-            .get(parentLexicalScope) ?? null;
+            .get(parentLexicalScopeBodyNode) ?? null;
         const parentLexicalScopeNames: string[] | null = parentLexicalScopeDataByEncoding?.[encoding]?.names ?? null;
 
         return parentLexicalScopeNames?.length
@@ -266,10 +263,10 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     }
 
     /**
-     * @param {TNodeWithLexicalScopeAndStatements} lexicalScopeNode
+     * @param {TNodeWithLexicalScopeStatements} lexicalScopeBodyNode
      */
-    private onLexicalScopeNodeEnter (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): void {
-        this.visitedLexicalScopeNodesStackStorage.push(lexicalScopeNode);
+    private onLexicalScopeNodeEnter (lexicalScopeBodyNode: TNodeWithLexicalScopeStatements): void {
+        this.visitedLexicalScopeNodesStackStorage.push(lexicalScopeBodyNode);
     }
 
     private onLexicalScopeNodeLeave (): void {

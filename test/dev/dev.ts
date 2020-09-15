@@ -13,13 +13,14 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             const bar = 'bar';
             const baz = 'baz';
             
-            function test () {
-                const bark = 'bark'
+            function test (arg = 'bark') {
                 const hawk = 'hawk';
                 const eagle = 'eagle';
+                
+                console.log(arg, hawk, eagle);
             }
             
-            console.log(foo, bar, baz);
+            test();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

@@ -1,5 +1,9 @@
 Change Log
 
+v2.2.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/745
+
 v2.2.0
 ---
 * **New option (enabled by default):** `stringArrayWrappersCount` sets the count of wrappers for the `string array` inside each root or function scope

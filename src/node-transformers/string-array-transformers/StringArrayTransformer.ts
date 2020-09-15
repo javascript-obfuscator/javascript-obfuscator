@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TInitialData } from '../../types/TInitialData';
-import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 import { TStatement } from '../../types/node/TStatement';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayScopeCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperDataByEncoding';
@@ -251,14 +251,15 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {string}
      */
     private getUpperStringArrayCallsWrapperName (encoding: TStringArrayEncoding): string {
-        const currentLexicalScopeNode: TNodeWithLexicalScope | undefined = this.visitedLexicalScopeNodesStackStorage.getLastElement();
+        const currentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | undefined =
+            this.visitedLexicalScopeNodesStackStorage.getLastElement();
 
-        if (!currentLexicalScopeNode) {
-            throw new Error('Cannot find current lexical scope node');
+        if (!currentLexicalScopeBodyNode) {
+            throw new Error('Cannot find current lexical scope body node');
         }
 
         const stringArrayScopeCallsWrapperDataByEncoding: TStringArrayScopeCallsWrapperDataByEncoding =
-            this.stringArrayScopeCallsWrapperDataStorage.get(currentLexicalScopeNode) ?? {};
+            this.stringArrayScopeCallsWrapperDataStorage.get(currentLexicalScopeBodyNode) ?? {};
         const stringArrayScopeCallsWrapperNames: string[] = stringArrayScopeCallsWrapperDataByEncoding[encoding]?.names ?? [];
         const isFilledScopeCallsWrapperNamesList: boolean = stringArrayScopeCallsWrapperNames.length === this.options.stringArrayWrappersCount;
 
@@ -272,7 +273,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             };
 
             this.stringArrayScopeCallsWrapperDataStorage.set(
-                currentLexicalScopeNode,
+                currentLexicalScopeBodyNode,
                 stringArrayScopeCallsWrapperDataByEncoding
             );
         }

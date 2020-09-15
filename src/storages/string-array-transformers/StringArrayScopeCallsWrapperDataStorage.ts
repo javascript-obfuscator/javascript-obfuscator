@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 import { TStringArrayScopeCallsWrapperDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperDataByEncoding';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -12,7 +12,7 @@ import { MapStorage } from '../MapStorage';
 
 @injectable()
 export class StringArrayScopeCallsWrapperDataStorage extends MapStorage <
-    TNodeWithLexicalScope,
+    TNodeWithLexicalScopeStatements,
     TStringArrayScopeCallsWrapperDataByEncoding
 > implements IStringArrayScopeCallsWrapperDataStorage {
     /**

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithLexicalScopeAndStatements } from '../../types/node/TNodeWithLexicalScopeAndStatements';
+import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -11,7 +11,7 @@ import { IVisitedLexicalScopeNodesStackStorage } from '../../interfaces/storages
 import { ArrayStorage } from '../ArrayStorage';
 
 @injectable()
-export class VisitedLexicalScopeNodesStackStorage extends ArrayStorage <TNodeWithLexicalScopeAndStatements> implements IVisitedLexicalScopeNodesStackStorage {
+export class VisitedLexicalScopeNodesStackStorage extends ArrayStorage <TNodeWithLexicalScopeStatements> implements IVisitedLexicalScopeNodesStackStorage {
     /**
      * @type {IArrayUtils}
      */
@@ -33,23 +33,23 @@ export class VisitedLexicalScopeNodesStackStorage extends ArrayStorage <TNodeWit
     }
 
     /**
-     * @returns {TNodeWithLexicalScopeAndStatements | undefined}
+     * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    public getLastElement (): TNodeWithLexicalScopeAndStatements | undefined {
+    public getLastElement (): TNodeWithLexicalScopeStatements | undefined {
         return this.arrayUtils.getLastElement(this.getStorage());
     }
 
     /**
-     * @param {TNodeWithLexicalScopeAndStatements} lexicalScopeNode
+     * @param {TNodeWithLexicalScopeStatements} nodeWithLexicalScopeStatements
      */
-    public push (lexicalScopeNode: TNodeWithLexicalScopeAndStatements): void {
-        this.storage.push(lexicalScopeNode);
+    public push (nodeWithLexicalScopeStatements: TNodeWithLexicalScopeStatements): void {
+        this.storage.push(nodeWithLexicalScopeStatements);
     }
 
     /**
-     * @returns {TNodeWithLexicalScopeAndStatements | undefined}
+     * @returns {TNodeWithLexicalScopeStatements| undefined}
      */
-    public pop (): TNodeWithLexicalScopeAndStatements | undefined {
+    public pop (): TNodeWithLexicalScopeStatements | undefined {
         return this.storage.pop();
     }
 }

@@ -209,6 +209,38 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
+
+            describe('Variant #4: correct wrapper for the function default parameter', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'const e *= *b;' +
+                    'const foo *= *e\\(\'0x0\'\\);' +
+                    'function test *\\(c *= *e\\(\'0x1\'\\)\\) *{' +
+                        'const f *= *b;' +
+                        'const d *= *f\\(\'0x2\'\\);' +
+                    '}'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/wrapper-for-the-function-default-parameter.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
         });
 
         describe('Variant #3: prohibited scopes', () => {

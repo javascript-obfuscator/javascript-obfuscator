@@ -12,13 +12,12 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
+import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
-import { StringArrayCallNode } from './StringArrayCallNode';
 
 @injectable()
-export class StringArrayScopeCallsWrapperFunctionNode extends AbstractCustomNode {
+export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArrayCallNode {
     /**
      * @type {number}
      */
@@ -102,7 +101,7 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractCustomNode
                             NodeFactory.binaryExpressionNode(
                                 '-',
                                 firstCallArgumentIdentifierNode,
-                                StringArrayCallNode.getHexadecimalLiteralNode(this.shiftedIndex)
+                                this.getHexadecimalNode(this.shiftedIndex)
                             ),
                             secondCallArgumentIdentifierNode
                         ]

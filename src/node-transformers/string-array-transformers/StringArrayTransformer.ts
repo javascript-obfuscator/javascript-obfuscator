@@ -42,12 +42,12 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
-    private static readonly minShiftedIndexValue: number = 10;
+    private static readonly minShiftedIndexValue: number = -1000;
 
     /**
      * @type {number}
      */
-    private static readonly maxShiftedIndexValue: number = 100;
+    private static readonly maxShiftedIndexValue: number = 1000;
 
     /**
      * @type {IEscapeSequenceEncoder}

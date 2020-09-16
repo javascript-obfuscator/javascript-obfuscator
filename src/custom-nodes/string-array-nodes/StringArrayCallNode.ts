@@ -12,14 +12,12 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
+import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
-import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
-import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
-export class StringArrayCallNode extends AbstractCustomNode {
+export class StringArrayCallNode extends AbstractStringArrayCallNode {
     /**
      * @type {string | null}
      */
@@ -61,31 +59,6 @@ export class StringArrayCallNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {string} index
-     * @returns {Literal}
-     */
-    public static getHexadecimalLiteralNode (index: number): ESTree.Literal {
-        const hexadecimalIndex: string = NumberUtils.toHex(index);
-        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
-
-        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
-
-        return hexadecimalLiteralNode;
-    }
-
-    /**
-     * @param {string} decodeKey
-     * @returns {Literal}
-     */
-    private static getRc4KeyLiteralNode (decodeKey: string): ESTree.Literal {
-        const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(decodeKey);
-
-        NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
-
-        return rc4KeyLiteralNode;
-    }
-
-    /**
      * @param {string} stringArrayCallsWrapperName
      * @param {number} index
      * @param {string | null} decodeKey
@@ -104,12 +77,12 @@ export class StringArrayCallNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const callExpressionArgs: ESTree.Literal[] = [
-            StringArrayCallNode.getHexadecimalLiteralNode(this.index)
+        const callExpressionArgs: ESTree.Expression[] = [
+            this.getHexadecimalNode(this.index)
         ];
 
         if (this.decodeKey) {
-            callExpressionArgs.push(StringArrayCallNode.getRc4KeyLiteralNode(this.decodeKey));
+            callExpressionArgs.push(this.getRc4KeyLiteralNode(this.decodeKey));
         }
 
         const stringArrayIdentifierNode: ESTree.Identifier =

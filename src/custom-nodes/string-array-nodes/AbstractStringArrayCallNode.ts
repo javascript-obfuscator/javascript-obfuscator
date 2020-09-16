@@ -1,41 +1,29 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { initializable } from '../../decorators/Initializable';
-
-import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
+import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
+import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
-export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArrayCallNode {
-    /**
-     * @type {string}
-     */
-    @initializable()
-    private stringArrayCallsWrapperName!: string;
-
-    /**
-     * @type {string}
-     */
-    @initializable()
-    private stringArrayScopeCallsWrapperName!: string;
-
-
+export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    protected constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
@@ -51,33 +39,39 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
     }
 
     /**
-     * @param {string} stringArrayScopeCallsWrapperName
-     * @param {string} stringArrayCallsWrapperName
+     * @param {number} index
+     * @returns {Expression}
      */
-    public initialize (
-        stringArrayScopeCallsWrapperName: string,
-        stringArrayCallsWrapperName: string
-    ): void {
-        this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+    protected getHexadecimalNode (index: number): ESTree.Expression {
+        const isPositive: boolean = index >= 0;
+        const normalizedIndex: number = Math.abs(index);
+
+        const hexadecimalIndex: string = NumberUtils.toHex(normalizedIndex);
+        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
+
+        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
+
+        const hexadecimalNode: ESTree.Expression = isPositive
+            ? hexadecimalLiteralNode
+            : NodeFactory.unaryExpressionNode(
+                '-',
+                hexadecimalLiteralNode
+            );
+
+        NodeUtils.parentizeAst(hexadecimalNode);
+        
+        return hexadecimalNode;
     }
 
     /**
-     * @returns {TStatement[]}
+     * @param {string} decodeKey
+     * @returns {Literal}
      */
-    protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = NodeFactory.variableDeclarationNode(
-            [
-                NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperName),
-                    NodeFactory.identifierNode(this.stringArrayCallsWrapperName)
-                )
-            ],
-            'const',
-        );
+    protected getRc4KeyLiteralNode (decodeKey: string): ESTree.Literal {
+        const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(decodeKey);
 
-        NodeUtils.parentizeAst(structure);
+        NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
 
-        return [structure];
+        return rc4KeyLiteralNode;
     }
 }

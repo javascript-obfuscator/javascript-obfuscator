@@ -15,9 +15,16 @@ import { initializable } from '../../decorators/Initializable';
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
+import { StringArrayCallNode } from './StringArrayCallNode';
 
 @injectable()
 export class StringArrayScopeCallsWrapperFunctionNode extends AbstractCustomNode {
+    /**
+     * @type {number}
+     */
+    @initializable()
+    private shiftedIndex!: number;
+
     /**
      * @type {string}
      */
@@ -55,13 +62,16 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractCustomNode
     /**
      * @param {string} stringArrayScopeCallsWrapperName
      * @param {string} stringArrayCallsWrapperName
+     * @param {number} shiftedIndex
      */
     public initialize (
         stringArrayScopeCallsWrapperName: string,
-        stringArrayCallsWrapperName: string
+        stringArrayCallsWrapperName: string,
+        shiftedIndex: number
     ): void {
         this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.shiftedIndex = shiftedIndex;
     }
 
     /**
@@ -89,7 +99,11 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractCustomNode
                     NodeFactory.callExpressionNode(
                         NodeFactory.identifierNode(this.stringArrayCallsWrapperName),
                         [
-                            firstCallArgumentIdentifierNode,
+                            NodeFactory.binaryExpressionNode(
+                                '-',
+                                firstCallArgumentIdentifierNode,
+                                StringArrayCallNode.getHexadecimalLiteralNode(this.shiftedIndex)
+                            ),
                             secondCallArgumentIdentifierNode
                         ]
                     )

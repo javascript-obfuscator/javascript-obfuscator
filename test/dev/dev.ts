@@ -20,6 +20,8 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
                 console.log(arg, hawk, eagle);
             }
             
+            console.log(foo, bar, baz);
+            
             test();
         `,
         {

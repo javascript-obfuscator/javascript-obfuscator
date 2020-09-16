@@ -11,6 +11,11 @@ export interface IVisitedLexicalScopeNodesStackStorage extends IArrayStorage<TNo
     /**
      * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
+    getPenultimateElement (): TNodeWithLexicalScopeStatements | undefined;
+
+    /**
+     * @returns {TNodeWithLexicalScopeStatements | undefined}
+     */
     pop (): TNodeWithLexicalScopeStatements | undefined;
 
     /**

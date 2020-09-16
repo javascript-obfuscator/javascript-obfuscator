@@ -67,6 +67,79 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
         });
     });
 
+    describe('getPenultimateElement', () => {
+        describe('Variant #1: three array elements', () => {
+            const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('first')
+                )
+            ]);
+            const expectedSecondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('second')
+                )
+            ]);
+            const lastElement: TNodeWithLexicalScopeStatements =  NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('last')
+                )
+            ]);
+
+            let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
+
+            before(() => {
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+
+                visitedLexicalScopeNodesStackStorage.push(firstElement);
+                visitedLexicalScopeNodesStackStorage.push(expectedSecondElement);
+                visitedLexicalScopeNodesStackStorage.push(lastElement);
+                penultimateElement = visitedLexicalScopeNodesStackStorage.getPenultimateElement();
+            });
+
+            it('should return a penultimate element from the stack', () => {
+                assert.equal(penultimateElement, expectedSecondElement);
+            });
+        });
+
+        describe('Variant #2: one array element', () => {
+            const expectedPenultimateElement: undefined = undefined;
+            const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('first')
+                )
+            ]);
+
+            let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
+
+            before(() => {
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+
+                visitedLexicalScopeNodesStackStorage.push(firstElement);
+                penultimateElement = visitedLexicalScopeNodesStackStorage.getPenultimateElement();
+            });
+
+            it('should return a penultimate element from the stack', () => {
+                assert.equal(penultimateElement, expectedPenultimateElement);
+            });
+        });
+
+        describe('Variant #3: empty array', () => {
+            const expectedPenultimateElement: undefined = undefined;
+
+            let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
+
+            before(() => {
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+
+                penultimateElement = visitedLexicalScopeNodesStackStorage.getPenultimateElement();
+            });
+
+            it('should return a penultimate element from the stack', () => {
+                assert.equal(penultimateElement, expectedPenultimateElement);
+            });
+        });
+    });
+
     describe('push', () => {
         const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
             NodeFactory.expressionStatementNode(
@@ -99,40 +172,72 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
     });
 
     describe('pop', () => {
-        const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('first')
-            )
-        ]);
-        const secondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('second')
-            )
-        ]);
-        const expectedStorage: TNodeWithLexicalScopeStatements[] = [
-            firstElement
-        ];
-        const expectedPoppedElement: TNodeWithLexicalScopeStatements = secondElement;
+        describe('Variant #1: few elements', () => {
+            const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('first')
+                )
+            ]);
+            const secondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('second')
+                )
+            ]);
+            const expectedStorage: TNodeWithLexicalScopeStatements[] = [
+                firstElement
+            ];
+            const expectedPoppedElement: TNodeWithLexicalScopeStatements = secondElement;
 
-        let storage: TNodeWithLexicalScopeStatements[];
-        let poppedElement: TNodeWithLexicalScopeStatements | undefined;
+            let storage: TNodeWithLexicalScopeStatements[];
+            let poppedElement: TNodeWithLexicalScopeStatements | undefined;
 
-        before(() => {
-            const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+            before(() => {
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
 
-            visitedLexicalScopeNodesStackStorage.push(firstElement);
-            visitedLexicalScopeNodesStackStorage.push(secondElement);
+                visitedLexicalScopeNodesStackStorage.push(firstElement);
+                visitedLexicalScopeNodesStackStorage.push(secondElement);
 
-            poppedElement = visitedLexicalScopeNodesStackStorage.pop();
-            storage = visitedLexicalScopeNodesStackStorage.getStorage();
+                poppedElement = visitedLexicalScopeNodesStackStorage.pop();
+                storage = visitedLexicalScopeNodesStackStorage.getStorage();
+            });
+
+            it('should pop a last element from the storage', () => {
+                assert.deepEqual(storage, expectedStorage);
+            });
+
+            it('should return a popped element from the storage', () => {
+                assert.equal(poppedElement, expectedPoppedElement);
+            });
         });
 
-        it('should pop a last element from the storage', () => {
-            assert.deepEqual(storage, expectedStorage);
-        });
+        describe('Variant #2: single element', () => {
+            const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(
+                    NodeFactory.literalNode('first')
+                )
+            ]);
+            const expectedStorage: TNodeWithLexicalScopeStatements[] = [];
+            const expectedPoppedElement: TNodeWithLexicalScopeStatements = firstElement;
 
-        it('should return a popped element from the storage', () => {
-            assert.equal(poppedElement, expectedPoppedElement);
+            let storage: TNodeWithLexicalScopeStatements[];
+            let poppedElement: TNodeWithLexicalScopeStatements | undefined;
+
+            before(() => {
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+
+                visitedLexicalScopeNodesStackStorage.push(firstElement);
+
+                poppedElement = visitedLexicalScopeNodesStackStorage.pop();
+                storage = visitedLexicalScopeNodesStackStorage.getStorage();
+            });
+
+            it('should pop a last element from the storage', () => {
+                assert.deepEqual(storage, expectedStorage);
+            });
+
+            it('should return a popped element from the storage', () => {
+                assert.equal(poppedElement, expectedPoppedElement);
+            });
         });
     });
 });

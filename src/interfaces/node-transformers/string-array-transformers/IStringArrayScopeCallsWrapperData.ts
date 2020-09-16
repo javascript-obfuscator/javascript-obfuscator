@@ -1,13 +1,24 @@
-import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
+import { TNodeWithLexicalScopeStatements } from '../../../types/node/TNodeWithLexicalScopeStatements';
+import { TStringArrayScopeCallsWrapperNamesDataByEncoding } from '../../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperNamesDataByEncoding';
 
 export interface IStringArrayScopeCallsWrapperData {
     /**
-     * @type {TStringArrayEncoding}
+     * @type {number}
      */
-    encoding: TStringArrayEncoding;
+    globalIndexShift: number;
 
     /**
-     * @type {string[]}
+     * @type {TStringArrayScopeCallsWrapperNamesDataByEncoding}
      */
-    names: string[];
+    names: TStringArrayScopeCallsWrapperNamesDataByEncoding;
+
+    /**
+     * @type {TNodeWithLexicalScopeStatements | null}
+     */
+    parentLexicalScopeNode: TNodeWithLexicalScopeStatements | null;
+
+    /**
+     * @type {number}
+     */
+    scopeIndexShift: number;
 }

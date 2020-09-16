@@ -61,10 +61,11 @@ export class StringArrayCallNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {string} hexadecimalIndex
+     * @param {string} index
      * @returns {Literal}
      */
-    private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
+    public static getHexadecimalLiteralNode (index: number): ESTree.Literal {
+        const hexadecimalIndex: string = NumberUtils.toHex(index);
         const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
 
         NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
@@ -103,9 +104,8 @@ export class StringArrayCallNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const hexadecimalIndex: string = NumberUtils.toHex(this.index);
         const callExpressionArgs: ESTree.Literal[] = [
-            StringArrayCallNode.getHexadecimalLiteralNode(hexadecimalIndex)
+            StringArrayCallNode.getHexadecimalLiteralNode(this.index)
         ];
 
         if (this.decodeKey) {

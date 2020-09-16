@@ -213,7 +213,7 @@ Returns `ObfuscationResult` object which contains two public methods:
 
 Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
 
-Method takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
+Method takes two parameters, `sourceCode` and `options` – the source code and the options respectively:
 
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;
 * `options` (`Object`, default: `null`) – an object with options.

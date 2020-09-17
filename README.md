@@ -1078,7 +1078,7 @@ Available values:
 Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
 
 Example of the `'function'` option value:
-```
+```ts
 // input
 const foo = 'foo';
 

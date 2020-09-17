@@ -6,7 +6,6 @@ import * as ESTree from 'estree';
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 import { TStatement } from '../../types/node/TStatement';
-import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayScopeCallsWrapperNamesDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperNamesDataByEncoding';
 import { TStringArrayTransformerCustomNodeFactory } from '../../types/container/custom-nodes/TStringArrayTransformerCustomNodeFactory';
 
@@ -135,9 +134,6 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
 
         const stringArrayScopeCallsWrapperNamesDataList: (IStringArrayScopeCallsWrapperNamesData | undefined)[] =
             Object.values(stringArrayScopeCallsWrapperNamesDataByEncoding);
-        const stringArrayScopeCallsWrapperShiftedIndex: number = this.options.stringArrayWrappersChainedCalls
-            ? stringArrayScopeCallsWrapperNamesLexicalScopeData.scopeShiftedIndex
-            : stringArrayScopeCallsWrapperNamesLexicalScopeData.resultShiftedIndex;
 
         // iterates over data for each encoding type
         for (const stringArrayScopeCallsWrapperNamesData of stringArrayScopeCallsWrapperNamesDataList) {
@@ -145,7 +141,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
                 continue;
             }
 
-            const {encoding, names} = stringArrayScopeCallsWrapperNamesData;
+            const {names} = stringArrayScopeCallsWrapperNamesData;
             const namesLength: number = names.length;
 
             /**
@@ -154,12 +150,18 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
              */
             for (let i = namesLength - 1; i >= 0; i--) {
                 const stringArrayScopeCallsWrapperName: string = names[i];
-                const upperStringArrayCallsWrapperName: string = this.getUpperStringArrayCallsWrapperName(encoding);
+                const [
+                    upperStringArrayCallsWrapperName,
+                    upperStringArrayCallsWrapperShiftedIndex,
+                ] = this.getUpperStringArrayCallsWrapperName(
+                    stringArrayScopeCallsWrapperNamesData,
+                    stringArrayScopeCallsWrapperNamesLexicalScopeData,
+                );
 
                 const stringArrayScopeCallsWrapperNode: TStatement[] = this.getStringArrayScopeCallsWrapperNode(
                     stringArrayScopeCallsWrapperName,
                     upperStringArrayCallsWrapperName,
-                    stringArrayScopeCallsWrapperShiftedIndex
+                    upperStringArrayCallsWrapperShiftedIndex
                 );
 
                 NodeAppender.prepend(
@@ -173,40 +175,68 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     }
 
     /**
-     * @param {TStringArrayEncoding} encoding
-     * @returns {string}
+     * @param {IStringArrayScopeCallsWrapperNamesData} stringArrayScopeCallsWrapperNamesData
+     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperNamesLexicalScopeData
+     * @returns {[name: string, index: number]}
      */
-    private getRootStringArrayCallsWrapperName (encoding: TStringArrayEncoding): string {
-        return this.stringArrayStorage.getStorageCallsWrapperName(encoding);
+    private getRootStringArrayCallsWrapperData (
+        stringArrayScopeCallsWrapperNamesData: IStringArrayScopeCallsWrapperNamesData,
+        stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
+    ): [name: string, index: number] {
+        const {encoding} = stringArrayScopeCallsWrapperNamesData;
+        const {resultShiftedIndex} = stringArrayScopeCallsWrapperNamesLexicalScopeData;
+
+        return [
+            this.stringArrayStorage.getStorageCallsWrapperName(encoding),
+            resultShiftedIndex
+        ];
     }
 
     /**
-     * @param {TStringArrayEncoding} encoding
-     * @returns {string}
+     * @param {IStringArrayScopeCallsWrapperNamesData} stringArrayScopeCallsWrapperNamesData
+     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperNamesLexicalScopeData
+     * @returns {[name: string, index: number]}
      */
-    private getUpperStringArrayCallsWrapperName (encoding: TStringArrayEncoding): string {
-        const rootStringArrayCallsWrapperName: string = this.getRootStringArrayCallsWrapperName(encoding);
+    private getUpperStringArrayCallsWrapperName (
+        stringArrayScopeCallsWrapperNamesData: IStringArrayScopeCallsWrapperNamesData,
+        stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
+    ): [name: string, index: number] {
+        const {encoding} = stringArrayScopeCallsWrapperNamesData;
+        const {scopeShiftedIndex} = stringArrayScopeCallsWrapperNamesLexicalScopeData;
+
+        const rootStringArrayCallsWrapperData = this.getRootStringArrayCallsWrapperData(
+            stringArrayScopeCallsWrapperNamesData,
+            stringArrayScopeCallsWrapperNamesLexicalScopeData
+        );
 
         if (!this.options.stringArrayWrappersChainedCalls) {
-            return rootStringArrayCallsWrapperName;
+            return rootStringArrayCallsWrapperData;
         }
 
-        const parentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | undefined =
-            this.visitedLexicalScopeNodesStackStorage.getLastElement();
+        const parentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | null =
+            this.visitedLexicalScopeNodesStackStorage.getLastElement()
+            ?? null;
 
         if (!parentLexicalScopeBodyNode) {
-            return rootStringArrayCallsWrapperName;
+            return rootStringArrayCallsWrapperData;
         }
 
         const parentLexicalScopeNamesDataByEncoding: TStringArrayScopeCallsWrapperNamesDataByEncoding | null = this.stringArrayScopeCallsWrapperNamesDataStorage
             .get(parentLexicalScopeBodyNode) ?? null;
         const parentLexicalScopeNames: string[] | null = parentLexicalScopeNamesDataByEncoding?.[encoding]?.names ?? null;
 
-        return parentLexicalScopeNames?.length
-            ? this.randomGenerator
-                .getRandomGenerator()
-                .pickone(parentLexicalScopeNames)
-            : rootStringArrayCallsWrapperName;
+        if (!parentLexicalScopeNames?.length) {
+            return rootStringArrayCallsWrapperData;
+        }
+
+        const upperStringArrayCallsWrapperName: string = this.randomGenerator
+            .getRandomGenerator()
+            .pickone(parentLexicalScopeNames);
+
+        return [
+            upperStringArrayCallsWrapperName,
+            scopeShiftedIndex
+        ];
     }
 
     /**

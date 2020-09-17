@@ -245,6 +245,81 @@ describe('ArrayStorage', () => {
         });
     });
 
+    describe('delete', () => {
+        describe('Variant #1: value exist', () => {
+            const expectedUpdatedStorage: string[] = [
+                'foo',
+                'baz'
+            ];
+            const expectedUpdatedStorageLength: number = 2;
+            const expectedDeletedValue: string = 'bar';
+
+            let updatedStorage: string[];
+            let updatedStorageLength: number;
+            let deletedValue: string;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+                storage.set(0, 'foo');
+                storage.set(1, 'bar');
+                storage.set(2, 'baz');
+
+                deletedValue = storage.delete(1);
+                updatedStorage = storage.getStorage();
+                updatedStorageLength = storage.getLength();
+            });
+
+            it('should delete value from the storage by index', () => {
+                assert.deepEqual(updatedStorage, expectedUpdatedStorage);
+            });
+
+            it('should update storage length', () => {
+                assert.deepEqual(updatedStorageLength, expectedUpdatedStorageLength);
+            });
+
+            it('should return deleted value', () => {
+                assert.equal(deletedValue, expectedDeletedValue);
+            });
+        });
+
+        describe('Variant #2: value isn\'t exist', () => {
+            const expectedUpdatedStorage: string[] = [
+                'foo',
+                'bar',
+                'baz'
+            ];
+            const expectedUpdatedStorageLength: number = 3;
+            const expectedDeletedValue: undefined = undefined;
+
+            let updatedStorage: string[];
+            let updatedStorageLength: number;
+            let deletedValue: string;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+                storage.set(0, 'foo');
+                storage.set(1, 'bar');
+                storage.set(2, 'baz');
+
+                deletedValue = storage.delete(3);
+                updatedStorage = storage.getStorage();
+                updatedStorageLength = storage.getLength();
+            });
+
+            it('should keep storage the same', () => {
+                assert.deepEqual(updatedStorage, expectedUpdatedStorage);
+            });
+
+            it('should keep storage length', () => {
+                assert.deepEqual(updatedStorageLength, expectedUpdatedStorageLength);
+            });
+
+            it('should return undefined', () => {
+                assert.equal(deletedValue, expectedDeletedValue);
+            });
+        });
+    });
+
     describe('mergeWith', () => {
         describe('Base merge', () => {
             const secondStorageKey: number = 1;

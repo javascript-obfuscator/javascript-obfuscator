@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';

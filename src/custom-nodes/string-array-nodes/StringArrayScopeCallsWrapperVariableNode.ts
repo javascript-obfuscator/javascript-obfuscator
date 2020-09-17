@@ -10,12 +10,12 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
+import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
-export class StringArrayScopeCallsWrapperNode extends AbstractCustomNode {
+export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArrayCallNode {
     /**
      * @type {string}
      */

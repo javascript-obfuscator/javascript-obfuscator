@@ -365,6 +365,7 @@ Following options are available for the JS Obfuscator:
     stringArrayEncoding: [],
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersType: 'variable',
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -415,6 +416,7 @@ Following options are available for the JS Obfuscator:
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
+    --string-array-wrappers-type <string> [variable, function]
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
@@ -1061,6 +1063,19 @@ function test() {
     }
 }
 ```
+
+### `stringArrayWrappersType`
+Type: `string` Default: `variable`
+
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+
+Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
+
+Available values:
+* `'variable'`: appends variable wrappers. Fast performance.
+* `'function'`: appends function wrappers. More slow performance than with `variable` but allows to additionally shift the `stringArray` index.
+
+Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
@@ -1162,6 +1177,7 @@ Performance will 50-100% slower than without obfuscation
     stringArrayEncoding: ['rc4'],
     stringArrayWrappersCount: 5,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersType: 'function',
     stringArrayThreshold: 1,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1196,6 +1212,7 @@ Performance will 30-35% slower than without obfuscation
     stringArrayEncoding: ['base64'],
     stringArrayWrappersCount: 2,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersType: 'variable',
     stringArrayThreshold: 0.75,
     transformObjectKeys: true,
     unicodeEscapeSequence: false
@@ -1227,6 +1244,7 @@ Performance will slightly slower than without obfuscation
     stringArrayEncoding: [],
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersType: 'variable',
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }
@@ -1255,6 +1273,7 @@ Performance will slightly slower than without obfuscation
     stringArrayEncoding: [],
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersType: 'variable',
     stringArrayThreshold: 0.75,
     unicodeEscapeSequence: false
 }

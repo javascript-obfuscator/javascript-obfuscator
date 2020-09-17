@@ -19,7 +19,8 @@ import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-flatt
 import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/LogicalExpressionFunctionNode';
 import { StringArrayCallNode } from '../../../custom-nodes/string-array-nodes/StringArrayCallNode';
-import { StringArrayScopeCallsWrapperNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperNode';
+import { StringArrayScopeCallsWrapperFunctionNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperFunctionNode';
+import { StringArrayScopeCallsWrapperVariableNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperVariableNode';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
@@ -77,8 +78,12 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayScopeCallsWrapperNode)
-        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperNode);
+        .toConstructor(StringArrayScopeCallsWrapperFunctionNode)
+        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperFunctionNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(StringArrayScopeCallsWrapperVariableNode)
+        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperVariableNode);
 
     // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)

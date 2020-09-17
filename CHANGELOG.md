@@ -1,5 +1,9 @@
 Change Log
 
+v2.3.0
+---
+* **New option:** `stringArrayWrappersType` allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option
+
 v2.2.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/745

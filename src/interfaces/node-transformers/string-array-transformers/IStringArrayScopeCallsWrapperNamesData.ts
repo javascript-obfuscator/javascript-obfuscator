@@ -1,6 +1,6 @@
 import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
-export interface IStringArrayScopeCallsWrapperData {
+export interface IStringArrayScopeCallsWrapperNamesData {
     /**
      * @type {TStringArrayEncoding}
      */

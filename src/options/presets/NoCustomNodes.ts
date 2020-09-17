@@ -3,7 +3,8 @@ import { TInputOptions } from '../../types/options/TInputOptions';
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
-import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
@@ -43,6 +44,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     ],
     stringArrayWrappersChainedCalls: false,
     stringArrayWrappersCount: 0,
+    stringArrayWrappersType: StringArrayWrappersType.Variable,
     stringArrayThreshold: 0,
     target: ObfuscationTarget.Browser,
     transformObjectKeys: false,

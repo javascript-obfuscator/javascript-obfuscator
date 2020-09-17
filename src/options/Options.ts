@@ -23,6 +23,7 @@ import {
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
+import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
 
 import { IOptions } from '../interfaces/options/IOptions';
 import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
@@ -31,7 +32,8 @@ import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-g
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
-import { StringArrayEncoding } from '../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { DEFAULT_PRESET } from './presets/Default';
 import { LOW_OBFUSCATION_PRESET } from './presets/LowObfuscation';
@@ -309,6 +311,12 @@ export class Options implements IOptions {
     @IsNumber()
     @Min(0)
     public readonly stringArrayWrappersCount!: number;
+
+    /**
+     * @type {TStringArrayWrappersType}
+     */
+    @IsIn([StringArrayWrappersType.Variable, StringArrayWrappersType.Function])
+    public readonly stringArrayWrappersType!: TStringArrayWrappersType;
 
     /**
      * @type {number}

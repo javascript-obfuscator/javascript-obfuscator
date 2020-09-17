@@ -10,7 +10,7 @@ import { IInversifyContainerFacade } from '../../../src/interfaces/container/IIn
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 import { IOptionsNormalizer } from '../../../src/interfaces/options/IOptionsNormalizer';
 
-import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 

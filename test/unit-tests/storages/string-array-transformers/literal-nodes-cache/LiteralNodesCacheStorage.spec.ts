@@ -10,7 +10,7 @@ import { TInputOptions } from '../../../../../src/types/options/TInputOptions';
 import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
 import { ILiteralNodesCacheStorage } from '../../../../../src/interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 
-import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 

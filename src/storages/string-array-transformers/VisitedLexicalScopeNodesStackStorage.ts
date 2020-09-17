@@ -40,16 +40,29 @@ export class VisitedLexicalScopeNodesStackStorage extends ArrayStorage <TNodeWit
     }
 
     /**
+     * @returns {TNodeWithLexicalScopeStatements | undefined}
+     */
+    public getPenultimateElement (): TNodeWithLexicalScopeStatements | undefined {
+        const storageLength: number = this.getLength();
+
+        return this.get(storageLength - 2) ?? undefined;
+    }
+
+    /**
      * @param {TNodeWithLexicalScopeStatements} nodeWithLexicalScopeStatements
      */
     public push (nodeWithLexicalScopeStatements: TNodeWithLexicalScopeStatements): void {
-        this.storage.push(nodeWithLexicalScopeStatements);
+        const storageLength: number = this.getLength();
+
+        this.set(storageLength, nodeWithLexicalScopeStatements);
     }
 
     /**
      * @returns {TNodeWithLexicalScopeStatements| undefined}
      */
     public pop (): TNodeWithLexicalScopeStatements | undefined {
-        return this.storage.pop();
+        const storageLength: number = this.getLength();
+
+        return this.delete(storageLength - 1);
     }
 }

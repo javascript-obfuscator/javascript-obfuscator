@@ -7,14 +7,16 @@ import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCo
 import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStringArrayScopeCallsWrapperDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperDataStorage';
+import { IStringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeDataStorage';
+import { IStringArrayScopeCallsWrapperNamesDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperNamesDataStorage';
 import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IVisitedLexicalScopeNodesStackStorage } from '../../../interfaces/storages/string-array-transformers/IVisitedLexicalScopeNodesStackStorage';
 
 import { ControlFlowStorage } from '../../../storages/custom-nodes/ControlFlowStorage';
 import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage';
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
-import { StringArrayScopeCallsWrapperDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperDataStorage';
+import { StringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage';
+import { StringArrayScopeCallsWrapperNamesDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperNamesDataStorage';
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
 import { VisitedLexicalScopeNodesStackStorage } from '../../../storages/string-array-transformers/VisitedLexicalScopeNodesStackStorage';
 
@@ -32,8 +34,12 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
         .to(StringArrayStorage)
         .inSingletonScope();
 
-    bind<IStringArrayScopeCallsWrapperDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrapperDataStorage)
-        .to(StringArrayScopeCallsWrapperDataStorage)
+    bind<IStringArrayScopeCallsWrapperLexicalScopeDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)
+        .to(StringArrayScopeCallsWrapperLexicalScopeDataStorage)
+        .inSingletonScope();
+
+    bind<IStringArrayScopeCallsWrapperNamesDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)
+        .to(StringArrayScopeCallsWrapperNamesDataStorage)
         .inSingletonScope();
 
     bind<IVisitedLexicalScopeNodesStackStorage>(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)

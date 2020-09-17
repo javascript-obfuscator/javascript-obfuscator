@@ -1,7 +1,8 @@
 import { assert } from 'chai';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
@@ -16,7 +17,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
         describe('Variant #1: root scope', () => {
             describe('Variant #1: option value value is lower then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'return _0x([a-f0-9]){4,6};' +
+                        'return _0x([a-f0-9]){4,6};' +
                     '};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -553,6 +554,296 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                                         ],
                                         stringArrayWrappersChainedCalls: true,
                                         stringArrayWrappersCount: 5
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+                });
+            });
+        });
+
+        describe('Variant #7: `stringArrayWrappersType` option has `Function` value', () => {
+            const hexadecimalIndexMatch: string = '0x[a-z0-9]{1,3}';
+
+            describe('Variant #1: base', () => {
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const f *= *function *\\(c, *d\\) *{' +
+                            `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                        '};' +
+                        `const foo *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        `const bar *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        `const baz *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        'function test *\\( *\\) *{' +
+                            'const g *= *function *\\(c, *d\\) *{' +
+                                `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                            '};' +
+                            `const c *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const d *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const e *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: false,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+                });
+
+            describe('Variant #2: correct chained calls', () => {
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const f *= *function *\\(c, *d\\) *{' +
+                            `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                        '};' +
+                        `const foo *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        `const bar *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        `const baz *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        'function test *\\( *\\) *{' +
+                            'const g *= *function *\\(c, *d\\) *{' +
+                                `return f\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                            '};' +
+                            `const c *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const d *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const e *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+                });
+
+            describe('Variant #3: no wrappers on a root scope', () => {
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                            'return e;' +
+                        '};' +
+                        'function test *\\( *\\) *{' +
+                            'const f *= *function *\\(c, *d\\) *{' +
+                                `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                            '};' +
+                            `const c *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const d *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const e *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const-no-root-wrappers.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+                });
+
+            describe('Variant #4: correct evaluation of the string array wrappers chained calls', () => {
+                describe('Variant #1: base', () => {
+                    describe('Variant #1: `Hexadecimal` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5,
+                                        stringArrayWrappersType: StringArrayWrappersType.Function
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+
+                    describe('Variant #2: `Mangled` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5,
+                                        stringArrayWrappersType: StringArrayWrappersType.Function
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+                });
+
+                describe('Variant #2: advanced', () => {
+                    describe('Variant #1: `Hexadecimal` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5,
+                                        stringArrayWrappersType: StringArrayWrappersType.Function
+                                    }
+                                ).getObfuscatedCode();
+
+                                const evaluationResult: string = eval(obfuscatedCode);
+
+                                if (evaluationResult !== expectedEvaluationResult) {
+                                    isEvaluationSuccessful = false;
+                                    break;
+                                }
+                            }
+                        });
+
+                        it('should correctly evaluate string array wrappers chained calls', () => {
+                            assert.equal(isEvaluationSuccessful, true);
+                        });
+                    });
+
+                    describe('Variant #2: `Mangled` identifier names generator', () => {
+                        const samplesCount: number = 50;
+                        const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+                        let isEvaluationSuccessful: boolean = true;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
+
+                            for (let i = 0; i < samplesCount; i++) {
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                        stringArray: true,
+                                        stringArrayThreshold: 1,
+                                        stringArrayEncoding: [
+                                            StringArrayEncoding.None,
+                                            StringArrayEncoding.Rc4
+                                        ],
+                                        stringArrayWrappersChainedCalls: true,
+                                        stringArrayWrappersCount: 5,
+                                        stringArrayWrappersType: StringArrayWrappersType.Function
                                     }
                                 ).getObfuscatedCode();
 

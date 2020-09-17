@@ -1,7 +1,7 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
-import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { LOW_OBFUSCATION_PRESET } from './LowObfuscation';
 

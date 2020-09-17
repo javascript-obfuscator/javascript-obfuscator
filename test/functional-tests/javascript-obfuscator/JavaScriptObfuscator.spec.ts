@@ -8,7 +8,8 @@ import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
-import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
@@ -853,6 +854,7 @@ describe('JavaScriptObfuscator', () => {
                         ],
                         stringArrayWrappersChainedCalls: true,
                         stringArrayWrappersCount: 10,
+                        stringArrayWrappersType: StringArrayWrappersType.Function,
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false

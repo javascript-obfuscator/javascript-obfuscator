@@ -58,6 +58,20 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {number} key
      * @returns {V | undefined}
      */
+    public delete (key: number): V | undefined {
+        const deletedElement: V | undefined = this.storage.splice(key, 1)[0] ?? undefined;
+
+        if (deletedElement) {
+            this.storageLength--;
+        }
+
+        return deletedElement;
+    }
+
+    /**
+     * @param {number} key
+     * @returns {V | undefined}
+     */
     public get (key: number): V | undefined {
         return this.storage[key];
     }

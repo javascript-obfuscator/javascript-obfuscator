@@ -2,7 +2,7 @@ import { TOptionsNormalizerRule } from '../../types/options/TOptionsNormalizerRu
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
-import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 /**
  * @param {IOptions} options

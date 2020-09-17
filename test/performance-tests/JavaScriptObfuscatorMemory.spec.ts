@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { readFileAsString } from '../helpers/readFileAsString';
 
-import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 

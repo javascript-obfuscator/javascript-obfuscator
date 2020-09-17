@@ -16,6 +16,7 @@ v2.2.0
 v2.1.0
 ---
 * **New API:** `getOptionsByPreset` allows to get options for the passed options preset name 
+* Add force convert of unicode control characters to the unicode escape sequence. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/747
 
 v2.0.0
 ---

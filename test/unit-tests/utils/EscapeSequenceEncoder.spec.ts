@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
@@ -45,6 +47,36 @@ describe('EscapeSequenceEncoder', () => {
             });
 
             it('should return a string where all `escape sequences` are encoded', () => {
+                assert.equal(actualString, expectedString);
+            });
+        });
+
+        describe('Variant #3: non-ascii character`', () => {
+            const string: string = 'тест';
+            const expectedString: string = '\\u0442\\u0435\\u0441\\u0442';
+
+            let actualString: string;
+
+            before(() => {
+                actualString = escapeSequenceEncoder.encode(string, true);
+            });
+
+            it('should return a string where all non-ascii characters are encoded', () => {
+                assert.equal(actualString, expectedString);
+            });
+        });
+
+        describe('Variant #4: unicode control character`', () => {
+            const string: string = '\x00\x1F\x7F\x9F';
+            const expectedString: string = '\\x00\\x1f\\x7f\\u009f';
+
+            let actualString: string;
+
+            before(() => {
+                actualString = escapeSequenceEncoder.encode(string, false);
+            });
+
+            it('should return a string where all unicode control characters are encoded', () => {
                 assert.equal(actualString, expectedString);
             });
         });

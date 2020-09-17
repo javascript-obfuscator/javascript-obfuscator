@@ -5,6 +5,21 @@ import { IEscapeSequenceEncoder } from '../interfaces/utils/IEscapeSequenceEncod
 @injectable()
 export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
     /**
+     * https://bytefreaks.net/gnulinux/regular-expression-to-match-any-ascii-character
+     *
+     * @type {RegExp}
+     */
+    private static readonly ASCIICharactersRegExp: RegExp = /[\x00-\x7F]/;
+
+    /**
+     * https://en.wikipedia.org/wiki/List_of_Unicode_characters
+     * \x00-\x1F\x7F-\x9F are the control unicode characters
+     *
+     * @type {RegExp}
+     */
+    private static readonly forceEscapeCharactersRegExp: RegExp = /[\x00-\x1F\x7F-\x9F'"\\\s]/;
+
+    /**
      * @type {Map<string, string>}
      */
     private readonly stringsCache: Map <string, string> = new Map();
@@ -23,18 +38,19 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
 
         const radix: number = 16;
         const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
-        const escapeSequenceRegExp: RegExp = new RegExp('[\'\"\\\\\\s]');
-        const regExp: RegExp = new RegExp('[\\x00-\\x7F]');
 
         let prefix: string;
         let template: string;
 
         const result: string = string.replace(replaceRegExp, (character: string): string => {
-            if (!encodeAllSymbols && !escapeSequenceRegExp.exec(character)) {
+            const shouldEncodeCharacter: boolean = encodeAllSymbols
+                || EscapeSequenceEncoder.forceEscapeCharactersRegExp.test(character);
+
+            if (!shouldEncodeCharacter) {
                 return character;
             }
 
-            if (regExp.exec(character)) {
+            if (EscapeSequenceEncoder.ASCIICharactersRegExp.test(character)) {
                 prefix = '\\x';
                 template = '00';
             } else {

@@ -1076,6 +1076,37 @@ Available values:
 * `'function'`: appends function wrappers. More slow performance than with `variable` but allows to additionally shift the `stringArray` index.
 
 Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
+
+Example of the `'function'` option value:
+```
+// input
+const foo = 'foo';
+
+function test () {
+    const bar = 'bar';
+}
+
+// output
+const a = [
+    'foo',
+    'bar'
+];
+const b = function (c, d) {
+    c = c - 0x0;
+    let e = a[c];
+    return e;
+};
+const d = function (c, f) {
+    return b(c - '0x372', f);
+};
+const foo = d('0x372');
+function test() {
+    const e = function (c, f) {
+        return d(c - -'0x260', f);
+    };
+    const c = e('0x113');
+}
+```
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

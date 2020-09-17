@@ -1,17 +1,29 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const s = '\0ab cd';
+            const foo = 'foo';
+
+            function test () {
+                const bar = 'bar';
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false
+            compact: false,
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+            stringArray: true,
+            stringArrayThreshold: 1,
+            stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersCount: 1,
+            stringArrayWrappersType: StringArrayWrappersType.Function
         }
     ).getObfuscatedCode();
 

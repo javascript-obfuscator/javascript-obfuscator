@@ -416,6 +416,7 @@ Following options are available for the JS Obfuscator:
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
+    --string-array-wrappers-type <string> [variable, function]
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>

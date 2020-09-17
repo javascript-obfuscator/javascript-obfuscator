@@ -3,6 +3,7 @@ Change Log
 v2.3.0
 ---
 * **New option:** `stringArrayWrappersType` allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option
+* Add force convert of unicode control characters to the unicode escape sequence. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/747
 
 v2.2.1
 ---
@@ -16,7 +17,6 @@ v2.2.0
 v2.1.0
 ---
 * **New API:** `getOptionsByPreset` allows to get options for the passed options preset name 
-* Add force convert of unicode control characters to the unicode escape sequence. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/747
 
 v2.0.0
 ---

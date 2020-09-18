@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require('../dist/index.cli').obfuscate(process.argv);
+require('../dist/index.cli').JavaScriptObfuscator.obfuscate(process.argv);

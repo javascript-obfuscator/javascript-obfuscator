@@ -44,7 +44,7 @@ module.exports = {
         hints: false
     },
     stats: {
-        maxModules: 0,
+        excludeModules: true,
         warnings: false
     }
 };

@@ -34,6 +34,14 @@ module.exports = {
     resolve: {
         extensions: ['.ts']
     },
+    cache: {
+        type: "filesystem",
+        buildDependencies: {
+            config: [
+                __filename
+            ]
+        }
+    },
     plugins: [
         new webpack.BannerPlugin(
             {
@@ -66,6 +74,6 @@ module.exports = {
         library: 'JavaScriptObfuscator'
     },
     stats: {
-        maxModules: 0
+        excludeModules: true
     }
 };

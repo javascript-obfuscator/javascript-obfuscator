@@ -1,5 +1,9 @@
 Change Log
 
+v2.3.1
+---
+* Fixed a rare bug with `identifierNamesGenerator: 'mangled'` option that causes wrong identifier names generation
+
 v2.3.0
 ---
 * **New option:** `stringArrayWrappersType` allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option

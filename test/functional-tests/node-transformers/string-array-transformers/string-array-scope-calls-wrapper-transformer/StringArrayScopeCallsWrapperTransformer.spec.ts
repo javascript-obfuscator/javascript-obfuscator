@@ -49,7 +49,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #2: option value is bigger then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'return _0x([a-f0-9]){4,6};' +
+                        'return _0x([a-f0-9]){4,6};' +
                     '};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -116,11 +116,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #1: option value is lower then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
                     '}'
                 );
 
@@ -148,12 +148,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #2: option value is bigger then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'function test *\\(\\) *{' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
                     '}'
                 );
 
@@ -181,11 +181,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #3: correct wrappers order', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                    'const h *= *b;' +
-                    'const i *= *b;' +
-                    'const c *= *[h|i]\\(\'0x3\'\\);' +
-                    'const d *= *[h|i]\\(\'0x4\'\\);' +
-                    'const e *= *[h|i]\\(\'0x5\'\\);' +
+                        'const h *= *b;' +
+                        'const i *= *b;' +
+                        'const c *= *[h|i]\\(\'0x3\'\\);' +
+                        'const d *= *[h|i]\\(\'0x4\'\\);' +
+                        'const e *= *[h|i]\\(\'0x5\'\\);' +
                     '}'
                 );
 
@@ -249,7 +249,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'var c *= *b;' +
                     'if *\\(!!\\[]\\) *{' +
-                    'var foo *= *c\\(\'0x0\'\\);' +
+                        'var foo *= *c\\(\'0x0\'\\);' +
                     '}'
                 );
 
@@ -306,7 +306,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
         describe('Variant #4: prevailing kind of variables', () => {
             const stringArrayCallRegExp: RegExp = new RegExp(
-                'return _0x([a-f0-9]){4,6};' +
+                    'return _0x([a-f0-9]){4,6};' +
                 '};' +
                 'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                 'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -368,22 +368,22 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const q *= *b;' +
                         'const foo *= *q\\(\'0x0\'\\);' +
                         'function test\\(c, *d\\) *{' +
-                        'const r *= *q;' +
-                        'const e *= *r\\(\'0x1\'\\);' +
-                        'const f *= *r\\(\'0x2\'\\);' +
-                        'function g\\(h, *i\\) *{' +
-                        'const s *= *r;' +
-                        'const j *= *s\\(\'0x3\'\\);' +
-                        'const k *= *s\\(\'0x4\'\\);' +
-                        'function l\\(m, *n *\\) *{' +
-                        'const t *= *s;' +
-                        'const o *= *t\\(\'0x3\'\\);' +
-                        'const p *= *t\\(\'0x4\'\\);' +
-                        'return o *\\+ *p;' +
-                        '}' +
-                        'return j *\\+ *k;' +
-                        '}' +
-                        'return e *\\+ *f *\\+ *g\\(\\);' +
+                            'const r *= *q;' +
+                            'const e *= *r\\(\'0x1\'\\);' +
+                            'const f *= *r\\(\'0x2\'\\);' +
+                            'function g\\(h, *i\\) *{' +
+                                'const s *= *r;' +
+                                'const j *= *s\\(\'0x3\'\\);' +
+                                'const k *= *s\\(\'0x4\'\\);' +
+                                'function l\\(m, *n *\\) *{' +
+                                    'const t *= *s;' +
+                                    'const o *= *t\\(\'0x3\'\\);' +
+                                    'const p *= *t\\(\'0x4\'\\);' +
+                                    'return o *\\+ *p;' +
+                                '}' +
+                                'return j *\\+ *k;' +
+                            '}' +
+                            'return e *\\+ *f *\\+ *g\\(\\);' +
                         '}'
                     );
 
@@ -869,7 +869,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
         describe('Variant #1: root scope', () => {
             describe('Variant #1: `1` scope calls wrapper for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
-                    'return _0x([a-f0-9]){4,6};' +
+                        'return _0x([a-f0-9]){4,6};' +
                     '};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     // this one may be added or not depends on:
@@ -907,7 +907,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #2: `2` scope calls wrappers for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
-                    'return _0x([a-f0-9]){4,6};' +
+                        'return _0x([a-f0-9]){4,6};' +
                     '};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
@@ -949,13 +949,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #1: `1` scope calls wrapper for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    // this one may be added or not depends on:
-                    // if all literal values encoded with a single encoding or not
-                    '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        // this one may be added or not depends on:
+                        // if all literal values encoded with a single encoding or not
+                        '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
                     '}'
                 );
 
@@ -987,14 +987,14 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #2: `2` scope calls wrappers for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    // this one may be added or not depends on:
-                    // if all literal values encoded with a single encoding or not
-                    '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
+                        // this one may be added or not depends on:
+                        // if all literal values encoded with a single encoding or not
+                        '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
                     '}'
                 );
 

@@ -873,7 +873,7 @@ describe('JavaScriptObfuscator', () => {
             this.timeout(20000);
 
             const samplesCount: number = 100;
-            const expectedEvaluationResult: string = 'aaabbbcccdddeee';
+            const expectedEvaluationResult: string = 'Hello World';
             let isEvaluationSuccessful: boolean = true;
 
             before(() => {

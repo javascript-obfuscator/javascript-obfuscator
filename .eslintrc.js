@@ -327,7 +327,6 @@ module.exports = {
                 "name": "error"
             }
         ],
-        "unicorn/no-array-instanceof": "error",
         "unicorn/no-nested-ternary": "error",
         "unicorn/no-unreadable-array-destructuring": "error",
         "unicorn/prefer-includes": "error",

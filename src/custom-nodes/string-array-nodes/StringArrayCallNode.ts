@@ -36,7 +36,6 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     @initializable()
     private stringArrayCallsWrapperName!: string;
 
-
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter

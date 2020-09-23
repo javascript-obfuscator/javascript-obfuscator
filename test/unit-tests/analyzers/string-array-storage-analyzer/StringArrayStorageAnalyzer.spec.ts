@@ -213,7 +213,7 @@ describe('StringArrayStorageAnalyzer', () => {
             });
         });
 
-        describe('Analyzes of the AST tree with ignored nodes', () => {
+        describe('Analyzes of the AST tree with ignored string literal nodes', () => {
             const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
             const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
             NodeMetadata.set(literalNode2, {ignoredNode: true});
@@ -251,6 +251,90 @@ describe('StringArrayStorageAnalyzer', () => {
 
             it('Variant #2: should return correct string array storage item data for literal node #1', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+            });
+        });
+
+        describe('Analyzes of the AST tree with force obfuscated string literal nodes', () => {
+            describe('Variant #1: Force obfuscate string when threshold is `0`', () => {
+                const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
+                const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
+                NodeMetadata.set(literalNode2, {forceObfuscatedNode: true});
+
+                const expectedStringArrayStorageItemData1: undefined = undefined;
+                const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {
+                    encodedValue: 'bar',
+                    encoding: StringArrayEncoding.None,
+                    decodeKey: null,
+                    index: 0,
+                    value: 'bar'
+                };
+
+                let stringArrayStorageItemData1: IStringArrayStorageItemData | undefined;
+                let stringArrayStorageItemData2: IStringArrayStorageItemData | undefined;
+
+                before(() => {
+                    stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArrayThreshold: 0
+                    });
+
+                    const astTree: ESTree.Program = NodeFactory.programNode([
+                        NodeFactory.expressionStatementNode(literalNode1),
+                        NodeFactory.expressionStatementNode(literalNode2)
+                    ]);
+
+                    stringArrayStorageAnalyzer.analyze(astTree);
+                    stringArrayStorageItemData1 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
+                    stringArrayStorageItemData2 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+                });
+
+                it('Variant #1: should return correct string array storage item data for literal node #1', () => {
+                    assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
+                });
+
+                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                    assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+                });
+            });
+
+            describe('Variant #2: Force obfuscate string when string value shorter than allowed length', () => {
+                const literalNode1: ESTree.Literal = NodeFactory.literalNode('a');
+                const literalNode2: ESTree.Literal = NodeFactory.literalNode('b');
+                NodeMetadata.set(literalNode2, {forceObfuscatedNode: true});
+
+                const expectedStringArrayStorageItemData1: undefined = undefined;
+                const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {
+                    encodedValue: 'b',
+                    encoding: StringArrayEncoding.None,
+                    decodeKey: null,
+                    index: 0,
+                    value: 'b'
+                };
+
+                let stringArrayStorageItemData1: IStringArrayStorageItemData | undefined;
+                let stringArrayStorageItemData2: IStringArrayStorageItemData | undefined;
+
+                before(() => {
+                    stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArrayThreshold: 1
+                    });
+
+                    const astTree: ESTree.Program = NodeFactory.programNode([
+                        NodeFactory.expressionStatementNode(literalNode1),
+                        NodeFactory.expressionStatementNode(literalNode2)
+                    ]);
+
+                    stringArrayStorageAnalyzer.analyze(astTree);
+                    stringArrayStorageItemData1 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
+                    stringArrayStorageItemData2 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+                });
+
+                it('Variant #1: should return correct string array storage item data for literal node #1', () => {
+                    assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
+                });
+
+                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                    assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+                });
             });
         });
 

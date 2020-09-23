@@ -12,7 +12,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
-export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
+export class ForceTransformedStringObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {IOptions}
      */
@@ -33,13 +33,13 @@ export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
      */
     public check (node: ESTree.Node): ObfuscatingGuardResult {
         if (
-            this.options.reservedStrings.length
+            this.options.forceTransformedStrings.length
             && NodeGuards.isLiteralNode(node)
             && typeof node.value === 'string'
         ) {
-            return !this.isReservedString(node.value)
+            return !this.isForceTransformedString(node.value)
                 ? ObfuscatingGuardResult.Obfuscated
-                : ObfuscatingGuardResult.Ignored;
+                : ObfuscatingGuardResult.ForceObfuscated;
         }
 
         return ObfuscatingGuardResult.Obfuscated;
@@ -49,10 +49,10 @@ export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
      * @param {string} value
      * @returns {boolean}
      */
-    private isReservedString (value: string): boolean {
-        return this.options.reservedStrings
-            .some((reservedString: string) => {
-                return new RegExp(reservedString, 'g').exec(value) !== null;
+    private isForceTransformedString (value: string): boolean {
+        return this.options.forceTransformedStrings
+            .some((forceTransformedString: string) => {
+                return new RegExp(forceTransformedString, 'g').exec(value) !== null;
             });
     }
 }

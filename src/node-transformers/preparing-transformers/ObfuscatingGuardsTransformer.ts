@@ -11,8 +11,9 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
-import { ObfuscatingGuard } from '../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { ObfuscatingGuard } from '../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
+import { ObfuscatingGuardResult } from '../../enums/node/ObfuscatingGuardResult';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -29,6 +30,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
     private static readonly obfuscatingGuardsList: ObfuscatingGuard[] = [
         ObfuscatingGuard.BlackListObfuscatingGuard,
         ObfuscatingGuard.ConditionalCommentObfuscatingGuard,
+        ObfuscatingGuard.ForceTransformedStringObfuscatingGuard,
         ObfuscatingGuard.ReservedStringObfuscatingGuard
     ];
 
@@ -84,13 +86,37 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
-        const obfuscationAllowed: boolean = this.obfuscatingGuards
-            .every((nodeGuard: IObfuscatingGuard) => nodeGuard.check(node));
+        const obfuscatingGuardResults: ObfuscatingGuardResult[] = this.obfuscatingGuards
+            .map((obfuscatingGuard: IObfuscatingGuard) => obfuscatingGuard.check(node));
 
-        NodeMetadata.set(node, {
-            ignoredNode: !(NodeGuards.isProgramNode(node) || obfuscationAllowed)
-        });
+        this.setNodeMetadata(node, obfuscatingGuardResults);
 
         return node;
+    }
+
+    /**
+     * @param {Node} node
+     * @param {ObfuscatingGuardResult[]} obfuscatingGuardResults
+     */
+    private setNodeMetadata (node: ESTree.Node, obfuscatingGuardResults: ObfuscatingGuardResult[]): void {
+        let ignoredNode: boolean = false;
+        let forceObfuscatedNode: boolean = false;
+
+        for (const obfuscatingGuardResult of obfuscatingGuardResults) {
+            if (obfuscatingGuardResult === ObfuscatingGuardResult.Ignored) {
+                ignoredNode = true;
+                forceObfuscatedNode = false;
+                break;
+            }
+
+            if (obfuscatingGuardResult === ObfuscatingGuardResult.ForceObfuscated) {
+                forceObfuscatedNode = true;
+            }
+        }
+
+        NodeMetadata.set(node, {
+            ignoredNode: ignoredNode && !NodeGuards.isProgramNode(node),
+            forceObfuscatedNode: forceObfuscatedNode && !NodeGuards.isProgramNode(node)
+        });
     }
 }

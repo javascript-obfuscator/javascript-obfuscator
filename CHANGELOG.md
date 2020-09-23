@@ -1,5 +1,9 @@
 Change Log
 
+v2.4.0
+---
+* **New option:** `forceTransformedStrings` allows force transform strings even if by `stringArrayThreshold` (or possible other thresholds in the future) they shouldn't be transformed
+
 v2.3.1
 ---
 * Fixed a rare bug with `identifierNamesGenerator: 'mangled'` option that causes wrong identifier names generation

@@ -16,6 +16,7 @@ import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCu
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { NodeGuards } from '../../../node/NodeGuards';
+import { NodeLiteralUtils } from '../../../node/NodeLiteralUtils';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
@@ -55,7 +56,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
             return literalNode;
         }
 
-        if (typeof literalNode.value !== 'string' || literalNode.value.length < 3) {
+        if (!NodeLiteralUtils.isStringLiteralNode(literalNode) || literalNode.value.length < 3) {
             return literalNode;
         }
 

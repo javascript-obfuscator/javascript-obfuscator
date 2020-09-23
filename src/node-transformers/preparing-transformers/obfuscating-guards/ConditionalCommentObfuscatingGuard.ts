@@ -4,6 +4,8 @@ import * as ESTree from 'estree';
 
 import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
 
+import { ObfuscatingGuardResult } from '../../../enums/node/ObfuscatingGuardResult';
+
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
@@ -33,21 +35,21 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
     }
 
     /**
-     * @returns {boolean}
-     * @param node
+     * @param {Node} node
+     * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): boolean {
-        if (!NodeGuards.isNodeWithComments(node)) {
-            return this.obfuscationAllowed;
+    public check (node: ESTree.Node): ObfuscatingGuardResult {
+        if (NodeGuards.isNodeWithComments(node)) {
+            const leadingComments: ESTree.Comment[] | undefined = node.leadingComments;
+
+            if (leadingComments) {
+                this.obfuscationAllowed = this.checkComments(leadingComments);
+            }
         }
 
-        const leadingComments: ESTree.Comment[] | undefined = node.leadingComments;
-
-        if (leadingComments) {
-            this.obfuscationAllowed = this.checkComments(leadingComments);
-        }
-
-        return this.obfuscationAllowed;
+        return this.obfuscationAllowed
+            ? ObfuscatingGuardResult.Obfuscated
+            : ObfuscatingGuardResult.Ignored;
     }
 
     /**

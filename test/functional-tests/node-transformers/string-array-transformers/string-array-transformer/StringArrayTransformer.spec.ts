@@ -689,7 +689,188 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #16: object expression key literal', () => {
+    describe('Variant #16: `forceTransformedStrings` option is enabled', () => {
+        describe('Variant #1: base `forceTransformedStrings` values', () => {
+            describe('Variant #1: single force transformed string value', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformedStrings: ['bar'],
+                            stringArray: true,
+                            stringArrayThreshold: 0
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+
+            describe('Variant #2: two force transformed string values', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformedStrings: ['foo', 'bar'],
+                            stringArray: true,
+                            stringArrayThreshold: 0
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+        });
+
+        describe('Variant #2: RegExp `forceTransformedStrings` values', () => {
+            describe('Variant #1: single force transformed string value', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo'/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformedStrings: ['ar$'],
+                            stringArray: true,
+                            stringArrayThreshold: 0
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+
+            describe('Variant #2: two force transformed string values', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformedStrings: ['^fo', '.ar'],
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform force transformed string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+        });
+
+        describe('Variant #3: `unicodeEscapeSequence` option is disabled', () => {
+            const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+            const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformedStrings: ['bar'],
+                        unicodeEscapeSequence: false
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should not encode force transformed string with unicode escape sequence', () => {
+                assert.match(obfuscatedCode, stringLiteralRegExp1);
+            });
+
+            it('match #2: should not encode force transformed string with unicode escape sequence', () => {
+                assert.match(obfuscatedCode, stringLiteralRegExp2);
+            });
+        });
+
+        describe('Variant #4: `stringArray` option is disabled', () => {
+            describe('Variant #1: base case', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformedStrings: ['foo', 'bar'],
+                            stringArray: false,
+                            stringArrayThreshold: 0
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+        });
+    });
+
+    describe('Variant #17: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
             const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
@@ -747,7 +928,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #17: import declaration source literal', () => {
+    describe('Variant #18: import declaration source literal', () => {
         const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -770,7 +951,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #18: export all declaration source literal', () => {
+    describe('Variant #19: export all declaration source literal', () => {
         const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -793,7 +974,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #19: export named declaration source literal', () => {
+    describe('Variant #20: export named declaration source literal', () => {
         const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;

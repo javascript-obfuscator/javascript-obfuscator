@@ -11,8 +11,8 @@ import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-a
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 /**
  * Adds values of literal nodes to the string array storage
@@ -99,7 +99,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {Node} parentNode
      */
     private analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
-        if (typeof literalNode.value !== 'string') {
+        if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return;
         }
 
@@ -107,7 +107,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
             return;
         }
 
-        if (!this.shouldAddValueToStringArray(literalNode.value)) {
+        if (!this.shouldAddValueToStringArray(literalNode)) {
             return;
         }
 
@@ -118,11 +118,17 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     }
 
     /**
-     * @param {string} value
+     * @param {(SimpleLiteral & {value: string})} literalNode
      * @returns {boolean}
      */
-    private shouldAddValueToStringArray (value: string): boolean {
-        return value.length >= StringArrayStorageAnalyzer.minimumLengthForStringArray
+    private shouldAddValueToStringArray (literalNode: ESTree.Literal & {value: string}): boolean {
+        const isForceObfuscatedNode: boolean = NodeMetadata.isForceObfuscatedNode(literalNode);
+
+        if (isForceObfuscatedNode) {
+            return true;
+        }
+
+        return literalNode.value.length >= StringArrayStorageAnalyzer.minimumLengthForStringArray
             && this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold;
     }
 }

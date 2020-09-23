@@ -6,6 +6,7 @@ import * as eslintScope from 'eslint-scope';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {
+        forceObfuscatedNode?: boolean;
         ignoredNode?: boolean;
     }
 

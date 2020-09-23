@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 
 import * as ESTree from 'estree';
 
-import { TNodeGuard } from '../../../types/node/TNodeGuard';
-
 import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
+
+import { ObfuscatingGuardResult } from '../../../enums/node/ObfuscatingGuardResult';
 
 import { NodeGuards } from '../../../node/NodeGuards';
 
@@ -13,7 +13,7 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {((node: Node) => boolean)[]}
      */
-    private static readonly blackListGuards: TNodeGuard[] = [
+    private static readonly blackListGuards: ((node: ESTree.Node) => boolean)[] = [
         NodeGuards.isUseStrictOperator
     ];
 
@@ -27,16 +27,16 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
     }
 
     /**
-     * @returns {boolean}
-     * @param node
+     * @param {Node} node
+     * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): boolean {
+    public check (node: ESTree.Node): ObfuscatingGuardResult {
         for (let i: number = 0; i < this.blackListGuardsLength; i++) {
             if (BlackListObfuscatingGuard.blackListGuards[i](node)) {
-                return false;
+                return ObfuscatingGuardResult.Ignored;
             }
         }
 
-        return true;
+        return ObfuscatingGuardResult.Obfuscated;
     }
 }

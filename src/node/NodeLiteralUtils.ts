@@ -5,6 +5,14 @@ import { NodeGuards } from './NodeGuards';
 export class NodeLiteralUtils {
     /**
      * @param {Literal} literalNode
+     * @returns {literalNode is (SimpleLiteral & {value: string})}
+     */
+    public static isStringLiteralNode (literalNode: ESTree.Literal): literalNode is ESTree.Literal & {value: string} {
+        return typeof literalNode.value === 'string';
+    }
+
+    /**
+     * @param {Literal} literalNode
      * @param {Node} parentNode
      * @returns {boolean}
      */

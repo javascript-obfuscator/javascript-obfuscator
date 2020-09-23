@@ -191,7 +191,10 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
-        if (typeof literalNode.value !== 'string' || NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)) {
+        if (
+            !NodeLiteralUtils.isStringLiteralNode(literalNode)
+            || NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)
+        ) {
             return literalNode;
         }
 
@@ -413,7 +416,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node
     ): ESTree.Literal {
-        if (typeof literalNode.value !== 'string') {
+        if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return literalNode;
         }
 

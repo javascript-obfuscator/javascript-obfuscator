@@ -18,9 +18,10 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
+            forceTransformedStrings: ['foo'],
             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
             stringArray: true,
-            stringArrayThreshold: 1,
+            stringArrayThreshold: 0,
             stringArrayWrappersChainedCalls: true,
             stringArrayWrappersCount: 1,
             stringArrayWrappersType: StringArrayWrappersType.Function

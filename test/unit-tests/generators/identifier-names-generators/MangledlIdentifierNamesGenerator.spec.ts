@@ -174,6 +174,7 @@ describe('MangledIdentifierNamesGenerator', () => {
     describe('isIncrementedMangledName', function () {
         this.timeout(60000);
 
+        const samplesCount: number = 1000000;
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
@@ -182,29 +183,29 @@ describe('MangledIdentifierNamesGenerator', () => {
             IdentifierNamesGenerator.MangledIdentifierNamesGenerator
         );
 
+        let isSuccessComparison: boolean = true;
         let mangledName: string = '';
         let prevMangledName: string = '9';
 
-        for (let sample = 0; sample <= 10000; sample++) {
-            describe(`Variant #${sample + 1}`, () => {
-                let resultNormal: boolean;
-                let resultReversed: boolean;
+        for (let sample = 0; sample <= samplesCount; sample++) {
+            let resultNormal: boolean;
+            let resultReversed: boolean;
 
-                mangledName = identifierNamesGenerator.generateNext();
-                resultNormal = MangledIdentifierNamesGenerator.isIncrementedMangledName(mangledName, prevMangledName);
-                resultReversed = MangledIdentifierNamesGenerator.isIncrementedMangledName(prevMangledName, mangledName);
+            mangledName = identifierNamesGenerator.generateNext();
+            resultNormal = MangledIdentifierNamesGenerator.isIncrementedMangledName(mangledName, prevMangledName);
+            resultReversed = MangledIdentifierNamesGenerator.isIncrementedMangledName(prevMangledName, mangledName);
 
-                it(`Variant #1: should compare mangled names: ${mangledName}, ${prevMangledName}`, () => {
-                    assert.isTrue(resultNormal);
-                });
+            if (!resultNormal || resultReversed) {
+                isSuccessComparison = false;
+                break;
+            }
 
-                it(`Variant #2: should compare mangled names: ${prevMangledName}, ${mangledName}`, () => {
-                    assert.isFalse(resultReversed);
-                });
-
-                prevMangledName = mangledName;
-            });
+            prevMangledName = mangledName;
         }
+
+        it('should correctly compare mangled names', () => {
+            assert.isTrue(isSuccessComparison);
+        });
     });
 
     describe('isValidIdentifierName', () => {

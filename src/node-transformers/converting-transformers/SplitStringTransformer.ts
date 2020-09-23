@@ -140,7 +140,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
         parentNode: ESTree.Node,
         chunkLength: number
     ): ESTree.Node {
-        if (typeof literalNode.value !== 'string') {
+        if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return literalNode;
         }
 

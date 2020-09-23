@@ -12,23 +12,34 @@ import { INodeTransformer } from '../../../../src/interfaces/node-transformers/I
 
 import { NodeTransformer } from '../../../../src/enums/node-transformers/NodeTransformer';
 import { NodeFactory } from '../../../../src/node/NodeFactory';
-import { NodeUtils } from '../../../../src/node/NodeUtils';
 import { NodeMetadata } from '../../../../src/node/NodeMetadata';
+import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('ObfuscatingGuardsTransformer', () => {
     describe('transformNode', () => {
+        const forceObfuscatedString: string = 'important string';
+        const ignoredAndForceObfuscatedString: string = 'important ignored string';
+
         let inversifyContainerFacade: IInversifyContainerFacade,
             obfuscatingGuardsTransformer: INodeTransformer;
 
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
-            inversifyContainerFacade.load('', '', {});
+            inversifyContainerFacade.load('', '', {
+                forceTransformedStrings: [
+                    forceObfuscatedString,
+                    ignoredAndForceObfuscatedString
+                ],
+                reservedStrings: [
+                    ignoredAndForceObfuscatedString
+                ]
+            });
 
             obfuscatingGuardsTransformer = inversifyContainerFacade
                 .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ObfuscatingGuardsTransformer);
         });
 
-        describe('Variant #1: valid node', () => {
+        describe('Variant #1: allowed node', () => {
             const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
 
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
@@ -38,7 +49,10 @@ describe('ObfuscatingGuardsTransformer', () => {
             before(() => {
                 identifier.parentNode = identifier;
 
-                NodeMetadata.set(expectedResult, { ignoredNode: false });
+                NodeMetadata.set(expectedResult, {
+                    forceObfuscatedNode: false,
+                    ignoredNode: false
+                });
 
                 result = <ESTree.Identifier>obfuscatingGuardsTransformer.transformNode(identifier, identifier);
             });
@@ -48,7 +62,7 @@ describe('ObfuscatingGuardsTransformer', () => {
             });
         });
 
-        describe('Variant #2: invalid node', () => {
+        describe('Variant #2: ignored node', () => {
             const expressionStatement: ESTree.ExpressionStatement = NodeFactory.directiveNode(
                 NodeFactory.literalNode('use strict'),
                 'use strict'
@@ -63,10 +77,63 @@ describe('ObfuscatingGuardsTransformer', () => {
                 expressionStatement.expression.parentNode = expressionStatement;
 
                 expectedResult.parentNode = expectedResult;
-                NodeMetadata.set(expectedResult, { ignoredNode: true });
+                NodeMetadata.set(expectedResult, {
+                    forceObfuscatedNode: false,
+                    ignoredNode: true
+                });
 
                 result = <ESTree.ExpressionStatement>obfuscatingGuardsTransformer
                     .transformNode(expressionStatement, expressionStatement);
+            });
+
+            it('should add `ignoredNode` property with `true` value to given node', () => {
+                assert.deepEqual(result, expectedResult);
+            });
+        });
+
+        describe('Variant #3: force obfuscated node', () => {
+            const literalNode: ESTree.Literal =  NodeFactory.literalNode(forceObfuscatedString);
+
+            const expectedResult: ESTree.Literal = NodeUtils.clone(literalNode);
+
+            let result: ESTree.Literal;
+
+            before(() => {
+                literalNode.parentNode = literalNode;
+
+                expectedResult.parentNode = expectedResult;
+                NodeMetadata.set(expectedResult, {
+                    forceObfuscatedNode: true,
+                    ignoredNode: false
+                });
+
+                result = <ESTree.Literal>obfuscatingGuardsTransformer
+                    .transformNode(literalNode, literalNode);
+            });
+
+            it('should add `forceObfuscatedNode` property with `true` value to given node', () => {
+                assert.deepEqual(result, expectedResult);
+            });
+        });
+
+        describe('Variant #4: ignored node and force obfuscated node', () => {
+            const literalNode: ESTree.Literal = NodeFactory.literalNode(ignoredAndForceObfuscatedString);
+
+            const expectedResult: ESTree.Literal = NodeUtils.clone(literalNode);
+
+            let result: ESTree.Literal;
+
+            before(() => {
+                literalNode.parentNode = literalNode;
+
+                expectedResult.parentNode = expectedResult;
+                NodeMetadata.set(expectedResult, {
+                    forceObfuscatedNode: false,
+                    ignoredNode: true
+                });
+
+                result = <ESTree.Literal>obfuscatingGuardsTransformer
+                    .transformNode(literalNode, literalNode);
             });
 
             it('should add `ignoredNode` property with `true` value to given node', () => {

@@ -19,7 +19,7 @@ import { renameIdentifiersTransformersModule } from './modules/node-transformers
 import { renamePropertiesTransformersModule } from './modules/node-transformers/RenamePropertiesTransformersModule';
 import { simplifyingTransformersModule } from './modules/node-transformers/SimplifyingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
-import { stringArrayTransformersModule } from './modules/node-transformers/StringArrayTransformersModule';
+import { stringsTransformersModule } from './modules/node-transformers/StringsTransformersModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
 import { TInputOptions } from '../types/options/TInputOptions';
@@ -223,7 +223,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(renamePropertiesTransformersModule);
         this.container.load(simplifyingTransformersModule);
         this.container.load(storagesModule);
-        this.container.load(stringArrayTransformersModule);
+        this.container.load(stringsTransformersModule);
         this.container.load(utilsModule);
     }
 

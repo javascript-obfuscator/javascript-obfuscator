@@ -115,8 +115,9 @@ import './functional-tests/node-transformers/simplifying-transformers/block-stat
 import './functional-tests/node-transformers/simplifying-transformers/expression-statements-merge-transformer/ExpressionStatementsMergeTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/if-statement-simplify-transformer/IfStatementSimplifyTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/variable-declarations-merge-transformer/VariableDeclarationsMergeTransformer.spec';
-import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
-import './functional-tests/node-transformers/string-array-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
+import './functional-tests/node-transformers/strings-transformers/escape-sequence-transformer/EscapeSequenceTransformer.spec';
+import './functional-tests/node-transformers/strings-transformers/string-array-transformer/StringArrayTransformer.spec';
+import './functional-tests/node-transformers/strings-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';

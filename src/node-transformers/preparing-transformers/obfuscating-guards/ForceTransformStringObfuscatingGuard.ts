@@ -38,11 +38,11 @@ export class ForceTransformStringObfuscatingGuard implements IObfuscatingGuard {
             && typeof node.value === 'string'
         ) {
             return !this.isForceTransformString(node.value)
-                ? ObfuscatingGuardResult.Obfuscate
+                ? ObfuscatingGuardResult.Transform
                 : ObfuscatingGuardResult.ForceTransform;
         }
 
-        return ObfuscatingGuardResult.Obfuscate;
+        return ObfuscatingGuardResult.Transform;
     }
 
     /**

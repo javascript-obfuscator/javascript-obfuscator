@@ -37,6 +37,6 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
             }
         }
 
-        return ObfuscatingGuardResult.Obfuscate;
+        return ObfuscatingGuardResult.Transform;
     }
 }

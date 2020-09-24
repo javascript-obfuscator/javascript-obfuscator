@@ -717,6 +717,74 @@ describe('StringArrayTransformer', function () {
                 });
             });
         });
+
+        describe('Variant #4: Priority over `reservedStrings` option', () => {
+            describe('Variant #1: base case', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformStrings: ['bar'],
+                            reservedStrings: ['foo', 'bar'],
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+        });
+
+        describe('Variant #5: Priority on conditional comments', () => {
+            describe('Variant #1: base case', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+                const stringLiteralRegExp3: RegExp = /const baz *= *_0x([a-f0-9]){4}\('0x0'\);/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option-conditional-comments.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            forceTransformStrings: ['bar'],
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should not transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+
+                it('match #3: should transform string', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp3);
+                });
+            });
+        });
     });
 
     describe('Variant #14: object expression key literal', () => {

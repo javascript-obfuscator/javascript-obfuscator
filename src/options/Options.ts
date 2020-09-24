@@ -136,7 +136,7 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
-    public readonly forceTransformedStrings!: string[];
+    public readonly forceTransformStrings!: string[];
 
     /**
      * @type {IdentifierNamesGenerator}

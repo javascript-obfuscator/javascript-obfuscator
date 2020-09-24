@@ -38,11 +38,11 @@ export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
             && typeof node.value === 'string'
         ) {
             return !this.isReservedString(node.value)
-                ? ObfuscatingGuardResult.Obfuscated
-                : ObfuscatingGuardResult.Ignored;
+                ? ObfuscatingGuardResult.Obfuscate
+                : ObfuscatingGuardResult.Ignore;
         }
 
-        return ObfuscatingGuardResult.Obfuscated;
+        return ObfuscatingGuardResult.Obfuscate;
     }
 
     /**

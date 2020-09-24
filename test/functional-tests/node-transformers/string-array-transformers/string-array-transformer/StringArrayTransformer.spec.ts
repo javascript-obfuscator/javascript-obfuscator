@@ -566,22 +566,22 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #13: `forceTransformedStrings` option is enabled', () => {
-        describe('Variant #1: base `forceTransformedStrings` values', () => {
-            describe('Variant #1: single force transformed string value', () => {
+    describe('Variant #13: `forceTransformStrings` option is enabled', () => {
+        describe('Variant #1: base `forceTransformStrings` values', () => {
+            describe('Variant #1: single force transform string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformedStrings: ['bar'],
+                            forceTransformStrings: ['bar'],
                             stringArray: true,
                             stringArrayThreshold: 0
                         }
@@ -592,56 +592,56 @@ describe('StringArrayTransformer', function () {
                     assert.match(obfuscatedCode, stringLiteralRegExp1);
                 });
 
-                it('match #2: should transform force transformed string', () => {
+                it('match #2: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp2);
                 });
             });
 
-            describe('Variant #2: two force transformed string values', () => {
+            describe('Variant #2: two force transform string values', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformedStrings: ['foo', 'bar'],
+                            forceTransformStrings: ['foo', 'bar'],
                             stringArray: true,
                             stringArrayThreshold: 0
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('match #1: should transform force transformed string', () => {
+                it('match #1: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp1);
                 });
 
-                it('match #2: should transform force transformed string', () => {
+                it('match #2: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp2);
                 });
             });
         });
 
-        describe('Variant #2: RegExp `forceTransformedStrings` values', () => {
-            describe('Variant #1: single force transformed string value', () => {
+        describe('Variant #2: RegExp `forceTransformStrings` values', () => {
+            describe('Variant #1: single force transform string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo'/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformedStrings: ['ar$'],
+                            forceTransformStrings: ['ar$'],
                             stringArray: true,
                             stringArrayThreshold: 0
                         }
@@ -652,36 +652,36 @@ describe('StringArrayTransformer', function () {
                     assert.match(obfuscatedCode, stringLiteralRegExp1);
                 });
 
-                it('match #2: should transform force transformed string', () => {
+                it('match #2: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp2);
                 });
             });
 
-            describe('Variant #2: two force transformed string values', () => {
+            describe('Variant #2: two force transform string values', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformedStrings: ['^fo', '.ar'],
+                            forceTransformStrings: ['^fo', '.ar'],
                             stringArray: true,
                             stringArrayThreshold: 1
                         }
                     ).getObfuscatedCode();
                 });
 
-                it('match #1: should transform force transformed string', () => {
+                it('match #1: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp1);
                 });
 
-                it('match #2: should transform force transformed string', () => {
+                it('match #2: should transform force transform string', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp2);
                 });
             });
@@ -695,13 +695,13 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformedStrings: ['foo', 'bar'],
+                            forceTransformStrings: ['foo', 'bar'],
                             stringArray: false,
                             stringArrayThreshold: 0
                         }

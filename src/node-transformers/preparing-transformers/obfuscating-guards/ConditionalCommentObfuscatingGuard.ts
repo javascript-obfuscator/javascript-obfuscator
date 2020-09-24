@@ -48,8 +48,8 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
         }
 
         return this.obfuscationAllowed
-            ? ObfuscatingGuardResult.Obfuscated
-            : ObfuscatingGuardResult.Ignored;
+            ? ObfuscatingGuardResult.Obfuscate
+            : ObfuscatingGuardResult.Ignore;
     }
 
     /**

@@ -254,11 +254,11 @@ describe('StringArrayStorageAnalyzer', () => {
             });
         });
 
-        describe('Analyzes of the AST tree with force obfuscated string literal nodes', () => {
+        describe('Analyzes of the AST tree with force transform string literal nodes', () => {
             describe('Variant #1: Force obfuscate string when threshold is `0`', () => {
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
-                NodeMetadata.set(literalNode2, {forceObfuscatedNode: true});
+                NodeMetadata.set(literalNode2, {forceTransformNode: true});
 
                 const expectedStringArrayStorageItemData1: undefined = undefined;
                 const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {
@@ -299,7 +299,7 @@ describe('StringArrayStorageAnalyzer', () => {
             describe('Variant #2: Force obfuscate string when string value shorter than allowed length', () => {
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('a');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('b');
-                NodeMetadata.set(literalNode2, {forceObfuscatedNode: true});
+                NodeMetadata.set(literalNode2, {forceTransformNode: true});
 
                 const expectedStringArrayStorageItemData1: undefined = undefined;
                 const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {

@@ -231,7 +231,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--force-transformed-strings <list> (comma separated, without whitespaces)',
+                '--force-transform-strings <list> (comma separated, without whitespaces)',
                 'Enables force transformation of string literals, which being matched by passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )

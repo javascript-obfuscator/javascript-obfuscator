@@ -17,8 +17,8 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('ObfuscatingGuardsTransformer', () => {
     describe('transformNode', () => {
-        const forceObfuscatedString: string = 'important string';
-        const ignoredAndForceObfuscatedString: string = 'important ignored string';
+        const forceTransformString: string = 'important string';
+        const ignoredAndForceTransformString: string = 'important ignored string';
 
         let inversifyContainerFacade: IInversifyContainerFacade,
             obfuscatingGuardsTransformer: INodeTransformer;
@@ -26,12 +26,12 @@ describe('ObfuscatingGuardsTransformer', () => {
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
             inversifyContainerFacade.load('', '', {
-                forceTransformedStrings: [
-                    forceObfuscatedString,
-                    ignoredAndForceObfuscatedString
+                forceTransformStrings: [
+                    forceTransformString,
+                    ignoredAndForceTransformString
                 ],
                 reservedStrings: [
-                    ignoredAndForceObfuscatedString
+                    ignoredAndForceTransformString
                 ]
             });
 
@@ -50,7 +50,7 @@ describe('ObfuscatingGuardsTransformer', () => {
                 identifier.parentNode = identifier;
 
                 NodeMetadata.set(expectedResult, {
-                    forceObfuscatedNode: false,
+                    forceTransformNode: false,
                     ignoredNode: false
                 });
 
@@ -78,7 +78,7 @@ describe('ObfuscatingGuardsTransformer', () => {
 
                 expectedResult.parentNode = expectedResult;
                 NodeMetadata.set(expectedResult, {
-                    forceObfuscatedNode: false,
+                    forceTransformNode: false,
                     ignoredNode: true
                 });
 
@@ -91,8 +91,8 @@ describe('ObfuscatingGuardsTransformer', () => {
             });
         });
 
-        describe('Variant #3: force obfuscated node', () => {
-            const literalNode: ESTree.Literal =  NodeFactory.literalNode(forceObfuscatedString);
+        describe('Variant #3: force transform node', () => {
+            const literalNode: ESTree.Literal =  NodeFactory.literalNode(forceTransformString);
 
             const expectedResult: ESTree.Literal = NodeUtils.clone(literalNode);
 
@@ -103,7 +103,7 @@ describe('ObfuscatingGuardsTransformer', () => {
 
                 expectedResult.parentNode = expectedResult;
                 NodeMetadata.set(expectedResult, {
-                    forceObfuscatedNode: true,
+                    forceTransformNode: true,
                     ignoredNode: false
                 });
 
@@ -111,13 +111,13 @@ describe('ObfuscatingGuardsTransformer', () => {
                     .transformNode(literalNode, literalNode);
             });
 
-            it('should add `forceObfuscatedNode` property with `true` value to given node', () => {
+            it('should add `forceTransformNode` property with `true` value to given node', () => {
                 assert.deepEqual(result, expectedResult);
             });
         });
 
-        describe('Variant #4: ignored node and force obfuscated node', () => {
-            const literalNode: ESTree.Literal = NodeFactory.literalNode(ignoredAndForceObfuscatedString);
+        describe('Variant #4: ignored node and force transform node', () => {
+            const literalNode: ESTree.Literal = NodeFactory.literalNode(ignoredAndForceTransformString);
 
             const expectedResult: ESTree.Literal = NodeUtils.clone(literalNode);
 
@@ -128,15 +128,15 @@ describe('ObfuscatingGuardsTransformer', () => {
 
                 expectedResult.parentNode = expectedResult;
                 NodeMetadata.set(expectedResult, {
-                    forceObfuscatedNode: false,
-                    ignoredNode: true
+                    forceTransformNode: true,
+                    ignoredNode: false
                 });
 
                 result = <ESTree.Literal>obfuscatingGuardsTransformer
                     .transformNode(literalNode, literalNode);
             });
 
-            it('should add `ignoredNode` property with `true` value to given node', () => {
+            it('should add correct metadata to given node', () => {
                 assert.deepEqual(result, expectedResult);
             });
         });

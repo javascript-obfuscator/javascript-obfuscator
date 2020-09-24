@@ -122,9 +122,9 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @returns {boolean}
      */
     private shouldAddValueToStringArray (literalNode: ESTree.Literal & {value: string}): boolean {
-        const isForceObfuscatedNode: boolean = NodeMetadata.isForceObfuscatedNode(literalNode);
+        const isForceTransformNode: boolean = NodeMetadata.isForceTransformNode(literalNode);
 
-        if (isForceObfuscatedNode) {
+        if (isForceTransformNode) {
             return true;
         }
 

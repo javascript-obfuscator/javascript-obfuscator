@@ -33,10 +33,10 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
     public check (node: ESTree.Node): ObfuscatingGuardResult {
         for (let i: number = 0; i < this.blackListGuardsLength; i++) {
             if (BlackListObfuscatingGuard.blackListGuards[i](node)) {
-                return ObfuscatingGuardResult.Ignored;
+                return ObfuscatingGuardResult.Ignore;
             }
         }
 
-        return ObfuscatingGuardResult.Obfuscated;
+        return ObfuscatingGuardResult.Obfuscate;
     }
 }

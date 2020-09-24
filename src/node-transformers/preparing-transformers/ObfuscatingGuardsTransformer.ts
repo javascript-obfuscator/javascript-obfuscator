@@ -30,7 +30,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
     private static readonly obfuscatingGuardsList: ObfuscatingGuard[] = [
         ObfuscatingGuard.BlackListObfuscatingGuard,
         ObfuscatingGuard.ConditionalCommentObfuscatingGuard,
-        ObfuscatingGuard.ForceTransformedStringObfuscatingGuard,
+        ObfuscatingGuard.ForceTransformStringObfuscatingGuard,
         ObfuscatingGuard.ReservedStringObfuscatingGuard
     ];
 
@@ -99,24 +99,14 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {ObfuscatingGuardResult[]} obfuscatingGuardResults
      */
     private setNodeMetadata (node: ESTree.Node, obfuscatingGuardResults: ObfuscatingGuardResult[]): void {
-        let ignoredNode: boolean = false;
-        let forceObfuscatedNode: boolean = false;
-
-        for (const obfuscatingGuardResult of obfuscatingGuardResults) {
-            if (obfuscatingGuardResult === ObfuscatingGuardResult.Ignored) {
-                ignoredNode = true;
-                forceObfuscatedNode = false;
-                break;
-            }
-
-            if (obfuscatingGuardResult === ObfuscatingGuardResult.ForceObfuscated) {
-                forceObfuscatedNode = true;
-            }
-        }
+        const forceTransformNode: boolean = obfuscatingGuardResults
+            .some((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.ForceTransform);
+        const ignoredNode: boolean = !forceTransformNode && obfuscatingGuardResults
+            .some((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.Ignore);
 
         NodeMetadata.set(node, {
-            ignoredNode: ignoredNode && !NodeGuards.isProgramNode(node),
-            forceObfuscatedNode: forceObfuscatedNode && !NodeGuards.isProgramNode(node)
+            forceTransformNode: forceTransformNode && !NodeGuards.isProgramNode(node),
+            ignoredNode: ignoredNode && !NodeGuards.isProgramNode(node)
         });
     }
 }

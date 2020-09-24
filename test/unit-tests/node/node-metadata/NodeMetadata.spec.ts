@@ -47,7 +47,7 @@ describe('NodeMetadata', () => {
         });
     });
 
-    describe('isForceObfuscatedNode', () => {
+    describe('isForceTransformNode', () => {
         const expectedValue: boolean = true;
 
         let node: ESTree.Identifier,
@@ -56,8 +56,8 @@ describe('NodeMetadata', () => {
         before(() => {
             node = NodeFactory.identifierNode('foo');
             node.metadata = {};
-            node.metadata.forceObfuscatedNode = true;
-            value = NodeMetadata.isForceObfuscatedNode(node);
+            node.metadata.forceTransformNode = true;
+            value = NodeMetadata.isForceTransformNode(node);
         });
 
         it('should return metadata value', () => {

@@ -24,8 +24,8 @@ export class NodeMetadata {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isForceObfuscatedNode (node: ESTree.Node): boolean {
-        return NodeMetadata.get(node, 'forceObfuscatedNode') === true;
+    public static isForceTransformNode (node: ESTree.Node): boolean {
+        return NodeMetadata.get(node, 'forceTransformNode') === true;
     }
 
     /**

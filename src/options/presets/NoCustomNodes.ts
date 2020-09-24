@@ -17,7 +17,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     exclude: [],
-    forceTransformedStrings: [],
+    forceTransformStrings: [],
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     identifiersPrefix: '',
     identifiersDictionary: [],

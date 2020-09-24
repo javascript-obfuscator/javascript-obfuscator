@@ -1,5 +1,5 @@
 export enum ObfuscatingGuardResult {
-    ForceObfuscated = 'ForceObfuscated',
-    Ignored = 'Ignored',
-    Obfuscated = 'Obfuscated'
+    ForceTransform = 'ForceTransform',
+    Ignore = 'Ignore',
+    Obfuscate = 'Obfuscate'
 }

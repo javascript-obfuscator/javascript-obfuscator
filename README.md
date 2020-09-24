@@ -339,7 +339,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
-    forceTransformedStrings: [],
+    forceTransformStrings: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
@@ -392,7 +392,7 @@ Following options are available for the JS Obfuscator:
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
-    --force-transformed-strings '<list>' (comma separated)
+    --force-transform-strings '<list>' (comma separated)
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
@@ -658,7 +658,7 @@ Type: `string[]` Default: `[]`
 
 A file names or globs which indicates files to exclude from obfuscation. 
 
-### `forceTransformedStrings`
+### `forceTransformStrings`
 Type: `string[]` Default: `[]`
 
 Enables force transformation of string literals, which being matched by passed RegExp patterns.
@@ -668,7 +668,7 @@ Enables force transformation of string literals, which being matched by passed R
 Example:
 ```ts
 	{
-		forceTransformedStrings: [
+		forceTransformStrings: [
 			'some-important-value',
 			'some-string_\d'
 		]

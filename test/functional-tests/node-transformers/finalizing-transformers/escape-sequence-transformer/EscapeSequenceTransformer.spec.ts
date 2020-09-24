@@ -136,30 +136,30 @@ describe('EscapeSequenceTransformer', function () {
         });
     });
 
-    describe('Variant #5: `forceTransformedStrings` option is enabled', () => {
+    describe('Variant #5: `forceTransformStrings` option is enabled', () => {
         const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
         const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
 
         let obfuscatedCode: string;
 
         before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/force-transformed-strings-option.js');
+            const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    forceTransformedStrings: ['bar'],
+                    forceTransformStrings: ['bar'],
                     unicodeEscapeSequence: false
                 }
             ).getObfuscatedCode();
         });
 
-        it('match #1: should not encode force transformed string with unicode escape sequence', () => {
+        it('match #1: should not encode force transform string with unicode escape sequence', () => {
             assert.match(obfuscatedCode, stringLiteralRegExp1);
         });
 
-        it('match #2: should not encode force transformed string with unicode escape sequence', () => {
+        it('match #2: should not encode force transform string with unicode escape sequence', () => {
             assert.match(obfuscatedCode, stringLiteralRegExp2);
         });
     });

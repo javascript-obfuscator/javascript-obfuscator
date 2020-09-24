@@ -95,6 +95,7 @@ import './functional-tests/node-transformers/converting-transformers/object-patt
 import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
+import './functional-tests/node-transformers/finalizing-transformers/escape-sequence-transformer/EscapeSequenceTransformer.spec';
 import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
@@ -115,9 +116,8 @@ import './functional-tests/node-transformers/simplifying-transformers/block-stat
 import './functional-tests/node-transformers/simplifying-transformers/expression-statements-merge-transformer/ExpressionStatementsMergeTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/if-statement-simplify-transformer/IfStatementSimplifyTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/variable-declarations-merge-transformer/VariableDeclarationsMergeTransformer.spec';
-import './functional-tests/node-transformers/strings-transformers/escape-sequence-transformer/EscapeSequenceTransformer.spec';
-import './functional-tests/node-transformers/strings-transformers/string-array-transformer/StringArrayTransformer.spec';
-import './functional-tests/node-transformers/strings-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
+import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
+import './functional-tests/node-transformers/string-array-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';

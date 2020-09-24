@@ -95,7 +95,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
         }
 
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Strings:
+            case NodeTransformationStage.StringArray:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                         if (parentNode && NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode)) {

@@ -29,7 +29,6 @@ import { StringArrayCustomNode } from '../../enums/custom-nodes/StringArrayCusto
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
@@ -135,7 +134,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Strings:
+            case NodeTransformationStage.StringArray:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
@@ -194,21 +193,13 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
         const resultNode: ESTree.Node = stringArrayStorageItemData
             ? this.getStringArrayCallNode(stringArrayStorageItemData)
-            : this.getLiteralNode(literalValue);
+            : literalNode;
 
         this.literalNodesCacheStorage.set(cacheKey, resultNode);
 
         NodeUtils.parentizeNode(resultNode, parentNode);
 
         return resultNode;
-    }
-
-    /**
-     * @param {string} value
-     * @returns {Node}
-     */
-    private getLiteralNode (value: string): ESTree.Node {
-        return NodeFactory.literalNode(value);
     }
 
     /**

@@ -9,7 +9,6 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -19,14 +18,6 @@ import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class EscapeSequenceTransformer extends AbstractNodeTransformer {
-    /**
-     * @type {NodeTransformer[]}
-     */
-    public readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.StringArrayScopeCallsWrapperTransformer,
-        NodeTransformer.StringArrayTransformer
-    ];
-
     /**
      * @type {IEscapeSequenceEncoder}
      */
@@ -53,7 +44,7 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
-            case NodeTransformationStage.Strings:
+            case NodeTransformationStage.Finalizing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isLiteralNode(node)) {

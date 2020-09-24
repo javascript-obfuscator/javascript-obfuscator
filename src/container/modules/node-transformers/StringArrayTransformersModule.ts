@@ -5,16 +5,11 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
-import { EscapeSequenceTransformer } from '../../../node-transformers/strings-transformers/EscapeSequenceTransformer';
-import { StringArrayScopeCallsWrapperTransformer } from '../../../node-transformers/strings-transformers/StringArrayScopeCallsWrapperTransformer';
-import { StringArrayTransformer } from '../../../node-transformers/strings-transformers/StringArrayTransformer';
+import { StringArrayScopeCallsWrapperTransformer } from '../../../node-transformers/string-array-transformers/StringArrayScopeCallsWrapperTransformer';
+import { StringArrayTransformer } from '../../../node-transformers/string-array-transformers/StringArrayTransformer';
 
-export const stringsTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const stringArrayTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // strings transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(EscapeSequenceTransformer)
-        .whenTargetNamed(NodeTransformer.EscapeSequenceTransformer);
-
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(StringArrayScopeCallsWrapperTransformer)
         .whenTargetNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);

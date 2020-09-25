@@ -1,5 +1,9 @@
 Change Log
 
+v2.4.0
+---
+* **New option:** `forceTransformStrings` allows force transform strings even if by `stringArrayThreshold` (or possible other thresholds in the future) they shouldn't be transformed. Implemented https://github.com/javascript-obfuscator/javascript-obfuscator/issues/657
+
 v2.3.1
 ---
 * Fixed a rare bug with `identifierNamesGenerator: 'mangled'` option that causes wrong identifier names generation

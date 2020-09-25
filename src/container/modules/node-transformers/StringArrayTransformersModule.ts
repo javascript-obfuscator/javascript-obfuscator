@@ -9,7 +9,7 @@ import { StringArrayScopeCallsWrapperTransformer } from '../../../node-transform
 import { StringArrayTransformer } from '../../../node-transformers/string-array-transformers/StringArrayTransformer';
 
 export const stringArrayTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // string array transformers
+    // strings transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(StringArrayScopeCallsWrapperTransformer)
         .whenTargetNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);

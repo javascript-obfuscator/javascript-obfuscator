@@ -24,6 +24,14 @@ export class NodeMetadata {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isForceTransformNode (node: ESTree.Node): boolean {
+        return NodeMetadata.get(node, 'forceTransformNode') === true;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isIgnoredNode (node: ESTree.Node): boolean {
         return NodeMetadata.get(node, 'ignoredNode') === true;
     }

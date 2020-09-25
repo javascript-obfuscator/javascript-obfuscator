@@ -339,6 +339,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    forceTransformStrings: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
@@ -391,6 +392,7 @@ Following options are available for the JS Obfuscator:
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
+    --force-transform-strings '<list>' (comma separated)
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
@@ -655,6 +657,25 @@ It's possible to lock your code to more than one domain or sub-domain. For insta
 Type: `string[]` Default: `[]`
 
 A file names or globs which indicates files to exclude from obfuscation. 
+
+### `forceTransformStrings`
+Type: `string[]` Default: `[]`
+
+Enables force transformation of string literals, which being matched by passed RegExp patterns.
+
+##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringArrayThreshold) (or possible other thresholds in the future)
+
+The option has a priority over `reservedStrings` option but hasn't a priority over `conditional comments`.
+
+Example:
+```ts
+	{
+		forceTransformStrings: [
+			'some-important-value',
+			'some-string_\d'
+		]
+	}
+```
 
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`

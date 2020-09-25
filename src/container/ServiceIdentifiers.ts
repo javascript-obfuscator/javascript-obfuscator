@@ -12,7 +12,7 @@ export enum ServiceIdentifiers {
     Factory__IObfuscatedCode = 'Factory<IObfuscatedCode>',
     Factory__IObjectExpressionKeysTransformerCustomNode = 'Factory<IObjectExpressionKeysTransformerCustomNode>',
     Factory__IObjectExpressionExtractor = 'Factory<IObjectExpressionExtractor>',
-    Factory__IStringArrayTransformerCustomNode = 'Factory<IStringArrayTransformerCustomNode>',
+    Factory__IStringArrayCustomNode = 'Factory<IStringArrayCustomNode>',
     Factory__TControlFlowStorage = 'Factory<TControlFlowStorage>',
     IArrayUtils = 'IArrayUtils',
     ICalleeDataExtractor = 'ICalleeDataExtractor',

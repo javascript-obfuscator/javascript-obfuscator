@@ -587,34 +587,6 @@ describe('OptionsNormalizer', () => {
             });
         });
 
-        describe('stringArrayThresholdRule', () => {
-            before(() => {
-                optionsPreset = getNormalizedOptions({
-                    ...getDefaultOptions(),
-                    rotateStringArray: true,
-                    shuffleStringArray: true,
-                    stringArray: true,
-                    stringArrayWrappersChainedCalls: true,
-                    stringArrayWrappersCount: 5,
-                    stringArrayThreshold: 0
-                });
-
-                expectedOptionsPreset = {
-                    ...getDefaultOptions(),
-                    rotateStringArray: false,
-                    shuffleStringArray: false,
-                    stringArray: false,
-                    stringArrayWrappersChainedCalls: false,
-                    stringArrayWrappersCount: 0,
-                    stringArrayThreshold: 0
-                };
-            });
-
-            it('should normalize options preset', () => {
-                assert.deepEqual(optionsPreset, expectedOptionsPreset);
-            });
-        });
-
         describe('stringArrayWrappersChainedCallsRule', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({

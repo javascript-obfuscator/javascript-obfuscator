@@ -2,14 +2,13 @@
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'foo';
+            const foo = 'foo test';
 
             function test () {
                 const bar = 'bar';
@@ -21,9 +20,7 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersCount: 1,
-            stringArrayWrappersType: StringArrayWrappersType.Function
+            unicodeEscapeSequence: false
         }
     ).getObfuscatedCode();
 

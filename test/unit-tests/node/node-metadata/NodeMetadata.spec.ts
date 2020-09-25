@@ -47,6 +47,24 @@ describe('NodeMetadata', () => {
         });
     });
 
+    describe('isForceTransformNode', () => {
+        const expectedValue: boolean = true;
+
+        let node: ESTree.Identifier,
+            value: boolean | undefined;
+
+        before(() => {
+            node = NodeFactory.identifierNode('foo');
+            node.metadata = {};
+            node.metadata.forceTransformNode = true;
+            value = NodeMetadata.isForceTransformNode(node);
+        });
+
+        it('should return metadata value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
+
     describe('isIgnoredNode', () => {
         const expectedValue: boolean = true;
 

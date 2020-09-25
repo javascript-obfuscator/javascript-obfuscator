@@ -39,7 +39,7 @@ describe('ObfuscatingGuardsTransformer', () => {
                 .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ObfuscatingGuardsTransformer);
         });
 
-        describe('Variant #1: allowed node', () => {
+        describe('Variant #1: transform node', () => {
             const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
 
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);

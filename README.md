@@ -665,6 +665,8 @@ Enables force transformation of string literals, which being matched by passed R
 
 ##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringArrayThreshold) (or possible other thresholds in the future)
 
+The option has a priority over `reservedStrings` option but hasn't a priority over `conditional comments`.
+
 Example:
 ```ts
 	{

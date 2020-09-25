@@ -99,14 +99,26 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {ObfuscatingGuardResult[]} obfuscatingGuardResults
      */
     private setNodeMetadata (node: ESTree.Node, obfuscatingGuardResults: ObfuscatingGuardResult[]): void {
-        const forceTransformNode: boolean = obfuscatingGuardResults
-            .some((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.ForceTransform);
-        const ignoredNode: boolean = !forceTransformNode && obfuscatingGuardResults
-            .some((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.Ignore);
+        const isTransformNode: boolean = obfuscatingGuardResults
+            .every((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.Transform);
+
+        let isForceTransformNode: boolean = false;
+        let isIgnoredNode: boolean = false;
+
+        if (!isTransformNode) {
+            isForceTransformNode = obfuscatingGuardResults
+                .some((obfuscatingGuardResult: ObfuscatingGuardResult) =>
+                    obfuscatingGuardResult === ObfuscatingGuardResult.ForceTransform
+                );
+            isIgnoredNode = !isForceTransformNode && obfuscatingGuardResults
+                .some((obfuscatingGuardResult: ObfuscatingGuardResult) =>
+                    obfuscatingGuardResult === ObfuscatingGuardResult.Ignore
+                );
+        }
 
         NodeMetadata.set(node, {
-            forceTransformNode: forceTransformNode && !NodeGuards.isProgramNode(node),
-            ignoredNode: ignoredNode && !NodeGuards.isProgramNode(node)
+            forceTransformNode: isForceTransformNode && !NodeGuards.isProgramNode(node),
+            ignoredNode: isIgnoredNode && !NodeGuards.isProgramNode(node)
         });
     }
 }

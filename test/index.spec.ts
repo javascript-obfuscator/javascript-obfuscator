@@ -45,6 +45,7 @@ import './unit-tests/utils/CryptUtilsSwappedAlphabet.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
 import './unit-tests/utils/LevelledTopologicalSorter.spec';
 import './unit-tests/utils/NumberUtils.spec';
+import './unit-tests/utils/StringUtils.spec';
 import './unit-tests/utils/Utils.spec';
 
 /**

@@ -22,6 +22,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
      * @type {NodeTransformer.ParentificationTransformer[]}
      */
     public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.EscapeSequenceTransformer,
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.VariablePreserveTransformer
     ];

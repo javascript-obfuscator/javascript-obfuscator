@@ -9,6 +9,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -18,6 +19,13 @@ import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class EscapeSequenceTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.CustomCodeHelpersTransformer
+    ];
+
     /**
      * @type {IEscapeSequenceEncoder}
      */
@@ -68,12 +76,11 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        const newLiteralNode: ESTree.Literal = NodeFactory.literalNode(
-            this.escapeSequenceEncoder.encode(
-                literalNode.value,
-                this.options.unicodeEscapeSequence
-            )
+        const encodedValue: string = this.escapeSequenceEncoder.encode(
+            literalNode.value,
+            this.options.unicodeEscapeSequence
         );
+        const newLiteralNode: ESTree.Literal = NodeFactory.literalNode(encodedValue);
 
         NodeUtils.parentizeNode(newLiteralNode, parentNode);
 

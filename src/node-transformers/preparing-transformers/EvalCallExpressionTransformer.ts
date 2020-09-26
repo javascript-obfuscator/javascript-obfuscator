@@ -2,7 +2,6 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
-import jsStringEscape from 'js-string-escape';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -15,6 +14,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
+import { StringUtils } from '../../utils/StringUtils';
 
 @injectable()
 export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
@@ -22,6 +22,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
      * @type {NodeTransformer.ParentificationTransformer[]}
      */
     public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.EscapeSequenceTransformer,
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.VariablePreserveTransformer
     ];
@@ -179,7 +180,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         return NodeFactory.callExpressionNode(
             NodeFactory.identifierNode('eval'),
             [
-                NodeFactory.literalNode(jsStringEscape(obfuscatedCode))
+                NodeFactory.literalNode(StringUtils.escapeJsString(obfuscatedCode))
             ]
         );
     }

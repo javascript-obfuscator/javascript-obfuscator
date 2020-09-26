@@ -8,11 +8,9 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'foo test';
-
-            function test () {
-                const bar = 'bar';
-            }
+           var test = '\\nreturn \\n//# sourceURL= there can only be \\'^\\' and \\'!\\' markers in a subscription marble diagram.';
+           
+           console.log(test);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

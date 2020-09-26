@@ -534,10 +534,10 @@
     "@types/glob" "*"
     "@types/node" "*"
 
-"@types/sinon@9.0.5":
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-9.0.5.tgz#56b2a12662dd8c7d081cdc511af5f872cb37377f"
-  integrity sha512-4CnkGdM/5/FXDGqL32JQ1ttVrGvhOoesLLF7VnTh4KdjK5N5VQOtxaylFqqTjnHx55MnD9O02Nbk5c1ELC8wlQ==
+"@types/sinon@9.0.6":
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-9.0.6.tgz#fb4b6883fe0417e6a1ac5d9753bdcb7016dd4dd0"
+  integrity sha512-j3GK0fiHgn8fe7sqOpInMjm0A2Tary1NBZ8gbI/sZ0C0JxYeO+nh8H0/pW/0l94vNWcH1FnZOZu/cOvIfNZTrg==
   dependencies:
     "@types/sinonjs__fake-timers" "*"
 
@@ -2138,10 +2138,10 @@ eslint-plugin-import@2.22.0:
     resolve "^1.17.0"
     tsconfig-paths "^3.9.0"
 
-eslint-plugin-jsdoc@30.5.1:
-  version "30.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-30.5.1.tgz#b024295db3ce3b258909419d9bcf747b8e65e2a7"
-  integrity sha512-cY3YNxdhFcQVkcQLnZw/iZGsTPMuWa9yWZclorMWkjdHprBQX0TMWMEcmJYM3IjHp1HJr7aD0Z0sCRifEBhnzg==
+eslint-plugin-jsdoc@30.5.2:
+  version "30.5.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-30.5.2.tgz#a2002c52d5fb4a9d42b9fa3a3136a9dbdcb7f69e"
+  integrity sha512-LJfjqVGYrPUZv4Gt+1OB5NHhySVPeX4Sdd1qUUjTPnBSwbezry7j3NdPVIeU67VwCVJU2rmqd6jhZ7VYec37Cw==
   dependencies:
     comment-parser "^0.7.6"
     debug "^4.1.1"

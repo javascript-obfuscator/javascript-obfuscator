@@ -1,5 +1,9 @@
 Change Log
 
+v2.4.1
+---
+* Small release with some README.md improvements that allow to use it on [obfuscator.io](https://obfuscator.io)
+
 v2.4.0
 ---
 * **New option:** `forceTransformStrings` allows force transform strings even if by `stringArrayThreshold` (or possible other thresholds in the future) they shouldn't be transformed. Implemented https://github.com/javascript-obfuscator/javascript-obfuscator/issues/657

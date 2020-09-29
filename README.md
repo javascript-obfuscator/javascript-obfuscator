@@ -307,7 +307,7 @@ Kind of variables of inserted nodes will auto-detected, based on most prevailing
 ## Conflicts of identifier names between different files
 
 During obfuscation of the different files, the same names can be generated for the global identifiers between these files.
-To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersPrefix) option. 
+To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersprefix) option. 
 
 When using CLI this prefix will be added automatically.
 
@@ -424,6 +424,8 @@ Following options are available for the JS Obfuscator:
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
 ```
+
+<!-- ##options-start## -->
 
 ### `compact`
 Type: `boolean` Default: `true`
@@ -663,7 +665,7 @@ Type: `string[]` Default: `[]`
 
 Enables force transformation of string literals, which being matched by passed RegExp patterns.
 
-##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringArrayThreshold) (or possible other thresholds in the future)
+##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringarraythreshold) (or possible other thresholds in the future)
 
 The option has a priority over `reservedStrings` option but hasn't a priority over `conditional comments`.
 
@@ -683,7 +685,7 @@ Type: `string` Default: `hexadecimal`
 Sets identifier names generator.
 
 Available values:
-* `dictionary`: identifier names from [`identifiersDictionary`](#identifiersDictionary) list
+* `dictionary`: identifier names from [`identifiersDictionary`](#identifiersdictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
 * `mangled-shuffled`: same as `mangled` but with shuffled alphabet
@@ -691,7 +693,7 @@ Available values:
 ### `identifiersDictionary`
 Type: `string[]` Default: `[]`
 
-Sets identifiers dictionary for [`identifierNamesGenerator`](#identifierNamesGenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
+Sets identifiers dictionary for [`identifierNamesGenerator`](#identifiernamesgenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
 
 ### `identifiersPrefix`
 Type: `string` Default: `''`
@@ -751,9 +753,9 @@ Type: `boolean` Default: `false`
 
 Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
 
-To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+To set format of renamed property names use [`identifierNamesGenerator`](#identifiernamesgenerator) option.
 
-To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
+To control which properties will be renamed use [`reservedNames`](#reservednames) option.
 
 Example: 
 ```ts
@@ -927,7 +929,7 @@ Specifies source map generation mode:
 ### `splitStrings`
 Type: `boolean` Default: `false`
 
-Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitStringsChunkLength) option value.
+Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitstringschunklength) option value.
 
 Example:
 ```ts
@@ -945,7 +947,7 @@ Example:
 ### `splitStringsChunkLength`
 Type: `number` Default: `10`
 
-Sets chunk length of [`splitStrings`](#splitStrings) option.
+Sets chunk length of [`splitStrings`](#splitstrings) option.
 
 ### `stringArray`
 Type: `boolean` Default: `true`
@@ -1033,7 +1035,7 @@ const eagle = _0x26ca42('0x5');
 ### `stringArrayWrappersChainedCalls`
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
 
 Enables the chained calls between `string array` wrappers.
 
@@ -1088,7 +1090,7 @@ function test() {
 ### `stringArrayWrappersType`
 Type: `string` Default: `variable`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
 
 Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
 
@@ -1330,6 +1332,8 @@ Performance will slightly slower than without obfuscation
     unicodeEscapeSequence: false
 }
 ```
+
+<!-- ##options-end## -->
 
 ## Frequently Asked Questions
 

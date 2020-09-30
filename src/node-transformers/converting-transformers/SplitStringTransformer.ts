@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+import * as stringz from 'stringz';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -48,11 +49,16 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {string} string
+     * @param {number} stringLength
      * @param {number} chunkSize
      * @returns {string[]}
      */
-    private static chunkString (string: string, chunkSize: number): string[] {
-        const chunksCount: number = Math.ceil(string.length / chunkSize);
+    private static chunkString (
+        string: string,
+        stringLength: number,
+        chunkSize: number
+    ): string[] {
+        const chunksCount: number = Math.ceil(stringLength / chunkSize);
         const chunks: string[] = [];
 
         let nextChunkStartIndex: number = 0;
@@ -62,7 +68,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             chunkIndex < chunksCount;
             ++chunkIndex, nextChunkStartIndex += chunkSize
         ) {
-            chunks[chunkIndex] = string.substr(nextChunkStartIndex, chunkSize);
+            chunks[chunkIndex] = stringz.substr(string, nextChunkStartIndex, chunkSize);
         }
 
         return chunks;
@@ -144,12 +150,15 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        if (chunkLength >= literalNode.value.length) {
+        const valueLength: number = stringz.length(literalNode.value);
+
+        if (chunkLength >= valueLength) {
             return literalNode;
         }
 
         const stringChunks: string[] = SplitStringTransformer.chunkString(
             literalNode.value,
+            valueLength,
             chunkLength
         );
 

@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -23,7 +23,7 @@
   "dependencies": {
     "@gradecam/tsenum": "1.2.0",
     "@nuxtjs/opencollective": "0.2.2",
-    "acorn": "8.0.1",
+    "acorn": "8.0.2",
     "chalk": "4.1.0",
     "chance": "1.1.7",
     "class-validator": "0.12.2",
@@ -41,6 +41,7 @@
     "reflect-metadata": "0.1.13",
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",
+    "stringz": "2.1.0",
     "tslib": "2.0.1"
   },
   "devDependencies": {
@@ -57,7 +58,7 @@
     "@types/multimatch": "4.0.0",
     "@types/node": "14.11.2",
     "@types/rimraf": "3.0.0",
-    "@types/sinon": "9.0.6",
+    "@types/sinon": "9.0.7",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.15.3",
     "@typescript-eslint/eslint-plugin": "4.3.0",
@@ -67,7 +68,7 @@
     "coveralls": "3.1.0",
     "eslint": "7.10.0",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jsdoc": "30.6.1",
+    "eslint-plugin-jsdoc": "30.6.2",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.2",
     "eslint-plugin-unicorn": "22.0.0",
@@ -78,7 +79,7 @@
     "pjson": "1.0.9",
     "pre-commit": "1.2.2",
     "rimraf": "3.0.2",
-    "sinon": "9.0.3",
+    "sinon": "9.1.0",
     "threads": "1.6.3",
     "ts-loader": "8.0.4",
     "ts-node": "9.0.0",

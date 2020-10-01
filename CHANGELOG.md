@@ -1,5 +1,9 @@
 Change Log
 
+v2.4.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/769
+
 v2.4.2
 ---
 * Fixed `URI-malformed` when `splitStrings` and `stringArrayEncoding` options are enabled. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/530

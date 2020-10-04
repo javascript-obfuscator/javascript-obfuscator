@@ -9,8 +9,6 @@ jobs:
     - os: linux
       node_js: "13"
     - os: linux
-      node_js: "14"
-    - os: linux
       node_js: "stable"
     - os: windows
       node_js: "14"
@@ -20,8 +18,8 @@ cache:
   directories:
     - node_modules
 
-script: "yarn run travis"
+script: "cross-env yarn run travis"
 
 after_success:
-  - yarn run test:coveralls
-  - rm -rf ./coverage
+  - cross-env yarn run test:coveralls
+  - rimraf ./coverage

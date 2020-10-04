@@ -1,16 +1,19 @@
-sudo: false
 language: node_js
 
-os:
-  - linux
-  - windows
-
-node_js:
-  - "10"
-  - "12"
-  - "13"
-  - "14"
-  - "stable"
+jobs:
+  include:
+    - os: linux
+      node_js: "10"
+    - os: linux
+      node_js: "12"
+    - os: linux
+      node_js: "13"
+    - os: linux
+      node_js: "14"
+    - os: linux
+      node_js: "stable"
+    - os: windows
+      node_js: "14"
 
 cache:
   yarn: true

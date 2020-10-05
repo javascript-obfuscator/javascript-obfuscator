@@ -1,6 +1,3 @@
 #!/bin/bash
 
-yarn run test:removeTmpDir &&
-yarn run test:compile &&
-NODE_OPTIONS=--max-old-space-size=200 $(yarn bin)/mocha test-tmp/test/performance-tests/JavaScriptObfuscatorMemory.spec.js &&
-yarn run test:removeTmpDir
+NODE_OPTIONS=--max-old-space-size=220 $(yarn bin)/mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts

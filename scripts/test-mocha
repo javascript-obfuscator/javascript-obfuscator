@@ -1,6 +1,3 @@
 #!/bin/bash
 
-yarn run test:removeTmpDir &&
-yarn run test:compile &&
-$(yarn bin)/mocha test-tmp/test/index.spec.js &&
-yarn run test:removeTmpDir
+$(yarn bin)/mocha --require ts-node/register --require source-map-support/register test/index.spec.ts --exit

@@ -2,12 +2,12 @@
 .DS_Store
 .idea
 .nyc_output
+coverage
 npm-debug.log
 *.js.map
 /coverage
 /node_modules
 /test/fixtures/compile-performance-obfuscated.js
-/test-tmp
 /tmp
 /test/benchmark/**/**
 *dockerfile

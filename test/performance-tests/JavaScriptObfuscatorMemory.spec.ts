@@ -13,7 +13,7 @@ describe('JavaScriptObfuscator memory', function () {
     const gcDiffThreshold: number = 10;
     const allowedHeapDiffThreshold: number = 80;
 
-    this.timeout(100000);
+    this.timeout(150000);
 
     describe('memory: heap usage', () => {
         it('should keep heap usage without memory leaks', () => {

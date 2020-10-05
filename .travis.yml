@@ -18,8 +18,7 @@ cache:
   directories:
     - node_modules
 
-script: "cross-env-shell yarn run travis"
+script: "yarn run travis"
 
 after_success:
-  - cross-env-shell yarn run test:coveralls
-  - rimraf ./coverage
+  - yarn run test:coveralls

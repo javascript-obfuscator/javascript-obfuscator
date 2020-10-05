@@ -64,8 +64,8 @@ describe('JavaScriptObfuscator memory', function () {
 
             const sortedMaxHeapUsed: number[] = [...maxHeapUsed].sort((a: number, b: number) => a - b);
 
-            const firstMaxHeapMBUsed: number = sortedMaxHeapUsed[0];
-            const lastMaxHeapMbUsed: number = sortedMaxHeapUsed[sortedMaxHeapUsed.length - 1];
+            const firstMaxHeapMBUsed: number = sortedMaxHeapUsed[0] ?? 0;
+            const lastMaxHeapMbUsed: number = sortedMaxHeapUsed[sortedMaxHeapUsed.length - 1] ?? 0;
 
             const diff: number = lastMaxHeapMbUsed - firstMaxHeapMBUsed;
 

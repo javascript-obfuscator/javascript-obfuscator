@@ -113,7 +113,7 @@
     "eslint": "scripts/eslint.js",
     "travis": "scripts/travis.js",
     "git:addFiles": "scripts/git-add-files.js",
-    "postinstall": "scripts/postinstall.js"
+    "postinstall": "opencollective || exit 0"
   },
   "pre-commit": [
     "build",

@@ -1,5 +1,8 @@
 language: node_js
 
+env:
+  - YARN_GPG=no
+
 jobs:
   include:
     - os: linux
@@ -19,6 +22,3 @@ cache:
     - node_modules
 
 script: "yarn run travis"
-
-after_success:
-  - yarn run test:coveralls

@@ -2,4 +2,4 @@
 
 const shell = require('shelljs');
 
-shell.exec('opencollective') || shell.exit(0);
+shell.exec('opencollective');

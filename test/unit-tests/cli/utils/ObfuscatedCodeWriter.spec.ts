@@ -1,7 +1,8 @@
 import { assert } from 'chai';
+import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import * as rimraf from 'rimraf';
-import * as fs from "fs";
 
 import { ObfuscatedCodeWriter } from '../../../../src/cli/utils/ObfuscatedCodeWriter';
 
@@ -10,18 +11,18 @@ describe('ObfuscatedCodeWriter', () => {
 
     describe('getOutputCodePath', () => {
         before(() => {
-            mkdirp.sync(`${tmpDirectoryPath}/input/`);
+            mkdirp.sync(path.join(tmpDirectoryPath, 'input'));
             fs.writeFileSync(
-                `${tmpDirectoryPath}/input/test-input.js`,
+                path.join(tmpDirectoryPath, 'input', 'test-input.js'),
                 'var foo = 1;'
             );
         });
 
         describe('Variant #1: raw input path is a file path, raw output path is a file path', () => {
-            const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawInputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawOutputPath: string = `${tmpDirectoryPath}/output/test-output.js`;
-            const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/test-output.js`;
+            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
 
             let outputCodePath: string;
 
@@ -41,10 +42,10 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         describe('Variant #2: raw input path is a file path, raw output path is a directory path', () => {
-            const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawInputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawOutputPath: string = `${tmpDirectoryPath}/output`;
-            const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/test-input.js`;
+            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
+            const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
             let outputCodePath: string;
 
@@ -64,9 +65,9 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         describe('Variant #3: raw input path is a directory path, raw output path is a file path', () => {
-            const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-            const rawInputPath: string = `${tmpDirectoryPath}/input`;
-            const rawOutputPath: string = `${tmpDirectoryPath}/output/test-output.js`;
+            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
 
             let testFunc: () => string;
 
@@ -87,10 +88,16 @@ describe('ObfuscatedCodeWriter', () => {
 
         describe('Variant #4: raw input path is a directory path, raw output path is a directory path', () => {
             describe('Variant #1: base directory name', () => {
-                const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-                const rawInputPath: string = `${tmpDirectoryPath}/input`;
-                const rawOutputPath: string = `${tmpDirectoryPath}/output`;
-                const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/${tmpDirectoryPath}/input/test-input.js`;
+                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
+                const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
+                const expectedOutputCodePath: string = path.join(
+                    tmpDirectoryPath,
+                    'output',
+                    tmpDirectoryPath,
+                    'input',
+                    'test-input.js'
+                );
 
                 let outputCodePath: string;
 
@@ -110,10 +117,17 @@ describe('ObfuscatedCodeWriter', () => {
             });
 
             describe('Variant #2: directory name with dot', () => {
-                const inputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-                const rawInputPath: string = `${tmpDirectoryPath}/input`;
-                const rawOutputPath: string = `${tmpDirectoryPath}/output/foo.bar`;
-                const expectedOutputCodePath: string = `${tmpDirectoryPath}/output/foo.bar/${tmpDirectoryPath}/input/test-input.js`;
+                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
+                const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'foo.bar');
+                const expectedOutputCodePath: string = path.join(
+                    tmpDirectoryPath,
+                    'output',
+                    'foo.bar',
+                    tmpDirectoryPath,
+                    'input',
+                    'test-input.js'
+                );
 
                 let outputCodePath: string;
 
@@ -139,10 +153,10 @@ describe('ObfuscatedCodeWriter', () => {
     });
 
     describe('getOutputSourceMapPath', () => {
-        const rawInputPath: string = `${tmpDirectoryPath}/input/test-input.js`;
-        const rawOutputPath: string = `${tmpDirectoryPath}/output/test-output.js`;
-        const outputCodePath: string = `${tmpDirectoryPath}/output/test-output.js`;
-        const expectedOutputSourceMapPath: string = `${tmpDirectoryPath}/output/test-output.js.map`;
+        const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+        const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+        const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js.map');
 
         let outputSourceMapPath: string;
 

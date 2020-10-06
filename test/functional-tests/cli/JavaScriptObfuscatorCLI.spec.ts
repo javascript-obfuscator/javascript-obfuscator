@@ -15,15 +15,15 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
     const expectedError: RegExp = /Given input path must be a valid/;
 
-    const fixturesDirName: string = 'test/fixtures';
+    const fixturesDirName: string = path.join('test', 'fixtures');
     const fixtureFileName: string = 'sample.js';
-    const fixtureFilePath: string = `${fixturesDirName}/${fixtureFileName}`;
-    const outputDirName: string = 'test/tmp';
+    const fixtureFilePath: string = path.join(fixturesDirName, fixtureFileName);
+    const outputDirName: string = path.join('test', 'tmp');
     const outputFileName: string = 'sample-obfuscated.js';
-    const outputFilePath: string = `${outputDirName}/${outputFileName}`;
-    const configDirName: string = 'test/fixtures';
+    const outputFilePath: string = path.join(outputDirName, outputFileName);
+    const configDirName: string = path.join('test', 'fixtures');
     const configFileName: string = 'config.js';
-    const configFilePath: string = `${configDirName}/${configFileName}`;
+    const configFilePath: string = path.join(configDirName, configFileName);
 
 
     describe('run', () => {

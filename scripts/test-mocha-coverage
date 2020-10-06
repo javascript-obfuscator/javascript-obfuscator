@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(yarn bin)/nyc --reporter text-summary yarn run test:mocha

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(yarn bin)/ts-node test/dev/dev-runtime-performance.ts

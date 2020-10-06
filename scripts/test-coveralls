@@ -1,4 +1,0 @@
-#!/bin/bash
-
-yarn run test:mocha &&
-$(yarn bin)/nyc report --reporter=text-lcov | $(yarn bin)/coveralls

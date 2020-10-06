@@ -80,9 +80,12 @@ export class ObfuscatedCodeWriter {
      */
     public getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
         if (sourceMapFileName) {
-            outputCodePath = `${outputCodePath.substring(
-                0, outputCodePath.lastIndexOf('/')
-            )}/${sourceMapFileName}`;
+            const sourceMapPath: string = outputCodePath.substring(
+                0,
+                outputCodePath.lastIndexOf(path.sep)
+            );
+
+            outputCodePath = path.join(sourceMapPath, sourceMapFileName);
         }
 
         if (!/\.js\.map$/.test(outputCodePath)) {

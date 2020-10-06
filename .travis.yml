@@ -22,3 +22,6 @@ cache:
     - node_modules
 
 script: "yarn run travis"
+
+after_success:
+  - yarn run test:mocha-coverage:report

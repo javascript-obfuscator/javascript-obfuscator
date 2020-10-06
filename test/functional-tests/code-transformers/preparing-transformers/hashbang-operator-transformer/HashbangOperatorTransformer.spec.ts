@@ -7,9 +7,11 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('HashbangOperatorTransformer', () => {
+    const lineSeparator: string = '\r?\n';
+
     describe('Variant #1: simple', () => {
         const regExp: RegExp = new RegExp(
-            `^#!\/usr\/bin\/env node\n` +
+            `^#!\/usr\/bin\/env node${lineSeparator}` +
             `var foo *= *'abc';`
         );
 
@@ -33,7 +35,7 @@ describe('HashbangOperatorTransformer', () => {
 
     describe('Variant #2: multiple new lines', () => {
         const regExp: RegExp = new RegExp(
-            `^#!\/usr\/bin\/env node\n\n\n\n` +
+            `^#!\/usr\/bin\/env node${lineSeparator.repeat(4)}` +
             `var foo *= *'abc';`
         );
 
@@ -57,7 +59,7 @@ describe('HashbangOperatorTransformer', () => {
 
     describe('Variant #3: `stringArray` option enabled', () => {
         const regExp: RegExp = new RegExp(
-            `^#!\/usr\/bin\/env node\n` +
+            `^#!\/usr\/bin\/env node${lineSeparator}` +
             `var _0x(\\w){4} *= *\\['abc'];`
         );
 

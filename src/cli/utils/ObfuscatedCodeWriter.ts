@@ -92,8 +92,10 @@ export class ObfuscatedCodeWriter {
             const sourceMapPath: string = indexOfLastSeparator > 0
                 ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
                 : normalizedOutputCodePath;
+            // remove possible drive letter for win32 environment
+            const normalizedSourceMapFilePath: string = sourceMapFileName.replace(/^[a-zA-Z]:\\*/, '');
 
-            normalizedOutputCodePath = path.join(sourceMapPath, sourceMapFileName);
+            normalizedOutputCodePath = path.join(sourceMapPath, normalizedSourceMapFilePath);
         }
 
         if (!/\.js\.map$/.test(normalizedOutputCodePath)) {

@@ -151,7 +151,7 @@ describe('ObfuscatedCodeWriter', () => {
             const baseDirnamePath: string = __dirname;
 
             before(() => {
-                mkdirp.sync(path.join(baseDirnamePath, tmpDirectoryPath, 'input'));
+                mkdirp.sync(path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested'));
                 fs.writeFileSync(
                     path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js'),
                     'var foo = 1;'

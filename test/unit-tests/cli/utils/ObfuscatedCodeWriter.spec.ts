@@ -6,8 +6,6 @@ import * as rimraf from 'rimraf';
 
 import { ObfuscatedCodeWriter } from '../../../../src/cli/utils/ObfuscatedCodeWriter';
 
-const isWin32: boolean = process.platform === 'win32';
-
 describe('ObfuscatedCodeWriter', () => {
     const tmpDirectoryPath: string = 'test/tmp';
 
@@ -147,7 +145,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        if (isWin32) {
+        describe('Variant #5: Win32 tests', () => {
             const baseDirnamePath: string = __dirname;
 
             before(() => {
@@ -158,35 +156,33 @@ describe('ObfuscatedCodeWriter', () => {
                 );
             });
 
-            describe('Win32 tests', () => {
-                describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
-                    describe('Variant #1: base directory name', () => {
-                        const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js');
-                        const rawInputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input');
-                        const rawOutputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'output');
-                        const expectedOutputCodePath: string = path.join(
-                            baseDirnamePath,
-                            tmpDirectoryPath,
-                            'output',
-                            'nested',
-                            'test-input.js'
+            describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
+                describe('Variant #1: base directory name', () => {
+                    const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js');
+                    const rawInputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input');
+                    const rawOutputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'output');
+                    const expectedOutputCodePath: string = path.join(
+                        baseDirnamePath,
+                        tmpDirectoryPath,
+                        'output',
+                        'nested',
+                        'test-input.js'
+                    );
+
+                    let outputCodePath: string;
+
+                    before(() => {
+                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                            rawInputPath,
+                            {
+                                output: rawOutputPath
+                            }
                         );
+                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    });
 
-                        let outputCodePath: string;
-
-                        before(() => {
-                            const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
-                                rawInputPath,
-                                {
-                                    output: rawOutputPath
-                                }
-                            );
-                            outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
-                        });
-
-                        it('should return output path that contains raw output path and actual file input path', () => {
-                            assert.equal(outputCodePath, expectedOutputCodePath);
-                        });
+                    it('should return output path that contains raw output path and actual file input path', () => {
+                        assert.equal(outputCodePath, expectedOutputCodePath);
                     });
                 });
             });
@@ -194,7 +190,7 @@ describe('ObfuscatedCodeWriter', () => {
             after(() => {
                 rimraf.sync(path.join(baseDirnamePath, tmpDirectoryPath));
             });
-        }
+        });
 
         after(() => {
             rimraf.sync(tmpDirectoryPath);

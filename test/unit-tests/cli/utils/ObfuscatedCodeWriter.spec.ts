@@ -150,66 +150,52 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         if (isWin32) {
-            describe('Variant #5 (win32): raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
-                describe('Variant #1: base directory name', () => {
-                    const inputPath: string = path.join('D:\\', tmpDirectoryPath, 'input', 'test-input.js');
-                    const rawInputPath: string = path.join('D:\\', tmpDirectoryPath, 'input');
-                    const rawOutputPath: string = path.join('D:\\', tmpDirectoryPath, 'output');
-                    const expectedOutputCodePath: string = path.join(
-                        'D:\\',
-                        tmpDirectoryPath,
-                        'output',
-                        tmpDirectoryPath,
-                        'input',
-                        'test-input.js'
-                    );
+            const driveLetter: string = 'D:\\';
 
-                    let outputCodePath: string;
+            before(() => {
+                mkdirp.sync(path.join(driveLetter, tmpDirectoryPath, 'input'));
+                fs.writeFileSync(
+                    path.join(driveLetter, tmpDirectoryPath, 'input', 'test-input.js'),
+                    'var foo = 1;'
+                );
+            });
 
-                    before(() => {
-                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
-                            rawInputPath,
-                            {
-                                output: rawOutputPath
-                            }
+            describe('Win32 tests', () => {
+                describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
+                    describe('Variant #1: base directory name', () => {
+                        const inputPath: string = path.join(driveLetter, tmpDirectoryPath, 'input', 'test-input.js');
+                        const rawInputPath: string = path.join(driveLetter, tmpDirectoryPath, 'input');
+                        const rawOutputPath: string = path.join(driveLetter, tmpDirectoryPath, 'output');
+                        const expectedOutputCodePath: string = path.join(
+                            driveLetter,
+                            tmpDirectoryPath,
+                            'output',
+                            tmpDirectoryPath,
+                            'input',
+                            'test-input.js'
                         );
-                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
-                    });
 
-                    it('should return output path that contains raw output path and actual file input path', () => {
-                        assert.equal(outputCodePath, expectedOutputCodePath);
+                        let outputCodePath: string;
+
+                        before(() => {
+                            const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                                rawInputPath,
+                                {
+                                    output: rawOutputPath
+                                }
+                            );
+                            outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                        });
+
+                        it('should return output path that contains raw output path and actual file input path', () => {
+                            assert.equal(outputCodePath, expectedOutputCodePath);
+                        });
                     });
                 });
+            });
 
-                describe('Variant #2: directory name with dot', () => {
-                    const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
-                    const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
-                    const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'foo.bar');
-                    const expectedOutputCodePath: string = path.join(
-                        tmpDirectoryPath,
-                        'output',
-                        'foo.bar',
-                        tmpDirectoryPath,
-                        'input',
-                        'test-input.js'
-                    );
-
-                    let outputCodePath: string;
-
-                    before(() => {
-                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
-                            rawInputPath,
-                            {
-                                output: rawOutputPath
-                            }
-                        );
-                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
-                    });
-
-                    it('should return output path that contains raw output path and actual file input path', () => {
-                        assert.equal(outputCodePath, expectedOutputCodePath);
-                    });
-                });
+            after(() => {
+                rimraf.sync(path.join(driveLetter, tmpDirectoryPath));
             });
         }
 

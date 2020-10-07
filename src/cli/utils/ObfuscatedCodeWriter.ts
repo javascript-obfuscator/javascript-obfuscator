@@ -27,7 +27,7 @@ export class ObfuscatedCodeWriter {
         inputPath: string,
         options: TInputCLIOptions
     ) {
-        this.inputPath = inputPath;
+        this.inputPath = path.normalize(inputPath);
         this.options = options;
     }
 
@@ -60,13 +60,9 @@ export class ObfuscatedCodeWriter {
 
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {
-                const parsedPath: path.ParsedPath = path.parse(normalizedFilePath);
-                const filePathWithoutRoot: string = path.join(
-                    parsedPath.dir.replace(parsedPath.root, path.sep),
-                    parsedPath.base
-                );
+                const baseOutputPath: string = normalizedFilePath.replace(this.inputPath, '');
 
-                return path.join(normalizedRawOutputPath, filePathWithoutRoot);
+                return path.join(normalizedRawOutputPath, baseOutputPath);
             } else {
                 throw new Error('Output path for directory obfuscation should be a directory path');
             }

@@ -13,16 +13,16 @@ describe('ObfuscatedCodeWriter', () => {
 
     describe('getOutputCodePath', () => {
         before(() => {
-            mkdirp.sync(path.join(tmpDirectoryPath, 'input'));
+            mkdirp.sync(path.join(tmpDirectoryPath, 'input', 'nested',));
             fs.writeFileSync(
-                path.join(tmpDirectoryPath, 'input', 'test-input.js'),
+                path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js'),
                 'var foo = 1;'
             );
         });
 
         describe('Variant #1: raw input path is a file path, raw output path is a file path', () => {
-            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
-            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
 
@@ -44,8 +44,8 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         describe('Variant #2: raw input path is a file path, raw output path is a directory path', () => {
-            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
-            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
             const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
@@ -90,14 +90,13 @@ describe('ObfuscatedCodeWriter', () => {
 
         describe('Variant #4: raw input path is a directory path, raw output path is a directory path', () => {
             describe('Variant #1: base directory name', () => {
-                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
                 const expectedOutputCodePath: string = path.join(
                     tmpDirectoryPath,
                     'output',
-                    tmpDirectoryPath,
-                    'input',
+                    'nested',
                     'test-input.js'
                 );
 
@@ -119,15 +118,14 @@ describe('ObfuscatedCodeWriter', () => {
             });
 
             describe('Variant #2: directory name with dot', () => {
-                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'foo.bar');
                 const expectedOutputCodePath: string = path.join(
                     tmpDirectoryPath,
                     'output',
                     'foo.bar',
-                    tmpDirectoryPath,
-                    'input',
+                    'nested',
                     'test-input.js'
                 );
 
@@ -155,7 +153,7 @@ describe('ObfuscatedCodeWriter', () => {
             before(() => {
                 mkdirp.sync(path.join(baseDirnamePath, tmpDirectoryPath, 'input'));
                 fs.writeFileSync(
-                    path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'test-input.js'),
+                    path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js'),
                     'var foo = 1;'
                 );
             });
@@ -163,15 +161,14 @@ describe('ObfuscatedCodeWriter', () => {
             describe('Win32 tests', () => {
                 describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
                     describe('Variant #1: base directory name', () => {
-                        const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'test-input.js');
+                        const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                         const rawInputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input');
                         const rawOutputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'output');
                         const expectedOutputCodePath: string = path.join(
                             baseDirnamePath,
                             tmpDirectoryPath,
                             'output',
-                            tmpDirectoryPath,
-                            'input',
+                            'nested',
                             'test-input.js'
                         );
 

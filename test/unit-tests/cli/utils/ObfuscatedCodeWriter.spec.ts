@@ -150,12 +150,12 @@ describe('ObfuscatedCodeWriter', () => {
         });
 
         if (isWin32) {
-            const driveLetter: string = 'D:\\';
+            const baseDirnamePath: string = __dirname;
 
             before(() => {
-                mkdirp.sync(path.join(driveLetter, tmpDirectoryPath, 'input'));
+                mkdirp.sync(path.join(baseDirnamePath, tmpDirectoryPath, 'input'));
                 fs.writeFileSync(
-                    path.join(driveLetter, tmpDirectoryPath, 'input', 'test-input.js'),
+                    path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'test-input.js'),
                     'var foo = 1;'
                 );
             });
@@ -163,11 +163,11 @@ describe('ObfuscatedCodeWriter', () => {
             describe('Win32 tests', () => {
                 describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
                     describe('Variant #1: base directory name', () => {
-                        const inputPath: string = path.join(driveLetter, tmpDirectoryPath, 'input', 'test-input.js');
-                        const rawInputPath: string = path.join(driveLetter, tmpDirectoryPath, 'input');
-                        const rawOutputPath: string = path.join(driveLetter, tmpDirectoryPath, 'output');
+                        const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'test-input.js');
+                        const rawInputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input');
+                        const rawOutputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'output');
                         const expectedOutputCodePath: string = path.join(
-                            driveLetter,
+                            baseDirnamePath,
                             tmpDirectoryPath,
                             'output',
                             tmpDirectoryPath,
@@ -195,7 +195,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
 
             after(() => {
-                rimraf.sync(path.join(driveLetter, tmpDirectoryPath));
+                rimraf.sync(path.join(baseDirnamePath, tmpDirectoryPath));
             });
         }
 

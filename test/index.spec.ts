@@ -49,6 +49,7 @@ import './unit-tests/utils/Utils.spec';
 /**
  * Functional tests
  */
+/*
 import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/code-transformers/preparing-transformers/hashbang-operator-transformer/HashbangOperatorTransformer.spec';
@@ -122,12 +123,13 @@ import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';
 
-/**
+/!**
  * Performance tests
- */
+ *!/
 import './performance-tests/JavaScriptObfuscatorPerformance.spec';
 
-/**
+/!**
  * Runtime tests
- */
+ *!/
 import './runtime-tests/JavaScriptObfuscatorRuntime.spec';
+*/

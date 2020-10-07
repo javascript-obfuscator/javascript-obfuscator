@@ -36,13 +36,13 @@ export class ObfuscatedCodeWriter {
      * @returns {string}
      */
     public getOutputCodePath (filePath: string): string {
+        const normalizedFilePath: string = path.normalize(filePath);
         const normalizedRawOutputPath: string | null = this.options.output
             ? path.normalize(this.options.output)
             : null;
 
         if (!normalizedRawOutputPath) {
-            return path
-                .normalize(filePath)
+            return normalizedFilePath
                 .split(StringSeparator.Dot)
                 .map((value: string, index: number) => {
                     return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
@@ -60,7 +60,13 @@ export class ObfuscatedCodeWriter {
 
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {
-                return path.join(normalizedRawOutputPath, filePath);
+                const parsedPath: path.ParsedPath = path.parse(normalizedFilePath);
+                const filePathWithoutRoot: string = path.join(
+                    parsedPath.dir.replace(parsedPath.root, path.sep),
+                    parsedPath.base
+                );
+
+                return path.join(normalizedRawOutputPath, filePathWithoutRoot);
             } else {
                 throw new Error('Output path for directory obfuscation should be a directory path');
             }

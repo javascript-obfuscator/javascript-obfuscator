@@ -6,6 +6,8 @@ import * as rimraf from 'rimraf';
 
 import { ObfuscatedCodeWriter } from '../../../../src/cli/utils/ObfuscatedCodeWriter';
 
+const isWin32: boolean = process.platform === 'win32';
+
 describe('ObfuscatedCodeWriter', () => {
     const tmpDirectoryPath: string = 'test/tmp';
 
@@ -146,6 +148,70 @@ describe('ObfuscatedCodeWriter', () => {
                 });
             });
         });
+
+        if (isWin32) {
+            describe('Variant #5 (win32): raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
+                describe('Variant #1: base directory name', () => {
+                    const inputPath: string = path.join('D:\\', tmpDirectoryPath, 'input', 'test-input.js');
+                    const rawInputPath: string = path.join('D:\\', tmpDirectoryPath, 'input');
+                    const rawOutputPath: string = path.join('D:\\', tmpDirectoryPath, 'output');
+                    const expectedOutputCodePath: string = path.join(
+                        'D:\\',
+                        tmpDirectoryPath,
+                        'output',
+                        tmpDirectoryPath,
+                        'input',
+                        'test-input.js'
+                    );
+
+                    let outputCodePath: string;
+
+                    before(() => {
+                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                            rawInputPath,
+                            {
+                                output: rawOutputPath
+                            }
+                        );
+                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    });
+
+                    it('should return output path that contains raw output path and actual file input path', () => {
+                        assert.equal(outputCodePath, expectedOutputCodePath);
+                    });
+                });
+
+                describe('Variant #2: directory name with dot', () => {
+                    const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                    const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
+                    const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'foo.bar');
+                    const expectedOutputCodePath: string = path.join(
+                        tmpDirectoryPath,
+                        'output',
+                        'foo.bar',
+                        tmpDirectoryPath,
+                        'input',
+                        'test-input.js'
+                    );
+
+                    let outputCodePath: string;
+
+                    before(() => {
+                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                            rawInputPath,
+                            {
+                                output: rawOutputPath
+                            }
+                        );
+                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    });
+
+                    it('should return output path that contains raw output path and actual file input path', () => {
+                        assert.equal(outputCodePath, expectedOutputCodePath);
+                    });
+                });
+            });
+        }
 
         after(() => {
             rimraf.sync(tmpDirectoryPath);

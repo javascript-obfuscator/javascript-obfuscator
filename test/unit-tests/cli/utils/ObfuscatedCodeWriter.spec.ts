@@ -198,7 +198,7 @@ describe('ObfuscatedCodeWriter', () => {
     });
 
     describe('getOutputSourceMapPath', () => {
-        describe('Variant #1: output code path is set', () => {
+        describe('Variant #1: output code path is a file path', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
@@ -221,7 +221,29 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #2: output code path with dot', () => {
+        describe('Variant #2: output code path is a directory path and source map file name is not set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output');
+
+            let testFunc: () => string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                testFunc = () => obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+            });
+
+            it('should throw an error if output code path is a directory path and source map file name is not set', () => {
+                assert.throws(testFunc, Error);
+            });
+        });
+
+        describe('Variant #3: output code path with dot', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input.with.dot', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
@@ -244,7 +266,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #3: source map file name without extension is set', () => {
+        describe('Variant #4: source map file name without extension is set', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
@@ -268,7 +290,31 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #4: source map file name with wrong extension is set', () => {
+        describe('Variant #5: output code path is a directory path and source map file name without extension is set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output');
+            const sourceMapFileName: string = 'foo';
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'foo.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #6: source map file name with wrong extension is set', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
@@ -292,7 +338,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #5: source map file name with valid extension is set', () => {
+        describe('Variant #7: source map file name with valid extension is set', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
@@ -316,7 +362,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #6: source map file name is a path', () => {
+        describe('Variant #8: source map file name is a path', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
             const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
@@ -340,8 +386,32 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #7: Win32 environment', () => {
-            describe('Variant #1: win32 output path is a file name without extension', () => {
+        describe('Variant #9: Win32 environment', () => {
+            describe('Variant #1: output code path is a directory path', () => {
+                const rawInputPath: string = path.join('C:\\', tmpDirectoryPath, 'input', 'test-input.js');
+                const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
+                const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output');
+                const sourceMapFileName: string = path.join('foo');
+                const expectedOutputSourceMapPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'foo.js.map');
+
+                let outputSourceMapPath: string;
+
+                before(() => {
+                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                        rawInputPath,
+                        {
+                            output: rawOutputPath
+                        }
+                    );
+                    outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                });
+
+                it('should return output path for source map', () => {
+                    assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+                });
+            });
+
+            describe('Variant #2: source map file name is a file name without extension', () => {
                 const rawInputPath: string = path.join('C:\\', tmpDirectoryPath, 'input', 'test-input.js');
                 const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                 const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
@@ -365,7 +435,7 @@ describe('ObfuscatedCodeWriter', () => {
                 });
             });
 
-            describe('Variant #2: win32 output path is a file name with an extension', () => {
+            describe('Variant #3: source map file name is a file name with an extension', () => {
                 const rawInputPath: string = path.join('C:\\', tmpDirectoryPath, 'input', 'test-input.js');
                 const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                 const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
@@ -389,7 +459,7 @@ describe('ObfuscatedCodeWriter', () => {
                 });
             });
 
-            describe('Variant #3: win32 output path and win32 path in source map file name', () => {
+            describe('Variant #4: output path and win32 path in source map file name', () => {
                 const rawInputPath: string = path.join('C:\\', tmpDirectoryPath, 'input', 'test-input.js');
                 const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                 const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
@@ -414,7 +484,7 @@ describe('ObfuscatedCodeWriter', () => {
             });
         });
 
-        describe('Variant #8: empty paths', () => {
+        describe('Variant #10: empty paths', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
 

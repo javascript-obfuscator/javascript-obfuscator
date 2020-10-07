@@ -86,10 +86,15 @@ export class ObfuscatedCodeWriter {
         }
 
         let normalizedOutputCodePath: string = path.normalize(outputCodePath);
+        let parsedOutputCodePath: path.ParsedPath = path.parse(normalizedOutputCodePath);
+
+        if (!parsedOutputCodePath.ext && !sourceMapFileName) {
+            throw new Error('Source map file name should be set when output code path is a directory path');
+        }
 
         if (sourceMapFileName) {
             const indexOfLastSeparator: number = normalizedOutputCodePath.lastIndexOf(path.sep);
-            const sourceMapPath: string = indexOfLastSeparator > 0
+            const sourceMapPath: string = parsedOutputCodePath.ext && indexOfLastSeparator > 0
                 ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
                 : normalizedOutputCodePath;
             // remove possible drive letter for win32 environment
@@ -99,7 +104,7 @@ export class ObfuscatedCodeWriter {
         }
 
         if (!/\.js\.map$/.test(normalizedOutputCodePath)) {
-            const parsedOutputCodePath: path.ParsedPath = path.parse(normalizedOutputCodePath);
+            parsedOutputCodePath = path.parse(normalizedOutputCodePath);
             const outputCodePathWithoutExtension: string = path.join(parsedOutputCodePath.dir, parsedOutputCodePath.name);
 
             normalizedOutputCodePath = `${outputCodePathWithoutExtension}.js.map`;

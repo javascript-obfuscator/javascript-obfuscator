@@ -1,5 +1,9 @@
 Change Log
 
+v2.5.0
+---
+* Fixed wrong source map path generation under `windows`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/760
+
 v2.4.3
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/769

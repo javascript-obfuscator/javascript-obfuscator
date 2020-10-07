@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.4.3",
+  "version": "2.5.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -42,11 +42,11 @@
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",
     "stringz": "2.1.0",
-    "tslib": "2.0.1"
+    "tslib": "2.0.2"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@types/chai": "4.2.12",
+    "@types/chai": "4.2.13",
     "@types/chance": "1.1.0",
     "@types/escodegen": "0.0.6",
     "@types/eslint-scope": "3.7.0",
@@ -57,13 +57,13 @@
     "@types/mkdirp": "1.0.1",
     "@types/mocha": "8.0.3",
     "@types/multimatch": "4.0.0",
-    "@types/node": "14.11.2",
+    "@types/node": "14.11.5",
     "@types/rimraf": "3.0.0",
     "@types/sinon": "9.0.8",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.15.3",
-    "@typescript-eslint/eslint-plugin": "4.3.0",
-    "@typescript-eslint/parser": "4.3.0",
+    "@typescript-eslint/eslint-plugin": "4.4.0",
+    "@typescript-eslint/parser": "4.4.0",
     "chai": "4.2.0",
     "chai-exclude": "2.0.2",
     "coveralls": "3.1.0",
@@ -81,7 +81,7 @@
     "pjson": "1.0.9",
     "pre-commit": "1.2.2",
     "rimraf": "3.0.2",
-    "sinon": "9.1.0",
+    "sinon": "9.2.0",
     "threads": "1.6.3",
     "ts-loader": "8.0.4",
     "ts-node": "9.0.0",

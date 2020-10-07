@@ -202,25 +202,167 @@ describe('ObfuscatedCodeWriter', () => {
     });
 
     describe('getOutputSourceMapPath', () => {
-        const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
-        const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
-        const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
-        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js.map');
+        describe('Variant #1: output code path is set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js.map');
 
-        let outputSourceMapPath: string;
+            let outputSourceMapPath: string;
 
-        before(() => {
-            const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
-                rawInputPath,
-                {
-                    output: rawOutputPath
-                }
-            );
-            outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
         });
 
-        it('should return output path for source map', () => {
-            assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+        describe('Variant #2: output code path with dot', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input.with.dot', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #3: source map file name without extension is set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const sourceMapFileName: string = 'foo';
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'foo.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #4: source map file name with wrong extension is set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const sourceMapFileName: string = 'foo.js';
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'foo.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #5: source map file name with valid extension is set', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const sourceMapFileName: string = 'foo.js.map';
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'foo.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #6: source map file name is a path', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+            const sourceMapFileName: string = path.join('parent', 'foo.js.map');
+            const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'parent', 'foo.js.map');
+
+            let outputSourceMapPath: string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+            });
+
+            it('should return output path for source map', () => {
+                assert.equal(outputSourceMapPath, expectedOutputSourceMapPath);
+            });
+        });
+
+        describe('Variant #7: empty paths', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
+
+            let testFunc: () => string;
+
+            before(() => {
+                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    rawInputPath,
+                    {
+                        output: rawOutputPath
+                    }
+                );
+                testFunc = () => obfuscatedCodeWriter.getOutputSourceMapPath('', '');
+            });
+
+            it('should throw an error if output code path is empty', () => {
+                assert.throws(testFunc, Error);
+            });
         });
     });
 });

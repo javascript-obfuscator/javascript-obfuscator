@@ -81,22 +81,31 @@ export class ObfuscatedCodeWriter {
      * @returns {string}
      */
     public getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
+        if (!outputCodePath) {
+            throw new Error('Output code path is empty');
+        }
+
+        let normalizedOutputCodePath: string = path.normalize(outputCodePath);
+
         if (sourceMapFileName) {
-            const sourceMapPath: string = outputCodePath.substring(
-                0,
-                outputCodePath.lastIndexOf(path.sep)
-            );
+            const indexOfLastSeparator: number = normalizedOutputCodePath.lastIndexOf(path.sep);
+            const sourceMapPath: string = indexOfLastSeparator > 0
+                ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
+                : normalizedOutputCodePath;
 
-            outputCodePath = path.join(sourceMapPath, sourceMapFileName);
+            normalizedOutputCodePath = path.join(sourceMapPath, sourceMapFileName);
         }
 
-        if (!/\.js\.map$/.test(outputCodePath)) {
-            outputCodePath = `${outputCodePath.split(StringSeparator.Dot)[0]}.js.map`;
-        } else if (/\.js$/.test(outputCodePath)) {
-            outputCodePath += '.map';
+        if (!/\.js\.map$/.test(normalizedOutputCodePath)) {
+            const parsedOutputCodePath: path.ParsedPath = path.parse(normalizedOutputCodePath);
+            const outputCodePathWithoutExtension: string = path.join(parsedOutputCodePath.dir, parsedOutputCodePath.name);
+
+            normalizedOutputCodePath = `${outputCodePathWithoutExtension}.js.map`;
+        } else if (/\.js$/.test(normalizedOutputCodePath)) {
+            normalizedOutputCodePath += '.map';
         }
 
-        return outputCodePath;
+        return normalizedOutputCodePath;
     }
 
     /**

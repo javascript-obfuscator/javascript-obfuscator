@@ -319,9 +319,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     isFileExist3: boolean;
 
                 before(() => {
-                    outputFixturesFilePath1 = path.join(outputDirectoryPath, directoryPath, outputFileName1);
-                    outputFixturesFilePath2 = path.join(outputDirectoryPath, directoryPath, outputFileName2);
-                    outputFixturesFilePath3 = path.join(outputDirectoryPath, directoryPath, outputFileName3);
+                    outputFixturesFilePath1 = path.join(outputDirectoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(outputDirectoryPath, outputFileName2);
+                    outputFixturesFilePath3 = path.join(outputDirectoryPath, outputFileName3);
 
                     JavaScriptObfuscatorCLI.obfuscate([
                         'node',

@@ -32,6 +32,7 @@ import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/options/Options.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-code/ObfuscatedCode.spec';
+import './unit-tests/source-code/SourceCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/storages/string-array-transformers/literal-nodes-cache/LiteralNodesCacheStorage.spec';

@@ -3,9 +3,9 @@ Change Log
 v2.5.0
 ---
 * Improved hierarchy of generated directories when `--output` is a directory path
-* Fixed wrong obfuscated files path generation under `windows`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/576
-* Fixed wrong source map path generation under `windows`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/760
-* `javascript-obfuscator` now can be built under `windows` environment
+* Fixed wrong path generation for obfuscated files for `win32` environment. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/576
+* Fixed wrong path generation under for source map for `win32` environment. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/760
+* `javascript-obfuscator` now can be built under `win32` environment
 
 v2.4.3
 ---

@@ -1,11 +1,20 @@
 language: node_js
 
-node_js:
-  - "10"
-  - "12"
-  - "13"
-  - "14"
-  - "stable"
+env:
+  - YARN_GPG=no
+
+jobs:
+  include:
+    - os: linux
+      node_js: "10"
+    - os: linux
+      node_js: "12"
+    - os: linux
+      node_js: "13"
+    - os: linux
+      node_js: "stable"
+    - os: windows
+      node_js: "14"
 
 cache:
   yarn: true
@@ -15,5 +24,4 @@ cache:
 script: "yarn run travis"
 
 after_success:
-  - yarn run test:coveralls
-  - rm -rf ./coverage
+  - yarn run test:mocha-coverage:report

@@ -15,15 +15,15 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
     const expectedError: RegExp = /Given input path must be a valid/;
 
-    const fixturesDirName: string = 'test/fixtures';
+    const fixturesDirName: string = path.join('test', 'fixtures');
     const fixtureFileName: string = 'sample.js';
-    const fixtureFilePath: string = `${fixturesDirName}/${fixtureFileName}`;
-    const outputDirName: string = 'test/tmp';
+    const fixtureFilePath: string = path.join(fixturesDirName, fixtureFileName);
+    const outputDirName: string = path.join('test', 'tmp');
     const outputFileName: string = 'sample-obfuscated.js';
-    const outputFilePath: string = `${outputDirName}/${outputFileName}`;
-    const configDirName: string = 'test/fixtures';
+    const outputFilePath: string = path.join(outputDirName, outputFileName);
+    const configDirName: string = path.join('test', 'fixtures');
     const configFileName: string = 'config.js';
-    const configFilePath: string = `${configDirName}/${configFileName}`;
+    const configFilePath: string = path.join(configDirName, configFileName);
 
 
     describe('run', () => {
@@ -66,7 +66,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         isFileExist: boolean;
 
                     before(() => {
-                        outputFixturesFilePath = `${fixturesDirName}/${outputFileName}`;
+                        outputFixturesFilePath = path.join(fixturesDirName, outputFileName);
 
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
@@ -93,7 +93,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         testFunc = () => JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
-                            'wrong/file/path'
+                            path.join('wrong', 'file', 'path')
                         ]);
                     });
 
@@ -105,7 +105,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 describe('Variant #3: input file extension isn\'t `.js`', () => {
                     const expectedError: RegExp = /Given input path must be a valid/;
                     const outputFileName: string = 'sample-obfuscated.ts';
-                    const outputFilePath: string = `${outputDirName}/${outputFileName}`;
+                    const outputFilePath: string = path.join(outputDirName, outputFileName);
 
                     let testFunc: () => void;
 
@@ -141,7 +141,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                             '--output',
                             outputFilePath,
                             '--exclude',
-                            '**/foo.js'
+                            path.join('**', 'foo.js')
                         ]);
 
                         isFileExist = fs.existsSync(outputFilePath);
@@ -163,7 +163,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                             '--output',
                             outputFilePath,
                             '--exclude',
-                            '**/sample.js'
+                            path.join('**', 'sample.js')
                         ]);
                     });
 
@@ -180,7 +180,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
         describe('Variant #2: obfuscation of directory', () => {
             describe(`Variant #1: default behaviour`, () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
                 const outputFileName3: string = 'baz-obfuscated.js';
@@ -198,9 +198,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     fileContent2: string;
 
                 before(() => {
-                    outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
-                    outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
-                    outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
+                    outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
+                    outputFixturesFilePath3 = path.join(directoryPath, outputFileName3);
 
                     JavaScriptObfuscatorCLI.obfuscate([
                         'node',
@@ -245,7 +245,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             describe('Variant #2: obfuscation of directory with `identifiersPrefix` option value', () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                 const identifiersPrefix: string = 'foo';
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
@@ -261,8 +261,8 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     fileContent2: string;
 
                 before(() => {
-                    outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
-                    outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
+                    outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
 
                     JavaScriptObfuscatorCLI.obfuscate([
                         'node',
@@ -304,9 +304,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             describe('Variant #3: obfuscation of directory with `output` option', () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                 const outputDirectoryName: string = 'obfuscated';
-                const outputDirectoryPath: string = `${directoryPath}/${outputDirectoryName}`;
+                const outputDirectoryPath: string = path.join(directoryPath, outputDirectoryName);
                 const outputFileName1: string = 'foo.js';
                 const outputFileName2: string = 'bar.js';
                 const outputFileName3: string = 'baz.js';
@@ -319,9 +319,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     isFileExist3: boolean;
 
                 before(() => {
-                    outputFixturesFilePath1 = `${outputDirectoryPath}/${directoryPath}/${outputFileName1}`;
-                    outputFixturesFilePath2 = `${outputDirectoryPath}/${directoryPath}/${outputFileName2}`;
-                    outputFixturesFilePath3 = `${outputDirectoryPath}/${directoryPath}/${outputFileName3}`;
+                    outputFixturesFilePath1 = path.join(outputDirectoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(outputDirectoryPath, outputFileName2);
+                    outputFixturesFilePath3 = path.join(outputDirectoryPath, outputFileName3);
 
                     JavaScriptObfuscatorCLI.obfuscate([
                         'node',
@@ -338,7 +338,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
                 it(
                     `should create file \`${outputFileName1}\` with obfuscated code in ` +
-                    `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                    `\`${path.join(fixturesDirName, outputDirectoryName)}\` directory`,
                     () => {
                         assert.equal(isFileExist1, true);
                     }
@@ -346,7 +346,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
                 it(
                     `should create file \`${outputFileName2}\` with obfuscated code in ` +
-                    `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                    `\`${path.join(fixturesDirName, outputDirectoryName)}\` directory`,
                     () => {
                         assert.equal(isFileExist2, true);
                     }
@@ -354,7 +354,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
                 it(
                     `shouldn't create file \`${outputFileName3}\` in ` +
-                    `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                    `\`${path.join(fixturesDirName, outputDirectoryName)}\` directory`,
                     () => {
                         assert.equal(isFileExist3, false);
                     }
@@ -367,7 +367,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
             describe('Variant #4: --exclude option', () => {
                 describe('Variant #1: --exclude option is pointed on different file', () => {
-                    const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                    const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                     const outputFileName1: string = 'foo-obfuscated.js';
                     const outputFileName2: string = 'bar-obfuscated.js';
                     const outputFileName3: string = 'baz-obfuscated.js';
@@ -385,16 +385,16 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         fileContent2: string;
 
                     before(() => {
-                        outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
-                        outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
-                        outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
+                        outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                        outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
+                        outputFixturesFilePath3 = path.join(directoryPath, outputFileName3);
 
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             directoryPath,
                             '--exclude',
-                            '**/bark.js',
+                            path.join('**', 'bark.js'),
                             '--rename-globals',
                             'true'
                         ]);
@@ -434,7 +434,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #2: --exclude option is pointed on file under obfuscating directory', () => {
-                    const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                    const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                     const outputFileName1: string = 'foo-obfuscated.js';
                     const outputFileName2: string = 'bar-obfuscated.js';
                     const outputFileName3: string = 'baz-obfuscated.js';
@@ -450,16 +450,16 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         fileContent1: string;
 
                     before(() => {
-                        outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
-                        outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
-                        outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
+                        outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                        outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
+                        outputFixturesFilePath3 = path.join(directoryPath, outputFileName3);
 
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             directoryPath,
                             '--exclude',
-                            '**/foo.js',
+                            path.join('**', 'foo.js'),
                             '--rename-globals',
                             'true'
                         ]);
@@ -619,7 +619,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
                     const sourceMapFileName: string = 'test';
                     const sourceMapFilePath: string = `${sourceMapFileName}.js.map`;
-                    const outputSourceMapFilePath: string = `${outputDirName}/${sourceMapFilePath}`;
+                    const outputSourceMapFilePath: string = path.join(outputDirName, sourceMapFilePath);
 
                     let isFileExist: boolean,
                         sourceMapObject: any;
@@ -864,7 +864,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             describe('`--exclude` option', () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
 
@@ -874,8 +874,8 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     isFileExist2: boolean;
 
                 before(() => {
-                    outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
-                    outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
+                    outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
 
                     JavaScriptObfuscatorCLI.obfuscate([
                         'node',
@@ -942,17 +942,17 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
         describe('Logging', () => {
             describe('Obfuscating file message', () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
 
                 const inputFileName1: string = 'foo.js';
                 const inputFileName2: string = 'bar.js';
-                const inputFilePath1: string = `${directoryPath}/${inputFileName1}`;
-                const inputFilePath2: string = `${directoryPath}/${inputFileName2}`;
+                const inputFilePath1: string = path.join(directoryPath, inputFileName1);
+                const inputFilePath2: string = path.join(directoryPath, inputFileName2);
 
                 const outputFileName1: string = 'foo-obfuscated.js';
                 const outputFileName2: string = 'bar-obfuscated.js';
-                const outputFilePath1: string = `${directoryPath}/${outputFileName1}`;
-                const outputFilePath2: string = `${directoryPath}/${outputFileName2}`;
+                const outputFilePath1: string = path.join(directoryPath, outputFileName1);
+                const outputFilePath2: string = path.join(directoryPath, outputFileName2);
 
                 const expectedLoggingMessage1: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputFilePath1}...`;
                 const expectedLoggingMessage2: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputFilePath2}...`;
@@ -992,10 +992,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             describe('Error message', () => {
-                const directoryPath: string = `${fixturesDirName}/directory-obfuscation-error`;
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation-error');
 
                 const inputFileName: string = 'foo.js';
-                const inputFilePath: string = `${directoryPath}/${inputFileName}`;
+                const inputFilePath: string = path.join(directoryPath, inputFileName);
 
                 const expectedLoggingMessage1: string = `[javascript-obfuscator-cli] Error in file: ${inputFilePath}...`;
 

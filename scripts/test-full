@@ -1,5 +1,0 @@
-#!/bin/bash
-
-yarn run test:dev &&
-yarn run test:mocha-coverage &&
-yarn run test:mocha-memory-performance

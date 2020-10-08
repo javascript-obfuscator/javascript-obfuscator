@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(yarn bin)/mocha --require ts-node/register --require source-map-support/register test/index.spec.ts --exit

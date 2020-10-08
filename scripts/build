@@ -1,5 +1,0 @@
-#!/bin/bash
-
-yarn run webpack:prod &&
-yarn run eslint &&
-yarn test

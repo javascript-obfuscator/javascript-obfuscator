@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import * as rimraf from 'rimraf';
 
 import { assert } from 'chai';
@@ -11,7 +12,7 @@ import { SourceCodeReader } from '../../../../src/cli/utils/SourceCodeReader';
 describe('SourceCodeReader', () => {
     const expectedError: RegExp = /Given input path must be a valid/;
     const fileContent: string = 'test';
-    const tmpDirectoryPath: string = 'test/tmp';
+    const tmpDirectoryPath: string = path.join('test', 'tmp');
 
     before(() => {
         mkdirp.sync(tmpDirectoryPath);
@@ -21,7 +22,7 @@ describe('SourceCodeReader', () => {
         describe('Variant #1: input path is a file path', () => {
             describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName: string = 'test.js';
-                const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
                 const expectedFilesData: IFileData[] = [{
                     content: fileContent,
                     filePath: inputPath
@@ -45,7 +46,7 @@ describe('SourceCodeReader', () => {
 
             describe('Variant #2: `inputPath` is not a valid path', () => {
                 const tmpFileName: string = 'test.js';
-                const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
 
                 let testFunc: () => void;
 
@@ -60,7 +61,7 @@ describe('SourceCodeReader', () => {
 
             describe('Variant #3: `inputPath` has invalid extension', () => {
                 const tmpFileName: string = 'test.ts';
-                const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
 
                 let testFunc: () => void;
 
@@ -81,7 +82,7 @@ describe('SourceCodeReader', () => {
             describe('Variant #4: `exclude` option', () => {
                 describe('Variant #1: `inputPath` isn\'t excluded path', () => {
                     const tmpFileName: string = 'test.js';
-                    const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                    const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
                     const expectedFilesData: IFileData[] = [{
                         content: fileContent,
                         filePath: inputPath
@@ -94,7 +95,7 @@ describe('SourceCodeReader', () => {
                         filesData = new SourceCodeReader(
                             inputPath,
                             {
-                                exclude: ['**/foo.js']
+                                exclude: [path.join('**', 'foo.js')]
                             }
                         ).readSourceCode();
                     });
@@ -111,7 +112,7 @@ describe('SourceCodeReader', () => {
                 describe('Variant #2: `inputPath` is excluded path', () => {
                     describe('Variant #1: exclude by `glob` pattern', () => {
                         const tmpFileName: string = 'test.js';
-                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
 
                         let testFunc: () => void;
 
@@ -120,7 +121,7 @@ describe('SourceCodeReader', () => {
                             testFunc = () => new SourceCodeReader(
                                 inputPath,
                                 {
-                                    exclude: [`**/${tmpFileName}`]
+                                    exclude: [path.join('**', tmpFileName)]
                                 }
                             ).readSourceCode();
                         });
@@ -136,7 +137,7 @@ describe('SourceCodeReader', () => {
 
                     describe('Variant #2: exclude by file name', () => {
                         const tmpFileName: string = 'test.js';
-                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
 
                         let testFunc: () => void;
 
@@ -161,7 +162,7 @@ describe('SourceCodeReader', () => {
 
                     describe('Variant #3: exclude by file path', () => {
                         const tmpFileName: string = 'test.js';
-                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
 
                         let testFunc: () => void;
 
@@ -193,10 +194,10 @@ describe('SourceCodeReader', () => {
                 const tmpFileName2: string = 'bar.js';
                 const tmpFileName3: string = 'baz.png';
                 const tmpFileName4: string = 'bark-obfuscated.js';
-                const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                 const expectedResult: IFileData[] = [
                     {
@@ -248,16 +249,16 @@ describe('SourceCodeReader', () => {
             describe('Variant #3: `inputPath` is a directory with sub-directories', () => {
                 const parentDirectoryName1: string = 'parent1';
                 const parentDirectoryName2: string = 'parent';
-                const parentDirectoryPath1: string = `${tmpDirectoryPath}/${parentDirectoryName1}`;
-                const parentDirectoryPath2: string = `${tmpDirectoryPath}/${parentDirectoryName2}`;
+                const parentDirectoryPath1: string = path.join(tmpDirectoryPath, parentDirectoryName1);
+                const parentDirectoryPath2: string = path.join(tmpDirectoryPath, parentDirectoryName2);
                 const tmpFileName1: string = 'foo.js';
                 const tmpFileName2: string = 'bar.js';
                 const tmpFileName3: string = 'baz.js';
                 const tmpFileName4: string = 'bark.js';
-                const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                const filePath3: string = `${parentDirectoryPath1}/${tmpFileName3}`;
-                const filePath4: string = `${parentDirectoryPath2}/${tmpFileName4}`;
+                const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                const filePath3: string = path.join(parentDirectoryPath1, tmpFileName3);
+                const filePath4: string = path.join(parentDirectoryPath2, tmpFileName4);
 
                 const expectedResult: IFileData[] = [
                     {
@@ -310,10 +311,10 @@ describe('SourceCodeReader', () => {
                     const tmpFileName2: string = 'bar.js';
                     const tmpFileName3: string = 'baz.png';
                     const tmpFileName4: string = 'bark-obfuscated.js';
-                    const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                    const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                    const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                    const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                    const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                    const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                    const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                    const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                     const expectedResult: IFileData[] = [
                         {
@@ -359,10 +360,10 @@ describe('SourceCodeReader', () => {
                         const tmpFileName2: string = 'bar.js';
                         const tmpFileName3: string = 'baz.js';
                         const tmpFileName4: string = 'bark.js';
-                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                        const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                        const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                        const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                        const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                         const expectedResult: IFileData[] = [
                             {
@@ -410,10 +411,10 @@ describe('SourceCodeReader', () => {
                         const tmpFileName2: string = 'bar.js';
                         const tmpFileName3: string = 'baz.js';
                         const tmpFileName4: string = 'bark.js';
-                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                        const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                        const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                        const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                        const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                         const expectedResult: IFileData[] = [
                             {
@@ -461,10 +462,10 @@ describe('SourceCodeReader', () => {
                         const tmpFileName2: string = 'bar.js';
                         const tmpFileName3: string = 'baz.js';
                         const tmpFileName4: string = 'bark.js';
-                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                        const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                        const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                        const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                        const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                         const expectedResult: IFileData[] = [
                             {
@@ -512,10 +513,10 @@ describe('SourceCodeReader', () => {
                         const tmpFileName2: string = 'bar.js';
                         const tmpFileName3: string = 'baz.js';
                         const tmpFileName4: string = 'bark.js';
-                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
-                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
-                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
-                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+                        const filePath1: string = path.join(tmpDirectoryPath, tmpFileName1);
+                        const filePath2: string = path.join(tmpDirectoryPath, tmpFileName2);
+                        const filePath3: string = path.join(tmpDirectoryPath, tmpFileName3);
+                        const filePath4: string = path.join(tmpDirectoryPath, tmpFileName4);
 
                         let testFunc: () => void;
 
@@ -549,7 +550,7 @@ describe('SourceCodeReader', () => {
             describe('Variant #5: `inputPath` is a valid path with dot', () => {
                 const tmpDirectoryWithDotPath: string = `${tmpDirectoryPath}.bar`;
                 const tmpFileName: string = 'foo.js';
-                const filePath: string = `${tmpDirectoryWithDotPath}/${tmpFileName}`;
+                const filePath: string = path.join(tmpDirectoryWithDotPath, tmpFileName);
 
                 const expectedResult: IFileData[] = [
                     {

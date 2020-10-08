@@ -139,7 +139,7 @@ export class SourceCodeReader {
     private readDirectoryRecursive (directoryPath: string, filesData: IFileData[] = []): IFileData[] {
         fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
             .forEach((fileName: string) => {
-                const filePath: string = `${directoryPath}/${fileName}`;
+                const filePath: string = path.join(directoryPath, fileName);
 
                 if (
                     SourceCodeReader.isDirectoryPath(filePath)

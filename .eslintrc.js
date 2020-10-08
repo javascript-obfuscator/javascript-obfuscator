@@ -205,7 +205,7 @@ module.exports = {
         "import/order": "off",
         "indent": "off",
         "jsdoc/no-types": "off",
-        "linebreak-style": "error",
+        "linebreak-style": "off",
         "max-classes-per-file": [
             "error",
             1

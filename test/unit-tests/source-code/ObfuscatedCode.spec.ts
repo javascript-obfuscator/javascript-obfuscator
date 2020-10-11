@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { assert } from 'chai';
 
-import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';

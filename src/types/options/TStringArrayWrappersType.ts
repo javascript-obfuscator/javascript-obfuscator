@@ -1,4 +1,4 @@
-import { TTypeFromEnum } from '../utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../utils/TTypeFromEnum';
 
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 

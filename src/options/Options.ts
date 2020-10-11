@@ -22,7 +22,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
-import { TTypeFromEnum } from '../types/utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../types/utils/TTypeFromEnum';
 
 import { IOptions } from '../interfaces/options/IOptions';
 import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';

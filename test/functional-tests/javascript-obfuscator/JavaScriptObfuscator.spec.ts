@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { TDictionary } from '../../../src/types/TDictionary';
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
-import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 

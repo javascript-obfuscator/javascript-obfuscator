@@ -1,9 +1,9 @@
-import { MakeEnum } from '../../utils/TsEnum';
+import { Utils } from '../../utils/Utils';
 
 export const SourceMapMode: Readonly<{
     Inline: 'inline';
     Separate: 'separate';
-}> = MakeEnum({
+}> = Utils.makeEnum({
     Inline: 'inline',
     Separate: 'separate'
 });

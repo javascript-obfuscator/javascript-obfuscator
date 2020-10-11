@@ -1,7 +1,7 @@
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
-import { TTypeFromEnum } from '../../types/utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';

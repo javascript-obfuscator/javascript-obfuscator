@@ -1,11 +1,11 @@
-import { MakeEnum } from '../../../utils/TsEnum';
+import { Utils } from '../../../utils/Utils';
 
 export const OptionsPreset: Readonly<{
     Default: 'default';
     LowObfuscation: 'low-obfuscation';
     MediumObfuscation: 'medium-obfuscation';
     HighObfuscation: 'high-obfuscation';
-}> = MakeEnum({
+}> = Utils.makeEnum({
     Default: 'default',
     LowObfuscation: 'low-obfuscation',
     MediumObfuscation: 'medium-obfuscation',

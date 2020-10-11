@@ -1,9 +1,9 @@
-import { MakeEnum } from '../../../utils/TsEnum';
+import { Utils } from '../../../utils/Utils';
 
 export const StringArrayWrappersType: Readonly<{
     Variable: 'variable';
     Function: 'function';
-}> = MakeEnum({
+}> = Utils.makeEnum({
     Variable: 'variable',
     Function: 'function',
 });

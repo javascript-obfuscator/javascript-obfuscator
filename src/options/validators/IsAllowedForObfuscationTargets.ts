@@ -1,7 +1,7 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 import equal from 'fast-deep-equal';
 
-import { TTypeFromEnum } from '../../types/utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 

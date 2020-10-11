@@ -1,4 +1,4 @@
-import { TTypeFromEnum } from '../utils/TTypeFromEnym';
+import { TTypeFromEnum } from '../utils/TTypeFromEnum';
 
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 

@@ -12,6 +12,7 @@ import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { CustomCodeHelpersTransformer } from '../../../node-transformers/preparing-transformers/CustomCodeHelpersTransformer';
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
+import { ForceTransformStringObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ForceTransformStringObfuscatingGuard';
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
@@ -40,6 +41,10 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .to(ParentificationTransformer)
         .whenTargetNamed(NodeTransformer.ParentificationTransformer);
 
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(VariablePreserveTransformer)
+        .whenTargetNamed(NodeTransformer.VariablePreserveTransformer);
+
     // obfuscating guards
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
         .to(BlackListObfuscatingGuard)
@@ -52,13 +57,14 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .whenTargetNamed(ObfuscatingGuard.ConditionalCommentObfuscatingGuard);
 
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
+        .to(ForceTransformStringObfuscatingGuard)
+        .inSingletonScope()
+        .whenTargetNamed(ObfuscatingGuard.ForceTransformStringObfuscatingGuard);
+
+    bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
         .to(ReservedStringObfuscatingGuard)
         .inSingletonScope()
         .whenTargetNamed(ObfuscatingGuard.ReservedStringObfuscatingGuard);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(VariablePreserveTransformer)
-        .whenTargetNamed(NodeTransformer.VariablePreserveTransformer);
 
     // obfuscating guards factory
     bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard)

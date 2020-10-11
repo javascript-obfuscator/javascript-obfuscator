@@ -171,62 +171,41 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
     });
 
-    describe('isIncrementedMangledName', () => {
-        const names: [nameA: string, nameB: string, result: boolean][] = [
-            ['aa', 'aa', false],
+    describe('isIncrementedMangledName', function () {
+        this.timeout(60000);
 
-            ['a', '9', true],
-            ['9', 'a', false],
+        const samplesCount: number = 1000000;
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            ['b', 'a', true],
-            ['a', 'b', false],
+        inversifyContainerFacade.load('', '', {});
+        const identifierNamesGenerator: IIdentifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+            ServiceIdentifiers.IIdentifierNamesGenerator,
+            IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+        );
 
-            ['A', 'z', true],
-            ['z', 'A', false],
+        let isSuccessComparison: boolean = true;
+        let mangledName: string = '';
+        let prevMangledName: string = '9';
 
-            ['B', 'A', true],
-            ['A', 'B', false],
+        for (let sample = 0; sample <= samplesCount; sample++) {
+            let resultNormal: boolean;
+            let resultReversed: boolean;
 
-            ['a0', 'Z', true],
-            ['Z', 'a0', false],
+            mangledName = identifierNamesGenerator.generateNext();
+            resultNormal = MangledIdentifierNamesGenerator.isIncrementedMangledName(mangledName, prevMangledName);
+            resultReversed = MangledIdentifierNamesGenerator.isIncrementedMangledName(prevMangledName, mangledName);
 
-            ['a9', 'a0', true],
-            ['a0', 'a9', false],
+            if (!resultNormal || resultReversed) {
+                isSuccessComparison = false;
+                break;
+            }
 
-            ['z0', 'a0', true],
-            ['a0', 'z0', false],
+            prevMangledName = mangledName;
+        }
 
-            ['a0', 'a', true],
-            ['a', 'a0', false],
-
-            ['A0', 'a0', true],
-            ['a0', 'A0', false],
-
-            ['z1', 'a0', true],
-            ['a0', 'z1', false],
-
-            ['aa0', 'ZZ', true],
-            ['ZZ', 'aa0', false],
-
-            ['aaA', 'aa0', true],
-            ['aa0', 'aaA', false]
-        ];
-
-        names.forEach(([nameA, nameB, expectedResult], index: number) => {
-            describe(`Variant #${index + 1}: \`${nameA}\` and \`${nameB}\``, () => {
-                let result: boolean;
-
-                beforeEach(() => {
-                    console.time();
-                    result = MangledIdentifierNamesGenerator.isIncrementedMangledName(nameA, nameB);
-                    console.timeEnd();
-                });
-
-                it('should compare mangled names', () => {
-                    assert.equal(result, expectedResult);
-                });
-            });
-        })
+        it('should correctly compare mangled names', () => {
+            assert.isTrue(isSuccessComparison);
+        });
     });
 
     describe('isValidIdentifierName', () => {

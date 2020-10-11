@@ -64,6 +64,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} prevName
      * @returns {boolean}
      */
+    // eslint-disable-next-line complexity
     public static isIncrementedMangledName (nextName: string, prevName: string): boolean {
         if (nextName === prevName) {
             return false;
@@ -76,12 +77,25 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             return nextNameLength > prevNameLength;
         }
 
+        let isIncrementedPrevCharacter: boolean = false;
+
         for (let i: number = 0; i < nextNameLength; i++) {
             const nextNameCharacter: string = nextName[i];
             const prevNameCharacter: string = prevName[i];
 
             if (nextNameCharacter === prevNameCharacter) {
                 continue;
+            }
+
+            const isDigitNextNameCharacter: boolean = MangledIdentifierNamesGenerator.isDigitCharacter(nextNameCharacter);
+            const isDigitPrevNameCharacter: boolean = MangledIdentifierNamesGenerator.isDigitCharacter(prevNameCharacter);
+
+            if (
+                isIncrementedPrevCharacter
+                && isDigitNextNameCharacter
+                && !isDigitPrevNameCharacter
+            ) {
+                return true;
             }
 
             const isUpperCaseNextNameCharacter: boolean = MangledIdentifierNamesGenerator.isUpperCaseCharacter(nextNameCharacter);
@@ -98,6 +112,12 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             ) {
                 return false;
             }
+
+            isIncrementedPrevCharacter = nextNameCharacter > prevNameCharacter;
+
+            if (nextNameCharacter < prevNameCharacter) {
+                return false;
+            }
         }
 
         return nextName > prevName;
@@ -109,6 +129,14 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     private static isUpperCaseCharacter (string: string): boolean {
         return /^[A-Z]*$/.test(string);
+    }
+
+    /**
+     * @param {string} character
+     * @returns {boolean}
+     */
+    private static isDigitCharacter (string: string): boolean {
+        return /^[0-9]*$/.test(string);
     }
 
     /**

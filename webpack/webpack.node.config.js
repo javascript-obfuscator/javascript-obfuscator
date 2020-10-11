@@ -35,7 +35,7 @@ module.exports = {
         extensions: ['.ts']
     },
     cache: {
-        type: "filesystem",
+        type: 'filesystem',
         buildDependencies: {
             config: [
                 __filename

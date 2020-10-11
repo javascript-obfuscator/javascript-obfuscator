@@ -13,7 +13,7 @@ describe('JavaScriptObfuscator memory', function () {
     const gcDiffThreshold: number = 10;
     const allowedHeapDiffThreshold: number = 80;
 
-    this.timeout(100000);
+    this.timeout(250000);
 
     describe('memory: heap usage', () => {
         it('should keep heap usage without memory leaks', () => {
@@ -64,8 +64,8 @@ describe('JavaScriptObfuscator memory', function () {
 
             const sortedMaxHeapUsed: number[] = [...maxHeapUsed].sort((a: number, b: number) => a - b);
 
-            const firstMaxHeapMBUsed: number = sortedMaxHeapUsed[0];
-            const lastMaxHeapMbUsed: number = sortedMaxHeapUsed[sortedMaxHeapUsed.length - 1];
+            const firstMaxHeapMBUsed: number = sortedMaxHeapUsed[0] ?? 0;
+            const lastMaxHeapMbUsed: number = sortedMaxHeapUsed[sortedMaxHeapUsed.length - 1] ?? 0;
 
             const diff: number = lastMaxHeapMbUsed - firstMaxHeapMBUsed;
 

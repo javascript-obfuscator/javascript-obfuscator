@@ -1,4 +1,0 @@
-#!/bin/bash
-
-$(yarn bin)/tsc -p test/tsconfig.test.json --outDir test-tmp &&
-rsync -a --prune-empty-dirs --include '*/' --include '*.js' --include '*.json' --exclude '*' test/ test-tmp/test/

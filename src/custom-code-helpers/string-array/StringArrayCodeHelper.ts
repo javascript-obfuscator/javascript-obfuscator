@@ -9,6 +9,7 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -16,6 +17,7 @@ import { StringArrayTemplate } from './templates/string-array/StringArrayTemplat
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
+import { StringUtils } from '../../utils/StringUtils';
 
 @injectable()
 export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
@@ -81,7 +83,21 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
     protected getCodeHelperTemplate (): string {
         return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
             stringArrayName: this.stringArrayName,
-            stringArray: this.stringArrayStorage.toString()
+            stringArrayStorageItems: this.getEncodedStringArrayStorageItems()
         });
+    }
+
+    /**
+     * @returns {string}
+     */
+    private getEncodedStringArrayStorageItems (): string {
+        return Array
+            .from(this.stringArrayStorage.getStorage().values())
+            .map((stringArrayStorageItemData: IStringArrayStorageItemData): string => {
+                const escapedEncodedValue: string = StringUtils.escapeJsString(stringArrayStorageItemData.encodedValue);
+
+                return `'${escapedEncodedValue}'`;
+            })
+            .toString();
     }
 }

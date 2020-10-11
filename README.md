@@ -35,7 +35,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_shield)
 [![Build Status](https://travis-ci.com/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.com/javascript-obfuscator/javascript-obfuscator)
-[![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator)
 [![Backers on Open Collective](https://opencollective.com/javascript-obfuscator/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 [![xscode](https://img.shields.io/badge/Available%20on-xs%3Acode-blue?style=?style=plastic&logo=appveyor&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////////VXz1bAAAAAJ0Uk5T/wDltzBKAAAAlUlEQVR42uzXSwqAMAwE0Mn9L+3Ggtgkk35QwcnSJo9S+yGwM9DCooCbgn4YrJ4CIPUcQF7/XSBbx2TEz4sAZ2q1RAECBAiYBlCtvwN+KiYAlG7UDGj59MViT9hOwEqAhYCtAsUZvL6I6W8c2wcbd+LIWSCHSTeSAAECngN4xxIDSK9f4B9t377Wd7H5Nt7/Xz8eAgwAvesLRjYYPuUAAAAASUVORK5CYII=)](https://xscode.com/sanex3339/javascript-obfuscator)
@@ -307,7 +307,7 @@ Kind of variables of inserted nodes will auto-detected, based on most prevailing
 ## Conflicts of identifier names between different files
 
 During obfuscation of the different files, the same names can be generated for the global identifiers between these files.
-To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersPrefix) option. 
+To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersprefix) option. 
 
 When using CLI this prefix will be added automatically.
 
@@ -339,6 +339,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    forceTransformStrings: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
@@ -391,6 +392,7 @@ Following options are available for the JS Obfuscator:
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
+    --force-transform-strings '<list>' (comma separated)
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
@@ -422,6 +424,8 @@ Following options are available for the JS Obfuscator:
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
 ```
+
+<!-- ##options-start## -->
 
 ### `compact`
 Type: `boolean` Default: `true`
@@ -656,13 +660,32 @@ Type: `string[]` Default: `[]`
 
 A file names or globs which indicates files to exclude from obfuscation. 
 
+### `forceTransformStrings`
+Type: `string[]` Default: `[]`
+
+Enables force transformation of string literals, which being matched by passed RegExp patterns.
+
+##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringarraythreshold) (or possible other thresholds in the future)
+
+The option has a priority over `reservedStrings` option but hasn't a priority over `conditional comments`.
+
+Example:
+```ts
+	{
+		forceTransformStrings: [
+			'some-important-value',
+			'some-string_\d'
+		]
+	}
+```
+
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`
 
 Sets identifier names generator.
 
 Available values:
-* `dictionary`: identifier names from [`identifiersDictionary`](#identifiersDictionary) list
+* `dictionary`: identifier names from [`identifiersDictionary`](#identifiersdictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
 * `mangled-shuffled`: same as `mangled` but with shuffled alphabet
@@ -670,7 +693,7 @@ Available values:
 ### `identifiersDictionary`
 Type: `string[]` Default: `[]`
 
-Sets identifiers dictionary for [`identifierNamesGenerator`](#identifierNamesGenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
+Sets identifiers dictionary for [`identifierNamesGenerator`](#identifiernamesgenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
 
 ### `identifiersPrefix`
 Type: `string` Default: `''`
@@ -730,9 +753,9 @@ Type: `boolean` Default: `false`
 
 Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
 
-To set format of renamed property names use [`identifierNamesGenerator`](#identifierNamesGenerator) option.
+To set format of renamed property names use [`identifierNamesGenerator`](#identifiernamesgenerator) option.
 
-To control which properties will be renamed use [`reservedNames`](#reservedNames) option.
+To control which properties will be renamed use [`reservedNames`](#reservednames) option.
 
 Example: 
 ```ts
@@ -906,7 +929,7 @@ Specifies source map generation mode:
 ### `splitStrings`
 Type: `boolean` Default: `false`
 
-Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitStringsChunkLength) option value.
+Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitstringschunklength) option value.
 
 Example:
 ```ts
@@ -924,7 +947,7 @@ Example:
 ### `splitStringsChunkLength`
 Type: `number` Default: `10`
 
-Sets chunk length of [`splitStrings`](#splitStrings) option.
+Sets chunk length of [`splitStrings`](#splitstrings) option.
 
 ### `stringArray`
 Type: `boolean` Default: `true`
@@ -1012,7 +1035,7 @@ const eagle = _0x26ca42('0x5');
 ### `stringArrayWrappersChainedCalls`
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
 
 Enables the chained calls between `string array` wrappers.
 
@@ -1067,7 +1090,7 @@ function test() {
 ### `stringArrayWrappersType`
 Type: `string` Default: `variable`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringArrayWrappersCount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
 
 Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
 
@@ -1309,6 +1332,8 @@ Performance will slightly slower than without obfuscation
     unicodeEscapeSequence: false
 }
 ```
+
+<!-- ##options-end## -->
 
 ## Frequently Asked Questions
 

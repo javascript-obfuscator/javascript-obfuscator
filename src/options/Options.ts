@@ -129,6 +129,16 @@ export class Options implements IOptions {
     public readonly domainLock!: string[];
 
     /**
+     * @type {string[]}
+     */
+    @IsArray()
+    @ArrayUnique()
+    @IsString({
+        each: true
+    })
+    public readonly forceTransformStrings!: string[];
+
+    /**
      * @type {IdentifierNamesGenerator}
      */
     @IsIn([

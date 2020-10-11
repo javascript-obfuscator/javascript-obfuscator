@@ -869,6 +869,52 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('Eval `Hello World`', function () {
+            this.timeout(20000);
+
+            const samplesCount: number = 100;
+            const expectedEvaluationResult: string = 'Hello World';
+            let isEvaluationSuccessful: boolean = true;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/eval-hello-world.js');
+
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            compact: false,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            disableConsoleOutput: true,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            renameProperties: true,
+                            simplify: false,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersChainedCalls: true,
+                            stringArrayWrappersCount: 1,
+                            stringArrayWrappersType: StringArrayWrappersType.Variable
+                        }
+                    ).getObfuscatedCode();
+
+                    const evaluationResult: string = eval(obfuscatedCode);
+
+                    if (evaluationResult !== expectedEvaluationResult) {
+                        isEvaluationSuccessful = false;
+                        break;
+                    }
+                }
+            });
+
+            it('should correctly evaluate obfuscated code', () => {
+                assert.equal(isEvaluationSuccessful, true);
+            });
+        });
+
         describe('Identifier names collision between base code and appended string array nodes', function () {
             this.timeout(10000);
 

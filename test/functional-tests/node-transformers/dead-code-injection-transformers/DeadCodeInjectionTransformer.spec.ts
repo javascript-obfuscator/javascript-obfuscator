@@ -438,6 +438,57 @@ describe('DeadCodeInjectionTransformer', () => {
                     assert.equal(superExpressionMatchesLength, expectedSuperExpressionMatchesLength);
                 });
             });
+
+            describe('Variant #6 - for-await expression in block statement', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const awaitExpressionRegExp: RegExp = new RegExp(
+                    `for await *\\(const ${variableMatch} of *\\[]\\){}`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedAwaitExpressionMatchesLength: number = 1;
+
+                let functionMatchesLength: number = 0,
+                    awaitExpressionMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/for-await-expression.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (awaitExpressionMatches) {
+                        awaitExpressionMatchesLength = awaitExpressionMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
+                });
+            });
         });
 
         describe('Variant #5 - chance of `IfStatement` variant', () => {

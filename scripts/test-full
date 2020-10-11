@@ -1,8 +1,0 @@
-#!/bin/bash
-
-yarn run test:removeTmpDir &&
-yarn run test:compile &&
-yarn run test:dev &&
-$(yarn bin)/nyc --reporter text-summary $(yarn bin)/mocha -- test-tmp/test/index.spec.js --exit &&
-yarn run test:removeTmpDir &&
-yarn run test:mocha-memory-performance

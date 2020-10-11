@@ -205,7 +205,7 @@ module.exports = {
         "import/order": "off",
         "indent": "off",
         "jsdoc/no-types": "off",
-        "linebreak-style": "error",
+        "linebreak-style": "off",
         "max-classes-per-file": [
             "error",
             1
@@ -327,7 +327,6 @@ module.exports = {
                 "name": "error"
             }
         ],
-        "unicorn/no-array-instanceof": "error",
         "unicorn/no-nested-ternary": "error",
         "unicorn/no-unreadable-array-destructuring": "error",
         "unicorn/prefer-includes": "error",

@@ -5,6 +5,8 @@ import * as ESTree from 'estree';
 import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
+import { ObfuscatingGuardResult } from '../../../enums/node/ObfuscatingGuardResult';
+
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { NodeGuards } from '../../../node/NodeGuards';
@@ -26,19 +28,21 @@ export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
     }
 
     /**
-     * @returns {boolean}
-     * @param node
+     * @param {Node} node
+     * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): boolean {
+    public check (node: ESTree.Node): ObfuscatingGuardResult {
         if (
             this.options.reservedStrings.length
             && NodeGuards.isLiteralNode(node)
             && typeof node.value === 'string'
         ) {
-            return !this.isReservedString(node.value);
+            return !this.isReservedString(node.value)
+                ? ObfuscatingGuardResult.Transform
+                : ObfuscatingGuardResult.Ignore;
         }
 
-        return true;
+        return ObfuscatingGuardResult.Transform;
     }
 
     /**

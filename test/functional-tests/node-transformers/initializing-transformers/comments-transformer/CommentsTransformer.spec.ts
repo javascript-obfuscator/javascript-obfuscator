@@ -7,6 +7,8 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('CommentsTransformer', () => {
+    const lineSeparatorEscaped: string = '\\r?\\n';
+
     describe('Variant #1: simple comment without preserved words', () => {
         const regExp: RegExp = /^var test *= *0x1;$/;
 
@@ -72,10 +74,10 @@ describe('CommentsTransformer', () => {
 
     describe('Variant #4: comment with preserved and non-preserved words', () => {
         const regExp: RegExp = new RegExp(``+
-            `^\\/\\*\\* *\\n` +
-            ` *\\* *@license *\\n` +
-            ` *\\* *test\\n` +
-            ` *\\*\\/\\n` +
+            `^\\/\\*\\* *${lineSeparatorEscaped}` +
+            ` *\\* *@license *${lineSeparatorEscaped}` +
+            ` *\\* *test${lineSeparatorEscaped}` +
+            ` *\\*\\/${lineSeparatorEscaped}` +
             `var test *= *0x1;` +
             ` *\\/\\*\\* *@preserved *\\*\\/$` +
         ``);
@@ -117,7 +119,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('Variant #5: only comment with preserved words', () => {
+    describe('Variant #6: only comment with preserved words', () => {
         const regExp: RegExp = /^\/\/ *@license$/;
 
         let obfuscatedCode: string;
@@ -138,7 +140,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('Variant #6: simple comment with preserved words and additional code helper is inserted', () => {
+    describe('Variant #7: simple comment with preserved words and additional code helper is inserted', () => {
         describe('Variant #1: `stringArray` code helper', () => {
             const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var _0x([a-f0-9]){4} *= *\['abc'];/;
 

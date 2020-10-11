@@ -7,7 +7,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
-import { StringArrayTransformerCustomNode } from '../../../enums/custom-nodes/StringArrayTransformerCustomNode';
+import { StringArrayCustomNode } from '../../../enums/custom-nodes/StringArrayCustomNode';
 
 import { ObjectExpressionVariableDeclarationHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/ObjectExpressionVariableDeclarationHostNode';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
@@ -72,18 +72,18 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toConstructor(ObjectExpressionVariableDeclarationHostNode)
         .whenTargetNamed(ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode);
 
-    // string array transformer nodes
+    // string array nodes
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayCallNode)
-        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayCallNode);
+        .whenTargetNamed(StringArrayCustomNode.StringArrayCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayScopeCallsWrapperFunctionNode)
-        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperFunctionNode);
+        .whenTargetNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayScopeCallsWrapperVariableNode)
-        .whenTargetNamed(StringArrayTransformerCustomNode.StringArrayScopeCallsWrapperVariableNode);
+        .whenTargetNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperVariableNode);
 
     // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -118,10 +118,10 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.IOptions
             ));
 
-    // string array transformer customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayTransformerCustomNode)
+    // string array customNode constructor factory
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayCustomNode)
         .toFactory<ICustomNode>(InversifyContainerFacade
-            .getConstructorFactory<StringArrayTransformerCustomNode, ICustomNode>(
+            .getConstructorFactory<StringArrayCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ICustomCodeHelperFormatter,

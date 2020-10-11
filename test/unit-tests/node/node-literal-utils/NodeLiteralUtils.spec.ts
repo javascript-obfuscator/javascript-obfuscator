@@ -6,6 +6,50 @@ import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeLiteralUtils } from '../../../../src/node/NodeLiteralUtils';
 
 describe('NodeLiteralUtils', () => {
+    describe('isStringLiteralNode', () => {
+        describe('Variant #1: string literal node', () => {
+            let result: boolean;
+
+            before(() => {
+                const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                result = NodeLiteralUtils.isStringLiteralNode(literalNode);
+            });
+
+            it('should return `true` for string literal node', () => {
+                assert.isTrue(result);
+            });
+        });
+
+        describe('Variant #2: number literal node', () => {
+            let result: boolean;
+
+            before(() => {
+                const literalNode: ESTree.Literal = NodeFactory.literalNode(123);
+
+                result = NodeLiteralUtils.isStringLiteralNode(literalNode);
+            });
+
+            it('should return `false` for number literal node', () => {
+                assert.isFalse(result);
+            });
+        });
+
+        describe('Variant #3: boolean literal node', () => {
+            let result: boolean;
+
+            before(() => {
+                const literalNode: ESTree.Literal = NodeFactory.literalNode(true);
+
+                result = NodeLiteralUtils.isStringLiteralNode(literalNode);
+            });
+
+            it('should return `false` for boolean literal node', () => {
+                assert.isFalse(result);
+            });
+        });
+    });
+
     describe('isProhibitedLiteralNode', () => {
         describe('String literal node', () => {
             describe('Variant #1: base string literal node', () => {

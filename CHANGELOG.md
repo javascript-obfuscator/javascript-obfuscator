@@ -1,5 +1,11 @@
 Change Log
 
+v2.6.0
+---
+* Migration to `webpack@5`
+* Optimized performance of `ExpressionStatementsMergeTransformer` when `simplify` option is enabled
+
+
 v2.5.0
 ---
 * Improved hierarchy of generated directories when `--output` is a directory path

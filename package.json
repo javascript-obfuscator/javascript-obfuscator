@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -21,9 +21,9 @@
   },
   "types": "index.d.ts",
   "dependencies": {
-    "@gradecam/tsenum": "1.2.0",
     "@nuxtjs/opencollective": "0.2.2",
     "acorn": "8.0.3",
+    "assert": "^2.0.0",
     "chalk": "4.1.0",
     "chance": "1.1.7",
     "class-validator": "0.12.2",

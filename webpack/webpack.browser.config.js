@@ -21,6 +21,9 @@ module.exports = {
         ]
     },
     resolve: {
+        alias: {
+            assert: 'assert'
+        },
         extensions: ['.ts', '.js']
     },
     plugins: [

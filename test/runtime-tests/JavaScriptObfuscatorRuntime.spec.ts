@@ -209,7 +209,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     `
                         ${getEnvironmentCode()}
                         ${obfuscatedCode}
-                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                        module.exports.JavaScriptObfuscator.obfuscate('var foo = 1;').getObfuscatedCode();
                     `,
                     evaluationTimeout
                 )

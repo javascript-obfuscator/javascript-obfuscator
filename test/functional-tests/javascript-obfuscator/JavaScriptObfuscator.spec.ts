@@ -1,9 +1,9 @@
 import { assert } from 'chai';
-import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { TDictionary } from '../../../src/types/TDictionary';
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
+import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnym';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
@@ -921,12 +921,12 @@ describe('JavaScriptObfuscator', () => {
             const samplesCount: number = 30;
 
             let areCollisionsExists: boolean = false;
-            let obfuscateFunc: (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => string;
+            let obfuscateFunc: (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
 
-                obfuscateFunc = (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => {
+                obfuscateFunc = (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => {
                     const obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
@@ -945,7 +945,7 @@ describe('JavaScriptObfuscator', () => {
                 [
                     IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                ].forEach((identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => {
+                ].forEach((identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => {
                     for (let i = 0; i < samplesCount; i++) {
                         try {
                             eval(obfuscateFunc(identifierNamesGenerator));

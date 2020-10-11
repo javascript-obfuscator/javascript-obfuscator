@@ -1,4 +1,4 @@
-import { MakeEnum } from '@gradecam/tsenum';
+import { MakeEnum } from '../../../utils/TsEnum';
 
 export const OptionsPreset: Readonly<{
     Default: 'default';

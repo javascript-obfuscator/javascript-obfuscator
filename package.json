@@ -23,7 +23,7 @@
   "dependencies": {
     "@nuxtjs/opencollective": "0.2.2",
     "acorn": "8.0.3",
-    "assert": "^2.0.0",
+    "assert": "2.0.0",
     "chalk": "4.1.0",
     "chance": "1.1.7",
     "class-validator": "0.12.2",
@@ -38,6 +38,7 @@
     "md5": "2.3.0",
     "mkdirp": "1.0.4",
     "multimatch": "4.0.0",
+    "process": "0.11.10",
     "reflect-metadata": "0.1.13",
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",

@@ -70,8 +70,7 @@ module.exports = {
         })
     ],
     output: {
-        libraryTarget:  'commonjs2',
-        library: 'JavaScriptObfuscator'
+        libraryTarget:  'commonjs2'
     },
     stats: {
         excludeModules: true

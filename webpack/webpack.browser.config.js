@@ -36,6 +36,9 @@ module.exports = {
         ),
         new webpack.EnvironmentPlugin({
             VERSION: packageJson.version
+        }),
+        new webpack.ProvidePlugin({
+            process: ['process']
         })
     ],
     output: {

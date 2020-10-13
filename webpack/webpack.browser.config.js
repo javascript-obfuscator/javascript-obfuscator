@@ -21,6 +21,9 @@ module.exports = {
         ]
     },
     resolve: {
+        alias: {
+            assert: 'assert'
+        },
         extensions: ['.ts', '.js']
     },
     plugins: [
@@ -33,6 +36,9 @@ module.exports = {
         ),
         new webpack.EnvironmentPlugin({
             VERSION: packageJson.version
+        }),
+        new webpack.ProvidePlugin({
+            process: ['process']
         })
     ],
     output: {
@@ -44,7 +50,7 @@ module.exports = {
         hints: false
     },
     stats: {
-        maxModules: 0,
+        excludeModules: true,
         warnings: false
     }
 };

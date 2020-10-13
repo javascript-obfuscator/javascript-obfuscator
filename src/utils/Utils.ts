@@ -57,4 +57,15 @@ export class Utils {
 
         return `${baseIdentifiersPrefix}${sourceCodeIndex}`;
     }
+
+    /**
+     * @param {TObject} enumLikeObject
+     * @returns {Readonly<TObject>}
+     */
+    public static makeEnum<
+        TObject extends {[index: string]: TValue},
+        TValue extends string
+    > (enumLikeObject: TObject): Readonly<TObject> {
+        return Object.freeze({...enumLikeObject});
+    }
 }

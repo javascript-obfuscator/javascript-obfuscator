@@ -1,5 +1,3 @@
-import { TypeFromEnum } from '@gradecam/tsenum';
-
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
@@ -24,6 +22,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
+import { TTypeFromEnum } from '../types/utils/TTypeFromEnum';
 
 import { IOptions } from '../interfaces/options/IOptions';
 import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
@@ -147,7 +146,7 @@ export class Options implements IOptions {
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
         IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
     ])
-    public readonly identifierNamesGenerator!: TypeFromEnum<typeof IdentifierNamesGenerator>;
+    public readonly identifierNamesGenerator!: TTypeFromEnum<typeof IdentifierNamesGenerator>;
 
     /**
      * @type {string}
@@ -279,7 +278,7 @@ export class Options implements IOptions {
      * @type {SourceMapMode}
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
-    public readonly sourceMapMode!: TypeFromEnum<typeof SourceMapMode>;
+    public readonly sourceMapMode!: TTypeFromEnum<typeof SourceMapMode>;
 
     /**
      * @type {boolean}
@@ -340,7 +339,7 @@ export class Options implements IOptions {
      * @type {ObfuscationTarget}
      */
     @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node])
-    public readonly target!: TypeFromEnum<typeof ObfuscationTarget>;
+    public readonly target!: TTypeFromEnum<typeof ObfuscationTarget>;
 
     /**
      * @type {boolean}

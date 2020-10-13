@@ -10,6 +10,7 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { MangledShuffledIdentifierNamesGenerator } from '../../../../src/generators/identifier-names-generators/MangledShuffledIdentifierNamesGenerator';
 
 describe('MangledShuffledIdentifierNamesGenerator', () => {
     describe('generateNext', () => {
@@ -110,6 +111,45 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             it('should return mangled name with prefix', () => {
                 assert.match(mangledIdentifierName, expectedMangledIdentifierNameRegExp);
             });
+        });
+    });
+
+    describe('isIncrementedMangledName', function () {
+        this.timeout(60000);
+
+        const samplesCount: number = 1000000;
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+        inversifyContainerFacade.load('', '', {});
+        const identifierNamesGenerator: IIdentifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+            ServiceIdentifiers.IIdentifierNamesGenerator,
+            IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+        );
+
+        let isSuccessComparison: boolean = true;
+        let mangledName: string = '';
+        let prevMangledName: string = '9';
+
+        for (let sample = 0; sample <= samplesCount; sample++) {
+            let resultNormal: boolean;
+            let resultReversed: boolean;
+
+            mangledName = identifierNamesGenerator.generateNext();
+            resultNormal = (<MangledShuffledIdentifierNamesGenerator>identifierNamesGenerator)
+                .isIncrementedMangledName(mangledName, prevMangledName);
+            resultReversed = (<MangledShuffledIdentifierNamesGenerator>identifierNamesGenerator)
+                .isIncrementedMangledName(prevMangledName, mangledName);
+
+            if (!resultNormal || resultReversed) {
+                isSuccessComparison = false;
+                break;
+            }
+
+            prevMangledName = mangledName;
+        }
+
+        it('should correctly compare mangled names', () => {
+            assert.isTrue(isSuccessComparison);
         });
     });
 });

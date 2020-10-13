@@ -1,5 +1,11 @@
 Change Log
 
+v2.6.0
+---
+* Migration to `webpack@5`
+* Optimized performance of `ExpressionStatementsMergeTransformer` when `simplify` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/777
+* Fixed broken `identifierNamesGenerator: 'mangled-shuffled'` after `2.2.0`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/778
+
 v2.5.0
 ---
 * Improved hierarchy of generated directories when `--output` is a directory path

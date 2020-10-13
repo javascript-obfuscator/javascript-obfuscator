@@ -1,6 +1,7 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { TypeFromEnum } from '@gradecam/tsenum';
 import equal from 'fast-deep-equal';
+
+import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
@@ -15,7 +16,7 @@ import { DEFAULT_PRESET } from '../presets/Default';
  * @returns {(options: IOptions, propertyName: keyof IOptions) => void}
  */
 export function IsAllowedForObfuscationTargets (
-    obfuscationTargets: TypeFromEnum<typeof ObfuscationTarget>[],
+    obfuscationTargets: TTypeFromEnum<typeof ObfuscationTarget>[],
     validationOptions?: ValidationOptions
 ): (options: IOptions, propertyName: keyof IOptions) => void {
     return (optionsObject: IOptions, propertyName: keyof IOptions): void => {

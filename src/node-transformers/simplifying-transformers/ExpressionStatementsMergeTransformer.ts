@@ -83,14 +83,16 @@ export class ExpressionStatementsMergeTransformer extends AbstractNodeTransforme
 
         if (NodeGuards.isSequenceExpressionNode(prevStatement.expression)) {
             prevStatement.expression.expressions.push(expressionStatementNode.expression);
+            NodeUtils.parentizeNode(expressionStatementNode.expression, prevStatement.expression);
         } else {
             prevStatement.expression = NodeFactory.sequenceExpressionNode([
                 prevStatement.expression,
                 expressionStatementNode.expression
             ]);
-        }
 
-        NodeUtils.parentizeAst(prevStatement);
+            NodeUtils.parentizeAst(prevStatement.expression);
+            NodeUtils.parentizeNode(prevStatement.expression, prevStatement);
+        }
 
         return estraverse.VisitorOption.Remove;
     }

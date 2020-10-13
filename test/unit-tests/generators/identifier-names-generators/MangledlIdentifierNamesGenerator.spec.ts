@@ -192,8 +192,10 @@ describe('MangledIdentifierNamesGenerator', () => {
             let resultReversed: boolean;
 
             mangledName = identifierNamesGenerator.generateNext();
-            resultNormal = MangledIdentifierNamesGenerator.isIncrementedMangledName(mangledName, prevMangledName);
-            resultReversed = MangledIdentifierNamesGenerator.isIncrementedMangledName(prevMangledName, mangledName);
+            resultNormal = (<MangledIdentifierNamesGenerator>identifierNamesGenerator)
+                .isIncrementedMangledName(mangledName, prevMangledName);
+            resultReversed = (<MangledIdentifierNamesGenerator>identifierNamesGenerator)
+                .isIncrementedMangledName(prevMangledName, mangledName);
 
             if (!resultNormal || resultReversed) {
                 isSuccessComparison = false;

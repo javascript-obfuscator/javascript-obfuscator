@@ -1,8 +1,7 @@
-import { TypeFromEnum } from '@gradecam/tsenum';
-
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
+import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
@@ -19,7 +18,7 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly forceTransformStrings: string[];
-    readonly identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>;
+    readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;
     readonly inputFileName: string;
@@ -38,7 +37,7 @@ export interface IOptions {
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
-    readonly sourceMapMode: TypeFromEnum<typeof SourceMapMode>;
+    readonly sourceMapMode: TTypeFromEnum<typeof SourceMapMode>;
     readonly splitStrings: boolean;
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
@@ -47,7 +46,7 @@ export interface IOptions {
     readonly stringArrayWrappersCount: number;
     readonly stringArrayWrappersType: TStringArrayWrappersType;
     readonly stringArrayThreshold: number;
-    readonly target: TypeFromEnum<typeof ObfuscationTarget>;
+    readonly target: TTypeFromEnum<typeof ObfuscationTarget>;
     readonly transformObjectKeys: boolean;
     readonly unicodeEscapeSequence: boolean;
 }

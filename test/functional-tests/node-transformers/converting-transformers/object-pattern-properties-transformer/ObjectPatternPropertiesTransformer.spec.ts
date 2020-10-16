@@ -65,6 +65,37 @@ describe('ObjectPatternPropertiesTransformer', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
+
+        describe('Variant #3: issue 781. Wrong parentize of cloned `propertyNode` value', () => {
+            const regExp: RegExp = new RegExp(
+                'const { *' +
+                    'foo: *_0x([a-f0-9]){4,6}, *' +
+                    'bar: *_0x([a-f0-9]){4,6} *' +
+                '} *= *{}; *' +
+                'const _0x([a-f0-9]){4,6} *= *{};' +
+                '_0x([a-f0-9]){4,6}\\[\'prop\'] *= *0x1;' +
+                'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6};'
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-scope-wrong-parentize.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: false,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should transform object properties', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
     });
 
     describe('Variant #2: global scope', () => {

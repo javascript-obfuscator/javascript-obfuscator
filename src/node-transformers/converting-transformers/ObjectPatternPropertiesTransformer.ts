@@ -77,7 +77,7 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
         propertyNode.shorthand = false;
         propertyNode.value = NodeUtils.clone(propertyNode.value);
 
-        NodeUtils.parentizeNode(propertyNode.value, parentNode);
+        NodeUtils.parentizeNode(propertyNode.value, propertyNode);
 
         return propertyNode;
     }

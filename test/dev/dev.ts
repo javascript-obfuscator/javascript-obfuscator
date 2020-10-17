@@ -1,24 +1,27 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-           var test = '\\nreturn \\n//# sourceURL= there can only be \\'^\\' and \\'!\\' markers in a subscription marble diagram.';
-           
-           console.log(test);
+            function foo () {
+                const {
+                    qq,
+                    qqq,
+                } = object;
+            
+                const foo = {
+                    prop: 1
+                };
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-            stringArray: true,
-            stringArrayThreshold: 1,
-            unicodeEscapeSequence: false
+            transformObjectKeys: true
         }
     ).getObfuscatedCode();
 

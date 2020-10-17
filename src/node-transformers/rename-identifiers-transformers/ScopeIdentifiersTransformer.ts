@@ -296,6 +296,7 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
             && !parentNode.computed
             && NodeGuards.isIdentifierNode(parentNode.key)
             && NodeGuards.isIdentifierNode(node)
+            && parentNode.shorthand
             && parentNode.key.name === node.name;
     }
 

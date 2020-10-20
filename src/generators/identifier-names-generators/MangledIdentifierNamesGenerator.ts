@@ -210,7 +210,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 const lastNameSequenceIndex: number = nameSequenceLength - 1;
 
                 if (indexInSequence !== lastNameSequenceIndex) {
-                    const previousNamePart: string = name.substring(0, index);
+                    const previousNamePart: string = name.slice(0, index);
                     const nextCharacter: string = nameSequence[indexInSequence + 1];
                     const zeroSequenceLength: number = nameLength - (index + 1);
                     const zeroSequenceCharacters: string = zeroSequence(zeroSequenceLength);

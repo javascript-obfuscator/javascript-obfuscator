@@ -67,7 +67,7 @@ function initializeTargetMetadata (metadataKey: string, metadataValue: any, targ
  */
 function wrapTargetMethodsInInitializedCheck (target: IInitializable, initializeMethodName: string): void {
     const ownPropertyNames: string[] = Object.getOwnPropertyNames(target);
-    const prohibitedPropertyNames: string[] = [initializeMethodName, constructorMethodName];
+    const prohibitedPropertyNames: Set<string> = new Set([initializeMethodName, constructorMethodName]);
 
     ownPropertyNames.forEach((propertyName: string) => {
         const initializablePropertiesSet: Set <string | symbol> = Reflect
@@ -75,7 +75,7 @@ function wrapTargetMethodsInInitializedCheck (target: IInitializable, initialize
         const wrappedMethodsSet: Set <string | symbol> = Reflect
             .getMetadata(wrappedMethodsSetMetadataKey, target);
 
-        const isProhibitedPropertyName: boolean = prohibitedPropertyNames.includes(propertyName)
+        const isProhibitedPropertyName: boolean = prohibitedPropertyNames.has(propertyName)
             || initializablePropertiesSet.has(propertyName)
             || wrappedMethodsSet.has(propertyName);
 

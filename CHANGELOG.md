@@ -1,5 +1,9 @@
 Change Log
 
+v2.6.2
+---
+* Fixed installation in `PowerShell`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/783
+
 v2.6.1
 ---
 * Fixed missing rename of object pattern properties in some cases. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/781

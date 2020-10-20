@@ -106,7 +106,7 @@ export class ASTParserFacade {
 
         const formattedPointer: string = ASTParserFacade.colorError('>');
         const formattedCodeSlice: string = `...${
-            errorLine.substring(startErrorIndex, endErrorIndex).replace(/^\s+/, '')
+            errorLine.slice(startErrorIndex, endErrorIndex).replace(/^\s+/, '')
         }...`;
 
         throw new Error(

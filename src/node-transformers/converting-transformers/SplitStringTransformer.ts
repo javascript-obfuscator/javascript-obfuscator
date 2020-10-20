@@ -68,6 +68,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             chunkIndex < chunksCount;
             ++chunkIndex, nextChunkStartIndex += chunkSize
         ) {
+            // eslint-disable-next-line unicorn/prefer-string-slice
             chunks[chunkIndex] = stringz.substr(string, nextChunkStartIndex, chunkSize);
         }
 

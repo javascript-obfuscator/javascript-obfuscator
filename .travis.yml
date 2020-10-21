@@ -12,6 +12,8 @@ jobs:
     - os: linux
       node_js: "13"
     - os: linux
+      node_js: "14"
+    - os: linux
       node_js: "stable"
     - os: windows
       node_js: "14"

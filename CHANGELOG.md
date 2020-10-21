@@ -3,6 +3,7 @@ Change Log
 v2.6.2
 ---
 * Fixed installation in `PowerShell`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/783
+* Tested under `Node.js@15`
 
 v2.6.1
 ---

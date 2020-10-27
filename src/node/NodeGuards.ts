@@ -136,6 +136,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isExportSpecifierNode (node: ESTree.Node): node is ESTree.ExportSpecifier {
+        return node.type === NodeType.ExportSpecifier;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
         return node.type === NodeType.ExpressionStatement
             && !('directive' in node);

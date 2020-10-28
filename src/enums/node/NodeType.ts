@@ -16,6 +16,7 @@ export enum NodeType {
     ContinueStatement = 'ContinueStatement',
     ExportAllDeclaration = 'ExportAllDeclaration',
     ExportNamedDeclaration = 'ExportNamedDeclaration',
+    ExportSpecifier = 'ExportSpecifier',
     ExpressionStatement = 'ExpressionStatement',
     ForStatement = 'ForStatement',
     ForInStatement = 'ForInStatement',

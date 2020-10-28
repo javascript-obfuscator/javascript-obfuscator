@@ -7,6 +7,7 @@ export enum NodeTransformer {
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
     EscapeSequenceTransformer = 'EscapeSequenceTransformer',
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
+    ExportSpecifierTransformer = 'ExportSpecifierTransformer',
     ExpressionStatementsMergeTransformer = 'ExpressionStatementsMergeTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',

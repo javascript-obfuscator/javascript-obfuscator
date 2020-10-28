@@ -1,5 +1,9 @@
 Change Log
 
+v2.6.3
+---
+* Added `ExportSpecifierTransformer`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/791
+
 v2.6.2
 ---
 * Fixed installation in `PowerShell`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/783

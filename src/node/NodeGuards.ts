@@ -378,6 +378,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isSpreadElementNode (node: ESTree.Node): node is ESTree.SpreadElement {
+        return node.type === NodeType.SpreadElement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isSuperNode (node: ESTree.Node): node is ESTree.Super {
         return node.type === NodeType.Super;
     }

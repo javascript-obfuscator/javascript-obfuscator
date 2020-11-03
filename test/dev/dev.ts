@@ -7,16 +7,15 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function foo () {
-                const {
-                    qq,
-                    qqq,
-                } = object;
-            
-                const foo = {
-                    prop: 1
-                };
-            }
+            const foo = { 
+                baz: 1
+            };
+            const bar = {
+                baz: 2,
+                bark: 3,
+                ...foo,
+            };
+            console.log(bar);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

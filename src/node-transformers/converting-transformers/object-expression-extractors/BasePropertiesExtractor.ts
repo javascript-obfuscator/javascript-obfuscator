@@ -152,11 +152,16 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         const expressionStatements: ESTree.ExpressionStatement[] = [];
         const removablePropertyIds: number[] = [];
 
-        for (let i: number = 0; i < propertiesLength; i++) {
+        // have to iterate in the reversed order to fast check spread elements and break iteration on them
+        for (let i: number = propertiesLength - 1; i >= 0; i--) {
             const property: (ESTree.Property | ESTree.SpreadElement) = properties[i];
 
-            // invalid property node
-            if (!NodeGuards.isPropertyNode(property) || BasePropertiesExtractor.isProhibitedPropertyNode(property)) {
+            // spread element
+            if (NodeGuards.isSpreadElementNode(property)) {
+                break;
+            }
+
+            if (BasePropertiesExtractor.isProhibitedPropertyNode(property)) {
                 continue;
             }
 
@@ -199,8 +204,8 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
             /**
              * Stage 4: filling arrays
              */
-            expressionStatements.push(expressionStatementNode);
-            removablePropertyIds.push(i);
+            expressionStatements.unshift(expressionStatementNode);
+            removablePropertyIds.unshift(i);
         }
 
         return [expressionStatements, removablePropertyIds];

@@ -1,5 +1,9 @@
 Change Log
 
+v2.6.4
+---
+* Added ignoring of all object members previous to `SpreadElement` when `transformObjectKeys` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/797
+
 v2.6.3
 ---
 * Added `ExportSpecifierTransformer`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/791

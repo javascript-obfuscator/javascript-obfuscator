@@ -741,6 +741,72 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #19: object spread as member', () => {
+            describe('Variant #1: object spread as first member', () => {
+                const match: string = `` +
+                    `const ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['baz'] *= *0x1;` +
+                    `const foo *= *${variableMatch};` +
+                    `const ${variableMatch} *= *{ *\.\.\.foo *};` +
+                    `${variableMatch}\\['baz'] *= *0x2;` +
+                    `${variableMatch}\\['bark'] *= *0x3;` +
+                    `const bar *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/object-spread-as-first-member.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn transform object expressions keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: object spread as middle member', () => {
+                const match: string = `` +
+                    `const ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['baz'] *= *0x1;` +
+                    `const foo *= *${variableMatch};` +
+                    `const ${variableMatch} *= *{ *` +
+                        `'baz': *0x2, *` +
+                        `\.\.\.foo *` +
+                    `};` +
+                    `${variableMatch}\\['bark'] *= *0x3;` +
+                    `const bar *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/object-spread-as-middle-member.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn transform object expressions keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {
@@ -1846,6 +1912,39 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             it('should keep property nodes with `get` and `set` kind in the object', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #12: object spread as last member', () => {
+            const match: string = `` +
+                `const ${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *0x1;` +
+                `const foo *= *${variableMatch};` +
+                `const ${variableMatch} *= *{ *` +
+                    `'baz': *0x2 *,` +
+                    `'bark': *0x3 *,` +
+                    `\.\.\.foo *` +
+                `};` +
+                `const bar *= *${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-spread-as-last-member.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore object expressions keys transformation', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

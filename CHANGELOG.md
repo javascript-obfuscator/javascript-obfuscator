@@ -1,5 +1,11 @@
 Change Log
 
+v2.7.0
+---
+* Switched form `escodegen` to `@javascript-obfuscator/escodegen`
+* Full support of `nullish-coalescing`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/604
+* Support for `exported` field of `ExportAllDeclaration` node. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/710
+
 v2.6.4
 ---
 * Added ignoring of all object members previous to `SpreadElement` when `transformObjectKeys` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/797

@@ -642,6 +642,30 @@ describe('JavaScriptObfuscator', () => {
         });
 
         /**
+         * https://github.com/javascript-obfuscator/javascript-obfuscator/issues/710
+         */
+        describe('export * as', () => {
+            const regExp: RegExp = /export *\* *as foo from *'bar';/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/export-all-named-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support `export * as` syntax', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        /**
          * https://github.com/estools/escodegen/pull/407
          */
         describe('valid exponentiation operator precedence', () => {
@@ -708,6 +732,48 @@ describe('JavaScriptObfuscator', () => {
             });
 
             it('should support optional chaining', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('Nullish coalescing support', () => {
+            const regExp: RegExp = /\(foo *\?\? *bar\) *&& *baz;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/nullish-coalescing-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support nullish coalescing operator', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('Numeric separators support', () => {
+            const regExp: RegExp = /const foo *= *0x64;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/numeric-separators-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support numeric separators', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });

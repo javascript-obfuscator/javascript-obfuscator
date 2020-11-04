@@ -1,5 +1,9 @@
 Change Log
 
+v2.7.1
+---
+* Updated `@javascript-obfuscator/escodegen` to `2.1.1`
+
 v2.7.0
 ---
 * Switched form `escodegen` to `@javascript-obfuscator/escodegen`

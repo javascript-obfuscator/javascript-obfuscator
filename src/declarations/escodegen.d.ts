@@ -1,13 +1,18 @@
 /* eslint-disable */
 
-import * as ESTree from 'estree';
+declare module '@javascript-obfuscator/escodegen' {
+    import * as ESTree from 'estree';
+    import * as escodegen from 'escodegen';
+    export * from 'escodegen';
 
-import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
+    export interface IGeneratorOutput {
+        code: string;
+        map: string;
+    }
 
-declare module 'escodegen' {
     export interface XVerbatimProperty {
         content?: string;
-        precedence: Precedence;
+        precedence: escodegen.Precedence;
     }
 
     /**
@@ -15,5 +20,5 @@ declare module 'escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate (ast: ESTree.Node, options?: GenerateOptions): IGeneratorOutput;
+    export function generate (ast: ESTree.Node, options?: escodegen.GenerateOptions): IGeneratorOutput;
 }

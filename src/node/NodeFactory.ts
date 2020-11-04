@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import * as escodegen from 'escodegen';
+import * as escodegen from '@javascript-obfuscator/escodegen';
 import * as ESTree from 'estree';
 
 import { TStatement } from '../types/node/TStatement';

@@ -2,7 +2,7 @@ Change Log
 
 v2.8.0
 ---
-* New option `ignoreRequireImports` prevents obfuscation of `require` imports
+* New option `ignoreRequireImports` prevents obfuscation of `require` imports. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/801
 
 v2.7.1
 ---

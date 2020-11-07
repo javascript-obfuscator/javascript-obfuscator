@@ -343,6 +343,7 @@ Following options are available for the JS Obfuscator:
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
+    ignoreRequireImports: false,
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
@@ -396,6 +397,7 @@ Following options are available for the JS Obfuscator:
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
+    --ignore-require-imports <boolean>
     --log <boolean>
     --numbers-to-expressions <boolean>
     --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]
@@ -701,6 +703,11 @@ Type: `string` Default: `''`
 Sets prefix for all global identifiers.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
+
+### `ignoreRequireImports`
+Type: `boolean` Default: `false`
+
+Prevents obfuscation of `require` imports. Could be helpful in some cases when for some reason runtime environment requires these imports with static strings only.
 
 ### `inputFileName`
 Type: `string` Default: `''`

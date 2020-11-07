@@ -166,6 +166,12 @@ export class Options implements IOptions {
     public readonly identifiersDictionary!: string[];
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly ignoreRequireImports!: boolean;
+
+    /**
      * @type {string}
      */
     @IsString()

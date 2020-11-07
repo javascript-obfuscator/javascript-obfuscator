@@ -1,5 +1,9 @@
 Change Log
 
+v2.8.0
+---
+* New option `ignoreRequireImports` prevents obfuscation of `require` imports
+
 v2.7.1
 ---
 * Updated `@javascript-obfuscator/escodegen` to `2.1.1`

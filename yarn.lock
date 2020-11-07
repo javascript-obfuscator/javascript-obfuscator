@@ -1236,7 +1236,7 @@ check-error@^1.0.2:
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
   integrity sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=
 
-chokidar@3.4.3:
+chokidar@3.4.3, chokidar@^3.4.2:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.3.tgz#c1df38231448e45ca4ac588e6c79573ba6a57d5b"
   integrity sha512-DtM3g7juCXQxFVSNPNByEC2+NImtBuxQQvWlHunpJIS5Ocr0lG306cC7FCi7cEA0fzmybPUIl4txBIobk1gGOQ==
@@ -1910,10 +1910,10 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-2.0.0.tgz#21fdc8fbcd9c795cc0321f0563702095751511a8"
   integrity sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
 
-eslint@7.12.1:
-  version "7.12.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.12.1.tgz#bd9a81fa67a6cfd51656cdb88812ce49ccec5801"
-  integrity sha512-HlMTEdr/LicJfN08LB3nM1rRYliDXOmfoO4vj39xN6BLpFzF00hbwBoqHk8UcJ2M/3nlARZWy/mslvGEuZFvsg==
+eslint@7.13.0:
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.13.0.tgz#7f180126c0dcdef327bfb54b211d7802decc08da"
+  integrity sha512-uCORMuOO8tUzJmsdRtrvcGq5qposf7Rw0LwkTJkoDbOycVQtQjmnhZSuLQnozLE4TmAzlMVV45eCHmQ1OpDKUQ==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@eslint/eslintrc" "^0.2.1"
@@ -2187,14 +2187,15 @@ fork-ts-checker-notifier-webpack-plugin@3.0.0:
   dependencies:
     node-notifier "^6.0.0"
 
-fork-ts-checker-webpack-plugin@5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.2.1.tgz#79326d869797906fa8b24e2abcf9421fc805450d"
-  integrity sha512-SVi+ZAQOGbtAsUWrZvGzz38ga2YqjWvca1pXQFUArIVXqli0lLoDQ8uS0wg0kSpcwpZmaW5jVCZXQebkyUQSsw==
+fork-ts-checker-webpack-plugin@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-6.0.0.tgz#7166d972fb07ce4b6e954085e02159a82d030d62"
+  integrity sha512-fa+ergrDxdy8d8fkCp14hy9slxrdXUnWwaHZEyM+k9qimq3RA+x3GncTz3oliTZrTshCTiFz8auPBedS19Tviw==
   dependencies:
     "@babel/code-frame" "^7.8.3"
     "@types/json-schema" "^7.0.5"
     chalk "^4.1.0"
+    chokidar "^3.4.2"
     cosmiconfig "^6.0.0"
     deepmerge "^4.2.2"
     fs-extra "^9.0.0"
@@ -4310,10 +4311,10 @@ tough-cookie@~2.5.0:
     psl "^1.1.28"
     punycode "^2.1.1"
 
-ts-loader@8.0.9:
-  version "8.0.9"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-8.0.9.tgz#890fc25f49a99124268f4e738ed22d00f666dc37"
-  integrity sha512-rQd+iIfz5z4HSVzhhRFP4M2OQ0QmihilWWauYvvowBfnRvr4DW+gqA2om70xp/07EQj1qBkLMWobnXsgmWMbmg==
+ts-loader@8.0.10:
+  version "8.0.10"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-8.0.10.tgz#4af4afb8d26847290cd010df93a4c172df92278f"
+  integrity sha512-5fVbbZldz6LQi6RQ0v1P7lZ98CZGlQyM8b4xGZXw3G/XUqL8GIH+Ib6H01nImPhkHZ9+PVXZgTb+v3fRsaIHlg==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import * as commander from 'commander';
 import * as path from 'path';
 
@@ -249,6 +250,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 '--identifiers-dictionary <list> (comma separated, without whitespaces)',
                 'Identifiers dictionary (comma separated) for `--identifier-names-generator dictionary` option',
                 ArraySanitizer
+            )
+            .option(
+                '--ignore-require-imports <boolean>', 'Prevents obfuscation of `require` imports',
+                BooleanSanitizer
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',

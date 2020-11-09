@@ -51,6 +51,7 @@ import './unit-tests/utils/Utils.spec';
  * Functional tests
  */
 import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
+import './functional-tests/analyzers/scope-analyzer/ScopeAnalyzer.spec';
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/code-transformers/preparing-transformers/hashbang-operator-transformer/HashbangOperatorTransformer.spec';
 import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';

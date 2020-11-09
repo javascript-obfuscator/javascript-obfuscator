@@ -1,5 +1,9 @@
 Change Log
 
+v2.8.1
+---
+* Fixed incorrect rename of the identifiers of the added helpers in some rare cases. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/804
+
 v2.8.0
 ---
 * New option `ignoreRequireImports` prevents obfuscation of `require` imports. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/801

@@ -46,11 +46,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      */
     private static attachMissingRanges (astTree: ESTree.Node): void {
         estraverse.replace(astTree, {
-            enter: (node: ESTree.Node): ESTree.Node => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {
                 if (!node.range) {
                     node.range = [
-                        node.parentNode?.range?.[0] ?? ScopeAnalyzer.emptyRangeValue,
-                        node.parentNode?.range?.[1] ?? ScopeAnalyzer.emptyRangeValue
+                        parentNode?.range?.[0] ?? ScopeAnalyzer.emptyRangeValue,
+                        parentNode?.range?.[1] ?? ScopeAnalyzer.emptyRangeValue
                     ];
                 }
 

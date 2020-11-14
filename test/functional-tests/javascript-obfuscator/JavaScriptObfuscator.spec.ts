@@ -918,6 +918,7 @@ describe('JavaScriptObfuscator', () => {
                             StringArrayEncoding.Base64,
                             StringArrayEncoding.Rc4
                         ],
+                        stringArrayIndexShift: true,
                         stringArrayWrappersChainedCalls: true,
                         stringArrayWrappersCount: 10,
                         stringArrayWrappersType: StringArrayWrappersType.Function,

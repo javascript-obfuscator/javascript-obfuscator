@@ -47,6 +47,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArrayEncoding: [
         StringArrayEncoding.None
     ],
+    stringArrayIndexShift: true,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersType: StringArrayWrappersType.Variable,

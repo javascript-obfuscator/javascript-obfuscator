@@ -7,6 +7,11 @@ export interface IStringArrayStorage extends IMapStorage <string, IStringArraySt
     /**
      * @returns {number}
      */
+    getIndexShiftAmount (): number;
+
+    /**
+     * @returns {number}
+     */
     getRotationAmount (): number;
 
     /**

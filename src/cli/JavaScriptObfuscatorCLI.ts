@@ -351,6 +351,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
+                '--string-array-index-shift <boolean>',
+                'Enables additional index shift for all string array calls',
+                BooleanSanitizer
+            )
+            .option(
                 '--string-array-wrappers-count <number>',
                 'Sets the count of wrappers for the string array inside each root or function scope',
                 parseInt

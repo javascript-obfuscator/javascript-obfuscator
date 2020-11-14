@@ -18,6 +18,7 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ],
+            stringArrayIndexShift: false,
             stringArrayWrappersChainedCalls: false,
             stringArrayWrappersCount: 0,
             stringArrayThreshold: 0

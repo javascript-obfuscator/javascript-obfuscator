@@ -318,6 +318,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly stringArrayIndexShift!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly stringArrayWrappersChainedCalls!: boolean;
 
     /**

@@ -31,6 +31,12 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     private index!: number;
 
     /**
+     * @type {number}
+     */
+    @initializable()
+    private indexShiftAmount!: number;
+
+    /**
      * @type {string}
      */
     @initializable()
@@ -60,15 +66,18 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     /**
      * @param {string} stringArrayCallsWrapperName
      * @param {number} index
+     * @param {number} indexShiftAmount
      * @param {string | null} decodeKey
      */
     public initialize (
         stringArrayCallsWrapperName: string,
         index: number,
+        indexShiftAmount: number,
         decodeKey: string | null
     ): void {
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
         this.index = index;
+        this.indexShiftAmount = indexShiftAmount;
         this.decodeKey = decodeKey;
     }
 
@@ -77,7 +86,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      */
     protected getNodeStructure (): TStatement[] {
         const callExpressionArgs: ESTree.Expression[] = [
-            this.getHexadecimalNode(this.index)
+            this.getHexadecimalNode(this.indexShiftAmount + this.index)
         ];
 
         if (this.decodeKey) {

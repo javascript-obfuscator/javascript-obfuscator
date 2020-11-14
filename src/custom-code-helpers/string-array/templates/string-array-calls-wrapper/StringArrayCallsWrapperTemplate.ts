@@ -4,7 +4,7 @@
 export function StringArrayCallsWrapperTemplate (): string {
     return `
         const {stringArrayCallsWrapperName} = function (index, key) {
-            index = index - 0;
+            index = index - {indexShiftAmount};
             
             let value = {stringArrayName}[index];
             

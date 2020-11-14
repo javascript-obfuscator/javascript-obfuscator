@@ -434,7 +434,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
                         stringArrayThreshold: 0.5,
-                        seed: 1
+                        seed: 3
                     });
 
                     const astTree: ESTree.Program = NodeFactory.programNode([

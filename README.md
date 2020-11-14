@@ -365,6 +365,7 @@ Following options are available for the JS Obfuscator:
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersType: 'variable',
@@ -418,6 +419,7 @@ Following options are available for the JS Obfuscator:
     --split-strings-chunk-length <number>
     --string-array <boolean>
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
+    --string-array-index-shift <boolean>
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
     --string-array-wrappers-type <string> [variable, function]
@@ -987,6 +989,13 @@ stringArrayEncoding: [
 ]
 ```
 
+### `stringArrayIndexShift`
+Type: `boolean` Default: `true`
+
+##### :warning: `stringArray` option must be enabled
+
+Enables additional index shift for all string array calls
+
 ### `stringArrayWrappersCount`
 Type: `number` Default: `1`
 
@@ -1236,6 +1245,7 @@ Performance will 50-100% slower than without obfuscation
     splitStringsChunkLength: 5,
     stringArray: true,
     stringArrayEncoding: ['rc4'],
+    stringArrayIndexShift: true,
     stringArrayWrappersCount: 5,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersType: 'function',
@@ -1271,6 +1281,7 @@ Performance will 30-35% slower than without obfuscation
     splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: ['base64'],
+    stringArrayIndexShift: true,
     stringArrayWrappersCount: 2,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersType: 'variable',
@@ -1303,6 +1314,7 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersType: 'variable',
@@ -1332,6 +1344,7 @@ Performance will slightly slower than without obfuscation
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: [],
+    stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersType: 'variable',

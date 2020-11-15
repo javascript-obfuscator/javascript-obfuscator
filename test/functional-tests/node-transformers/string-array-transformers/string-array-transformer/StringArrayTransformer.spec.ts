@@ -17,7 +17,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #1: default behaviour', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
-        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
         let obfuscatedCode: string;
 
@@ -66,9 +66,9 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #3: `stringArrayIndexShift` option is enabled', () => {
         const stringArrayIndexShiftRegExp: RegExp = /_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6} *- *(0x[a-z0-9]{1,3});/;
-        const stringArrayCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x1;/;
-        const stringArrayCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x2;/;
-        const stringArrayCallRegExp3: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x3;/;
+        const stringArrayCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x1;/;
+        const stringArrayCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x2;/;
+        const stringArrayCallRegExp3: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x3;/;
 
         const expectedEvaluationResult: string = 'foo1bar2baz3';
 
@@ -260,7 +260,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #4: same literal node values', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
-        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
         let obfuscatedCode: string;
 
@@ -311,7 +311,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #6: base64 encoding', () => {
         const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA==')}'];`);
-        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+        const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
         let obfuscatedCode: string;
 
@@ -340,7 +340,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #7: rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
-            const regExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+            const regExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0, *'.{4}'\);/;
 
             let obfuscatedCode: string;
 
@@ -364,8 +364,8 @@ describe('StringArrayTransformer', function () {
         });
 
         describe('Variant #2: multiple string literals', () => {
-            const variableRegExp1: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\('0x0', *'(.{4})'\);/;
-            const variableRegExp2: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\('0x1', *'(.{4})'\);/;
+            const variableRegExp1: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\(0x0, *'(.{4})'\);/;
+            const variableRegExp2: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\(0x1, *'(.{4})'\);/;
 
             let encodedLiteralValue1: string;
             let encodedLiteralValue2: string;
@@ -466,8 +466,8 @@ describe('StringArrayTransformer', function () {
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
 
-            const noneEncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
-            const rc4EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+            const noneEncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
+            const rc4EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0, *'.{4}'\);/;
 
             let noneEncodingMatchesCount: number = 0;
             let rc4EncodingMatchesCount: number = 0;
@@ -522,8 +522,8 @@ describe('StringArrayTransformer', function () {
             const expectedMatchesChance: number = 0.5;
             const expectedMatchesDelta: number = 0.15;
 
-            const base64EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
-            const rc4EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+            const base64EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
+            const rc4EncodingRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0, *'.{4}'\);/;
 
             let base64EncodingMatchesCount: number = 0;
             let rc4EncodingMatchesCount: number = 0;
@@ -577,7 +577,7 @@ describe('StringArrayTransformer', function () {
         const stringArrayThreshold: number = 0.5;
         const delta: number = 0.1;
 
-        const regExp1: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+        const regExp1: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
         const regExp2: RegExp = /var test *= *'test';/g;
 
         let stringArrayProbability: number,
@@ -616,7 +616,7 @@ describe('StringArrayTransformer', function () {
     });
 
     describe('Variant #12: string array calls wrapper name', () => {
-        const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
+        const regExp: RegExp = /console\[b\(0x0\)]\('a'\);/;
 
         let obfuscatedCode: string;
 
@@ -643,7 +643,7 @@ describe('StringArrayTransformer', function () {
         describe('Variant #1: base `reservedStrings` values', () => {
             describe('Variant #1: single reserved string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -702,7 +702,7 @@ describe('StringArrayTransformer', function () {
 
         describe('Variant #2: RegExp `reservedStrings` values', () => {
             describe('Variant #1: single reserved string value', () => {
-                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\(0x0\);/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
 
                 let obfuscatedCode: string;
@@ -765,7 +765,7 @@ describe('StringArrayTransformer', function () {
         describe('Variant #1: base `forceTransformStrings` values', () => {
             describe('Variant #1: single force transform string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -793,8 +793,8 @@ describe('StringArrayTransformer', function () {
             });
 
             describe('Variant #2: two force transform string values', () => {
-                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
+                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\(0x0\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x1\);/;
 
                 let obfuscatedCode: string;
 
@@ -825,7 +825,7 @@ describe('StringArrayTransformer', function () {
         describe('Variant #2: RegExp `forceTransformStrings` values', () => {
             describe('Variant #1: single force transform string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo'/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -853,8 +853,8 @@ describe('StringArrayTransformer', function () {
             });
 
             describe('Variant #2: two force transform string values', () => {
-                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x1'\);/;
+                const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\(0x0\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x1\);/;
 
                 let obfuscatedCode: string;
 
@@ -916,7 +916,7 @@ describe('StringArrayTransformer', function () {
         describe('Variant #4: Priority over `reservedStrings` option', () => {
             describe('Variant #1: base case', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
-                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -949,7 +949,7 @@ describe('StringArrayTransformer', function () {
             describe('Variant #1: base case', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
                 const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
-                const stringLiteralRegExp3: RegExp = /const baz *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                const stringLiteralRegExp3: RegExp = /const baz *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -985,7 +985,7 @@ describe('StringArrayTransformer', function () {
     describe('Variant #15: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
-            const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
+            const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\(0x0\)};/;
 
             let obfuscatedCode: string;
 
@@ -1013,7 +1013,7 @@ describe('StringArrayTransformer', function () {
 
         describe('Variant #2: computed key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['foo', *'bar'];/;
-            const objectExpressionRegExp: RegExp = /var test *= *{\[_0x([a-f0-9]){4}\('0x0'\)] *: *_0x([a-f0-9]){4}\('0x1'\)};/;
+            const objectExpressionRegExp: RegExp = /var test *= *{\[_0x([a-f0-9]){4}\(0x0\)] *: *_0x([a-f0-9]){4}\(0x1\)};/;
 
             let obfuscatedCode: string;
 

@@ -4,6 +4,7 @@ import { IdentifierNamesGenerator } from '../../enums/generators/identifier-name
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
+import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
@@ -46,6 +47,9 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArray: true,
     stringArrayEncoding: [
         StringArrayEncoding.None
+    ],
+    stringArrayIndexesType: [
+        StringArrayIndexesType.HexadecimalNumber
     ],
     stringArrayIndexShift: true,
     stringArrayWrappersChainedCalls: true,

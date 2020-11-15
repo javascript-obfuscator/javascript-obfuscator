@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { StringArrayIndexesType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
@@ -69,6 +70,9 @@ describe('EscapeSequenceTransformer', function () {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
+                    stringArrayIndexesType: [
+                        StringArrayIndexesType.HexadecimalNumericString
+                    ],
                     stringArrayThreshold: 1,
                     unicodeEscapeSequence: true
                 }
@@ -191,6 +195,9 @@ describe('EscapeSequenceTransformer', function () {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                     stringArray: true,
+                    stringArrayIndexesType: [
+                        StringArrayIndexesType.HexadecimalNumericString
+                    ],
                     stringArrayThreshold: 1,
                     stringArrayWrappersChainedCalls: true,
                     stringArrayWrappersCount: 1,

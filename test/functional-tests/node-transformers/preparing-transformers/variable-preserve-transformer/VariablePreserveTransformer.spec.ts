@@ -12,7 +12,7 @@ describe('VariablePreserveTransformer', () => {
     describe('Variant #1: string array storage name conflicts with identifier name', () => {
         describe('Variant #1: `renameGlobals` option is disabled', () => {
             const stringArrayStorageNameRegExp: RegExp = /const b *= *\['abc'];/;
-            const identifierNameRegExp: RegExp = /const a *= *c\('0x0'\);/;
+            const identifierNameRegExp: RegExp = /const a *= *c\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -41,7 +41,7 @@ describe('VariablePreserveTransformer', () => {
 
         describe('Variant #2: `renameGlobals` option is enabled', () => {
             const stringArrayStorageNameRegExp: RegExp = /const b *= *\['abc'];/;
-            const identifierNameRegExp: RegExp = /const d *= *c\('0x0'\);/;
+            const identifierNameRegExp: RegExp = /const d *= *c\(0x0\);/;
 
             let obfuscatedCode: string;
 

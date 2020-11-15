@@ -1,4 +1,5 @@
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
+import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
 import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
@@ -43,6 +44,7 @@ export interface IOptions {
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding[];
+    readonly stringArrayIndexesType: TStringArrayIndexesType[];
     readonly stringArrayIndexShift: boolean;
     readonly stringArrayWrappersChainedCalls: boolean;
     readonly stringArrayWrappersCount: number;

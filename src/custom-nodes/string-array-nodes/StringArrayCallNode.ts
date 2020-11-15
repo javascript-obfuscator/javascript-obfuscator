@@ -86,7 +86,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      */
     protected getNodeStructure (): TStatement[] {
         const callExpressionArgs: ESTree.Expression[] = [
-            this.getHexadecimalNode(this.indexShiftAmount + this.index)
+            this.getStringArrayCallIndexNode(this.indexShiftAmount + this.index)
         ];
 
         if (this.decodeKey) {

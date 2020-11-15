@@ -1,6 +1,7 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -34,6 +35,9 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             rotateStringArray: true,
             shuffleStringArray: true,
             stringArray: true,
+            stringArrayIndexesType: [
+                StringArrayIndexesType.HexadecimalNumber
+            ],
             stringArrayIndexShift: true,
             stringArrayThreshold: 1,
             stringArrayWrappersCount: 2,

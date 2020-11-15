@@ -4,10 +4,13 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+
+import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
@@ -42,20 +45,33 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      * @param {number} index
      * @returns {Expression}
      */
-    protected getHexadecimalNode (index: number): ESTree.Expression {
+    protected getStringArrayCallIndexNode (index: number): ESTree.Expression {
         const isPositive: boolean = index >= 0;
         const normalizedIndex: number = Math.abs(index);
 
-        const hexadecimalIndex: string = NumberUtils.toHex(normalizedIndex);
-        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
+        const stringArrayCallsIndexType: TStringArrayIndexesType = this.randomGenerator
+            .getRandomGenerator()
+            .pickone(this.options.stringArrayIndexesType);
+        let stringArrayCallIndexNode: ESTree.Expression;
 
-        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
+        switch (stringArrayCallsIndexType) {
+            case StringArrayIndexesType.HexadecimalNumber:
+                stringArrayCallIndexNode = this.getHexadecimalNumberCallIndexNode(normalizedIndex);
+                break;
+
+            case StringArrayIndexesType.HexadecimalNumericString:
+            default:
+                stringArrayCallIndexNode = this.getHexadecimalNumericStringCallIndexNode(normalizedIndex);
+                break;
+        }
+
+        NodeMetadata.set(stringArrayCallIndexNode, { replacedLiteral: true });
 
         const hexadecimalNode: ESTree.Expression = isPositive
-            ? hexadecimalLiteralNode
+            ? stringArrayCallIndexNode
             : NodeFactory.unaryExpressionNode(
                 '-',
-                hexadecimalLiteralNode
+                stringArrayCallIndexNode
             );
 
         NodeUtils.parentizeAst(hexadecimalNode);
@@ -73,5 +89,25 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
         NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
 
         return rc4KeyLiteralNode;
+    }
+
+    /**
+     * @param {number} index
+     * @returns {Expression}
+     */
+    private getHexadecimalNumberCallIndexNode (index: number): ESTree.Expression {
+        const hexadecimalIndex: string = NumberUtils.toHex(index);
+
+        return NodeFactory.literalNode(index, hexadecimalIndex);
+    }
+
+    /**
+     * @param {number} index
+     * @returns {Expression}
+     */
+    private getHexadecimalNumericStringCallIndexNode (index: number): ESTree.Expression {
+        const hexadecimalIndex: string = NumberUtils.toHex(index);
+
+        return NodeFactory.literalNode(hexadecimalIndex);
     }
 }

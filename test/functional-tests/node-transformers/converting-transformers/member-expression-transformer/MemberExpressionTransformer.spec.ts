@@ -31,7 +31,7 @@ describe('MemberExpressionTransformer', () => {
 
         describe('`stringArray` option is enabled', () => {
             const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log'\];/;
-            const stringArrayCallRegExp: RegExp = /var test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *console\[_0x([a-f0-9]){4}\(0x0\)\];/;
 
             let obfuscatedCode: string;
 
@@ -61,7 +61,7 @@ describe('MemberExpressionTransformer', () => {
     describe('transformation of member expression node with square brackets', () => {
         describe('Variant #1: square brackets literal ', () => {
             const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log'\];/;
-            const stringArrayCallRegExp: RegExp = /var test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *console\[_0x([a-f0-9]){4}\(0x0\)\];/;
 
             let obfuscatedCode: string;
 

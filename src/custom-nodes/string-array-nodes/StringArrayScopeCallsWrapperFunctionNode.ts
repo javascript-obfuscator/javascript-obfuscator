@@ -101,7 +101,7 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
                             NodeFactory.binaryExpressionNode(
                                 '-',
                                 firstCallArgumentIdentifierNode,
-                                this.getHexadecimalNode(this.shiftedIndex)
+                                this.getStringArrayCallIndexNode(this.shiftedIndex)
                             ),
                             secondCallArgumentIdentifierNode
                         ]

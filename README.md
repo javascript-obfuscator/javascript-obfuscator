@@ -364,6 +364,9 @@ Following options are available for the JS Obfuscator:
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
+    stringArrayCallsIndexType: [
+        'hexadecimal-number'
+    ],
     stringArrayEncoding: [],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
@@ -418,6 +421,7 @@ Following options are available for the JS Obfuscator:
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
+    --string-array-calls-index-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-index-shift <boolean>
     --string-array-wrappers-count <number>
@@ -962,7 +966,7 @@ Sets chunk length of [`splitStrings`](#splitstrings) option.
 Type: `boolean` Default: `true`
 
 Removes string literals and place them in a special array. For instance, the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
-    
+
 ### `stringArrayEncoding`
 Type: `string[]` Default: `[]`
 
@@ -988,6 +992,25 @@ stringArrayEncoding: [
     'rc4'
 ]
 ```
+
+### `stringArrayIndexesType`
+Type: `string[]` Default: `['hexadecimal-number']`
+
+##### :warning: `stringArray` option must be enabled
+
+Allows to control the type of string array call indexes.
+
+Each `stringArray` call index will be transformed by the randomly picked type from the passed list. This makes possible to use multiple types.
+
+Available values:
+* `'hexadecimal-number'` (`default`): transforms string array call indexes as hexadecimal numbers
+* `'hexadecimal-numeric-string'`: transforms string array call indexes as hexadecimal numeric string
+
+Before `2.9.0` release `javascript-obfuscator` transformed all string array call indexes with `hexadecimal-numeric-string` type. This makes some manual deobfuscation slightly harder but it allows easy detection of these calls by automatic deobfuscators.
+
+The new `hexadecimal-number` type approaches to make harder auto-detect of string array call patterns in the code.
+
+More types will be added in the future.
 
 ### `stringArrayIndexShift`
 Type: `boolean` Default: `true`

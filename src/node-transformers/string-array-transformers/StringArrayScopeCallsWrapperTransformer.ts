@@ -125,10 +125,10 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     ): TNodeWithLexicalScopeStatements {
         const stringArrayScopeCallsWrapperNamesDataByEncoding: TStringArrayScopeCallsWrapperNamesDataByEncoding | null =
             this.stringArrayScopeCallsWrapperNamesDataStorage.get(lexicalScopeBodyNode) ?? null;
-        const stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData | null =
+        const stringArrayScopeCallsWrapperLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData | null =
             this.stringArrayScopeCallsWrapperLexicalScopeDataStorage.get(lexicalScopeBodyNode) ?? null;
 
-        if (!stringArrayScopeCallsWrapperNamesDataByEncoding || !stringArrayScopeCallsWrapperNamesLexicalScopeData) {
+        if (!stringArrayScopeCallsWrapperNamesDataByEncoding || !stringArrayScopeCallsWrapperLexicalScopeData) {
             return lexicalScopeBodyNode;
         }
 
@@ -153,9 +153,9 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
                 const [
                     upperStringArrayCallsWrapperName,
                     upperStringArrayCallsWrapperShiftedIndex,
-                ] = this.getUpperStringArrayCallsWrapperName(
+                ] = this.getUpperStringArrayCallsWrapperData(
                     stringArrayScopeCallsWrapperNamesData,
-                    stringArrayScopeCallsWrapperNamesLexicalScopeData,
+                    stringArrayScopeCallsWrapperLexicalScopeData,
                 );
 
                 const stringArrayScopeCallsWrapperNode: TStatement[] = this.getStringArrayScopeCallsWrapperNode(
@@ -176,15 +176,15 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
 
     /**
      * @param {IStringArrayScopeCallsWrapperNamesData} stringArrayScopeCallsWrapperNamesData
-     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperNamesLexicalScopeData
+     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperLexicalScopeData
      * @returns {[name: string, index: number]}
      */
     private getRootStringArrayCallsWrapperData (
         stringArrayScopeCallsWrapperNamesData: IStringArrayScopeCallsWrapperNamesData,
-        stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
+        stringArrayScopeCallsWrapperLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
     ): [name: string, index: number] {
         const {encoding} = stringArrayScopeCallsWrapperNamesData;
-        const {resultShiftedIndex} = stringArrayScopeCallsWrapperNamesLexicalScopeData;
+        const {resultShiftedIndex} = stringArrayScopeCallsWrapperLexicalScopeData;
 
         return [
             this.stringArrayStorage.getStorageCallsWrapperName(encoding),
@@ -194,19 +194,19 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
 
     /**
      * @param {IStringArrayScopeCallsWrapperNamesData} stringArrayScopeCallsWrapperNamesData
-     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperNamesLexicalScopeData
+     * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperLexicalScopeData
      * @returns {[name: string, index: number]}
      */
-    private getUpperStringArrayCallsWrapperName (
+    private getUpperStringArrayCallsWrapperData (
         stringArrayScopeCallsWrapperNamesData: IStringArrayScopeCallsWrapperNamesData,
-        stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
+        stringArrayScopeCallsWrapperLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
     ): [name: string, index: number] {
         const {encoding} = stringArrayScopeCallsWrapperNamesData;
-        const {scopeShiftedIndex} = stringArrayScopeCallsWrapperNamesLexicalScopeData;
+        const {scopeShiftedIndex} = stringArrayScopeCallsWrapperLexicalScopeData;
 
         const rootStringArrayCallsWrapperData = this.getRootStringArrayCallsWrapperData(
             stringArrayScopeCallsWrapperNamesData,
-            stringArrayScopeCallsWrapperNamesLexicalScopeData
+            stringArrayScopeCallsWrapperLexicalScopeData
         );
 
         if (!this.options.stringArrayWrappersChainedCalls) {

@@ -5,6 +5,7 @@ import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
+import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
@@ -43,6 +44,9 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     stringArray: false,
     stringArrayEncoding: [
         StringArrayEncoding.None
+    ],
+    stringArrayIndexesType: [
+        StringArrayIndexesType.HexadecimalNumber
     ],
     stringArrayIndexShift: false,
     stringArrayWrappersChainedCalls: false,

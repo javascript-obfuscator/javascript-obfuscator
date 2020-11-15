@@ -4,6 +4,7 @@ import { TInputOptions } from '../../src/types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { evaluateInWorker } from '../helpers/evaluateInWorker';
@@ -39,6 +40,10 @@ describe('JavaScriptObfuscator runtime eval', function () {
             StringArrayEncoding.None,
             StringArrayEncoding.Base64,
             StringArrayEncoding.Rc4
+        ],
+        stringArrayIndexesType: [
+            StringArrayIndexesType.HexadecimalNumber,
+            StringArrayIndexesType.HexadecimalNumericString
         ],
         stringArrayIndexShift: true,
         stringArrayWrappersChainedCalls: true,

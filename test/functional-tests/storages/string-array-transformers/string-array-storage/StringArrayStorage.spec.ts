@@ -16,7 +16,7 @@ describe('StringArrayStorage', () => {
             const expectedVariantProbability: number = 1;
 
             const stringArrayVariant1RegExp1: RegExp = /var _0x([a-f0-9]){4} *= *\['test'];/g;
-            const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+            const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
 
             let stringArrayVariant1Probability: number,
                 literalNodeVariant1Probability: number;
@@ -80,9 +80,9 @@ describe('StringArrayStorage', () => {
             ];
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 )
             ];
 
@@ -157,7 +157,7 @@ describe('StringArrayStorage', () => {
             const expectedVariantProbability: number = 1;
 
             const stringArrayVariantRegExp1: RegExp = /var _0x([a-f0-9]){4} *= *\['test'];/g;
-            const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+            const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
 
             let stringArrayVariant1Probability: number,
                 literalNodeVariant1Probability: number;
@@ -223,34 +223,34 @@ describe('StringArrayStorage', () => {
 
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x1'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x0'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x1'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\('0x0'\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 )
             ];
 

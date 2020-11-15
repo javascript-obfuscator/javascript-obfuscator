@@ -13,7 +13,7 @@ describe('ForceTransformStringObfuscatingGuard', () => {
         describe('`forceTransformStrings` option is enabled', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
                 'var foo *= *\'foo\';' +
-                'var bar *= *b\\(\'0x0\'\\);'
+                'var bar *= *b\\(0x0\\);'
             );
 
             let obfuscatedCode: string;

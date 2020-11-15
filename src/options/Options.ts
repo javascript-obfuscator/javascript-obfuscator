@@ -20,6 +20,7 @@ import {
 
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
+import { TStringArrayIndexesType } from '../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
 import { TTypeFromEnum } from '../types/utils/TTypeFromEnum';
@@ -31,6 +32,7 @@ import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-g
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
@@ -313,6 +315,15 @@ export class Options implements IOptions {
     @ArrayUnique()
     @IsIn([StringArrayEncoding.None, StringArrayEncoding.Base64, StringArrayEncoding.Rc4], { each: true })
     public readonly stringArrayEncoding!: TStringArrayEncoding[];
+
+    /**
+     * @type {TStringArrayIndexesType[]}
+     */
+    @IsArray()
+    @ArrayNotEmpty()
+    @ArrayUnique()
+    @IsIn([StringArrayIndexesType.HexadecimalNumber, StringArrayIndexesType.HexadecimalNumericString], { each: true })
+    public readonly stringArrayIndexesType!: TStringArrayIndexesType[];
 
     /**
      * @type {boolean}

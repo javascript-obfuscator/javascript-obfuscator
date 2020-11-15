@@ -30,6 +30,7 @@ import { Logger } from '../logger/Logger';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
 import { SourceCodeReader } from './utils/SourceCodeReader';
 import { Utils } from '../utils/Utils';
+import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
@@ -348,6 +349,13 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed). ' +
                 `Values: ${CLIUtils.stringifyOptionAvailableValues(StringArrayEncoding)}. ` +
                 `Default: ${StringArrayEncoding.None}`,
+                ArraySanitizer
+            )
+            .option(
+                '--string-array-indexes-type <list> (comma separated, without whitespaces)',
+                'Encodes each string in strings array using base64 or rc4 (this option can slow down your code speed). ' +
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(StringArrayIndexesType)}. ` +
+                `Default: ${StringArrayIndexesType.HexadecimalNumber}`,
                 ArraySanitizer
             )
             .option(

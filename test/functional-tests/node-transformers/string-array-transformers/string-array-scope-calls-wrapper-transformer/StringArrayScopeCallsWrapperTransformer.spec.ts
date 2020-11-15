@@ -9,6 +9,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { StringArrayIndexesType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 describe('StringArrayScopeCallsWrapperTransformer', function () {
     this.timeout(120000);
@@ -21,9 +22,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     '};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);' +
+                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);' +
+                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -54,9 +55,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                     'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);' +
+                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);' +
+                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -84,9 +85,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'const f *= *b;' +
                     'const g *= *b;' +
-                    'const foo *= *[f|g]\\(\'0x0\'\\);' +
-                    'const bar *= *[f|g]\\(\'0x1\'\\);' +
-                    'const baz *= *[f|g]\\(\'0x2\'\\);'
+                    'const foo *= *[f|g]\\(0x0\\);' +
+                    'const bar *= *[f|g]\\(0x1\\);' +
+                    'const baz *= *[f|g]\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -118,9 +119,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     'function test *\\( *\\) *{' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
                     '}'
                 );
 
@@ -151,9 +152,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
                     '}'
                 );
 
@@ -183,9 +184,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     'function test *\\( *\\) *{' +
                         'const h *= *b;' +
                         'const i *= *b;' +
-                        'const c *= *[h|i]\\(\'0x3\'\\);' +
-                        'const d *= *[h|i]\\(\'0x4\'\\);' +
-                        'const e *= *[h|i]\\(\'0x5\'\\);' +
+                        'const c *= *[h|i]\\(0x3\\);' +
+                        'const d *= *[h|i]\\(0x4\\);' +
+                        'const e *= *[h|i]\\(0x5\\);' +
                     '}'
                 );
 
@@ -214,10 +215,10 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #4: correct wrapper for the function default parameter', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'const e *= *b;' +
-                    'const foo *= *e\\(\'0x0\'\\);' +
-                    'function test *\\(c *= *e\\(\'0x1\'\\)\\) *{' +
+                    'const foo *= *e\\(0x0\\);' +
+                    'function test *\\(c *= *e\\(0x1\\)\\) *{' +
                         'const f *= *b;' +
-                        'const d *= *f\\(\'0x2\'\\);' +
+                        'const d *= *f\\(0x2\\);' +
                     '}'
                 );
 
@@ -249,7 +250,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'var c *= *b;' +
                     'if *\\(!!\\[]\\) *{' +
-                        'var foo *= *c\\(\'0x0\'\\);' +
+                        'var foo *= *c\\(0x0\\);' +
                     '}'
                 );
 
@@ -278,7 +279,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #2: arrow function scope without statements', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'var c *= *b;' +
-                    '\\[]\\[c\\(\'0x0\'\\)]\\(\\(\\) *=> *c\\(\'0x1\'\\)\\);'
+                    '\\[]\\[c\\(0x0\\)]\\(\\(\\) *=> *c\\(0x1\\)\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -310,9 +311,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 '};' +
                 'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
                 'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};' +
-                'var foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                'var bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                'var baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                'var foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);' +
+                'var bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);' +
+                'var baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
             );
 
             let obfuscatedCode: string;
@@ -366,19 +367,19 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 describe('Variant #1: `Mangled` identifier names generator', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(
                         'const q *= *b;' +
-                        'const foo *= *q\\(\'0x0\'\\);' +
+                        'const foo *= *q\\(0x0\\);' +
                         'function test\\(c, *d\\) *{' +
                             'const r *= *q;' +
-                            'const e *= *r\\(\'0x1\'\\);' +
-                            'const f *= *r\\(\'0x2\'\\);' +
+                            'const e *= *r\\(0x1\\);' +
+                            'const f *= *r\\(0x2\\);' +
                             'function g\\(h, *i\\) *{' +
                                 'const s *= *r;' +
-                                'const j *= *s\\(\'0x3\'\\);' +
-                                'const k *= *s\\(\'0x4\'\\);' +
+                                'const j *= *s\\(0x3\\);' +
+                                'const k *= *s\\(0x4\\);' +
                                 'function l\\(m, *n *\\) *{' +
                                     'const t *= *s;' +
-                                    'const o *= *t\\(\'0x3\'\\);' +
-                                    'const p *= *t\\(\'0x4\'\\);' +
+                                    'const o *= *t\\(0x3\\);' +
+                                    'const p *= *t\\(0x4\\);' +
                                     'return o *\\+ *p;' +
                                 '}' +
                                 'return j *\\+ *k;' +
@@ -578,6 +579,52 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             const hexadecimalIndexMatch: string = '0x[a-z0-9]{1,3}';
 
             describe('Variant #1: base', () => {
+                describe('Variant #1: `hexadecimal-number` indexes type', () => {
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const f *= *function *\\(c, *d\\) *{' +
+                            `return b\\(c *-(?: -)?${hexadecimalIndexMatch}, *d\\);` +
+                        '};' +
+                        `const foo *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                        `const bar *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                        `const baz *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                        'function test *\\( *\\) *{' +
+                            'const g *= *function *\\(c, *d\\) *{' +
+                                `return b\\(c *-(?: -)?${hexadecimalIndexMatch}, *d\\);` +
+                            '};' +
+                            `const c *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const d *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const e *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayIndexesType: [
+                                    StringArrayIndexesType.HexadecimalNumber
+                                ],
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: false,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+                });
+
+                describe('Variant #2: `hexadecimal-numeric-string` indexes type', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(
                         'const f *= *function *\\(c, *d\\) *{' +
                             `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
@@ -606,6 +653,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
+                                stringArrayIndexesType: [
+                                    StringArrayIndexesType.HexadecimalNumericString
+                                ],
                                 stringArrayThreshold: 1,
                                 stringArrayWrappersChainedCalls: false,
                                 stringArrayWrappersCount: 1,
@@ -618,22 +668,23 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         assert.match(obfuscatedCode, stringArrayCallRegExp);
                     });
                 });
+            });
 
             describe('Variant #2: correct chained calls', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(
                         'const f *= *function *\\(c, *d\\) *{' +
-                            `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                            `return b\\(c *-(?: -)?${hexadecimalIndexMatch}, *d\\);` +
                         '};' +
-                        `const foo *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                        `const bar *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                        `const baz *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                        `const foo *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                        `const bar *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                        `const baz *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
                         'function test *\\( *\\) *{' +
                             'const g *= *function *\\(c, *d\\) *{' +
-                                `return f\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                                `return f\\(c *-(?: -)?${hexadecimalIndexMatch}, *d\\);` +
                             '};' +
-                            `const c *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const d *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const e *= *g\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const c *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const d *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const e *= *g\\(-? *${hexadecimalIndexMatch}\\);` +
                         '}'
                     );
 
@@ -667,11 +718,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         '};' +
                         'function test *\\( *\\) *{' +
                             'const f *= *function *\\(c, *d\\) *{' +
-                                `return b\\(c *-(?: -)?'${hexadecimalIndexMatch}', *d\\);` +
+                                `return b\\(c *-(?: -)?${hexadecimalIndexMatch}, *d\\);` +
                             '};' +
-                            `const c *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const d *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const e *= *f\\(-? *'${hexadecimalIndexMatch}'\\);` +
+                            `const c *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const d *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
+                            `const e *= *f\\(-? *${hexadecimalIndexMatch}\\);` +
                         '}'
                     );
 
@@ -875,9 +926,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     // this one may be added or not depends on:
                     // if all literal values encoded with a single encoding or not
                     '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);' +
+                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);' +
+                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -914,9 +965,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     // this one may be added or not depends on:
                     // if all literal values encoded with a single encoding or not
                     '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(\'0x0\'\\);' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(\'0x1\'\\);' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(\'0x2\'\\);'
+                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);' +
+                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);' +
+                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -953,9 +1004,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         // this one may be added or not depends on:
                         // if all literal values encoded with a single encoding or not
                         '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
                     '}'
                 );
 
@@ -992,9 +1043,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         // this one may be added or not depends on:
                         // if all literal values encoded with a single encoding or not
                         '(?:const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};)?' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x3\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x4\'\\);' +
-                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(\'0x5\'\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
+                        'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
                     '}'
                 );
 

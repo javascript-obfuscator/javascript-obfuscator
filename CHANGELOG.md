@@ -2,6 +2,8 @@ Change Log
 
 v2.9.0
 ---
+* New option: `stringArrayIndexesType` accepts an array of types of string array call indexes
+* Changed default type of all string array call indexes from `hexadecimal-numeric-string` to `hexadecimal-number`
 * New option: `stringArrayIndexShift` enables additional index shift for all string array calls
 
 v2.8.1

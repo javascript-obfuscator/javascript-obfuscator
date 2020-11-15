@@ -14,7 +14,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
         describe('Variant #1: should not generate same name for string array as existing name in code', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
                 const stringArrayStorageRegExp: RegExp = /const a[aB] *= *\['abc'];/;
-                const variableDeclarationIdentifierNameRegExp: RegExp = /const ab *= *a[abAB]\('0x0'\);/;
+                const variableDeclarationIdentifierNameRegExp: RegExp = /const ab *= *a[abAB]\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -46,7 +46,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
                 const stringArrayStorageRegExp: RegExp = /const a[aB] *= *\['abc'];/;
-                const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const a[AB] *= *a[AB]\('0x0'\);/;
+                const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const a[AB] *= *a[AB]\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -85,7 +85,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
 
             describe('Variant #1: `renameGlobals` option is disabled', () => {
                 const stringArrayStorageRegExp: RegExp = /const ([abAB]{1,3}) *= *\['first', *'abc'];/;
-                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\('0x0'\);/;
+                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 
@@ -124,7 +124,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
                 const stringArrayStorageRegExp: RegExp = /const ([abAB]{1,3}) *= *\['first', *'abc'];/;
-                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\('0x0'\);/;
+                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 

@@ -4,21 +4,39 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
+import { TStringArrayIndexNodeFactory } from '../../types/container/custom-nodes/string-array-index-nodes/TStringArrayIndexNodeFactory';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
+import { StringArrayIndexNode } from '../../enums/custom-nodes/string-array-index-nodes/StringArrayIndexNode';
+
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
-import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
 export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     /**
+     * @type {Map<TStringArrayIndexesType, StringArrayIndexNode>}
+     */
+    private static readonly stringArrayIndexNodesMap: Map<TStringArrayIndexesType, StringArrayIndexNode> = new Map([
+        [StringArrayIndexesType.HexadecimalNumber, StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode],
+        [StringArrayIndexesType.HexadecimalNumericString, StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode]
+    ]);
+
+    /**
+     * @type {TStringArrayIndexNodeFactory}
+     */
+    private readonly stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -26,6 +44,8 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     protected constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
+            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -36,26 +56,37 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
             randomGenerator,
             options
         );
+
+        this.stringArrayIndexNodeFactory = stringArrayIndexNodeFactory;
     }
 
     /**
      * @param {number} index
      * @returns {Expression}
      */
-    protected getHexadecimalNode (index: number): ESTree.Expression {
+    protected getStringArrayIndexNode (index: number): ESTree.Expression {
         const isPositive: boolean = index >= 0;
         const normalizedIndex: number = Math.abs(index);
 
-        const hexadecimalIndex: string = NumberUtils.toHex(normalizedIndex);
-        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
+        const stringArrayCallsIndexType: TStringArrayIndexesType = this.randomGenerator
+            .getRandomGenerator()
+            .pickone(this.options.stringArrayIndexesType);
+        const stringArrayIndexNodeName: StringArrayIndexNode | null = AbstractStringArrayCallNode.stringArrayIndexNodesMap.get(stringArrayCallsIndexType) ?? null;
 
-        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
+        if (!stringArrayIndexNodeName) {
+            throw new Error('Invalid string array index node name');
+        }
+
+        const stringArrayCallIndexNode: ESTree.Expression = this.stringArrayIndexNodeFactory(stringArrayIndexNodeName)
+            .getNode(normalizedIndex);
+
+        NodeMetadata.set(stringArrayCallIndexNode, { replacedLiteral: true });
 
         const hexadecimalNode: ESTree.Expression = isPositive
-            ? hexadecimalLiteralNode
+            ? stringArrayCallIndexNode
             : NodeFactory.unaryExpressionNode(
                 '-',
-                hexadecimalLiteralNode
+                stringArrayCallIndexNode
             );
 
         NodeUtils.parentizeAst(hexadecimalNode);

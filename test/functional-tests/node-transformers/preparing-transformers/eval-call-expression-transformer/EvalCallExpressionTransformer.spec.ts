@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { StringArrayIndexesType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
+
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -92,30 +94,66 @@ describe('EvalCallExpressionTransformer', () => {
     });
 
     describe('Variant #4: string array calls wrapper call', () => {
-        const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
-        const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
+        describe('Variant #1: hexadecimal number indexes type', () => {
+            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+            const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(0\)]\(_0x([a-f0-9]){4,6}\(1\)\);'\);/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-call.js');
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-call.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayIndexesType: [
+                            StringArrayIndexesType.HexadecimalNumber
+                        ],
+                        stringArrayThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should add strings from eval expression to the string array', () => {
+                assert.match(obfuscatedCode, stringArrayRegExp);
+            });
+
+            it('match #1: should replace string with call to the string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
         });
 
-        it('match #1: should add strings from eval expression to the string array', () => {
-            assert.match(obfuscatedCode, stringArrayRegExp);
-        });
+        describe('Variant #1: hexadecimal numeric string indexes type', () => {
+            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+            const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
-        it('match #1: should replace string with call to the string array calls wrapper', () => {
-            assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-call.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayIndexesType: [
+                            StringArrayIndexesType.HexadecimalNumericString
+                        ],
+                        stringArrayThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should add strings from eval expression to the string array', () => {
+                assert.match(obfuscatedCode, stringArrayRegExp);
+            });
+
+            it('match #1: should replace string with call to the string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
         });
     });
 

@@ -35,6 +35,21 @@ export class ArrayUtils implements IArrayUtils {
     }
 
     /**
+     * @param {number} length
+     * @param {(index: number) => TValue} valueFunction
+     * @returns {TValue[]}
+     */
+    public fillWithRange <TValue> (length: number, valueFunction: (index: number) => TValue): TValue[] {
+        const range: TValue[] = [];
+
+        for (let i: number = 0; i < length; i++) {
+            range.push(valueFunction(i));
+        }
+
+        return range;
+    }
+
+    /**
      * @param {T[]} array
      * @returns {T | null}
      */

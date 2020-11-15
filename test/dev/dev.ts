@@ -2,6 +2,7 @@
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
+import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -35,6 +36,9 @@ import { StringArrayIndexesType } from '../../src/enums/node-transformers/string
             rotateStringArray: true,
             shuffleStringArray: true,
             stringArray: true,
+            stringArrayEncoding: [
+                StringArrayEncoding.Rc4
+            ],
             stringArrayIndexesType: [
                 StringArrayIndexesType.HexadecimalNumericString,
                 StringArrayIndexesType.HexadecimalNumber

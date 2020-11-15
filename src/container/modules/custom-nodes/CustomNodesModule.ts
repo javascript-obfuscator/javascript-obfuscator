@@ -141,6 +141,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.Factory__IStringArrayIndexNode,
                 ServiceIdentifiers.ICustomCodeHelperFormatter,
+                ServiceIdentifiers.IStringArrayStorage,
+                ServiceIdentifiers.IArrayUtils,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));

@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringArrayIndexNodeFactory } from '../../types/container/custom-nodes/string-array-index-nodes/TStringArrayIndexNodeFactory';
 
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -31,6 +32,7 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -38,12 +40,15 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
+            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
     ) {
         super(
             identifierNamesGeneratorFactory,
+            stringArrayIndexNodeFactory,
             customCodeHelperFormatter,
             randomGenerator,
             options

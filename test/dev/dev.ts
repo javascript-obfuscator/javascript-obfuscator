@@ -36,6 +36,7 @@ import { StringArrayIndexesType } from '../../src/enums/node-transformers/string
             shuffleStringArray: true,
             stringArray: true,
             stringArrayIndexesType: [
+                StringArrayIndexesType.HexadecimalNumericString,
                 StringArrayIndexesType.HexadecimalNumber
             ],
             stringArrayIndexShift: true,

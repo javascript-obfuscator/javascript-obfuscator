@@ -153,7 +153,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
                 const [
                     upperStringArrayCallsWrapperName,
                     upperStringArrayCallsWrapperShiftedIndex,
-                ] = this.getUpperStringArrayCallsWrapperName(
+                ] = this.getUpperStringArrayCallsWrapperData(
                     stringArrayScopeCallsWrapperNamesData,
                     stringArrayScopeCallsWrapperNamesLexicalScopeData,
                 );
@@ -197,7 +197,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
      * @param {IStringArrayScopeCallsWrapperLexicalScopeData} stringArrayScopeCallsWrapperNamesLexicalScopeData
      * @returns {[name: string, index: number]}
      */
-    private getUpperStringArrayCallsWrapperName (
+    private getUpperStringArrayCallsWrapperData (
         stringArrayScopeCallsWrapperNamesData: IStringArrayScopeCallsWrapperNamesData,
         stringArrayScopeCallsWrapperNamesLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData
     ): [name: string, index: number] {

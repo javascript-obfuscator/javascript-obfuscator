@@ -3,13 +3,13 @@ import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IStringArrayIndexNode } from '../../../interfaces/custom-nodes/string-array-nodes/IStringArrayIndexNode';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
 import { StringArrayCustomNode } from '../../../enums/custom-nodes/StringArrayCustomNode';
 
-import { ObjectExpressionVariableDeclarationHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/ObjectExpressionVariableDeclarationHostNode';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { BlockStatementControlFlowFlatteningNode } from '../../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
 import { BlockStatementDeadCodeInjectionNode } from '../../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
@@ -18,7 +18,11 @@ import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-f
 import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/LogicalExpressionFunctionNode';
+import { ObjectExpressionVariableDeclarationHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/ObjectExpressionVariableDeclarationHostNode';
 import { StringArrayCallNode } from '../../../custom-nodes/string-array-nodes/StringArrayCallNode';
+import { StringArrayHexadecimalNumberIndexNode } from '../../../custom-nodes/string-array-nodes/string-array-index-nodes/StringArrayHexadecimalNumberIndexNode';
+import { StringArrayHexadecimalNumericStringIndexNode } from '../../../custom-nodes/string-array-nodes/string-array-index-nodes/StringArrayHexadecimalNumericStringIndexNode';
+import { StringArrayIndexNode } from '../../../enums/custom-nodes/string-array-index-nodes/StringArrayIndexNode';
 import { StringArrayScopeCallsWrapperFunctionNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperFunctionNode';
 import { StringArrayScopeCallsWrapperVariableNode } from '../../../custom-nodes/string-array-nodes/StringArrayScopeCallsWrapperVariableNode';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
@@ -85,6 +89,17 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toConstructor(StringArrayScopeCallsWrapperVariableNode)
         .whenTargetNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperVariableNode);
 
+    // string array index nodes
+    bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
+        .to(StringArrayHexadecimalNumberIndexNode)
+        .inSingletonScope()
+        .whenTargetNamed(StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode);
+
+    bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
+        .to(StringArrayHexadecimalNumericStringIndexNode)
+        .inSingletonScope()
+        .whenTargetNamed(StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode);
+
     // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
         .toFactory<ICustomNode>(InversifyContainerFacade
@@ -124,8 +139,14 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<StringArrayCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.Factory__IStringArrayIndexNode,
                 ServiceIdentifiers.ICustomCodeHelperFormatter,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));
+
+    // string array index node factory
+    bind<IStringArrayIndexNode>(ServiceIdentifiers.Factory__IStringArrayIndexNode)
+        .toFactory<IStringArrayIndexNode>(InversifyContainerFacade
+            .getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode));
 });

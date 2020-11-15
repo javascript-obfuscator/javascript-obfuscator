@@ -204,16 +204,21 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
-     * @returns {Node}
+     * @returns {Expression}
      */
-    private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Node {
+    private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Expression {
         const [stringArrayCallsWrapperName, index] = this.getStringArrayCallsWrapperData(stringArrayStorageItemData);
         const {decodeKey } = stringArrayStorageItemData;
 
         const stringArrayCallCustomNode: ICustomNode<TInitialData<StringArrayCallNode>> =
             this.stringArrayTransformerCustomNodeFactory(StringArrayCustomNode.StringArrayCallNode);
 
-        stringArrayCallCustomNode.initialize(stringArrayCallsWrapperName, index, decodeKey);
+        stringArrayCallCustomNode.initialize(
+            stringArrayCallsWrapperName,
+            index,
+            this.stringArrayStorage.getIndexShiftAmount(),
+            decodeKey
+        );
 
         const statementNode: TStatement = stringArrayCallCustomNode.getNode()[0];
 

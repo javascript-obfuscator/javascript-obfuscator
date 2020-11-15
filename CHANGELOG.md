@@ -1,5 +1,9 @@
 Change Log
 
+v2.9.0
+---
+* New option: `stringArrayIndexShift` enables additional index shift for all string array calls
+
 v2.8.1
 ---
 * Fixed incorrect rename of the identifiers of the added helpers in some rare cases. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/804

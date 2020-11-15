@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayEncoding } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayWrappersType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
@@ -63,7 +64,201 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #3: same literal node values', () => {
+    describe('Variant #3: `stringArrayIndexShift` option is enabled', () => {
+        const stringArrayIndexShiftRegExp: RegExp = /_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6} *- *(0x[a-z0-9]{1,3});/;
+        const stringArrayCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x1;/;
+        const stringArrayCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x2;/;
+        const stringArrayCallRegExp3: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\('(0x[a-z0-9]{1,3})'\) *\+ *0x3;/;
+
+        const expectedEvaluationResult: string = 'foo1bar2baz3';
+
+        let obfuscatedCode: string;
+
+        let stringArrayIndexShiftIndexValue: number;
+        let stringArrayCallIndexValue1: number;
+        let stringArrayCallIndexValue2: number;
+        let stringArrayCallIndexValue3: number;
+
+        let evaluationResult: string;
+
+        describe('Variant #1: simple', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIndexShift: true
+                    }
+                ).getObfuscatedCode();
+
+                stringArrayIndexShiftIndexValue = parseInt(getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp), 16);
+                stringArrayCallIndexValue1 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp1), 16);
+                stringArrayCallIndexValue2 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp2), 16);
+                stringArrayCallIndexValue3 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp3), 16);
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should shift string array index in calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
+            });
+
+            it('Match #1: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue1);
+            });
+
+            it('Match #2: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue2 - 1);
+            });
+
+            it('Match #3: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue3 - 2);
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #2: `rotateStringArray` option is enabled', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIndexShift: true,
+                        rotateStringArray: true
+                    }
+                ).getObfuscatedCode();
+
+                stringArrayIndexShiftIndexValue = parseInt(getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp), 16);
+                stringArrayCallIndexValue1 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp1), 16);
+                stringArrayCallIndexValue2 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp2), 16);
+                stringArrayCallIndexValue3 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp3), 16);
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should shift string array index in calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
+            });
+
+            it('Match #1: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue1);
+            });
+
+            it('Match #2: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue2 - 1);
+            });
+
+            it('Match #3: should create string array call with shifted index', () => {
+                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue3 - 2);
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #3: `shuffleStringArray` option is enabled', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIndexShift: true,
+                        shuffleStringArray: true
+                    }
+                ).getObfuscatedCode();
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should shift string array index in calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #4: `stringArrayWrappersCount` option is enabled and type is `function`', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIndexShift: true,
+                        stringArrayWrappersCount: 1,
+                        stringArrayWrappersType: StringArrayWrappersType.Function
+                    }
+                ).getObfuscatedCode();
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should shift string array index in calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #5: all string array options are enabled', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        rotateStringArray: true,
+                        shuffleStringArray: true,
+                        stringArray: true,
+                        stringArrayEncoding: [
+                            StringArrayEncoding.Rc4
+                        ],
+                        stringArrayIndexShift: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2,
+                        stringArrayWrappersChainedCalls: true,
+                        stringArrayWrappersType: 'function'
+                    }
+                ).getObfuscatedCode();
+
+                evaluationResult = eval(obfuscatedCode);
+            });
+
+            it('should shift string array index in calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+    });
+
+    describe('Variant #4: same literal node values', () => {
         const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
@@ -91,7 +286,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #4: short literal node value', () => {
+    describe('Variant #5: short literal node value', () => {
         const regExp: RegExp = /var test *= *'te';/;
 
         let obfuscatedCode: string;
@@ -114,7 +309,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #5: base64 encoding', () => {
+    describe('Variant #6: base64 encoding', () => {
         const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA==')}'];`);
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
@@ -143,7 +338,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #6: rc4 encoding', () => {
+    describe('Variant #7: rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
             const regExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
 
@@ -209,7 +404,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #7: none and base64 encoding', () => {
+    describe('Variant #8: none and base64 encoding', () => {
         describe('Variant #1: string array values', () => {
             const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
@@ -265,7 +460,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #8: none and rc4 encoding', () => {
+    describe('Variant #9: none and rc4 encoding', () => {
         describe('Variant #1: string array calls wrapper call', () => {
             const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
@@ -321,7 +516,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #9: base64 and rc4 encoding', () => {
+    describe('Variant #10: base64 and rc4 encoding', () => {
         describe('Variant #1: single string literal', () => {
             const samplesCount: number = 300;
             const expectedMatchesChance: number = 0.5;
@@ -377,7 +572,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #10: `stringArrayThreshold` option value', () => {
+    describe('Variant #11: `stringArrayThreshold` option value', () => {
         const samples: number = 1000;
         const stringArrayThreshold: number = 0.5;
         const delta: number = 0.1;
@@ -420,7 +615,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #11: string array calls wrapper name', () => {
+    describe('Variant #12: string array calls wrapper name', () => {
         const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
 
         let obfuscatedCode: string;
@@ -444,7 +639,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #12: `reservedStrings` option is enabled', () => {
+    describe('Variant #13: `reservedStrings` option is enabled', () => {
         describe('Variant #1: base `reservedStrings` values', () => {
             describe('Variant #1: single reserved string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
@@ -566,7 +761,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #13: `forceTransformStrings` option is enabled', () => {
+    describe('Variant #14: `forceTransformStrings` option is enabled', () => {
         describe('Variant #1: base `forceTransformStrings` values', () => {
             describe('Variant #1: single force transform string value', () => {
                 const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
@@ -787,7 +982,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #14: object expression key literal', () => {
+    describe('Variant #15: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
             const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
             const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
@@ -845,7 +1040,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #15: import declaration source literal', () => {
+    describe('Variant #16: import declaration source literal', () => {
         const importDeclarationRegExp: RegExp = /import *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -868,7 +1063,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #16: export all declaration source literal', () => {
+    describe('Variant #17: export all declaration source literal', () => {
         const exportAllDeclarationRegExp: RegExp = /export *\* *from *'foo';/;
 
         let obfuscatedCode: string;
@@ -891,7 +1086,7 @@ describe('StringArrayTransformer', function () {
         });
     });
 
-    describe('Variant #17: export named declaration source literal', () => {
+    describe('Variant #18: export named declaration source literal', () => {
         const exportNamedDeclarationRegExp: RegExp = /export *{ *bar *} *from *'foo';/;
 
         let obfuscatedCode: string;

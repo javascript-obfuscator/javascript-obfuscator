@@ -21,6 +21,12 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper {
     /**
+     * @type {number}
+     */
+    @initializable()
+    protected indexShiftAmount!: number;
+
+    /**
      * @type {string}
      */
     @initializable()
@@ -68,13 +74,16 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
+     * @param {number} indexShiftAmount
      */
     public initialize (
         stringArrayName: string,
-        stringArrayCallsWrapperName: string
+        stringArrayCallsWrapperName: string,
+        indexShiftAmount: number
     ): void {
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.indexShiftAmount = indexShiftAmount;
     }
 
     /**
@@ -97,7 +106,8 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
             this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeCodeHelperTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName
+                stringArrayName: this.stringArrayName,
+                indexShiftAmount: this.indexShiftAmount
             }),
             {
                 reservedNames: preservedNames

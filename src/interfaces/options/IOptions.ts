@@ -43,6 +43,7 @@ export interface IOptions {
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding[];
+    readonly stringArrayIndexShift: boolean;
     readonly stringArrayWrappersChainedCalls: boolean;
     readonly stringArrayWrappersCount: number;
     readonly stringArrayWrappersType: TStringArrayWrappersType;

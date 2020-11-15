@@ -32,6 +32,16 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     /**
      * @type {number}
      */
+    private static readonly minimumIndexShiftAmount: number = 100;
+
+    /**
+     * @type {number}
+     */
+    private static readonly maximumIndexShiftAmount: number = 500;
+
+    /**
+     * @type {number}
+     */
     private static readonly rc4KeyLength: number = 4;
 
     /**
@@ -68,6 +78,11 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @type {Map<string, string[]>}
      */
     private readonly rc4EncodedValuesSourcesCache: Map<string, string[]> = new Map();
+
+    /**
+     * @type {number}
+     */
+    private indexShiftAmount: number = 0;
 
     /**
      * @type {number}
@@ -118,6 +133,12 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     public initialize (): void {
         super.initialize();
 
+        this.indexShiftAmount = this.options.stringArrayIndexShift
+            ? this.randomGenerator.getRandomInteger(
+                StringArrayStorage.minimumIndexShiftAmount,
+                StringArrayStorage.maximumIndexShiftAmount
+            )
+            : 0;
         this.rotationAmount = this.options.rotateStringArray
             ? this.randomGenerator.getRandomInteger(
                 StringArrayStorage.minimumRotationAmount,
@@ -131,6 +152,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      */
     public get (value: string): IStringArrayStorageItemData {
         return this.getOrSetIfDoesNotExist(value);
+    }
+
+    /**
+     * @returns {number}
+     */
+    public getIndexShiftAmount (): number {
+        return this.indexShiftAmount;
     }
 
     /**

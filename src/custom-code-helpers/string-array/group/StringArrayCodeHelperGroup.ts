@@ -142,7 +142,8 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
 
             stringArrayCallsWrapperCodeHelper.initialize(
                 stringArrayName,
-                stringArrayCallsWrapperName
+                stringArrayCallsWrapperName,
+                this.stringArrayStorage.getIndexShiftAmount()
             );
 
             this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);
@@ -151,9 +152,11 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         // stringArrayRotateFunction helper initialize
         const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
-        const stringArrayRotationAmount: number = this.stringArrayStorage.getRotationAmount();
 
-        stringArrayRotateFunctionCodeHelper.initialize(stringArrayName, stringArrayRotationAmount);
+        stringArrayRotateFunctionCodeHelper.initialize(
+            stringArrayName,
+            this.stringArrayStorage.getRotationAmount()
+        );
 
         if (this.options.rotateStringArray) {
             this.customCodeHelpers.set(CustomCodeHelper.StringArrayRotateFunction, stringArrayRotateFunctionCodeHelper);

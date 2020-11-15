@@ -16,12 +16,9 @@ import { IStringArrayStorage } from '../../interfaces/storages/string-array-tran
 
 import { initializable } from '../../decorators/Initializable';
 
-import { stringArrayScopeCallsWrapperParametersMaxCount } from '../../constants/node-transformers/string-array-transformers/StringArrayScopeCallsWrapperParametersMaxCount';
-
 import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
-import { stringArrayRootCallsWrapperParametersDefaultCount } from '../../constants/node-transformers/string-array-transformers/StringArrayRootCallsWrapperParametersDefaultCount';
 
 @injectable()
 export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArrayCallNode {
@@ -127,9 +124,9 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         const parameters: ESTree.Identifier[] = this.arrayUtils.fillWithRange(
             !this.stringArrayScopeCallsWrapperParameterIndexesData
                 // root string array calls wrapper
-                ? stringArrayRootCallsWrapperParametersDefaultCount
+                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
                 // scope string array calls wrapper
-                : stringArrayScopeCallsWrapperParametersMaxCount,
+                : this.options.stringArrayWrappersParametersMaxCount,
             () => this.getFakeParameterNode()
         );
         parameters.splice(this.stringArrayScopeCallsWrapperParameterIndexesData?.index ?? 0, 1, stringArrayCallIdentifierNode);
@@ -140,9 +137,9 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
             !this.upperStringArrayCallsWrapperParameterIndexesData
                 // root string array calls wrapper
-                ? stringArrayRootCallsWrapperParametersDefaultCount
+                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
                 // scope string array calls wrapper
-                : stringArrayScopeCallsWrapperParametersMaxCount,
+                : this.options.stringArrayWrappersParametersMaxCount,
             (index: number) => this.getUpperStringArrayCallNode(
                 parameters[index],
                 this.getFakeUpperStringArrayIndexNode()

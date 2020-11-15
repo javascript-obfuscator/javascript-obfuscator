@@ -345,6 +345,13 @@ export class Options implements IOptions {
     public readonly stringArrayWrappersCount!: number;
 
     /**
+     * @type {boolean}
+     */
+    @IsNumber()
+    @Min(2)
+    public readonly stringArrayWrappersParametersMaxCount!: number;
+
+    /**
      * @type {TStringArrayWrappersType}
      */
     @IsIn([StringArrayWrappersType.Variable, StringArrayWrappersType.Function])

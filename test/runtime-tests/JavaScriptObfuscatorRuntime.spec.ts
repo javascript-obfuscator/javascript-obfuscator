@@ -48,6 +48,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         stringArrayIndexShift: true,
         stringArrayWrappersChainedCalls: true,
         stringArrayWrappersCount: 5,
+        stringArrayWrappersParametersMaxCount: 5,
         stringArrayWrappersType: StringArrayWrappersType.Function,
         stringArrayThreshold: 1,
         transformObjectKeys: true,

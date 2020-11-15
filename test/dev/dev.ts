@@ -37,6 +37,7 @@ import { StringArrayEncoding } from '../../src/enums/node-transformers/string-ar
             shuffleStringArray: true,
             stringArray: true,
             stringArrayEncoding: [
+                StringArrayEncoding.None,
                 StringArrayEncoding.Rc4
             ],
             stringArrayIndexesType: [
@@ -47,6 +48,7 @@ import { StringArrayEncoding } from '../../src/enums/node-transformers/string-ar
             stringArrayThreshold: 1,
             stringArrayWrappersCount: 2,
             stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersParametersMaxCount: 5,
             stringArrayWrappersType: 'function'
         }
     ).getObfuscatedCode();

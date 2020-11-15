@@ -48,6 +48,7 @@ export interface IOptions {
     readonly stringArrayIndexShift: boolean;
     readonly stringArrayWrappersChainedCalls: boolean;
     readonly stringArrayWrappersCount: number;
+    readonly stringArrayWrappersParametersMaxCount: number;
     readonly stringArrayWrappersType: TStringArrayWrappersType;
     readonly stringArrayThreshold: number;
     readonly target: TTypeFromEnum<typeof ObfuscationTarget>;

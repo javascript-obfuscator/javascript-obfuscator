@@ -374,6 +374,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
+                '--string-array-wrappers-parameters-count <number>',
+                'Allows to control the maximum number of string array wrappers parameters',
+                parseInt
+            )
+            .option(
                 '--string-array-wrappers-type <string>',
                 'Allows to select a type of the wrappers that are appending by the `--string-array-wrappers-count` option. ' +
                 `Values: ${CLIUtils.stringifyOptionAvailableValues(StringArrayWrappersType)}. ` +

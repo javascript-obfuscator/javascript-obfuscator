@@ -30,8 +30,6 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { StringArrayCustomNode } from '../../enums/custom-nodes/StringArrayCustomNode';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
-import { stringArrayScopeCallsWrapperParametersMaxCount } from '../../constants/node-transformers/string-array-transformers/StringArrayScopeCallsWrapperParametersMaxCount';
-
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
@@ -407,7 +405,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      */
     private getStringArrayCallsWrapperParameterIndexesData (): IStringArrayScopeCallsWrapperParameterIndexesData {
         const minIndexValue: number = 0;
-        const maxIndexValue: number = stringArrayScopeCallsWrapperParametersMaxCount - 1;
+        const maxIndexValue: number = this.options.stringArrayWrappersParametersMaxCount - 1;
 
         const index: number = this.randomGenerator.getRandomInteger(minIndexValue, maxIndexValue);
         const decodeKey: number = this.randomGenerator.getRandomIntegerExcluding(minIndexValue, maxIndexValue, [index]);

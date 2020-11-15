@@ -24,6 +24,13 @@ import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 @injectable()
 export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     /**
+     * Max count of root string array calls wrapper parameters
+     *
+     * @type {number}
+     */
+    protected static readonly stringArrayRootCallsWrapperParametersCount: number = 2;
+
+    /**
      * @type {Map<TStringArrayIndexesType, StringArrayIndexNode>}
      */
     private static readonly stringArrayIndexNodesMap: Map<TStringArrayIndexesType, StringArrayIndexNode> = new Map([

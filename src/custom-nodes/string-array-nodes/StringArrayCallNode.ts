@@ -16,9 +16,6 @@ import { IStringArrayStorage } from '../../interfaces/storages/string-array-tran
 
 import { initializable } from '../../decorators/Initializable';
 
-import { stringArrayRootCallsWrapperParametersDefaultCount } from '../../constants/node-transformers/string-array-transformers/StringArrayRootCallsWrapperParametersDefaultCount';
-import { stringArrayScopeCallsWrapperParametersMaxCount } from '../../constants/node-transformers/string-array-transformers/StringArrayScopeCallsWrapperParametersMaxCount';
-
 import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -122,9 +119,9 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
         const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
             !this.stringArrayCallsWrapperParameterIndexesData
                 // root string array calls wrapper
-                ? stringArrayRootCallsWrapperParametersDefaultCount
+                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
                 // scope string array calls wrapper
-                : stringArrayScopeCallsWrapperParametersMaxCount,
+                : this.options.stringArrayWrappersParametersMaxCount,
             () => this.getFakeStringArrayIndexNode(resultIndex)
         );
 

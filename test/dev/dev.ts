@@ -2,33 +2,24 @@
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
-import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'foo';
-            const bar = 'bar';
-            
-            function test1 () {
-                const baz = 'baz';
-                
-                function test2() {
-                    const bark = 'bark';
-                    
-                    console.log(bark);
-                }
-                
-                console.log(baz);
-                
-                test2();
+            // Paste your JavaScript code here
+            function hi() {
+              function inner () {
+                  console.log('inner');
+                  console.log('inner1');
+              }
+              
+              console.log("Hello World!");
+              
+              inner();
             }
-            
-            console.log(foo, bar);
-            
-            test1();
+            hi();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
@@ -36,19 +27,19 @@ import { StringArrayEncoding } from '../../src/enums/node-transformers/string-ar
             rotateStringArray: true,
             shuffleStringArray: true,
             stringArray: true,
-            stringArrayEncoding: [
+            /*stringArrayEncoding: [
                 StringArrayEncoding.None,
                 StringArrayEncoding.Rc4
-            ],
+            ],*/
             stringArrayIndexesType: [
                 StringArrayIndexesType.HexadecimalNumericString,
                 StringArrayIndexesType.HexadecimalNumber
             ],
             stringArrayIndexShift: true,
             stringArrayThreshold: 1,
-            stringArrayWrappersCount: 2,
+            stringArrayWrappersCount: 1,
             stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersParametersMaxCount: 5,
+            stringArrayWrappersParametersMaxCount: 2,
             stringArrayWrappersType: 'function'
         }
     ).getObfuscatedCode();

@@ -66,6 +66,61 @@ describe('ArrayUtils', () => {
         });
     });
 
+    describe('fillWithRange', () => {
+        const valueFunction: (index: number) => string = (index: number) => `foo${index}`;
+
+        describe('range length more than 0', () => {
+            const rangeLength: number = 5;
+            const expectedArray: string[] = [
+                'foo0',
+                'foo1',
+                'foo2',
+                'foo3',
+                'foo4',
+            ];
+
+            let array: string[];
+
+            before(() => {
+                array = arrayUtils.fillWithRange(rangeLength, valueFunction);
+            });
+
+            it('should return array with range of strings', () => {
+                assert.deepEqual(array, expectedArray);
+            });
+        });
+
+        describe('range length is 0', () => {
+            const rangeLength: number = 0;
+            const expectedArray: string[] = [];
+
+            let array: string[];
+
+            before(() => {
+                array = arrayUtils.fillWithRange(rangeLength, valueFunction);
+            });
+
+            it('should return empty array', () => {
+                assert.deepEqual(array, expectedArray);
+            });
+        });
+
+        describe('range length less than 0', () => {
+            const rangeLength: number = -5;
+            const expectedArray: string[] = [];
+
+            let array: string[];
+
+            before(() => {
+                array = arrayUtils.fillWithRange(rangeLength, valueFunction);
+            });
+
+            it('should return empty array', () => {
+                assert.deepEqual(array, expectedArray);
+            });
+        });
+    });
+
     describe('findMostOccurringElement', () => {
         describe('empty array', () => {
             const array: string[] = [];

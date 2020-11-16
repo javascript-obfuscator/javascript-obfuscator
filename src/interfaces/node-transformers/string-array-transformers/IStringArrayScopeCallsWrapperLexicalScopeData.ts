@@ -1,5 +1,7 @@
 import { TNodeWithLexicalScopeStatements } from '../../../types/node/TNodeWithLexicalScopeStatements';
 
+import { IStringArrayScopeCallsWrapperParameterIndexesData } from './IStringArrayScopeCallsWrapperParameterIndexesData';
+
 export interface IStringArrayScopeCallsWrapperLexicalScopeData {
     /**
      * @type {TNodeWithLexicalScopeStatements | null}
@@ -15,4 +17,9 @@ export interface IStringArrayScopeCallsWrapperLexicalScopeData {
      * @type {number}
      */
     scopeShiftedIndex: number;
+
+    /**
+     * @type {IStringArrayScopeCallsWrapperParameterIndexesData | null}
+     */
+    callsWrappersParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null;
 }

@@ -10,6 +10,7 @@ import { TStringArrayIndexNodeFactory } from '../../types/container/custom-nodes
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayIndexNode } from '../../enums/custom-nodes/string-array-index-nodes/StringArrayIndexNode';
@@ -18,9 +19,17 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
+import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 
 @injectable()
 export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
+    /**
+     * Max count of root string array calls wrapper parameters
+     *
+     * @type {number}
+     */
+    protected static readonly stringArrayRootCallsWrapperParametersCount: number = 2;
+
     /**
      * @type {Map<TStringArrayIndexesType, StringArrayIndexNode>}
      */
@@ -28,6 +37,16 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
         [StringArrayIndexesType.HexadecimalNumber, StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode],
         [StringArrayIndexesType.HexadecimalNumericString, StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode]
     ]);
+
+    /**
+     * @type {IArrayUtils}
+     */
+    protected readonly arrayUtils: IArrayUtils;
+
+    /**
+     * @type {IStringArrayStorage}
+     */
+    protected readonly stringArrayStorage: IStringArrayStorage;
 
     /**
      * @type {TStringArrayIndexNodeFactory}
@@ -38,6 +57,8 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
+     * @param {IStringArrayStorage} stringArrayStorage
+     * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -47,6 +68,8 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
             stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -58,6 +81,8 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
         );
 
         this.stringArrayIndexNodeFactory = stringArrayIndexNodeFactory;
+        this.stringArrayStorage = stringArrayStorage;
+        this.arrayUtils = arrayUtils;
     }
 
     /**

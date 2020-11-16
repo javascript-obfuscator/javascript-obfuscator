@@ -5,9 +5,11 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { TStatement } from '../../types/node/TStatement';
 import { TStringArrayIndexNodeFactory } from '../../types/container/custom-nodes/string-array-index-nodes/TStringArrayIndexNodeFactory';
 
+import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -34,6 +36,8 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
+     * @param {IStringArrayStorage} stringArrayStorage
+     * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -43,6 +47,8 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
             stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
     ) {
@@ -50,6 +56,8 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
             identifierNamesGeneratorFactory,
             stringArrayIndexNodeFactory,
             customCodeHelperFormatter,
+            stringArrayStorage,
+            arrayUtils,
             randomGenerator,
             options
         );

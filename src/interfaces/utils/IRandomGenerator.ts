@@ -21,6 +21,14 @@ export interface IRandomGenerator {
     getRandomInteger (min: number, max: number): number;
 
     /**
+     * @param {number} min
+     * @param {number} max
+     * @param {number[]} valuesToExclude
+     * @returns {number}
+     */
+    getRandomIntegerExcluding (min: number, max: number, valuesToExclude: number[]): number;
+
+    /**
      * @param length
      * @param pool
      * @returns {string}

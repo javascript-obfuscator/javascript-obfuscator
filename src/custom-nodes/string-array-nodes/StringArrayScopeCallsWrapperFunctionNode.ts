@@ -7,9 +7,12 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { TStatement } from '../../types/node/TStatement';
 import { TStringArrayIndexNodeFactory } from '../../types/container/custom-nodes/string-array-index-nodes/TStringArrayIndexNodeFactory';
 
+import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayScopeCallsWrapperParameterIndexesData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperParameterIndexesData';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -29,7 +32,13 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
      * @type {string}
      */
     @initializable()
-    private stringArrayCallsWrapperName!: string;
+    private upperStringArrayCallsWrapperName!: string;
+
+    /**
+     * @type {IStringArrayScopeCallsWrapperParameterIndexesData}
+     */
+    @initializable()
+    private upperStringArrayCallsWrapperParameterIndexesData!: IStringArrayScopeCallsWrapperParameterIndexesData | null;
 
     /**
      * @type {string}
@@ -37,11 +46,19 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
     @initializable()
     private stringArrayScopeCallsWrapperName!: string;
 
+    /**
+     * @type {IStringArrayScopeCallsWrapperParameterIndexesData}
+     */
+    @initializable()
+    private stringArrayScopeCallsWrapperParameterIndexesData!: IStringArrayScopeCallsWrapperParameterIndexesData | null;
+
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
+     * @param {IStringArrayStorage} stringArrayStorage
+     * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -51,6 +68,8 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
             stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -58,6 +77,8 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
             identifierNamesGeneratorFactory,
             stringArrayIndexNodeFactory,
             customCodeHelperFormatter,
+            stringArrayStorage,
+            arrayUtils,
             randomGenerator,
             options
         );
@@ -65,16 +86,22 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
 
     /**
      * @param {string} stringArrayScopeCallsWrapperName
-     * @param {string} stringArrayCallsWrapperName
+     * @param {IStringArrayScopeCallsWrapperParameterIndexesData | null} stringArrayScopeCallsWrapperParameterIndexesData
+     * @param {string} upperStringArrayCallsWrapperName
+     * @param {IStringArrayScopeCallsWrapperParameterIndexesData | null} upperStringArrayCallsWrapperParameterIndexesData
      * @param {number} shiftedIndex
      */
     public initialize (
         stringArrayScopeCallsWrapperName: string,
-        stringArrayCallsWrapperName: string,
-        shiftedIndex: number
+        stringArrayScopeCallsWrapperParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null,
+        upperStringArrayCallsWrapperName: string,
+        upperStringArrayCallsWrapperParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null,
+        shiftedIndex: number,
     ): void {
         this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.stringArrayScopeCallsWrapperParameterIndexesData = stringArrayScopeCallsWrapperParameterIndexesData;
+        this.upperStringArrayCallsWrapperName = upperStringArrayCallsWrapperName;
+        this.upperStringArrayCallsWrapperParameterIndexesData = upperStringArrayCallsWrapperParameterIndexesData;
         this.shiftedIndex = shiftedIndex;
     }
 
@@ -84,32 +111,68 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
     protected getNodeStructure (): TStatement[] {
         // identifiers of function expression parameters
         // as a temporary names use random strings
-        const firstParameterIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
-        const secondParameterIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
+        const stringArrayCallIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
+        const decodeKeyIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
 
-        // identifiers of call to the parent string array scope wrapper
-        // as a temporary names use random strings
-        const firstCallArgumentIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
-        const secondCallArgumentIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
+        const stringArrayCallNode: ESTree.Expression = this.getUpperStringArrayCallNode(
+            stringArrayCallIdentifierNode,
+            this.getStringArrayIndexNode(this.shiftedIndex)
+        );
 
-        // function expression node
+        // stage 1: function expression node parameters
+        // filling all parameters with a fake parameters first
+        const parameters: ESTree.Identifier[] = this.arrayUtils.fillWithRange(
+            !this.stringArrayScopeCallsWrapperParameterIndexesData
+                // root string array calls wrapper
+                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
+                // scope string array calls wrapper
+                : this.options.stringArrayWrappersParametersMaxCount,
+            () => this.getFakeParameterNode()
+        );
+        parameters.splice(
+            this.stringArrayScopeCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            1,
+            stringArrayCallIdentifierNode
+        );
+        parameters.splice(
+            this.stringArrayScopeCallsWrapperParameterIndexesData?.decodeKeyParameterIndex ?? 1,
+            1,
+            decodeKeyIdentifierNode
+        );
+
+        // stage 2: upper string array call expression arguments
+        // filling all call expression arguments with a fake string array calls
+        const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
+            !this.upperStringArrayCallsWrapperParameterIndexesData
+                // root string array calls wrapper
+                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
+                // scope string array calls wrapper
+                : this.options.stringArrayWrappersParametersMaxCount,
+            (index: number) => this.getUpperStringArrayCallNode(
+                parameters[index],
+                this.getFakeUpperStringArrayIndexNode()
+            )
+        );
+
+        callExpressionArgs.splice(
+            this.upperStringArrayCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            1,
+            stringArrayCallNode
+        );
+        callExpressionArgs.splice(
+            this.upperStringArrayCallsWrapperParameterIndexesData?.decodeKeyParameterIndex ?? 1,
+            1,
+            decodeKeyIdentifierNode
+        );
+
+        // stage 3: function expression node
         const functionExpressionNode: ESTree.FunctionExpression =  NodeFactory.functionExpressionNode(
-            [
-                firstParameterIdentifierNode,
-                secondParameterIdentifierNode,
-            ],
+            parameters,
             NodeFactory.blockStatementNode([
                 NodeFactory.returnStatementNode(
                     NodeFactory.callExpressionNode(
-                        NodeFactory.identifierNode(this.stringArrayCallsWrapperName),
-                        [
-                            NodeFactory.binaryExpressionNode(
-                                '-',
-                                firstCallArgumentIdentifierNode,
-                                this.getStringArrayIndexNode(this.shiftedIndex)
-                            ),
-                            secondCallArgumentIdentifierNode
-                        ]
+                        NodeFactory.identifierNode(this.upperStringArrayCallsWrapperName),
+                        callExpressionArgs
                     )
                 )
             ])
@@ -127,16 +190,42 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
 
         NodeUtils.parentizeAst(structure);
 
+        // stage 4: rename
         // have to generate names for both parameter and call identifiers
-        const firstParameterName: string = this.identifierNamesGenerator.generateForLexicalScope(functionExpressionNode);
-        const secondParameterName: string = this.identifierNamesGenerator.generateForLexicalScope(functionExpressionNode);
-
-        firstParameterIdentifierNode.name = firstParameterName;
-        secondParameterIdentifierNode.name = secondParameterName;
-
-        firstCallArgumentIdentifierNode.name = firstParameterName;
-        secondCallArgumentIdentifierNode.name = secondParameterName;
+        for (const parameter of parameters) {
+            parameter.name = this.identifierNamesGenerator.generateForLexicalScope(functionExpressionNode);
+        }
 
         return [structure];
+    }
+
+    /**
+     * @param {Identifier} indexParameterIdentifierNode
+     * @param {Expression} indexShiftNode
+     * @returns {Expression}
+     */
+    private getUpperStringArrayCallNode (
+        indexParameterIdentifierNode: ESTree.Identifier,
+        indexShiftNode: ESTree.Expression
+    ): ESTree.Expression {
+        return NodeFactory.binaryExpressionNode(
+            '-',
+            indexParameterIdentifierNode,
+            indexShiftNode
+        );
+    }
+
+    /**
+     * @returns {Identifier}
+     */
+    private getFakeParameterNode (): ESTree.Identifier {
+        return NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
+    }
+
+    /**
+     * @returns {Expression}
+     */
+    private getFakeUpperStringArrayIndexNode (): ESTree.Expression {
+        return this.getStringArrayIndexNode(this.randomGenerator.getRandomInteger(0, 500));
     }
 }

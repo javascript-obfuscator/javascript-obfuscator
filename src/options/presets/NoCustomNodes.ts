@@ -51,6 +51,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     stringArrayIndexShift: false,
     stringArrayWrappersChainedCalls: false,
     stringArrayWrappersCount: 0,
+    stringArrayWrappersParametersMaxCount: 2,
     stringArrayWrappersType: StringArrayWrappersType.Variable,
     stringArrayThreshold: 0,
     target: ObfuscationTarget.Browser,

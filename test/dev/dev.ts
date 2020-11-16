@@ -8,26 +8,18 @@ import { StringArrayIndexesType } from '../../src/enums/node-transformers/string
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const foo = 'foo';
-            const bar = 'bar';
-            
-            function test1 () {
-                const baz = 'baz';
-                
-                function test2() {
-                    const bark = 'bark';
-                    
-                    console.log(bark);
-                }
-                
-                console.log(baz);
-                
-                test2();
+            // Paste your JavaScript code here
+            function hi() {
+              function inner () {
+                  console.log('inner');
+                  console.log('inner1');
+              }
+              
+              console.log("Hello World!");
+              
+              inner();
             }
-            
-            console.log(foo, bar);
-            
-            test1();
+            hi();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
@@ -35,14 +27,19 @@ import { StringArrayIndexesType } from '../../src/enums/node-transformers/string
             rotateStringArray: true,
             shuffleStringArray: true,
             stringArray: true,
+            /*stringArrayEncoding: [
+                StringArrayEncoding.None,
+                StringArrayEncoding.Rc4
+            ],*/
             stringArrayIndexesType: [
                 StringArrayIndexesType.HexadecimalNumericString,
                 StringArrayIndexesType.HexadecimalNumber
             ],
             stringArrayIndexShift: true,
             stringArrayThreshold: 1,
-            stringArrayWrappersCount: 2,
+            stringArrayWrappersCount: 1,
             stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersParametersMaxCount: 2,
             stringArrayWrappersType: 'function'
         }
     ).getObfuscatedCode();

@@ -6,6 +6,13 @@ export interface IArrayUtils {
     createWithRange (length: number): number[];
 
     /**
+     * @param {number} length
+     * @param {(index: number) => TValue} valueFunction
+     * @returns {TValue[]}
+     */
+    fillWithRange <TValue> (length: number, valueFunction: (index: number) => TValue): TValue[];
+
+    /**
      * @param {T[]} array
      * @returns {T | null}
      */

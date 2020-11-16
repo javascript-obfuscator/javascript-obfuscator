@@ -2,7 +2,6 @@ import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
-import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { MEDIUM_OBFUSCATION_PRESET } from './MediumObfuscation';
 
@@ -18,6 +17,6 @@ export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
         StringArrayEncoding.Rc4
     ],
     stringArrayWrappersCount: 5,
-    stringArrayWrappersType: StringArrayWrappersType.Function,
+    stringArrayWrappersParametersMaxCount: 5,
     stringArrayThreshold: 1
 });

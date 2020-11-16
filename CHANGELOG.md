@@ -5,6 +5,8 @@ v2.9.0
 * New option: `stringArrayIndexesType` accepts an array of types of string array call indexes
 * Changed default type of all string array call indexes from `hexadecimal-numeric-string` to `hexadecimal-number`
 * New option: `stringArrayIndexShift` enables additional index shift for all string array calls
+* New option: `stringArrayWrappersParametersMaxCount` allows to control the maximum number of string array wrappers parameters
+* `stringArrayWrappersType: 'function'` option value moved from `high-obfuscation` to `medium-obfuscation` options preset
 
 v2.8.1
 ---

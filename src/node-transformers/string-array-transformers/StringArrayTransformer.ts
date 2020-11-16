@@ -15,9 +15,11 @@ import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifie
 import { ILiteralNodesCacheStorage } from '../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayScopeCallsWrapperData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperData';
 import { IStringArrayScopeCallsWrapperLexicalScopeData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeData';
 import { IStringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { IStringArrayScopeCallsWrapperNamesDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperNamesDataStorage';
+import { IStringArrayScopeCallsWrapperParameterIndexesData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperParameterIndexesData';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
@@ -207,7 +209,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {Expression}
      */
     private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Expression {
-        const [stringArrayCallsWrapperName, index] = this.getStringArrayCallsWrapperData(stringArrayStorageItemData);
+        const {
+            name: stringArrayCallsWrapperName,
+            index,
+            parameterIndexesData
+        } = this.getStringArrayCallsWrapperData(stringArrayStorageItemData);
         const {decodeKey } = stringArrayStorageItemData;
 
         const stringArrayCallCustomNode: ICustomNode<TInitialData<StringArrayCallNode>> =
@@ -215,6 +221,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
         stringArrayCallCustomNode.initialize(
             stringArrayCallsWrapperName,
+            parameterIndexesData,
             index,
             this.stringArrayStorage.getIndexShiftAmount(),
             decodeKey
@@ -231,11 +238,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
-     * @returns {[name: string, index: number]}
+     * @returns {IStringArrayScopeCallsWrapperData}
      */
     private getStringArrayCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
-    ): [name: string, index: number] {
+    ): IStringArrayScopeCallsWrapperData {
         return !this.options.stringArrayWrappersCount
             ? this.getRootStringArrayCallsWrapperData(stringArrayStorageItemData)
             : this.getUpperStringArrayCallsWrapperData(stringArrayStorageItemData);
@@ -243,28 +250,29 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
-     * @returns {[name: string, index: number]}
+     * @returns {IStringArrayScopeCallsWrapperData}
      */
     private getRootStringArrayCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
-    ): [name: string, index: number] {
+    ): IStringArrayScopeCallsWrapperData {
         const {encoding, index} = stringArrayStorageItemData;
 
         const rootStringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(encoding);
 
-        return [
-            rootStringArrayCallsWrapperName,
+        return {
+            name: rootStringArrayCallsWrapperName,
+            parameterIndexesData: null,
             index
-        ];
+        };
     }
 
     /**
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
-     * @returns {[name: string, index: number]}
+     * @returns {IStringArrayScopeCallsWrapperData}
      */
     private getUpperStringArrayCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
-    ): [name: string, index: number] {
+    ): IStringArrayScopeCallsWrapperData {
         const {encoding, index} = stringArrayStorageItemData;
         const currentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | null =
             this.visitedLexicalScopeNodesStackStorage.getLastElement() ?? null;
@@ -295,10 +303,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             ? stringArrayScopeCallsWrapperLexicalScopeData.resultShiftedIndex + index
             : index;
 
-        return [
-            randomUpperStringArrayCallsWrapperName,
-            resultIndex
-        ];
+        return {
+            name: randomUpperStringArrayCallsWrapperName,
+            index: resultIndex,
+            parameterIndexesData: stringArrayScopeCallsWrapperLexicalScopeData.callsWrappersParameterIndexesData
+        };
     }
 
     /**
@@ -362,6 +371,10 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             ? this.stringArrayScopeCallsWrapperLexicalScopeDataStorage.get(parentLexicalScopeBodyNode) ?? null
             : null;
 
+        const callsWrappersParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null =
+            this.options.stringArrayWrappersType === StringArrayWrappersType.Function
+            ? this.getStringArrayCallsWrapperParameterIndexesData()
+            : null;
         const scopeShiftedIndex: number = this.options.stringArrayWrappersType === StringArrayWrappersType.Function
             ? this.randomGenerator.getRandomInteger(
                 StringArrayTransformer.minShiftedIndexValue,
@@ -373,6 +386,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             : scopeShiftedIndex;
 
         const lexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData = {
+            callsWrappersParameterIndexesData,
             parentLexicalScopeBodyNode,
             resultShiftedIndex,
             scopeShiftedIndex
@@ -384,5 +398,23 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         );
 
         return lexicalScopeData;
+    }
+
+    /**
+     * @returns {IStringArrayScopeCallsWrapperParameterIndexesData}
+     */
+    private getStringArrayCallsWrapperParameterIndexesData (): IStringArrayScopeCallsWrapperParameterIndexesData {
+        const minIndexValue: number = 0;
+        const maxIndexValue: number = this.options.stringArrayWrappersParametersMaxCount - 1;
+
+        const valueIndexParameterIndex: number = this.randomGenerator
+            .getRandomInteger(minIndexValue, maxIndexValue);
+        const decodeKeyParameterIndex: number = this.randomGenerator
+            .getRandomIntegerExcluding(minIndexValue, maxIndexValue, [valueIndexParameterIndex]);
+
+        return {
+            valueIndexParameterIndex,
+            decodeKeyParameterIndex
+        };
     }
 }

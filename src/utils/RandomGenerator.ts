@@ -81,6 +81,26 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     }
 
     /**
+     * @param {number} min
+     * @param {number} max
+     * @param {number[]} valuesToExclude
+     * @returns {number}
+     */
+    public getRandomIntegerExcluding (min: number, max: number, valuesToExclude: number[]): number {
+        const valuesToPickArray: number[] = [];
+
+        for (let value: number = min; value <= max; value++) {
+            if (valuesToExclude.includes(value)) {
+                continue;
+            }
+
+            valuesToPickArray.push(value);
+        }
+
+        return this.randomGenerator.pickone(valuesToPickArray);
+    }
+
+    /**
      * @param {number} length
      * @param {string} pool
      * @returns {string}

@@ -54,6 +54,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArrayIndexShift: true,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersCount: 1,
+    stringArrayWrappersParametersMaxCount: 2,
     stringArrayWrappersType: StringArrayWrappersType.Variable,
     stringArrayThreshold: 0.75,
     target: ObfuscationTarget.Browser,

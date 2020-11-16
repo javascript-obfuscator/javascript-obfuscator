@@ -926,6 +926,7 @@ describe('JavaScriptObfuscator', () => {
                         stringArrayIndexShift: true,
                         stringArrayWrappersChainedCalls: true,
                         stringArrayWrappersCount: 10,
+                        stringArrayWrappersParametersMaxCount: 5,
                         stringArrayWrappersType: StringArrayWrappersType.Function,
                         stringArrayThreshold: 1,
                         transformObjectKeys: true,

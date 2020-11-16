@@ -129,8 +129,16 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
                 : this.options.stringArrayWrappersParametersMaxCount,
             () => this.getFakeParameterNode()
         );
-        parameters.splice(this.stringArrayScopeCallsWrapperParameterIndexesData?.index ?? 0, 1, stringArrayCallIdentifierNode);
-        parameters.splice(this.stringArrayScopeCallsWrapperParameterIndexesData?.decodeKey ?? 1, 1, decodeKeyIdentifierNode);
+        parameters.splice(
+            this.stringArrayScopeCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            1,
+            stringArrayCallIdentifierNode
+        );
+        parameters.splice(
+            this.stringArrayScopeCallsWrapperParameterIndexesData?.decodeKeyParameterIndex ?? 1,
+            1,
+            decodeKeyIdentifierNode
+        );
 
         // stage 2: upper string array call expression arguments
         // filling all call expression arguments with a fake string array calls
@@ -146,8 +154,16 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
             )
         );
 
-        callExpressionArgs.splice(this.upperStringArrayCallsWrapperParameterIndexesData?.index ?? 0, 1, stringArrayCallNode);
-        callExpressionArgs.splice(this.upperStringArrayCallsWrapperParameterIndexesData?.decodeKey ?? 1, 1, decodeKeyIdentifierNode);
+        callExpressionArgs.splice(
+            this.upperStringArrayCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            1,
+            stringArrayCallNode
+        );
+        callExpressionArgs.splice(
+            this.upperStringArrayCallsWrapperParameterIndexesData?.decodeKeyParameterIndex ?? 1,
+            1,
+            decodeKeyIdentifierNode
+        );
 
         // stage 3: function expression node
         const functionExpressionNode: ESTree.FunctionExpression =  NodeFactory.functionExpressionNode(

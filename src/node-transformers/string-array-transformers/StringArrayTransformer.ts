@@ -407,12 +407,14 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const minIndexValue: number = 0;
         const maxIndexValue: number = this.options.stringArrayWrappersParametersMaxCount - 1;
 
-        const index: number = this.randomGenerator.getRandomInteger(minIndexValue, maxIndexValue);
-        const decodeKey: number = this.randomGenerator.getRandomIntegerExcluding(minIndexValue, maxIndexValue, [index]);
+        const valueIndexParameterIndex: number = this.randomGenerator
+            .getRandomInteger(minIndexValue, maxIndexValue);
+        const decodeKeyParameterIndex: number = this.randomGenerator
+            .getRandomIntegerExcluding(minIndexValue, maxIndexValue, [valueIndexParameterIndex]);
 
         return {
-            index,
-            decodeKey
+            valueIndexParameterIndex,
+            decodeKeyParameterIndex
         };
     }
 }

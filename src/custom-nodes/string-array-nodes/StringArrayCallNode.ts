@@ -125,11 +125,15 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
             () => this.getFakeStringArrayIndexNode(resultIndex)
         );
 
-        callExpressionArgs.splice(this.stringArrayCallsWrapperParameterIndexesData?.index ?? 0, 1, indexNode);
+        callExpressionArgs.splice(
+            this.stringArrayCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            1,
+            indexNode
+        );
 
         if (this.stringArrayCallsWrapperParameterIndexesData) {
             callExpressionArgs.splice(
-                this.stringArrayCallsWrapperParameterIndexesData.decodeKey,
+                this.stringArrayCallsWrapperParameterIndexesData.decodeKeyParameterIndex,
                 1,
                 // use rc4 key literal node if exists or a node with fake string array wrapper index
                 rc4KeyLiteralNode ?? this.getFakeStringArrayIndexNode(resultIndex)

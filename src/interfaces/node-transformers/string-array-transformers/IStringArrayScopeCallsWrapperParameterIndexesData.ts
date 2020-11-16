@@ -2,10 +2,10 @@ export interface IStringArrayScopeCallsWrapperParameterIndexesData {
     /**
      * @type {number}
      */
-    index: number;
+    valueIndexParameterIndex: number;
 
     /**
      * @type {number}
      */
-    decodeKey: number;
+    decodeKeyParameterIndex: number;
 }

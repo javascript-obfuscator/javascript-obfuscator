@@ -959,6 +959,137 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     });
                 });
             });
+
+            describe('Variant #5: variable amount of the arguments', () => {
+                describe('Variant #1: base', () => {
+                    const stringArrayWrapperArgumentsRegExpString: string = Array(5)
+                        .fill(`-? *${hexadecimalIndexMatch}`)
+                        .join(', *');
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const f *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                            `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
+                        '};' +
+                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        'function test *\\( *\\) *{' +
+                            'const g *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                                `return f\\(` +
+                                    // order of arguments depends on the parent wrapper parameters order
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
+                                `\\);` +
+                            '};' +
+                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+                    let areSuccessEvaluations: boolean;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+                        const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersParametersMaxCount: 5,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+
+                        obfuscatedCode = getObfuscatedCode();
+                        areSuccessEvaluations = checkCodeEvaluation(
+                            getObfuscatedCode,
+                            evaluationSamplesCount
+                        ).areSuccessEvaluations;
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+
+                    it('should evaluate code without errors', () => {
+                        assert.isTrue(areSuccessEvaluations);
+                    });
+                });
+
+                describe('Variant #2: `stringArrayEncoding` option is `rc4`', () => {
+                    const stringArrayWrapperArgumentsRegExpString: string = Array(5)
+                        .fill(`(?:-? *${hexadecimalIndexMatch}|(?:'.{4}'))`)
+                        .join(', *');
+                    const stringArrayCallRegExp: RegExp = new RegExp(
+                        'const f *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                            `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
+                        '};' +
+                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        'function test *\\( *\\) *{' +
+                            'const g *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                                `return f\\(` +
+                                    // order of arguments depends on the parent wrapper parameters order
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
+                                `\\);` +
+                            '};' +
+                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                        '}'
+                    );
+
+                    let obfuscatedCode: string;
+                    let areSuccessEvaluations: boolean;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+                        const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayEncoding: [
+                                    StringArrayEncoding.Rc4
+                                ],
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersParametersMaxCount: 5,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+
+                        obfuscatedCode = getObfuscatedCode();
+                        areSuccessEvaluations = checkCodeEvaluation(
+                            getObfuscatedCode,
+                            evaluationSamplesCount
+                        ).areSuccessEvaluations;
+                    });
+
+                    it('should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    });
+
+                    it('should evaluate code without errors', () => {
+                        assert.isTrue(areSuccessEvaluations);
+                    });
+                });
+            });
         });
     });
 

@@ -371,6 +371,7 @@ Following options are available for the JS Obfuscator:
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersParametersMaxCount: 2,
     stringArrayWrappersType: 'variable',
     stringArrayThreshold: 0.75,
     target: 'browser',
@@ -426,6 +427,7 @@ Following options are available for the JS Obfuscator:
     --string-array-index-shift <boolean>
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
+    --string-array-wrappers-parameters-max-count <number>
     --string-array-wrappers-type <string> [variable, function]
     --string-array-threshold <number>
     --target <string> [browser, browser-no-eval, node]
@@ -1126,7 +1128,7 @@ function test() {
 }
 ```
 
-### `stringArrayWrappersParametersCount`
+### `stringArrayWrappersParametersMaxCount`
 Type: `number` Default: `2`
 
 ##### :warning: [`stringArray`](#stringarray) option must be enabled

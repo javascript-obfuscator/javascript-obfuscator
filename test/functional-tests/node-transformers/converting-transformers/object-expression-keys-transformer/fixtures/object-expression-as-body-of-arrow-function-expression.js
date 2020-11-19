@@ -1,0 +1,3 @@
+const test = () => ({
+    foo: 'bar'
+});

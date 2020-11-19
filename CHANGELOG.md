@@ -1,5 +1,9 @@
 Change Log
 
+v2.9.2
+---
+* Ignore object expressions as body of arrow function expression when `transformObjectKeys` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/813
+
 v2.9.1
 ---
 * Fixed wrong `stringArrayWrappersParametersMaxCount` CLI option name

@@ -50,31 +50,37 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} hostStatement
+     * @param {Node} objectExpressionParentNode
+     * @param {Statement} objectExpressionHostStatement
      * @returns {boolean}
      */
-    private static isProhibitedHostStatement (
+    private static isProhibitedObjectExpressionNode (
         objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
+        objectExpressionParentNode: ESTree.Node,
+        objectExpressionHostStatement: ESTree.Statement
     ): boolean {
         return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
                 objectExpressionNode,
-                hostStatement
+                objectExpressionHostStatement
+            )
+            || ObjectExpressionKeysTransformer.isProhibitedArrowFunctionExpression(
+                objectExpressionNode,
+                objectExpressionParentNode
             )
             || ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
                 objectExpressionNode,
-                hostStatement
+                objectExpressionHostStatement
             );
     }
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} hostNode
+     * @param {Node} objectExpressionHostNode
      * @returns {boolean}
      */
     private static isReferencedIdentifierName (
         objectExpressionNode: ESTree.ObjectExpression,
-        hostNode: ESTree.Node,
+        objectExpressionHostNode: ESTree.Node,
     ): boolean {
         const identifierNamesSet: string[] = [];
 
@@ -82,7 +88,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         let isCurrentNode: boolean = false;
 
         // should mark node as prohibited if identifier of node is referenced somewhere inside other nodes
-        estraverse.traverse(hostNode, {
+        estraverse.traverse(objectExpressionHostNode, {
             enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
                 if (node === objectExpressionNode) {
                     isCurrentNode = true;
@@ -116,16 +122,29 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} hostNode
+     * @param {Node} objectExpressionNodeParentNode
+     * @returns {boolean}
+     */
+    private static isProhibitedArrowFunctionExpression (
+        objectExpressionNode: ESTree.ObjectExpression,
+        objectExpressionNodeParentNode: ESTree.Node
+    ): boolean {
+        return NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode)
+            && objectExpressionNodeParentNode.body === objectExpressionNode;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node} objectExpressionHostNode
      * @returns {boolean}
      */
     private static isProhibitedSequenceExpression (
         objectExpressionNode: ESTree.ObjectExpression,
-        hostNode: ESTree.Node,
+        objectExpressionHostNode: ESTree.Node,
     ): boolean {
-        return NodeGuards.isExpressionStatementNode(hostNode)
-            && NodeGuards.isSequenceExpressionNode(hostNode.expression)
-            && hostNode.expression.expressions.some((expressionNode: ESTree.Expression) =>
+        return NodeGuards.isExpressionStatementNode(objectExpressionHostNode)
+            && NodeGuards.isSequenceExpressionNode(objectExpressionHostNode.expression)
+            && objectExpressionHostNode.expression.expressions.some((expressionNode: ESTree.Expression) =>
                 NodeGuards.isCallExpressionNode(expressionNode)
                 && NodeGuards.isSuperNode(expressionNode.callee)
             );
@@ -182,7 +201,11 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
         const hostStatement: ESTree.Statement = NodeStatementUtils.getRootStatementOfNode(objectExpressionNode);
 
-        if (ObjectExpressionKeysTransformer.isProhibitedHostStatement(objectExpressionNode, hostStatement)) {
+        if (ObjectExpressionKeysTransformer.isProhibitedObjectExpressionNode(
+            objectExpressionNode,
+            parentNode,
+            hostStatement
+        )) {
             return objectExpressionNode;
         }
 

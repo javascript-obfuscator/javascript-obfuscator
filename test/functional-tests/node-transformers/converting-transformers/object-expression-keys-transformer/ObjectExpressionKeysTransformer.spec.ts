@@ -1948,5 +1948,32 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #13: object expression as body of arrow function expression', () => {
+            const match: string = `` +
+                `const test *= *\\(\\) *=> *\\({`+
+                    `'foo' *: *'bar'` +
+                `}\\);` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-expression-as-body-of-arrow-function-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore object expressions keys transformation', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

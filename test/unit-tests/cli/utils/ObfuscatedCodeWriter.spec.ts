@@ -114,7 +114,34 @@ describe('ObfuscatedCodeWriter', () => {
                 });
             });
 
-            describe('Variant #2: base nested directory name', () => {
+            describe('Variant #2: base directory name with leading dot in output path', () => {
+                const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
+                const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
+                const rawOutputPath: string = path.join('.', tmpDirectoryPath, 'output');
+                const expectedOutputCodePath: string = path.join(
+                    tmpDirectoryPath,
+                    'output',
+                    'test-input.js'
+                );
+
+                let outputCodePath: string;
+
+                before(() => {
+                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                        rawInputPath,
+                        {
+                            output: rawOutputPath
+                        }
+                    );
+                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                });
+
+                it('should return output path that contains raw output path and actual file input path', () => {
+                    assert.equal(outputCodePath, expectedOutputCodePath);
+                });
+            });
+
+            describe('Variant #3: base nested directory name', () => {
                 const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
@@ -142,7 +169,7 @@ describe('ObfuscatedCodeWriter', () => {
                 });
             });
 
-            describe('Variant #3: directory name with dot', () => {
+            describe('Variant #4: directory name with dot', () => {
                 const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'foo.bar');

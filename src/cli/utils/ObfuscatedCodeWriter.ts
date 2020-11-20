@@ -60,7 +60,11 @@ export class ObfuscatedCodeWriter {
 
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {
-                const baseOutputPath: string = normalizedFilePath.replace(this.inputPath, '');
+                const parsedNormalizedFilePath: path.ParsedPath = path.parse(normalizedFilePath);
+                const baseOutputPath: string = path.join(
+                    parsedNormalizedFilePath.dir.replace(this.inputPath, ''),
+                    parsedNormalizedFilePath.base
+                );
 
                 return path.join(normalizedRawOutputPath, baseOutputPath);
             } else {

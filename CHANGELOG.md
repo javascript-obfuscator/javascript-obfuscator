@@ -1,5 +1,9 @@
 Change Log
 
+v2.9.3
+---
+* **CLI**: Fixed wrong name of obfuscated files when input directory path is the `.` symbol. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/816
+
 v2.9.2
 ---
 * Ignore object expressions as body of arrow function expression when `transformObjectKeys` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/813

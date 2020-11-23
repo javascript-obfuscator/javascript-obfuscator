@@ -1,5 +1,9 @@
 Change Log
 
+v2.9.4
+---
+* Fixed missing prefix of root identifiers added by `stringArrayWrappersCount` option when `identifiersPrefix` option is set
+
 v2.9.3
 ---
 * **CLI**: Fixed wrong name of obfuscated files when input directory path is the `.` symbol. https://github.com/javascript-obfuscator/javascript-obfuscator/issues/816

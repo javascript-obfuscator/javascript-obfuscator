@@ -112,6 +112,38 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
+
+            describe('Variant #4: `identifiersPrefix` option is set', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'const foo_d *= *foo_b;' +
+                    'const foo_e *= *foo_b;' +
+                    'const foo *= *foo_[d|e]\\(0x0\\);' +
+                    'const bar *= *foo_[d|e]\\(0x1\\);' +
+                    'const baz *= *foo_[d|e]\\(0x2\\);'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            identifiersPrefix: 'foo_',
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
         });
 
         describe('Variant #2: function scope', () => {
@@ -236,6 +268,40 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             stringArray: true,
                             stringArrayThreshold: 1,
                             stringArrayWrappersCount: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
+            });
+
+            describe('Variant #5: `identifiersPrefix` option is set', () => {
+                const stringArrayCallRegExp: RegExp = new RegExp(
+                    'function test *\\( *\\) *{' +
+                        'const f *= *foo_b;' +
+                        'const g *= *foo_b;' +
+                        'const a *= *[f|g]\\(0x3\\);' +
+                        'const b *= *[f|g]\\(0x4\\);' +
+                        'const c *= *[f|g]\\(0x5\\);' +
+                    '}'
+                );
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            identifiersPrefix: 'foo_',
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersCount: 2
                         }
                     ).getObfuscatedCode();
                 });

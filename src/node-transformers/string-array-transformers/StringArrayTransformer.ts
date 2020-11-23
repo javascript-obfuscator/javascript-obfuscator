@@ -331,7 +331,10 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             return stringArrayScopeCallsWrapperNamesDataByEncoding;
         }
 
-        const nextScopeCallsWrapperName: string = this.identifierNamesGenerator.generateNext();
+        // have to use `generateForGlobalScope` for program node for correct attach prefix to the calls wrapper name
+        const nextScopeCallsWrapperName: string = NodeGuards.isProgramNode(currentLexicalScopeBodyNode)
+            ? this.identifierNamesGenerator.generateForGlobalScope()
+            : this.identifierNamesGenerator.generateNext();
 
         stringArrayScopeCallsWrapperNamesDataByEncoding[encoding] = {
             encoding,

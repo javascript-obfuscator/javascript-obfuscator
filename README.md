@@ -938,7 +938,7 @@ Result:
 Type: `string` Default: `separate`
 
 Specifies source map generation mode:
-* `inline` - emit a single file with source maps instead of having a separate file;
+* `inline` - add source map at the end of each .js files;
 * `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
 ### `splitStrings`

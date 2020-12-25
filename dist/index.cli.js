@@ -5346,7 +5346,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StringArrayRotateFunctionCodeHelper = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
@@ -5355,97 +5355,59 @@ const TIdentifierNamesGeneratorFactory_1 = __webpack_require__(/*! ../../types/c
 const ICustomCodeHelperFormatter_1 = __webpack_require__(/*! ../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter */ "./src/interfaces/custom-code-helpers/ICustomCodeHelperFormatter.ts");
 const ICustomCodeHelperObfuscator_1 = __webpack_require__(/*! ../../interfaces/custom-code-helpers/ICustomCodeHelperObfuscator */ "./src/interfaces/custom-code-helpers/ICustomCodeHelperObfuscator.ts");
 const IEscapeSequenceEncoder_1 = __webpack_require__(/*! ../../interfaces/utils/IEscapeSequenceEncoder */ "./src/interfaces/utils/IEscapeSequenceEncoder.ts");
-const INumberNumericalExpressionAnalyzer_1 = __webpack_require__(/*! ../../interfaces/analyzers/number-numerical-expression-analyzer/INumberNumericalExpressionAnalyzer */ "./src/interfaces/analyzers/number-numerical-expression-analyzer/INumberNumericalExpressionAnalyzer.ts");
 const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
 const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
 const Initializable_1 = __webpack_require__(/*! ../../decorators/Initializable */ "./src/decorators/Initializable.ts");
 const SelfDefendingTemplate_1 = __webpack_require__(/*! ./templates/string-array-rotate-function/SelfDefendingTemplate */ "./src/custom-code-helpers/string-array/templates/string-array-rotate-function/SelfDefendingTemplate.ts");
 const StringArrayRotateFunctionTemplate_1 = __webpack_require__(/*! ./templates/string-array-rotate-function/StringArrayRotateFunctionTemplate */ "./src/custom-code-helpers/string-array/templates/string-array-rotate-function/StringArrayRotateFunctionTemplate.ts");
 const AbstractCustomCodeHelper_1 = __webpack_require__(/*! ../AbstractCustomCodeHelper */ "./src/custom-code-helpers/AbstractCustomCodeHelper.ts");
-const NodeFactory_1 = __webpack_require__(/*! ../../node/NodeFactory */ "./src/node/NodeFactory.ts");
 const NodeUtils_1 = __webpack_require__(/*! ../../node/NodeUtils */ "./src/node/NodeUtils.ts");
 const NumberUtils_1 = __webpack_require__(/*! ../../utils/NumberUtils */ "./src/utils/NumberUtils.ts");
 let StringArrayRotateFunctionCodeHelper = class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelper_1.AbstractCustomCodeHelper {
-    constructor(identifierNamesGeneratorFactory, customCodeHelperFormatter, customCodeHelperObfuscator, randomGenerator, options, escapeSequenceEncoder, numberNumericalExpressionAnalyzer) {
+    constructor(identifierNamesGeneratorFactory, customCodeHelperFormatter, customCodeHelperObfuscator, randomGenerator, options, escapeSequenceEncoder) {
         super(identifierNamesGeneratorFactory, customCodeHelperFormatter, customCodeHelperObfuscator, randomGenerator, options);
         this.escapeSequenceEncoder = escapeSequenceEncoder;
-        this.numberNumericalExpressionAnalyzer = numberNumericalExpressionAnalyzer;
     }
-    initialize(stringArrayName) {
+    initialize(stringArrayName, stringArrayRotationAmount) {
         this.stringArrayName = stringArrayName;
+        this.stringArrayRotationAmount = stringArrayRotationAmount;
     }
     getNodeStructure(codeHelperTemplate) {
         return NodeUtils_1.NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
     getCodeHelperTemplate() {
+        const timesName = this.identifierNamesGenerator.generateNext();
         const whileFunctionName = this.identifierNamesGenerator.generateNext();
         const preservedNames = [`^${this.stringArrayName}$`];
-        const comparisonValue = this.randomGenerator.getRandomInteger(100000, 1000000);
-        const rotationAmountNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer.analyze(comparisonValue);
-        const rotationAmountExpression = this.convertNumericalExpressionDataToNode(rotationAmountNumberNumericalExpressionData);
-        const rotationAmountExpressionCode = NodeUtils_1.NodeUtils.convertStructureToCode([rotationAmountExpression]);
         let code = '';
         if (this.options.selfDefending) {
             code = this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate_1.SelfDefendingTemplate(this.escapeSequenceEncoder), {
+                timesName,
                 whileFunctionName
             });
         }
         else {
-            code = `${whileFunctionName}()`;
+            code = `${whileFunctionName}(++${timesName})`;
         }
         return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate(StringArrayRotateFunctionTemplate_1.StringArrayRotateFunctionTemplate(), {
             code,
-            comparisonValue,
-            rotationAmountExpressionCode,
+            timesName,
             whileFunctionName,
-            stringArrayName: this.stringArrayName
+            stringArrayName: this.stringArrayName,
+            stringArrayRotationAmount: NumberUtils_1.NumberUtils.toHex(this.stringArrayRotationAmount)
         }), {
             reservedNames: preservedNames
         });
-    }
-    convertNumericalExpressionDataToNode(numberNumericalExpressionData, operator = '+') {
-        var _a;
-        const numberNumericalExpressionDataLength = numberNumericalExpressionData.length;
-        const leftParts = numberNumericalExpressionDataLength > 1
-            ? numberNumericalExpressionData.slice(0, numberNumericalExpressionDataLength - 1)
-            : [numberNumericalExpressionData[0]];
-        const rightParts = numberNumericalExpressionDataLength > 1
-            ? numberNumericalExpressionData.slice(-1)
-            : [];
-        if (rightParts.length) {
-            return this.convertPartsToBinaryExpression(operator, leftParts, rightParts);
-        }
-        const firstLeftPartOrNumber = (_a = leftParts[0]) !== null && _a !== void 0 ? _a : null;
-        return Array.isArray(firstLeftPartOrNumber)
-            ? this.convertNumericalExpressionDataToNode(firstLeftPartOrNumber, '*')
-            : this.convertPartOrNumberToLiteralNode(firstLeftPartOrNumber);
-    }
-    convertPartsToBinaryExpression(operator, leftParts, rightParts) {
-        const rightPartOrNumber = rightParts[0];
-        if (Array.isArray(rightPartOrNumber)) {
-            return NodeFactory_1.NodeFactory.binaryExpressionNode(operator, this.convertNumericalExpressionDataToNode(leftParts), this.convertNumericalExpressionDataToNode(rightPartOrNumber, '*'));
-        }
-        else {
-            return NodeFactory_1.NodeFactory.binaryExpressionNode(operator, this.convertNumericalExpressionDataToNode(leftParts), this.convertPartOrNumberToLiteralNode(rightPartOrNumber));
-        }
-    }
-    convertPartOrNumberToLiteralNode(partOrNumber) {
-        const number = Array.isArray(partOrNumber)
-            ? partOrNumber[0]
-            : partOrNumber;
-        const isPositiveNumber = NumberUtils_1.NumberUtils.isPositive(number);
-        const literalNode = NodeFactory_1.NodeFactory.literalNode(Math.abs(number).toString());
-        return NodeFactory_1.NodeFactory.callExpressionNode(NodeFactory_1.NodeFactory.identifierNode('parseInt'), [
-            isPositiveNumber
-                ? literalNode
-                : NodeFactory_1.NodeFactory.unaryExpressionNode('-', literalNode)
-        ]);
     }
 };
 __decorate([
     Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayRotateFunctionCodeHelper.prototype, "stringArrayName", void 0);
+__decorate([
+    Initializable_1.initializable(),
+    __metadata("design:type", Number)
+], StringArrayRotateFunctionCodeHelper.prototype, "stringArrayRotationAmount", void 0);
 StringArrayRotateFunctionCodeHelper = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
@@ -5454,8 +5416,7 @@ StringArrayRotateFunctionCodeHelper = __decorate([
     __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
-    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INumberNumericalExpressionAnalyzer)),
-    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object, typeof (_f = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _f : Object, typeof (_g = typeof INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer !== "undefined" && INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer) === "function" ? _g : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object, typeof (_f = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _f : Object])
 ], StringArrayRotateFunctionCodeHelper);
 exports.StringArrayRotateFunctionCodeHelper = StringArrayRotateFunctionCodeHelper;
 
@@ -5503,11 +5464,6 @@ let StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = class StringArra
         this.customCodeHelperFactory = customCodeHelperFactory;
         this.stringArrayStorage = stringArrayStorage;
     }
-    appendOnPreparing(nodeWithStatements, callsGraphData) {
-        this.appendCustomNodeIfExist(CustomCodeHelper_1.CustomCodeHelper.StringArrayRotateFunction, (customCodeHelper) => {
-            NodeAppender_1.NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
-        });
-    }
     appendOnFinalizing(nodeWithStatements, callsGraphData) {
         if (!this.stringArrayStorage.getLength()) {
             return;
@@ -5523,6 +5479,9 @@ let StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = class StringArra
                 NodeAppender_1.NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), i + 1);
             });
         }
+        this.appendCustomNodeIfExist(CustomCodeHelper_1.CustomCodeHelper.StringArrayRotateFunction, (customCodeHelper) => {
+            NodeAppender_1.NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
+        });
     }
     initialize() {
         this.customCodeHelpers = new Map();
@@ -5541,7 +5500,7 @@ let StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = class StringArra
             this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);
         }
         const stringArrayRotateFunctionCodeHelper = this.customCodeHelperFactory(CustomCodeHelper_1.CustomCodeHelper.StringArrayRotateFunction);
-        stringArrayRotateFunctionCodeHelper.initialize(stringArrayName);
+        stringArrayRotateFunctionCodeHelper.initialize(stringArrayName, this.stringArrayStorage.getRotationAmount());
         if (this.options.rotateStringArray) {
             this.customCodeHelpers.set(CustomCodeHelper_1.CustomCodeHelper.StringArrayRotateFunction, stringArrayRotateFunctionCodeHelper);
         }
@@ -5912,7 +5871,7 @@ function SelfDefendingTemplate(escapeSequenceEncoder) {
                         param1(++param2);
                     };
                     
-                    func({whileFunctionName});
+                    func({whileFunctionName}, {timesName});
                                         
                     return matches ? decodeURIComponent(matches[1]) : undefined;
                 }
@@ -5958,23 +5917,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StringArrayRotateFunctionTemplate = void 0;
 function StringArrayRotateFunctionTemplate() {
     return `
-        (function (comparisonValue) {
-            const {whileFunctionName} = function () {
-                while (true) {
-                    const expression = {rotationAmountExpressionCode};
-                    
-                    if (expression === comparisonValue) {
-                        break;
-                    } else {
-                        const [first, ...rest] = {stringArrayName};
-                        {stringArrayName} = [...rest, first];
-                    }
+        (function (array, {timesName}) {
+            const {whileFunctionName} = function (times) {
+                while (--times) {
+                    array['push'](array['shift']());
                 }
-
             };
             
             {code}
-        })({comparisonValue});
+        })({stringArrayName}, {stringArrayRotationAmount});
     `;
 }
 exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
@@ -5994,7 +5945,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StringArrayTemplate = void 0;
 function StringArrayTemplate() {
     return `
-        let {stringArrayName} = [{stringArrayStorageItems}];
+        const {stringArrayName} = [{stringArrayStorageItems}];
     `;
 }
 exports.StringArrayTemplate = StringArrayTemplate;

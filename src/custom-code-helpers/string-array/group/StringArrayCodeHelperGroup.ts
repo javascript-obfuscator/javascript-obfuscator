@@ -16,7 +16,6 @@ import { IStringArrayStorage } from '../../../interfaces/storages/string-array-t
 import { initializable } from '../../../decorators/Initializable';
 
 import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeHelper';
-import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 import { StringArrayEncoding } from '../../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGroup';
@@ -41,11 +40,6 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
      */
     @initializable()
     protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
-
-    /**
-     * @type {ObfuscationEvent}
-     */
-    protected appendEvent: ObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
      * @type {TCustomCodeHelperFactory}
@@ -82,7 +76,7 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnFinalizing (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.stringArrayStorage.getLength()) {
             return;
         }

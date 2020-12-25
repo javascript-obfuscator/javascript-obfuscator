@@ -28,7 +28,6 @@ import { ICodeTransformersRunner } from '../interfaces/code-transformers/ICodeTr
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
-import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 import { INodeTransformersRunner } from '../interfaces/node-transformers/INodeTransformersRunner';
@@ -37,7 +36,6 @@ import { CodeTransformersRunner } from '../code-transformers/CodeTransformersRun
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { NodeTransformersRunner } from '../node-transformers/NodeTransformersRunner';
-import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscatedCode } from '../source-code/ObfuscatedCode';
 import { SourceCode } from '../source-code/SourceCode';
 
@@ -198,11 +196,6 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
                     return obfuscatedCode;
                 };
             });
-
-        this.container
-            .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)
-            .to(ObfuscationEventEmitter)
-            .inSingletonScope();
 
         // modules
         this.container.load(analyzersModule);

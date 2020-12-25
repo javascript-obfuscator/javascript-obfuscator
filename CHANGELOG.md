@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.0
+---
+* Some internal refactoring related to node append events
+
 v2.9.4
 ---
 * Fixed missing prefix of root identifiers added by `stringArrayWrappersCount` option when `identifiersPrefix` option is set

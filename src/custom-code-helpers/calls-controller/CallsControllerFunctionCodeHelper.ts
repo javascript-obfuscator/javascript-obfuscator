@@ -62,7 +62,7 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
      */
     public initialize (nodeTransformationStage: NodeTransformationStage, callsControllerFunctionName: string): void {
         this.nodeTransformationStage = nodeTransformationStage;
-        this.callsControllerFunctionName = nodeTransformationStage;
+        this.callsControllerFunctionName = callsControllerFunctionName;
     }
 
     /**

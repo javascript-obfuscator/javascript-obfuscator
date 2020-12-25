@@ -40,7 +40,6 @@ export enum ServiceIdentifiers {
     INodeTransformerNamesGroupsBuilder = 'INodeTransformerNamesGroupsBuilder',
     INodeTransformersRunner = 'INodeTransformersRunner',
     INumberNumericalExpressionAnalyzer = 'INumberNumericalExpressionAnalyzer',
-    IObfuscationEventEmitter = 'IObfuscationEventEmitter',
     IObfuscatedCode = 'IObfuscatedCode',
     IOptions = 'IOptions',
     IOptionsNormalizer = 'IOptionsNormalizer',

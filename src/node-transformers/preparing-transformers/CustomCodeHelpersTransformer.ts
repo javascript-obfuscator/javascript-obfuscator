@@ -6,7 +6,6 @@ import * as ESTree from 'estree';
 import { TCustomCodeHelperGroupStorage } from '../../types/storages/TCustomCodeHelperGroupStorage';
 
 import { ICustomCodeHelperGroup } from '../../interfaces/custom-code-helpers/ICustomCodeHelperGroup';
-import { IObfuscationEventEmitter } from '../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ICallsGraphAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
@@ -15,7 +14,6 @@ import { IPrevailingKindOfVariablesAnalyzer } from '../../interfaces/analyzers/c
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
-import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -40,11 +38,6 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
     private readonly customCodeHelperGroupStorage: TCustomCodeHelperGroupStorage;
 
     /**
-     * @type {IObfuscationEventEmitter}
-     */
-    private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
-
-    /**
      * @type {ICallsGraphAnalyzer}
      */
     private readonly callsGraphAnalyzer: ICallsGraphAnalyzer;
@@ -62,7 +55,6 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
     /**
      * @param {ICallsGraphAnalyzer} callsGraphAnalyzer
      * @param {IPrevailingKindOfVariablesAnalyzer} prevailingKindOfVariablesAnalyzer
-     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {TCustomCodeHelperGroupStorage} customCodeHelperGroupStorage
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -71,7 +63,6 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
             prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
-        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customCodeHelperGroupStorage: TCustomCodeHelperGroupStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -80,7 +71,6 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
 
         this.callsGraphAnalyzer = callsGraphAnalyzer;
         this.prevailingKindOfVariablesAnalyzer = prevailingKindOfVariablesAnalyzer;
-        this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customCodeHelperGroupStorage = customCodeHelperGroupStorage;
     }
 
@@ -95,24 +85,23 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
                             this.prepareNode(node, parentNode);
-                            this.appendCustomNodesBeforeObfuscation(node, parentNode);
+                            this.appendCustomNodesForPreparingStage(node, parentNode);
 
                             return this.transformNode(node, parentNode);
                         }
                     }
                 };
 
-            case NodeTransformationStage.Finalizing:
+            default:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
-                            this.appendCustomNodesAfterObfuscation(node, parentNode);
+                            this.appendCustomNodesForStage(nodeTransformationStage, node, parentNode);
                         }
+
+                        return node;
                     }
                 };
-
-            default:
-                return null;
         }
     }
 
@@ -138,26 +127,29 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    private appendCustomNodesBeforeObfuscation (node: ESTree.Program, parentNode: ESTree.Node | null): void {
+    private appendCustomNodesForPreparingStage (node: ESTree.Program, parentNode: ESTree.Node | null): void {
         this.customCodeHelperGroupStorage
             .getStorage()
             .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
                 customCodeHelperGroup.initialize();
-
-                this.obfuscationEventEmitter.once(
-                    customCodeHelperGroup.getAppendEvent(),
-                    customCodeHelperGroup.appendNodes.bind(customCodeHelperGroup)
-                );
+                customCodeHelperGroup.appendOnPreparing?.(node, this.callsGraphData);
             });
-
-        this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, node, this.callsGraphData);
     }
 
     /**
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    private appendCustomNodesAfterObfuscation (node: ESTree.Program, parentNode: ESTree.Node | null): void {
-        this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, node, this.callsGraphData);
+    private appendCustomNodesForStage (
+        nodeTransformationStage: NodeTransformationStage,
+        node: ESTree.Program,
+        parentNode: ESTree.Node | null
+    ): void {
+        this.customCodeHelperGroupStorage
+            .getStorage()
+            .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
+                customCodeHelperGroup[`appendOn${nodeTransformationStage}`]?.(node, this.callsGraphData);
+            });
     }
 }

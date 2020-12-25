@@ -9,7 +9,7 @@ import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
+import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -27,10 +27,10 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
     protected callsControllerFunctionName!: string;
 
     /**
-     * @type {ObfuscationEvent}
+     * @type {NodeTransformationStage}
      */
     @initializable()
-    private appendEvent!: ObfuscationEvent;
+    private nodeTransformationStage!: NodeTransformationStage;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -57,12 +57,12 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
     }
 
     /**
-     * @param {ObfuscationEvent} appendEvent
+     * @param {NodeTransformationStage} nodeTransformationStage
      * @param {string} callsControllerFunctionName
      */
-    public initialize (appendEvent: ObfuscationEvent, callsControllerFunctionName: string): void {
-        this.appendEvent = appendEvent;
-        this.callsControllerFunctionName = callsControllerFunctionName;
+    public initialize (nodeTransformationStage: NodeTransformationStage, callsControllerFunctionName: string): void {
+        this.nodeTransformationStage = nodeTransformationStage;
+        this.callsControllerFunctionName = nodeTransformationStage;
     }
 
     /**
@@ -77,7 +77,7 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @returns {string}
      */
     protected getCodeHelperTemplate (): string {
-        if (this.appendEvent === ObfuscationEvent.AfterObfuscation) {
+        if (this.nodeTransformationStage === NodeTransformationStage.Finalizing) {
             return this.customCodeHelperObfuscator.obfuscateTemplate(
                 this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate(), {
                     callControllerFunctionName: this.callsControllerFunctionName

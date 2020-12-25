@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TCustomCodeHelperGroupStorage } from '../../types/storages/TCustomCodeHelperGroupStorage';
+import { TCustomCodeHelpersGroupAppendMethodName } from '../../types/custom-code-helpers/TCustomCodeHelpersGroupAppendMethodName';
 
 import { ICustomCodeHelperGroup } from '../../interfaces/custom-code-helpers/ICustomCodeHelperGroup';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -149,7 +150,9 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
         this.customCodeHelperGroupStorage
             .getStorage()
             .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
-                customCodeHelperGroup[`appendOn${nodeTransformationStage}`]?.(node, this.callsGraphData);
+                const methodName = <TCustomCodeHelpersGroupAppendMethodName>`appendOn${nodeTransformationStage}`;
+
+                customCodeHelperGroup[methodName]?.(node, this.callsGraphData);
             });
     }
 }

@@ -18,7 +18,7 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class StringArrayStorage extends MapStorage <string, IStringArrayStorageItemData> implements IStringArrayStorage {
+export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData> implements IStringArrayStorage {
     /**
      * @type {number}
      */
@@ -227,9 +227,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         this.storage = new Map(
             this.arrayUtils
                 .shuffle(Array.from(this.storage.entries()))
-                .map<[string, IStringArrayStorageItemData]>(
+                .map<[`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]>(
                     (
-                        [value, stringArrayStorageItemData]: [string, IStringArrayStorageItemData],
+                        [value, stringArrayStorageItemData],
                         index: number
                     ) => {
                         stringArrayStorageItemData.index = index;
@@ -250,7 +250,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      */
     private getOrSetIfDoesNotExist (value: string): IStringArrayStorageItemData {
         const { encodedValue, encoding, decodeKey }: IEncodedValue = this.getEncodedValue(value);
-        const storedStringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.storage.get(encodedValue);
+
+        const cacheKey = <`${string}-${TStringArrayEncoding}`>`${encodedValue}-${encoding}`;
+        const storedStringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.storage.get(cacheKey);
 
         if (storedStringArrayStorageItemData) {
             return storedStringArrayStorageItemData;
@@ -264,7 +266,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
             index: this.getLength()
         };
 
-        this.storage.set(encodedValue, stringArrayStorageItemData);
+        this.storage.set(cacheKey, stringArrayStorageItemData);
 
         return stringArrayStorageItemData;
     }

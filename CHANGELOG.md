@@ -1,7 +1,8 @@
 Change Log
 
-v2.10.0
+v2.9.5
 ---
+* Fixed runtime errors in large obfuscated code when both `rc4` and `base64` encodings are enabled
 * Some internal refactoring related to node append events
 
 v2.9.4

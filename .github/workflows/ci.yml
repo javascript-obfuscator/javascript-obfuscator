@@ -15,13 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-latest,
             matrix:
               node-version: [10.x, 14.x]
-          - os: windows-latest
-            node-version: 14.x
 
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +32,8 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - run: yarn install
-      - run: yarn run travis
+      - run: yarn run eslint
+      - run: yarn run test
       - run: yarn run test:mocha-coverage:report
       - name: Coveralls
         uses: coverallsapp/github-action@master

@@ -110,7 +110,6 @@
     "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=220 mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
-    "travis": "yarn run eslint && yarn run test",
     "git:addFiles": "git add .",
     "postinstall": "opencollective"
   },

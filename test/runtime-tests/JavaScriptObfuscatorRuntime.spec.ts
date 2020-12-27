@@ -34,7 +34,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         rotateStringArray: true,
         selfDefending: true,
         splitStrings: true,
-        splitStringsChunkLength: 1,
+        splitStringsChunkLength: 3,
         stringArray: true,
         stringArrayEncoding: [
             StringArrayEncoding.None,

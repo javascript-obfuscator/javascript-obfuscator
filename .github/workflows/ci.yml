@@ -15,11 +15,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
         include:
           - os: ubuntu-latest,
-            matrix:
-              node-version: [10.x, 14.x]
+            node-version: 10.x
+          - os: ubuntu-latest,
+            node-version: 12.x
+          - os: ubuntu-latest,
+            node-version: 13.x
+          - os: ubuntu-latest,
+            node-version: 14.x
+          - os: windows-latest,
+            node-version: 14.x
 
     steps:
       - uses: actions/checkout@v2

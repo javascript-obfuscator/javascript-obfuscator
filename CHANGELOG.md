@@ -2,6 +2,7 @@ Change Log
 
 v2.10.0
 ---
+* `splitStringsChunkLength` minimum value is `3` now
 * Some internal refactoring related to node append events
 
 v2.9.4

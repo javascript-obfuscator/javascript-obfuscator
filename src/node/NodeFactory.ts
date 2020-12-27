@@ -138,6 +138,23 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Pattern | null} param
+     * @param {BlockStatement} body
+     * @returns {CatchClause}
+     */
+    public static catchClauseNode (
+        param: ESTree.Pattern | null,
+        body: ESTree.BlockStatement
+    ): ESTree.CatchClause {
+        return {
+            type: NodeType.CatchClause,
+            param,
+            body,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {ESTree.Expression} test
      * @param {ESTree.Expression} consequent
      * @param {ESTree.Expression} alternate
@@ -535,6 +552,26 @@ export class NodeFactory {
             type: NodeType.TemplateLiteral,
             expressions,
             quasis,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {BlockStatement} block
+     * @param {CatchClause | null} handler
+     * @param {BlockStatement | null} finalizer
+     * @returns {TryStatement}
+     */
+    public static tryStatement (
+        block: ESTree.BlockStatement,
+        handler?: ESTree.CatchClause | null,
+        finalizer?: ESTree.BlockStatement | null
+    ): ESTree.TryStatement {
+        return {
+            type: NodeType.TryStatement,
+            block,
+            handler,
+            finalizer,
             metadata: { ignoredNode: false }
         };
     }

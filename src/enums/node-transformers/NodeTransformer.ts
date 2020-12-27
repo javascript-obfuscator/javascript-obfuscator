@@ -27,6 +27,7 @@ export enum NodeTransformer {
     ScopeThroughIdentifiersTransformer = 'ScopeThroughIdentifiersTransformer',
     SplitStringTransformer = 'SplitStringTransformer',
     StringArrayTransformer = 'StringArrayTransformer',
+    StringArrayRotateFunctionTransformer = 'StringArrayRotateFunctionTransformer',
     StringArrayScopeCallsWrapperTransformer = 'StringArrayScopeCallsWrapperTransformer',
     TemplateLiteralTransformer = 'TemplateLiteralTransformer',
     VariableDeclarationsMergeTransformer = 'VariableDeclarationsMergeTransformer',

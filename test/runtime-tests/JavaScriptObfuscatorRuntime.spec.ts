@@ -4,8 +4,6 @@ import { TInputOptions } from '../../src/types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
-import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
-import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { evaluateInWorker } from '../helpers/evaluateInWorker';
 import { readFileAsString } from '../helpers/readFileAsString';
@@ -20,38 +18,28 @@ const getEnvironmentCode = () => `
 
 describe('JavaScriptObfuscator runtime eval', function () {
     const baseOptions: TInputOptions = {
-        controlFlowFlattening: true,
-        controlFlowFlatteningThreshold: 1,
+        compact: false,
         deadCodeInjection: true,
         deadCodeInjectionThreshold: 1,
-        debugProtection: true,
-        disableConsoleOutput: true,
+        // debugProtection: true,
+        disableConsoleOutput: false,
         domainLock: ['obfuscator.io'],
         numbersToExpressions: true,
         simplify: true,
-        renameProperties: true,
         reservedNames: ['generate', 'sha256'],
-        rotateStringArray: true,
-        selfDefending: true,
+        rotateStringArray: false,
+        // selfDefending: true,
         splitStrings: true,
-        splitStringsChunkLength: 1,
+        splitStringsChunkLength: 3,
         stringArray: true,
         stringArrayEncoding: [
             StringArrayEncoding.None,
             StringArrayEncoding.Base64,
             StringArrayEncoding.Rc4
         ],
-        stringArrayIndexesType: [
-            StringArrayIndexesType.HexadecimalNumber,
-            StringArrayIndexesType.HexadecimalNumericString
-        ],
-        stringArrayIndexShift: true,
         stringArrayWrappersChainedCalls: true,
         stringArrayWrappersCount: 5,
-        stringArrayWrappersParametersMaxCount: 5,
-        stringArrayWrappersType: StringArrayWrappersType.Function,
         stringArrayThreshold: 1,
-        transformObjectKeys: true,
         unicodeEscapeSequence: true
     };
 

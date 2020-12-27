@@ -33,9 +33,10 @@ export function StringArrayBase64DecodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
+        const ignoreCache = {stringArrayName}[-1];
         const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
                         
-        if (cachedValue === undefined) {
+        if (ignoreCache || cachedValue === undefined) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);

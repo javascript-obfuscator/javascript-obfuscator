@@ -15,6 +15,7 @@ import { INumberNumericalExpressionAnalyzer } from '../../interfaces/analyzers/n
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { CustomCodeHelper } from '../../enums/custom-code-helpers/CustomCodeHelper';
@@ -46,6 +47,11 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
     ];
 
     /**
+     * @type {number}
+     */
+    private static readonly comparisonExpressionAdditionalPartsCount: number = 7;
+
+    /**
      * @type {INumberNumericalExpressionAnalyzer}
      */
     private readonly numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer;
@@ -54,6 +60,11 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @type {IStringArrayStorage}
      */
     private readonly stringArrayStorage: IStringArrayStorage;
+
+    /**
+     * @type {IStringArrayStorageAnalyzer}
+     */
+    private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
 
     /**
      * @type {TCustomCodeHelperFactory}
@@ -70,6 +81,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {IOptions} options
      * @param {INodeTransformersRunner} transformersRunner
      * @param {IStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {TCustomCodeHelperFactory} customCodeHelperFactory
      * @param {INumberNumericalExpressionAnalyzer} numberNumericalExpressionAnalyzer
      */
@@ -78,6 +90,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.INodeTransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
             numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer
@@ -85,9 +98,36 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         super(randomGenerator, options);
 
         this.stringArrayStorage = stringArrayStorage;
+        this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
         this.transformersRunner = transformersRunner;
         this.customCodeHelperFactory = customCodeHelperFactory;
         this.numberNumericalExpressionAnalyzer = numberNumericalExpressionAnalyzer;
+    }
+
+    /**
+     * Because this transformer runs BEFORE string array analyzer we can't check string array storage length.
+     * So we have to traverse over program node and check if it has any string literal node.
+     *
+     * @param {Program} programNode
+     * @returns {boolean}
+     */
+    private static isProgramNodeHasStringLiterals (programNode: ESTree.Program): boolean {
+        let hasStringLiterals: boolean = false;
+
+        estraverse.traverse(programNode, {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+                if (
+                    NodeGuards.isLiteralNode(node)
+                    && NodeLiteralUtils.isStringLiteralNode(node)
+                ) {
+                    hasStringLiterals = true;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        return hasStringLiterals;
     }
 
     /**
@@ -102,12 +142,16 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         switch (nodeTransformationStage) {
             case NodeTransformationStage.StringArray:
                 return {
-                    enter: (node: ESTree.Node): ESTree.Node | undefined => {
-                        if (NodeGuards.isProgramNode(node)) {
-                            this.transformNode(node);
+                    enter: (node: ESTree.Node): ESTree.Node | estraverse.VisitorOption => {
+                        if (!NodeGuards.isProgramNode(node)) {
+                            return node;
                         }
 
-                        return node;
+                        if (!StringArrayRotateFunctionTransformer.isProgramNodeHasStringLiterals(node)) {
+                            return estraverse.VisitorOption.Break;
+                        }
+
+                        return this.transformNode(node);
                     }
                 };
 
@@ -149,17 +193,21 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         estraverse.traverse(wrappedStringArrayRotateFunctionNode, {
             enter: (node: ESTree.Node): void => {
                 if (
-                    NodeGuards.isLiteralNode(node)
-                    && NodeLiteralUtils.isStringLiteralNode(node)
-                    && !/\d/.test(node.value)
+                    !NodeGuards.isLiteralNode(node)
+                    || !NodeLiteralUtils.isStringLiteralNode(node)
                 ) {
+                   return;
+                }
+
+                if (/\d/.test(node.value)) {
+                    this.stringArrayStorageAnalyzer.addItemDataForLiteralNode(node);
+                } else {
                     NodeMetadata.set(node, {ignoredNode: true});
                 }
             }
         });
 
         NodeAppender.prepend(programNode, [stringArrayRotateFunctionNode]);
-        NodeUtils.parentizeNode(stringArrayRotateFunctionNode, programNode);
 
         return programNode;
     }
@@ -170,24 +218,28 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
     private getStringArrayRotateFunctionNode (): TStatement {
         const comparisonValue: number = this.randomGenerator.getRandomInteger(100000, 1_000_000);
         const comparisonExpressionNumberNumericalExpressionData: TNumberNumericalExpressionData =
-            this.numberNumericalExpressionAnalyzer.analyze(comparisonValue);
+            this.numberNumericalExpressionAnalyzer.analyze(
+                comparisonValue,
+                StringArrayRotateFunctionTransformer.comparisonExpressionAdditionalPartsCount
+            );
 
         const comparisonExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter.convert(
             comparisonExpressionNumberNumericalExpressionData,
             ((number: number, isPositiveNumber) => {
-                const literalNode: ESTree.Literal = NodeFactory.literalNode(number.toString());
-
-                return NodeFactory.callExpressionNode(
-                    NodeFactory.identifierNode('parseInt'),
-                    [
-                        isPositiveNumber
-                            ? literalNode
-                            : NodeFactory.unaryExpressionNode(
-                                '-',
-                                literalNode
-                            )
-                    ]
+                const literalNode: ESTree.Literal = NodeFactory.literalNode(
+                    `${number}${this.randomGenerator.getRandomString(6)}`
                 );
+                const parseIntCallExpression: ESTree.CallExpression = NodeFactory.callExpressionNode(
+                    NodeFactory.identifierNode('parseInt'),
+                    [literalNode]
+                );
+
+                return isPositiveNumber
+                    ? parseIntCallExpression
+                    : NodeFactory.unaryExpressionNode(
+                        '-',
+                        parseIntCallExpression
+                    );
             })
         );
 

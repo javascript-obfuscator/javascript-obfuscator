@@ -11,6 +11,17 @@ export interface IStringArrayStorageAnalyzer extends IAnalyzer<[ESTree.Program],
 
     /**
      * @param {Literal} literalNode
+     * @param {Node} parentNode
+     */
+    analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void;
+
+    /**
+     * @param {(SimpleLiteral & {value: string}) | (RegExpLiteral & {value: string})} literalNode
+     */
+    addItemDataForLiteralNode (literalNode: ESTree.Literal & {value: string}): void;
+
+    /**
+     * @param {Literal} literalNode
      * @returns {IStringArrayStorageItemData | undefined}
      */
     getItemDataForLiteralNode (literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined;

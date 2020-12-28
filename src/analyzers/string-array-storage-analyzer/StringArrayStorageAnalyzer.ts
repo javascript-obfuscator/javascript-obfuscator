@@ -88,17 +88,9 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
 
     /**
      * @param {Literal} literalNode
-     * @returns {IStringArrayStorageItemData | undefined}
-     */
-    public getItemDataForLiteralNode (literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined {
-        return this.stringArrayStorageData.get(literalNode);
-    }
-
-    /**
-     * @param {Literal} literalNode
      * @param {Node} parentNode
      */
-    private analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
+    public analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
         if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return;
         }
@@ -111,10 +103,25 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
             return;
         }
 
+        this.addItemDataForLiteralNode(literalNode);
+    }
+
+    /**
+     * @param {(SimpleLiteral & {value: string}) | (RegExpLiteral & {value: string})} literalNode
+     */
+    public addItemDataForLiteralNode (literalNode: ESTree.Literal & {value: string}): void {
         this.stringArrayStorageData.set(
             literalNode,
             this.stringArrayStorage.getOrThrow(literalNode.value)
         );
+    }
+
+    /**
+     * @param {Literal} literalNode
+     * @returns {IStringArrayStorageItemData | undefined}
+     */
+    public getItemDataForLiteralNode (literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined {
+        return this.stringArrayStorageData.get(literalNode);
     }
 
     /**

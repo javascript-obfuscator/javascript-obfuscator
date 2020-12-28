@@ -26,10 +26,11 @@ export function StringArrayRC4DecodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
   
-        const ignoreCache = {stringArrayName}[-1];
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
+        const firstValue = {stringArrayName}[0];
+        const cacheKey = index + firstValue;
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
 
-        if (ignoreCache || cachedValue === undefined) {
+        if (cachedValue === undefined) {
             if ({stringArrayCallsWrapperName}.${onceIdentifier} === undefined) {
                 {selfDefendingCode}
                 
@@ -37,7 +38,7 @@ export function StringArrayRC4DecodeTemplate (
             }
             
             value = {stringArrayCallsWrapperName}.${rc4Identifier}(value, key);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[index] = value;
+            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

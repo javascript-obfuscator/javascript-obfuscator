@@ -15,6 +15,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeFactory } from '../../node/NodeFactory';
+import { NumberNumericalExpressionAnalyzer } from '../../analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer';
 import { NumericalExpressionDataToNodeConverter } from '../../node/NumericalExpressionDataToNodeConverter';
 
 /**
@@ -85,7 +86,10 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
             return literalNode;
         }
 
-        const numberNumericalExpressionData: TNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer.analyze(literalNode.value);
+        const numberNumericalExpressionData: TNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer.analyze(
+            literalNode.value,
+            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+        );
 
         return NumericalExpressionDataToNodeConverter.convert(
             numberNumericalExpressionData,

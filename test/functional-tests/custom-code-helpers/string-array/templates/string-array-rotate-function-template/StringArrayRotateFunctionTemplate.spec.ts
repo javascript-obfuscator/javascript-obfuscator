@@ -13,7 +13,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
     describe('Prevailing kind of variables', () => {
         describe('`var` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRotateFunctionRegExp: RegExp = /function\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\){var _0x([a-f0-9]){4,6} *= *function/;
+                stringArrayRotateFunctionTryCatchRegExp: RegExp = /try *{var *_0x([a-f0-9]){4,6}/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
@@ -31,7 +31,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
             });
 
             it('Should return correct kind of variables for string array rotate function', () => {
-                assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
+                assert.match(obfuscatedCode, stringArrayRotateFunctionTryCatchRegExp);
             });
 
             it('Should does not break on obfuscating', () => {
@@ -41,7 +41,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
         describe('`const` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRotateFunctionRegExp: RegExp = /function\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\){const _0x([a-f0-9]){4,6} *= *function/;
+                stringArrayRotateFunctionTryCatchRegExp: RegExp = /try *{const *_0x([a-f0-9]){4,6}/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
@@ -59,7 +59,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
             });
 
             it('Should return correct kind of variables for string array rotate function', () => {
-                assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
+                assert.match(obfuscatedCode, stringArrayRotateFunctionTryCatchRegExp);
             });
 
             it('Should does not break on obfuscating', () => {
@@ -69,7 +69,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
         describe('`let` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRotateFunctionRegExp: RegExp = /function\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\){const _0x([a-f0-9]){4,6} *= *function/;
+                stringArrayRotateFunctionTryCatchRegExp: RegExp = /try *{const *_0x([a-f0-9]){4,6}/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
@@ -87,7 +87,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
             });
 
             it('Should return correct kind of variables for string array rotate function', () => {
-                assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
+                assert.match(obfuscatedCode, stringArrayRotateFunctionTryCatchRegExp);
             });
 
             it('Should does not break on obfuscating', () => {

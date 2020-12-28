@@ -10,7 +10,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade
 
 describe('StringArrayRotateFunctionCodeHelper', () => {
     describe('Base behaviour', () => {
-        const regExp: RegExp = /while *\(-- *_0x([a-f0-9]){4,6}\) *\{/;
+        const regExp: RegExp = /while *\(!!\[]\) *\{/;
 
         describe('`stringArray` option is set', () => {
             let obfuscatedCode: string;
@@ -58,8 +58,8 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
     });
 
     describe('Preserve string array name', () => {
-        const rotateLogicRegExp: RegExp = /b\['push']\(b\['shift']\(\)\);/;
-        const incrementRegExp: RegExp = /f\(\+\+e\);/;
+        const arrayRotateRegExp: RegExp = /c\['push']\(c\['shift']\(\)\);/;
+        const comparisonRegExp: RegExp = /if *\(e *=== *d\) *{/;
 
         let obfuscatedCode: string;
 
@@ -79,11 +79,11 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
         });
 
         it('should preserve string array name', () => {
-            assert.match(obfuscatedCode, rotateLogicRegExp);
+            assert.match(obfuscatedCode, arrayRotateRegExp);
         });
 
         it('generate valid identifier names', () => {
-            assert.match(obfuscatedCode, incrementRegExp);
+            assert.match(obfuscatedCode, comparisonRegExp);
         });
     });
 });

@@ -299,7 +299,7 @@ export class Options implements IOptions {
      */
     @IsNumber()
     @ValidateIf((options: IOptions) => Boolean(options.splitStrings))
-    @Min(3)
+    @Min(1)
     public readonly splitStringsChunkLength!: number;
 
     /**

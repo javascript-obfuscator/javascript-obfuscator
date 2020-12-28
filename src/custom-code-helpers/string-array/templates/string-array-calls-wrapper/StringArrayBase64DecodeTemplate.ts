@@ -33,14 +33,15 @@ export function StringArrayBase64DecodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
-        const ignoreCache = {stringArrayName}[-1];
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
+        const firstValue = {stringArrayName}[0];
+        const cacheKey = index + firstValue;
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
                         
-        if (ignoreCache || cachedValue === undefined) {
+        if (cachedValue === undefined) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[index] = value;
+            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

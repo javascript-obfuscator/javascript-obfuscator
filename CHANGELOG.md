@@ -2,7 +2,7 @@ Change Log
 
 v2.10.0
 ---
-* `splitStringsChunkLength` minimum value is `3` now
+* Improved `rotateStringArray` option
 
 v2.9.5
 ---

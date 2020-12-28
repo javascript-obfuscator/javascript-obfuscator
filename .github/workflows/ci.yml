@@ -1,0 +1,53 @@
+name: JavaScript Obfuscator CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest,
+            node-version: 12.x
+          - os: ubuntu-latest,
+            node-version: 13.x
+          - os: ubuntu-latest,
+            node-version: 14.x
+          - os: ubuntu-latest,
+            node-version: 15.x
+          - os: windows-latest,
+            node-version: 14.x
+          - os: windows-latest,
+            node-version: 15.x
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn install
+      - run: yarn run eslint
+      - run: yarn run test
+      - run: yarn run test:mocha-coverage:report
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: './coverage/lcov.info'

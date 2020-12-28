@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
@@ -18,6 +19,16 @@ import { NodeFactory } from '../../../node/NodeFactory';
 @injectable()
 export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     /**
+     * Properties list taken from `UglifyJS` and `terser`
+     * https://github.com/mishoo/UglifyJS/blob/master/tools/domprops.json
+     * https://github.com/terser/terser/blob/master/tools/domprops.js
+     * Copyright 2012-2018 (c) Mihai Bazon <mihai.bazon@gmail.com>
+     *
+     * @type {Set<string>}
+     */
+    private static readonly reservedDomPropertiesList: Set<string> = new Set(ReservedDomProperties);
+
+    /**
      * @type {IIdentifierNamesGenerator}
      */
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
@@ -32,17 +43,6 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @type {IOptions}
      */
     private readonly options: IOptions;
-
-    /**
-     * Properties list taken from `UglifyJS` and `terser`
-     * https://github.com/mishoo/UglifyJS/blob/master/tools/domprops.json
-     * https://github.com/terser/terser/blob/master/tools/domprops.js
-     * Copyright 2012-2018 (c) Mihai Bazon <mihai.bazon@gmail.com>
-     *
-     * @type {Set<string>}
-     */
-    private readonly reservedDomPropertiesList: Set<string> = new Set(ReservedDomProperties);
-
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -128,6 +128,6 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @returns {boolean}
      */
     private isReservedDomPropertyName (name: string): boolean {
-        return this.reservedDomPropertiesList.has(name);
+        return RenamePropertiesReplacer.reservedDomPropertiesList.has(name);
     }
 }

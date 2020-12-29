@@ -35,25 +35,6 @@ export class NodeFactory {
     }
 
     /**
-     * @param {Pattern[]} params
-     * @param {boolean} expression
-     * @param {BlockStatement | Expression} body
-     * @returns {ArrowFunctionExpression}
-     */
-    public static arrowFunctionExpressionNode (
-        params: ESTree.Pattern[],
-        expression: boolean,
-        body: ESTree.BlockStatement | ESTree.Expression
-    ): ESTree.ArrowFunctionExpression {
-        return {
-            type: NodeType.ArrowFunctionExpression,
-            params,
-            expression,
-            body
-        };
-    }
-
-    /**
      * @param {AssignmentOperator} operator
      * @param {Pattern | MemberExpression} left
      * @param {Expression} right
@@ -133,23 +114,6 @@ export class NodeFactory {
             callee,
             optional,
             arguments: args,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {Pattern | null} param
-     * @param {BlockStatement} body
-     * @returns {CatchClause}
-     */
-    public static catchClauseNode (
-        param: ESTree.Pattern | null,
-        body: ESTree.BlockStatement
-    ): ESTree.CatchClause {
-        return {
-            type: NodeType.CatchClause,
-            param,
-            body,
             metadata: { ignoredNode: false }
         };
     }
@@ -518,60 +482,6 @@ export class NodeFactory {
             operator,
             argument: argumentExpr,
             prefix: false,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {ESTree.TemplateElement["value"]} value
-     * @param {boolean} tail
-     * @returns {ESTree.TemplateElement}
-     */
-    public static templateElement (
-        value: ESTree.TemplateElement['value'],
-        tail: boolean
-    ): ESTree.TemplateElement {
-        return {
-            type: NodeType.TemplateElement,
-            value,
-            tail,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {ESTree.Expression[]} expressions
-     * @param {ESTree.TemplateElement[]} quasis
-     * @returns {ESTree.TemplateLiteral}
-     */
-    public static templateLiteral (
-        expressions: ESTree.Expression[],
-        quasis: ESTree.TemplateElement[]
-    ): ESTree.TemplateLiteral {
-        return {
-            type: NodeType.TemplateLiteral,
-            expressions,
-            quasis,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {BlockStatement} block
-     * @param {CatchClause | null} handler
-     * @param {BlockStatement | null} finalizer
-     * @returns {TryStatement}
-     */
-    public static tryStatement (
-        block: ESTree.BlockStatement,
-        handler?: ESTree.CatchClause | null,
-        finalizer?: ESTree.BlockStatement | null
-    ): ESTree.TryStatement {
-        return {
-            type: NodeType.TryStatement,
-            block,
-            handler,
-            finalizer,
             metadata: { ignoredNode: false }
         };
     }

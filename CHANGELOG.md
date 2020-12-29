@@ -4,6 +4,10 @@ v2.10.0
 ---
 * Improved `rotateStringArray` option
 
+v2.9.6
+---
+* Preventing move of `"use strict";` directive during obfuscation
+
 v2.9.5
 ---
 * Fixed runtime errors in large obfuscated code when both `rc4` and `base64` encodings are enabled

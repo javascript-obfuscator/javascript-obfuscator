@@ -1,1 +1,2 @@
-'ab😴😄cd';
+var test = 'ab😴😄cd';
+test;

@@ -5,9 +5,40 @@ import * as escodegen from '@javascript-obfuscator/escodegen';
 import * as eslintScope from 'eslint-scope';
 
 declare module 'estree' {
+    /**
+     * Nodes metadata
+     */
     export interface BaseNodeMetadata {
         forceTransformNode?: boolean;
         ignoredNode?: boolean;
+    }
+
+    export interface FunctionNodeMetadata extends BaseNodeMetadata {
+        directiveNode?: Directive | null;
+    }
+
+    export interface LiteralNodeMetadata extends BaseNodeMetadata {
+        replacedLiteral?: boolean;
+    }
+
+    export interface ProgramNodeMetadata extends BaseNodeMetadata {
+        directiveNode?: Directive | null;
+    }
+
+    /**
+     * Nodes
+     */
+    interface ArrowFunctionExpression extends BaseNode {
+        metadata?: FunctionNodeMetadata;
+    }
+
+    interface BaseNode {
+        metadata?: BaseNodeMetadata;
+        parentNode?: Node;
+    }
+
+    interface BigIntLiteral extends SimpleLiteral {
+        bigint: string;
     }
 
     export interface Comment {
@@ -16,29 +47,25 @@ declare module 'estree' {
         loc?: acorn.SourceLocation;
     }
 
-    export interface LiteralNodeMetadata extends BaseNodeMetadata {
-        replacedLiteral?: boolean;
+    interface FunctionExpression extends BaseNode {
+        metadata?: FunctionNodeMetadata;
     }
 
-    interface BaseNode {
-        metadata?: BaseNodeMetadata;
-        parentNode?: Node;
+    interface FunctionDeclaration extends BaseNode {
+        metadata?: FunctionNodeMetadata;
     }
 
     interface Program extends BaseNode {
+        metadata?: ProgramNodeMetadata;
         scope?: eslintScope.Scope | null;
     }
 
-    interface SimpleLiteral extends BaseNode {
+    interface RegExpLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 
-    interface BigIntLiteral extends SimpleLiteral {
-        bigint: string;
-    }
-
-    interface RegExpLiteral extends BaseNode {
+    interface SimpleLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }

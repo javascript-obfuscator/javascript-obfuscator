@@ -426,15 +426,6 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isUseStrictOperator (node: ESTree.Node): node is ESTree.Directive {
-        return NodeGuards.isDirectiveNode(node)
-            && node.directive === 'use strict';
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
         return node.type === NodeType.VariableDeclaration;
     }

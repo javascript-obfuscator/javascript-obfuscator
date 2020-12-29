@@ -14,7 +14,7 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
      * @type {((node: Node) => boolean)[]}
      */
     private static readonly blackListGuards: ((node: ESTree.Node) => boolean)[] = [
-        NodeGuards.isUseStrictOperator
+        NodeGuards.isDirectiveNode
     ];
 
     /**

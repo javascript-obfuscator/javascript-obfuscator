@@ -168,7 +168,7 @@ describe('SplitStringTransformer', () => {
     describe('Variant #10: string with emoji', () => {
         describe('Variant #1: single emoji', () => {
             it('should correctly split string with emoji', () => {
-                const regExp: RegExp = /^'a' *\+ *'b' *\+ *'👋🏼' *\+ *'c' *\+ *'d';$/;
+                const regExp: RegExp = /^var test *= *'a' *\+ *'b' *\+ *'👋🏼' *\+ *'c' *\+ *'d'; *test;$/;
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
@@ -206,7 +206,7 @@ describe('SplitStringTransformer', () => {
 
         describe('Variant #2: multiple emoji', () => {
             it('should correctly split string with emoji', () => {
-                const regExp: RegExp = /^'a' *\+ *'b' *\+ *'😴' *\+ *'😄' *\+ *'c' *\+ *'d';$/;
+                const regExp: RegExp = /^var test *= *'a' *\+ *'b' *\+ *'😴' *\+ *'😄' *\+ *'c' *\+ *'d'; *test;$/;
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-2.js');
 
@@ -244,7 +244,7 @@ describe('SplitStringTransformer', () => {
 
         describe('Variant #3: correct split emoji', () => {
             it('should correctly split string with emoji', () => {
-                const regExp: RegExp = /^'ab👋🏼' *\+ *'cd';$/;
+                const regExp: RegExp = /^var test *= *'ab👋🏼' *\+ *'cd'; *test;$/;
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 

@@ -98,6 +98,7 @@ import './functional-tests/node-transformers/converting-transformers/object-patt
 import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
+import './functional-tests/node-transformers/finalizing-transformers/directive-placement-transformer/DirectivePlacementTransformer.spec';
 import './functional-tests/node-transformers/finalizing-transformers/escape-sequence-transformer/EscapeSequenceTransformer.spec';
 import './functional-tests/node-transformers/initializing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';

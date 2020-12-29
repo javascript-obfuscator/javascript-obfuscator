@@ -10,6 +10,68 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('StringArrayRotateFunctionTemplate', () => {
+    describe('Computed member expressions as array method calls', () => {
+        describe('Array push', () => {
+            const arrayPushBaseRegExp: RegExp = /_0x([a-f0-9]){4,6}\.push/;
+            const arrayPushComputedRegExp: RegExp = /_0x([a-f0-9]){4,6}\['push']/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        rotateStringArray: true
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should use computed member expression in `array.push` method', () => {
+                assert.match(obfuscatedCode, arrayPushComputedRegExp);
+            });
+
+            it('Should not use base member expression in `array.push` method', () => {
+                assert.notMatch(obfuscatedCode, arrayPushBaseRegExp);
+            });
+        });
+
+        describe('Array shift', () => {
+            const arrayShiftBaseRegExp: RegExp = /_0x([a-f0-9]){4,6}\.shift/;
+            const arrayShiftComputedRegExp: RegExp = /_0x([a-f0-9]){4,6}\['shift']/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        rotateStringArray: true
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should use computed member expression in `array.shift` method', () => {
+                assert.match(obfuscatedCode, arrayShiftComputedRegExp);
+            });
+
+            it('Should not use base member expression in `array.shift` method', () => {
+                assert.notMatch(obfuscatedCode, arrayShiftBaseRegExp);
+            });
+        });
+    });
+
     describe('Prevailing kind of variables', () => {
         describe('`var` kind', () => {
             let obfuscatedCode: string,

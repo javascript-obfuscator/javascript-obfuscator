@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -16,7 +17,6 @@ import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -31,6 +31,14 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
     public readonly runAfter: NodeTransformer[] = [
         NodeTransformer.CustomCodeHelpersTransformer
     ];
+
+    /**
+     * @type {WeakMap<TNodeWithLexicalScope, Directive>}
+     */
+    private readonly lexicalScopeDirectives: WeakMap<
+        TNodeWithLexicalScope,
+        ESTree.Directive
+    > = new WeakMap<TNodeWithLexicalScope, ESTree.Directive>();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -94,7 +102,7 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
         const firstStatementNode = nodeWithLexicalScopeStatements.body[0] ?? null;
 
         if (firstStatementNode && NodeGuards.isDirectiveNode(firstStatementNode)) {
-            NodeMetadata.set(parentNode, {directiveNode: firstStatementNode});
+            this.lexicalScopeDirectives.set(parentNode, firstStatementNode);
         }
 
         return nodeWithLexicalScopeStatements;
@@ -113,7 +121,7 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
             return nodeWithLexicalScopeStatements;
         }
 
-        const directiveNode: ESTree.Directive | null | undefined = NodeMetadata.getDirectiveNode(parentNode);
+        const directiveNode: ESTree.Directive | undefined = this.lexicalScopeDirectives.get(parentNode);
 
         if (directiveNode) {
             const newDirectiveNode: ESTree.Directive = NodeUtils.clone(directiveNode);

@@ -13,25 +13,13 @@ declare module 'estree' {
         ignoredNode?: boolean;
     }
 
-    export interface FunctionNodeMetadata extends BaseNodeMetadata {
-        directiveNode?: Directive | null;
-    }
-
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
         replacedLiteral?: boolean;
-    }
-
-    export interface ProgramNodeMetadata extends BaseNodeMetadata {
-        directiveNode?: Directive | null;
     }
 
     /**
      * Nodes
      */
-    interface ArrowFunctionExpression extends BaseNode {
-        metadata?: FunctionNodeMetadata;
-    }
-
     interface BaseNode {
         metadata?: BaseNodeMetadata;
         parentNode?: Node;
@@ -47,16 +35,7 @@ declare module 'estree' {
         loc?: acorn.SourceLocation;
     }
 
-    interface FunctionExpression extends BaseNode {
-        metadata?: FunctionNodeMetadata;
-    }
-
-    interface FunctionDeclaration extends BaseNode {
-        metadata?: FunctionNodeMetadata;
-    }
-
     interface Program extends BaseNode {
-        metadata?: ProgramNodeMetadata;
         scope?: eslintScope.Scope | null;
     }
 

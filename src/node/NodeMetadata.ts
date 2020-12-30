@@ -1,5 +1,4 @@
 import * as ESTree from 'estree';
-import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
 
 export class NodeMetadata {
     /**
@@ -46,17 +45,5 @@ export class NodeMetadata {
      */
     public static isReplacedLiteral (literalNode: ESTree.Literal): boolean {
         return NodeMetadata.get<ESTree.LiteralNodeMetadata, 'replacedLiteral'>(literalNode, 'replacedLiteral') === true;
-    }
-
-    /**
-     * @param {TNodeWithLexicalScope} nodeWithLexicalScope
-     * @returns {Directive | null | undefined}
-     */
-    public static getDirectiveNode (nodeWithLexicalScope: TNodeWithLexicalScope): ESTree.Directive | null | undefined {
-        return NodeMetadata.get<
-            ESTree.ProgramNodeMetadata
-            | ESTree.FunctionNodeMetadata,
-            'directiveNode'
-        >(nodeWithLexicalScope, 'directiveNode');
     }
 }

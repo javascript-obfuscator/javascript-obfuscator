@@ -199,7 +199,9 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
                    return;
                 }
 
-                if (/\d/.test(node.value)) {
+                // force add item data for string literal nodes of comparison expressions
+                // set all other nodes as ignored to prevent them from obfuscation
+                if (this.isComparisonExpressionStringLiteralNode(node)) {
                     this.stringArrayStorageAnalyzer.addItemDataForLiteralNode(node);
                 } else {
                     NodeMetadata.set(node, {ignoredNode: true});
@@ -253,5 +255,13 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         );
 
         return stringArrayRotateFunctionCodeHelper.getNode()[0];
+    }
+
+    /**
+     * @param {Literal} stringLiteralNode
+     * @returns {boolean}
+     */
+    private isComparisonExpressionStringLiteralNode (stringLiteralNode: ESTree.Literal & {value: string}): boolean {
+        return /\d/.test(stringLiteralNode.value);
     }
 }

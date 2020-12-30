@@ -344,7 +344,7 @@ module.exports = {
         "unicorn/prefer-starts-ends-with": "error",
         "unicorn/prefer-set-has": "error",
         "unicorn/prefer-string-slice": "error",
-        "unicorn/prefer-trim-start-end": "error",
+        "unicorn/prefer-string-trim-start-end": "error",
         "use-isnan": "error",
         "valid-typeof": "error",
         "yoda": "error"

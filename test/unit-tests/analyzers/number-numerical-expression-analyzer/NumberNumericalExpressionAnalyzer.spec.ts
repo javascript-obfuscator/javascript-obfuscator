@@ -10,6 +10,7 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { INumberNumericalExpressionAnalyzer } from '../../../../src/interfaces/analyzers/number-numerical-expression-analyzer/INumberNumericalExpressionAnalyzer';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { NumberNumericalExpressionAnalyzer } from '../../../../src/analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer';
 
 /**
  * @param {TNumberNumericalExpressionData} data
@@ -43,7 +44,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -58,7 +62,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -73,7 +80,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -88,7 +98,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -105,7 +118,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -120,7 +136,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -135,7 +154,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -150,7 +172,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
 
                 before(() => {
                     const numberNumericalExpressionData: TNumberNumericalExpressionData =
-                        numberNumericalExpressionAnalyzer.analyze(number);
+                        numberNumericalExpressionAnalyzer.analyze(
+                            number,
+                            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                        );
 
                     evaluatedResult = eval(numberNumericalExpressionDataToString(numberNumericalExpressionData));
                 });
@@ -167,7 +192,10 @@ describe('NumberNumericalExpressionAnalyzer', function() {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => numberNumericalExpressionAnalyzer.analyze(number);
+                testFunc = () => numberNumericalExpressionAnalyzer.analyze(
+                    number,
+                    NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                );
             });
 
             it('should throw error', () => {

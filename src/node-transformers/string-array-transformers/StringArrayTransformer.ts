@@ -26,6 +26,7 @@ import { IStringArrayStorageItemData } from '../../interfaces/storages/string-ar
 import { IVisitedLexicalScopeNodesStackStorage } from '../../interfaces/storages/string-array-transformers/IVisitedLexicalScopeNodesStackStorage';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 import { StringArrayCustomNode } from '../../enums/custom-nodes/StringArrayCustomNode';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -48,6 +49,13 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @type {number}
      */
     private static readonly maxShiftedIndexValue: number = 1000;
+
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.StringArrayRotateFunctionTransformer
+    ];
 
 
     /**
@@ -158,7 +166,9 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @param {Program} programNode
      */
     public prepareNode (programNode: ESTree.Program): void {
-        this.stringArrayStorageAnalyzer.analyze(programNode);
+        if (this.options.stringArray) {
+            this.stringArrayStorageAnalyzer.analyze(programNode);
+        }
 
         if (this.options.shuffleStringArray) {
             this.stringArrayStorage.shuffleStorage();

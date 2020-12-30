@@ -29,6 +29,7 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
                 atobPolyfill,
                 rc4Polyfill,
                 selfDefendingCode,
+                stringArrayName: this.stringArrayName,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
             }
         );

@@ -259,18 +259,6 @@ describe('StringArrayTransformer', function () {
                 assert.match(obfuscatedCode, stringArrayIndexShiftRegExp);
             });
 
-            it('Match #1: should create string array call with shifted index', () => {
-                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue1);
-            });
-
-            it('Match #2: should create string array call with shifted index', () => {
-                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue2 - 1);
-            });
-
-            it('Match #3: should create string array call with shifted index', () => {
-                assert.equal(stringArrayIndexShiftIndexValue, stringArrayCallIndexValue3 - 2);
-            });
-
             it('should correctly evaluate code', () => {
                 assert.equal(evaluationResult, expectedEvaluationResult);
             });

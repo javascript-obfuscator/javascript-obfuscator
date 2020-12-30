@@ -15,17 +15,17 @@ describe('StringArrayStorage', () => {
             const delta: number = 0.1;
             const expectedVariantProbability: number = 1;
 
-            const stringArrayVariant1RegExp1: RegExp = /var _0x([a-f0-9]){4} *= *\['test'];/g;
-            const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
+            const stringArrayVariantRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\[(?:'.*?', *)?'test'(?:, *'.*?')?];/g;
+            const literalNodeVariantRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x.\);/g;
 
-            let stringArrayVariant1Probability: number,
-                literalNodeVariant1Probability: number;
+            let stringArrayVariantProbability: number,
+                literalNodeVariantProbability: number;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/one-string.js');
 
-                let stringArrayVariant1MatchesLength: number = 0;
-                let literalNodeVariant1MatchesLength: number = 0;
+                let stringArrayVariantMatchesLength: number = 0;
+                let literalNodeVariantMatchesLength: number = 0;
 
                for (let i = 0; i < samples; i++) {
                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
@@ -38,51 +38,50 @@ describe('StringArrayStorage', () => {
                        }
                    ).getObfuscatedCode();
 
-                   if (obfuscatedCode.match(stringArrayVariant1RegExp1)) {
-                       stringArrayVariant1MatchesLength++;
+                   if (obfuscatedCode.match(stringArrayVariantRegExp)) {
+                       stringArrayVariantMatchesLength++;
                    }
 
-                   if (obfuscatedCode.match(literalNodeVariant1RegExp)) {
-                       literalNodeVariant1MatchesLength++;
+                   if (obfuscatedCode.match(literalNodeVariantRegExp)) {
+                       literalNodeVariantMatchesLength++;
                    }
                }
 
-                stringArrayVariant1Probability = stringArrayVariant1MatchesLength / samples;
-                literalNodeVariant1Probability = literalNodeVariant1MatchesLength / samples;
+                stringArrayVariantProbability = stringArrayVariantMatchesLength / samples;
+                literalNodeVariantProbability = literalNodeVariantMatchesLength / samples;
             });
 
             describe('String array probability', () => {
                 it('Variant #1: should create single string array variant', () => {
-                    assert.closeTo(stringArrayVariant1Probability, expectedVariantProbability, delta);
+                    assert.closeTo(stringArrayVariantProbability, expectedVariantProbability, delta);
                 });
             });
 
             describe('Literal node probability', () => {
                 it('Variant #1: should replace literal node with call to string array variant', () => {
-                    assert.closeTo(literalNodeVariant1Probability, expectedVariantProbability, delta);
+                    assert.closeTo(literalNodeVariantProbability, expectedVariantProbability, delta);
                 });
             });
         });
 
         describe('Variant #2: Three string array values', () => {
             const samples: number = 1000;
-            const delta: number = 0.1;
-            const expectedStringArrayVariantProbability: number = 0.33;
+            const delta: number = 0.05;
+            const expectedStringArrayVariantProbability: number = 0.07;
             const expectedLiteralNodeVariantProbability: number = 1;
 
-            const stringArrayVariantsCount: number = 3;
+            const stringArrayVariantsCount: number = 2;
             const literalNodeVariantsCount: number = 1;
 
             const stringArrayVariantRegExps: RegExp[] = [
-                /var _0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'];/g,
-                /var _0x([a-f0-9]){4} *= *\['bar', *'baz', *'foo'];/g,
-                /var _0x([a-f0-9]){4} *= *\['baz', *'foo', *'bar'];/g
+                /var _0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'(?:, *'.*?')+];/g,
+                /var _0x([a-f0-9]){4} *= *\[(?:'.*?', *)+'foo', *'bar', *'baz'];/g
             ];
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x.\\); *` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x.\\); *` +
+                    `var baz *= *_0x([a-f0-9]){4}\\(0x.\\);`
                 )
             ];
 

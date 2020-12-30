@@ -13,7 +13,7 @@ export function StringArrayRC4DecodeTemplate (
     const rc4Identifier: string = randomGenerator.getRandomString(identifierLength);
     const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const onceIdentifier: string = randomGenerator.getRandomString(identifierLength);
-  
+
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
@@ -26,7 +26,9 @@ export function StringArrayRC4DecodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
   
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
+        const firstValue = {stringArrayName}[0];
+        const cacheKey = index + firstValue;
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
 
         if (cachedValue === undefined) {
             if ({stringArrayCallsWrapperName}.${onceIdentifier} === undefined) {
@@ -36,7 +38,7 @@ export function StringArrayRC4DecodeTemplate (
             }
             
             value = {stringArrayCallsWrapperName}.${rc4Identifier}(value, key);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[index] = value;
+            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

@@ -17,7 +17,7 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     /**
      * @type {number}
      */
-    private static readonly additionalParts: number = 3;
+    public static readonly defaultAdditionalPartsCount: number = 3;
 
     /**
      * @type {Map<number, number[]>}
@@ -40,9 +40,13 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
 
     /**
      * @param {number} number
+     * @param {number} additionalPartsCount
      * @returns {TNumberNumericalExpressionData}
      */
-    public analyze (number: number): TNumberNumericalExpressionData {
+    public analyze (
+        number: number,
+        additionalPartsCount: number
+    ): TNumberNumericalExpressionData {
         if (isNaN(number)) {
             throw new Error('Given value is NaN');
         }
@@ -51,16 +55,17 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
             return [number];
         }
 
-        const additionParts: number[] = this.generateAdditionParts(number);
+        const additionParts: number[] = this.generateAdditionParts(number, additionalPartsCount);
 
         return additionParts.map((addition: number) => this.mixWithMultiplyParts(addition));
     }
 
     /**
      * @param {number} number
+     * @param {number} additionalPartsCount
      * @returns {number[]}
      */
-    private generateAdditionParts (number: number): number[] {
+    private generateAdditionParts (number: number, additionalPartsCount: number): number[] {
         const additionParts = [];
 
         const upperNumberLimit: number = Math.min(Math.abs(number * 2), Number.MAX_SAFE_INTEGER);
@@ -70,8 +75,8 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
 
         let temporarySum = 0;
 
-        for (let i = 0; i < NumberNumericalExpressionAnalyzer.additionalParts; i++) {
-            if (i < NumberNumericalExpressionAnalyzer.additionalParts - 1) {
+        for (let i = 0; i < additionalPartsCount; i++) {
+            if (i < additionalPartsCount - 1) {
                 // trailing parts
 
                 let addition: number = this.randomGenerator.getRandomInteger(from, to);

@@ -35,25 +35,6 @@ export class NodeFactory {
     }
 
     /**
-     * @param {Pattern[]} params
-     * @param {boolean} expression
-     * @param {BlockStatement | Expression} body
-     * @returns {ArrowFunctionExpression}
-     */
-    public static arrowFunctionExpressionNode (
-        params: ESTree.Pattern[],
-        expression: boolean,
-        body: ESTree.BlockStatement | ESTree.Expression
-    ): ESTree.ArrowFunctionExpression {
-        return {
-            type: NodeType.ArrowFunctionExpression,
-            params,
-            expression,
-            body
-        };
-    }
-
-    /**
      * @param {AssignmentOperator} operator
      * @param {Pattern | MemberExpression} left
      * @param {Expression} right
@@ -501,40 +482,6 @@ export class NodeFactory {
             operator,
             argument: argumentExpr,
             prefix: false,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {ESTree.TemplateElement["value"]} value
-     * @param {boolean} tail
-     * @returns {ESTree.TemplateElement}
-     */
-    public static templateElement (
-        value: ESTree.TemplateElement['value'],
-        tail: boolean
-    ): ESTree.TemplateElement {
-        return {
-            type: NodeType.TemplateElement,
-            value,
-            tail,
-            metadata: { ignoredNode: false }
-        };
-    }
-
-    /**
-     * @param {ESTree.Expression[]} expressions
-     * @param {ESTree.TemplateElement[]} quasis
-     * @returns {ESTree.TemplateLiteral}
-     */
-    public static templateLiteral (
-        expressions: ESTree.Expression[],
-        quasis: ESTree.TemplateElement[]
-    ): ESTree.TemplateLiteral {
-        return {
-            type: NodeType.TemplateLiteral,
-            expressions,
-            quasis,
             metadata: { ignoredNode: false }
         };
     }

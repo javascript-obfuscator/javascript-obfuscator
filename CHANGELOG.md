@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.0
+---
+* Improved `rotateStringArray` option
+
 v2.9.6
 ---
 * Preventing move of `"use strict";` directive during obfuscation

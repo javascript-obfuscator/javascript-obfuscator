@@ -133,7 +133,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
             .getStorage()
             .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
                 customCodeHelperGroup.initialize();
-                customCodeHelperGroup.appendOnPreparing?.(node, this.callsGraphData);
+                customCodeHelperGroup.appendOnPreparingStage?.(node, this.callsGraphData);
             });
     }
 
@@ -150,7 +150,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
         this.customCodeHelperGroupStorage
             .getStorage()
             .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
-                const methodName = <TCustomCodeHelpersGroupAppendMethodName>`appendOn${nodeTransformationStage}`;
+                const methodName = <TCustomCodeHelpersGroupAppendMethodName>`appendOn${nodeTransformationStage}Stage`;
 
                 customCodeHelperGroup[methodName]?.(node, this.callsGraphData);
             });

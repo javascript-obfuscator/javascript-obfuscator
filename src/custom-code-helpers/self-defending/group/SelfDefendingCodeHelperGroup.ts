@@ -58,7 +58,7 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnPreparing (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnPreparingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.options.selfDefending) {
             return;
         }

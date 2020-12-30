@@ -61,7 +61,7 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnPreparing (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnPreparingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.options.debugProtection) {
             return;
         }

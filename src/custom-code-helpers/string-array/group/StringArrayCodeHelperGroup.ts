@@ -75,7 +75,7 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnFinalizing (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnFinalizingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.stringArrayStorage.getLength()) {
             return;
         }

@@ -119,83 +119,103 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
 
 console.log(obfuscationResult.getObfuscatedCode());
 /*
-var _0x236b = [
-    '8|3|2|4|7|',
-    'izyPY',
-    'ZXpNn',
-    'split',
-    '1|5|9|6|0',
-    'foo\x20',
-    'xPhYQ',
-    'sKneg',
-    'thwwU',
+var _0x1139 = [
+    '250745hAZAIu',
+    'qyvdX',
+    '359787rBCuAH',
+    'map',
+    'CAsQH',
+    '2yDlJiW',
+    'IzZqs',
+    '3|8|4|5|0|',
+    '975554pJYIxL',
+    '2sejBjT',
+    '258646CmEwYP',
+    '23651lJjzwJ',
+    'xqNJa',
+    '37rnYVXp',
     'log',
-    'map'
+    'WudlX',
+    'cIfMd',
+    'foo\x20',
+    '2GUqEHE',
+    '2|6|7|9|1',
+    '238609DyHPrO',
+    'split',
+    '828371LpDRiJ'
 ];
-(function (_0x34d326, _0xc4ba4e) {
-    var _0xcd0f69 = function (_0x39b54a) {
-        while (--_0x39b54a) {
-            _0x34d326['push'](_0x34d326['shift']());
-        }
-    };
-    _0xcd0f69(++_0xc4ba4e);
-}(_0x236b, 0x31 + 0x42 * -0x27 + 0xbbc));
-var _0x17c9 = function (_0x34d326, _0xc4ba4e) {
-    _0x34d326 = _0x34d326 - (0x31 + 0x42 * -0x27 + 0x9dd);
-    var _0xcd0f69 = _0x236b[_0x34d326];
-    return _0xcd0f69;
+var _0x1054 = function (_0x14a2a4, _0x5a6b22) {
+    _0x14a2a4 = _0x14a2a4 - (0x1c48 + -0x1dd + 0x38f * -0x7);
+    var _0x581b0b = _0x1139[_0x14a2a4];
+    return _0x581b0b;
 };
-(function () {
-    var _0x32cb02 = _0x17c9, _0x41d9b4 = {
-            'thwwU': _0x32cb02('0x5') + _0x32cb02('0x9'),
-            'xPhYQ': function (_0x176227, _0x3e4c2d) {
-                return _0x176227 + _0x3e4c2d;
-            },
-            'izyPY': function (_0x13389c, _0x58f8bc) {
-                return _0x13389c + _0x58f8bc;
-            },
-            'sKneg': _0x32cb02('0xa'),
-            'ZXpNn': function (_0x1e08e1, _0x5cba70) {
-                return _0x1e08e1 - _0x5cba70;
-            }
-        }, _0x2f8df3 = _0x41d9b4[_0x32cb02('0x2')][_0x32cb02('0x8')]('|'), _0x2087f0 = -0x9a * 0x1f + 0x15 * 0x3 + 0x1267;
+(function (_0x190a1e, _0x14558c) {
+    var _0x59720b = _0x1054;
     while (!![]) {
-        switch (_0x2f8df3[_0x2087f0++]) {
+        try {
+            var _0x3dab81 = parseInt(_0x59720b(0x196)) * parseInt(_0x59720b(0x191)) + parseInt(_0x59720b(0x193)) * parseInt(_0x59720b(0x184)) + parseInt(_0x59720b(0x198)) * parseInt(_0x59720b(0x188)) + parseInt(_0x59720b(0x18a)) * parseInt(_0x59720b(0x18c)) + -parseInt(_0x59720b(0x187)) + -parseInt(_0x59720b(0x189)) + -parseInt(_0x59720b(0x195));
+            if (_0x3dab81 === _0x14558c)
+                break;
+            else
+                _0x190a1e['push'](_0x190a1e['shift']());
+        } catch (_0x58f14d) {
+            _0x190a1e['push'](_0x190a1e['shift']());
+        }
+    }
+}(_0x1139, 0x2c5c * -0x7 + -0xdfdc6 + 0x16ff98), function () {
+    var _0x9b877 = _0x1054, _0x4add6f = {
+            'WudlX': _0x9b877(0x186) + _0x9b877(0x192),
+            'qyvdX': function (_0x552261, _0x28d3ee) {
+                return _0x552261 + _0x28d3ee;
+            },
+            'xqNJa': function (_0x387474, _0x5602bf) {
+                return _0x387474 + _0x5602bf;
+            },
+            'CAsQH': _0x9b877(0x190),
+            'IzZqs': function (_0x5d9fd2, _0x9f4faa) {
+                return _0x5d9fd2 - _0x9f4faa;
+            },
+            'cIfMd': function (_0x5f18e0, _0x4c33c5) {
+                return _0x5f18e0 + _0x4c33c5;
+            }
+        }, _0x593549 = _0x4add6f[_0x9b877(0x18e)][_0x9b877(0x194)]('|'), _0x2acb4f = -0x94b + -0x2627 * -0x1 + 0xe6e * -0x2;
+    while (!![]) {
+        switch (_0x593549[_0x2acb4f++]) {
         case '0':
-            console[_0x32cb02('0x3')](_0x2e20e0);
+            var _0x10d015 = _0x4add6f[_0x9b877(0x197)](_0x4add6f[_0x9b877(0x18b)](_0x4add6f[_0x9b877(0x183)], -0x3d * -0xc + -0x6f1 * -0x1 + 0x42 * -0x26), 0x62f * 0x3 + 0x1046 * -0x1 + -0x246);
             continue;
         case '1':
-            console[_0x32cb02('0x3')](_0x3c882f);
+            console[_0x9b877(0x18d)](_0x10d015);
             continue;
         case '2':
-            var _0x39f804 = _0x41d9b4[_0x32cb02('0x0')]('5', -'2');
+            console[_0x9b877(0x18d)](_0x4cd6e2);
             continue;
         case '3':
-            var _0x700005 = _0x41d9b4[_0x32cb02('0x6')]('5', 0x1818 + 0x11b5 + -0x29ca);
+            var _0x4cd6e2 = _0x4add6f[_0x9b877(0x185)]('5', -0x1bc + 0xf61 + 0x5 * -0x2ba);
             continue;
         case '4':
-            var _0x172286 = [
+            var _0x2c3053 = _0x4add6f[_0x9b877(0x18b)]('5', -'2');
+            continue;
+        case '5':
+            var _0x372d29 = [
                 '10',
                 '10',
                 '10',
                 '10',
                 '10'
-            ][_0x32cb02('0x4')](parseInt);
-            continue;
-        case '5':
-            console[_0x32cb02('0x3')](_0x700005);
+            ][_0x9b877(0x182)](parseInt);
             continue;
         case '6':
-            console[_0x32cb02('0x3')](_0x172286);
+            console[_0x9b877(0x18d)](_0x109ffa);
             continue;
         case '7':
-            var _0x2e20e0 = _0x41d9b4[_0x32cb02('0x6')](_0x41d9b4[_0x32cb02('0x6')](_0x41d9b4[_0x32cb02('0x1')], -0x2596 + -0x27b * 0x1 + 0xdf * 0x2e), 0x1 * 0x1b06 + -0x1b8e * -0x1 + 0x1 * -0x3693);
+            console[_0x9b877(0x18d)](_0x2c3053);
             continue;
         case '8':
-            var _0x3c882f = _0x41d9b4[_0x32cb02('0x7')]('5', 0x1dc1 * -0x1 + 0x1d59 + 0x6b);
+            var _0x109ffa = _0x4add6f[_0x9b877(0x18f)]('5', -0x1d70 + -0x1654 + -0xf1 * -0x37);
             continue;
         case '9':
-            console[_0x32cb02('0x3')](_0x39f804);
+            console[_0x9b877(0x18d)](_0x372d29);
             continue;
         }
         break;
@@ -837,8 +857,6 @@ Type: `boolean` Default: `true`
 ##### :warning: [`stringArray`](#stringarray) must be enabled
 
 Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
-
-This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
 ### `seed`
 Type: `string|number` Default: `0`

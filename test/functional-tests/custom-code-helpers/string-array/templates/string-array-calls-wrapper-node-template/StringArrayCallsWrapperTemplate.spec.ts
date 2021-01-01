@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtilsSwappedAlphabet } from '../../../../../../src/interfaces/utils/ICryptUtilsSwappedAlphabet';
+import { ICryptUtilsStringArray } from '../../../../../../src/interfaces/utils/ICryptUtilsStringArray';
 import { IInversifyContainerFacade } from '../../../../../../src/interfaces/container/IInversifyContainerFacade';
 import { IObfuscatedCode } from '../../../../../../src/interfaces/source-code/IObfuscatedCode';
 import { IRandomGenerator } from '../../../../../../src/interfaces/utils/IRandomGenerator';
@@ -22,13 +22,14 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 import { InversifyContainerFacade } from '../../../../../../src/container/InversifyContainerFacade';
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
+import { swapLettersCase } from '../../../../../helpers/swapLettersCase';
 
 describe('StringArrayCallsWrapperTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
     const atobFunctionName: string = 'atob';
 
-    let cryptUtilsSwappedAlphabet: ICryptUtilsSwappedAlphabet,
+    let cryptUtilsSwappedAlphabet: ICryptUtilsStringArray,
         randomGenerator: IRandomGenerator;
 
     before(() => {
@@ -36,7 +37,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         inversifyContainerFacade.load('', '', {});
         cryptUtilsSwappedAlphabet = inversifyContainerFacade
-            .get<ICryptUtilsSwappedAlphabet>(ServiceIdentifiers.ICryptUtilsSwappedAlphabet);
+            .get<ICryptUtilsStringArray>(ServiceIdentifiers.ICryptUtilsStringArray);
         randomGenerator = inversifyContainerFacade
             .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });
@@ -125,6 +126,50 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
             it('should correctly return decoded value', () => {
                 assert.deepEqual(decodedValue, expectedDecodedValue);
+            });
+        });
+
+        describe('Variant #3: no regexp inside atob template', () => {
+            const indexShiftAmount: number = 0;
+
+            const expectedRegExpTestValue: string = '12345';
+
+            let decodedValue: string;
+
+            before(() => {
+                const atobPolyfill = format(AtobTemplate(), {
+                    atobFunctionName
+                });
+                const atobDecodeTemplate: string = format(
+                    StringArrayBase64DecodeTemplate(randomGenerator),
+                    {
+                        atobPolyfill,
+                        atobFunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCallsWrapperName
+                    }
+                );
+                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                    decodeCodeHelperTemplate: atobDecodeTemplate,
+                    indexShiftAmount,
+                    stringArrayCallsWrapperName,
+                    stringArrayName
+                });
+
+                decodedValue = Function(`
+                var ${stringArrayName} = ['${swapLettersCase('c3RyaQ==')}'];
+            
+                ${stringArrayCallsWrapperTemplate}
+                
+                /(.+)/.test("12345");
+                ${stringArrayCallsWrapperName}(0x0);
+                                
+                return RegExp.$1;
+            `)();
+            });
+
+            it('should correctly return RegExp.$1 match without mutation by atob template', () => {
+                assert.deepEqual(decodedValue, expectedRegExpTestValue);
             });
         });
     });

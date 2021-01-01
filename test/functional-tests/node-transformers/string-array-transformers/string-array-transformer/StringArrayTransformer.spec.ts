@@ -406,7 +406,7 @@ describe('StringArrayTransformer', function () {
     });
 
     describe('Variant #7: base64 encoding', () => {
-        const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA==')}'];`);
+        const stringArrayRegExp: RegExp = new RegExp(`^var _0x([a-f0-9]){4} *= *\\['${swapLettersCase('dGVzdA')}'];`);
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
         let obfuscatedCode: string;
@@ -507,7 +507,7 @@ describe('StringArrayTransformer', function () {
             const expectedMatchesDelta: number = 0.15;
 
             const noneEncodingRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
-            const base64EncodingRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['DgvZDa=='\];/;
+            const base64EncodingRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['DgvZDa'\];/;
 
             let noneEncodingMatchesCount: number = 0;
             let base64EncodingMatchesCount: number = 0;

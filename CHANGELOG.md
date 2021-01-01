@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.1
+---
+* Removed padding characters from all base64 encoded strings. Removed RegExp that trims padding characters from `base64` encoded strings from `atob` code helper to prevent mutation of `RegExp.$1` value during calls to the `stringArray`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/829
+
 v2.10.0
 ---
 * Improved `rotateStringArray` option

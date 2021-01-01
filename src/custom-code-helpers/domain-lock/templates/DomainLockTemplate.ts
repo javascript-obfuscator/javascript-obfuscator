@@ -7,31 +7,14 @@ export function DomainLockTemplate (): string {
             
             {globalVariableTemplate}
             
-            const func = function () {
-                return {
-                    key: 'item',
-                    value: 'attribute',
-                    getAttribute: function () {
-                        for (let i = 0; i < 1000; i--) {
-                            const isPositive = i > 0;
-                            
-                            switch (isPositive) {
-                                case true:
-                                    return this.item + '_' + this.value + '_' + i;
-                                default:
-                                    this.item + '_' + this.value;
-                            }
-                        }
-                    }()
-                };
-            };
-                        
             const regExp = new RegExp("[{diff}]", "g");
             const domains = "{domains}".replace(regExp, "").split(";");
+            
             let document;
             let domain;
             let location;
             let hostname;
+            let ok = false;
 
             for (let d in that) {
                 if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
@@ -78,9 +61,7 @@ export function DomainLockTemplate (): string {
             if (!currentDomain) {
                 return;
             }
-          
-            let ok = false;
-                        
+                                  
             for (let i = 0; i < domains.length; i++) {
                 const domain = domains[i];
                 const domainNormalized = domain[0] === String.fromCharCode(46)
@@ -98,12 +79,8 @@ export function DomainLockTemplate (): string {
             }
                
             if (!ok) {
-                data;
-            } else {
-                return;
+                {stringArrayName}.shift();
             }
-            
-            func();
         });
 
         {domainLockFunctionName}();

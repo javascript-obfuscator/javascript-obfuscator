@@ -7,10 +7,11 @@ import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
+import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
+import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -37,21 +38,29 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
     private readonly customCodeHelperFactory: TCustomCodeHelperFactory;
 
     /**
+     * @type {IStringArrayStorage}
+     */
+    private readonly stringArrayStorage: IStringArrayStorage;
+
+    /**
      * @param {TCustomCodeHelperFactory} customCodeHelperFactory
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {IStringArrayStorage} stringArrayStorage
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage
     ) {
         super(identifierNamesGeneratorFactory, randomGenerator, options);
 
         this.customCodeHelperFactory = customCodeHelperFactory;
+        this.stringArrayStorage = stringArrayStorage;
     }
 
     /**
@@ -86,7 +95,11 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
         this.appendCustomNodeIfExist(
             CustomCodeHelper.DomainLock,
             (customCodeHelper: ICustomCodeHelper<TInitialData<DomainLockCodeHelper>>) => {
-                customCodeHelper.initialize(callsControllerFunctionName, domainLockFunctionName);
+                customCodeHelper.initialize(
+                    callsControllerFunctionName,
+                    domainLockFunctionName,
+                    this.stringArrayStorage.getStorageName()
+                );
 
                 NodeAppender.prepend(domainLockFunctionHostNode, customCodeHelper.getNode());
             }

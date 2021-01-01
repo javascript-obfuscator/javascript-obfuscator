@@ -3,14 +3,14 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IArrayUtils } from '../../../interfaces/utils/IArrayUtils';
 import { ICryptUtils } from '../../../interfaces/utils/ICryptUtils';
-import { ICryptUtilsSwappedAlphabet } from '../../../interfaces/utils/ICryptUtilsSwappedAlphabet';
+import { ICryptUtilsStringArray } from '../../../interfaces/utils/ICryptUtilsStringArray';
 import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenceEncoder';
 import { ILevelledTopologicalSorter } from '../../../interfaces/utils/ILevelledTopologicalSorter';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { ArrayUtils } from '../../../utils/ArrayUtils';
 import { CryptUtils } from '../../../utils/CryptUtils';
-import { CryptUtilsSwappedAlphabet } from '../../../utils/CryptUtilsSwappedAlphabet';
+import { CryptUtilsStringArray } from '../../../utils/CryptUtilsStringArray';
 import { EscapeSequenceEncoder } from '../../../utils/EscapeSequenceEncoder';
 import { LevelledTopologicalSorter } from '../../../utils/LevelledTopologicalSorter';
 import { RandomGenerator } from '../../../utils/RandomGenerator';
@@ -31,9 +31,9 @@ export const utilsModule: interfaces.ContainerModule = new ContainerModule((bind
         .to(CryptUtils)
         .inSingletonScope();
 
-    // crypt utils with swapped alphabet
-    bind<ICryptUtilsSwappedAlphabet>(ServiceIdentifiers.ICryptUtilsSwappedAlphabet)
-        .to(CryptUtilsSwappedAlphabet)
+    // crypt utils for string array
+    bind<ICryptUtilsStringArray>(ServiceIdentifiers.ICryptUtilsStringArray)
+        .to(CryptUtilsStringArray)
         .inSingletonScope();
 
     // escape sequence encoder

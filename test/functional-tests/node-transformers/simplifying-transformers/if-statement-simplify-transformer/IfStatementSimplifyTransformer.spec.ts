@@ -781,7 +781,182 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
             });
 
-            describe('Variant #2: `FunctionDeclaration` as prohibited single statement', () => {
+            describe('Variant #2: Nodes with single statement `body` property', () => {
+                describe('Variant #1: Single line `ForStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'for *\\( *' +
+                                'let _0x([a-f0-9]){4,6} *= *0x0; *' +
+                                '_0x([a-f0-9]){4,6} *< *0x1; *' +
+                                '_0x([a-f0-9]){4,6}\\+\\+ *' +
+                            '\\) *' +
+                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: Single line `ForOfStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'for *\\(const _0x([a-f0-9]){4,6} of *\\[\\]\\) *' +
+                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-of-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #3: Single line `ForInStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'for *\\(const _0x([a-f0-9]){4,6} in *\\{\\}\\) *' +
+                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-in-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #4: Single line `WhileStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'while *\\(!!\\[]\\) *' +
+                                'console\\[\'log\']\\(0x1\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-while-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #5: Single line `DoWhileStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'do *' +
+                                'console\\[\'log\']\\(0x1\\); *' +
+                            'while *\\(!!\\[]\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-do-while-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #6: Single line `LabeledStatement` as prohibited single statement', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            '_0x([a-f0-9]){4,6}: *' +
+                                'console\\[\'log\']\\(0x1\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-labeled-statement-as-prohibited-single-statement.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+            });
+
+            describe('Variant #3: `FunctionDeclaration` as prohibited single statement', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *{ *' +
                         'function _0x([a-f0-9]){4,6} *\\(\\) *{} *' +
@@ -810,7 +985,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
             });
 
-            describe('Variant #3: `let` `VariableDeclaration` as prohibited single statement', () => {
+            describe('Variant #4: `let` `VariableDeclaration` as prohibited single statement', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *{ *' +
                         'let foo *= *0x1; *' +
@@ -837,7 +1012,7 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
             });
 
-            describe('Variant #4: `const` `VariableDeclaration` as prohibited single statement', () => {
+            describe('Variant #5: `const` `VariableDeclaration` as prohibited single statement', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *{ *' +
                         'const foo *= *0x1; *' +

@@ -14,6 +14,7 @@ export enum NodeType {
     ClassDeclaration = 'ClassDeclaration',
     ConditionalExpression = 'ConditionalExpression',
     ContinueStatement = 'ContinueStatement',
+    DoWhileStatement = 'DoWhileStatement',
     ExportAllDeclaration = 'ExportAllDeclaration',
     ExportNamedDeclaration = 'ExportNamedDeclaration',
     ExportSpecifier = 'ExportSpecifier',
@@ -54,6 +55,7 @@ export enum NodeType {
     UpdateExpression = 'UpdateExpression',
     VariableDeclaration = 'VariableDeclaration',
     VariableDeclarator = 'VariableDeclarator',
+    WithStatement = 'WithStatement',
     WhileStatement = 'WhileStatement',
     YieldExpression = 'YieldExpression'
 }

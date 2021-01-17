@@ -79,7 +79,22 @@ describe('NodeGuards', () => {
         });
 
         describe('false checks', () => {
-            describe('Variant #1: multiple statements `consequent` and `alternate`', () => {
+            describe('Variant #1: other node', () => {
+                const expectedResult: boolean = false;
+                const node: ESTree.Literal = NodeFactory.literalNode(true);
+
+                let result: boolean;
+
+                before(() => {
+                    result = NodeGuards.isIfStatementNodeWithSingleStatementBody(node);
+                });
+
+                it('should return `false` for other node', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #2: multiple statements `consequent` and `alternate`', () => {
                 const expectedResult: boolean = false;
                 const node: ESTree.IfStatement = NodeFactory.ifStatementNode(
                     NodeFactory.literalNode(true),

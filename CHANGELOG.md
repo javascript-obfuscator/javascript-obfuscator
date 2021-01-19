@@ -2,7 +2,7 @@ Change Log
 
 v2.10.2
 ---
-* Fixed behaviour of `simplify` options when node with a single-statement `body` is inside simplified `IfStatement` node. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/860
+* Fixed behavior of `simplify` options when a node with a single-statement `body` is inside simplified `IfStatement` node. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/860
 
 v2.10.1
 ---

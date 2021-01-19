@@ -168,6 +168,20 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Statement} body
+     * @param {Expression} test
+     * @returns {DoWhileStatement}
+     */
+    public static doWhileStatementNode (body: ESTree.Statement, test: ESTree.Expression): ESTree.DoWhileStatement {
+        return {
+            type: NodeType.DoWhileStatement,
+            body,
+            test,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Literal} source
      * @returns {ExportAllDeclaration}
      */
@@ -206,6 +220,72 @@ export class NodeFactory {
         return {
             type: NodeType.ExpressionStatement,
             expression,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {VariableDeclaration | Expression | null} init
+     * @param {Expression | null} test
+     * @param {Expression | null} update
+     * @param {Statement} body
+     * @returns {ForStatement}
+     */
+    public static forStatementNode (
+        init: ESTree.VariableDeclaration | ESTree.Expression | null,
+        test: ESTree.Expression | null,
+        update: ESTree.Expression | null,
+        body: ESTree.Statement
+    ): ESTree.ForStatement {
+        return {
+            type: NodeType.ForStatement,
+            init,
+            test,
+            update,
+            body,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {VariableDeclaration | Pattern} left
+     * @param {Expression} right
+     * @param {Statement} body
+     * @returns {ForInStatement}
+     */
+    public static forInStatementNode (
+        left: ESTree.VariableDeclaration | ESTree.Pattern,
+        right: ESTree.Expression,
+        body: ESTree.Statement
+    ): ESTree.ForInStatement {
+        return {
+            type: NodeType.ForInStatement,
+            left,
+            right,
+            body,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {boolean} await
+     * @param {VariableDeclaration | Pattern} left
+     * @param {Expression} right
+     * @param {Statement} body
+     * @returns {ForOfStatement}
+     */
+    public static forOfStatementNode (
+        await: boolean,
+        left: ESTree.VariableDeclaration | ESTree.Pattern,
+        right: ESTree.Expression,
+        body: ESTree.Statement
+    ): ESTree.ForOfStatement {
+        return {
+            type: NodeType.ForOfStatement,
+            await,
+            left,
+            right,
+            body,
             metadata: { ignoredNode: false }
         };
     }
@@ -294,6 +374,23 @@ export class NodeFactory {
             type: NodeType.ImportDeclaration,
             specifiers,
             source,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {Identifier} label
+     * @param {Statement} body
+     * @returns {LabeledStatement}
+     */
+    public static labeledStatementNode (
+        label: ESTree.Identifier,
+        body: ESTree.Statement
+    ): ESTree.LabeledStatement {
+        return {
+            type: NodeType.LabeledStatement,
+            label,
+            body,
             metadata: { ignoredNode: false }
         };
     }

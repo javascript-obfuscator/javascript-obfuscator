@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
@@ -5,6 +6,7 @@ import { TNodeWithLexicalScopeStatements } from '../types/node/TNodeWithLexicalS
 import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { NodeType } from '../enums/node/NodeType';
+import { TNodeWithSingleStatementBody } from '../types/node/TNodeWithSingleStatementBody';
 
 export class NodeGuards {
     /**
@@ -120,6 +122,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isDoWhileStatementNode (node: ESTree.Node): node is ESTree.DoWhileStatement {
+        return node.type === NodeType.DoWhileStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isExportAllDeclarationNode (node: ESTree.Node): node is ESTree.ExportAllDeclaration {
         return node.type === NodeType.ExportAllDeclaration;
     }
@@ -147,6 +157,22 @@ export class NodeGuards {
     public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
         return node.type === NodeType.ExpressionStatement
             && !('directive' in node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isForStatementNode (node: ESTree.Node): node is ESTree.ForStatement {
+        return node.type === NodeType.ForStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isForInStatementNode (node: ESTree.Node): node is ESTree.ForInStatement {
+        return node.type === NodeType.ForInStatement;
     }
 
     /**
@@ -199,6 +225,19 @@ export class NodeGuards {
      */
     public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
         return node.type === NodeType.IfStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isIfStatementNodeWithSingleStatementBody (node: ESTree.Node): node is ESTree.IfStatement {
+        if (!NodeGuards.isIfStatementNode(node)) {
+           return false;
+        }
+
+        return !NodeGuards.isBlockStatementNode(node.consequent)
+            || (!!node.alternate && !NodeGuards.isBlockStatementNode(node.alternate));
     }
 
     /**
@@ -285,6 +324,35 @@ export class NodeGuards {
      */
     public static isNodeWithBlockLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
         return NodeGuards.isNodeWithLexicalScope(node) || NodeGuards.isBlockStatementNode(node);
+    }
+
+    /**
+     * Checks if a node is the node with single statement body, like:
+     * while (true)
+     *     console.log(1);
+     *
+     * or:
+     *
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeWithSingleStatementBody (node: ESTree.Node): node is TNodeWithSingleStatementBody {
+        // Different approach for `IfStatement` node because this node hasn't `body` property
+        if (NodeGuards.isIfStatementNode(node)) {
+            return NodeGuards.isIfStatementNodeWithSingleStatementBody(node);
+        }
+
+        // All other nodes with `Statement` node as `body` property
+        return (
+            NodeGuards.isForStatementNode(node)
+            || NodeGuards.isForOfStatementNode(node)
+            || NodeGuards.isForInStatementNode(node)
+            || NodeGuards.isWhileStatementNode(node)
+            || NodeGuards.isDoWhileStatementNode(node)
+            || NodeGuards.isWithStatementNode(node)
+            || NodeGuards.isLabeledStatementNode(node)
+        ) && !NodeGuards.isBlockStatementNode(node.body);
     }
 
     /**
@@ -436,6 +504,14 @@ export class NodeGuards {
      */
     public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
         return node.type === NodeType.VariableDeclarator;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isWithStatementNode (node: ESTree.Node): node is ESTree.WithStatement {
+        return node.type === NodeType.WithStatement;
     }
 
     /**

@@ -286,7 +286,8 @@ export class IfStatementSimplifyTransformer extends AbstractStatementSimplifyTra
          */
         return NodeGuards.isFunctionDeclarationNode(statement)
             /**
-             * Ignore any nodes with a single statement as a `body`
+             * Have to ignore all `IfStatement` nodes
+             * Also have to ignore any nodes with a single statement as a `body`
              * Without ignore it can break following code:
              * Input:
              * if (condition1) {
@@ -306,6 +307,7 @@ export class IfStatementSimplifyTransformer extends AbstractStatementSimplifyTra
              *
              * See issue: https://github.com/javascript-obfuscator/javascript-obfuscator/issues/860
              */
+            || NodeGuards.isIfStatementNode(statement)
             || NodeGuards.isNodeWithSingleStatementBody(statement)
 
             /**

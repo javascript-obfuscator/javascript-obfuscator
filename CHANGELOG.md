@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.3
+---
+* Fixed `simplify` option regression after `2.10.2`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/864
+
 v2.10.2
 ---
 * Fixed behavior of `simplify` options when a node with a single-statement `body` is inside simplified `IfStatement` node. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/860

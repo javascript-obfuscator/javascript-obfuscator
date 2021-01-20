@@ -753,31 +753,63 @@ describe('IfStatementSimplifyTransformer', () => {
 
         describe('Prohibited single statement', () => {
             describe('Variant #1: `IfStatement` as prohibited single statement', () => {
-                const regExp: RegExp = new RegExp(
-                    'if *\\(!!\\[]\\) *{ *' +
-                        'if *\\(!\\[]\\) *' +
-                            'var _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                    '} *else *' +
-                        'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
-                );
+                describe('Variant #1: `IfStatement` with `var` variable inside`' , () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'if *\\(!\\[]\\) *' +
+                                'var _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
 
 
-                let obfuscatedCode: string;
+                    let obfuscatedCode: string;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/if-statement-as-prohibited-single-statement.js');
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/if-statement-as-prohibited-single-statement-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            simplify: true
-                        }
-                    ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
                 });
 
-                it('should not simplify if statement', () => {
-                    assert.match(obfuscatedCode, regExp);
+                describe('Variant #2: `IfStatement` with `const` variable inside`' , () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'if *\\(!\\[]\\) *{ *' +
+                                'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            '} *' +
+                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/if-statement-as-prohibited-single-statement-2.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should not simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
                 });
             });
 

@@ -442,7 +442,7 @@ Following options are available for the JS Obfuscator:
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
-    --string-array-calls-index-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
+    --string-array-indexes-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-index-shift <boolean>
     --string-array-wrappers-count <number>

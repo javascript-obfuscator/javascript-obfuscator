@@ -51,7 +51,7 @@
     "@types/escodegen": "0.0.6",
     "@types/eslint-scope": "3.7.0",
     "@types/estraverse": "5.1.0",
-    "@types/estree": "0.0.46",
+    "@types/estree": "0.0.45",
     "@types/js-string-escape": "1.0.0",
     "@types/md5": "2.2.1",
     "@types/mkdirp": "1.0.1",

@@ -360,6 +360,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    exclude: [],
     forceTransformStrings: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],

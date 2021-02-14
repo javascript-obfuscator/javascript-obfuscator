@@ -108,13 +108,9 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
 
         if (!isTransformNode) {
             isForceTransformNode = obfuscatingGuardResults
-                .some((obfuscatingGuardResult: ObfuscatingGuardResult) =>
-                    obfuscatingGuardResult === ObfuscatingGuardResult.ForceTransform
-                );
+                .includes(ObfuscatingGuardResult.ForceTransform);
             isIgnoredNode = !isForceTransformNode && obfuscatingGuardResults
-                .some((obfuscatingGuardResult: ObfuscatingGuardResult) =>
-                    obfuscatingGuardResult === ObfuscatingGuardResult.Ignore
-                );
+                .includes(ObfuscatingGuardResult.Ignore);
         }
 
         NodeMetadata.set(node, {

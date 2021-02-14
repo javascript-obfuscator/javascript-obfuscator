@@ -257,6 +257,26 @@ describe('OptionsNormalizer', () => {
             });
         });
 
+        describe('renamePropertiesAutoExclude', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...getDefaultOptions(),
+                    renameProperties: false,
+                    renamePropertiesAutoExclude: true
+                });
+
+                expectedOptionsPreset = {
+                    ...getDefaultOptions(),
+                    renameProperties: false,
+                    renamePropertiesAutoExclude: false
+                };
+            });
+
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
+        });
+
         describe('seedRule', () => {
             describe('Variant #1: seed value is string', () => {
                 before(() => {

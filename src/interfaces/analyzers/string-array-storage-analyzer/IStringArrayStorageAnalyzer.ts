@@ -1,5 +1,7 @@
 import * as ESTree from 'estree';
 
+import { TStringLiteralNode } from '../../../types/node/TStringLiteralNode';
+
 import { IAnalyzer } from '../IAnalyzer';
 import { IStringArrayStorageItemData } from '../../storages/string-array-transformers/IStringArrayStorageItem';
 
@@ -16,9 +18,9 @@ export interface IStringArrayStorageAnalyzer extends IAnalyzer<[ESTree.Program],
     analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void;
 
     /**
-     * @param {(SimpleLiteral & {value: string}) | (RegExpLiteral & {value: string})} literalNode
+     * @param {TStringLiteralNode} stringLiteralNode
      */
-    addItemDataForLiteralNode (literalNode: ESTree.Literal & {value: string}): void;
+    addItemDataForLiteralNode (stringLiteralNode: TStringLiteralNode): void;
 
     /**
      * @param {Literal} literalNode

@@ -1,13 +1,15 @@
 import * as ESTree from 'estree';
 
+import { TStringLiteralNode } from '../types/node/TStringLiteralNode';
+
 import { NodeGuards } from './NodeGuards';
 
 export class NodeLiteralUtils {
     /**
      * @param {Literal} literalNode
-     * @returns {literalNode is (SimpleLiteral & {value: string})}
+     * @returns {literalNode is TStringLiteralNode}
      */
-    public static isStringLiteralNode (literalNode: ESTree.Literal): literalNode is ESTree.Literal & {value: string} {
+    public static isStringLiteralNode (literalNode: ESTree.Literal): literalNode is TStringLiteralNode {
         return typeof literalNode.value === 'string';
     }
 

@@ -8,6 +8,7 @@ import { TCustomCodeHelperFactory } from '../../types/container/custom-code-help
 import { TInitialData } from '../../types/TInitialData';
 import { TNumberNumericalExpressionData } from '../../types/analyzers/number-numerical-expression-analyzer/TNumberNumericalExpressionData';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringLiteralNode } from '../../types/node/TStringLiteralNode';
 
 import { ICustomCodeHelper } from '../../interfaces/custom-code-helpers/ICustomCodeHelper';
 import { INodeTransformersRunner } from '../../interfaces/node-transformers/INodeTransformersRunner';
@@ -258,10 +259,10 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param {Literal} stringLiteralNode
+     * @param {TStringLiteralNode} stringLiteralNode
      * @returns {boolean}
      */
-    private isComparisonExpressionStringLiteralNode (stringLiteralNode: ESTree.Literal & {value: string}): boolean {
+    private isComparisonExpressionStringLiteralNode (stringLiteralNode: TStringLiteralNode): boolean {
         return /\d/.test(stringLiteralNode.value);
     }
 }

@@ -215,6 +215,12 @@ export class Options implements IOptions {
     public readonly renameProperties!: boolean;
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly renamePropertiesAutoExclude!: boolean;
+
+    /**
      * @type {string[]}
      */
     @IsArray()

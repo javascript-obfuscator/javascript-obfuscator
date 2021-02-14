@@ -29,6 +29,7 @@ export interface IOptions {
     readonly optionsPreset: TOptionsPreset;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;
+    readonly renamePropertiesAutoExclude: boolean;
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
     readonly rotateStringArray: boolean;

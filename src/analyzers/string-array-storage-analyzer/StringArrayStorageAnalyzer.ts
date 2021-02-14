@@ -4,6 +4,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TStringLiteralNode } from '../../types/node/TStringLiteralNode';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
@@ -107,9 +109,9 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     }
 
     /**
-     * @param {(SimpleLiteral & {value: string}) | (RegExpLiteral & {value: string})} literalNode
+     * @param {TStringLiteralNode} literalNode
      */
-    public addItemDataForLiteralNode (literalNode: ESTree.Literal & {value: string}): void {
+    public addItemDataForLiteralNode (literalNode: TStringLiteralNode): void {
         this.stringArrayStorageData.set(
             literalNode,
             this.stringArrayStorage.getOrThrow(literalNode.value)
@@ -125,10 +127,10 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     }
 
     /**
-     * @param {(SimpleLiteral & {value: string})} literalNode
+     * @param {TStringLiteralNode} literalNode
      * @returns {boolean}
      */
-    private shouldAddValueToStringArray (literalNode: ESTree.Literal & {value: string}): boolean {
+    private shouldAddValueToStringArray (literalNode: TStringLiteralNode): boolean {
         const isForceTransformNode: boolean = NodeMetadata.isForceTransformNode(literalNode);
 
         if (isForceTransformNode) {

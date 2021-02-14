@@ -3,10 +3,10 @@ import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
 import { TNodeWithLexicalScopeStatements } from '../types/node/TNodeWithLexicalScopeStatements';
+import { TNodeWithSingleStatementBody } from '../types/node/TNodeWithSingleStatementBody';
 import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { NodeType } from '../enums/node/NodeType';
-import { TNodeWithSingleStatementBody } from '../types/node/TNodeWithSingleStatementBody';
 
 export class NodeGuards {
     /**

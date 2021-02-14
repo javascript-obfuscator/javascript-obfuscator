@@ -7,20 +7,22 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-           function foo () {
-              if (bar) {
-                if (baz) {
-                  const a = aa()
-                }
-              } else {
-                bb()
-              }
-            }
+            const object = {
+                foo: 1,
+                bar: 2,
+                baz: 3
+            };
+            
+            var excluded1 = 'bar';
+            var excluded2 = 'baz';
+            
+            console.log(object.foo, object['bar'], object.baz);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            simplify: true
+            renameProperties: true,
+            renamePropertiesAutoExclude: true
         }
     ).getObfuscatedCode();
 

@@ -20,6 +20,7 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
+    readonly domainDest: string;
     readonly forceTransformStrings: string[];
     readonly identifierNamesCache: TIdentifierNamesCache;
     readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;

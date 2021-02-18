@@ -135,6 +135,16 @@ export class Options implements IOptions {
     public readonly domainLock!: string[];
 
     /**
+     * @type {string}
+     */
+    @IsString()
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
+    public readonly domainDest!: string;
+
+    /**
      * @type {string[]}
      */
     @IsArray()

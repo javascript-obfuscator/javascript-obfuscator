@@ -7,34 +7,31 @@ export function DomainLockTemplate (): string {
             
             {globalVariableTemplate}
             
-            const func = function () {
-                return {
-                    key: 'item',
-                    value: 'attribute',
-                    getAttribute: function () {
-                        for (let i = 0; i < 1000; i--) {
-                            const isPositive = i > 0;
-                            
-                            switch (isPositive) {
-                                case true:
-                                    return this.item + '_' + this.value + '_' + i;
-                                default:
-                                    this.item + '_' + this.value;
-                            }
-                        }
-                    }()
-                };
-            };
-                        
-            const regExp = new RegExp("[{diff}]", "g");
+            const regExp = new RegExp("[{domainsStringDiff}]", "g");
             const domains = "{domains}".replace(regExp, "").split(";");
             let document;
             let domain;
             let location;
             let hostname;
 
+            const isName = function(name, length, cs) {
+                if (name.length != length) {
+                    return false;
+                }
+
+                for (let i = 0; i < length; i++) {
+                    for (let j = 0; j < cs.length; j += 2) {
+                        if (i == cs[j] && name.charCodeAt(i) != cs[j+1]) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            };
+
             for (let d in that) {
-                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
+                if (isName(d, 8, [7, 116, 5, 101, 3, 117, 0, 100])) {
                     document = d;
                 
                     break;
@@ -42,24 +39,24 @@ export function DomainLockTemplate (): string {
             }
 
             for (let d1 in that[document]) {
-                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
+                if (isName(d1, 6, [5, 110, 0, 100])) {
                     domain = d1;
-                    
+
+                    break;
+                }
+            }
+
+            for (let d2 in that[document]) {
+                if (isName(d2, 8, [7, 110, 0, 108])) {
+                    location = d2;
+
                     break;
                 }
             }
 
             if (!("~" > domain)) {
-                for (let d2 in that[document]) {
-                    if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
-                        location = d2;
-                        
-                        break;
-                    }
-                }
-
                 for (let d3 in that[document][location]) {
-                    if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
+                    if (isName(d3, 8, [7, 101, 0, 104])) {
                         hostname = d3;
                         
                         break;
@@ -96,14 +93,13 @@ export function DomainLockTemplate (): string {
                     }
                 }
             }
-               
+
             if (!ok) {
-                data;
-            } else {
-                return;
+                const regExp2 = new RegExp("[{domainDestDiff}]", "g");
+                const domainDest = "{domainDest}".replace(regExp2, "");
+
+                that[document][location] = domainDest;
             }
-            
-            func();
         });
 
         {domainLockFunctionName}();

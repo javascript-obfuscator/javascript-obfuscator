@@ -83,6 +83,129 @@ describe('NumberUtils', function () {
         });
     });
 
+    describe('extractIntegerAndDecimalParts', () => {
+        describe('Variant #1: number `0`', () => {
+            const number: number = 0;
+            const expectedParts: [number, number | null] = [0, null];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+        });
+
+        describe('Variant #2: number `10`', () => {
+            const number: number = 10;
+            const expectedParts: [number, number | null] = [10, null];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+        });
+
+        describe('Variant #3: number `-17`', () => {
+            const number: number = -17;
+            const expectedParts: [number, number | null] = [-17, null];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+        });
+
+        describe('Variant #4: number `0.0000000001`', () => {
+            const number: number = 0.0000000001;
+            const expectedParts: [number, number | null] = [0, 0.0000000001];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+
+            it('should return an initial number after sum of extracted parts', () => {
+                assert.equal(number, parts[0] + parts[1]!);
+            });
+        });
+
+        describe('Variant #5: number `10.0002`', () => {
+            const number: number = 10.0002;
+            const expectedParts: [number, number | null] = [10, 0.00019999999999953388];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts (with inaccuracy of float numbers)', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+
+            it('should return an initial number after sum of extracted parts', () => {
+                assert.equal(number, parts[0] + parts[1]!);
+            });
+        });
+
+        describe('Variant #6: number `1e-13`', () => {
+            const number: number = 1e-13;
+            const expectedParts: [number, number | null] = [0, 1e-13];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+
+            it('should return an initial number after sum of extracted parts', () => {
+                assert.equal(number, parts[0] + parts[1]!);
+            });
+        });
+
+        describe('Variant #7: number `-1e-100`', () => {
+            const number: number = -1e-100;
+            const expectedParts: [number, number | null] = [-0, -1e-100];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+
+            it('should return an initial number after sum of extracted parts', () => {
+                assert.equal(number, parts[0] + parts[1]!);
+            });
+        });
+    });
+
     describe('isCeil', () => {
         describe('given number is a ceil', () => {
             const number: number = 4;

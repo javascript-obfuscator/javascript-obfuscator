@@ -40,32 +40,94 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
     });
 
     describe('Variant #2: float number', () => {
-        const number: number = 50.5;
-        const samplesCount: number = 15;
+        describe('Variant #1: Number `50.5`', () => {
+            const number: number = 50.5;
+            const samplesCount: number = 15;
 
-        let areValidExpressions: boolean = true;
+            let areValidExpressions: boolean = true;
 
-        before(() => {
-            for (let i = 0; i < samplesCount; i++) {
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    `${number};`,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        numbersToExpressions: true
+            before(() => {
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        `${number};`,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            numbersToExpressions: true
+                        }
+                    ).getObfuscatedCode();
+
+                    const result: number = eval(obfuscatedCode);
+
+                    if (result !== number) {
+                        areValidExpressions = false;
+                        break;
                     }
-                ).getObfuscatedCode();
-
-                const result: number = eval(obfuscatedCode);
-
-                if (result !== number) {
-                    areValidExpressions = false;
-                    break;
                 }
-            }
+            });
+
+            it('should correctly transform numbers to expressions', () => {
+                assert.isTrue(areValidExpressions);
+            });
         });
 
-        it('should correctly transform numbers to expressions', () => {
-            assert.isTrue(areValidExpressions);
+        describe('Variant #2: Number `1e-13`', () => {
+            const number: number = 1e-13;
+            const samplesCount: number = 15;
+
+            let areValidExpressions: boolean = true;
+
+            before(() => {
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        `${number};`,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            numbersToExpressions: true
+                        }
+                    ).getObfuscatedCode();
+
+                    const result: number = eval(obfuscatedCode);
+
+                    if (result !== number) {
+                        areValidExpressions = false;
+                        break;
+                    }
+                }
+            });
+
+            it('should correctly transform numbers to expressions', () => {
+                assert.isTrue(areValidExpressions);
+            });
+        });
+
+        describe('Variant #3: Number `-1e-100`', () => {
+            const number: number = -1e-100;
+            const samplesCount: number = 15;
+
+            let areValidExpressions: boolean = true;
+
+            before(() => {
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        `${number};`,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            numbersToExpressions: true
+                        }
+                    ).getObfuscatedCode();
+
+                    const result: number = eval(obfuscatedCode);
+
+                    if (result !== number) {
+                        areValidExpressions = false;
+                        break;
+                    }
+                }
+            });
+
+            it('should correctly transform numbers to expressions', () => {
+                assert.isTrue(areValidExpressions);
+            });
         });
     });
 

@@ -16,6 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NumberNumericalExpressionAnalyzer } from '../../analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer';
+import { NumberUtils } from '../../utils/NumberUtils';
 import { NumericalExpressionDataToNodeConverter } from '../../node/NumericalExpressionDataToNodeConverter';
 
 /**
@@ -86,23 +87,41 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
             return literalNode;
         }
 
-        const numberNumericalExpressionData: TNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer.analyze(
-            literalNode.value,
-            NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
-        );
+        const baseNumber: number = literalNode.value;
+        const [integerPart, decimalPart] = NumberUtils.extractIntegerAndDecimalParts(baseNumber);
+        const integerNumberNumericalExpressionData: TNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer
+            .analyze(
+                integerPart,
+                NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+            );
 
-        return NumericalExpressionDataToNodeConverter.convert(
-            numberNumericalExpressionData,
-            (number: number, isPositiveNumber: boolean) => {
-                const numberLiteralNode: ESTree.Literal = NodeFactory.literalNode(number);
+        if (decimalPart) {
+            return NumericalExpressionDataToNodeConverter.convertFloatNumberData(
+                integerNumberNumericalExpressionData,
+                decimalPart,
+                this.getNumberNumericalExpressionLiteralNode
+            );
+        } else {
+            return NumericalExpressionDataToNodeConverter.convertIntegerNumberData(
+                integerNumberNumericalExpressionData,
+                this.getNumberNumericalExpressionLiteralNode
+            );
+        }
+    }
 
-                return isPositiveNumber
-                    ? numberLiteralNode
-                    : NodeFactory.unaryExpressionNode(
-                        '-',
-                        numberLiteralNode
-                    );
-            }
-        );
+    /**
+     * @param {number} number
+     * @param {boolean} isPositiveNumber
+     * @returns {Expression}
+     */
+    private getNumberNumericalExpressionLiteralNode (number: number, isPositiveNumber: boolean): ESTree.Expression {
+        const numberLiteralNode: ESTree.Literal = NodeFactory.literalNode(number);
+
+        return isPositiveNumber
+            ? numberLiteralNode
+            : NodeFactory.unaryExpressionNode(
+                '-',
+                numberLiteralNode
+            );
     }
 }

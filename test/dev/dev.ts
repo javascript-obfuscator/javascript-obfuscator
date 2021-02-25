@@ -7,20 +7,17 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-           function foo () {
-              if (bar) {
-                if (baz) {
-                  const a = aa()
-                }
-              } else {
-                bb()
-              }
-            }
+            const epsilon = 500;
+            const number = 500000.0000001;
+             
+            if(epsilon > 0 && number > 500000.0000000 && number < 500000.0000002) {
+                console.log("math works!");
+            };
+
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
-            simplify: true
+            numbersToExpressions: true
         }
     ).getObfuscatedCode();
 

@@ -167,9 +167,28 @@ describe('NumberUtils', function () {
             });
         });
 
-        describe('Variant #5: number `1e-13`', () => {
+        describe('Variant #6: number `1e-13`', () => {
             const number: number = 1e-13;
             const expectedParts: [number, number | null] = [0, 1e-13];
+
+            let parts: [number, number | null];
+
+            before(() => {
+                parts = NumberUtils.extractIntegerAndDecimalParts(number);
+            });
+
+            it('should extract integer and decimal parts', () => {
+                assert.deepEqual(parts, expectedParts);
+            });
+
+            it('should return an initial number after sum of extracted parts', () => {
+                assert.equal(number, parts[0] + parts[1]!);
+            });
+        });
+
+        describe('Variant #7: number `-1e-100`', () => {
+            const number: number = -1e-100;
+            const expectedParts: [number, number | null] = [-0, -1e-100];
 
             let parts: [number, number | null];
 

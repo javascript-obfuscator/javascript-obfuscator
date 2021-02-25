@@ -99,6 +99,36 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
                 assert.isTrue(areValidExpressions);
             });
         });
+
+        describe('Variant #3: Number `-1e-100`', () => {
+            const number: number = -1e-100;
+            const samplesCount: number = 15;
+
+            let areValidExpressions: boolean = true;
+
+            before(() => {
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        `${number};`,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            numbersToExpressions: true
+                        }
+                    ).getObfuscatedCode();
+
+                    const result: number = eval(obfuscatedCode);
+
+                    if (result !== number) {
+                        areValidExpressions = false;
+                        break;
+                    }
+                }
+            });
+
+            it('should correctly transform numbers to expressions', () => {
+                assert.isTrue(areValidExpressions);
+            });
+        });
     });
 
     describe('Variant #3: safe integers', () => {

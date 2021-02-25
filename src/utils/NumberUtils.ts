@@ -20,7 +20,7 @@ export class NumberUtils {
      * @returns {[number, (number | null)]}
      */
     public static extractIntegerAndDecimalParts (number: number): [number, number | null] {
-        const integerPart: number = Math.floor(number);
+        const integerPart: number = Math.trunc(number);
         const decimalPart: number | null = number !== integerPart
             ? number % 1
             : null;
@@ -72,18 +72,6 @@ export class NumberUtils {
         }
 
         return number < Number.MIN_SAFE_INTEGER || number > Number.MAX_SAFE_INTEGER;
-    }
-
-    /**
-     * @param {number} number
-     * @param {number} delta
-     * @returns {boolean}
-     */
-    public static isUnsafePrecisionNumber (number: number, delta: number): boolean {
-        const x: number = number + delta;
-        const x2: number = x - delta;
-
-        return number !== x2;
     }
 
     /**

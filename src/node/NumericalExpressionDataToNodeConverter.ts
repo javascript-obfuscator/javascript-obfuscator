@@ -15,7 +15,7 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
      * @returns {Expression}
      */
-    public static convert (
+    public static convertIntegerNumberData (
         numberNumericalExpressionData: TNumberNumericalExpressionData,
         literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter
     ): ESTree.Expression {
@@ -23,6 +23,30 @@ export class NumericalExpressionDataToNodeConverter {
            numberNumericalExpressionData,
            literalNodeGetter
        );
+    }
+
+    /**
+     * @param {TNumberNumericalExpressionData} integerNumberNumericalExpressionData
+     * @param {number} decimalPart
+     * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
+     * @returns {Expression}
+     */
+    public static convertFloatNumberData (
+        integerNumberNumericalExpressionData: TNumberNumericalExpressionData,
+        decimalPart: number,
+        literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter
+    ): ESTree.Expression {
+        const integerNumberNumericalExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter
+            .convertNumericalExpressionDataToNode(
+                integerNumberNumericalExpressionData,
+                literalNodeGetter
+            );
+
+        return NodeFactory.binaryExpressionNode(
+            '+',
+            integerNumberNumericalExpressionNode,
+            NodeFactory.literalNode(decimalPart)
+        );
     }
 
     /**

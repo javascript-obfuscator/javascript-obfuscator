@@ -17,6 +17,19 @@ export class NumberUtils {
 
     /**
      * @param {number} number
+     * @returns {[number, (number | null)]}
+     */
+    public static extractIntegerAndDecimalParts (number: number): [number, number | null] {
+        const integerPart: number = Math.trunc(number);
+        const decimalPart: number | null = number !== integerPart
+            ? number % 1
+            : null;
+
+        return [integerPart, decimalPart];
+    }
+
+    /**
+     * @param {number} number
      * @returns {boolean}
      */
     public static isCeil (number: number | bigint): boolean {

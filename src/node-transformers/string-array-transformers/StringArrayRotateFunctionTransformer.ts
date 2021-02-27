@@ -226,7 +226,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
                 StringArrayRotateFunctionTransformer.comparisonExpressionAdditionalPartsCount
             );
 
-        const comparisonExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter.convert(
+        const comparisonExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter.convertIntegerNumberData(
             comparisonExpressionNumberNumericalExpressionData,
             ((number: number, isPositiveNumber) => {
                 const literalNode: ESTree.Literal = NodeFactory.literalNode(

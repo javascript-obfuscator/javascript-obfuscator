@@ -20,6 +20,11 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     public static readonly defaultAdditionalPartsCount: number = 3;
 
     /**
+     * @type {number}
+     */
+    private static readonly delta: number = 10000;
+
+    /**
      * @type {Map<number, number[]>}
      */
     private readonly numberFactorsMap: Map<number, number[]> = new Map();
@@ -70,8 +75,8 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
 
         const upperNumberLimit: number = Math.min(Math.abs(number * 2), Number.MAX_SAFE_INTEGER);
 
-        const from: number = Math.min(-10000, -upperNumberLimit);
-        const to: number = Math.max(10000, upperNumberLimit);
+        const from: number = Math.min(-NumberNumericalExpressionAnalyzer.delta, -upperNumberLimit);
+        const to: number = Math.max(NumberNumericalExpressionAnalyzer.delta, upperNumberLimit);
 
         let temporarySum = 0;
 

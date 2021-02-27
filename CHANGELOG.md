@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.4
+---
+* Fixed invalid behaviour of `numbersToExpressions` option for float numbers. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/882
+
 v2.10.3
 ---
 * Fixed `simplify` option regression after `2.10.2`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/864

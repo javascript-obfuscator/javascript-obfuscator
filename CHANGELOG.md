@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.7
+---
+* Fixed CVE-2019-18413. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/880
+
 v2.10.6
 ---
 * Added support of `top-level await`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/884

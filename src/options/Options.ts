@@ -60,6 +60,7 @@ export class Options implements IOptions {
      * @type {ValidatorOptions}
      */
     private static readonly validatorOptions: ValidatorOptions = {
+        forbidUnknownValues: true,
         validationError: {
             target: false
         }

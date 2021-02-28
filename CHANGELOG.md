@@ -1,5 +1,9 @@
 Change Log
 
+v2.10.6
+---
+* Added support of `top-level await`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/884
+
 v2.10.5
 ---
 * Fixed invalid code generation for rest arguments when `controlFlowFlattening` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/887

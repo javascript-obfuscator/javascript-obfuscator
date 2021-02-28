@@ -779,6 +779,27 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('Top-level await support', () => {
+            const regExp: RegExp = /await 0x1;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/top-level-await-support.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support top-level await', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

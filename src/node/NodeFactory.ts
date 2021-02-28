@@ -317,7 +317,7 @@ export class NodeFactory {
      * @returns {FunctionExpression}
      */
     public static functionExpressionNode (
-        params: ESTree.Identifier[],
+        params: ESTree.Pattern[],
         body: ESTree.BlockStatement
     ): ESTree.FunctionExpression {
         return {
@@ -494,6 +494,18 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Pattern} argument
+     * @returns {SpreadElement}
+     */
+    public static restElementNode (argument: ESTree.Pattern): ESTree.RestElement {
+        return {
+            type: NodeType.RestElement,
+            argument,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Expression} argument
      * @returns {ReturnStatement}
      */
@@ -513,6 +525,18 @@ export class NodeFactory {
         return {
             type: NodeType.SequenceExpression,
             expressions,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
+     * @param {Expression} argument
+     * @returns {SpreadElement}
+     */
+    public static spreadElementNode (argument: ESTree.Expression): ESTree.SpreadElement {
+        return {
+            type: NodeType.SpreadElement,
+            argument,
             metadata: { ignoredNode: false }
         };
     }

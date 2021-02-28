@@ -15,6 +15,7 @@ import { initializable } from '../../decorators/Initializable';
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class CallExpressionFunctionNode extends AbstractCustomNode {
@@ -57,11 +58,26 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         const calleeIdentifier: ESTree.Identifier = NodeFactory.identifierNode('callee');
-        const params: ESTree.Identifier[] = [];
+        const params: (ESTree.Identifier | ESTree.RestElement)[] = [];
+        const callArguments: (ESTree.Identifier | ESTree.SpreadElement)[] = [];
         const argumentsLength: number = this.expressionArguments.length;
 
         for (let i: number = 0; i < argumentsLength; i++) {
-            params.push(NodeFactory.identifierNode(`param${i + 1}`));
+            const argument: ESTree.Expression | ESTree.SpreadElement = this.expressionArguments[i];
+            const isSpreadCallArgument: boolean = NodeGuards.isSpreadElementNode(argument);
+
+            const baseIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(`param${i + 1}`);
+
+            params.push(
+                isSpreadCallArgument
+                    ? NodeFactory.restElementNode(baseIdentifierNode)
+                    : baseIdentifierNode
+            );
+            callArguments.push(
+                isSpreadCallArgument
+                    ? NodeFactory.spreadElementNode(baseIdentifierNode)
+                    : baseIdentifierNode
+            );
         }
 
         const structure: TStatement = NodeFactory.expressionStatementNode(
@@ -74,7 +90,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
                     NodeFactory.returnStatementNode(
                         NodeFactory.callExpressionNode(
                             calleeIdentifier,
-                            params
+                            callArguments
                         )
                     )
                 ])

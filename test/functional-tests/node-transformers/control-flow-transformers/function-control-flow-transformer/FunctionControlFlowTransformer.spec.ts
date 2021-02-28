@@ -221,7 +221,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('arrow function expression', () => {
+        describe('Variant #7 - arrow function expression', () => {
             describe('Variant #1 - arrow function expression with body', () => {
                 const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 
@@ -269,7 +269,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('prevailing kind of variables', () => {
+        describe('Variant #8 - prevailing kind of variables', () => {
             describe('Variant #1 - `var` kind', () => {
                 const regexp: RegExp = new RegExp(`var ${variableMatch} *= *\\{`);
 

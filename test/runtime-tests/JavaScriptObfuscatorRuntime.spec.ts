@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { TInputOptions } from '../../src/types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { RenamePropertiesMode } from '../../src/enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayIndexesType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -30,7 +31,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         numbersToExpressions: true,
         simplify: true,
         renameProperties: true,
-        reservedNames: ['generate', 'sha256'],
+        renamePropertiesMode: RenamePropertiesMode.Unsafe,
         rotateStringArray: true,
         selfDefending: true,
         splitStrings: true,
@@ -92,78 +93,79 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/astring.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
+                    `
+                    ${getEnvironmentCode()}
+                    ${code}
+                    const code = generate({
+                        "type": "Program",
+                        "body": [
+                            {
+                                "type": "FunctionDeclaration",
+                                "id": {
+                                    "type": "Identifier",
+                                    "name": "test",
+                                    "range": [
+                                        9,
+                                        13
+                                    ]
+                                },
+                                "params": [],
+                                "body": {
+                                    "type": "BlockStatement",
+                                    "body": [
+                                        {
+                                            "type": "ReturnStatement",
+                                            "argument": {
+                                                "type": "Literal",
+                                                "value": "foo",
+                                                "raw": "'foo'",
+                                                "range": [
+                                                    30,
+                                                    35
+                                                ]
+                                            },
+                                            "range": [
+                                                23,
+                                                36
+                                            ]
+                                        }
+                                    ],
+                                    "range": [
+                                        17,
+                                        38
+                                    ]
+                                },
+                                "generator": false,
+                                "expression": false,
+                                "async": false,
+                                "range": [
+                                    0,
+                                    38
+                                ]
+                            }
+                        ],
+                        "sourceType": "module",
+                        "range": [
+                            0,
+                            38
+                        ],
+                        "comments": []
+                    });
+                    
+                    eval(\`\${code} test();\`);
+                    `,
                     {
                         ...baseOptions,
                         ...options,
-                        renameProperties: false
+                        renamePropertiesMode: RenamePropertiesMode.Safe,
+                        reservedNames: ['generate']
                     }
                 ).getObfuscatedCode();
 
                 let evaluationResult: string;
 
                 try {
-                    evaluationResult = eval(`
-                        ${getEnvironmentCode()}
-                        ${obfuscatedCode}
-                        const code = generate({
-                            "type": "Program",
-                            "body": [
-                                {
-                                    "type": "FunctionDeclaration",
-                                    "id": {
-                                        "type": "Identifier",
-                                        "name": "test",
-                                        "range": [
-                                            9,
-                                            13
-                                        ]
-                                    },
-                                    "params": [],
-                                    "body": {
-                                        "type": "BlockStatement",
-                                        "body": [
-                                            {
-                                                "type": "ReturnStatement",
-                                                "argument": {
-                                                    "type": "Literal",
-                                                    "value": "foo",
-                                                    "raw": "'foo'",
-                                                    "range": [
-                                                        30,
-                                                        35
-                                                    ]
-                                                },
-                                                "range": [
-                                                    23,
-                                                    36
-                                                ]
-                                            }
-                                        ],
-                                        "range": [
-                                            17,
-                                            38
-                                        ]
-                                    },
-                                    "generator": false,
-                                    "expression": false,
-                                    "async": false,
-                                    "range": [
-                                        0,
-                                        38
-                                    ]
-                                }
-                            ],
-                            "sourceType": "module",
-                            "range": [
-                                0,
-                                38
-                            ],
-                            "comments": []
-                        });
-                        
-                        eval(\`\${code} test();\`);
-                    `)
+                    evaluationResult = eval(obfuscatedCode)
                 } catch (e) {
                     throw new Error(`Evaluation error: ${e.message}. Code: ${obfuscatedCode}`);
                 }
@@ -177,19 +179,20 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
+                    `
+                    ${getEnvironmentCode()}
+                    ${code}
+                    sha256('test');
+                    `,
                     {
                         ...baseOptions,
-                        ...options
+                        ...options,
+                        reservedNames: ['sha256']
                     }
                 ).getObfuscatedCode();
 
                 assert.equal(
-                    eval(`
-                        ${getEnvironmentCode()}
-                        ${obfuscatedCode}
-                        sha256('test');
-                    `),
+                    eval(obfuscatedCode),
                     '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
                 );
             });

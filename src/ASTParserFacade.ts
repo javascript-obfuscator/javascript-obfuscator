@@ -65,6 +65,7 @@ export class ASTParserFacade {
         const comments: ESTree.Comment[] = [];
         const config: acorn.Options = {
             ...inputConfig,
+            allowAwaitOutsideFunction: true,
             onComment: comments,
             sourceType
         };

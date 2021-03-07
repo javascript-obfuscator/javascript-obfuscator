@@ -1,5 +1,17 @@
 Change Log
 
+v2.10.7
+---
+* Fixed CVE-2019-18413. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/880
+
+v2.10.6
+---
+* Added support of `top-level await`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/884
+
+v2.10.5
+---
+* Fixed invalid code generation for rest arguments when `controlFlowFlattening` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/887
+
 v2.10.4
 ---
 * Fixed invalid behaviour of `numbersToExpressions` option for float numbers. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/882

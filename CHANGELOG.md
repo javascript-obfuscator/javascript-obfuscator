@@ -1,5 +1,10 @@
 Change Log
 
+v2.11.0
+---
+* Added option `renamePropertiesMode` to switch between new `safe` and old `unsafe` modes of `renameProperties` option. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/878
+* `renameProperties` option now works in `safe` way by default
+
 v2.10.7
 ---
 * Fixed CVE-2019-18413. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/880

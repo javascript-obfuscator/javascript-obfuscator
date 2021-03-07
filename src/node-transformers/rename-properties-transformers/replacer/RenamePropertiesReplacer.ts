@@ -34,6 +34,11 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
+     * @type {Set<string>}
+     */
+    private readonly excludedPropertyNames: Set<string> = new Set();
+
+    /**
      * @type {Map<string, string>}
      * @private
      */
@@ -55,6 +60,13 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.options = options;
+    }
+
+    /**
+     * @param {string} propertyName
+     */
+    public excludePropertyName (propertyName: string): void {
+       this.excludedPropertyNames.add(propertyName);
     }
 
     /**
@@ -104,8 +116,17 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @returns {boolean}
      */
     private isReservedName (name: string): boolean {
-        return this.isReservedOptionName(name)
+        return this.isExcludedName(name)
+            || this.isReservedOptionName(name)
             || this.isReservedDomPropertyName(name);
+    }
+
+    /**
+     * @param {string} name
+     * @returns {boolean}
+     */
+    private isExcludedName (name: string): boolean {
+        return this.excludedPropertyNames.has(name);
     }
 
     /**

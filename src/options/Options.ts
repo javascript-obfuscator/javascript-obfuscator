@@ -20,6 +20,7 @@ import {
 
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
+import { TRenamePropertiesMode } from '../types/options/TRenamePropertiesMode';
 import { TStringArrayIndexesType } from '../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
@@ -31,6 +32,7 @@ import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
 import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
+import { RenamePropertiesMode } from '../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
@@ -214,6 +216,12 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly renameProperties!: boolean;
+
+    /**
+     * @type {RenamePropertiesMode}
+     */
+    @IsIn([RenamePropertiesMode.Safe, RenamePropertiesMode.Unsafe])
+    public readonly renamePropertiesMode!: TRenamePropertiesMode;
 
     /**
      * @type {string[]}

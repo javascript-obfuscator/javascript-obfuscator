@@ -15,8 +15,10 @@ import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-g
 import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
+import { RenamePropertiesMode } from '../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
+import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { DEFAULT_PRESET } from '../options/presets/Default';
@@ -30,7 +32,6 @@ import { Logger } from '../logger/Logger';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
 import { SourceCodeReader } from './utils/SourceCodeReader';
 import { Utils } from '../utils/Utils';
-import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
@@ -285,8 +286,14 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--rename-properties <boolean>', 'UNSAFE: Enables renaming of property names. This probably WILL break your code',
+                '--rename-properties <boolean>', 'UNSAFE: Enables renaming of property names. This probably MAY break your code',
                 BooleanSanitizer
+            )
+            .option(
+                '--rename-properties-mode <boolean>',
+                'Specify `--rename-properties` option mode. ' +
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(RenamePropertiesMode)}. ` +
+                `Default: ${RenamePropertiesMode.Safe}`
             )
             .option(
                 '--rotate-string-array <boolean>', 'Enable rotation of string array values during obfuscation',

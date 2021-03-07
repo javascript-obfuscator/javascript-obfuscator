@@ -371,6 +371,7 @@ Following options are available for the JS Obfuscator:
     optionsPreset: 'default',
     renameGlobals: false,
     renameProperties: false,
+    renamePropertiesMode: 'safe',
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: true,
@@ -429,6 +430,7 @@ Following options are available for the JS Obfuscator:
     --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]
     --rename-globals <boolean>
     --rename-properties <boolean>
+    --rename-properties-mode <string> [safe, unsafe]
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
@@ -785,9 +787,11 @@ Enables obfuscation of global variable and function names **with declaration**.
 ### `renameProperties`
 Type: `boolean` Default: `false`
 
-##### :warning: this option **WILL** break your code in most cases. Enable it only if you know what it does!
+##### :warning: this option **MAY** break your code. Enable it only if you know what it does!
 
 Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
+
+To switch between `safe` and `unsafe` modes of this option use [`renamePropertiesMode`](#renamepropertiesmode) option.
 
 To set format of renamed property names use [`identifierNamesGenerator`](#identifiernamesgenerator) option.
 
@@ -820,6 +824,15 @@ Example:
     console['log'](_0x46529b['_0x4b961d']());
 }());
 ```
+
+### `renamePropertiesMode`
+Type: `string` Default: `safe`
+
+##### :warning: Even in `safe` mode, [`renameProperties`](#renameproperties) option **MAY** break your code.
+
+Specifies `renameProperties` option mode:
+* `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors. With this mode some properties will be excluded from renaming.
+* `unsafe` - default behaviour before `2.11.0` release. Renames properties in an unsafe way without any restrictions.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -1447,7 +1460,7 @@ See: [`Kind of variables`](#kind-of-variables)
 
 ### I enabled `renameProperties` option, and my code broke! What to do?
 
-Just disable this option.
+Try `renamePropertiesMode: 'safe'` option, if it still doesn't work, just disable this option.
 
 ## Backers
 

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable} from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -12,6 +12,8 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
+import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 
 @injectable()
 export class RenamePropertiesTransformer extends AbstractNodeTransformer {
@@ -59,6 +61,15 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
+            case NodeTransformationStage.Preparing:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
+                        if (parentNode) {
+                            this.prepareNode(node, parentNode);
+                        }
+                    }
+                };
+
             case NodeTransformationStage.RenameProperties:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
@@ -70,6 +81,19 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
 
             default:
                 return null;
+        }
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     */
+    public prepareNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): void {
+        if (this.options.renamePropertiesMode === RenamePropertiesMode.Safe) {
+            this.analyzeAutoExcludedPropertyNames(node, parentNode);
         }
     }
 
@@ -135,5 +159,28 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         }
 
         return methodDefinitionNode;
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     */
+    private analyzeAutoExcludedPropertyNames (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): void {
+        if (!NodeGuards.isLiteralNode(node) || !NodeLiteralUtils.isStringLiteralNode(node)) {
+            return;
+        }
+
+        if (
+            (NodeGuards.isPropertyNode(parentNode) && parentNode.key === node)
+            || NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node
+            || NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node
+        ) {
+            return;
+        }
+
+        this.renamePropertiesReplacer.excludePropertyName(node.value);
     }
 }

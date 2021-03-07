@@ -2,6 +2,7 @@ import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
+import { TRenamePropertiesMode } from '../../types/options/TRenamePropertiesMode';
 import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
@@ -29,6 +30,7 @@ export interface IOptions {
     readonly optionsPreset: TOptionsPreset;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;
+    readonly renamePropertiesMode: TRenamePropertiesMode;
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
     readonly rotateStringArray: boolean;

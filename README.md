@@ -831,7 +831,7 @@ Type: `string` Default: `safe`
 ##### :warning: Even in `safe` mode, [`renameProperties`](#renameproperties) option **MAY** break your code.
 
 Specifies `renameProperties` option mode:
-* `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors.
+* `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors. With this mode some properties will be excluded from renaming.
 * `unsafe` - default behaviour before `2.11.0` release. Renames properties in an unsafe way without any restrictions.
 
 ### `reservedNames`

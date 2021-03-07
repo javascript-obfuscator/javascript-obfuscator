@@ -10,7 +10,6 @@ import { DeadCodeInjectionRule } from './normalizer-rules/DeadCodeInjectionRule'
 import { DeadCodeInjectionThresholdRule } from './normalizer-rules/DeadCodeInjectionThresholdRule';
 import { DomainLockRule } from './normalizer-rules/DomainLockRule';
 import { InputFileNameRule } from './normalizer-rules/InputFileNameRule';
-import { RenamePropertiesAutoExcludeRule } from './normalizer-rules/RenamePropertiesAutoExcludeRule';
 import { SeedRule } from './normalizer-rules/SeedRule';
 import { SelfDefendingRule } from './normalizer-rules/SelfDefendingRule';
 import { SourceMapBaseUrlRule } from './normalizer-rules/SourceMapBaseUrlRule';
@@ -31,7 +30,6 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         DeadCodeInjectionThresholdRule,
         DomainLockRule,
         InputFileNameRule,
-        RenamePropertiesAutoExcludeRule,
         SeedRule,
         SelfDefendingRule,
         SourceMapBaseUrlRule,

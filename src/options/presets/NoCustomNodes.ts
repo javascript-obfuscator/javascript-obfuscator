@@ -2,6 +2,7 @@ import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -28,7 +29,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     numbersToExpressions: false,
     renameGlobals: false,
     renameProperties: false,
-    renamePropertiesAutoExclude: false,
+    renamePropertiesMode: RenamePropertiesMode.Safe,
     reservedNames: [],
     reservedStrings: [],
     rotateStringArray: false,

@@ -1,6 +1,7 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { RenamePropertiesMode } from '../../src/enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -22,7 +23,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             renameProperties: true,
-            renamePropertiesAutoExclude: true
+            renamePropertiesMode: RenamePropertiesMode.Safe
         }
     ).getObfuscatedCode();
 

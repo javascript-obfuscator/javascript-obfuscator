@@ -13,6 +13,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
+import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 
 @injectable()
 export class RenamePropertiesTransformer extends AbstractNodeTransformer {
@@ -91,7 +92,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         node: ESTree.Node,
         parentNode: ESTree.Node
     ): void {
-        if (this.options.renamePropertiesAutoExclude) {
+        if (this.options.renamePropertiesMode === RenamePropertiesMode.Safe) {
             this.analyzeAutoExcludedPropertyNames(node, parentNode);
         }
     }

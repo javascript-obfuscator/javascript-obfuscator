@@ -386,7 +386,7 @@ Following options are available for the JS Obfuscator:
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
-    stringArrayCallsIndexType: [
+    stringArrayIndexesType: [
         'hexadecimal-number'
     ],
     stringArrayEncoding: [],

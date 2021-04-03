@@ -81,7 +81,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
             return null;
         }
 
-        return quasis[0].value.cooked;
+        return quasis[0].value.cooked ?? null;
     }
 
     /**

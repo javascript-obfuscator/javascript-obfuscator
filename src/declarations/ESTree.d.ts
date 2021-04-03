@@ -39,6 +39,11 @@ declare module 'estree' {
         scope?: eslintScope.Scope | null;
     }
 
+    interface BigIntLiteral extends BaseNode {
+        metadata?: LiteralNodeMetadata;
+        'x-verbatim-property'?: escodegen.XVerbatimProperty;
+    }
+
     interface RegExpLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;

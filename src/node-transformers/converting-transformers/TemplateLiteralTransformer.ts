@@ -83,6 +83,10 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         let nodes: ESTree.Expression[] = [];
 
         templateLiteralNode.quasis.forEach((templateElement: ESTree.TemplateElement) => {
+            if (templateElement.value.cooked === undefined || templateElement.value.cooked === null) {
+                return;
+            }
+
             nodes.push(NodeFactory.literalNode(templateElement.value.cooked));
 
             const expression: ESTree.Expression | undefined = templateLiteralExpressions.shift();

@@ -27,9 +27,12 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
     ];
 
     /**
-     * @type {Map<string, string>}
+     * @type {Map<ESTree.SimpleLiteral['value'] | ESTree.BigIntLiteral['value'], string>}
      */
-    private readonly numberLiteralCache: Map <number, string> = new Map();
+    private readonly numberLiteralCache: Map <
+        ESTree.SimpleLiteral['value'] | ESTree.BigIntLiteral['value'],
+        string
+    > = new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -78,7 +81,7 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
+        const literalValue: number = <number>literalNode.value;
 
         let rawValue: string;
 

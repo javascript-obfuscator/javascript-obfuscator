@@ -19,8 +19,6 @@ jobs:
           - os: ubuntu-latest,
             node-version: 12.x
           - os: ubuntu-latest,
-            node-version: 13.x
-          - os: ubuntu-latest,
             node-version: 14.x
           - os: ubuntu-latest,
             node-version: 15.x

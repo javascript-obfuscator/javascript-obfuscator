@@ -42,7 +42,7 @@
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",
     "stringz": "2.1.0",
-    "tslib": "2.1.0"
+    "tslib": "2.2.0"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
@@ -62,10 +62,10 @@
     "@types/sinon": "9.0.11",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.16.0",
-    "@typescript-eslint/eslint-plugin": "4.20.0",
-    "@typescript-eslint/parser": "4.20.0",
+    "@typescript-eslint/eslint-plugin": "4.21.0",
+    "@typescript-eslint/parser": "4.21.0",
     "chai": "4.3.4",
-    "chai-exclude": "2.0.2",
+    "chai-exclude": "2.0.3",
     "cross-env": "7.0.3",
     "eslint": "7.23.0",
     "eslint-plugin-import": "2.22.1",
@@ -85,7 +85,7 @@
     "ts-loader": "8.1.0",
     "ts-node": "9.1.1",
     "typescript": "4.2.3",
-    "webpack": "5.30.0",
+    "webpack": "5.31.0",
     "webpack-cli": "4.6.0",
     "webpack-node-externals": "2.5.2"
   },

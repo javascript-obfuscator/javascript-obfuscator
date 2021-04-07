@@ -251,7 +251,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     private getOrSetIfDoesNotExist (value: string): IStringArrayStorageItemData {
         const { encodedValue, encoding, decodeKey }: IEncodedValue = this.getEncodedValue(value);
 
-        const cacheKey = <`${string}-${TStringArrayEncoding}`>`${encodedValue}-${encoding}`;
+        const cacheKey: `${string}-${TStringArrayEncoding}` = `${encodedValue}-${encoding}`;
         const storedStringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.storage.get(cacheKey);
 
         if (storedStringArrayStorageItemData) {

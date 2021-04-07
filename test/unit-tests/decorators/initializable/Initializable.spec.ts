@@ -172,27 +172,4 @@ describe('@initializable', () => {
             assert.throws(testFunc, /Property `property` is not initialized/);
         });
     });
-
-    describe('Variant #4: `initialize` method with custom name', () => {
-        const testFunc: () => void = () => {
-            class Foo {
-                @initializable('bar')
-                public property!: string;
-
-                public initialize (property: string): void {
-                    this.property = property;
-                }
-            }
-
-            const foo: Foo = new Foo();
-
-            foo.initialize('baz');
-
-            foo.property;
-        };
-
-        it('should throws an error if `initialize` method with custom name wasn\'t found', () => {
-            assert.throws(testFunc, /method with initialization logic not found/);
-        });
-    });
 });

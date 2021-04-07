@@ -4278,10 +4278,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@4.2.3:
-  version "4.2.3"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.2.3.tgz"
-  integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
+typescript@beta:
+  version "4.3.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.0-beta.tgz#8098e7be29032f09827e94b8e3a6befc9ff70c77"
+  integrity sha512-bl3wxSVL6gWLQFa466Vm5Vk3z0BNx+QxWhb9wFiYEHm6H8oqFd8Wo3XjgCVxAa5yiSFFKgo/ngBpXdIwqo5o0A==
 
 universalify@^1.0.0:
   version "1.0.0"

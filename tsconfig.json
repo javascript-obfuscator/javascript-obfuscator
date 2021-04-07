@@ -13,6 +13,7 @@
     "module": "commonjs",
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "noImplicitOverride": false,
     "noImplicitThis": false,
     "noUnusedLocals": true,
     "removeComments": true,

@@ -150,7 +150,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
         this.customCodeHelperGroupStorage
             .getStorage()
             .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
-                const methodName = <TCustomCodeHelpersGroupAppendMethodName>`appendOn${nodeTransformationStage}Stage`;
+                const methodName: TCustomCodeHelpersGroupAppendMethodName = `appendOn${nodeTransformationStage}Stage`;
 
                 customCodeHelperGroup[methodName]?.(node, this.callsGraphData);
             });

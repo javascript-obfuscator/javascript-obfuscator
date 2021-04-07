@@ -32,31 +32,61 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         });
 
         describe('Variant #1: obfuscation of single file', () => {
-            describe('`--output` option is set', () => {
-                let isFileExist: boolean;
+            describe('--output` option is set', () => {
+                describe('Variant #1: input file path is before options', () => {
+                    let isFileExist: boolean;
 
-                before(() => {
-                    JavaScriptObfuscatorCLI.obfuscate([
-                        'node',
-                        'javascript-obfuscator',
-                        fixtureFilePath,
-                        '--output',
-                        outputFilePath,
-                        '--compact',
-                        'true',
-                        '--self-defending',
-                        '0'
-                    ]);
+                    before(() => {
+                        JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            fixtureFilePath,
+                            '--output',
+                            outputFilePath,
+                            '--compact',
+                            'true',
+                            '--self-defending',
+                            '0'
+                        ]);
 
-                    isFileExist = fs.existsSync(outputFilePath);
+                        isFileExist = fs.existsSync(outputFilePath);
+                    });
+
+                    it('should create file with obfuscated code in `--output` directory', () => {
+                        assert.equal(isFileExist, true);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(outputFilePath);
+                    });
                 });
 
-                it('should create file with obfuscated code in `--output` directory', () => {
-                    assert.equal(isFileExist, true);
-                });
+                describe('Variant #2: input file path is after options', () => {
+                    let isFileExist: boolean;
 
-                after(() => {
-                    fs.unlinkSync(outputFilePath);
+                    before(() => {
+                        JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            '--output',
+                            outputFilePath,
+                            '--compact',
+                            'true',
+                            '--self-defending',
+                            '0',
+                            fixtureFilePath
+                        ]);
+
+                        isFileExist = fs.existsSync(outputFilePath);
+                    });
+
+                    it('should create file with obfuscated code in `--output` directory', () => {
+                        assert.equal(isFileExist, true);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(outputFilePath);
+                    });
                 });
             });
 

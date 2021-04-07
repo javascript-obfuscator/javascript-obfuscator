@@ -137,12 +137,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     }
 
     public initialize (): void {
-        this.inputPath = path.normalize(this.arguments[0] || '');
         this.commands = <commander.CommanderStatic>(new commander.Command());
 
         this.configureCommands();
         this.configureHelp();
 
+        this.inputPath = path.normalize(this.commands.args[0] || '');
         this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts());
         this.sourceCodeReader = new SourceCodeReader(
             this.inputPath,

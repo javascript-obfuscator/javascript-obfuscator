@@ -1,5 +1,9 @@
 Change Log
 
+v2.11.1
+---
+* **CLI**: now it's possible to specify the path to the input file after specifying the obfuscator options. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/904 
+
 v2.11.0
 ---
 * Added option `renamePropertiesMode` to switch between new `safe` and old `unsafe` modes of `renameProperties` option. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/878

@@ -37,7 +37,7 @@ describe('DirectivePlacementTransformer', function () {
             const directiveRegExp: RegExp = new RegExp(
                 '^var _0x([a-f0-9]){4} *= *\\[\'test\', *\'use\\\\x20strict\']; *' +
                 '.*?' +
-                'var test *= *_0x([a-f0-9]){4}\\(0x0\\); *' +
+                'var test *= *_0x([a-f0-9]){4}\\(0x0\\);.*' +
                 '_0x([a-f0-9]){4}\\(0x1\\);'
             );
 

@@ -273,7 +273,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
     describe('Prevailing kind of variables', () => {
         describe('`var` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperRegExp: RegExp = /var (_0x(\w){4}) *= *function/;
+                stringArrayCallsWrapperVariableRegExp: RegExp = /var (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
@@ -289,8 +289,8 @@ describe('StringArrayCallsWrapperTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct kind of variables for string array calls wrapper', () => {
-                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            it('Should return correct kind of variables for string array calls wrapper code', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperVariableRegExp);
             });
 
             it('Should does not break on obfuscating', () => {
@@ -300,7 +300,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         describe('`const` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperRegExp: RegExp = /const (_0x(\w){4}) *= *function/;
+                stringArrayCallsWrapperVariableRegExp: RegExp = /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
@@ -316,8 +316,8 @@ describe('StringArrayCallsWrapperTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct kind of variables for string array calls wrapper', () => {
-                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            it('Should return correct kind of variables for string array calls wrapper code', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperVariableRegExp);
             });
 
             it('Should does not break on obfuscating', () => {
@@ -327,7 +327,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         describe('`let` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperRegExp: RegExp = /const (_0x(\w){4}) *= *function/;
+                stringArrayCallsWrapperVariableRegExp: RegExp = /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
@@ -343,8 +343,8 @@ describe('StringArrayCallsWrapperTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct kind of variables for string array calls wrapper', () => {
-                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            it('Should return correct kind of variables for string array calls wrapper code', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperVariableRegExp);
             });
 
             it('Should does not break on obfuscating', () => {

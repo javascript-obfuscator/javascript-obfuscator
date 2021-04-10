@@ -1,5 +1,9 @@
 Change Log
 
+v2.12.0
+---
+* `stringArray` calls wrappers now inserted as `FunctionDeclaration` nodes at random indexes
+
 v2.11.1
 ---
 * **CLI**: now it's possible to specify the path to the input file after specifying the obfuscator options. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/904 

@@ -1,6 +1,5 @@
 import { injectable, } from 'inversify';
 
-import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
 import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 
 import { StringArrayCallsWrapperCodeHelper } from './StringArrayCallsWrapperCodeHelper';
@@ -11,20 +10,17 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
      * @returns {string}
      */
     protected getDecodeStringArrayTemplate (): string {
-        const atobFunctionName: string = this.randomGenerator.getRandomString(6);
-
-        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
-            atobFunctionName: atobFunctionName
-        });
-
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
+
+        if (!this.stringArrayDecodeFunctionName) {
+            throw new Error('Unknown name for string array decode function');
+        }
 
         return this.customCodeHelperFormatter.formatTemplate(
             StringArrayBase64DecodeTemplate(this.randomGenerator),
             {
-                atobPolyfill,
-                atobFunctionName,
                 selfDefendingCode,
+                atobFunctionName: this.stringArrayDecodeFunctionName,
                 stringArrayName: this.stringArrayName,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
             }

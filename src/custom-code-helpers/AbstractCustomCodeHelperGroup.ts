@@ -57,10 +57,14 @@ export abstract class AbstractCustomCodeHelperGroup implements ICustomCodeHelper
     }
 
     /**
-     * @param {CustomCodeHelper} customCodeHelperName
+     * @param {CustomCodeHelper | null} customCodeHelperName
      * @param {callback} callback
      */
-    protected appendCustomNodeIfExist (customCodeHelperName: CustomCodeHelper, callback: (customCodeHelper: ICustomCodeHelper) => void): void {
+    protected appendCustomNodeIfExist (customCodeHelperName: CustomCodeHelper | null, callback: (customCodeHelper: ICustomCodeHelper) => void): void {
+        if (!customCodeHelperName) {
+            return;
+        }
+
         const customCodeHelper: ICustomCodeHelper | undefined = this.customCodeHelpers.get(customCodeHelperName);
 
         if (!customCodeHelper) {

@@ -16,6 +16,8 @@ import { DomainLockCustomCodeHelperGroup } from '../../../custom-code-helpers/do
 import { SelfDefendingCodeHelperGroup } from '../../../custom-code-helpers/self-defending/group/SelfDefendingCodeHelperGroup';
 import { StringArrayCodeHelperGroup } from '../../../custom-code-helpers/string-array/group/StringArrayCodeHelperGroup';
 
+import { Base64DecodeFunctionCodeHelper } from '../../../custom-code-helpers/common/Base64DecodeFunctionCodeHelper';
+import { CallsControllerFunctionCodeHelper } from '../../../custom-code-helpers/calls-controller/CallsControllerFunctionCodeHelper';
 import { ConsoleOutputDisableCodeHelper } from '../../../custom-code-helpers/console-output/ConsoleOutputDisableCodeHelper';
 import { CustomCodeHelperFormatter } from '../../../custom-code-helpers/CustomCodeHelperFormatter';
 import { CustomCodeHelperObfuscator } from '../../../custom-code-helpers/CustomCodeHelperObfuscator';
@@ -23,7 +25,7 @@ import { DebugProtectionFunctionCallCodeHelper } from '../../../custom-code-help
 import { DebugProtectionFunctionIntervalCodeHelper } from '../../../custom-code-helpers/debug-protection/DebugProtectionFunctionIntervalCodeHelper';
 import { DebugProtectionFunctionCodeHelper } from '../../../custom-code-helpers/debug-protection/DebugProtectionFunctionCodeHelper';
 import { DomainLockCodeHelper } from '../../../custom-code-helpers/domain-lock/DomainLockCodeHelper';
-import { CallsControllerFunctionCodeHelper } from '../../../custom-code-helpers/calls-controller/CallsControllerFunctionCodeHelper';
+import { Rc4DecodeFunctionCodeHelper } from '../../../custom-code-helpers/common/Rc4DecodeFunctionCodeHelper';
 import { SelfDefendingUnicodeCodeHelper } from '../../../custom-code-helpers/self-defending/SelfDefendingUnicodeCodeHelper';
 import { StringArrayCallsWrapperCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper';
 import { StringArrayCallsWrapperBase64CodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperBase64CodeHelper';
@@ -33,6 +35,10 @@ import { StringArrayRotateFunctionCodeHelper } from '../../../custom-code-helper
 
 export const customCodeHelpersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom code helpers
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(Base64DecodeFunctionCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.Base64DecodeFunction);
+
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(ConsoleOutputDisableCodeHelper)
         .whenTargetNamed(CustomCodeHelper.ConsoleOutputDisable);
@@ -56,6 +62,10 @@ export const customCodeHelpersModule: interfaces.ContainerModule = new Container
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(CallsControllerFunctionCodeHelper)
         .whenTargetNamed(CustomCodeHelper.CallsControllerFunction);
+
+    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+        .to(Rc4DecodeFunctionCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.Rc4DecodeFunction);
 
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(SelfDefendingUnicodeCodeHelper)

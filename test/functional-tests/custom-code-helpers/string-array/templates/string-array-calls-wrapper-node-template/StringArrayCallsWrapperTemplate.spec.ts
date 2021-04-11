@@ -11,11 +11,11 @@ import { IInversifyContainerFacade } from '../../../../../../src/interfaces/cont
 import { IObfuscatedCode } from '../../../../../../src/interfaces/source-code/IObfuscatedCode';
 import { IRandomGenerator } from '../../../../../../src/interfaces/utils/IRandomGenerator';
 
-import { AtobTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/AtobTemplate';
-import { Rc4Template } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/Rc4Template';
+import { Base64DecodeFunctionTemplate } from '../../../../../../src/custom-code-helpers/common/templates/Base64DecodeFunctionTemplate';
+import { Rc4DecodeFunctionTemplate } from '../../../../../../src/custom-code-helpers/common/templates/Rc4DecodeFunctionTemplate';
 import { StringArrayBase64DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 import { StringArrayCallsWrapperTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
-import { StringArrayRC4DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayRC4DecodeTemplate';
+import { StringArrayRc4DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayRc4DecodeTemplate';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
@@ -53,7 +53,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             let decodedValue: string;
 
             before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
+                const atobPolyfill = format(Base64DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
                 const atobDecodeTemplate: string = format(
@@ -96,7 +96,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             let decodedValue: string;
 
             before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
+                const atobPolyfill = format(Base64DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
                 const atobDecodeTemplate: string = format(
@@ -137,7 +137,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             let decodedValue: string;
 
             before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
+                const atobPolyfill = format(Base64DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
                 const atobDecodeTemplate: string = format(
@@ -186,14 +186,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
             let decodedValue: string;
 
             before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
+                const atobPolyfill = format(Base64DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
-                const rc4Polyfill = format(Rc4Template(), {
+                const rc4Polyfill = format(Rc4DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
                 const rc4decodeCodeHelperTemplate: string = format(
-                    StringArrayRC4DecodeTemplate(randomGenerator),
+                    StringArrayRc4DecodeTemplate(randomGenerator),
                     {
                         atobPolyfill,
                         rc4Polyfill,
@@ -233,14 +233,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
             let decodedValue: string;
 
             before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
+                const atobPolyfill = format(Base64DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
-                const rc4Polyfill = format(Rc4Template(), {
+                const rc4Polyfill = format(Rc4DecodeFunctionTemplate(), {
                     atobFunctionName
                 });
                 const rc4decodeCodeHelperTemplate: string = format(
-                    StringArrayRC4DecodeTemplate(randomGenerator),
+                    StringArrayRc4DecodeTemplate(randomGenerator),
                     {
                         atobPolyfill,
                         rc4Polyfill,

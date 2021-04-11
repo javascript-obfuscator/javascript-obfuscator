@@ -60,6 +60,11 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     private readonly arrayUtils: IArrayUtils;
 
     /**
+     * @type {string}
+     */
+    private base64DecodeFunctionName!: string;
+
+    /**
      * @type {ICryptUtilsStringArray}
      */
     private readonly cryptUtilsStringArray: ICryptUtilsStringArray;
@@ -83,6 +88,11 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
      * @type {number}
      */
     private indexShiftAmount: number = 0;
+
+    /**
+     * @type {string}
+     */
+    private rc4DecodeFunctionName!: string;
 
     /**
      * @type {number}
@@ -209,6 +219,29 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
 
         return newStorageCallsWrapperName;
     }
+
+    /**
+     * @returns {string}
+     */
+    public getBase64DecodeFunctionName (): string {
+        if (!this.base64DecodeFunctionName) {
+            this.base64DecodeFunctionName = this.identifierNamesGenerator.generateForGlobalScope();
+        }
+
+        return this.base64DecodeFunctionName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getRc4DecodeFunctionName (): string {
+        if (!this.rc4DecodeFunctionName) {
+            this.rc4DecodeFunctionName = this.identifierNamesGenerator.generateForGlobalScope();
+        }
+
+        return this.rc4DecodeFunctionName;
+    }
+
 
     public rotateStorage (): void {
         if (!this.getLength()) {

@@ -19,10 +19,11 @@ import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeH
 import { StringArrayEncoding } from '../../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGroup';
+import { Base64DecodeFunctionCodeHelper } from '../../common/Base64DecodeFunctionCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { Rc4DecodeFunctionCodeHelper } from '../../common/Rc4DecodeFunctionCodeHelper';
 import { StringArrayCallsWrapperCodeHelper } from '../StringArrayCallsWrapperCodeHelper';
 import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
-import { TStatement } from '../../../types/node/TStatement';
 
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -81,6 +82,8 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             return;
         }
 
+        const stringArrayEncodingsLength: number = this.options.stringArrayEncoding.length;
+
         // stringArray helper nodes append
         this.appendCustomNodeIfExist(
             CustomCodeHelper.StringArray,
@@ -90,17 +93,15 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         );
 
         // stringArrayCallsWrapper helper nodes append
-        const stringArrayEncodingsLength: number = this.options.stringArrayEncoding.length;
         // Stating from index 1 and forward. 0 index is reserved for string array itself.
         let randomIndex: number = 1;
         for (let i = 0; i < stringArrayEncodingsLength; i++, randomIndex++) {
             const stringArrayEncoding: TStringArrayEncoding = this.options.stringArrayEncoding[i];
             const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
 
-            const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
             randomIndex = this.randomGenerator.getRandomInteger(
                 randomIndex,
-                scopeStatements.length - 1
+                NodeAppender.getScopeStatements(nodeWithStatements).length - 1
             );
 
             this.appendCustomNodeIfExist(
@@ -110,6 +111,34 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
                 }
             );
         }
+
+        // base64DecodeFunction helper nodes append
+        const base64DecodeFunctionRandomIndex = this.randomGenerator.getRandomInteger(
+            // Stating from index 1 and forward. 0 index is reserved for string array itself.
+            1,
+            NodeAppender.getScopeStatements(nodeWithStatements).length - 1
+        );
+
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.Base64DecodeFunction,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<Base64DecodeFunctionCodeHelper>>) => {
+                NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), base64DecodeFunctionRandomIndex);
+            }
+        );
+
+        // rc4DecodeFunction helper nodes append
+        const rc4DecodeFunctionRandomIndex = this.randomGenerator.getRandomInteger(
+            // Stating from index 1 and forward. 0 index is reserved for string array itself.
+            1,
+            NodeAppender.getScopeStatements(nodeWithStatements).length - 1
+        );
+
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.Rc4DecodeFunction,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<Rc4DecodeFunctionCodeHelper>>) => {
+                NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), rc4DecodeFunctionRandomIndex);
+            }
+        );
     }
 
     public initialize (): void {
@@ -133,13 +162,46 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
                 this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
             const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+            const stringArrayDecodeFunctionNames: {[key in TStringArrayEncoding]: string | null} = {
+                [StringArrayEncoding.None]: null,
+                [StringArrayEncoding.Base64]: this.stringArrayStorage.getBase64DecodeFunctionName(),
+                [StringArrayEncoding.Rc4]: this.stringArrayStorage.getRc4DecodeFunctionName()
+            };
+            const stringArrayDecodeFunctionName: string | null = stringArrayDecodeFunctionNames[stringArrayEncoding];
+
             stringArrayCallsWrapperCodeHelper.initialize(
                 stringArrayName,
                 stringArrayCallsWrapperName,
+                stringArrayDecodeFunctionName,
                 this.stringArrayStorage.getIndexShiftAmount()
             );
-
             this.customCodeHelpers.set(stringArrayCallsWrapperCodeHelperName, stringArrayCallsWrapperCodeHelper);
+        }
+
+        // base64DecodeFunction helper initialize
+        const shouldAppendBase64DecodeFunctionCodeHelper: boolean =
+            this.options.stringArrayEncoding.includes(StringArrayEncoding.Base64)
+            || this.options.stringArrayEncoding.includes(StringArrayEncoding.Rc4);
+        if (shouldAppendBase64DecodeFunctionCodeHelper) {
+            const base64DecodeFunctionCodeHelper: ICustomCodeHelper<TInitialData<Base64DecodeFunctionCodeHelper>> =
+                this.customCodeHelperFactory(CustomCodeHelper.Base64DecodeFunction);
+
+            base64DecodeFunctionCodeHelper.initialize(this.stringArrayStorage.getBase64DecodeFunctionName());
+            this.customCodeHelpers.set(CustomCodeHelper.Base64DecodeFunction, base64DecodeFunctionCodeHelper);
+        }
+
+        // rc4DecodeFunction helper initialize
+        const shouldAppendRc4DecodeFunctionCodeHelper: boolean =
+            this.options.stringArrayEncoding.includes(StringArrayEncoding.Rc4);
+        if (shouldAppendRc4DecodeFunctionCodeHelper) {
+            const rc4DecodeFunctionCodeHelper: ICustomCodeHelper<TInitialData<Rc4DecodeFunctionCodeHelper>> =
+                this.customCodeHelperFactory(CustomCodeHelper.Rc4DecodeFunction);
+
+            rc4DecodeFunctionCodeHelper.initialize(
+                this.stringArrayStorage.getRc4DecodeFunctionName(),
+                this.stringArrayStorage.getBase64DecodeFunctionName(),
+            );
+            this.customCodeHelpers.set(CustomCodeHelper.Rc4DecodeFunction, rc4DecodeFunctionCodeHelper);
         }
     }
 

@@ -15,8 +15,6 @@ export function StringArrayBase64DecodeTemplate (
 
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
-            {atobPolyfill}
-            
             {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
                 const string = {atobFunctionName}(str);
                 let newStringChars = [];

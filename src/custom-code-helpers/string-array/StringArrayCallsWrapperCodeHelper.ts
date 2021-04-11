@@ -39,6 +39,12 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     protected stringArrayCallsWrapperName!: string;
 
     /**
+     * @type {string}
+     */
+    @initializable()
+    protected stringArrayDecodeFunctionName!: string | null;
+
+    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -74,15 +80,18 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
+     * @param {string | null} stringArrayDecodeFunctionName
      * @param {number} indexShiftAmount
      */
     public initialize (
         stringArrayName: string,
         stringArrayCallsWrapperName: string,
+        stringArrayDecodeFunctionName: string | null,
         indexShiftAmount: number
     ): void {
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.stringArrayDecodeFunctionName = stringArrayDecodeFunctionName;
         this.indexShiftAmount = indexShiftAmount;
     }
 

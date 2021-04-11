@@ -1,9 +1,9 @@
 /**
  * @returns {string}
  */
-export function Rc4Template (): string {
+export function Rc4DecodeFunctionTemplate (): string {
     return `
-        const rc4 = function (str, key) {
+        function {rc4FunctionName} (str, key) {
             let s = [], j = 0, x, res = '', newStr = '';
            
             str = {atobFunctionName}(str);

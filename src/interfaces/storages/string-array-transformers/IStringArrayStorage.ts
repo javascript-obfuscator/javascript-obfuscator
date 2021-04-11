@@ -5,9 +5,19 @@ import { IStringArrayStorageItemData } from './IStringArrayStorageItem';
 
 export interface IStringArrayStorage extends IMapStorage <string, IStringArrayStorageItemData> {
     /**
+     * @returns {string}
+     */
+    getBase64DecodeFunctionName (): string;
+
+    /**
      * @returns {number}
      */
     getIndexShiftAmount (): number;
+
+    /**
+     * @returns {string}
+     */
+    getRc4DecodeFunctionName (): string;
 
     /**
      * @returns {number}

@@ -1,13 +1,13 @@
-import { base64alphabetSwapped } from '../../../../constants/Base64AlphabetSwapped';
+import { base64alphabetSwapped } from '../../../constants/Base64AlphabetSwapped';
 
 /**
  * This atob logic completely ignores padding characters
  *
  * @returns {string}
  */
-export function AtobTemplate (): string {
+export function Base64DecodeFunctionTemplate (): string {
     return `
-        var {atobFunctionName} = function (input) {
+        function {atobFunctionName} (input) {
             const chars = '${base64alphabetSwapped}';
 
             let output = '';
@@ -20,6 +20,6 @@ export function AtobTemplate (): string {
                 buffer = chars.indexOf(buffer);
             }
             return output;
-        };
+        }
     `;
 }

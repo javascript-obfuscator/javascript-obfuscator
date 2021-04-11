@@ -1,6 +1,7 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { StringArrayEncoding } from '../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -23,7 +24,11 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            rotateStringArray: true,
+            stringArrayEncoding: [
+                StringArrayEncoding.Base64,
+                StringArrayEncoding.Rc4
+            ],
+            rotateStringArray: false,
             stringArrayWrappersCount: 3
         }
     ).getObfuscatedCode();

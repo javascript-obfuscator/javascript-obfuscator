@@ -10,8 +10,8 @@ describe('IgnoredRequireImportObfuscatingGuard', () => {
     describe('check', () => {
         describe('`ignoreRequireImports` option is enabled', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
-                'const foo *= *require\\(\'\\./foo\'\\); *' +
-                'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\'; *' +
+                'const foo *= *require\\(\'\\./foo\'\\);.*' +
+                'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\';.*' +
                 'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x0\\);'
             );
 
@@ -38,8 +38,8 @@ describe('IgnoredRequireImportObfuscatingGuard', () => {
 
         describe('`ignoreRequireImports` option is disabled', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
-                'const foo *= *require\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\); *' +
-                'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\'; *' +
+                'const foo *= *require\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\);.*' +
+                'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\';.*' +
                 'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x1\\);'
             );
 

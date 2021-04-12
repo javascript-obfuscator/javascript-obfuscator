@@ -22,6 +22,7 @@ import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGro
 import { NodeAppender } from '../../../node/NodeAppender';
 import { StringArrayCallsWrapperCodeHelper } from '../StringArrayCallsWrapperCodeHelper';
 import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
+import { TStatement } from '../../../types/node/TStatement';
 
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -90,14 +91,22 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
 
         // stringArrayCallsWrapper helper nodes append
         const stringArrayEncodingsLength: number = this.options.stringArrayEncoding.length;
-        for (let i = 0; i < stringArrayEncodingsLength; i++) {
+        // Stating from index 1 and forward. 0 index is reserved for string array itself.
+        let randomIndex: number = 1;
+        for (let i = 0; i < stringArrayEncodingsLength; i++, randomIndex++) {
             const stringArrayEncoding: TStringArrayEncoding = this.options.stringArrayEncoding[i];
             const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
+
+            const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
+            randomIndex = this.randomGenerator.getRandomInteger(
+                randomIndex,
+                scopeStatements.length - 1
+            );
 
             this.appendCustomNodeIfExist(
                 stringArrayCallsWrapperCodeHelperName,
                 (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
-                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), i + 1);
+                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), randomIndex);
                 }
             );
         }

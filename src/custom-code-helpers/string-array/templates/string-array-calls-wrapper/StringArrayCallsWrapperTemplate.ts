@@ -3,7 +3,7 @@
  */
 export function StringArrayCallsWrapperTemplate (): string {
     return `
-        const {stringArrayCallsWrapperName} = function (index, key) {
+         function {stringArrayCallsWrapperName} (index, key) {
             index = index - {indexShiftAmount};
             
             let value = {stringArrayName}[index];
@@ -11,6 +11,6 @@ export function StringArrayCallsWrapperTemplate (): string {
             {decodeCodeHelperTemplate}
         
             return value;
-        };
+        }
     `;
 }

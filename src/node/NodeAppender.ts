@@ -84,6 +84,18 @@ export class NodeAppender {
 
     /**
      * @param {TNodeWithStatements} nodeWithStatements
+     * @returns {TStatement[]}
+     */
+    public static getScopeStatements (nodeWithStatements: TNodeWithStatements): TStatement[] {
+        if (NodeGuards.isSwitchCaseNode(nodeWithStatements)) {
+            return nodeWithStatements.consequent;
+        }
+
+        return nodeWithStatements.body;
+    }
+
+    /**
+     * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} statements
      * @param {Node} target
      */
@@ -146,18 +158,6 @@ export class NodeAppender {
             ...statements,
             ...NodeAppender.getScopeStatements(nodeWithStatements),
         ]);
-    }
-
-    /**
-     * @param {TNodeWithStatements} nodeWithStatements
-     * @returns {TStatement[]}
-     */
-    private static getScopeStatements (nodeWithStatements: TNodeWithStatements): TStatement[] {
-        if (NodeGuards.isSwitchCaseNode(nodeWithStatements)) {
-            return nodeWithStatements.consequent;
-        }
-
-        return nodeWithStatements.body;
     }
 
     /**

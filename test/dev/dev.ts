@@ -1,29 +1,30 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { RenamePropertiesMode } from '../../src/enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const object = {
-                foo: 1,
-                bar: 2,
-                baz: 3
-            };
-            
-            var excluded1 = 'bar';
-            var excluded2 = 'baz';
-            
-            console.log(object.foo, object['bar'], object.baz);
+            var variable1 = '5' - 3;
+            var variable2 = '5' + 3;
+            var variable3 = '5' + - '2';
+            var variable4 = ['10','10','10','10','10'].map(parseInt);
+            var variable5 = 'foo ' + 1 + 1;
+            console.log(variable1);
+            console.log(variable2);
+            console.log(variable3);
+            console.log(variable4);
+            console.log(variable5);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            renameProperties: true,
-            renamePropertiesMode: RenamePropertiesMode.Safe
+            stringArray: true,
+            stringArrayThreshold: 1,
+            rotateStringArray: true,
+            stringArrayWrappersCount: 3
         }
     ).getObfuscatedCode();
 

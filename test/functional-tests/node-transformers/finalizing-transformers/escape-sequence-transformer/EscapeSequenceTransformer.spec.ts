@@ -170,12 +170,10 @@ describe('EscapeSequenceTransformer', function () {
 
     describe('Variant #6: `stringArrayWrappersCount` option enabled', () => {
         const stringArrayCallRegExp: RegExp = new RegExp(
-                'return e;' +
-            '};' +
-            'const f *= *b;' +
-            'const foo *= *f\\(\'\\\\x30\\\\x78\\\\x30\'\\);' +
-            'const bar *= *f\\(\'\\\\x30\\\\x78\\\\x31\'\\);' +
-            'const baz *= *f\\(\'\\\\x30\\\\x78\\\\x32\'\\);' +
+            'const f *= *b;.*' +
+            'const foo *= *f\\(\'\\\\x30\\\\x78\\\\x30\'\\);.*' +
+            'const bar *= *f\\(\'\\\\x30\\\\x78\\\\x31\'\\);.*' +
+            'const baz *= *f\\(\'\\\\x30\\\\x78\\\\x32\'\\);.*' +
             'function test\\( *\\) *{' +
                 'const g *= *f;' +
                 'const c *= *g\\(\'\\\\x30\\\\x78\\\\x33\'\\);' +

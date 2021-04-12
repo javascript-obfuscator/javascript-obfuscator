@@ -11,9 +11,9 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('StringArrayCodeHelperGroup', () => {
     const regExp: RegExp = new RegExp(
-        'var b *= *function\\(\\w, *\\w\\) *{.*return \\w;}; *' +
-        'var c *= *function\\(\\w, *\\w\\) *{.*return \\w;}; *' +
-        'var d *= *function\\(\\w, *\\w\\) *{.*return \\w;};'
+        'function *b *\\(\\w, *\\w\\) *{.*return \\w;}.*' +
+        'function *c *\\(\\w, *\\w\\) *{.*return \\w;}.*' +
+        'function *d *\\(\\w, *\\w\\) *{.*return \\w;}'
     );
 
     describe('StringArrayCallsWrapper code helper names', () => {

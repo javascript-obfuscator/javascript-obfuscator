@@ -79,8 +79,8 @@ describe('StringArrayStorage', () => {
             ];
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x.\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x.\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x.\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x.\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x.\\);`
                 )
             ];
@@ -222,33 +222,33 @@ describe('StringArrayStorage', () => {
 
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
-                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\); *` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\); *` +
+                    `var foo *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
+                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
                     `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 )
             ];

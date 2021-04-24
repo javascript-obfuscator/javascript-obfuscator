@@ -22,10 +22,14 @@ jobs:
             node-version: 14.x
           - os: ubuntu-latest,
             node-version: 15.x
+          - os: ubuntu-latest,
+            node-version: 16.x
           - os: windows-latest,
             node-version: 14.x
           - os: windows-latest,
             node-version: 15.x
+          - os: windows-latest,
+            node-version: 16.x
 
     steps:
       - uses: actions/checkout@v2

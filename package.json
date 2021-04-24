@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",
@@ -25,7 +25,7 @@
     "@nuxtjs/opencollective": "0.3.2",
     "acorn": "8.1.1",
     "assert": "2.0.0",
-    "chalk": "4.1.0",
+    "chalk": "4.1.1",
     "chance": "1.1.7",
     "class-validator": "0.13.1",
     "commander": "7.2.0",
@@ -67,27 +67,27 @@
     "chai": "4.3.4",
     "chai-exclude": "2.0.3",
     "cross-env": "7.0.3",
-    "eslint": "7.24.0",
+    "eslint": "7.25.0",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jsdoc": "32.3.0",
+    "eslint-plugin-jsdoc": "32.3.1",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.3",
-    "eslint-plugin-unicorn": "29.0.0",
-    "fork-ts-checker-notifier-webpack-plugin": "3.0.0",
-    "fork-ts-checker-webpack-plugin": "6.2.1",
+    "eslint-plugin-unicorn": "31.0.0",
+    "fork-ts-checker-notifier-webpack-plugin": "4.0.0",
+    "fork-ts-checker-webpack-plugin": "6.2.4",
     "mocha": "8.3.2",
     "nyc": "15.1.0",
     "pjson": "1.0.9",
     "pre-commit": "1.2.2",
     "rimraf": "3.0.2",
     "sinon": "10.0.0",
-    "threads": "1.6.3",
-    "ts-loader": "8.1.0",
+    "threads": "1.6.4",
+    "ts-loader": "9.1.1",
     "ts-node": "9.1.1",
     "typescript": "beta",
-    "webpack": "5.33.2",
+    "webpack": "5.35.1",
     "webpack-cli": "4.6.0",
-    "webpack-node-externals": "2.5.2"
+    "webpack-node-externals": "3.0.0"
   },
   "repository": {
     "type": "git",

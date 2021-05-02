@@ -1,7 +1,7 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
 import { TCalleeDataExtractorFactory } from '../../types/container/calls-graph-analyzer/TCalleeDataExtractorFactory';

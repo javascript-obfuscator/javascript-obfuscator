@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';

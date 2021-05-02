@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
 import { ICalleeData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeData';

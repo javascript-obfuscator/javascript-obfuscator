@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
 import { TObjectMembersCallsChain } from '../../../types/analyzers/calls-graph-analyzer/TObjectMembersCallsChain';

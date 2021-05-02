@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as eslintScope from 'eslint-scope';
 import * as ESTree from 'estree';
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 

@@ -1,4 +1,4 @@
-import * as estraverse from 'estraverse';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
 export interface IVisitor <T extends ESTree.Node = ESTree.Node> {

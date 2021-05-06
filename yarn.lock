@@ -447,19 +447,19 @@
   resolved "https://registry.npmjs.org/@istanbuljs/schema/-/schema-0.1.2.tgz"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@javascript-obfuscator/escodegen@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/@javascript-obfuscator/escodegen/-/escodegen-2.1.1.tgz"
-  integrity sha512-d5TIrhngNyqphUPgjWRVcepw55+aIrN2YX6BHy+4XOTq3/6AZCFj18Ym0tYSDm8T7+hLN6Culif18cepF/NpDQ==
+"@javascript-obfuscator/escodegen@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@javascript-obfuscator/escodegen/-/escodegen-2.2.0.tgz#c09fc83a9e3ff7b5555e37b9ac23947221dc8257"
+  integrity sha512-vyBqXZqAHWe40dA5tVsXC85KJ0eWgTwPrxZdOtaHH0di7tkb8G8x8MEQs0HbbDdONN7M5M45fyVpEF5aR1++Dw==
   dependencies:
+    "@javascript-obfuscator/estraverse" "^5.3.0"
     esprima "^4.0.1"
-    estraverse "^5.2.0"
     esutils "^2.0.2"
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
 
-"@javascript-obfuscator/estraverse@5.3.0":
+"@javascript-obfuscator/estraverse@5.3.0", "@javascript-obfuscator/estraverse@^5.3.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@javascript-obfuscator/estraverse/-/estraverse-5.3.0.tgz#eadd3c00ede6a05b75aa585c7b7a3ac58adb1755"
   integrity sha512-SxIFtV5/wlXYS7G3zLVj7CddLolX8Bm/hr68fiyNL3MyG2k4FwF9B5Z5GTpVLhw2EELYNwyoYBvFlR4gGnQPdw==

@@ -1,5 +1,9 @@
 Change Log
 
+v2.14.0
+---
+* Added support of `es2022` features: private identifiers and class properties
+
 v2.13.0
 ---
 * **Internal**: Added support of `node@16` and dropped support of `node@10`. This should not affect obfuscated code

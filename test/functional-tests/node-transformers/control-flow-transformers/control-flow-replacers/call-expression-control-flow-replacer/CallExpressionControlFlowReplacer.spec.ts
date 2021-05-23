@@ -118,18 +118,18 @@ describe('CallExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('Variant #4 - rest call argument', () => {
-            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\);/;
+        describe('Variant #4 - rest as start call argument', () => {
+            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\);/;
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
-                   `return *_0x([a-f0-9]){4,6}\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
+                    `return *_0x([a-f0-9]){4,6}\\(\.\.\._0x([a-f0-9]){4,6}\\);` +
                 `\\}` +
             ``);
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/rest-call-argument.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/rest-as-start-call-argument.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -145,7 +145,71 @@ describe('CallExpressionControlFlowReplacer', function () {
                 assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
             });
 
-            it('should keep spread parameter and rest call argument inside control flow storage node function', () => {
+            it('should keep rest parameter and rest call argument, but remove all function parameters after rest parameter', () => {
+                assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
+            });
+        });
+
+        describe('Variant #5 - rest as middle call argument', () => {
+            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
+                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
+                    `return *_0x([a-f0-9]){4,6}\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `\\}` +
+            ``);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/rest-as-middle-call-argument.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should replace call expression node with call to control flow storage node', () => {
+                assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
+            });
+
+            it('should keep rest parameter and rest call argument, but remove all function parameters after rest parameter', () => {
+                assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
+            });
+        });
+
+        describe('Variant #6 - rest as last call argument', () => {
+            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
+                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
+                   `return *_0x([a-f0-9]){4,6}\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `\\}` +
+            ``);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/rest-as-last-call-argument.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should replace call expression node with call to control flow storage node', () => {
+                assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
+            });
+
+            it('should keep rest parameter and rest call argument inside control flow storage node function', () => {
                 assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
             });
         });

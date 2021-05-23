@@ -2,6 +2,7 @@ Change Log
 
 v2.13.0
 ---
+* Fixed invalid code generation for start/middle rest arguments when `controlFlowFlattenig` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/920
 * **Internal**: Added support of `node@16` and dropped support of `node@10`. This should not affect obfuscated code
 
 v2.12.0

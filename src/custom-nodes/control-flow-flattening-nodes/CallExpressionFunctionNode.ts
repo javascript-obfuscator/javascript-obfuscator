@@ -68,16 +68,18 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
 
             const baseIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(`param${i + 1}`);
 
-            params.push(
-                isSpreadCallArgument
-                    ? NodeFactory.restElementNode(baseIdentifierNode)
-                    : baseIdentifierNode
-            );
-            callArguments.push(
-                isSpreadCallArgument
-                    ? NodeFactory.spreadElementNode(baseIdentifierNode)
-                    : baseIdentifierNode
-            );
+            if (isSpreadCallArgument) {
+                params.push(NodeFactory.restElementNode(baseIdentifierNode));
+                callArguments.push(NodeFactory.spreadElementNode(baseIdentifierNode));
+
+                const isMiddleSpreadCallArgument: boolean = i < argumentsLength - 1;
+                if (isMiddleSpreadCallArgument) {
+                    break;
+                }
+            } else {
+                params.push(baseIdentifierNode);
+                callArguments.push(baseIdentifierNode);
+            }
         }
 
         const structure: TStatement = NodeFactory.expressionStatementNode(

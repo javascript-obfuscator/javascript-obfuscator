@@ -12,7 +12,7 @@ import { BasePropertiesExtractor } from '../../../node-transformers/converting-t
 import { BooleanLiteralTransformer } from '../../../node-transformers/converting-transformers/BooleanLiteralTransformer';
 import { ExportSpecifierTransformer } from '../../../node-transformers/converting-transformers/ExportSpecifierTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
-import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
+import { MethodAndPropertyDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodAndPropertyDefinitionTransformer';
 import { NumberLiteralTransformer } from '../../../node-transformers/converting-transformers/NumberLiteralTransformer';
 import { NumberToNumericalExpressionTransformer } from '../../../node-transformers/converting-transformers/NumberToNumericalExpressionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
@@ -37,7 +37,7 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
         .whenTargetNamed(NodeTransformer.MemberExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(MethodDefinitionTransformer)
+        .to(MethodAndPropertyDefinitionTransformer)
         .whenTargetNamed(NodeTransformer.MethodDefinitionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)

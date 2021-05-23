@@ -39,6 +39,7 @@ export enum NodeType {
     ObjectPattern = 'ObjectPattern',
     Program = 'Program',
     Property = 'Property',
+    PropertyDefinition = 'PropertyDefinition',
     RestElement = 'RestElement',
     ReturnStatement = 'ReturnStatement',
     SequenceExpression = 'SequenceExpression',

@@ -1891,10 +1891,9 @@ eslint-scope@5.1.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-scope@5.1.1, eslint-scope@^5.0.0, eslint-scope@^5.1.1:
+eslint-scope@^5.0.0, eslint-scope@^5.1.1, "eslint-scope@github:eslint/eslint-scope#ad618bc5001f02492fe9bdc6318fa1ae179b0260":
   version "5.1.1"
-  resolved "https://registry.npmjs.org/eslint-scope/-/eslint-scope-5.1.1.tgz"
-  integrity sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==
+  resolved "https://codeload.github.com/eslint/eslint-scope/tar.gz/ad618bc5001f02492fe9bdc6318fa1ae179b0260"
   dependencies:
     esrecurse "^4.3.0"
     estraverse "^4.1.1"

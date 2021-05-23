@@ -21,12 +21,12 @@ import { NodeGuards } from '../../node/NodeGuards';
  *     'foo' () { //... };
  *
  * on:
- *     ['foo'] { //... };
+ *     ['foo'] () { //... };
  *
  * Literal node will be obfuscated by LiteralTransformer
  */
 @injectable()
-export class MethodDefinitionTransformer extends AbstractNodeTransformer {
+export class MethodAndPropertyDefinitionTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
@@ -52,7 +52,13 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
             case NodeTransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && NodeGuards.isMethodDefinitionNode(node)) {
+                        if (
+                            parentNode
+                            && (
+                                NodeGuards.isMethodDefinitionNode(node)
+                                || NodeGuards.isPropertyDefinitionNode(node)
+                            )
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -64,69 +70,65 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * replaces:
-     *     object.identifier = 1;
+     * TODO: remove all casts after @types/estree update
+     * TODO: make `classFieldNode` types just as `ESTree.MethodDefinition | ESTree.PropertyDefinition`
      *
-     * on:
-     *     object['identifier'] = 1;
-     *
-     * and skip:
-     *     object[identifier] = 1;
-     * Literal node will be obfuscated by LiteralTransformer
-     *
-     * @param {MethodDefinition} methodDefinitionNode
+     * @param {MethodDefinition | PropertyDefinition} classFieldNode
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeGuards.isIdentifierNode(methodDefinitionNode.key)) {
-            return this.replaceIdentifierKey(methodDefinitionNode, methodDefinitionNode.key);
+    public transformNode (
+        classFieldNode: ESTree.Node & (ESTree.MethodDefinition | ESTree.PropertyDefinition),
+        parentNode: ESTree.Node
+    ): ESTree.Node {
+        if (NodeGuards.isIdentifierNode(classFieldNode.key)) {
+            return this.replaceIdentifierKey(classFieldNode, classFieldNode.key);
         }
 
-        if (NodeGuards.isLiteralNode(methodDefinitionNode.key)) {
-            return this.replaceLiteralKey(methodDefinitionNode, methodDefinitionNode.key);
+        if (NodeGuards.isLiteralNode(classFieldNode.key)) {
+            return this.replaceLiteralKey(classFieldNode, classFieldNode.key);
         }
 
-        return methodDefinitionNode;
+        return classFieldNode;
     }
 
     /**
-     * @param {MethodDefinition} methodDefinitionNode
+     * @param {MethodDefinition | PropertyDefinition} classFieldNode
      * @param {Identifier} keyNode
-     * @returns {MethodDefinition}
+     * @returns {MethodDefinition | PropertyDefinition}
      */
     private replaceIdentifierKey (
-        methodDefinitionNode: ESTree.MethodDefinition,
+        classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Identifier
-    ): ESTree.MethodDefinition {
+    ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
-            !MethodDefinitionTransformer.ignoredNames.includes(keyNode.name)
-            && !methodDefinitionNode.computed
+            !MethodAndPropertyDefinitionTransformer.ignoredNames.includes(keyNode.name)
+            && !classFieldNode.computed
         ) {
-            methodDefinitionNode.computed = true;
-            methodDefinitionNode.key = NodeFactory.literalNode(keyNode.name);
+            classFieldNode.computed = true;
+            classFieldNode.key = NodeFactory.literalNode(keyNode.name);
         }
 
-        return methodDefinitionNode;
+        return classFieldNode;
     }
 
     /**
-     * @param {MethodDefinition} methodDefinitionNode
+     * @param {MethodDefinition | PropertyDefinition} classFieldNode
      * @param {Literal} keyNode
-     * @returns {MethodDefinition}
+     * @returns {MethodDefinition | PropertyDefinition}
      */
     private replaceLiteralKey (
-        methodDefinitionNode: ESTree.MethodDefinition,
+        classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Literal
-    ): ESTree.MethodDefinition {
+    ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
             typeof keyNode.value === 'string'
-            && !MethodDefinitionTransformer.ignoredNames.includes(keyNode.value)
-            && !methodDefinitionNode.computed
+            && !MethodAndPropertyDefinitionTransformer.ignoredNames.includes(keyNode.value)
+            && !classFieldNode.computed
         ) {
-            methodDefinitionNode.computed = true;
+            classFieldNode.computed = true;
         }
 
-        return methodDefinitionNode;
+        return classFieldNode;
     }
 }

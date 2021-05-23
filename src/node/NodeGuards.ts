@@ -422,6 +422,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isPropertyDefinitionNode (node: ESTree.Node): node is ESTree.PropertyDefinition {
+        return node.type === NodeType.PropertyDefinition;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isRestElementNode (node: ESTree.Node): node is ESTree.RestElement {
         return node.type === NodeType.RestElement;
     }

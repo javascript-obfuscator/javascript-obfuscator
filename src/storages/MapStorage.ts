@@ -6,6 +6,7 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../decorators/Initializable';
+import { TDictionary } from '../types/TDictionary';
 
 @injectable()
 export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
@@ -55,6 +56,13 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      */
     public get (key: K): V | undefined {
         return this.storage.get(key);
+    }
+
+    /**
+     * @returns {TDictionary<V>}
+     */
+    public getAsDictionary (): TDictionary<V> {
+        return Object.fromEntries(this.storage);
     }
 
     /**

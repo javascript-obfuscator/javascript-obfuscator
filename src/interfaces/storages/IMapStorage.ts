@@ -1,3 +1,5 @@
+import { TDictionary } from '../../types/TDictionary';
+
 import { IInitializable } from '../IInitializable';
 
 export interface IMapStorage <K, V> extends IInitializable {
@@ -6,6 +8,11 @@ export interface IMapStorage <K, V> extends IInitializable {
      * @returns {V | undefined}
      */
     get (key: K): V | undefined;
+
+    /**
+     * @returns {TDictionary<V>}
+     */
+    getAsDictionary (): TDictionary<V>;
 
     /**
      * @param {K} key

@@ -1,12 +1,15 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { TIdentifierNamesCache } from '../types/caches/TIdentifierNamesCache';
+
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
+import { IIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { IOptions } from '../interfaces/options/IOptions';
 
 import { initializable } from '../decorators/Initializable';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
-import { IOptions } from '../interfaces/options/IOptions';
 
 @injectable()
 export class ObfuscatedCode implements IObfuscatedCode {
@@ -28,15 +31,28 @@ export class ObfuscatedCode implements IObfuscatedCode {
     private readonly cryptUtils: ICryptUtils;
 
     /**
+     * @type {IIdentifierNamesCacheStorage}
+     */
+    private readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+
+    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
 
+    /**
+     * @param {ICryptUtils} cryptUtils
+     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IOptions} options
+     */
     public constructor (
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
+        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.cryptUtils = cryptUtils;
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
         this.options = options;
     }
 
@@ -47,6 +63,13 @@ export class ObfuscatedCode implements IObfuscatedCode {
     public initialize (obfuscatedCode: string, sourceMap: string): void {
         this.obfuscatedCode = obfuscatedCode;
         this.sourceMap = sourceMap;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getIdentifierNamesCache (): TIdentifierNamesCache {
+        return this.identifierNamesCacheStorage.getAsDictionary();
     }
 
     /**

@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
+import { IIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
@@ -14,6 +15,7 @@ import { IVisitedLexicalScopeNodesStackStorage } from '../../../interfaces/stora
 
 import { ControlFlowStorage } from '../../../storages/custom-nodes/ControlFlowStorage';
 import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage';
+import { IdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/IdentifierNamesCacheStorage';
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
 import { StringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { StringArrayScopeCallsWrapperNamesDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperNamesDataStorage';
@@ -24,6 +26,10 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
     // storages
     bind<TCustomCodeHelperGroupStorage>(ServiceIdentifiers.TCustomNodeGroupStorage)
         .to(CustomCodeHelperGroupStorage)
+        .inSingletonScope();
+
+    bind<IIdentifierNamesCacheStorage>(ServiceIdentifiers.IIdentifierNamesCacheStorage)
+        .to(IdentifierNamesCacheStorage)
         .inSingletonScope();
 
     bind<ILiteralNodesCacheStorage>(ServiceIdentifiers.ILiteralNodesCacheStorage)

@@ -29,6 +29,7 @@ export enum ServiceIdentifiers {
     ICustomCodeHelperFormatter = 'ICustomCodeHelperFormatter',
     ICustomCodeHelperObfuscator = 'ICustomCodeHelperObfuscator',
     IEscapeSequenceEncoder = 'IEscapeSequenceEncoder',
+    IIdentifierNamesCacheStorage = 'IIdentifierNamesCacheStorage',
     IIdentifierNamesGenerator = 'IIdentifierNamesGenerator',
     IIdentifierReplacer = 'IIdentifierReplacer',
     IJavaScriptObfuscator = 'IJavaScriptObfuscator',

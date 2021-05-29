@@ -27,6 +27,7 @@ import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 
 import { CLIUtils } from './utils/CLIUtils';
+import { IdentifierNamesCacheUtils } from './utils/IdentifierNamesCacheUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
 import { Logger } from '../logger/Logger';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
@@ -56,6 +57,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     @initializable()
     private commands!: commander.CommanderStatic;
+
+    /**
+     * @type {IdentifierNamesCacheUtils}
+     */
+    @initializable()
+    private identifierNamesCacheUtils!: IdentifierNamesCacheUtils;
 
     /**
      * @type {TInputCLIOptions}
@@ -152,6 +159,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             this.inputPath,
             this.inputCLIOptions
         );
+        this.identifierNamesCacheUtils = new IdentifierNamesCacheUtils(this.inputCLIOptions.identifierNamesCachePath);
     }
 
     public run (): void {
@@ -237,6 +245,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 '--force-transform-strings <list> (comma separated, without whitespaces)',
                 'Enables force transformation of string literals, which being matched by passed RegExp patterns (comma separated)',
                 ArraySanitizer
+            )
+            .option(
+                '--identifier-names-cache-path <string>',
+                'Sets path for identifier names cache'
             )
             .option(
                 '--identifier-names-generator <string>',
@@ -466,6 +478,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     ): void {
         const options: TInputOptions = {
             ...this.inputCLIOptions,
+            identifierNamesCache: this.identifierNamesCacheUtils.read(),
             inputFileName: path.basename(inputCodePath),
             ...sourceCodeIndex !== null && {
                 identifiersPrefix: Utils.getIdentifiersPrefixForMultipleSources(
@@ -492,9 +505,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         options: TInputOptions
     ): void {
-        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(sourceCode, options).getObfuscatedCode();
+        const obfuscatedCode: IObfuscatedCode = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode);
+        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
+        this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());
     }
 
     /**
@@ -520,6 +534,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const obfuscatedCode: IObfuscatedCode = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
         this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
+        this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());
 
         if (options.sourceMapMode === SourceMapMode.Separate && obfuscatedCode.getSourceMap()) {
             this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscatedCode.getSourceMap());

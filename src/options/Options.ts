@@ -18,6 +18,7 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
+import { TIdentifierNamesCache } from '../types/caches/TIdentifierNamesCache';
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TRenamePropertiesMode } from '../types/options/TRenamePropertiesMode';
@@ -45,6 +46,7 @@ import { HIGH_OBFUSCATION_PRESET } from './presets/HighObfuscation';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
+import { IsPrimitiveDictionary } from './validators/IsPrimitiveDictionary';
 
 @injectable()
 export class Options implements IOptions {
@@ -141,6 +143,12 @@ export class Options implements IOptions {
         each: true
     })
     public readonly forceTransformStrings!: string[];
+
+    /**
+     * @type {TIdentifierNamesCache}
+     */
+    @IsPrimitiveDictionary('string')
+    public readonly identifierNamesCache!: TIdentifierNamesCache;
 
     /**
      * @type {IdentifierNamesGenerator}

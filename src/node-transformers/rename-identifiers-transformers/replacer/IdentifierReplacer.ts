@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
+import { IIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -14,6 +15,11 @@ import { NodeFactory } from '../../../node/NodeFactory';
 
 @injectable()
 export class IdentifierReplacer implements IIdentifierReplacer {
+    /**
+     * @type {IIdentifierNamesCacheStorage}
+     */
+    private readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+
     /**
      * @type {IIdentifierNamesGenerator}
      */
@@ -31,14 +37,18 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
     }
 
@@ -56,7 +66,14 @@ export class IdentifierReplacer implements IIdentifierReplacer {
             return;
         }
 
-        const newIdentifierName: string = this.identifierNamesGenerator.generateForGlobalScope();
+        const valueFromIdentifierNamesCache: string | null = this.identifierNamesCacheStorage.get(identifierName) ?? null;
+        let newIdentifierName: string;
+
+        if (valueFromIdentifierNamesCache) {
+            newIdentifierName = valueFromIdentifierNamesCache;
+        } else {
+            newIdentifierName = this.identifierNamesGenerator.generateForGlobalScope();
+        }
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
@@ -65,6 +82,10 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
         namesMap.set(identifierName, newIdentifierName);
+
+        if (valueFromIdentifierNamesCache !== newIdentifierName) {
+            this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
+        }
     }
 
     /**

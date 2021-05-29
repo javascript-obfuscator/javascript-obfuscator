@@ -230,8 +230,8 @@ function _0x1054 (_0x14a2a4, _0x5a6b22) {
 Returns `ObfuscationResult` object which contains two public methods:
 
 * `getObfuscatedCode()` - returns `string` with obfuscated code;
-* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`.
-* `getIdentifierNamesCache()` - returns object with identifier names cache if `identifierNamesCache` option is enabled, `null` overwise;
+* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`;
+* `getIdentifierNamesCache()` - returns object with identifier names cache if `identifierNamesCache` option is enabled, `null` overwise.
 
 Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
 
@@ -423,7 +423,7 @@ Following options are available for the JS Obfuscator:
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
-    --identifier-names-cache <string>
+    --identifier-names-cache-path <string>
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
@@ -715,19 +715,19 @@ Example:
 	}
 ```
 
-### `identifierNamesGenerator`
+### `identifierNamesCache`
 Type: `Object | null` Default: `null`
 
-The main goal for this option is the ability to use the same identifier names of global identifiers between obfuscation of multiple source codes/files.
+The main goal for this option is the ability to use the same global identifier names during obfuscation of multiple sources/files.
 
 #### Node.js API
-If an empty object (`{}`) is passed enables the writing of all names (original and obfuscated) to the object. This object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
+If an empty object (`{}`) is passed, enables the writing dictionary of all global original and obfuscated names to the object. This object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
 
-The result of `getIdentifierNamesCache` call could be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched global identifier names of next source codes.
+The result of `getIdentifierNamesCache` call could be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched global identifier names of next sources.
 
 Example:
 ```
-const file1ObfuscationResult = JavaScriptObfuscator.obfuscate(
+const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
     `
         function foo(arg) {
            console.log(arg)
@@ -744,26 +744,28 @@ const file1ObfuscationResult = JavaScriptObfuscator.obfuscate(
     }
 )
 
-console.log(file1ObfuscationResult.getIdentifierNamesCache());
+console.log(source1ObfuscationResult.getIdentifierNamesCache());
 // { foo: '_0x5de86d', bar: '_0x2a943b' }
 
-const file2ObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+
+const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
     `
-        // Expect that these global functions are defined in another obfuscated file
+        // Expecting that these global functions are defined in another obfuscated file
         foo(1);
         bar();
         
-        // Expect that this global function is defined in third-party package
+        // Expecting that this global function is defined in third-party package
         baz();
     `,
     {
         compact: false,
-        identifierNamesCache: file1ObfuscationResult.getIdentifierNamesCache(),
+        identifierNamesCache: source1ObfuscationResult.getIdentifierNamesCache(),
         renameGlobals: true
     }
 )
 
-console.log(file2ObfuscationResult.getObfuscatedCode());
+console.log(source2ObfuscationResult.getObfuscatedCode());
 // _0x5de86d(0x1);
 // _0x2a943b();
 // baz();
@@ -774,7 +776,7 @@ CLI has a different option `--identifier-names-cache-path` that allows defining 
 
 If a path to the empty file will be passed - identifier names cache will be written to that file.
 
-This file with cache can be again used as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched global identifier names of next files.
+This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched global identifier names of the next files.
 
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`

@@ -142,6 +142,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
         const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
             ? variableScope.block
             : null;
+        const isGlobalDeclaration: boolean = ScopeIdentifiersTraverser.globalScopeNames.includes(variableScope.type);
 
         if (!variableLexicalScopeNode) {
             return;
@@ -149,6 +150,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
 
         for (const reference of currentScope.through) {
             callback({
+                isGlobalDeclaration,
                 reference,
                 variableLexicalScopeNode
             });

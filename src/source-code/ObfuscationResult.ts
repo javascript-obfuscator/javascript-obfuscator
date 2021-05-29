@@ -5,14 +5,14 @@ import { TIdentifierNamesCache } from '../types/caches/TIdentifierNamesCache';
 
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
 import { IIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
-import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../interfaces/source-code/IObfuscationResult';
 import { IOptions } from '../interfaces/options/IOptions';
 
 import { initializable } from '../decorators/Initializable';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 
 @injectable()
-export class ObfuscatedCode implements IObfuscatedCode {
+export class ObfuscationResult implements IObfuscationResult {
     /**
      * @type {string}
      */
@@ -69,7 +69,7 @@ export class ObfuscatedCode implements IObfuscatedCode {
      * @returns {string}
      */
     public getIdentifierNamesCache (): TIdentifierNamesCache {
-        return this.identifierNamesCacheStorage.getAsDictionary();
+        return this.identifierNamesCacheStorage.getCache();
     }
 
     /**

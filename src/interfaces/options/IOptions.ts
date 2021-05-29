@@ -21,7 +21,7 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly forceTransformStrings: string[];
-    readonly identifierNamesCache: TIdentifierNamesCache | null;
+    readonly identifierNamesCache: TIdentifierNamesCache;
     readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;

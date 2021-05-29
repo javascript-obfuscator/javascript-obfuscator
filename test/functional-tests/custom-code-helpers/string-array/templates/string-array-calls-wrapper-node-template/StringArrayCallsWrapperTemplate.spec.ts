@@ -8,7 +8,7 @@ import { ServiceIdentifiers } from '../../../../../../src/container/ServiceIdent
 
 import { ICryptUtilsStringArray } from '../../../../../../src/interfaces/utils/ICryptUtilsStringArray';
 import { IInversifyContainerFacade } from '../../../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IObfuscatedCode } from '../../../../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../../../../src/interfaces/source-code/IObfuscationResult';
 import { IRandomGenerator } from '../../../../../../src/interfaces/utils/IRandomGenerator';
 
 import { AtobTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/AtobTemplate';
@@ -277,7 +277,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -304,7 +304,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -331,7 +331,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,

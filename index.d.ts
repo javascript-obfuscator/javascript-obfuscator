@@ -3,18 +3,18 @@ import { TInputOptions } from './src/types/options/TInputOptions';
 import { TObfuscationResultsObject } from './src/types/TObfuscationResultsObject';
 import { TOptionsPreset } from './src/types/options/TOptionsPreset';
 
-import { IObfuscatedCode } from './src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from './src/interfaces/source-code/IObfuscationResult';
 
 export type ObfuscatorOptions = TInputOptions;
 
-export interface ObfuscatedCode extends IObfuscatedCode {}
+export interface ObfuscationResult extends IObfuscationResult {}
 
 /**
  * @param {string} sourceCode
  * @param {ObfuscatorOptions} inputOptions
  * @returns {ObfuscatedCode}
  */
-export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscatedCode;
+export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscationResult;
 
 /**
  * @param {TSourceCodesObject} sourceCodesObject

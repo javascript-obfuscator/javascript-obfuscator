@@ -6,6 +6,7 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
+import { DeadCodeInjectionIdentifiersTransformer } from '../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionIdentifiersTransformer';
 import { IdentifierReplacer } from '../../../node-transformers/rename-identifiers-transformers/replacer/IdentifierReplacer';
 import { LabeledStatementTransformer } from '../../../node-transformers/rename-identifiers-transformers/LabeledStatementTransformer';
 import { ScopeIdentifiersTransformer } from '../../../node-transformers/rename-identifiers-transformers/ScopeIdentifiersTransformer';
@@ -13,6 +14,10 @@ import { ScopeThroughIdentifiersTransformer } from '../../../node-transformers/r
 
 export const renameIdentifiersTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // rename identifiers transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(DeadCodeInjectionIdentifiersTransformer)
+        .whenTargetNamed(NodeTransformer.DeadCodeInjectionIdentifiersTransformer);
+
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LabeledStatementTransformer)
         .whenTargetNamed(NodeTransformer.LabeledStatementTransformer);

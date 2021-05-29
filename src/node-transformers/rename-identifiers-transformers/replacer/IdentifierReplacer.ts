@@ -83,9 +83,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
         namesMap.set(identifierName, newIdentifierName);
 
-        if (valueFromIdentifierNamesCache !== newIdentifierName) {
-            this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
-        }
+        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
     }
 
     /**

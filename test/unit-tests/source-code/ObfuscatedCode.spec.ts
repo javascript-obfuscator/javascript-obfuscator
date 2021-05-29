@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
-import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfuscationResult';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 
@@ -26,7 +26,7 @@ function getObfuscatedCode (
     sourceMapBaseUrl: string,
     sourceMapFileName: string,
     sourceMapMode: TTypeFromEnum<typeof SourceMapMode>
-): IObfuscatedCode {
+): IObfuscationResult {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
     inversifyContainerFacade.load(
@@ -40,8 +40,8 @@ function getObfuscatedCode (
         }
     );
 
-    const obfuscatedCode: IObfuscatedCode = inversifyContainerFacade
-        .get<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode);
+    const obfuscatedCode: IObfuscationResult = inversifyContainerFacade
+        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
 
     obfuscatedCode.initialize(rawObfuscatedCode, sourceMap);
 
@@ -53,7 +53,7 @@ describe('ObfuscatedCode', () => {
     const sourceMap: string = 'test';
 
     describe('constructor', () => {
-        let obfuscatedCode: IObfuscatedCode;
+        let obfuscatedCode: IObfuscationResult;
 
         before(() => {
             obfuscatedCode = getObfuscatedCode(

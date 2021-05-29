@@ -5,7 +5,7 @@ import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
-import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfuscationResult';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
@@ -32,7 +32,7 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
@@ -111,7 +111,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -140,7 +140,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -174,7 +174,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             sourceMap: true
@@ -1224,7 +1224,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('invalid source codes object', () => {
-            let testFunc: () => TDictionary<IObfuscatedCode>;
+            let testFunc: () => TDictionary<IObfuscationResult>;
 
             beforeEach(() => {
                 testFunc = () => JavaScriptObfuscator.obfuscateMultiple(

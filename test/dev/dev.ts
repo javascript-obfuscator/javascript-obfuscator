@@ -1,36 +1,22 @@
 'use strict';
 
-import { TIdentifierNamesCache } from '../../src/types/caches/TIdentifierNamesCache';
-
-import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
-    const existingIdentifierNamesCache: TIdentifierNamesCache | null = {
-        foo: 'foo_existing',
-        bar: 'bar_existing'
-    };
-
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
-            (() => {
-                function foo(a, b, c, d) {
-                  console.log(a, b, c, d)
-                }
-                
-                function bar(...args) {
-                  foo(...args, 5)
-                }
-                
-                bar(...[1, 2, 3], 4)
-            })();
+            function foo() {
+               var baz = 1; 
+            }
+            
+            function bar(...args) {
+                var bark = 2;
+            }
         `,
         {
-            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            identifierNamesCache: existingIdentifierNamesCache,
-            identifierNamesGenerator: 'mangled-shuffled'
+            identifierNamesCache: { foo: '_0x5de86d', bar: '_0x2a943b' },
+            renameGlobals: true
         }
     );
 

@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../../../src/interfaces/IJavaScriptObfsucator';
-import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfuscationResult';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
@@ -40,7 +40,7 @@ describe('JavaScriptObfuscator', () => {
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
 
-                    const obfuscatedCodeObject: IObfuscatedCode = javaScriptObfuscator.obfuscate(code);
+                    const obfuscatedCodeObject: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
                     obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
                     sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());
@@ -79,7 +79,7 @@ describe('JavaScriptObfuscator', () => {
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
 
-                    const obfuscatedCodeObject: IObfuscatedCode = javaScriptObfuscator.obfuscate(code);
+                    const obfuscatedCodeObject: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
                     obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
                     sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());

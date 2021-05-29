@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
+import { IIdentifierNamesCacheStorage } from '../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { IIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -19,36 +20,46 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
- * Renames all through identifiers. Now used directly from Dead Code Injection transformer
+ * Renames all through identifiers
  */
 @injectable()
 export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
     /**
+     * @type {IIdentifierNamesCacheStorage}
+     */
+    protected readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+
+    /**
      * @type {IIdentifierReplacer}
      */
-    private readonly identifierReplacer: IIdentifierReplacer;
+    protected readonly identifierReplacer: IIdentifierReplacer;
 
     /**
      * @type {IScopeIdentifiersTraverser}
      */
-    private readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
+    protected readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
 
     /**
      * @param {IIdentifierReplacer} identifierReplacer
      * @param {IRandomGenerator} randomGenerator
-     * @param {IOptions} options
      * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
+     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser
+        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser)
+            scopeIdentifiersTraverser: IScopeIdentifiersTraverser,
+        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
         this.identifierReplacer = identifierReplacer;
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
     }
 
     /**
@@ -82,11 +93,24 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
             parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
                 const {
+                    isGlobalDeclaration,
                     reference,
                     variableLexicalScopeNode
                 } = data;
 
-                this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
+                const identifier: ESTree.Identifier = reference.identifier;
+                const identifierName: string = identifier.name;
+                const hasIdentifierNameInIdentifierNamesCache: boolean = this.identifierNamesCacheStorage.has(identifierName);
+
+                if (!hasIdentifierNameInIdentifierNamesCache) {
+                    return;
+                }
+
+                this.transformScopeThroughIdentifiers(
+                    reference,
+                    variableLexicalScopeNode,
+                    isGlobalDeclaration
+                );
             }
         );
 
@@ -94,12 +118,19 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
     }
 
     /**
+     * Have to store names only for identifiers that are existing in identifier names cache
+     * All other global and local `through` identifiers are expecting to be defined in
+     * other files without using identifier names cache or in third-party packages
+     * and these identifiers should not be renamed
+     *
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {boolean} isGlobalDeclaration
      */
-    private transformScopeThroughIdentifiers (
+    protected transformScopeThroughIdentifiers (
         reference: eslintScope.Reference,
         lexicalScopeNode: TNodeWithLexicalScope,
+        isGlobalDeclaration: boolean
     ): void {
         if (reference.resolved) {
             return;
@@ -107,19 +138,25 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
 
         const identifier: ESTree.Identifier = reference.identifier;
 
-        this.storeIdentifierName(identifier, lexicalScopeNode);
+        this.storeIdentifierName(identifier, lexicalScopeNode, isGlobalDeclaration);
         this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
     }
 
     /**
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {boolean} isGlobalDeclaration
      */
-    private storeIdentifierName (
+    protected storeIdentifierName (
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope
+        lexicalScopeNode: TNodeWithLexicalScope,
+        isGlobalDeclaration: boolean
     ): void {
-        this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
+        if (isGlobalDeclaration) {
+            this.identifierReplacer.storeGlobalName(identifierNode, lexicalScopeNode);
+        } else {
+            this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
+        }
     }
 
     /**
@@ -127,7 +164,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Variable} reference
      */
-    private replaceIdentifierName (
+    protected replaceIdentifierName (
         identifierNode: ESTree.Identifier,
         lexicalScopeNode: TNodeWithLexicalScope,
         reference: eslintScope.Reference

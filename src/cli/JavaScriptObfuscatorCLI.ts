@@ -7,7 +7,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 
 import { IFileData } from '../interfaces/cli/IFileData';
 import { IInitializable } from '../interfaces/IInitializable';
-import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../interfaces/source-code/IObfuscationResult';
 
 import { initializable } from '../decorators/Initializable';
 
@@ -505,7 +505,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         options: TInputOptions
     ): void {
-        const obfuscatedCode: IObfuscatedCode = JavaScriptObfuscator.obfuscate(sourceCode, options);
+        const obfuscatedCode: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
         this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
         this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());
@@ -531,7 +531,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             sourceMapFileName: path.basename(outputSourceMapPath)
         };
 
-        const obfuscatedCode: IObfuscatedCode = JavaScriptObfuscator.obfuscate(sourceCode, options);
+        const obfuscatedCode: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
         this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
         this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());

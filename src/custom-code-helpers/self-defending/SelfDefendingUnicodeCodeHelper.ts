@@ -78,7 +78,7 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();

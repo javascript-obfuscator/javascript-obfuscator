@@ -24,7 +24,7 @@ export class BlockStatementSimplifyTransformer extends AbstractStatementSimplify
     /**
      * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.VariableDeclarationsMergeTransformer
     ];
 

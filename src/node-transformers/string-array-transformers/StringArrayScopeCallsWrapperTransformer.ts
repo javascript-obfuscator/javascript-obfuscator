@@ -38,7 +38,7 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     /**
      * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.StringArrayRotateFunctionTransformer
     ];
 

@@ -74,7 +74,7 @@ export class DebugProtectionFunctionCallCodeHelper extends AbstractCustomCodeHel
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionCallTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName,
             callControllerFunctionName: this.callsControllerFunctionName

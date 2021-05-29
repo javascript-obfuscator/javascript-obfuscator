@@ -58,7 +58,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
     /**
      * @returns {string[]}
      */
-    protected getNameSequence (): string[] {
+    protected override getNameSequence (): string[] {
         return MangledShuffledIdentifierNamesGenerator.shuffledNameSequence;
     }
 
@@ -66,7 +66,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
      * @param {string} previousMangledName
      * @returns {string}
      */
-    protected generateNewMangledName (previousMangledName: string): string {
+    protected override generateNewMangledName (previousMangledName: string): string {
         return super.generateNewMangledName(previousMangledName);
     }
 }

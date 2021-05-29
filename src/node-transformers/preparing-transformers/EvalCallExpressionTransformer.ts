@@ -19,9 +19,9 @@ import { StringUtils } from '../../utils/StringUtils';
 @injectable()
 export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
     /**
-     * @type {NodeTransformer.NodeTransformer[]}
+     * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.EscapeSequenceTransformer,
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.VariablePreserveTransformer

@@ -87,7 +87,7 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         const comparisonExpressionCode: string = NodeUtils.convertStructureToCode([this.comparisonExpressionNode]);
 
         return this.customCodeHelperFormatter.formatTemplate(

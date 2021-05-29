@@ -66,7 +66,7 @@ export class DebugProtectionFunctionIntervalCodeHelper extends AbstractCustomCod
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionIntervalTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });

@@ -87,7 +87,7 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         const domainsString: string = this.options.domainLock.join(';');
         const [hiddenDomainsString, diff]: string[] = this.cryptUtils.hideString(
             domainsString,

@@ -22,7 +22,7 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
      *
      * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.NumberToNumericalExpressionTransformer
     ];
 

@@ -45,7 +45,7 @@ export class CustomCodeHelperGroupStorage extends MapStorage <string, ICustomCod
     }
 
     @postConstruct()
-    public initialize (): void {
+    public override initialize (): void {
         super.initialize();
 
         CustomCodeHelperGroupStorage.customCodeHelperGroupsList.forEach((customCodeHelperGroupName: CustomCodeHelperGroup) => {

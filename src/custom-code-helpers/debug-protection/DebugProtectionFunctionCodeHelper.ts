@@ -70,7 +70,7 @@ export class DebugProtectionFunctionCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         const debuggerTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? DebuggerTemplate()
             : DebuggerTemplateNoEval();

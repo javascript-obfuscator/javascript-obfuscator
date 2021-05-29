@@ -11,7 +11,7 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
     /**
      * @returns {string}
      */
-    protected getDecodeStringArrayTemplate (): string {
+    protected override getDecodeStringArrayTemplate (): string {
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
 
         const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {

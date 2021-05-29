@@ -165,7 +165,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} mangledName
      * @returns {boolean}
      */
-    public isValidIdentifierName (mangledName: string): boolean {
+    public override isValidIdentifierName (mangledName: string): boolean {
         return super.isValidIdentifierName(mangledName)
             && !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName);
     }

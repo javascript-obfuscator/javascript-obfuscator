@@ -262,7 +262,7 @@ export class IfStatementSimplifyTransformer extends AbstractStatementSimplifyTra
      * @param {IStatementSimplifyData} statementSimplifyData
      * @returns {ESTree.Statement}
      */
-    protected getPartialStatement (statementSimplifyData: IStatementSimplifyData): ESTree.Statement {
+    protected override getPartialStatement (statementSimplifyData: IStatementSimplifyData): ESTree.Statement {
         const partialStatement: ESTree.Statement = super.getPartialStatement(statementSimplifyData);
 
         if (!NodeGuards.isBlockStatementNode(partialStatement)) {

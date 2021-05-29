@@ -22,7 +22,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
     /**
      * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.ExpressionStatementsMergeTransformer,
         NodeTransformer.VariableDeclarationsMergeTransformer
     ];
@@ -189,7 +189,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Node}
      */
-    public abstract transformNode (
+    public abstract override transformNode (
         statementNode: ESTree.Statement,
         parentNode: ESTree.Node
     ): ESTree.Node;

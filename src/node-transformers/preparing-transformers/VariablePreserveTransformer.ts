@@ -26,7 +26,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     /**
      * @type {NodeTransformer.ParentificationTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.ParentificationTransformer
     ];
 

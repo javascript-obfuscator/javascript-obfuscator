@@ -80,7 +80,7 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
             stringArrayName: this.stringArrayName,
             stringArrayStorageItems: this.getEncodedStringArrayStorageItems()

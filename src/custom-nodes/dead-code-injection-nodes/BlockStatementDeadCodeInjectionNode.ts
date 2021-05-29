@@ -64,7 +64,7 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
      *
      * @returns {TStatement[]}
      */
-    public getNode (): TStatement[] {
+    public override getNode (): TStatement[] {
         return this.getNodeStructure();
     }
 

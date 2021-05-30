@@ -1,4 +1,4 @@
-import { TIdentifierNamesCache } from '../../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../types/storages/TIdentifierNamesCache';
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';

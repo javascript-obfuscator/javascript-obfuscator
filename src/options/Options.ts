@@ -18,7 +18,7 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
-import { TIdentifierNamesCache } from '../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../types/storages/TIdentifierNamesCache';
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TOptionsPreset } from '../types/options/TOptionsPreset';
 import { TRenamePropertiesMode } from '../types/options/TRenamePropertiesMode';

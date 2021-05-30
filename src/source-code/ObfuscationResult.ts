@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { TIdentifierNamesCache } from '../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../types/storages/TIdentifierNamesCache';
 
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
 import { IIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';

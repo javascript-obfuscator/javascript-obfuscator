@@ -1,7 +1,7 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TIdentifierNamesCache } from '../../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../types/storages/TIdentifierNamesCache';
 
 import { IIdentifierNamesCacheStorage } from '../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -82,6 +82,6 @@ export class IdentifierNamesCacheStorage extends MapStorage <string, string> imp
             return null;
         }
 
-        return this.getAsDictionary();
+        return this.getStorageAsDictionary();
     }
 }

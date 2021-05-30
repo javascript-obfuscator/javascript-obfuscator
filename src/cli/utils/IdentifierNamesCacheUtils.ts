@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { TIdentifierNamesCache } from '../../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../types/storages/TIdentifierNamesCache';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 

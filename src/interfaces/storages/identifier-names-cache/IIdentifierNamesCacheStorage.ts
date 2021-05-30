@@ -1,4 +1,4 @@
-import { TIdentifierNamesCache } from '../../../types/caches/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../../types/storages/TIdentifierNamesCache';
 
 import { IMapStorage } from '../IMapStorage';
 

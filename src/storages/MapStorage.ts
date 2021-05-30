@@ -59,13 +59,6 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     }
 
     /**
-     * @returns {TDictionary<V>}
-     */
-    public getAsDictionary (): TDictionary<V> {
-        return Object.fromEntries(this.storage);
-    }
-
-    /**
      * @param {K} key
      * @returns {V}
      */
@@ -105,6 +98,13 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      */
     public getStorage (): Map <K, V> {
         return this.storage;
+    }
+
+    /**
+     * @returns {TDictionary<V>}
+     */
+    public getStorageAsDictionary (): TDictionary<V> {
+        return Object.fromEntries(this.storage);
     }
 
     /**

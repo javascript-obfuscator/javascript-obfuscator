@@ -10,11 +10,6 @@ export interface IMapStorage <K, V> extends IInitializable {
     get (key: K): V | undefined;
 
     /**
-     * @returns {TDictionary<V>}
-     */
-    getAsDictionary (): TDictionary<V>;
-
-    /**
      * @param {K} key
      * @returns {V}
      */
@@ -35,6 +30,11 @@ export interface IMapStorage <K, V> extends IInitializable {
      * @returns {Map<K, V>}
      */
     getStorage (): Map <K, V>;
+
+    /**
+     * @returns {TDictionary<V>}
+     */
+    getStorageAsDictionary (): TDictionary<V>;
 
     /**
      * @returns string

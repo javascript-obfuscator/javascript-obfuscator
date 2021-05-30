@@ -721,9 +721,11 @@ Type: `Object | null` Default: `null`
 The main goal for this option is the ability to use the same global identifier names during obfuscation of multiple sources/files.
 
 #### Node.js API
+If a `null` value is passed, completely disables the cache.
+
 If an empty object (`{}`) is passed, enables the writing dictionary of all global original and obfuscated names to the object. This object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
 
-The result of `getIdentifierNamesCache` call could be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched global identifier names of next sources.
+The result of `getIdentifierNamesCache` call could be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched **undeclared** global identifier names of next sources.
 
 Example:
 ```
@@ -776,7 +778,7 @@ CLI has a different option `--identifier-names-cache-path` that allows defining 
 
 If a path to the empty file will be passed - identifier names cache will be written to that file.
 
-This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched global identifier names of the next files.
+This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched **undeclared** global identifier names of the next files.
 
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`

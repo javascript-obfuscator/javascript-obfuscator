@@ -10528,13 +10528,6 @@ let DeadCodeInjectionIdentifiersTransformer = class DeadCodeInjectionIdentifiers
     constructor(identifierReplacer, randomGenerator, scopeIdentifiersTraverser, identifierNamesCacheStorage, options) {
         super(identifierReplacer, randomGenerator, scopeIdentifiersTraverser, identifierNamesCacheStorage, options);
     }
-    transformNode(programNode, parentNode) {
-        this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(programNode, parentNode, (data) => {
-            const { isGlobalDeclaration, reference, variableLexicalScopeNode } = data;
-            this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode, isGlobalDeclaration);
-        });
-        return programNode;
-    }
     storeIdentifierName(identifierNode, lexicalScopeNode) {
         this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
     }
@@ -12416,12 +12409,6 @@ let ScopeThroughIdentifiersTransformer = class ScopeThroughIdentifiersTransforme
     transformNode(programNode, parentNode) {
         this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(programNode, parentNode, (data) => {
             const { isGlobalDeclaration, reference, variableLexicalScopeNode } = data;
-            const identifier = reference.identifier;
-            const identifierName = identifier.name;
-            const hasIdentifierNameInIdentifierNamesCache = this.identifierNamesCacheStorage.has(identifierName);
-            if (!hasIdentifierNameInIdentifierNamesCache) {
-                return;
-            }
             this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode, isGlobalDeclaration);
         });
         return programNode;
@@ -12435,12 +12422,7 @@ let ScopeThroughIdentifiersTransformer = class ScopeThroughIdentifiersTransforme
         this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
     }
     storeIdentifierName(identifierNode, lexicalScopeNode, isGlobalDeclaration) {
-        if (isGlobalDeclaration) {
-            this.identifierReplacer.storeGlobalName(identifierNode, lexicalScopeNode);
-        }
-        else {
-            this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
-        }
+        this.identifierReplacer.storeThroughName(identifierNode, lexicalScopeNode);
     }
     replaceIdentifierName(identifierNode, lexicalScopeNode, reference) {
         const newIdentifier = this.identifierReplacer
@@ -12498,19 +12480,11 @@ let IdentifierReplacer = class IdentifierReplacer {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
     }
     storeGlobalName(identifierNode, lexicalScopeNode) {
-        var _a;
         const identifierName = identifierNode.name;
         if (this.isReservedName(identifierName)) {
             return;
         }
-        const valueFromIdentifierNamesCache = (_a = this.identifierNamesCacheStorage.get(identifierName)) !== null && _a !== void 0 ? _a : null;
-        let newIdentifierName;
-        if (valueFromIdentifierNamesCache) {
-            newIdentifierName = valueFromIdentifierNamesCache;
-        }
-        else {
-            newIdentifierName = this.identifierNamesGenerator.generateForGlobalScope();
-        }
+        const newIdentifierName = this.identifierNamesGenerator.generateForGlobalScope();
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
         }
@@ -12529,6 +12503,23 @@ let IdentifierReplacer = class IdentifierReplacer {
         }
         const namesMap = this.blockScopesMap.get(lexicalScopeNode);
         namesMap.set(identifierName, newIdentifierName);
+    }
+    storeThroughName(identifierNode, lexicalScopeNode) {
+        var _a;
+        const identifierName = identifierNode.name;
+        if (this.isReservedName(identifierName)) {
+            return;
+        }
+        const newIdentifierName = (_a = this.identifierNamesCacheStorage.get(identifierName)) !== null && _a !== void 0 ? _a : null;
+        if (!newIdentifierName) {
+            return;
+        }
+        if (!this.blockScopesMap.has(lexicalScopeNode)) {
+            this.blockScopesMap.set(lexicalScopeNode, new Map());
+        }
+        const namesMap = this.blockScopesMap.get(lexicalScopeNode);
+        namesMap.set(identifierName, newIdentifierName);
+        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
     }
     replace(identifierNode, lexicalScopeNode) {
         let identifierName = identifierNode.name;

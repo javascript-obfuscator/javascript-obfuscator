@@ -10,7 +10,6 @@ import { IIdentifierReplacer } from '../../interfaces/node-transformers/rename-i
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
-import { IScopeThroughIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeThroughIdentifiersTraverserCallbackData';
 
 import { ScopeThroughIdentifiersTransformer } from '../rename-identifiers-transformers/ScopeThroughIdentifiersTransformer';
 
@@ -42,35 +41,6 @@ export class DeadCodeInjectionIdentifiersTransformer extends ScopeThroughIdentif
             identifierNamesCacheStorage,
             options
         );
-    }
-
-    /**
-     * Override parent method, because we have to transform all local scope `through` identifiers
-     *
-     * @param {VariableDeclaration} programNode
-     * @param {NodeGuards} parentNode
-     * @returns {NodeGuards}
-     */
-    public override transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
-            programNode,
-            parentNode,
-            (data: IScopeThroughIdentifiersTraverserCallbackData) => {
-                const {
-                    isGlobalDeclaration,
-                    reference,
-                    variableLexicalScopeNode
-                } = data;
-
-                this.transformScopeThroughIdentifiers(
-                    reference,
-                    variableLexicalScopeNode,
-                    isGlobalDeclaration
-                );
-            }
-        );
-
-        return programNode;
     }
 
     /**

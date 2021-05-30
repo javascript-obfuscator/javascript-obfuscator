@@ -53,7 +53,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     }
 
     /**
-     * Store `nodeName` of global identifiers as key in map with random name as value.
+     * Store identifier node `name` of global identifiers as key in map with random name as value.
      * Reserved name will be ignored.
      *
      * @param {Node} identifierNode
@@ -66,14 +66,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
             return;
         }
 
-        const valueFromIdentifierNamesCache: string | null = this.identifierNamesCacheStorage.get(identifierName) ?? null;
-        let newIdentifierName: string;
-
-        if (valueFromIdentifierNamesCache) {
-            newIdentifierName = valueFromIdentifierNamesCache;
-        } else {
-            newIdentifierName = this.identifierNamesGenerator.generateForGlobalScope();
-        }
+        const newIdentifierName: string = this.identifierNamesGenerator.generateForGlobalScope();
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
@@ -83,11 +76,12 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
         namesMap.set(identifierName, newIdentifierName);
 
+        // Have to write all global identifier names to the identifier names cache storage
         this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
     }
 
     /**
-     * Store `nodeName` of local identifier as key in map with random name as value.
+     * Store identifier node `name` of local identifier as key in map with random name as value.
      * Reserved name will be ignored.
      *
      * @param {Identifier} identifierNode
@@ -109,6 +103,37 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
         namesMap.set(identifierName, newIdentifierName);
+    }
+
+    /**
+     * Store identifier node `name` of `through` identifiers as key in map with value from identifier names cache.
+     * Reserved name will be ignored.
+     *
+     * @param {Node} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    public storeThroughName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+        const identifierName: string = identifierNode.name;
+
+        if (this.isReservedName(identifierName)) {
+            return;
+        }
+
+        const newIdentifierName: string | null = this.identifierNamesCacheStorage.get(identifierName) ?? null;
+
+        if (!newIdentifierName) {
+            return;
+        }
+
+        if (!this.blockScopesMap.has(lexicalScopeNode)) {
+            this.blockScopesMap.set(lexicalScopeNode, new Map());
+        }
+
+        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
+
+        namesMap.set(identifierName, newIdentifierName);
+
+        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
     }
 
     /**

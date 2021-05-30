@@ -98,14 +98,6 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
                     variableLexicalScopeNode
                 } = data;
 
-                const identifier: ESTree.Identifier = reference.identifier;
-                const identifierName: string = identifier.name;
-                const hasIdentifierNameInIdentifierNamesCache: boolean = this.identifierNamesCacheStorage.has(identifierName);
-
-                if (!hasIdentifierNameInIdentifierNamesCache) {
-                    return;
-                }
-
                 this.transformScopeThroughIdentifiers(
                     reference,
                     variableLexicalScopeNode,
@@ -118,11 +110,6 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
     }
 
     /**
-     * Have to store names only for identifiers that are existing in identifier names cache
-     * All other global and local `through` identifiers are expecting to be defined in
-     * other files without using identifier names cache or in third-party packages
-     * and these identifiers should not be renamed
-     *
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {boolean} isGlobalDeclaration
@@ -152,11 +139,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
         lexicalScopeNode: TNodeWithLexicalScope,
         isGlobalDeclaration: boolean
     ): void {
-        if (isGlobalDeclaration) {
-            this.identifierReplacer.storeGlobalName(identifierNode, lexicalScopeNode);
-        } else {
-            this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
-        }
+        this.identifierReplacer.storeThroughName(identifierNode, lexicalScopeNode);
     }
 
     /**

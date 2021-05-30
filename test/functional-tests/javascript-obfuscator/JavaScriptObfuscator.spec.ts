@@ -23,6 +23,7 @@ import { OptionsPreset } from '../../../src/enums/options/presets/OptionsPreset'
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
+import { TIdentifierNamesCache } from '../../../src/types/storages/TIdentifierNamesCache';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate', () => {
@@ -886,7 +887,7 @@ describe('JavaScriptObfuscator', () => {
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(code).getObfuscatedCode();
                 });
 
-                it('Match #!: should correctly obfuscate a import', () => {
+                it('Match #1: should correctly obfuscate a import', () => {
                     assert.match(obfuscatedCode, importRegExp);
                 });
 
@@ -908,6 +909,113 @@ describe('JavaScriptObfuscator', () => {
 
                 it('should correctly obfuscate a module', () => {
                     assert.match(obfuscatedCode, regExp);
+                });
+            });
+        });
+
+        describe('identifier names cache generation', () => {
+            describe('Variant #1: `identifierNamesCache` and `renameGlobal` options are enabled. Existing cache is passed', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    foo: 'a',
+                    bar: 'b',
+                    baz: 'baz_value_from_cache'
+                };
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {
+                                baz: 'baz_value_from_cache'
+                            },
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #2: `identifierNamesCache` and `renameGlobal` options are enabled', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    foo: 'a',
+                    bar: 'b'
+                };
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {},
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #3: `identifierNamesCache` and `renameGlobal` options are enabled. Source code without global variables', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {};
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-2.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {},
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #4: `identifierNamesCache` option is disabled', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = null;
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: null,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
                 });
             });
         });

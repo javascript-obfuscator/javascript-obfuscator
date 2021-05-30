@@ -5,9 +5,9 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 describe('`identifierNamesCache` validation', () => {
-    describe('IsPrimitiveDictionary', () => {
+    describe('IsIdentifierNamesCache', () => {
         describe('Variant #1: positive validation', () => {
-            describe('Variant #1: object with existing identifier names cache', () => {
+            describe('Variant #1: object with existing identifier names cached', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
@@ -16,7 +16,12 @@ describe('`identifierNamesCache` validation', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
-                                foo: '_0x123456'
+                                globalIdentifiers: {
+                                    foo: '_0x123456'
+                                },
+                                propertyIdentifiers: {
+                                    bar: '_0x654321'
+                                }
                             }
                         }
                     ).getObfuscatedCode();
@@ -35,7 +40,12 @@ describe('`identifierNamesCache` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesCache: {}
+                            identifierNamesCache: {
+                                globalIdentifiers: {
+                                    foo: '_0x123456'
+                                },
+                                propertyIdentifiers: {}
+                            }
                         }
                     ).getObfuscatedCode();
                 });
@@ -45,7 +55,28 @@ describe('`identifierNamesCache` validation', () => {
                 });
             });
 
-            describe('Variant #3: `null` value', () => {
+            describe('Variant #3: object with empty identifier names caches', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should pass validation', () => {
+                    assert.doesNotThrow(testFunc);
+                });
+            });
+
+            describe('Variant #4: `null` value', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
@@ -65,7 +96,7 @@ describe('`identifierNamesCache` validation', () => {
         });
 
         describe('Variant #2: negative validation', () => {
-            const expectedError: string = 'Passed value must be a dictionary with `string` values or `null` value';
+            const expectedError: string = 'Passed value must be an identifier names cache object or `null` value';
 
             describe('Variant #1: string value', () => {
                 let testFunc: () => string;
@@ -85,7 +116,7 @@ describe('`identifierNamesCache` validation', () => {
                 });
             });
 
-            describe('Variant #2: object with number values', () => {
+            describe('Variant #2: cache with number values inside single cache', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
@@ -94,8 +125,11 @@ describe('`identifierNamesCache` validation', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
-                                foo: <any>1,
-                                bar: <any>2,
+                                globalIdentifiers: {
+                                    foo: <any>1,
+                                    bar: <any>2,
+                                },
+                                propertyIdentifiers: {}
                             }
                         }
                     ).getObfuscatedCode();
@@ -106,7 +140,7 @@ describe('`identifierNamesCache` validation', () => {
                 });
             });
 
-            describe('Variant #3: object with mixed values', () => {
+            describe('Variant #3: cache with number values inside both caches', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
@@ -115,8 +149,61 @@ describe('`identifierNamesCache` validation', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
-                                foo: <any>1,
-                                bar: '_0x1234567',
+                                globalIdentifiers: {
+                                    foo: <any>1,
+                                    bar: <any>2,
+                                },
+                                propertyIdentifiers: {
+                                    baz: <any>3,
+                                    bark: <any>4,
+                                }
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not pass validation', () => {
+                    assert.throws(testFunc, expectedError);
+                });
+            });
+
+            describe('Variant #4: cache with mixed values', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesCache: {
+                                globalIdentifiers: {
+                                    foo: <any>1,
+                                    bar: '_0x1234567',
+                                },
+                                propertyIdentifiers: {
+                                    foo: '_0x123456'
+                                }
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not pass validation', () => {
+                    assert.throws(testFunc, expectedError);
+                });
+            });
+
+            describe('Variant #4: cache with nullable dictionary fields', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesCache: {
+                                globalIdentifiers: <any>null,
+                                propertyIdentifiers: <any>null
                             }
                         }
                     ).getObfuscatedCode();

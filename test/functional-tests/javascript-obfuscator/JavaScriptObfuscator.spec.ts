@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 
 import { TDictionary } from '../../../src/types/TDictionary';
+import { TIdentifierNamesCache } from '../../../src/types/TIdentifierNamesCache';
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
@@ -23,7 +24,6 @@ import { OptionsPreset } from '../../../src/enums/options/presets/OptionsPreset'
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
-import { TIdentifierNamesCache } from '../../../src/types/storages/TIdentifierNamesCache';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate', () => {
@@ -916,9 +916,12 @@ describe('JavaScriptObfuscator', () => {
         describe('identifier names cache generation', () => {
             describe('Variant #1: `identifierNamesCache` and `renameGlobal` options are enabled. Existing cache is passed', () => {
                 const expectedIdentifierNamesCache: TIdentifierNamesCache = {
-                    foo: 'a',
-                    bar: 'b',
-                    baz: 'baz_value_from_cache'
+                    globalIdentifiers: {
+                        foo: 'a',
+                        bar: 'b',
+                        baz: 'baz_value_from_cache'
+                    },
+                    propertyIdentifiers: {}
                 };
 
                 let identifierNamesCache: TIdentifierNamesCache;
@@ -932,7 +935,10 @@ describe('JavaScriptObfuscator', () => {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true,
                             identifierNamesCache: {
-                                baz: 'baz_value_from_cache'
+                                globalIdentifiers: {
+                                    baz: 'baz_value_from_cache'
+                                },
+                                propertyIdentifiers: {}
                             },
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
@@ -946,8 +952,11 @@ describe('JavaScriptObfuscator', () => {
 
             describe('Variant #2: `identifierNamesCache` and `renameGlobal` options are enabled', () => {
                 const expectedIdentifierNamesCache: TIdentifierNamesCache = {
-                    foo: 'a',
-                    bar: 'b'
+                    globalIdentifiers: {
+                        foo: 'a',
+                        bar: 'b'
+                    },
+                    propertyIdentifiers: {}
                 };
 
                 let identifierNamesCache: TIdentifierNamesCache;
@@ -960,7 +969,10 @@ describe('JavaScriptObfuscator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true,
-                            identifierNamesCache: {},
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            },
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getIdentifierNamesCache();
@@ -972,7 +984,10 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #3: `identifierNamesCache` and `renameGlobal` options are enabled. Source code without global variables', () => {
-                const expectedIdentifierNamesCache: TIdentifierNamesCache = {};
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    globalIdentifiers: {},
+                    propertyIdentifiers: {}
+                };
 
                 let identifierNamesCache: TIdentifierNamesCache;
 
@@ -984,7 +999,10 @@ describe('JavaScriptObfuscator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true,
-                            identifierNamesCache: {},
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            },
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
                     ).getIdentifierNamesCache();

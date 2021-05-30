@@ -15,7 +15,10 @@
         `,
         {
             compact: false,
-            identifierNamesCache: { foo: '_0x5de86d', bar: '_0x2a943b' },
+            identifierNamesCache: {
+                globalIdentifiers: { foo: '_0x5de86d', bar: '_0x2a943b' },
+                propertyIdentifiers: {}
+            },
             renameGlobals: true
         }
     );

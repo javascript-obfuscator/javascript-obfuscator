@@ -1,4 +1,4 @@
-import { TIdentifierNamesCache } from '../../types/storages/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
 import { IInitializable } from '../IInitializable';
 
 export interface IObfuscationResult extends IInitializable <[string, string]> {

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { TIdentifierNamesCache } from '../types/storages/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../types/TIdentifierNamesCache';
 
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
 import { IIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
@@ -69,7 +69,14 @@ export class ObfuscationResult implements IObfuscationResult {
      * @returns {string}
      */
     public getIdentifierNamesCache (): TIdentifierNamesCache {
-        return this.identifierNamesCacheStorage.getCache();
+        if (!this.options.identifierNamesCache) {
+            return null;
+        }
+
+        return {
+            globalIdentifiers: this.identifierNamesCacheStorage.getStorageAsDictionary(),
+            propertyIdentifiers: {}
+        };
     }
 
     /**

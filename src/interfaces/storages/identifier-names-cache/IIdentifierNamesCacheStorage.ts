@@ -1,10 +1,4 @@
-import { TIdentifierNamesCache } from '../../../types/storages/TIdentifierNamesCache';
-
 import { IMapStorage } from '../IMapStorage';
 
-export interface IIdentifierNamesCacheStorage extends Omit<IMapStorage <string, string>, 'getStorage'> {
-    /**
-     * @returns {TIdentifierNamesCache}
-     */
-    getCache (): TIdentifierNamesCache;
-}
+// eslint-disable-next-line
+export interface IIdentifierNamesCacheStorage extends IMapStorage <string, string> {}

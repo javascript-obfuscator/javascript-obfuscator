@@ -22,7 +22,10 @@ describe('ScopeThroughIdentifiersTransformer FunctionDeclaration identifiers', (
                     ...NO_ADDITIONAL_NODES_PRESET,
                     renameGlobals: true,
                     identifierNamesCache: {
-                        'foo': 'foo_from_cache'
+                        globalIdentifiers: {
+                            'foo': 'foo_from_cache'
+                        },
+                        propertyIdentifiers: {}
                     }
                 }
             ).getObfuscatedCode();
@@ -52,7 +55,10 @@ describe('ScopeThroughIdentifiersTransformer FunctionDeclaration identifiers', (
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true,
                         identifierNamesCache: {
-                            'foo': 'foo_from_cache'
+                            globalIdentifiers: {
+                                'foo': 'foo_from_cache'
+                            },
+                            propertyIdentifiers: {}
                         }
                     }
                 ).getObfuscatedCode();
@@ -76,7 +82,10 @@ describe('ScopeThroughIdentifiersTransformer FunctionDeclaration identifiers', (
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true,
-                        identifierNamesCache: {}
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
+                        }
                     }
                 ).getObfuscatedCode();
             });

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { TIdentifierNamesCache } from '../../types/storages/TIdentifierNamesCache';
+import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
@@ -70,7 +70,10 @@ export class IdentifierNamesCacheUtils {
 
         if (!fileData.content) {
             // Initial state of identifier names cache file
-            return {};
+            return {
+                globalIdentifiers: {},
+                propertyIdentifiers: {}
+            };
         }
 
         try {

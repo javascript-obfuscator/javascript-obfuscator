@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
 import { TDictionary } from '../../../../src/types/TDictionary';
-import { TIdentifierNamesCache } from '../../../../src/types/storages/TIdentifierNamesCache';
 
 import { IIdentifierNamesCacheStorage } from '../../../../src/interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
@@ -54,7 +53,10 @@ describe('IdentifierNamesCacheStorage', () => {
             before(() => {
                 storage = getStorageInstance({
                     identifierNamesCache: {
-                        [storageKey]: storageValue
+                        globalIdentifiers: {
+                            [storageKey]: storageValue
+                        },
+                        propertyIdentifiers: {}
                     }
                 });
 
@@ -70,94 +72,38 @@ describe('IdentifierNamesCacheStorage', () => {
             const expectedDictionary: TDictionary<string> = {};
 
             let dictionary: TDictionary<string>;
-
-            before(() => {
-                storage = getStorageInstance({
-                    identifierNamesCache: {}
-                });
-
-                dictionary = storage.getStorageAsDictionary();
-            });
-
-            it('should initialize storage with `identifierNamesStorage` option object', () => {
-                assert.deepEqual(dictionary, expectedDictionary);
-            });
-        });
-
-        describe('Variant #3: `identifierNamesCache` option values is `null`', () => {
-            const expectedDictionary: TDictionary<string> = {};
-
-            let dictionary: TDictionary<string>;
-
-            before(() => {
-                storage = getStorageInstance({
-                    identifierNamesCache: null
-                });
-
-                dictionary = storage.getStorageAsDictionary();
-            });
-
-            it('should initialize storage with `identifierNamesStorage` option object', () => {
-                assert.deepEqual(dictionary, expectedDictionary);
-            });
-        });
-    });
-
-    describe('getCache', () => {
-        describe('Variant #1: `identifierNamesCache` option values is object', () => {
-            const expectedIdentifierNamesCache: TIdentifierNamesCache = {
-                [storageKey]: storageValue
-            };
-
-            let identifierNamesCache: TIdentifierNamesCache;
 
             before(() => {
                 storage = getStorageInstance({
                     identifierNamesCache: {
-                        [storageKey]: storageValue
+                        globalIdentifiers: {},
+                        propertyIdentifiers: {}
                     }
                 });
 
-                identifierNamesCache = storage.getCache();
+                dictionary = storage.getStorageAsDictionary();
             });
 
-            it('should return cache object', () => {
-                assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
-            });
-        });
-
-        describe('Variant #2: `identifierNamesCache` option values is empty object', () => {
-            const expectedIdentifierNamesCache: TIdentifierNamesCache = {};
-
-            let identifierNamesCache: TIdentifierNamesCache;
-
-            before(() => {
-                storage = getStorageInstance({
-                    identifierNamesCache: {}
-                });
-
-                identifierNamesCache = storage.getCache();
-            });
-
-            it('should return empty cache object', () => {
-                assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+            it('should initialize storage with `identifierNamesStorage` option object', () => {
+                assert.deepEqual(dictionary, expectedDictionary);
             });
         });
 
         describe('Variant #3: `identifierNamesCache` option values is `null`', () => {
-            let identifierNamesCache: TIdentifierNamesCache;
+            const expectedDictionary: TDictionary<string> = {};
+
+            let dictionary: TDictionary<string>;
 
             before(() => {
                 storage = getStorageInstance({
                     identifierNamesCache: null
                 });
-                storage.set(storageKey, storageValue);
 
-                identifierNamesCache = storage.getCache();
+                dictionary = storage.getStorageAsDictionary();
             });
 
-            it('should return `null`', () => {
-                assert.isNull(identifierNamesCache);
+            it('should initialize storage with `identifierNamesStorage` option object', () => {
+                assert.deepEqual(dictionary, expectedDictionary);
             });
         });
     });

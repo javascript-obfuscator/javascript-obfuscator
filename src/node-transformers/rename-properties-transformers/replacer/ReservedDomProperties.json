@@ -1029,6 +1029,7 @@
     "EQUALPOWER",
     "ERROR",
     "EXPONENTIAL_DISTANCE",
+    "exports",
     "Element",
     "ElementInternals",
     "ElementQuery",

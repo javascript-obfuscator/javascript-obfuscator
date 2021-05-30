@@ -40,10 +40,10 @@ describe('JavaScriptObfuscator', () => {
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
 
-                    const obfuscatedCodeObject: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
+                    const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
-                    sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    sourceMapObject = JSON.parse(obfuscationResult.getSourceMap());
                 });
 
                 it('should link obfuscated code with source map', () => {
@@ -79,10 +79,10 @@ describe('JavaScriptObfuscator', () => {
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
 
-                    const obfuscatedCodeObject: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
+                    const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
-                    sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    sourceMapObject = JSON.parse(obfuscationResult.getSourceMap());
                 });
 
                 it('should properly add base url to source map import inside obfuscated code', () => {

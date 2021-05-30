@@ -17,7 +17,7 @@ describe('StringArrayTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -26,7 +26,7 @@ describe('StringArrayTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for string array', () => {
@@ -44,7 +44,7 @@ describe('StringArrayTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -53,7 +53,7 @@ describe('StringArrayTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for string array', () => {
@@ -71,7 +71,7 @@ describe('StringArrayTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscatedCodeObject: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -80,7 +80,7 @@ describe('StringArrayTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for string array', () => {

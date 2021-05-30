@@ -20,7 +20,7 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
  * @param sourceMapFileName
  * @param sourceMapMode
  */
-function getObfuscatedCode (
+function getObfuscationResult (
     rawObfuscatedCode: string,
     sourceMap: string,
     sourceMapBaseUrl: string,
@@ -40,12 +40,12 @@ function getObfuscatedCode (
         }
     );
 
-    const obfuscatedCode: IObfuscationResult = inversifyContainerFacade
+    const obfuscationResult: IObfuscationResult = inversifyContainerFacade
         .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
 
-    obfuscatedCode.initialize(rawObfuscatedCode, sourceMap);
+    obfuscationResult.initialize(rawObfuscatedCode, sourceMap);
 
-    return obfuscatedCode;
+    return obfuscationResult;
 }
 
 describe('ObfuscatedCode', () => {
@@ -53,10 +53,10 @@ describe('ObfuscatedCode', () => {
     const sourceMap: string = 'test';
 
     describe('constructor', () => {
-        let obfuscatedCode: IObfuscationResult;
+        let obfuscationResult: IObfuscationResult;
 
         before(() => {
-            obfuscatedCode = getObfuscatedCode(
+            obfuscationResult = getObfuscationResult(
                 expectedObfuscatedCode,
                 sourceMap,
                 '',
@@ -65,8 +65,8 @@ describe('ObfuscatedCode', () => {
             );
         });
 
-        it('should return obfuscated code if `.toString()` was called on `ObfuscatedCode` object', () => {
-            assert.equal(obfuscatedCode.toString(), expectedObfuscatedCode);
+        it('should return obfuscation result if `.toString()` was called on `ObfuscationResult` object', () => {
+            assert.equal(obfuscationResult.toString(), expectedObfuscatedCode);
         });
     });
 
@@ -75,7 +75,7 @@ describe('ObfuscatedCode', () => {
 
         describe('source map doest\'t exist', () => {
             before(() => {
-                obfuscatedCode = getObfuscatedCode(
+                obfuscatedCode = getObfuscationResult(
                     expectedObfuscatedCode,
                     '',
                     '',
@@ -93,7 +93,7 @@ describe('ObfuscatedCode', () => {
             const regExp: RegExp = /data:application\/json;base64,dGVzdA==/;
 
             before(() => {
-                obfuscatedCode = getObfuscatedCode(
+                obfuscatedCode = getObfuscationResult(
                     expectedObfuscatedCode,
                     sourceMap,
                     '',
@@ -111,7 +111,7 @@ describe('ObfuscatedCode', () => {
             const regExp: RegExp = /sourceMappingURL=http:\/\/example\.com\/output\.js\.map/;
 
             before(() => {
-                obfuscatedCode = getObfuscatedCode(
+                obfuscatedCode = getObfuscationResult(
                     expectedObfuscatedCode,
                     sourceMap,
                     'http://example.com',
@@ -127,7 +127,7 @@ describe('ObfuscatedCode', () => {
 
         describe('source map mode is `separate`, `sourceMapUrl` is not set', () => {
             before(() => {
-                obfuscatedCode = getObfuscatedCode(
+                obfuscatedCode = getObfuscationResult(
                     expectedObfuscatedCode,
                     sourceMap,
                     '',

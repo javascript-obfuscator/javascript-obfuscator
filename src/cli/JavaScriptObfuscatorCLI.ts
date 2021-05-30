@@ -505,10 +505,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         options: TInputOptions
     ): void {
-        const obfuscatedCode: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
-        this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());
+        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheUtils.write(obfuscationResult.getIdentifierNamesCache());
     }
 
     /**
@@ -531,13 +531,13 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             sourceMapFileName: path.basename(outputSourceMapPath)
         };
 
-        const obfuscatedCode: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
-        this.identifierNamesCacheUtils.write(obfuscatedCode.getIdentifierNamesCache());
+        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheUtils.write(obfuscationResult.getIdentifierNamesCache());
 
-        if (options.sourceMapMode === SourceMapMode.Separate && obfuscatedCode.getSourceMap()) {
-            this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscatedCode.getSourceMap());
+        if (options.sourceMapMode === SourceMapMode.Separate && obfuscationResult.getSourceMap()) {
+            this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }
 }

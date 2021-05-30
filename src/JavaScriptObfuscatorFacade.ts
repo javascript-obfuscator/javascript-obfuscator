@@ -33,11 +33,11 @@ class JavaScriptObfuscatorFacade {
 
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
-        const obfuscatedCode: IObfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
+        const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
 
         inversifyContainerFacade.unload();
 
-        return obfuscatedCode;
+        return obfuscationResult;
     }
 
     /**

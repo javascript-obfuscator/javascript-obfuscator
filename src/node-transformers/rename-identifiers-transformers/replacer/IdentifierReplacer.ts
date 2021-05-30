@@ -6,7 +6,7 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
-import { IIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
+import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -16,9 +16,9 @@ import { NodeFactory } from '../../../node/NodeFactory';
 @injectable()
 export class IdentifierReplacer implements IIdentifierReplacer {
     /**
-     * @type {IIdentifierNamesCacheStorage}
+     * @type {IGlobalIdentifierNamesCacheStorage}
      */
-    private readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+    private readonly identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage;
 
     /**
      * @type {IIdentifierNamesGenerator}
@@ -37,14 +37,14 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IGlobalIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
+        @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;

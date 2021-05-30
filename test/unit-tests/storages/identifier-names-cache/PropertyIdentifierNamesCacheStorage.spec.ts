@@ -6,24 +6,24 @@ import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers
 
 import { TDictionary } from '../../../../src/types/TDictionary';
 
-import { IIdentifierNamesCacheStorage } from '../../../../src/interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
+import { IPropertyIdentifierNamesCacheStorage } from '../../../../src/interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 import { IOptions } from '../../../../src/interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../../src/interfaces/utils/IRandomGenerator';
 
 import { DEFAULT_PRESET } from '../../../../src/options/presets/Default';
 
-import { IdentifierNamesCacheStorage } from '../../../../src/storages/identifier-names-cache/IdentifierNamesCacheStorage';
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { PropertyIdentifierNamesCacheStorage } from '../../../../src/storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage';
 
 /**
- * @returns {IIdentifierNamesCacheStorage}
+ * @returns {IPropertyIdentifierNamesCacheStorage}
  */
-const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IIdentifierNamesCacheStorage => {
+const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IPropertyIdentifierNamesCacheStorage => {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
     inversifyContainerFacade.load('', '', {});
 
-    const storage: IIdentifierNamesCacheStorage = new IdentifierNamesCacheStorage (
+    const storage: IPropertyIdentifierNamesCacheStorage = new PropertyIdentifierNamesCacheStorage(
         inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator),
         {
             ...DEFAULT_PRESET,
@@ -36,11 +36,11 @@ const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IId
     return storage;
 };
 
-describe('IdentifierNamesCacheStorage', () => {
+describe('PropertyIdentifierNamesCacheStorage', () => {
     const storageKey: string = 'foo';
     const storageValue: string = 'bar';
 
-    let storage: IIdentifierNamesCacheStorage;
+    let storage: IPropertyIdentifierNamesCacheStorage;
 
     describe('initialize', () => {
         describe('Variant #1: `identifierNamesCache` option values is object', () => {
@@ -53,10 +53,10 @@ describe('IdentifierNamesCacheStorage', () => {
             before(() => {
                 storage = getStorageInstance({
                     identifierNamesCache: {
-                        globalIdentifiers: {
+                        globalIdentifiers: {},
+                        propertyIdentifiers: {
                             [storageKey]: storageValue
-                        },
-                        propertyIdentifiers: {}
+                        }
                     }
                 });
 

@@ -1,14 +1,14 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { IIdentifierNamesCacheStorage } from '../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
+import { IGlobalIdentifierNamesCacheStorage } from '../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class IdentifierNamesCacheStorage extends MapStorage <string, string> implements IIdentifierNamesCacheStorage {
+export class GlobalIdentifierNamesCacheStorage extends MapStorage <string, string> implements IGlobalIdentifierNamesCacheStorage {
    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

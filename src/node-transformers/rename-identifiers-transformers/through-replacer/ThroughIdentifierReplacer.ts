@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
+import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IThroughIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer';
 
@@ -12,9 +12,9 @@ import { NodeFactory } from '../../../node/NodeFactory';
 @injectable()
 export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
     /**
-     * @type {IIdentifierNamesCacheStorage}
+     * @type {IGlobalIdentifierNamesCacheStorage}
      */
-    private readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+    private readonly identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage;
 
     /**
      * @type {IOptions}
@@ -22,12 +22,12 @@ export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
     private readonly options: IOptions;
 
     /**
-     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IGlobalIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
+        @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesCacheStorage = identifierNamesCacheStorage;

@@ -4,8 +4,9 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import { TIdentifierNamesCache } from '../types/TIdentifierNamesCache';
 
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
-import { IIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
+import { IGlobalIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IObfuscationResult } from '../interfaces/source-code/IObfuscationResult';
+import { IPropertyIdentifierNamesCacheStorage } from '../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage';
 import { IOptions } from '../interfaces/options/IOptions';
 
 import { initializable } from '../decorators/Initializable';
@@ -31,9 +32,14 @@ export class ObfuscationResult implements IObfuscationResult {
     private readonly cryptUtils: ICryptUtils;
 
     /**
-     * @type {IIdentifierNamesCacheStorage}
+     * @type {IGlobalIdentifierNamesCacheStorage}
      */
-    private readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
+    private readonly globalIdentifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage;
+
+    /**
+     * @type {IPropertyIdentifierNamesCacheStorage}
+     */
+    private readonly propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage;
 
     /**
      * @type {IOptions}
@@ -42,17 +48,21 @@ export class ObfuscationResult implements IObfuscationResult {
 
     /**
      * @param {ICryptUtils} cryptUtils
-     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IGlobalIdentifierNamesCacheStorage} globalIdentifierNamesCacheStorage
+     * @param {IPropertyIdentifierNamesCacheStorage} propertyIdentifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
-        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
+        @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+            globalIdentifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
+        @inject(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
+            propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.cryptUtils = cryptUtils;
-        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
+        this.globalIdentifierNamesCacheStorage = globalIdentifierNamesCacheStorage;
+        this.propertyIdentifierNamesCacheStorage = propertyIdentifierNamesCacheStorage;
         this.options = options;
     }
 
@@ -74,8 +84,8 @@ export class ObfuscationResult implements IObfuscationResult {
         }
 
         return {
-            globalIdentifiers: this.identifierNamesCacheStorage.getStorageAsDictionary(),
-            propertyIdentifiers: {}
+            globalIdentifiers: this.globalIdentifierNamesCacheStorage.getStorageAsDictionary(),
+            propertyIdentifiers: this.propertyIdentifierNamesCacheStorage.getStorageAsDictionary()
         };
     }
 

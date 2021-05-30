@@ -6,20 +6,21 @@
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
             function foo() {
-               var baz = 1; 
+               global.baz = 3;
             }
             
             function bar(...args) {
-                var bark = 2;
+                console.log(2);
             }
         `,
         {
             compact: false,
             identifierNamesCache: {
-                globalIdentifiers: { foo: '_0x5de86d', bar: '_0x2a943b' },
+                globalIdentifiers: {},
                 propertyIdentifiers: {}
             },
-            renameGlobals: true
+            renameGlobals: true,
+            renameProperties: true
         }
     );
 

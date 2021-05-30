@@ -7,8 +7,9 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
-import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IPropertyIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage';
+import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 
 // eslint-disable-next-line import/no-internal-modules
 import ReservedDomProperties from './ReservedDomProperties.json';
@@ -39,6 +40,11 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     private readonly excludedPropertyNames: Set<string> = new Set();
 
     /**
+     * @type {IPropertyIdentifierNamesCacheStorage}
+     */
+    private readonly propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage;
+
+    /**
      * @type {Map<string, string>}
      * @private
      */
@@ -51,14 +57,18 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {IPropertyIdentifierNamesCacheStorage} propertyIdentifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
+            propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
+        this.propertyIdentifierNamesCacheStorage = propertyIdentifierNamesCacheStorage;
         this.options = options;
     }
 
@@ -99,7 +109,13 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
             return propertyName;
         }
 
-        let renamedPropertyName: string | null = this.propertyNamesMap.get(propertyName) ?? null;
+        let renamedPropertyName: string | null = this.options.identifierNamesCache
+            ? this.propertyIdentifierNamesCacheStorage.get(propertyName) ?? null
+            : null;
+
+        renamedPropertyName = renamedPropertyName
+            ?? this.propertyNamesMap.get(propertyName)
+            ?? null;
 
         if (renamedPropertyName !== null) {
             return renamedPropertyName;
@@ -107,6 +123,10 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
 
         renamedPropertyName = this.identifierNamesGenerator.generateNext();
         this.propertyNamesMap.set(propertyName, renamedPropertyName);
+
+        if (this.options.identifierNamesCache) {
+            this.propertyIdentifierNamesCacheStorage.set(propertyName, renamedPropertyName);
+        }
 
         return renamedPropertyName;
     }

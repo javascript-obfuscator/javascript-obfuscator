@@ -35,36 +35,16 @@ export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
     }
 
     /**
-     * Store identifier node `name` of `through` identifiers as key in map with value from identifier names cache.
-     * Reserved name will be ignored.
-     *
-     * @param {Node} identifierNode
-     */
-    public store (identifierNode: ESTree.Identifier): void {
-        const identifierName: string = identifierNode.name;
-
-        if (this.isReservedName(identifierName)) {
-            return;
-        }
-
-        const newIdentifierName: string | null = this.identifierNamesCacheStorage.get(identifierName) ?? null;
-
-        if (!newIdentifierName) {
-            return;
-        }
-
-        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
-    }
-
-    /**
      * @param {Identifier} identifierNode
      * @returns {Identifier}
      */
     public replace (identifierNode: ESTree.Identifier): ESTree.Identifier {
-        const identifierName: string = this.identifierNamesCacheStorage.get(identifierNode.name)
-            ?? identifierNode.name;
+        const identifierName: string = identifierNode.name;
+        const newIdentifierName: string = this.options.identifierNamesCache && !this.isReservedName(identifierName)
+            ? this.identifierNamesCacheStorage.get(identifierName) ?? identifierName
+            : identifierName;
 
-        return NodeFactory.identifierNode(identifierName);
+        return NodeFactory.identifierNode(newIdentifierName);
     }
 
     /**

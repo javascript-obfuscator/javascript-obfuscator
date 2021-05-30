@@ -11,12 +11,7 @@ import { MapStorage } from '../MapStorage';
 
 @injectable()
 export class IdentifierNamesCacheStorage extends MapStorage <string, string> implements IIdentifierNamesCacheStorage {
-    /**
-     * @type {boolean}
-     */
-    private readonly shouldUseCache: boolean;
-
-    /**
+   /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -25,60 +20,20 @@ export class IdentifierNamesCacheStorage extends MapStorage <string, string> imp
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-
-        this.shouldUseCache = !!options.identifierNamesCache;
     }
 
     @postConstruct()
     public override initialize (): void {
        super.initialize();
 
-       if (this.options.identifierNamesCache) {
-           this.storage = new Map(Object.entries(this.options.identifierNamesCache));
-       }
-    }
-
-    /**
-     * @param {string} key
-     * @returns {string | undefined}
-     */
-    public override get (key: string): string | undefined {
-        if (!this.shouldUseCache) {
-            return undefined;
-        }
-
-        return super.get(key);
-    }
-
-    /**
-     * @param {string} key
-     * @returns {boolean}
-     */
-    public override has (key: string): boolean {
-        if (!this.shouldUseCache) {
-            return false;
-        }
-
-        return super.has(key);
-    }
-
-    /**
-     * @param {string} key
-     * @param {string} value
-     */
-    public override set (key: string, value: string): void {
-        if (!this.shouldUseCache) {
-            return;
-        }
-
-        super.set(key, value);
+        this.storage = new Map(Object.entries(this.options.identifierNamesCache ?? {}));
     }
 
     /**
      * @returns {TIdentifierNamesCache}
      */
     public getCache (): TIdentifierNamesCache {
-        if (!this.shouldUseCache) {
+        if (!this.options.identifierNamesCache) {
             return null;
         }
 

@@ -108,30 +108,15 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
             return;
         }
 
-        const identifier: ESTree.Identifier = reference.identifier;
-
-        this.storeIdentifierName(identifier);
-        this.replaceIdentifierName(identifier, reference);
+        this.replaceIdentifierName(reference);
     }
 
     /**
-     * @param {Identifier} identifierNode
-     */
-    protected storeIdentifierName (
-        identifierNode: ESTree.Identifier
-    ): void {
-        this.throughIdentifierReplacer.store(identifierNode);
-    }
-
-    /**
-     * @param {Identifier} identifierNode
      * @param {Variable} reference
      */
-    protected replaceIdentifierName (
-        identifierNode: ESTree.Identifier,
-        reference: eslintScope.Reference
-    ): void {
-        const newIdentifier: ESTree.Identifier = this.throughIdentifierReplacer.replace(identifierNode);
+    protected replaceIdentifierName (reference: eslintScope.Reference): void {
+        const identifier: ESTree.Identifier = reference.identifier;
+        const newIdentifier: ESTree.Identifier = this.throughIdentifierReplacer.replace(identifier);
 
         // rename of identifier
         reference.identifier.name = newIdentifier.name;

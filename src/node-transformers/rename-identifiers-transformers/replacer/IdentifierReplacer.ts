@@ -77,7 +77,9 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         namesMap.set(identifierName, newIdentifierName);
 
         // Have to write all global identifier names to the identifier names cache storage
-        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
+        if (this.options.identifierNamesCache) {
+            this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
+        }
     }
 
     /**

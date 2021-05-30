@@ -118,6 +118,9 @@ import './functional-tests/node-transformers/rename-identifiers-transformers/sco
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/function/Function.spec';
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/import-declaration/ImportDeclaration.spec';
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/class-declaration/ClassDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/function-declaration/FunctionDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
 import './functional-tests/node-transformers/rename-properties-transformers/rename-properties-transformer/RenamePropertiesTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/block-statement-simplify-transformer/BlockStatementSimplifyTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/expression-statements-merge-transformer/ExpressionStatementsMergeTransformer.spec';

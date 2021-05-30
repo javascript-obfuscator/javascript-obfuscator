@@ -6,12 +6,11 @@ import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
-import { IIdentifierNamesCacheStorage } from '../../interfaces/storages/identifier-names-cache/IIdentifierNamesCacheStorage';
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
 import { IScopeThroughIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeThroughIdentifiersTraverserCallbackData';
+import { IThroughIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
@@ -25,41 +24,31 @@ import { NodeGuards } from '../../node/NodeGuards';
 @injectable()
 export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IIdentifierNamesCacheStorage}
-     */
-    protected readonly identifierNamesCacheStorage: IIdentifierNamesCacheStorage;
-
-    /**
-     * @type {IIdentifierReplacer}
-     */
-    protected readonly identifierReplacer: IIdentifierReplacer;
-
-    /**
      * @type {IScopeIdentifiersTraverser}
      */
     protected readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
 
     /**
-     * @param {IIdentifierReplacer} identifierReplacer
-     * @param {IRandomGenerator} randomGenerator
+     * @type {IThroughIdentifierReplacer}
+     */
+    protected readonly throughIdentifierReplacer: IThroughIdentifierReplacer;
+
+    /**
+     * @param {IThroughIdentifierReplacer} throughIdentifierReplacer
      * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
-     * @param {IIdentifierNamesCacheStorage} identifierNamesCacheStorage
+     * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
+        @inject(ServiceIdentifiers.IThroughIdentifierReplacer) throughIdentifierReplacer: IThroughIdentifierReplacer,
+        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser)
-            scopeIdentifiersTraverser: IScopeIdentifiersTraverser,
-        @inject(ServiceIdentifiers.IIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.identifierReplacer = identifierReplacer;
+        this.throughIdentifierReplacer = throughIdentifierReplacer;
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
-        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
     }
 
     /**
@@ -93,15 +82,13 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
             parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
                 const {
-                    isGlobalDeclaration,
                     reference,
                     variableLexicalScopeNode
                 } = data;
 
                 this.transformScopeThroughIdentifiers(
                     reference,
-                    variableLexicalScopeNode,
-                    isGlobalDeclaration
+                    variableLexicalScopeNode
                 );
             }
         );
@@ -112,12 +99,10 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
     /**
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
-     * @param {boolean} isGlobalDeclaration
      */
     protected transformScopeThroughIdentifiers (
         reference: eslintScope.Reference,
-        lexicalScopeNode: TNodeWithLexicalScope,
-        isGlobalDeclaration: boolean
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         if (reference.resolved) {
             return;
@@ -125,35 +110,28 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
 
         const identifier: ESTree.Identifier = reference.identifier;
 
-        this.storeIdentifierName(identifier, lexicalScopeNode, isGlobalDeclaration);
-        this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
+        this.storeIdentifierName(identifier);
+        this.replaceIdentifierName(identifier, reference);
     }
 
     /**
      * @param {Identifier} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
-     * @param {boolean} isGlobalDeclaration
      */
     protected storeIdentifierName (
-        identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope,
-        isGlobalDeclaration: boolean
+        identifierNode: ESTree.Identifier
     ): void {
-        this.identifierReplacer.storeThroughName(identifierNode, lexicalScopeNode);
+        this.throughIdentifierReplacer.store(identifierNode);
     }
 
     /**
      * @param {Identifier} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Variable} reference
      */
     protected replaceIdentifierName (
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope,
         reference: eslintScope.Reference
     ): void {
-        const newIdentifier: ESTree.Identifier = this.identifierReplacer
-            .replace(identifierNode, lexicalScopeNode);
+        const newIdentifier: ESTree.Identifier = this.throughIdentifierReplacer.replace(identifierNode);
 
         // rename of identifier
         reference.identifier.name = newIdentifier.name;

@@ -16,12 +16,6 @@ export interface IIdentifierReplacer {
     storeLocalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
-     * @param {Identifier} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
-     */
-    storeThroughName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
-
-    /**
      * @param {Node} node
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nodeIdentifier

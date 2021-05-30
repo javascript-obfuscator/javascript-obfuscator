@@ -56,6 +56,7 @@ export enum ServiceIdentifiers {
     IStringArrayScopeCallsWrapperNamesDataStorage = 'IStringArrayScopeCallsWrapperNamesDataStorage',
     IStringArrayStorage = 'IStringArrayStorage',
     IStringArrayStorageAnalyzer = 'IStringArrayStorageAnalyzer',
+    IThroughIdentifierReplacer = 'IThroughIdentifierReplacer',
     IVisitedLexicalScopeNodesStackStorage = 'IVisitedLexicalScopeNodesStackStorage',
     Newable__ICustomNode = 'Newable<ICustomNode>',
     Newable__TControlFlowStorage = 'Newable<TControlFlowStorage>',

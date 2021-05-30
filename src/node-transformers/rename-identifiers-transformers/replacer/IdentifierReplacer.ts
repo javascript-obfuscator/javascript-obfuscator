@@ -106,37 +106,6 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     }
 
     /**
-     * Store identifier node `name` of `through` identifiers as key in map with value from identifier names cache.
-     * Reserved name will be ignored.
-     *
-     * @param {Node} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
-     */
-    public storeThroughName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
-        const identifierName: string = identifierNode.name;
-
-        if (this.isReservedName(identifierName)) {
-            return;
-        }
-
-        const newIdentifierName: string | null = this.identifierNamesCacheStorage.get(identifierName) ?? null;
-
-        if (!newIdentifierName) {
-            return;
-        }
-
-        if (!this.blockScopesMap.has(lexicalScopeNode)) {
-            this.blockScopesMap.set(lexicalScopeNode, new Map());
-        }
-
-        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
-
-        namesMap.set(identifierName, newIdentifierName);
-
-        this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
-    }
-
-    /**
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {Identifier}

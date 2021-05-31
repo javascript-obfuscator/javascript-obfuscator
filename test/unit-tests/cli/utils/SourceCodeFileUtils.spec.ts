@@ -7,9 +7,9 @@ import { assert } from 'chai';
 
 import { IFileData } from '../../../../src/interfaces/cli/IFileData';
 
-import { SourceCodeReader } from '../../../../src/cli/utils/SourceCodeReader';
+import { SourceCodeFileUtils } from '../../../../src/cli/utils/SourceCodeFileUtils';
 
-describe('SourceCodeReader', () => {
+describe('SourceCodeFileUtils', () => {
     const expectedError: RegExp = /Given input path must be a valid/;
     const fileContent: string = 'test';
     const tmpDirectoryPath: string = path.join('test', 'tmp');
@@ -32,7 +32,7 @@ describe('SourceCodeReader', () => {
 
                 before(() => {
                     fs.writeFileSync(inputPath, fileContent);
-                    filesData = new SourceCodeReader(inputPath, {}).readSourceCode();
+                    filesData = new SourceCodeFileUtils(inputPath, {}).readSourceCode();
                 });
 
                 it('should return valid files data', () => {
@@ -51,7 +51,7 @@ describe('SourceCodeReader', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => new SourceCodeReader(inputPath, {}).readSourceCode();
+                    testFunc = () => new SourceCodeFileUtils(inputPath, {}).readSourceCode();
                 });
 
                 it('should throw an error if `inputPath` is not a valid path', () => {
@@ -67,7 +67,7 @@ describe('SourceCodeReader', () => {
 
                 before(() => {
                     fs.writeFileSync(inputPath, fileContent);
-                    testFunc = () => new SourceCodeReader(inputPath, {}).readSourceCode();
+                    testFunc = () => new SourceCodeFileUtils(inputPath, {}).readSourceCode();
                 });
 
                 it('should throw an error if `inputPath` has invalid extension', () => {
@@ -92,7 +92,7 @@ describe('SourceCodeReader', () => {
 
                     before(() => {
                         fs.writeFileSync(inputPath, fileContent);
-                        filesData = new SourceCodeReader(
+                        filesData = new SourceCodeFileUtils(
                             inputPath,
                             {
                                 exclude: [path.join('**', 'foo.js')]
@@ -118,7 +118,7 @@ describe('SourceCodeReader', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeReader(
+                            testFunc = () => new SourceCodeFileUtils(
                                 inputPath,
                                 {
                                     exclude: [path.join('**', tmpFileName)]
@@ -143,7 +143,7 @@ describe('SourceCodeReader', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeReader(
+                            testFunc = () => new SourceCodeFileUtils(
                                 inputPath,
                                 {
                                     exclude: [tmpFileName]
@@ -168,7 +168,7 @@ describe('SourceCodeReader', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeReader(
+                            testFunc = () => new SourceCodeFileUtils(
                                 inputPath,
                                 {
                                     exclude: [inputPath]
@@ -217,7 +217,7 @@ describe('SourceCodeReader', () => {
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
                     fs.writeFileSync(filePath4, fileContent);
-                    result = new SourceCodeReader(tmpDirectoryPath, {}).readSourceCode();
+                    result = new SourceCodeFileUtils(tmpDirectoryPath, {}).readSourceCode();
                 });
 
                 it('should return files data', () => {
@@ -238,7 +238,7 @@ describe('SourceCodeReader', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => new SourceCodeReader(inputPath, {}).readSourceCode();
+                    testFunc = () => new SourceCodeFileUtils(inputPath, {}).readSourceCode();
                 });
 
                 it('should throw an error if `inputPath` is not a valid path', () => {
@@ -288,7 +288,7 @@ describe('SourceCodeReader', () => {
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
                     fs.writeFileSync(filePath4, fileContent);
-                    result = new SourceCodeReader(tmpDirectoryPath, {}).readSourceCode();
+                    result = new SourceCodeFileUtils(tmpDirectoryPath, {}).readSourceCode();
                 });
 
                 it('should return files data', () => {
@@ -334,7 +334,7 @@ describe('SourceCodeReader', () => {
                         fs.writeFileSync(filePath2, fileContent);
                         fs.writeFileSync(filePath3, fileContent);
                         fs.writeFileSync(filePath4, fileContent);
-                        result = new SourceCodeReader(
+                        result = new SourceCodeFileUtils(
                             tmpDirectoryPath,
                             {
                                 exclude: ['**/hawk.js']
@@ -383,7 +383,7 @@ describe('SourceCodeReader', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeReader(
+                            result = new SourceCodeFileUtils(
                                 tmpDirectoryPath,
                                 {
                                     exclude: [
@@ -434,7 +434,7 @@ describe('SourceCodeReader', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeReader(
+                            result = new SourceCodeFileUtils(
                                 tmpDirectoryPath,
                                 {
                                     exclude: [
@@ -485,7 +485,7 @@ describe('SourceCodeReader', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeReader(
+                            result = new SourceCodeFileUtils(
                                 tmpDirectoryPath,
                                 {
                                     exclude: [
@@ -525,7 +525,7 @@ describe('SourceCodeReader', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            testFunc = () => new SourceCodeReader(
+                            testFunc = () => new SourceCodeFileUtils(
                                 tmpDirectoryPath,
                                 {
                                     exclude: [tmpDirectoryPath]
@@ -564,7 +564,7 @@ describe('SourceCodeReader', () => {
                 before(() => {
                     mkdirp.sync(tmpDirectoryWithDotPath);
                     fs.writeFileSync(filePath, fileContent);
-                    result = new SourceCodeReader(tmpDirectoryWithDotPath, {}).readSourceCode();
+                    result = new SourceCodeFileUtils(tmpDirectoryWithDotPath, {}).readSourceCode();
                 });
 
                 it('should return files data', () => {

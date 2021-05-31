@@ -8,7 +8,7 @@ import { IFileData } from '../../interfaces/cli/IFileData';
 
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
-export class SourceCodeReader {
+export class SourceCodeFileUtils {
     /**
      * @type {string}
      */
@@ -80,7 +80,7 @@ export class SourceCodeReader {
      * @returns {boolean}
      */
     private static isValidDirectory (directoryPath: string, excludePatterns: string[] = []): boolean {
-        return !SourceCodeReader.isExcludedPath(directoryPath, excludePatterns);
+        return !SourceCodeFileUtils.isExcludedPath(directoryPath, excludePatterns);
     }
 
     /**
@@ -91,7 +91,7 @@ export class SourceCodeReader {
     private static isValidFile (filePath: string, excludePatterns: string[] = []): boolean {
         return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
             && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
-            && !SourceCodeReader.isExcludedPath(filePath, excludePatterns);
+            && !SourceCodeFileUtils.isExcludedPath(filePath, excludePatterns);
     }
 
     /**
@@ -110,15 +110,15 @@ export class SourceCodeReader {
      */
     public readSourceCode (): IFileData[] {
         if (
-            SourceCodeReader.isFilePath(this.inputPath)
-            && SourceCodeReader.isValidFile(this.inputPath, this.options.exclude)
+            SourceCodeFileUtils.isFilePath(this.inputPath)
+            && SourceCodeFileUtils.isValidFile(this.inputPath, this.options.exclude)
         ) {
-            return [SourceCodeReader.readFile(this.inputPath)];
+            return [SourceCodeFileUtils.readFile(this.inputPath)];
         }
 
         if (
-            SourceCodeReader.isDirectoryPath(this.inputPath)
-            && SourceCodeReader.isValidDirectory(this.inputPath, this.options.exclude)
+            SourceCodeFileUtils.isDirectoryPath(this.inputPath)
+            && SourceCodeFileUtils.isValidDirectory(this.inputPath, this.options.exclude)
         ) {
             return this.readDirectoryRecursive(this.inputPath);
         }
@@ -142,8 +142,8 @@ export class SourceCodeReader {
                 const filePath: string = path.join(directoryPath, fileName);
 
                 if (
-                    SourceCodeReader.isDirectoryPath(filePath)
-                    && SourceCodeReader.isValidDirectory(filePath, this.options.exclude)
+                    SourceCodeFileUtils.isDirectoryPath(filePath)
+                    && SourceCodeFileUtils.isValidDirectory(filePath, this.options.exclude)
                 ) {
                     filesData.push(...this.readDirectoryRecursive(filePath));
 
@@ -151,10 +151,10 @@ export class SourceCodeReader {
                 }
 
                 if (
-                    SourceCodeReader.isFilePath(filePath)
-                    && SourceCodeReader.isValidFile(filePath, this.options.exclude)
+                    SourceCodeFileUtils.isFilePath(filePath)
+                    && SourceCodeFileUtils.isValidFile(filePath, this.options.exclude)
                 ) {
-                    const fileData: IFileData = SourceCodeReader.readFile(filePath);
+                    const fileData: IFileData = SourceCodeFileUtils.readFile(filePath);
 
                     filesData.push(fileData);
 

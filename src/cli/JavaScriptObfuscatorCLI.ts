@@ -27,11 +27,11 @@ import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 
 import { CLIUtils } from './utils/CLIUtils';
-import { IdentifierNamesCacheUtils } from './utils/IdentifierNamesCacheUtils';
+import { IdentifierNamesCacheFileUtils } from './utils/IdentifierNamesCacheFileUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
 import { Logger } from '../logger/Logger';
-import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
-import { SourceCodeReader } from './utils/SourceCodeReader';
+import { ObfuscatedCodeFileUtils } from './utils/ObfuscatedCodeFileUtils';
+import { SourceCodeFileUtils } from './utils/SourceCodeFileUtils';
 import { Utils } from '../utils/Utils';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
@@ -59,10 +59,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private commands!: commander.CommanderStatic;
 
     /**
-     * @type {IdentifierNamesCacheUtils}
+     * @type {IdentifierNamesCacheFileUtils}
      */
     @initializable()
-    private identifierNamesCacheUtils!: IdentifierNamesCacheUtils;
+    private identifierNamesCacheFileUtils!: IdentifierNamesCacheFileUtils;
 
     /**
      * @type {TInputCLIOptions}
@@ -77,16 +77,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private inputPath!: string;
 
     /**
-     * @type {SourceCodeReader}
+     * @type {SourceCodeFileUtils}
      */
     @initializable()
-    private sourceCodeReader!: SourceCodeReader;
+    private sourceCodeFileUtils!: SourceCodeFileUtils;
 
     /**
-     * @type {ObfuscatedCodeWriter}
+     * @type {ObfuscatedCodeFileUtils}
      */
     @initializable()
-    private obfuscatedCodeWriter!: ObfuscatedCodeWriter;
+    private obfuscatedCodeFileUtils!: ObfuscatedCodeFileUtils;
 
     /**
      * @type {string[]}
@@ -151,15 +151,15 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
         this.inputPath = path.normalize(this.commands.args[0] || '');
         this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts());
-        this.sourceCodeReader = new SourceCodeReader(
+        this.sourceCodeFileUtils = new SourceCodeFileUtils(
             this.inputPath,
             this.inputCLIOptions
         );
-        this.obfuscatedCodeWriter = new ObfuscatedCodeWriter(
+        this.obfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
             this.inputPath,
             this.inputCLIOptions
         );
-        this.identifierNamesCacheUtils = new IdentifierNamesCacheUtils(this.inputCLIOptions.identifierNamesCachePath);
+        this.identifierNamesCacheFileUtils = new IdentifierNamesCacheFileUtils(this.inputCLIOptions.identifierNamesCachePath);
     }
 
     public run (): void {
@@ -171,7 +171,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             return;
         }
 
-        const sourceCodeData: IFileData[] = this.sourceCodeReader.readSourceCode();
+        const sourceCodeData: IFileData[] = this.sourceCodeFileUtils.readSourceCode();
 
         this.processSourceCodeData(sourceCodeData);
     }
@@ -442,7 +442,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     private processSourceCodeData (sourceCodeData: IFileData[]): void {
         sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
-            const outputCodePath: string = this.obfuscatedCodeWriter.getOutputCodePath(filePath);
+            const outputCodePath: string = this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
 
             try {
                 Logger.log(
@@ -478,7 +478,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     ): void {
         const options: TInputOptions = {
             ...this.inputCLIOptions,
-            identifierNamesCache: this.identifierNamesCacheUtils.read(),
+            identifierNamesCache: this.identifierNamesCacheFileUtils.readFile(),
             inputFileName: path.basename(inputCodePath),
             ...sourceCodeIndex !== null && {
                 identifiersPrefix: Utils.getIdentifiersPrefixForMultipleSources(
@@ -507,8 +507,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     ): void {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
-        this.identifierNamesCacheUtils.write(obfuscationResult.getIdentifierNamesCache());
+        this.obfuscatedCodeFileUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheFileUtils.writeFile(obfuscationResult.getIdentifierNamesCache());
     }
 
     /**
@@ -521,7 +521,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         options: TInputOptions
     ): void {
-        const outputSourceMapPath: string = this.obfuscatedCodeWriter.getOutputSourceMapPath(
+        const outputSourceMapPath: string = this.obfuscatedCodeFileUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName ?? ''
         );
@@ -533,11 +533,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
-        this.identifierNamesCacheUtils.write(obfuscationResult.getIdentifierNamesCache());
+        this.obfuscatedCodeFileUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheFileUtils.writeFile(obfuscationResult.getIdentifierNamesCache());
 
         if (options.sourceMapMode === SourceMapMode.Separate && obfuscationResult.getSourceMap()) {
-            this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
+            this.obfuscatedCodeFileUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }
 }

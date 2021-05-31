@@ -10,7 +10,7 @@ import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 /**
  * Utils to work with identifier names cache file
  */
-export class IdentifierNamesCacheUtils {
+export class IdentifierNamesCacheFileUtils {
     /**
      * @type {string}
      */
@@ -35,7 +35,7 @@ export class IdentifierNamesCacheUtils {
     private static isValidFilePath (filePath: string): boolean {
         try {
             return fs.statSync(filePath).isFile()
-                && path.extname(filePath) === IdentifierNamesCacheUtils.identifierNamesCacheExtension;
+                && path.extname(filePath) === IdentifierNamesCacheFileUtils.identifierNamesCacheExtension;
         } catch {
             return false;
         }
@@ -55,18 +55,18 @@ export class IdentifierNamesCacheUtils {
     /**
      * @returns {TIdentifierNamesCache | null}
      */
-    public read (): TIdentifierNamesCache | null {
+    public readFile (): TIdentifierNamesCache | null {
         if (!this.identifierNamesCachePath) {
             return null;
         }
 
-        if (!IdentifierNamesCacheUtils.isValidFilePath(this.identifierNamesCachePath)) {
+        if (!IdentifierNamesCacheFileUtils.isValidFilePath(this.identifierNamesCachePath)) {
             throw new ReferenceError(`Given identifier names cache path must be a valid ${
-                IdentifierNamesCacheUtils.identifierNamesCacheExtension
+                IdentifierNamesCacheFileUtils.identifierNamesCacheExtension
             } file path`);
         }
 
-        const fileData: IFileData = IdentifierNamesCacheUtils.readFile(this.identifierNamesCachePath);
+        const fileData: IFileData = IdentifierNamesCacheFileUtils.readFile(this.identifierNamesCachePath);
 
         if (!fileData.content) {
             // Initial state of identifier names cache file
@@ -87,7 +87,7 @@ export class IdentifierNamesCacheUtils {
     /**
      * @param {TIdentifierNamesCache} identifierNamesCache
      */
-    public write (identifierNamesCache: TIdentifierNamesCache): void {
+    public writeFile (identifierNamesCache: TIdentifierNamesCache): void {
         if (!this.identifierNamesCachePath) {
             return;
         }

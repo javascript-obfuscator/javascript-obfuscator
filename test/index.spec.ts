@@ -11,8 +11,9 @@ import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageA
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
-import './unit-tests/cli/utils/ObfuscatedCodeWriter.spec';
-import './unit-tests/cli/utils/SourceCodeReader.spec';
+import './unit-tests/cli/utils/IdentifierNamesCacheFileUtils.spec';
+import './unit-tests/cli/utils/ObfuscatedCodeFileUtils.spec';
+import './unit-tests/cli/utils/SourceCodeFileUtils.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
 import './unit-tests/generators/identifier-names-generators/DictionarylIdentifierNamesGenerator.spec';
 import './unit-tests/generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator.spec';
@@ -32,10 +33,12 @@ import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node/numerical-expression-data-to-node-converter/NumericalExpressionDataToNodeConverter.spec';
 import './unit-tests/options/Options.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';
-import './unit-tests/source-code/ObfuscatedCode.spec';
+import './unit-tests/source-code/ObfuscationResult.spec';
 import './unit-tests/source-code/SourceCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
+import './unit-tests/storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage.spec';
+import './unit-tests/storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage.spec';
 import './unit-tests/storages/string-array-transformers/literal-nodes-cache/LiteralNodesCacheStorage.spec';
 import './unit-tests/storages/string-array-transformers/string-array/StringArrayStorage.spec';
 import './unit-tests/storages/string-array-transformers/visited-lexical-scope-nodes-stack/VisitedLexicalScopeNodesStackStorage.spec';
@@ -118,6 +121,9 @@ import './functional-tests/node-transformers/rename-identifiers-transformers/sco
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/function/Function.spec';
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/import-declaration/ImportDeclaration.spec';
 import './functional-tests/node-transformers/rename-identifiers-transformers/scope-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/class-declaration/ClassDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/function-declaration/FunctionDeclaration.spec';
+import './functional-tests/node-transformers/rename-identifiers-transformers/scope-through-identifiers-transformer/variable-declaration/VariableDeclaration.spec';
 import './functional-tests/node-transformers/rename-properties-transformers/rename-properties-transformer/RenamePropertiesTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/block-statement-simplify-transformer/BlockStatementSimplifyTransformer.spec';
 import './functional-tests/node-transformers/simplifying-transformers/expression-statements-merge-transformer/ExpressionStatementsMergeTransformer.spec';
@@ -128,6 +134,7 @@ import './functional-tests/node-transformers/string-array-transformers/string-ar
 import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
+import './functional-tests/options/identifier-names-cache/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';
 
 /**

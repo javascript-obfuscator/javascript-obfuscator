@@ -33689,7 +33689,7 @@
         var _QueryWithRead = (function () {
             function _QueryWithRead(query, match) {
                 this.query = query;
-                this.read = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(query.meta.read) ? query.meta.read : match;
+                this.readFile = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(query.meta.read) ? query.meta.read : match;
             }
             return _QueryWithRead;
         }());

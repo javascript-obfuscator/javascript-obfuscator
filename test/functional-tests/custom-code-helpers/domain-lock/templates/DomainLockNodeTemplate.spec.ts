@@ -8,7 +8,7 @@ import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifi
 
 import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IObfuscatedCode } from '../../../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../../../src/interfaces/source-code/IObfuscationResult';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
@@ -631,7 +631,7 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -641,7 +641,7 @@ describe('DomainLockTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for domain lock code', () => {
@@ -659,7 +659,7 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -669,7 +669,7 @@ describe('DomainLockTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for domain lock code', () => {
@@ -687,7 +687,7 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -697,7 +697,7 @@ describe('DomainLockTemplate', () => {
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('Should return correct kind of variables for domain lock code', () => {

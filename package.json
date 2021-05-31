@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -24,7 +24,7 @@
     "@javascript-obfuscator/escodegen": "2.2.0",
     "@javascript-obfuscator/estraverse": "5.3.0",
     "@nuxtjs/opencollective": "0.3.2",
-    "acorn": "8.2.4",
+    "acorn": "8.3.0",
     "assert": "2.0.0",
     "chalk": "4.1.1",
     "chance": "1.1.7",
@@ -68,8 +68,8 @@
     "chai-exclude": "2.0.3",
     "cross-env": "7.0.3",
     "eslint": "7.27.0",
-    "eslint-plugin-import": "2.23.3",
-    "eslint-plugin-jsdoc": "35.0.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-jsdoc": "35.1.0",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-unicorn": "32.0.1",

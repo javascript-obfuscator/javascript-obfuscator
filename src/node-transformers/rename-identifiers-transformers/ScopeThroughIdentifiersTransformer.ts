@@ -6,11 +6,11 @@ import * as ESTree from 'estree';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
 import { IScopeThroughIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeThroughIdentifiersTraverserCallbackData';
+import { IThroughIdentifierReplacer } from '../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
@@ -19,35 +19,35 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
- * Renames all through identifiers. Now used directly from Dead Code Injection transformer
+ * Renames all through identifiers
  */
 @injectable()
 export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IIdentifierReplacer}
-     */
-    private readonly identifierReplacer: IIdentifierReplacer;
-
-    /**
      * @type {IScopeIdentifiersTraverser}
      */
-    private readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
+    protected readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
 
     /**
-     * @param {IIdentifierReplacer} identifierReplacer
+     * @type {IThroughIdentifierReplacer}
+     */
+    protected readonly throughIdentifierReplacer: IThroughIdentifierReplacer;
+
+    /**
+     * @param {IThroughIdentifierReplacer} throughIdentifierReplacer
+     * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
-     * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
      */
     public constructor (
-        @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
+        @inject(ServiceIdentifiers.IThroughIdentifierReplacer) throughIdentifierReplacer: IThroughIdentifierReplacer,
+        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.identifierReplacer = identifierReplacer;
+        this.throughIdentifierReplacer = throughIdentifierReplacer;
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
     }
 
@@ -86,7 +86,10 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
                     variableLexicalScopeNode
                 } = data;
 
-                this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
+                this.transformScopeThroughIdentifiers(
+                    reference,
+                    variableLexicalScopeNode
+                );
             }
         );
 
@@ -97,43 +100,23 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private transformScopeThroughIdentifiers (
+    protected transformScopeThroughIdentifiers (
         reference: eslintScope.Reference,
-        lexicalScopeNode: TNodeWithLexicalScope,
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         if (reference.resolved) {
             return;
         }
 
-        const identifier: ESTree.Identifier = reference.identifier;
-
-        this.storeIdentifierName(identifier, lexicalScopeNode);
-        this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
+        this.replaceIdentifierName(reference);
     }
 
     /**
-     * @param {Identifier} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
-     */
-    private storeIdentifierName (
-        identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope
-    ): void {
-        this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Variable} reference
      */
-    private replaceIdentifierName (
-        identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope,
-        reference: eslintScope.Reference
-    ): void {
-        const newIdentifier: ESTree.Identifier = this.identifierReplacer
-            .replace(identifierNode, lexicalScopeNode);
+    protected replaceIdentifierName (reference: eslintScope.Reference): void {
+        const identifier: ESTree.Identifier = reference.identifier;
+        const newIdentifier: ESTree.Identifier = this.throughIdentifierReplacer.replace(identifier);
 
         // rename of identifier
         reference.identifier.name = newIdentifier.name;

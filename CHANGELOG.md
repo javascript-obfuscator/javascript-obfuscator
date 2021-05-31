@@ -1,5 +1,10 @@
 Change Log
 
+v2.14.0
+---
+* Added `identifierNamesCache` option for reading and writing identifier names cache. See `README.md`.
+* **CLI**:  Added `--identifier-names-cache-path` option for reading and writing identifier names cache. See `README.md`.
+
 v2.13.0
 ---
 * Fixed invalid code generation for start/middle rest arguments when `controlFlowFlattenig` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/920

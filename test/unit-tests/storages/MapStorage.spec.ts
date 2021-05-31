@@ -4,6 +4,8 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
+import { TDictionary } from '../../../src/types/TDictionary';
+
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IMapStorage } from '../../../src/interfaces/storages/IMapStorage';
 import { IOptions } from '../../../src/interfaces/options/IOptions';
@@ -209,6 +211,25 @@ describe('MapStorage', () => {
             it('should return `null` if objects in `set` and `get` are two different objects', () => {
                 assert.equal(key, expectedKey);
             });
+        });
+    });
+
+    describe('getStorageAsDictionary', () => {
+        const expectedDictionary: TDictionary<string> = {
+            [storageKey]: storageValue
+        };
+
+        let storageAsDictionary: TDictionary<string>;
+
+        before(() => {
+            storage = getStorageInstance<string>();
+            storage.set(storageKey, storageValue);
+
+            storageAsDictionary = storage.getStorageAsDictionary();
+        });
+
+        it('should return storage as dictionary', () => {
+            assert.deepEqual(storageAsDictionary, expectedDictionary);
         });
     });
 

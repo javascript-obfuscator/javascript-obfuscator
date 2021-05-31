@@ -1,31 +1,33 @@
 'use strict';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
-    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+    let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
-            function foo(a, b, c, d) {
-              console.log(a, b, c, d)
+            function foo() {
+               global.baz = 3;
             }
             
             function bar(...args) {
-              foo(...args, 5)
+                console.log(2);
             }
-            
-            bar(...[1, 2, 3], 4)
         `,
         {
-            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1,
-            identifierNamesGenerator: 'mangled'
+            identifierNamesCache: {
+                globalIdentifiers: {},
+                propertyIdentifiers: {}
+            },
+            renameGlobals: true,
+            renameProperties: true
         }
-    ).getObfuscatedCode();
+    );
+
+    let obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+    let identifierNamesCache = obfuscationResult.getIdentifierNamesCache();
 
     console.log(obfuscatedCode);
     console.log(eval(obfuscatedCode));
+    console.log(identifierNamesCache);
 })();

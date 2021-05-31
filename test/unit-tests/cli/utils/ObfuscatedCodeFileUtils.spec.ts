@@ -4,9 +4,9 @@ import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
-import { ObfuscatedCodeWriter } from '../../../../src/cli/utils/ObfuscatedCodeWriter';
+import { ObfuscatedCodeFileUtils } from '../../../../src/cli/utils/ObfuscatedCodeFileUtils';
 
-describe('ObfuscatedCodeWriter', () => {
+describe('obfuscatedCodeFileUtils', () => {
     const tmpDirectoryPath: string = 'test/tmp';
 
     describe('getOutputCodePath', () => {
@@ -27,13 +27,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputCodePath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
             it('should return output path that equals to passed output file path', () => {
@@ -50,13 +50,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputCodePath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
             it('should return output path that equals to passed output directory with file name from actual file path', () => {
@@ -72,13 +72,13 @@ describe('ObfuscatedCodeWriter', () => {
             let testFunc: () => string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                testFunc = () => obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                testFunc = () => obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
             it('should throw an error if output path is a file path', () => {
@@ -100,13 +100,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -127,13 +127,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -155,13 +155,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -184,13 +184,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -211,13 +211,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -238,13 +238,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                    outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
                 it('should return output path that contains raw output path and actual file input path', () => {
@@ -280,13 +280,13 @@ describe('ObfuscatedCodeWriter', () => {
                     let outputCodePath: string;
 
                     before(() => {
-                        const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                        const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                             rawInputPath,
                             {
                                 output: rawOutputPath
                             }
                         );
-                        outputCodePath = obfuscatedCodeWriter.getOutputCodePath(inputPath);
+                        outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                     });
 
                     it('should return output path that contains raw output path and actual file input path', () => {
@@ -315,13 +315,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath);
             });
 
             it('should return output path for source map', () => {
@@ -337,13 +337,13 @@ describe('ObfuscatedCodeWriter', () => {
             let testFunc: () => string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                testFunc = () => obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+                testFunc = () => obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath);
             });
 
             it('should throw an error if output code path is a directory path and source map file name is not set', () => {
@@ -360,13 +360,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath);
             });
 
             it('should return output path for source map', () => {
@@ -384,13 +384,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
             });
 
             it('should return output path for source map', () => {
@@ -408,13 +408,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
             });
 
             it('should return output path for source map', () => {
@@ -432,13 +432,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
             });
 
             it('should return output path for source map', () => {
@@ -456,13 +456,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
             });
 
             it('should return output path for source map', () => {
@@ -480,13 +480,13 @@ describe('ObfuscatedCodeWriter', () => {
             let outputSourceMapPath: string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
             });
 
             it('should return output path for source map', () => {
@@ -505,13 +505,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -529,13 +529,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -553,13 +553,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -577,13 +577,13 @@ describe('ObfuscatedCodeWriter', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                         rawInputPath,
                         {
                             output: rawOutputPath
                         }
                     );
-                    outputSourceMapPath = obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -599,13 +599,13 @@ describe('ObfuscatedCodeWriter', () => {
             let testFunc: () => string;
 
             before(() => {
-                const obfuscatedCodeWriter: ObfuscatedCodeWriter = new ObfuscatedCodeWriter(
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
                     rawInputPath,
                     {
                         output: rawOutputPath
                     }
                 );
-                testFunc = () => obfuscatedCodeWriter.getOutputSourceMapPath('', '');
+                testFunc = () => obfuscatedCodeFileUtils.getOutputSourceMapPath('', '');
             });
 
             it('should throw an error if output code path is empty', () => {

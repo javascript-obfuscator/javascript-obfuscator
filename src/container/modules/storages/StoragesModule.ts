@@ -4,8 +4,10 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
+import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IPropertyIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { IStringArrayScopeCallsWrapperNamesDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperNamesDataStorage';
@@ -14,7 +16,9 @@ import { IVisitedLexicalScopeNodesStackStorage } from '../../../interfaces/stora
 
 import { ControlFlowStorage } from '../../../storages/custom-nodes/ControlFlowStorage';
 import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage';
+import { GlobalIdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage';
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
+import { PropertyIdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage';
 import { StringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { StringArrayScopeCallsWrapperNamesDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperNamesDataStorage';
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
@@ -26,8 +30,16 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
         .to(CustomCodeHelperGroupStorage)
         .inSingletonScope();
 
+    bind<IGlobalIdentifierNamesCacheStorage>(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+        .to(GlobalIdentifierNamesCacheStorage)
+        .inSingletonScope();
+
     bind<ILiteralNodesCacheStorage>(ServiceIdentifiers.ILiteralNodesCacheStorage)
         .to(LiteralNodesCacheStorage)
+        .inSingletonScope();
+
+    bind<IPropertyIdentifierNamesCacheStorage>(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
+        .to(PropertyIdentifierNamesCacheStorage)
         .inSingletonScope();
 
     bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)

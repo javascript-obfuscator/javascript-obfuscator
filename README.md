@@ -230,7 +230,8 @@ function _0x1054 (_0x14a2a4, _0x5a6b22) {
 Returns `ObfuscationResult` object which contains two public methods:
 
 * `getObfuscatedCode()` - returns `string` with obfuscated code;
-* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`.
+* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`;
+* `getIdentifierNamesCache()` - returns object with identifier names cache if `identifierNamesCache` option is enabled, `null` overwise.
 
 Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
 
@@ -361,6 +362,7 @@ Following options are available for the JS Obfuscator:
     disableConsoleOutput: false,
     domainLock: [],
     forceTransformStrings: [],
+    identifierNamesCache: null,
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
@@ -421,6 +423,7 @@ Following options are available for the JS Obfuscator:
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
+    --identifier-names-cache-path <string>
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
@@ -712,6 +715,84 @@ Example:
 	}
 ```
 
+### `identifierNamesCache`
+Type: `Object | null` Default: `null`
+
+The main goal for this option is the ability to use the same identifier names during obfuscation of multiple sources/files.
+
+Currently the two types of the identifiers are supported:
+- Global identifiers:
+    * All global identifiers will be written to the cache;
+    * All matched **undeclared** global identifiers will be replaced by the values from the cache.
+- Property identifiers, only when `renameProperties` option is enabled:
+    * All property identifiers will be written to the cache;
+    * All matched property identifiers will be replaced by the values from the cache.
+
+#### Node.js API
+If a `null` value is passed, completely disables the cache.
+
+If an empty object (`{}`) is passed, enables the writing identifier names to the cache-object (`TIdentifierNamesCache` type). This cache-object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
+
+The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
+
+Example:
+```
+const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
+    `
+        function foo(arg) {
+           console.log(arg)
+        }
+        
+        function bar() {
+            var bark = 2;
+        }
+    `,
+    {
+        compact: false,
+        identifierNamesCache: {},
+        renameGlobals: true
+    }
+)
+
+console.log(source1ObfuscationResult.getIdentifierNamesCache());
+/*{ 
+    globalIdentifiers: {
+        foo: '_0x5de86d',
+        bar: '_0x2a943b'
+    }
+}*/
+
+
+
+const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
+    `
+        // Expecting that these global functions are defined in another obfuscated file
+        foo(1);
+        bar();
+        
+        // Expecting that this global function is defined in third-party package
+        baz();
+    `,
+    {
+        compact: false,
+        identifierNamesCache: source1ObfuscationResult.getIdentifierNamesCache(),
+        renameGlobals: true
+    }
+)
+
+console.log(source2ObfuscationResult.getObfuscatedCode());
+// _0x5de86d(0x1);
+// _0x2a943b();
+// baz();
+```
+
+#### CLI
+CLI has a different option `--identifier-names-cache-path` that allows defining a path to the existing `.json` file that will be used to read and write identifier names cache.
+
+If a path to the empty file will be passed - identifier names cache will be written to that file.
+
+This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched identifier names of the next files.
+
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`
 
@@ -833,6 +914,8 @@ Type: `string` Default: `safe`
 Specifies `renameProperties` option mode:
 * `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors. With this mode some properties will be excluded from renaming.
 * `unsafe` - default behaviour before `2.11.0` release. Renames properties in an unsafe way without any restrictions.
+
+If one file is using properties from other file, use [`identifierNamesCache`](#identifiernamescache) option to keep the same property names between these files.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`

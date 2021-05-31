@@ -1,3 +1,4 @@
+import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
 import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
@@ -20,6 +21,7 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly forceTransformStrings: string[];
+    readonly identifierNamesCache: TIdentifierNamesCache;
     readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;

@@ -257,6 +257,140 @@ describe('OptionsNormalizer', () => {
             });
         });
 
+        describe('identifierNamesCacheRule', () => {
+            describe('Variant #1: all fields are exist with values', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            },
+                            propertyIdentifiers: {
+                                bar: '_0x654321'
+                            }
+                        }
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            },
+                            propertyIdentifiers: {
+                                bar: '_0x654321'
+                            }
+                        }
+                    };
+                });
+
+                it('should not normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #2: some fields are exist with values', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            },
+                            propertyIdentifiers: {}
+                        }
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            },
+                            propertyIdentifiers: {}
+                        }
+                    };
+                });
+
+                it('should not normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #3: all fields are exist with empty objects', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
+                        }
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
+                        }
+                    };
+                });
+
+                it('should not normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #4: some fields are missing', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            }
+                        }
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: '_0x123456'
+                            },
+                            propertyIdentifiers: {}
+                        }
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #5: all fields are missing', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {}
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
+                        }
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+        });
+
         describe('seedRule', () => {
             describe('Variant #1: seed value is string', () => {
                 before(() => {

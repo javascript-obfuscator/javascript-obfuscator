@@ -28,7 +28,7 @@ import { ICodeTransformersRunner } from '../interfaces/code-transformers/ICodeTr
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
-import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../interfaces/source-code/IObfuscationResult';
 import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 import { INodeTransformersRunner } from '../interfaces/node-transformers/INodeTransformersRunner';
 
@@ -36,7 +36,7 @@ import { CodeTransformersRunner } from '../code-transformers/CodeTransformersRun
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { NodeTransformersRunner } from '../node-transformers/NodeTransformersRunner';
-import { ObfuscatedCode } from '../source-code/ObfuscatedCode';
+import { ObfuscationResult } from '../source-code/ObfuscationResult';
 import { SourceCode } from '../source-code/SourceCode';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
@@ -181,19 +181,19 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode)
-            .to(ObfuscatedCode);
+            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
+            .to(ObfuscationResult);
 
         this.container
-            .bind<IObfuscatedCode>(ServiceIdentifiers.Factory__IObfuscatedCode)
-            .toFactory<IObfuscatedCode>((context: interfaces.Context) => {
-                return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscatedCode => {
-                    const obfuscatedCode: IObfuscatedCode = context.container
-                        .get<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode);
+            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
+            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
+                return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscationResult => {
+                    const obfuscationResult: IObfuscationResult = context.container
+                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
 
-                    obfuscatedCode.initialize(obfuscatedCodeAsString, sourceMapAsString);
+                    obfuscationResult.initialize(obfuscatedCodeAsString, sourceMapAsString);
 
-                    return obfuscatedCode;
+                    return obfuscationResult;
                 };
             });
 

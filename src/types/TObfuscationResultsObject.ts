@@ -1,3 +1,3 @@
-import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../interfaces/source-code/IObfuscationResult';
 
-export type TObfuscationResultsObject <TSourceCodesObject> = {[key in keyof TSourceCodesObject]: IObfuscatedCode};
+export type TObfuscationResultsObject <TSourceCodesObject> = {[key in keyof TSourceCodesObject]: IObfuscationResult};

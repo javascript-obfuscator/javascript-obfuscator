@@ -1,11 +1,12 @@
 import { assert } from 'chai';
 
 import { TDictionary } from '../../../src/types/TDictionary';
+import { TIdentifierNamesCache } from '../../../src/types/TIdentifierNamesCache';
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
 import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
-import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfuscationResult';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
@@ -32,15 +33,15 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
-                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
-                sourceMap = obfuscatedCodeObject.getSourceMap();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                sourceMap = obfuscationResult.getSourceMap();
             });
 
             it('should return correct obfuscated code', () => {
@@ -111,7 +112,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -119,8 +120,8 @@ describe('JavaScriptObfuscator', () => {
                         }
                     );
 
-                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscatedCodeObject.getSourceMap()).mappings;
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -140,7 +141,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -149,8 +150,8 @@ describe('JavaScriptObfuscator', () => {
                         }
                     );
 
-                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscatedCodeObject.getSourceMap()).mappings;
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -174,16 +175,16 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
-                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             sourceMap: true
                         }
                     );
 
-                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-                    const sourceMapObject: any = JSON.parse(obfuscatedCodeObject.getSourceMap());
+                    const sourceMapObject: any = JSON.parse(obfuscationResult.getSourceMap());
 
                     sourceMapNames = sourceMapObject.names;
                     sourceMapSources = sourceMapObject.sources;
@@ -886,7 +887,7 @@ describe('JavaScriptObfuscator', () => {
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(code).getObfuscatedCode();
                 });
 
-                it('Match #!: should correctly obfuscate a import', () => {
+                it('Match #1: should correctly obfuscate a import', () => {
                     assert.match(obfuscatedCode, importRegExp);
                 });
 
@@ -908,6 +909,131 @@ describe('JavaScriptObfuscator', () => {
 
                 it('should correctly obfuscate a module', () => {
                     assert.match(obfuscatedCode, regExp);
+                });
+            });
+        });
+
+        describe('identifier names cache generation', () => {
+            describe('Variant #1: `identifierNamesCache` and `renameGlobal` options are enabled. Existing cache is passed', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    globalIdentifiers: {
+                        foo: 'a',
+                        bar: 'b',
+                        baz: 'baz_value_from_cache'
+                    },
+                    propertyIdentifiers: {}
+                };
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {
+                                    baz: 'baz_value_from_cache'
+                                },
+                                propertyIdentifiers: {}
+                            },
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #2: `identifierNamesCache` and `renameGlobal` options are enabled', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    globalIdentifiers: {
+                        foo: 'a',
+                        bar: 'b'
+                    },
+                    propertyIdentifiers: {}
+                };
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            },
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #3: `identifierNamesCache` and `renameGlobal` options are enabled. Source code without global variables', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = {
+                    globalIdentifiers: {},
+                    propertyIdentifiers: {}
+                };
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-2.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            },
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
+                });
+            });
+
+            describe('Variant #4: `identifierNamesCache` option is disabled', () => {
+                const expectedIdentifierNamesCache: TIdentifierNamesCache = null;
+
+                let identifierNamesCache: TIdentifierNamesCache;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-cache-1.js');
+
+                    identifierNamesCache = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifierNamesCache: null,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    ).getIdentifierNamesCache();
+                });
+
+                it('Match #1: should correctly generate identifier names cache', () => {
+                    assert.deepEqual(identifierNamesCache, expectedIdentifierNamesCache);
                 });
             });
         });
@@ -1224,7 +1350,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('invalid source codes object', () => {
-            let testFunc: () => TDictionary<IObfuscatedCode>;
+            let testFunc: () => TDictionary<IObfuscationResult>;
 
             beforeEach(() => {
                 testFunc = () => JavaScriptObfuscator.obfuscateMultiple(

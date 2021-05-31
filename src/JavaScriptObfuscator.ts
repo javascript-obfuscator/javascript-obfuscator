@@ -5,13 +5,13 @@ import * as acorn from 'acorn';
 import * as escodegen from '@javascript-obfuscator/escodegen';
 import * as ESTree from 'estree';
 
-import { TObfuscatedCodeFactory } from './types/container/source-code/TObfuscatedCodeFactory';
+import { TObfuscationResultFactory } from './types/container/source-code/TObfuscationResultFactory';
 
 import { ICodeTransformersRunner } from './interfaces/code-transformers/ICodeTransformersRunner';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { ILogger } from './interfaces/logger/ILogger';
-import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
+import { IObfuscationResult } from './interfaces/source-code/IObfuscationResult';
 import { IOptions } from './interfaces/options/IOptions';
 import { IRandomGenerator } from './interfaces/utils/IRandomGenerator';
 import { INodeTransformersRunner } from './interfaces/node-transformers/INodeTransformersRunner';
@@ -87,6 +87,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ObjectPatternPropertiesTransformer,
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.ScopeIdentifiersTransformer,
+        NodeTransformer.ScopeThroughIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
         NodeTransformer.StringArrayRotateFunctionTransformer,
         NodeTransformer.StringArrayScopeCallsWrapperTransformer,
@@ -108,9 +109,9 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private readonly logger: ILogger;
 
     /**
-     * @type {TObfuscatedCodeFactory}
+     * @type {TObfuscationResultFactory}
      */
-    private readonly obfuscatedCodeFactory: TObfuscatedCodeFactory;
+    private readonly obfuscationResultFactory: TObfuscationResultFactory;
 
     /**
      * @type {IOptions}
@@ -131,7 +132,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @param {ICodeTransformersRunner} codeTransformersRunner
      * @param {INodeTransformersRunner} nodeTransformersRunner
      * @param {IRandomGenerator} randomGenerator
-     * @param {TObfuscatedCodeFactory} obfuscatedCodeFactory
+     * @param {TObfuscationResultFactory} obfuscatedCodeFactory
      * @param {ILogger} logger
      * @param {IOptions} options
      */
@@ -139,23 +140,23 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         @inject(ServiceIdentifiers.ICodeTransformersRunner) codeTransformersRunner: ICodeTransformersRunner,
         @inject(ServiceIdentifiers.INodeTransformersRunner) nodeTransformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.Factory__IObfuscatedCode) obfuscatedCodeFactory: TObfuscatedCodeFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscationResult) obfuscatedCodeFactory: TObfuscationResultFactory,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.codeTransformersRunner = codeTransformersRunner;
         this.nodeTransformersRunner = nodeTransformersRunner;
         this.randomGenerator = randomGenerator;
-        this.obfuscatedCodeFactory = obfuscatedCodeFactory;
+        this.obfuscationResultFactory = obfuscatedCodeFactory;
         this.logger = logger;
         this.options = options;
     }
 
     /**
      * @param {string} sourceCode
-     * @returns {IObfuscatedCode}
+     * @returns {IObfuscationResult}
      */
-    public obfuscate (sourceCode: string): IObfuscatedCode {
+    public obfuscate (sourceCode: string): IObfuscationResult {
         if (typeof sourceCode !== 'string') {
             sourceCode = '';
         }
@@ -183,7 +184,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         const obfuscationTime: number = (Date.now() - timeStart) / 1000;
         this.logger.success(LoggingMessage.ObfuscationCompleted, obfuscationTime);
 
-        return this.getObfuscatedCode(generatorOutput);
+        return this.getObfuscationResult(generatorOutput);
     }
 
     /**
@@ -268,10 +269,10 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
     /**
      * @param {IGeneratorOutput} generatorOutput
-     * @returns {IObfuscatedCode}
+     * @returns {IObfuscationResult}
      */
-    private getObfuscatedCode (generatorOutput: IGeneratorOutput): IObfuscatedCode {
-        return this.obfuscatedCodeFactory(generatorOutput.code, generatorOutput.map);
+    private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
+        return this.obfuscationResultFactory(generatorOutput.code, generatorOutput.map);
     }
 
     /**

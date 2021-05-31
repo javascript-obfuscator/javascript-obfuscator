@@ -175,7 +175,7 @@ exports.JavaScriptObfuscator = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ./container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const escodegen = __importStar(__webpack_require__(/*! @javascript-obfuscator/escodegen */ "@javascript-obfuscator/escodegen"));
-const TObfuscatedCodeFactory_1 = __webpack_require__(/*! ./types/container/source-code/TObfuscatedCodeFactory */ "./src/types/container/source-code/TObfuscatedCodeFactory.ts");
+const TObfuscationResultFactory_1 = __webpack_require__(/*! ./types/container/source-code/TObfuscationResultFactory */ "./src/types/container/source-code/TObfuscationResultFactory.ts");
 const ICodeTransformersRunner_1 = __webpack_require__(/*! ./interfaces/code-transformers/ICodeTransformersRunner */ "./src/interfaces/code-transformers/ICodeTransformersRunner.ts");
 const ILogger_1 = __webpack_require__(/*! ./interfaces/logger/ILogger */ "./src/interfaces/logger/ILogger.ts");
 const IOptions_1 = __webpack_require__(/*! ./interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
@@ -195,7 +195,7 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
         this.codeTransformersRunner = codeTransformersRunner;
         this.nodeTransformersRunner = nodeTransformersRunner;
         this.randomGenerator = randomGenerator;
-        this.obfuscatedCodeFactory = obfuscatedCodeFactory;
+        this.obfuscationResultFactory = obfuscatedCodeFactory;
         this.logger = logger;
         this.options = options;
     }
@@ -204,7 +204,7 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
             sourceCode = '';
         }
         const timeStart = Date.now();
-        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.14.0", 1620551393493));
+        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.15.0", 1622482543556));
         this.logger.info(LoggingMessage_1.LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage_1.LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getInputSeed());
         sourceCode = this.runCodeTransformationStage(sourceCode, CodeTransformationStage_1.CodeTransformationStage.PreparingTransformers);
@@ -214,7 +214,7 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
         generatorOutput.code = this.runCodeTransformationStage(generatorOutput.code, CodeTransformationStage_1.CodeTransformationStage.FinalizingTransformers);
         const obfuscationTime = (Date.now() - timeStart) / 1000;
         this.logger.success(LoggingMessage_1.LoggingMessage.ObfuscationCompleted, obfuscationTime);
-        return this.getObfuscatedCode(generatorOutput);
+        return this.getObfuscationResult(generatorOutput);
     }
     parseCode(sourceCode) {
         return ASTParserFacade_1.ASTParserFacade.parse(sourceCode, JavaScriptObfuscator_1.parseOptions);
@@ -249,19 +249,24 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
         return astTree;
     }
     generateCode(sourceCode, astTree) {
-        const escodegenParams = Object.assign({}, JavaScriptObfuscator_1.escodegenParams);
+        const escodegenParams = {
+            ...JavaScriptObfuscator_1.escodegenParams
+        };
         if (this.options.sourceMap) {
             escodegenParams.sourceMap = this.options.inputFileName || 'sourceMap';
             escodegenParams.sourceContent = sourceCode;
         }
-        const generatorOutput = escodegen.generate(astTree, Object.assign(Object.assign({}, escodegenParams), { format: {
+        const generatorOutput = escodegen.generate(astTree, {
+            ...escodegenParams,
+            format: {
                 compact: this.options.compact
-            } }));
+            }
+        });
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
         return generatorOutput;
     }
-    getObfuscatedCode(generatorOutput) {
-        return this.obfuscatedCodeFactory(generatorOutput.code, generatorOutput.map);
+    getObfuscationResult(generatorOutput) {
+        return this.obfuscationResultFactory(generatorOutput.code, generatorOutput.map);
     }
     runCodeTransformationStage(code, codeTransformationStage) {
         this.logger.info(LoggingMessage_1.LoggingMessage.CodeTransformationStage, codeTransformationStage);
@@ -314,6 +319,7 @@ JavaScriptObfuscator.nodeTransformersList = [
     NodeTransformer_1.NodeTransformer.ObjectPatternPropertiesTransformer,
     NodeTransformer_1.NodeTransformer.ParentificationTransformer,
     NodeTransformer_1.NodeTransformer.ScopeIdentifiersTransformer,
+    NodeTransformer_1.NodeTransformer.ScopeThroughIdentifiersTransformer,
     NodeTransformer_1.NodeTransformer.SplitStringTransformer,
     NodeTransformer_1.NodeTransformer.StringArrayRotateFunctionTransformer,
     NodeTransformer_1.NodeTransformer.StringArrayScopeCallsWrapperTransformer,
@@ -324,14 +330,14 @@ JavaScriptObfuscator.nodeTransformersList = [
     NodeTransformer_1.NodeTransformer.VariablePreserveTransformer
 ];
 JavaScriptObfuscator = JavaScriptObfuscator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICodeTransformersRunner)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatedCode)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ILogger)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __metadata("design:paramtypes", [typeof (_a = typeof ICodeTransformersRunner_1.ICodeTransformersRunner !== "undefined" && ICodeTransformersRunner_1.ICodeTransformersRunner) === "function" ? _a : Object, typeof (_b = typeof INodeTransformersRunner_1.INodeTransformersRunner !== "undefined" && INodeTransformersRunner_1.INodeTransformersRunner) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof TObfuscatedCodeFactory_1.TObfuscatedCodeFactory !== "undefined" && TObfuscatedCodeFactory_1.TObfuscatedCodeFactory) === "function" ? _d : Object, typeof (_e = typeof ILogger_1.ILogger !== "undefined" && ILogger_1.ILogger) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object])
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICodeTransformersRunner)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationResult)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ILogger)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof ICodeTransformersRunner_1.ICodeTransformersRunner !== "undefined" && ICodeTransformersRunner_1.ICodeTransformersRunner) === "function" ? _a : Object, typeof (_b = typeof INodeTransformersRunner_1.INodeTransformersRunner !== "undefined" && INodeTransformersRunner_1.INodeTransformersRunner) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof TObfuscationResultFactory_1.TObfuscationResultFactory !== "undefined" && TObfuscationResultFactory_1.TObfuscationResultFactory) === "function" ? _d : Object, typeof (_e = typeof ILogger_1.ILogger !== "undefined" && ILogger_1.ILogger) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object])
 ], JavaScriptObfuscator);
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
 
@@ -384,9 +390,9 @@ class JavaScriptObfuscatorFacade {
         inversifyContainerFacade.load(sourceCode, '', inputOptions);
         const javaScriptObfuscator = inversifyContainerFacade
             .get(ServiceIdentifiers_1.ServiceIdentifiers.IJavaScriptObfuscator);
-        const obfuscatedCode = javaScriptObfuscator.obfuscate(sourceCode);
+        const obfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
         inversifyContainerFacade.unload();
-        return obfuscatedCode;
+        return obfuscationResult;
     }
     static obfuscateMultiple(sourceCodesObject, inputOptions = {}) {
         if (typeof sourceCodesObject !== 'object') {
@@ -397,8 +403,14 @@ class JavaScriptObfuscatorFacade {
             .reduce((acc, sourceCodeIdentifier, index) => {
             const identifiersPrefix = Utils_1.Utils.getIdentifiersPrefixForMultipleSources(inputOptions.identifiersPrefix, index);
             const sourceCode = sourceCodesObject[sourceCodeIdentifier];
-            const sourceCodeOptions = Object.assign(Object.assign({}, inputOptions), { identifiersPrefix });
-            return Object.assign(Object.assign({}, acc), { [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, sourceCodeOptions) });
+            const sourceCodeOptions = {
+                ...inputOptions,
+                identifiersPrefix
+            };
+            return {
+                ...acc,
+                [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, sourceCodeOptions)
+            };
         }, {});
     }
     static getOptionsByPreset(optionsPreset) {
@@ -406,7 +418,7 @@ class JavaScriptObfuscatorFacade {
     }
 }
 exports.JavaScriptObfuscator = JavaScriptObfuscatorFacade;
-JavaScriptObfuscatorFacade.version = (_a = "2.14.0") !== null && _a !== void 0 ? _a : 'unknown';
+JavaScriptObfuscatorFacade.version = (_a = "2.15.0") !== null && _a !== void 0 ? _a : 'unknown';
 
 
 /***/ }),
@@ -521,8 +533,8 @@ CallsGraphAnalyzer.calleeDataExtractorsList = [
 CallsGraphAnalyzer.limitThresholdActivationLength = 25;
 CallsGraphAnalyzer.limitThreshold = 0.002;
 CallsGraphAnalyzer = CallsGraphAnalyzer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICalleeDataExtractor)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICalleeDataExtractor)),
     __metadata("design:paramtypes", [typeof (_a = typeof TCalleeDataExtractorFactory_1.TCalleeDataExtractorFactory !== "undefined" && TCalleeDataExtractorFactory_1.TCalleeDataExtractorFactory) === "function" ? _a : Object])
 ], CallsGraphAnalyzer);
 exports.CallsGraphAnalyzer = CallsGraphAnalyzer;
@@ -550,7 +562,7 @@ const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 let AbstractCalleeDataExtractor = class AbstractCalleeDataExtractor {
 };
 AbstractCalleeDataExtractor = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], AbstractCalleeDataExtractor);
 exports.AbstractCalleeDataExtractor = AbstractCalleeDataExtractor;
 
@@ -625,7 +637,7 @@ let FunctionDeclarationCalleeDataExtractor = class FunctionDeclarationCalleeData
     }
 };
 FunctionDeclarationCalleeDataExtractor = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], FunctionDeclarationCalleeDataExtractor);
 exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataExtractor;
 
@@ -710,7 +722,7 @@ let FunctionExpressionCalleeDataExtractor = class FunctionExpressionCalleeDataEx
     }
 };
 FunctionExpressionCalleeDataExtractor = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], FunctionExpressionCalleeDataExtractor);
 exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtractor;
 
@@ -850,7 +862,7 @@ let ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor_1 
     }
 };
 ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], ObjectExpressionCalleeDataExtractor);
 exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor;
 
@@ -950,8 +962,8 @@ let NumberNumericalExpressionAnalyzer = NumberNumericalExpressionAnalyzer_1 = cl
 NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount = 3;
 NumberNumericalExpressionAnalyzer.delta = 10000;
 NumberNumericalExpressionAnalyzer = NumberNumericalExpressionAnalyzer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object])
 ], NumberNumericalExpressionAnalyzer);
 exports.NumberNumericalExpressionAnalyzer = NumberNumericalExpressionAnalyzer;
@@ -1030,8 +1042,8 @@ let PrevailingKindOfVariablesAnalyzer = PrevailingKindOfVariablesAnalyzer_1 = cl
 };
 PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables = 'var';
 PrevailingKindOfVariablesAnalyzer = PrevailingKindOfVariablesAnalyzer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
     __metadata("design:paramtypes", [typeof (_a = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _a : Object])
 ], PrevailingKindOfVariablesAnalyzer);
 exports.PrevailingKindOfVariablesAnalyzer = PrevailingKindOfVariablesAnalyzer;
@@ -1160,7 +1172,7 @@ ScopeAnalyzer.sourceTypes = [
 ];
 ScopeAnalyzer.emptyRangeValue = 0;
 ScopeAnalyzer = ScopeAnalyzer_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], ScopeAnalyzer);
 exports.ScopeAnalyzer = ScopeAnalyzer;
 
@@ -1273,10 +1285,10 @@ let StringArrayStorageAnalyzer = StringArrayStorageAnalyzer_1 = class StringArra
 };
 StringArrayStorageAnalyzer.minimumLengthForStringArray = 3;
 StringArrayStorageAnalyzer = StringArrayStorageAnalyzer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], StringArrayStorageAnalyzer);
 exports.StringArrayStorageAnalyzer = StringArrayStorageAnalyzer;
@@ -1320,7 +1332,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JavaScriptObfuscatorCLI = void 0;
 const commander = __importStar(__webpack_require__(/*! commander */ "commander"));
@@ -1340,10 +1352,11 @@ const Default_1 = __webpack_require__(/*! ../options/presets/Default */ "./src/o
 const ArraySanitizer_1 = __webpack_require__(/*! ./sanitizers/ArraySanitizer */ "./src/cli/sanitizers/ArraySanitizer.ts");
 const BooleanSanitizer_1 = __webpack_require__(/*! ./sanitizers/BooleanSanitizer */ "./src/cli/sanitizers/BooleanSanitizer.ts");
 const CLIUtils_1 = __webpack_require__(/*! ./utils/CLIUtils */ "./src/cli/utils/CLIUtils.ts");
+const IdentifierNamesCacheFileUtils_1 = __webpack_require__(/*! ./utils/IdentifierNamesCacheFileUtils */ "./src/cli/utils/IdentifierNamesCacheFileUtils.ts");
 const JavaScriptObfuscatorFacade_1 = __webpack_require__(/*! ../JavaScriptObfuscatorFacade */ "./src/JavaScriptObfuscatorFacade.ts");
 const Logger_1 = __webpack_require__(/*! ../logger/Logger */ "./src/logger/Logger.ts");
-const ObfuscatedCodeWriter_1 = __webpack_require__(/*! ./utils/ObfuscatedCodeWriter */ "./src/cli/utils/ObfuscatedCodeWriter.ts");
-const SourceCodeReader_1 = __webpack_require__(/*! ./utils/SourceCodeReader */ "./src/cli/utils/SourceCodeReader.ts");
+const ObfuscatedCodeFileUtils_1 = __webpack_require__(/*! ./utils/ObfuscatedCodeFileUtils */ "./src/cli/utils/ObfuscatedCodeFileUtils.ts");
+const SourceCodeFileUtils_1 = __webpack_require__(/*! ./utils/SourceCodeFileUtils */ "./src/cli/utils/SourceCodeFileUtils.ts");
 const Utils_1 = __webpack_require__(/*! ../utils/Utils */ "./src/utils/Utils.ts");
 class JavaScriptObfuscatorCLI {
     constructor(argv) {
@@ -1355,7 +1368,11 @@ class JavaScriptObfuscatorCLI {
         const configFilePath = inputOptions.config;
         const configFileLocation = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions = configFileLocation ? CLIUtils_1.CLIUtils.getUserConfig(configFileLocation) : {};
-        return Object.assign(Object.assign(Object.assign({}, Default_1.DEFAULT_PRESET), configFileOptions), inputCLIOptions);
+        return {
+            ...Default_1.DEFAULT_PRESET,
+            ...configFileOptions,
+            ...inputCLIOptions
+        };
     }
     static filterOptions(options) {
         const filteredOptions = {};
@@ -1375,8 +1392,9 @@ class JavaScriptObfuscatorCLI {
         this.configureHelp();
         this.inputPath = path.normalize(this.commands.args[0] || '');
         this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts());
-        this.sourceCodeReader = new SourceCodeReader_1.SourceCodeReader(this.inputPath, this.inputCLIOptions);
-        this.obfuscatedCodeWriter = new ObfuscatedCodeWriter_1.ObfuscatedCodeWriter(this.inputPath, this.inputCLIOptions);
+        this.sourceCodeFileUtils = new SourceCodeFileUtils_1.SourceCodeFileUtils(this.inputPath, this.inputCLIOptions);
+        this.obfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils_1.ObfuscatedCodeFileUtils(this.inputPath, this.inputCLIOptions);
+        this.identifierNamesCacheFileUtils = new IdentifierNamesCacheFileUtils_1.IdentifierNamesCacheFileUtils(this.inputCLIOptions.identifierNamesCachePath);
     }
     run() {
         const canShowHelp = !this.arguments.length || this.arguments.includes('--help');
@@ -1384,13 +1402,13 @@ class JavaScriptObfuscatorCLI {
             this.commands.outputHelp();
             return;
         }
-        const sourceCodeData = this.sourceCodeReader.readSourceCode();
+        const sourceCodeData = this.sourceCodeFileUtils.readSourceCode();
         this.processSourceCodeData(sourceCodeData);
     }
     configureCommands() {
         this.commands
             .usage('<inputPath> [options]')
-            .version(Utils_1.Utils.buildVersionMessage("2.14.0", 1620551393493), '-v, --version')
+            .version(Utils_1.Utils.buildVersionMessage("2.15.0", 1622482543556), '-v, --version')
             .option('-o, --output <path>', 'Output path for obfuscated code')
             .option('--compact <boolean>', 'Disable one line output code compacting', BooleanSanitizer_1.BooleanSanitizer)
             .option('--config <boolean>', 'Name of js / json config file')
@@ -1404,6 +1422,7 @@ class JavaScriptObfuscatorCLI {
             .option('--domain-lock <list> (comma separated, without whitespaces)', 'Allows to run the obfuscated source code only on specific domains and/or sub-domains (comma separated)', ArraySanitizer_1.ArraySanitizer)
             .option('--exclude <list> (comma separated, without whitespaces)', 'A filename or glob which indicates files to exclude from obfuscation', ArraySanitizer_1.ArraySanitizer)
             .option('--force-transform-strings <list> (comma separated, without whitespaces)', 'Enables force transformation of string literals, which being matched by passed RegExp patterns (comma separated)', ArraySanitizer_1.ArraySanitizer)
+            .option('--identifier-names-cache-path <string>', 'Sets path for identifier names cache')
             .option('--identifier-names-generator <string>', 'Sets identifier names generator. ' +
             `Values: ${CLIUtils_1.CLIUtils.stringifyOptionAvailableValues(IdentifierNamesGenerator_1.IdentifierNamesGenerator)}. ` +
             `Default: ${IdentifierNamesGenerator_1.IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator}`)
@@ -1468,7 +1487,7 @@ class JavaScriptObfuscatorCLI {
     }
     processSourceCodeData(sourceCodeData) {
         sourceCodeData.forEach(({ filePath, content }, index) => {
-            const outputCodePath = this.obfuscatedCodeWriter.getOutputCodePath(filePath);
+            const outputCodePath = this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
             try {
                 Logger_1.Logger.log(Logger_1.Logger.colorInfo, LoggingPrefix_1.LoggingPrefix.CLI, `Obfuscating file: ${filePath}...`);
                 this.processSourceCode(content, filePath, outputCodePath, index);
@@ -1480,9 +1499,14 @@ class JavaScriptObfuscatorCLI {
         });
     }
     processSourceCode(sourceCode, inputCodePath, outputCodePath, sourceCodeIndex) {
-        const options = Object.assign(Object.assign(Object.assign({}, this.inputCLIOptions), { inputFileName: path.basename(inputCodePath) }), sourceCodeIndex !== null && {
-            identifiersPrefix: Utils_1.Utils.getIdentifiersPrefixForMultipleSources(this.inputCLIOptions.identifiersPrefix, sourceCodeIndex)
-        });
+        const options = {
+            ...this.inputCLIOptions,
+            identifierNamesCache: this.identifierNamesCacheFileUtils.readFile(),
+            inputFileName: path.basename(inputCodePath),
+            ...sourceCodeIndex !== null && {
+                identifiersPrefix: Utils_1.Utils.getIdentifiersPrefixForMultipleSources(this.inputCLIOptions.identifiersPrefix, sourceCodeIndex)
+            }
+        };
         if (options.sourceMap) {
             this.processSourceCodeWithSourceMap(sourceCode, outputCodePath, options);
         }
@@ -1491,17 +1515,22 @@ class JavaScriptObfuscatorCLI {
         }
     }
     processSourceCodeWithoutSourceMap(sourceCode, outputCodePath, options) {
-        const obfuscatedCode = JavaScriptObfuscatorFacade_1.JavaScriptObfuscator.obfuscate(sourceCode, options).getObfuscatedCode();
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode);
+        const obfuscationResult = JavaScriptObfuscatorFacade_1.JavaScriptObfuscator.obfuscate(sourceCode, options);
+        this.obfuscatedCodeFileUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheFileUtils.writeFile(obfuscationResult.getIdentifierNamesCache());
     }
     processSourceCodeWithSourceMap(sourceCode, outputCodePath, options) {
         var _a;
-        const outputSourceMapPath = this.obfuscatedCodeWriter.getOutputSourceMapPath(outputCodePath, (_a = options.sourceMapFileName) !== null && _a !== void 0 ? _a : '');
-        options = Object.assign(Object.assign({}, options), { sourceMapFileName: path.basename(outputSourceMapPath) });
-        const obfuscatedCode = JavaScriptObfuscatorFacade_1.JavaScriptObfuscator.obfuscate(sourceCode, options);
-        this.obfuscatedCodeWriter.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
-        if (options.sourceMapMode === SourceMapMode_1.SourceMapMode.Separate && obfuscatedCode.getSourceMap()) {
-            this.obfuscatedCodeWriter.writeFile(outputSourceMapPath, obfuscatedCode.getSourceMap());
+        const outputSourceMapPath = this.obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, (_a = options.sourceMapFileName) !== null && _a !== void 0 ? _a : '');
+        options = {
+            ...options,
+            sourceMapFileName: path.basename(outputSourceMapPath)
+        };
+        const obfuscationResult = JavaScriptObfuscatorFacade_1.JavaScriptObfuscator.obfuscate(sourceCode, options);
+        this.obfuscatedCodeFileUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        this.identifierNamesCacheFileUtils.writeFile(obfuscationResult.getIdentifierNamesCache());
+        if (options.sourceMapMode === SourceMapMode_1.SourceMapMode.Separate && obfuscationResult.getSourceMap()) {
+            this.obfuscatedCodeFileUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }
 }
@@ -1511,25 +1540,29 @@ JavaScriptObfuscatorCLI.availableInputExtensions = [
 JavaScriptObfuscatorCLI.encoding = 'utf8';
 JavaScriptObfuscatorCLI.obfuscatedFilePrefix = '-obfuscated';
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof commander !== "undefined" && commander.CommanderStatic) === "function" ? _a : Object)
 ], JavaScriptObfuscatorCLI.prototype, "commands", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
-    __metadata("design:type", typeof (_b = typeof TInputCLIOptions_1.TInputCLIOptions !== "undefined" && TInputCLIOptions_1.TInputCLIOptions) === "function" ? _b : Object)
+    Initializable_1.initializable(),
+    __metadata("design:type", typeof (_b = typeof IdentifierNamesCacheFileUtils_1.IdentifierNamesCacheFileUtils !== "undefined" && IdentifierNamesCacheFileUtils_1.IdentifierNamesCacheFileUtils) === "function" ? _b : Object)
+], JavaScriptObfuscatorCLI.prototype, "identifierNamesCacheFileUtils", void 0);
+__decorate([
+    Initializable_1.initializable(),
+    __metadata("design:type", typeof (_c = typeof TInputCLIOptions_1.TInputCLIOptions !== "undefined" && TInputCLIOptions_1.TInputCLIOptions) === "function" ? _c : Object)
 ], JavaScriptObfuscatorCLI.prototype, "inputCLIOptions", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], JavaScriptObfuscatorCLI.prototype, "inputPath", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
-    __metadata("design:type", typeof (_c = typeof SourceCodeReader_1.SourceCodeReader !== "undefined" && SourceCodeReader_1.SourceCodeReader) === "function" ? _c : Object)
-], JavaScriptObfuscatorCLI.prototype, "sourceCodeReader", void 0);
+    Initializable_1.initializable(),
+    __metadata("design:type", typeof (_d = typeof SourceCodeFileUtils_1.SourceCodeFileUtils !== "undefined" && SourceCodeFileUtils_1.SourceCodeFileUtils) === "function" ? _d : Object)
+], JavaScriptObfuscatorCLI.prototype, "sourceCodeFileUtils", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
-    __metadata("design:type", typeof (_d = typeof ObfuscatedCodeWriter_1.ObfuscatedCodeWriter !== "undefined" && ObfuscatedCodeWriter_1.ObfuscatedCodeWriter) === "function" ? _d : Object)
-], JavaScriptObfuscatorCLI.prototype, "obfuscatedCodeWriter", void 0);
+    Initializable_1.initializable(),
+    __metadata("design:type", typeof (_e = typeof ObfuscatedCodeFileUtils_1.ObfuscatedCodeFileUtils !== "undefined" && ObfuscatedCodeFileUtils_1.ObfuscatedCodeFileUtils) === "function" ? _e : Object)
+], JavaScriptObfuscatorCLI.prototype, "obfuscatedCodeFileUtils", void 0);
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 
@@ -1639,10 +1672,10 @@ CLIUtils.allowedConfigFileExtensions = [
 
 /***/ }),
 
-/***/ "./src/cli/utils/ObfuscatedCodeWriter.ts":
-/*!***********************************************!*\
-  !*** ./src/cli/utils/ObfuscatedCodeWriter.ts ***!
-  \***********************************************/
+/***/ "./src/cli/utils/IdentifierNamesCacheFileUtils.ts":
+/*!********************************************************!*\
+  !*** ./src/cli/utils/IdentifierNamesCacheFileUtils.ts ***!
+  \********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1667,13 +1700,98 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ObfuscatedCodeWriter = void 0;
+exports.IdentifierNamesCacheFileUtils = void 0;
+const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
+const path = __importStar(__webpack_require__(/*! path */ "path"));
+const JavaScriptObfuscatorCLI_1 = __webpack_require__(/*! ../JavaScriptObfuscatorCLI */ "./src/cli/JavaScriptObfuscatorCLI.ts");
+class IdentifierNamesCacheFileUtils {
+    constructor(identifierNamesCachePath) {
+        this.identifierNamesCachePath = identifierNamesCachePath;
+    }
+    static isValidFilePath(filePath) {
+        try {
+            return fs.statSync(filePath).isFile()
+                && path.extname(filePath) === IdentifierNamesCacheFileUtils.identifierNamesCacheExtension;
+        }
+        catch (_a) {
+            return false;
+        }
+    }
+    static readFile(filePath) {
+        return {
+            filePath: path.normalize(filePath),
+            content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI.encoding)
+        };
+    }
+    readFile() {
+        if (!this.identifierNamesCachePath) {
+            return null;
+        }
+        if (!IdentifierNamesCacheFileUtils.isValidFilePath(this.identifierNamesCachePath)) {
+            throw new ReferenceError(`Given identifier names cache path must be a valid ${IdentifierNamesCacheFileUtils.identifierNamesCacheExtension} file path`);
+        }
+        const fileData = IdentifierNamesCacheFileUtils.readFile(this.identifierNamesCachePath);
+        if (!fileData.content) {
+            return {};
+        }
+        try {
+            return JSON.parse(fileData.content);
+        }
+        catch (_a) {
+            throw new ReferenceError('Identifier names cache file must contains a json dictionary with identifier names');
+        }
+    }
+    writeFile(identifierNamesCache) {
+        if (!this.identifierNamesCachePath) {
+            return;
+        }
+        const identifierNamesCacheJson = JSON.stringify(identifierNamesCache);
+        fs.writeFileSync(this.identifierNamesCachePath, identifierNamesCacheJson, {
+            encoding: JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI.encoding
+        });
+    }
+}
+exports.IdentifierNamesCacheFileUtils = IdentifierNamesCacheFileUtils;
+IdentifierNamesCacheFileUtils.identifierNamesCacheExtension = '.json';
+
+
+/***/ }),
+
+/***/ "./src/cli/utils/ObfuscatedCodeFileUtils.ts":
+/*!**************************************************!*\
+  !*** ./src/cli/utils/ObfuscatedCodeFileUtils.ts ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ObfuscatedCodeFileUtils = void 0;
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
 const mkdirp = __importStar(__webpack_require__(/*! mkdirp */ "mkdirp"));
 const path = __importStar(__webpack_require__(/*! path */ "path"));
 const StringSeparator_1 = __webpack_require__(/*! ../../enums/StringSeparator */ "./src/enums/StringSeparator.ts");
 const JavaScriptObfuscatorCLI_1 = __webpack_require__(/*! ../JavaScriptObfuscatorCLI */ "./src/cli/JavaScriptObfuscatorCLI.ts");
-class ObfuscatedCodeWriter {
+class ObfuscatedCodeFileUtils {
     constructor(inputPath, options) {
         this.inputPath = path.normalize(inputPath);
         this.options = options;
@@ -1750,15 +1868,15 @@ class ObfuscatedCodeWriter {
         });
     }
 }
-exports.ObfuscatedCodeWriter = ObfuscatedCodeWriter;
+exports.ObfuscatedCodeFileUtils = ObfuscatedCodeFileUtils;
 
 
 /***/ }),
 
-/***/ "./src/cli/utils/SourceCodeReader.ts":
-/*!*******************************************!*\
-  !*** ./src/cli/utils/SourceCodeReader.ts ***!
-  \*******************************************/
+/***/ "./src/cli/utils/SourceCodeFileUtils.ts":
+/*!**********************************************!*\
+  !*** ./src/cli/utils/SourceCodeFileUtils.ts ***!
+  \**********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1786,12 +1904,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SourceCodeReader = void 0;
+exports.SourceCodeFileUtils = void 0;
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
 const path = __importStar(__webpack_require__(/*! path */ "path"));
 const multimatch_1 = __importDefault(__webpack_require__(/*! multimatch */ "multimatch"));
 const JavaScriptObfuscatorCLI_1 = __webpack_require__(/*! ../JavaScriptObfuscatorCLI */ "./src/cli/JavaScriptObfuscatorCLI.ts");
-class SourceCodeReader {
+class SourceCodeFileUtils {
     constructor(inputPath, options) {
         this.inputPath = inputPath;
         this.options = options;
@@ -1801,7 +1919,7 @@ class SourceCodeReader {
             return false;
         }
         const fileName = path.basename(filePath);
-        const isExcludedFilePathByGlobPattern = !!(0, multimatch_1.default)([filePath], excludePatterns).length;
+        const isExcludedFilePathByGlobPattern = !!multimatch_1.default([filePath], excludePatterns).length;
         const isExcludedFilePathByInclusion = excludePatterns.some((excludePattern) => filePath.includes(excludePattern) || fileName.includes(excludePattern));
         return isExcludedFilePathByInclusion || isExcludedFilePathByGlobPattern;
     }
@@ -1822,12 +1940,12 @@ class SourceCodeReader {
         }
     }
     static isValidDirectory(directoryPath, excludePatterns = []) {
-        return !SourceCodeReader.isExcludedPath(directoryPath, excludePatterns);
+        return !SourceCodeFileUtils.isExcludedPath(directoryPath, excludePatterns);
     }
     static isValidFile(filePath, excludePatterns = []) {
         return JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
             && !filePath.includes(JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
-            && !SourceCodeReader.isExcludedPath(filePath, excludePatterns);
+            && !SourceCodeFileUtils.isExcludedPath(filePath, excludePatterns);
     }
     static readFile(filePath) {
         return {
@@ -1836,12 +1954,12 @@ class SourceCodeReader {
         };
     }
     readSourceCode() {
-        if (SourceCodeReader.isFilePath(this.inputPath)
-            && SourceCodeReader.isValidFile(this.inputPath, this.options.exclude)) {
-            return [SourceCodeReader.readFile(this.inputPath)];
+        if (SourceCodeFileUtils.isFilePath(this.inputPath)
+            && SourceCodeFileUtils.isValidFile(this.inputPath, this.options.exclude)) {
+            return [SourceCodeFileUtils.readFile(this.inputPath)];
         }
-        if (SourceCodeReader.isDirectoryPath(this.inputPath)
-            && SourceCodeReader.isValidDirectory(this.inputPath, this.options.exclude)) {
+        if (SourceCodeFileUtils.isDirectoryPath(this.inputPath)
+            && SourceCodeFileUtils.isValidDirectory(this.inputPath, this.options.exclude)) {
             return this.readDirectoryRecursive(this.inputPath);
         }
         const availableFilePaths = JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI
@@ -1854,14 +1972,14 @@ class SourceCodeReader {
         fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI.encoding)
             .forEach((fileName) => {
             const filePath = path.join(directoryPath, fileName);
-            if (SourceCodeReader.isDirectoryPath(filePath)
-                && SourceCodeReader.isValidDirectory(filePath, this.options.exclude)) {
+            if (SourceCodeFileUtils.isDirectoryPath(filePath)
+                && SourceCodeFileUtils.isValidDirectory(filePath, this.options.exclude)) {
                 filesData.push(...this.readDirectoryRecursive(filePath));
                 return;
             }
-            if (SourceCodeReader.isFilePath(filePath)
-                && SourceCodeReader.isValidFile(filePath, this.options.exclude)) {
-                const fileData = SourceCodeReader.readFile(filePath);
+            if (SourceCodeFileUtils.isFilePath(filePath)
+                && SourceCodeFileUtils.isValidFile(filePath, this.options.exclude)) {
+                const fileData = SourceCodeFileUtils.readFile(filePath);
                 filesData.push(fileData);
                 return;
             }
@@ -1869,7 +1987,7 @@ class SourceCodeReader {
         return filesData;
     }
 }
-exports.SourceCodeReader = SourceCodeReader;
+exports.SourceCodeFileUtils = SourceCodeFileUtils;
 
 
 /***/ }),
@@ -1908,9 +2026,9 @@ let AbstractCodeTransformer = class AbstractCodeTransformer {
     }
 };
 AbstractCodeTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], AbstractCodeTransformer);
 exports.AbstractCodeTransformer = AbstractCodeTransformer;
@@ -1939,7 +2057,7 @@ const AbstractTransformerNamesGroupsBuilder_1 = __webpack_require__(/*! ../utils
 let CodeTransformerNamesGroupsBuilder = class CodeTransformerNamesGroupsBuilder extends AbstractTransformerNamesGroupsBuilder_1.AbstractTransformerNamesGroupsBuilder {
 };
 CodeTransformerNamesGroupsBuilder = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], CodeTransformerNamesGroupsBuilder);
 exports.CodeTransformerNamesGroupsBuilder = CodeTransformerNamesGroupsBuilder;
 
@@ -2001,9 +2119,9 @@ let CodeTransformersRunner = class CodeTransformersRunner {
     }
 };
 CodeTransformersRunner = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICodeTransformer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICodeTransformer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder)),
     __metadata("design:paramtypes", [typeof (_a = typeof TCodeTransformerFactory_1.TCodeTransformerFactory !== "undefined" && TCodeTransformerFactory_1.TCodeTransformerFactory) === "function" ? _a : Object, typeof (_b = typeof ITransformerNamesGroupsBuilder_1.ITransformerNamesGroupsBuilder !== "undefined" && ITransformerNamesGroupsBuilder_1.ITransformerNamesGroupsBuilder) === "function" ? _b : Object])
 ], CodeTransformersRunner);
 exports.CodeTransformersRunner = CodeTransformersRunner;
@@ -2071,9 +2189,9 @@ let HashbangOperatorTransformer = class HashbangOperatorTransformer extends Abst
     }
 };
 HashbangOperatorTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], HashbangOperatorTransformer);
 exports.HashbangOperatorTransformer = HashbangOperatorTransformer;
@@ -2214,7 +2332,7 @@ const CodeTransformersRunner_1 = __webpack_require__(/*! ../code-transformers/Co
 const JavaScriptObfuscator_1 = __webpack_require__(/*! ../JavaScriptObfuscator */ "./src/JavaScriptObfuscator.ts");
 const Logger_1 = __webpack_require__(/*! ../logger/Logger */ "./src/logger/Logger.ts");
 const NodeTransformersRunner_1 = __webpack_require__(/*! ../node-transformers/NodeTransformersRunner */ "./src/node-transformers/NodeTransformersRunner.ts");
-const ObfuscatedCode_1 = __webpack_require__(/*! ../source-code/ObfuscatedCode */ "./src/source-code/ObfuscatedCode.ts");
+const ObfuscationResult_1 = __webpack_require__(/*! ../source-code/ObfuscationResult */ "./src/source-code/ObfuscationResult.ts");
 const SourceCode_1 = __webpack_require__(/*! ../source-code/SourceCode */ "./src/source-code/SourceCode.ts");
 class InversifyContainerFacade {
     constructor() {
@@ -2292,16 +2410,16 @@ class InversifyContainerFacade {
             .to(NodeTransformersRunner_1.NodeTransformersRunner)
             .inSingletonScope();
         this.container
-            .bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatedCode)
-            .to(ObfuscatedCode_1.ObfuscatedCode);
+            .bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationResult)
+            .to(ObfuscationResult_1.ObfuscationResult);
         this.container
-            .bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatedCode)
+            .bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationResult)
             .toFactory((context) => {
             return (obfuscatedCodeAsString, sourceMapAsString) => {
-                const obfuscatedCode = context.container
-                    .get(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatedCode);
-                obfuscatedCode.initialize(obfuscatedCodeAsString, sourceMapAsString);
-                return obfuscatedCode;
+                const obfuscationResult = context.container
+                    .get(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationResult);
+                obfuscationResult.initialize(obfuscatedCodeAsString, sourceMapAsString);
+                return obfuscationResult;
             };
         });
         this.container.load(AnalyzersModule_1.analyzersModule);
@@ -2356,7 +2474,7 @@ var ServiceIdentifiers;
     ServiceIdentifiers["Factory__IIdentifierNamesGenerator"] = "Factory<IIdentifierNamesGenerator>";
     ServiceIdentifiers["Factory__INodeGuard"] = "Factory<INodeGuard>";
     ServiceIdentifiers["Factory__INodeTransformer"] = "Factory<INodeTransformer[]>";
-    ServiceIdentifiers["Factory__IObfuscatedCode"] = "Factory<IObfuscatedCode>";
+    ServiceIdentifiers["Factory__IObfuscationResult"] = "Factory<IObfuscationResult>";
     ServiceIdentifiers["Factory__IObjectExpressionKeysTransformerCustomNode"] = "Factory<IObjectExpressionKeysTransformerCustomNode>";
     ServiceIdentifiers["Factory__IObjectExpressionExtractor"] = "Factory<IObjectExpressionExtractor>";
     ServiceIdentifiers["Factory__IStringArrayCustomNode"] = "Factory<IStringArrayCustomNode>";
@@ -2376,6 +2494,7 @@ var ServiceIdentifiers;
     ServiceIdentifiers["ICustomCodeHelperFormatter"] = "ICustomCodeHelperFormatter";
     ServiceIdentifiers["ICustomCodeHelperObfuscator"] = "ICustomCodeHelperObfuscator";
     ServiceIdentifiers["IEscapeSequenceEncoder"] = "IEscapeSequenceEncoder";
+    ServiceIdentifiers["IGlobalIdentifierNamesCacheStorage"] = "IGlobalIdentifierNamesCacheStorage";
     ServiceIdentifiers["IIdentifierNamesGenerator"] = "IIdentifierNamesGenerator";
     ServiceIdentifiers["IIdentifierReplacer"] = "IIdentifierReplacer";
     ServiceIdentifiers["IJavaScriptObfuscator"] = "IJavaScriptObfuscator";
@@ -2387,10 +2506,11 @@ var ServiceIdentifiers;
     ServiceIdentifiers["INodeTransformerNamesGroupsBuilder"] = "INodeTransformerNamesGroupsBuilder";
     ServiceIdentifiers["INodeTransformersRunner"] = "INodeTransformersRunner";
     ServiceIdentifiers["INumberNumericalExpressionAnalyzer"] = "INumberNumericalExpressionAnalyzer";
-    ServiceIdentifiers["IObfuscatedCode"] = "IObfuscatedCode";
+    ServiceIdentifiers["IObfuscationResult"] = "IObfuscationResult";
     ServiceIdentifiers["IOptions"] = "IOptions";
     ServiceIdentifiers["IOptionsNormalizer"] = "IOptionsNormalizer";
     ServiceIdentifiers["IPrevailingKindOfVariablesAnalyzer"] = "IPrevailingKindOfVariablesAnalyzer";
+    ServiceIdentifiers["IPropertyIdentifierNamesCacheStorage"] = "IPropertyIdentifierNamesCacheStorage";
     ServiceIdentifiers["IObjectExpressionExtractor"] = "IObjectExpressionExtractor";
     ServiceIdentifiers["IRandomGenerator"] = "IRandomGenerator";
     ServiceIdentifiers["IRenamePropertiesReplacer"] = "IRenamePropertiesReplacer";
@@ -2402,6 +2522,7 @@ var ServiceIdentifiers;
     ServiceIdentifiers["IStringArrayScopeCallsWrapperNamesDataStorage"] = "IStringArrayScopeCallsWrapperNamesDataStorage";
     ServiceIdentifiers["IStringArrayStorage"] = "IStringArrayStorage";
     ServiceIdentifiers["IStringArrayStorageAnalyzer"] = "IStringArrayStorageAnalyzer";
+    ServiceIdentifiers["IThroughIdentifierReplacer"] = "IThroughIdentifierReplacer";
     ServiceIdentifiers["IVisitedLexicalScopeNodesStackStorage"] = "IVisitedLexicalScopeNodesStackStorage";
     ServiceIdentifiers["Newable__ICustomNode"] = "Newable<ICustomNode>";
     ServiceIdentifiers["Newable__TControlFlowStorage"] = "Newable<TControlFlowStorage>";
@@ -3081,11 +3202,16 @@ exports.renameIdentifiersTransformersModule = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../../ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const NodeTransformer_1 = __webpack_require__(/*! ../../../enums/node-transformers/NodeTransformer */ "./src/enums/node-transformers/NodeTransformer.ts");
+const DeadCodeInjectionIdentifiersTransformer_1 = __webpack_require__(/*! ../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionIdentifiersTransformer */ "./src/node-transformers/dead-code-injection-transformers/DeadCodeInjectionIdentifiersTransformer.ts");
 const IdentifierReplacer_1 = __webpack_require__(/*! ../../../node-transformers/rename-identifiers-transformers/replacer/IdentifierReplacer */ "./src/node-transformers/rename-identifiers-transformers/replacer/IdentifierReplacer.ts");
 const LabeledStatementTransformer_1 = __webpack_require__(/*! ../../../node-transformers/rename-identifiers-transformers/LabeledStatementTransformer */ "./src/node-transformers/rename-identifiers-transformers/LabeledStatementTransformer.ts");
 const ScopeIdentifiersTransformer_1 = __webpack_require__(/*! ../../../node-transformers/rename-identifiers-transformers/ScopeIdentifiersTransformer */ "./src/node-transformers/rename-identifiers-transformers/ScopeIdentifiersTransformer.ts");
 const ScopeThroughIdentifiersTransformer_1 = __webpack_require__(/*! ../../../node-transformers/rename-identifiers-transformers/ScopeThroughIdentifiersTransformer */ "./src/node-transformers/rename-identifiers-transformers/ScopeThroughIdentifiersTransformer.ts");
+const ThroughIdentifierReplacer_1 = __webpack_require__(/*! ../../../node-transformers/rename-identifiers-transformers/through-replacer/ThroughIdentifierReplacer */ "./src/node-transformers/rename-identifiers-transformers/through-replacer/ThroughIdentifierReplacer.ts");
 exports.renameIdentifiersTransformersModule = new inversify_1.ContainerModule((bind) => {
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer)
+        .to(DeadCodeInjectionIdentifiersTransformer_1.DeadCodeInjectionIdentifiersTransformer)
+        .whenTargetNamed(NodeTransformer_1.NodeTransformer.DeadCodeInjectionIdentifiersTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer)
         .to(LabeledStatementTransformer_1.LabeledStatementTransformer)
         .whenTargetNamed(NodeTransformer_1.NodeTransformer.LabeledStatementTransformer);
@@ -3097,6 +3223,9 @@ exports.renameIdentifiersTransformersModule = new inversify_1.ContainerModule((b
         .whenTargetNamed(NodeTransformer_1.NodeTransformer.ScopeThroughIdentifiersTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)
         .to(IdentifierReplacer_1.IdentifierReplacer)
+        .inSingletonScope();
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IThroughIdentifierReplacer)
+        .to(ThroughIdentifierReplacer_1.ThroughIdentifierReplacer)
         .inSingletonScope();
 });
 
@@ -3257,7 +3386,9 @@ const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../../ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const ControlFlowStorage_1 = __webpack_require__(/*! ../../../storages/custom-nodes/ControlFlowStorage */ "./src/storages/custom-nodes/ControlFlowStorage.ts");
 const CustomCodeHelperGroupStorage_1 = __webpack_require__(/*! ../../../storages/custom-code-helpers/CustomCodeHelperGroupStorage */ "./src/storages/custom-code-helpers/CustomCodeHelperGroupStorage.ts");
+const GlobalIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../../../storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage */ "./src/storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage.ts");
 const LiteralNodesCacheStorage_1 = __webpack_require__(/*! ../../../storages/string-array-transformers/LiteralNodesCacheStorage */ "./src/storages/string-array-transformers/LiteralNodesCacheStorage.ts");
+const PropertyIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../../../storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage */ "./src/storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage.ts");
 const StringArrayScopeCallsWrapperLexicalScopeDataStorage_1 = __webpack_require__(/*! ../../../storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage */ "./src/storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage.ts");
 const StringArrayScopeCallsWrapperNamesDataStorage_1 = __webpack_require__(/*! ../../../storages/string-array-transformers/StringArrayScopeCallsWrapperNamesDataStorage */ "./src/storages/string-array-transformers/StringArrayScopeCallsWrapperNamesDataStorage.ts");
 const StringArrayStorage_1 = __webpack_require__(/*! ../../../storages/string-array-transformers/StringArrayStorage */ "./src/storages/string-array-transformers/StringArrayStorage.ts");
@@ -3266,8 +3397,14 @@ exports.storagesModule = new inversify_1.ContainerModule((bind) => {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)
         .to(CustomCodeHelperGroupStorage_1.CustomCodeHelperGroupStorage)
         .inSingletonScope();
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+        .to(GlobalIdentifierNamesCacheStorage_1.GlobalIdentifierNamesCacheStorage)
+        .inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ILiteralNodesCacheStorage)
         .to(LiteralNodesCacheStorage_1.LiteralNodesCacheStorage)
+        .inSingletonScope();
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
+        .to(PropertyIdentifierNamesCacheStorage_1.PropertyIdentifierNamesCacheStorage)
         .inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)
         .to(StringArrayStorage_1.StringArrayStorage)
@@ -3401,16 +3538,16 @@ let AbstractCustomCodeHelper = AbstractCustomCodeHelper_1 = class AbstractCustom
     }
 };
 AbstractCustomCodeHelper.globalVariableTemplateFunctions = [
-    (0, GlobalVariableTemplate1_1.GlobalVariableTemplate1)(),
-    (0, GlobalVariableTemplate2_1.GlobalVariableTemplate2)()
+    GlobalVariableTemplate1_1.GlobalVariableTemplate1(),
+    GlobalVariableTemplate2_1.GlobalVariableTemplate2()
 ];
 AbstractCustomCodeHelper = AbstractCustomCodeHelper_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], AbstractCustomCodeHelper);
 exports.AbstractCustomCodeHelper = AbstractCustomCodeHelper;
@@ -3467,10 +3604,10 @@ let AbstractCustomCodeHelperGroup = class AbstractCustomCodeHelperGroup {
     }
 };
 AbstractCustomCodeHelperGroup = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], AbstractCustomCodeHelperGroup);
 exports.AbstractCustomCodeHelperGroup = AbstractCustomCodeHelperGroup;
@@ -3534,7 +3671,7 @@ let CustomCodeHelperFormatter = class CustomCodeHelperFormatter {
         this.prevailingKindOfVariables = prevailingKindOfVariablesAnalyzer.getPrevailingKind();
     }
     formatTemplate(template, mapping) {
-        return (0, string_template_1.default)(template, mapping);
+        return string_template_1.default(template, mapping);
     }
     formatStructure(statements) {
         for (const statement of statements) {
@@ -3554,8 +3691,8 @@ let CustomCodeHelperFormatter = class CustomCodeHelperFormatter {
     }
 };
 CustomCodeHelperFormatter = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)),
     __metadata("design:paramtypes", [typeof (_a = typeof IPrevailingKindOfVariablesAnalyzer_1.IPrevailingKindOfVariablesAnalyzer !== "undefined" && IPrevailingKindOfVariablesAnalyzer_1.IPrevailingKindOfVariablesAnalyzer) === "function" ? _a : Object])
 ], CustomCodeHelperFormatter);
 exports.CustomCodeHelperFormatter = CustomCodeHelperFormatter;
@@ -3602,9 +3739,9 @@ let CustomCodeHelperObfuscator = class CustomCodeHelperObfuscator {
     }
 };
 CustomCodeHelperObfuscator = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], CustomCodeHelperObfuscator);
 exports.CustomCodeHelperObfuscator = CustomCodeHelperObfuscator;
@@ -3660,30 +3797,30 @@ let CallsControllerFunctionCodeHelper = class CallsControllerFunctionCodeHelper 
     }
     getCodeHelperTemplate() {
         if (this.nodeTransformationStage === NodeTransformationStage_1.NodeTransformationStage.Finalizing) {
-            return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate((0, SingleCallControllerTemplate_1.SingleCallControllerTemplate)(), {
+            return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate_1.SingleCallControllerTemplate(), {
                 callControllerFunctionName: this.callsControllerFunctionName
             }));
         }
-        return this.customCodeHelperFormatter.formatTemplate((0, SingleCallControllerTemplate_1.SingleCallControllerTemplate)(), {
+        return this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate_1.SingleCallControllerTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName
         });
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], CallsControllerFunctionCodeHelper.prototype, "callsControllerFunctionName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof NodeTransformationStage_1.NodeTransformationStage !== "undefined" && NodeTransformationStage_1.NodeTransformationStage) === "function" ? _a : Object)
 ], CallsControllerFunctionCodeHelper.prototype, "nodeTransformationStage", void 0);
 CallsControllerFunctionCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _d : Object, typeof (_e = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object])
 ], CallsControllerFunctionCodeHelper);
 exports.CallsControllerFunctionCodeHelper = CallsControllerFunctionCodeHelper;
@@ -3862,8 +3999,8 @@ let ConsoleOutputDisableCodeHelper = class ConsoleOutputDisableCodeHelper extend
     getCodeHelperTemplate() {
         const globalVariableTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
-            : (0, GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate)();
-        return this.customCodeHelperFormatter.formatTemplate((0, ConsoleOutputDisableTemplate_1.ConsoleOutputDisableTemplate)(), {
+            : GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate();
+        return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableTemplate_1.ConsoleOutputDisableTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             consoleLogDisableFunctionName: this.consoleOutputDisableFunctionName,
             globalVariableTemplate
@@ -3871,20 +4008,20 @@ let ConsoleOutputDisableCodeHelper = class ConsoleOutputDisableCodeHelper extend
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], ConsoleOutputDisableCodeHelper.prototype, "callsControllerFunctionName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], ConsoleOutputDisableCodeHelper.prototype, "consoleOutputDisableFunctionName", void 0);
 ConsoleOutputDisableCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], ConsoleOutputDisableCodeHelper);
 exports.ConsoleOutputDisableCodeHelper = ConsoleOutputDisableCodeHelper;
@@ -3973,15 +4110,15 @@ let ConsoleOutputCodeHelperGroup = class ConsoleOutputCodeHelperGroup extends Ab
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], ConsoleOutputCodeHelperGroup.prototype, "customCodeHelpers", void 0);
 ConsoleOutputCodeHelperGroup = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _b : Object, typeof (_c = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], ConsoleOutputCodeHelperGroup);
 exports.ConsoleOutputCodeHelperGroup = ConsoleOutputCodeHelperGroup;
@@ -4073,27 +4210,27 @@ let DebugProtectionFunctionCallCodeHelper = class DebugProtectionFunctionCallCod
         return NodeUtils_1.NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
     getCodeHelperTemplate() {
-        return this.customCodeHelperFormatter.formatTemplate((0, DebugProtectionFunctionCallTemplate_1.DebugProtectionFunctionCallTemplate)(), {
+        return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionCallTemplate_1.DebugProtectionFunctionCallTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName,
             callControllerFunctionName: this.callsControllerFunctionName
         });
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DebugProtectionFunctionCallCodeHelper.prototype, "callsControllerFunctionName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DebugProtectionFunctionCallCodeHelper.prototype, "debugProtectionFunctionName", void 0);
 DebugProtectionFunctionCallCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], DebugProtectionFunctionCallCodeHelper);
 exports.DebugProtectionFunctionCallCodeHelper = DebugProtectionFunctionCallCodeHelper;
@@ -4150,25 +4287,25 @@ let DebugProtectionFunctionCodeHelper = class DebugProtectionFunctionCodeHelper 
     }
     getCodeHelperTemplate() {
         const debuggerTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
-            ? (0, DebuggerTemplate_1.DebuggerTemplate)()
-            : (0, DebuggerTemplateNoEval_1.DebuggerTemplateNoEval)();
-        return this.customCodeHelperFormatter.formatTemplate((0, DebugProtectionFunctionTemplate_1.DebugProtectionFunctionTemplate)(), {
+            ? DebuggerTemplate_1.DebuggerTemplate()
+            : DebuggerTemplateNoEval_1.DebuggerTemplateNoEval();
+        return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionTemplate_1.DebugProtectionFunctionTemplate(), {
             debuggerTemplate,
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DebugProtectionFunctionCodeHelper.prototype, "debugProtectionFunctionName", void 0);
 DebugProtectionFunctionCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], DebugProtectionFunctionCodeHelper);
 exports.DebugProtectionFunctionCodeHelper = DebugProtectionFunctionCodeHelper;
@@ -4221,22 +4358,22 @@ let DebugProtectionFunctionIntervalCodeHelper = class DebugProtectionFunctionInt
         return NodeUtils_1.NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
     getCodeHelperTemplate() {
-        return this.customCodeHelperFormatter.formatTemplate((0, DebugProtectionFunctionIntervalTemplate_1.DebugProtectionFunctionIntervalTemplate)(), {
+        return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionIntervalTemplate_1.DebugProtectionFunctionIntervalTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DebugProtectionFunctionIntervalCodeHelper.prototype, "debugProtectionFunctionName", void 0);
 DebugProtectionFunctionIntervalCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], DebugProtectionFunctionIntervalCodeHelper);
 exports.DebugProtectionFunctionIntervalCodeHelper = DebugProtectionFunctionIntervalCodeHelper;
@@ -4344,15 +4481,15 @@ let DebugProtectionCodeHelperGroup = class DebugProtectionCodeHelperGroup extend
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], DebugProtectionCodeHelperGroup.prototype, "customCodeHelpers", void 0);
 DebugProtectionCodeHelperGroup = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _b : Object, typeof (_c = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], DebugProtectionCodeHelperGroup);
 exports.DebugProtectionCodeHelperGroup = DebugProtectionCodeHelperGroup;
@@ -4569,8 +4706,8 @@ let DomainLockCodeHelper = class DomainLockCodeHelper extends AbstractCustomCode
         const [hiddenDomainsString, diff] = this.cryptUtils.hideString(domainsString, domainsString.length * 3);
         const globalVariableTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
-            : (0, GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate)();
-        return this.customCodeHelperFormatter.formatTemplate((0, DomainLockTemplate_1.DomainLockTemplate)(), {
+            : GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate();
+        return this.customCodeHelperFormatter.formatTemplate(DomainLockTemplate_1.DomainLockTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             domainLockFunctionName: this.domainLockFunctionName,
             diff,
@@ -4580,21 +4717,21 @@ let DomainLockCodeHelper = class DomainLockCodeHelper extends AbstractCustomCode
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DomainLockCodeHelper.prototype, "callsControllerFunctionName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], DomainLockCodeHelper.prototype, "domainLockFunctionName", void 0);
 DomainLockCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtils)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtils)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object, typeof (_f = typeof ICryptUtils_1.ICryptUtils !== "undefined" && ICryptUtils_1.ICryptUtils) === "function" ? _f : Object])
 ], DomainLockCodeHelper);
 exports.DomainLockCodeHelper = DomainLockCodeHelper;
@@ -4683,15 +4820,15 @@ let DomainLockCustomCodeHelperGroup = class DomainLockCustomCodeHelperGroup exte
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], DomainLockCustomCodeHelperGroup.prototype, "customCodeHelpers", void 0);
 DomainLockCustomCodeHelperGroup = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _b : Object, typeof (_c = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], DomainLockCustomCodeHelperGroup);
 exports.DomainLockCustomCodeHelperGroup = DomainLockCustomCodeHelperGroup;
@@ -4873,10 +5010,10 @@ let SelfDefendingUnicodeCodeHelper = class SelfDefendingUnicodeCodeHelper extend
     getCodeHelperTemplate() {
         const globalVariableTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
-            : (0, GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate)();
+            : GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate();
         const selfDefendingTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
-            ? (0, SelfDefendingTemplate_1.SelfDefendingTemplate)()
-            : (0, SelfDefendingNoEvalTemplate_1.SelfDefendingNoEvalTemplate)();
+            ? SelfDefendingTemplate_1.SelfDefendingTemplate()
+            : SelfDefendingNoEvalTemplate_1.SelfDefendingNoEvalTemplate();
         return this.customCodeHelperFormatter.formatTemplate(selfDefendingTemplate, {
             callControllerFunctionName: this.callsControllerFunctionName,
             selfDefendingFunctionName: this.selfDefendingFunctionName,
@@ -4885,20 +5022,20 @@ let SelfDefendingUnicodeCodeHelper = class SelfDefendingUnicodeCodeHelper extend
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], SelfDefendingUnicodeCodeHelper.prototype, "callsControllerFunctionName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], SelfDefendingUnicodeCodeHelper.prototype, "selfDefendingFunctionName", void 0);
 SelfDefendingUnicodeCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], SelfDefendingUnicodeCodeHelper);
 exports.SelfDefendingUnicodeCodeHelper = SelfDefendingUnicodeCodeHelper;
@@ -4987,15 +5124,15 @@ let SelfDefendingCodeHelperGroup = class SelfDefendingCodeHelperGroup extends Ab
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], SelfDefendingCodeHelperGroup.prototype, "customCodeHelpers", void 0);
 SelfDefendingCodeHelperGroup = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _b : Object, typeof (_c = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], SelfDefendingCodeHelperGroup);
 exports.SelfDefendingCodeHelperGroup = SelfDefendingCodeHelperGroup;
@@ -5090,11 +5227,11 @@ const StringArrayCallsWrapperCodeHelper_1 = __webpack_require__(/*! ./StringArra
 let StringArrayCallsWrapperBase64CodeHelper = class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWrapperCodeHelper_1.StringArrayCallsWrapperCodeHelper {
     getDecodeStringArrayTemplate() {
         const atobFunctionName = this.randomGenerator.getRandomString(6);
-        const atobPolyfill = this.customCodeHelperFormatter.formatTemplate((0, AtobTemplate_1.AtobTemplate)(), {
+        const atobPolyfill = this.customCodeHelperFormatter.formatTemplate(AtobTemplate_1.AtobTemplate(), {
             atobFunctionName: atobFunctionName
         });
         const selfDefendingCode = this.getSelfDefendingTemplate();
-        return this.customCodeHelperFormatter.formatTemplate((0, StringArrayBase64DecodeTemplate_1.StringArrayBase64DecodeTemplate)(this.randomGenerator), {
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayBase64DecodeTemplate_1.StringArrayBase64DecodeTemplate(this.randomGenerator), {
             atobPolyfill,
             atobFunctionName,
             selfDefendingCode,
@@ -5104,7 +5241,7 @@ let StringArrayCallsWrapperBase64CodeHelper = class StringArrayCallsWrapperBase6
     }
 };
 StringArrayCallsWrapperBase64CodeHelper = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], StringArrayCallsWrapperBase64CodeHelper);
 exports.StringArrayCallsWrapperBase64CodeHelper = StringArrayCallsWrapperBase64CodeHelper;
 
@@ -5163,7 +5300,7 @@ let StringArrayCallsWrapperCodeHelper = class StringArrayCallsWrapperCodeHelper 
     getCodeHelperTemplate() {
         const decodeCodeHelperTemplate = this.getDecodeStringArrayTemplate();
         const preservedNames = [`^${this.stringArrayName}$`];
-        return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate((0, StringArrayCallsWrapperTemplate_1.StringArrayCallsWrapperTemplate)(), {
+        return this.customCodeHelperObfuscator.obfuscateTemplate(this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate_1.StringArrayCallsWrapperTemplate(), {
             decodeCodeHelperTemplate,
             stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
             stringArrayName: this.stringArrayName,
@@ -5179,32 +5316,32 @@ let StringArrayCallsWrapperCodeHelper = class StringArrayCallsWrapperCodeHelper 
         if (!this.options.selfDefending) {
             return '';
         }
-        return this.customCodeHelperFormatter.formatTemplate((0, SelfDefendingTemplate_1.SelfDefendingTemplate)(this.randomGenerator, this.escapeSequenceEncoder), {
+        return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate_1.SelfDefendingTemplate(this.randomGenerator, this.escapeSequenceEncoder), {
             stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
             stringArrayName: this.stringArrayName
         });
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Number)
 ], StringArrayCallsWrapperCodeHelper.prototype, "indexShiftAmount", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayCallsWrapperCodeHelper.prototype, "stringArrayName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayCallsWrapperCodeHelper.prototype, "stringArrayCallsWrapperName", void 0);
 StringArrayCallsWrapperCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object, typeof (_f = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _f : Object])
 ], StringArrayCallsWrapperCodeHelper);
 exports.StringArrayCallsWrapperCodeHelper = StringArrayCallsWrapperCodeHelper;
@@ -5236,14 +5373,14 @@ const StringArrayCallsWrapperCodeHelper_1 = __webpack_require__(/*! ./StringArra
 let StringArrayCallsWrapperRc4CodeHelper = class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrapperCodeHelper_1.StringArrayCallsWrapperCodeHelper {
     getDecodeStringArrayTemplate() {
         const atobFunctionName = this.randomGenerator.getRandomString(6);
-        const atobPolyfill = this.customCodeHelperFormatter.formatTemplate((0, AtobTemplate_1.AtobTemplate)(), {
+        const atobPolyfill = this.customCodeHelperFormatter.formatTemplate(AtobTemplate_1.AtobTemplate(), {
             atobFunctionName
         });
-        const rc4Polyfill = this.customCodeHelperFormatter.formatTemplate((0, Rc4Template_1.Rc4Template)(), {
+        const rc4Polyfill = this.customCodeHelperFormatter.formatTemplate(Rc4Template_1.Rc4Template(), {
             atobFunctionName
         });
         const selfDefendingCode = this.getSelfDefendingTemplate();
-        return this.customCodeHelperFormatter.formatTemplate((0, StringArrayRC4DecodeTemplate_1.StringArrayRC4DecodeTemplate)(this.randomGenerator), {
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayRC4DecodeTemplate_1.StringArrayRC4DecodeTemplate(this.randomGenerator), {
             atobPolyfill,
             rc4Polyfill,
             selfDefendingCode,
@@ -5253,7 +5390,7 @@ let StringArrayCallsWrapperRc4CodeHelper = class StringArrayCallsWrapperRc4CodeH
     }
 };
 StringArrayCallsWrapperRc4CodeHelper = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], StringArrayCallsWrapperRc4CodeHelper);
 exports.StringArrayCallsWrapperRc4CodeHelper = StringArrayCallsWrapperRc4CodeHelper;
 
@@ -5308,7 +5445,7 @@ let StringArrayCodeHelper = class StringArrayCodeHelper extends AbstractCustomCo
         return NodeUtils_1.NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
     getCodeHelperTemplate() {
-        return this.customCodeHelperFormatter.formatTemplate((0, StringArrayTemplate_1.StringArrayTemplate)(), {
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate_1.StringArrayTemplate(), {
             stringArrayName: this.stringArrayName,
             stringArrayStorageItems: this.getEncodedStringArrayStorageItems()
         });
@@ -5324,20 +5461,20 @@ let StringArrayCodeHelper = class StringArrayCodeHelper extends AbstractCustomCo
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _a : Object)
 ], StringArrayCodeHelper.prototype, "stringArrayStorage", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayCodeHelper.prototype, "stringArrayName", void 0);
 StringArrayCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _d : Object, typeof (_e = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object])
 ], StringArrayCodeHelper);
 exports.StringArrayCodeHelper = StringArrayCodeHelper;
@@ -5393,7 +5530,7 @@ let StringArrayRotateFunctionCodeHelper = class StringArrayRotateFunctionCodeHel
     }
     getCodeHelperTemplate() {
         const comparisonExpressionCode = NodeUtils_1.NodeUtils.convertStructureToCode([this.comparisonExpressionNode]);
-        return this.customCodeHelperFormatter.formatTemplate((0, StringArrayRotateFunctionTemplate_1.StringArrayRotateFunctionTemplate)(), {
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayRotateFunctionTemplate_1.StringArrayRotateFunctionTemplate(), {
             comparisonExpressionCode,
             comparisonValue: this.comparisonValue,
             stringArrayName: this.stringArrayName
@@ -5401,24 +5538,24 @@ let StringArrayRotateFunctionCodeHelper = class StringArrayRotateFunctionCodeHel
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Number)
 ], StringArrayRotateFunctionCodeHelper.prototype, "comparisonValue", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Object)
 ], StringArrayRotateFunctionCodeHelper.prototype, "comparisonExpressionNode", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayRotateFunctionCodeHelper.prototype, "stringArrayName", void 0);
 StringArrayRotateFunctionCodeHelper = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperObfuscator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator !== "undefined" && ICustomCodeHelperObfuscator_1.ICustomCodeHelperObfuscator) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], StringArrayRotateFunctionCodeHelper);
 exports.StringArrayRotateFunctionCodeHelper = StringArrayRotateFunctionCodeHelper;
@@ -5505,7 +5642,8 @@ let StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = class StringArra
     }
     getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding) {
         var _a;
-        return (_a = StringArrayCodeHelperGroup_1.stringArrayCallsWrapperCodeHelperMap.get(stringArrayEncoding)) !== null && _a !== void 0 ? _a : CustomCodeHelper_1.CustomCodeHelper.StringArrayCallsWrapper;
+        return (_a = StringArrayCodeHelperGroup_1
+            .stringArrayCallsWrapperCodeHelperMap.get(stringArrayEncoding)) !== null && _a !== void 0 ? _a : CustomCodeHelper_1.CustomCodeHelper.StringArrayCallsWrapper;
     }
 };
 StringArrayCodeHelperGroup.stringArrayCallsWrapperCodeHelperMap = new Map([
@@ -5514,16 +5652,16 @@ StringArrayCodeHelperGroup.stringArrayCallsWrapperCodeHelperMap = new Map([
     [StringArrayEncoding_1.StringArrayEncoding.Rc4, CustomCodeHelper_1.CustomCodeHelper.StringArrayCallsWrapperRc4]
 ]);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], StringArrayCodeHelperGroup.prototype, "customCodeHelpers", void 0);
 StringArrayCodeHelperGroup = StringArrayCodeHelperGroup_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _b : Object, typeof (_c = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _c : Object, typeof (_d = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _d : Object, typeof (_e = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _e : Object, typeof (_f = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _f : Object])
 ], StringArrayCodeHelperGroup);
 exports.StringArrayCodeHelperGroup = StringArrayCodeHelperGroup;
@@ -5918,11 +6056,11 @@ let AbstractCustomNode = class AbstractCustomNode {
     }
 };
 AbstractCustomNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], AbstractCustomNode);
 exports.AbstractCustomNode = AbstractCustomNode;
@@ -5981,11 +6119,11 @@ let BinaryExpressionFunctionNode = class BinaryExpressionFunctionNode extends Ab
     }
 };
 BinaryExpressionFunctionNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], BinaryExpressionFunctionNode);
 exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
@@ -6066,23 +6204,23 @@ let BlockStatementControlFlowFlatteningNode = class BlockStatementControlFlowFla
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], BlockStatementControlFlowFlatteningNode.prototype, "blockStatementBody", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], BlockStatementControlFlowFlatteningNode.prototype, "originalKeysIndexesInShuffledArray", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], BlockStatementControlFlowFlatteningNode.prototype, "shuffledKeys", void 0);
 BlockStatementControlFlowFlatteningNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], BlockStatementControlFlowFlatteningNode);
 exports.BlockStatementControlFlowFlatteningNode = BlockStatementControlFlowFlatteningNode;
@@ -6140,12 +6278,18 @@ let CallExpressionFunctionNode = class CallExpressionFunctionNode extends Abstra
             const argument = this.expressionArguments[i];
             const isSpreadCallArgument = NodeGuards_1.NodeGuards.isSpreadElementNode(argument);
             const baseIdentifierNode = NodeFactory_1.NodeFactory.identifierNode(`param${i + 1}`);
-            params.push(isSpreadCallArgument
-                ? NodeFactory_1.NodeFactory.restElementNode(baseIdentifierNode)
-                : baseIdentifierNode);
-            callArguments.push(isSpreadCallArgument
-                ? NodeFactory_1.NodeFactory.spreadElementNode(baseIdentifierNode)
-                : baseIdentifierNode);
+            if (isSpreadCallArgument) {
+                params.push(NodeFactory_1.NodeFactory.restElementNode(baseIdentifierNode));
+                callArguments.push(NodeFactory_1.NodeFactory.spreadElementNode(baseIdentifierNode));
+                const isMiddleSpreadCallArgument = i < argumentsLength - 1;
+                if (isMiddleSpreadCallArgument) {
+                    break;
+                }
+            }
+            else {
+                params.push(baseIdentifierNode);
+                callArguments.push(baseIdentifierNode);
+            }
         }
         const structure = NodeFactory_1.NodeFactory.expressionStatementNode(NodeFactory_1.NodeFactory.functionExpressionNode([
             calleeIdentifier,
@@ -6158,15 +6302,15 @@ let CallExpressionFunctionNode = class CallExpressionFunctionNode extends Abstra
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], CallExpressionFunctionNode.prototype, "expressionArguments", void 0);
 CallExpressionFunctionNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], CallExpressionFunctionNode);
 exports.CallExpressionFunctionNode = CallExpressionFunctionNode;
@@ -6225,11 +6369,11 @@ let LogicalExpressionFunctionNode = class LogicalExpressionFunctionNode extends 
     }
 };
 LogicalExpressionFunctionNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], LogicalExpressionFunctionNode);
 exports.LogicalExpressionFunctionNode = LogicalExpressionFunctionNode;
@@ -6282,15 +6426,15 @@ let StringLiteralNode = class StringLiteralNode extends AbstractCustomNode_1.Abs
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringLiteralNode.prototype, "literalValue", void 0);
 StringLiteralNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], StringLiteralNode);
 exports.StringLiteralNode = StringLiteralNode;
@@ -6351,27 +6495,27 @@ let CallExpressionControlFlowStorageCallNode = class CallExpressionControlFlowSt
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof ESTree !== "undefined" && ESTree.Expression) === "function" ? _a : Object)
 ], CallExpressionControlFlowStorageCallNode.prototype, "callee", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], CallExpressionControlFlowStorageCallNode.prototype, "controlFlowStorageKey", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], CallExpressionControlFlowStorageCallNode.prototype, "controlFlowStorageName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], CallExpressionControlFlowStorageCallNode.prototype, "expressionArguments", void 0);
 CallExpressionControlFlowStorageCallNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], CallExpressionControlFlowStorageCallNode);
 exports.CallExpressionControlFlowStorageCallNode = CallExpressionControlFlowStorageCallNode;
@@ -6439,15 +6583,15 @@ let ControlFlowStorageNode = class ControlFlowStorageNode extends AbstractCustom
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof TControlFlowStorage_1.TControlFlowStorage !== "undefined" && TControlFlowStorage_1.TControlFlowStorage) === "function" ? _a : Object)
 ], ControlFlowStorageNode.prototype, "controlFlowStorage", void 0);
 ControlFlowStorageNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], ControlFlowStorageNode);
 exports.ControlFlowStorageNode = ControlFlowStorageNode;
@@ -6508,19 +6652,19 @@ let ExpressionWithOperatorControlFlowStorageCallNode = class ExpressionWithOpera
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], ExpressionWithOperatorControlFlowStorageCallNode.prototype, "controlFlowStorageKey", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], ExpressionWithOperatorControlFlowStorageCallNode.prototype, "controlFlowStorageName", void 0);
 ExpressionWithOperatorControlFlowStorageCallNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], ExpressionWithOperatorControlFlowStorageCallNode);
 exports.ExpressionWithOperatorControlFlowStorageCallNode = ExpressionWithOperatorControlFlowStorageCallNode;
@@ -6576,19 +6720,19 @@ let StringLiteralControlFlowStorageCallNode = class StringLiteralControlFlowStor
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringLiteralControlFlowStorageCallNode.prototype, "controlFlowStorageKey", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringLiteralControlFlowStorageCallNode.prototype, "controlFlowStorageName", void 0);
 StringLiteralControlFlowStorageCallNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], StringLiteralControlFlowStorageCallNode);
 exports.StringLiteralControlFlowStorageCallNode = StringLiteralControlFlowStorageCallNode;
@@ -6656,11 +6800,11 @@ let BlockStatementDeadCodeInjectionNode = class BlockStatementDeadCodeInjectionN
     }
 };
 BlockStatementDeadCodeInjectionNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], BlockStatementDeadCodeInjectionNode);
 exports.BlockStatementDeadCodeInjectionNode = BlockStatementDeadCodeInjectionNode;
@@ -6719,11 +6863,11 @@ let ObjectExpressionVariableDeclarationHostNode = class ObjectExpressionVariable
     }
 };
 ObjectExpressionVariableDeclarationHostNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], ObjectExpressionVariableDeclarationHostNode);
 exports.ObjectExpressionVariableDeclarationHostNode = ObjectExpressionVariableDeclarationHostNode;
@@ -6808,14 +6952,14 @@ AbstractStringArrayCallNode.stringArrayIndexNodesMap = new Map([
     [StringArrayIndexesType_1.StringArrayIndexesType.HexadecimalNumericString, StringArrayIndexNode_1.StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode]
 ]);
 AbstractStringArrayCallNode = AbstractStringArrayCallNode_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory !== "undefined" && TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _d : Object, typeof (_e = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _e : Object, typeof (_f = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _f : Object, typeof (_g = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _g : Object])
 ], AbstractStringArrayCallNode);
 exports.AbstractStringArrayCallNode = AbstractStringArrayCallNode;
@@ -6906,34 +7050,34 @@ let StringArrayCallNode = class StringArrayCallNode extends AbstractStringArrayC
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Object)
 ], StringArrayCallNode.prototype, "decodeKey", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Number)
 ], StringArrayCallNode.prototype, "index", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Number)
 ], StringArrayCallNode.prototype, "indexShiftAmount", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayCallNode.prototype, "stringArrayCallsWrapperName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Object)
 ], StringArrayCallNode.prototype, "stringArrayCallsWrapperParameterIndexesData", void 0);
 StringArrayCallNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _b : Object, typeof (_c = typeof TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory !== "undefined" && TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory) === "function" ? _c : Object, typeof (_d = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _d : Object, typeof (_e = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _e : Object, typeof (_f = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _f : Object, typeof (_g = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _g : Object, typeof (_h = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _h : Object])
 ], StringArrayCallNode);
 exports.StringArrayCallNode = StringArrayCallNode;
@@ -7026,34 +7170,34 @@ let StringArrayScopeCallsWrapperFunctionNode = class StringArrayScopeCallsWrappe
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Number)
 ], StringArrayScopeCallsWrapperFunctionNode.prototype, "shiftedIndex", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayScopeCallsWrapperFunctionNode.prototype, "upperStringArrayCallsWrapperName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Object)
 ], StringArrayScopeCallsWrapperFunctionNode.prototype, "upperStringArrayCallsWrapperParameterIndexesData", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayScopeCallsWrapperFunctionNode.prototype, "stringArrayScopeCallsWrapperName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Object)
 ], StringArrayScopeCallsWrapperFunctionNode.prototype, "stringArrayScopeCallsWrapperParameterIndexesData", void 0);
 StringArrayScopeCallsWrapperFunctionNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_c = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _c : Object, typeof (_d = typeof TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory !== "undefined" && TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory) === "function" ? _d : Object, typeof (_e = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _e : Object, typeof (_f = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _f : Object, typeof (_g = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _g : Object, typeof (_h = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _h : Object, typeof (_j = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _j : Object])
 ], StringArrayScopeCallsWrapperFunctionNode);
 exports.StringArrayScopeCallsWrapperFunctionNode = StringArrayScopeCallsWrapperFunctionNode;
@@ -7114,22 +7258,22 @@ let StringArrayScopeCallsWrapperVariableNode = class StringArrayScopeCallsWrappe
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayScopeCallsWrapperVariableNode.prototype, "stringArrayCallsWrapperName", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], StringArrayScopeCallsWrapperVariableNode.prototype, "stringArrayScopeCallsWrapperName", void 0);
 StringArrayScopeCallsWrapperVariableNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayIndexNode)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICustomCodeHelperFormatter)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory !== "undefined" && TStringArrayIndexNodeFactory_1.TStringArrayIndexNodeFactory) === "function" ? _b : Object, typeof (_c = typeof ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter !== "undefined" && ICustomCodeHelperFormatter_1.ICustomCodeHelperFormatter) === "function" ? _c : Object, typeof (_d = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _d : Object, typeof (_e = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _e : Object, typeof (_f = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _f : Object, typeof (_g = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _g : Object])
 ], StringArrayScopeCallsWrapperVariableNode);
 exports.StringArrayScopeCallsWrapperVariableNode = StringArrayScopeCallsWrapperVariableNode;
@@ -7171,9 +7315,9 @@ let AbstractStringArrayIndexNode = class AbstractStringArrayIndexNode {
     }
 };
 AbstractStringArrayIndexNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], AbstractStringArrayIndexNode);
 exports.AbstractStringArrayIndexNode = AbstractStringArrayIndexNode;
@@ -7221,9 +7365,9 @@ let StringArrayHexadecimalNumberIndexNode = class StringArrayHexadecimalNumberIn
     }
 };
 StringArrayHexadecimalNumberIndexNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], StringArrayHexadecimalNumberIndexNode);
 exports.StringArrayHexadecimalNumberIndexNode = StringArrayHexadecimalNumberIndexNode;
@@ -7271,9 +7415,9 @@ let StringArrayHexadecimalNumericStringIndexNode = class StringArrayHexadecimalN
     }
 };
 StringArrayHexadecimalNumericStringIndexNode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], StringArrayHexadecimalNumericStringIndexNode);
 exports.StringArrayHexadecimalNumericStringIndexNode = StringArrayHexadecimalNumericStringIndexNode;
@@ -7745,6 +7889,7 @@ var NodeTransformer;
     NodeTransformer["BlockStatementSimplifyTransformer"] = "BlockStatementSimplifyTransformer";
     NodeTransformer["CommentsTransformer"] = "CommentsTransformer";
     NodeTransformer["CustomCodeHelpersTransformer"] = "CustomCodeHelpersTransformer";
+    NodeTransformer["DeadCodeInjectionIdentifiersTransformer"] = "DeadCodeInjectionIdentifiersTransformer";
     NodeTransformer["DeadCodeInjectionTransformer"] = "DeadCodeInjectionTransformer";
     NodeTransformer["DirectivePlacementTransformer"] = "DirectivePlacementTransformer";
     NodeTransformer["EscapeSequenceTransformer"] = "EscapeSequenceTransformer";
@@ -8149,9 +8294,9 @@ let AbstractIdentifierNamesGenerator = class AbstractIdentifierNamesGenerator {
     }
 };
 AbstractIdentifierNamesGenerator = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], AbstractIdentifierNamesGenerator);
 exports.AbstractIdentifierNamesGenerator = AbstractIdentifierNamesGenerator;
@@ -8270,7 +8415,8 @@ let DictionaryIdentifierNamesGenerator = DictionaryIdentifierNamesGenerator_1 = 
     getIncrementedIdentifierNames(identifierNames) {
         const formattedIdentifierNames = [];
         for (const identifierName of identifierNames) {
-            const newIdentifierName = DictionaryIdentifierNamesGenerator_1.incrementIdentifierName(identifierName);
+            const newIdentifierName = DictionaryIdentifierNamesGenerator_1
+                .incrementIdentifierName(identifierName);
             if (newIdentifierName) {
                 formattedIdentifierNames.push(newIdentifierName);
             }
@@ -8279,10 +8425,10 @@ let DictionaryIdentifierNamesGenerator = DictionaryIdentifierNamesGenerator_1 = 
     }
 };
 DictionaryIdentifierNamesGenerator = DictionaryIdentifierNamesGenerator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _c : Object])
 ], DictionaryIdentifierNamesGenerator);
 exports.DictionaryIdentifierNamesGenerator = DictionaryIdentifierNamesGenerator;
@@ -8350,9 +8496,9 @@ let HexadecimalIdentifierNamesGenerator = HexadecimalIdentifierNamesGenerator_1 
 };
 HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength = 6;
 HexadecimalIdentifierNamesGenerator = HexadecimalIdentifierNamesGenerator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], HexadecimalIdentifierNamesGenerator);
 exports.HexadecimalIdentifierNamesGenerator = HexadecimalIdentifierNamesGenerator;
@@ -8521,9 +8667,9 @@ MangledIdentifierNamesGenerator.reservedNamesSet = new Set([
     'var', 'void', 'with'
 ]);
 MangledIdentifierNamesGenerator = MangledIdentifierNamesGenerator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], MangledIdentifierNamesGenerator);
 exports.MangledIdentifierNamesGenerator = MangledIdentifierNamesGenerator;
@@ -8587,16 +8733,16 @@ let MangledShuffledIdentifierNamesGenerator = MangledShuffledIdentifierNamesGene
     }
 };
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MangledShuffledIdentifierNamesGenerator.prototype, "initialize", null);
 MangledShuffledIdentifierNamesGenerator = MangledShuffledIdentifierNamesGenerator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], MangledShuffledIdentifierNamesGenerator);
 exports.MangledShuffledIdentifierNamesGenerator = MangledShuffledIdentifierNamesGenerator;
@@ -8747,6 +8893,19 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
+/***/ "./src/interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer.ts":
+/*!*****************************************************************************************************************!*\
+  !*** ./src/interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer.ts ***!
+  \*****************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
 /***/ "./src/interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer.ts":
 /*!***************************************************************************************************************!*\
   !*** ./src/interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer.ts ***!
@@ -8803,6 +8962,32 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 /*!***************************************************!*\
   !*** ./src/interfaces/source-code/ISourceCode.ts ***!
   \***************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage.ts":
+/*!**********************************************************************************************!*\
+  !*** ./src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage.ts ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage.ts":
+/*!************************************************************************************************!*\
+  !*** ./src/interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage.ts ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -9030,8 +9215,8 @@ Logger.colorInfo = chalk_1.default.cyan;
 Logger.colorSuccess = chalk_1.default.green;
 Logger.colorWarn = chalk_1.default.yellow;
 Logger = Logger_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _a : Object])
 ], Logger);
 exports.Logger = Logger;
@@ -9073,9 +9258,9 @@ let AbstractNodeTransformer = class AbstractNodeTransformer {
     }
 };
 AbstractNodeTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], AbstractNodeTransformer);
 exports.AbstractNodeTransformer = AbstractNodeTransformer;
@@ -9104,7 +9289,7 @@ const AbstractTransformerNamesGroupsBuilder_1 = __webpack_require__(/*! ../utils
 let NodeTransformerNamesGroupsBuilder = class NodeTransformerNamesGroupsBuilder extends AbstractTransformerNamesGroupsBuilder_1.AbstractTransformerNamesGroupsBuilder {
 };
 NodeTransformerNamesGroupsBuilder = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], NodeTransformerNamesGroupsBuilder);
 exports.NodeTransformerNamesGroupsBuilder = NodeTransformerNamesGroupsBuilder;
 
@@ -9233,9 +9418,9 @@ let NodeTransformersRunner = class NodeTransformersRunner {
     }
 };
 NodeTransformersRunner = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)),
     __metadata("design:paramtypes", [typeof (_a = typeof TNodeTransformerFactory_1.TNodeTransformerFactory !== "undefined" && TNodeTransformerFactory_1.TNodeTransformerFactory) === "function" ? _a : Object, typeof (_b = typeof ITransformerNamesGroupsBuilder_1.ITransformerNamesGroupsBuilder !== "undefined" && ITransformerNamesGroupsBuilder_1.ITransformerNamesGroupsBuilder) === "function" ? _b : Object])
 ], NodeTransformersRunner);
 exports.NodeTransformersRunner = NodeTransformersRunner;
@@ -9362,11 +9547,11 @@ let BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
     }
 };
 BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], BlockStatementControlFlowTransformer);
 exports.BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer;
@@ -9531,7 +9716,8 @@ let FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = class Fu
                 if (this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
                     return node;
                 }
-                const controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
+                const controlFlowReplacerName = FunctionControlFlowTransformer_1
+                    .controlFlowReplacersMap.get(node.type);
                 if (controlFlowReplacerName === undefined) {
                     return node;
                 }
@@ -9549,12 +9735,12 @@ FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([
 FunctionControlFlowTransformer.hostNodeSearchMinDepth = 0;
 FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 2;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowStorageFactory_1.TControlFlowStorageFactory !== "undefined" && TControlFlowStorageFactory_1.TControlFlowStorageFactory) === "function" ? _a : Object, typeof (_b = typeof TControlFlowReplacerFactory_1.TControlFlowReplacerFactory !== "undefined" && TControlFlowReplacerFactory_1.TControlFlowReplacerFactory) === "function" ? _b : Object, typeof (_c = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], FunctionControlFlowTransformer);
 exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
@@ -9609,7 +9795,8 @@ let AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = class Abstract
     }
     insertCustomNodeToControlFlowStorage(customNode, controlFlowStorage, replacerId, usingExistingIdentifierChance) {
         const controlFlowStorageId = controlFlowStorage.getStorageId();
-        const storageKeysById = AbstractControlFlowReplacer_1.getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
+        const storageKeysById = AbstractControlFlowReplacer_1
+            .getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
         const storageKeysForCurrentId = storageKeysById.get(replacerId);
         if (this.randomGenerator.getMathRandom() < usingExistingIdentifierChance &&
             storageKeysForCurrentId &&
@@ -9631,10 +9818,10 @@ let AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = class Abstract
     }
 };
 AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], AbstractControlFlowReplacer);
 exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
@@ -9686,10 +9873,10 @@ let BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 
 };
 BinaryExpressionControlFlowReplacer.usingExistingIdentifierChance = 0.5;
 BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], BinaryExpressionControlFlowReplacer);
 exports.BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer;
@@ -9756,10 +9943,10 @@ let CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = cl
 };
 CallExpressionControlFlowReplacer.usingExistingIdentifierChance = 0.5;
 CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], CallExpressionControlFlowReplacer);
 exports.CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer;
@@ -9813,10 +10000,10 @@ let ExpressionWithOperatorControlFlowReplacer = class ExpressionWithOperatorCont
     }
 };
 ExpressionWithOperatorControlFlowReplacer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], ExpressionWithOperatorControlFlowReplacer);
 exports.ExpressionWithOperatorControlFlowReplacer = ExpressionWithOperatorControlFlowReplacer;
@@ -9888,10 +10075,10 @@ let LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer_
 };
 LogicalExpressionControlFlowReplacer.usingExistingIdentifierChance = 0.5;
 LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], LogicalExpressionControlFlowReplacer);
 exports.LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer;
@@ -9960,10 +10147,10 @@ let StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = clas
 };
 StringLiteralControlFlowReplacer.usingExistingIdentifierChance = 1;
 StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory !== "undefined" && TControlFlowCustomNodeFactory_1.TControlFlowCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], StringLiteralControlFlowReplacer);
 exports.StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer;
@@ -10040,9 +10227,9 @@ let BooleanLiteralTransformer = class BooleanLiteralTransformer extends Abstract
     }
 };
 BooleanLiteralTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], BooleanLiteralTransformer);
 exports.BooleanLiteralTransformer = BooleanLiteralTransformer;
@@ -10107,9 +10294,9 @@ let ExportSpecifierTransformer = class ExportSpecifierTransformer extends Abstra
     }
 };
 ExportSpecifierTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ExportSpecifierTransformer);
 exports.ExportSpecifierTransformer = ExportSpecifierTransformer;
@@ -10178,9 +10365,9 @@ let MemberExpressionTransformer = class MemberExpressionTransformer extends Abst
     }
 };
 MemberExpressionTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], MemberExpressionTransformer);
 exports.MemberExpressionTransformer = MemberExpressionTransformer;
@@ -10267,9 +10454,9 @@ let MethodAndPropertyDefinitionTransformer = MethodAndPropertyDefinitionTransfor
 };
 MethodAndPropertyDefinitionTransformer.ignoredNames = ['constructor'];
 MethodAndPropertyDefinitionTransformer = MethodAndPropertyDefinitionTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], MethodAndPropertyDefinitionTransformer);
 exports.MethodAndPropertyDefinitionTransformer = MethodAndPropertyDefinitionTransformer;
@@ -10354,9 +10541,9 @@ let NumberLiteralTransformer = class NumberLiteralTransformer extends AbstractNo
     }
 };
 NumberLiteralTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], NumberLiteralTransformer);
 exports.NumberLiteralTransformer = NumberLiteralTransformer;
@@ -10447,10 +10634,10 @@ let NumberToNumericalExpressionTransformer = class NumberToNumericalExpressionTr
     }
 };
 NumberToNumericalExpressionTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INumberNumericalExpressionAnalyzer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INumberNumericalExpressionAnalyzer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer !== "undefined" && INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], NumberToNumericalExpressionTransformer);
 exports.NumberToNumericalExpressionTransformer = NumberToNumericalExpressionTransformer;
@@ -10605,10 +10792,10 @@ ObjectExpressionKeysTransformer.objectExpressionExtractorNames = [
     ObjectExpressionExtractor_1.ObjectExpressionExtractor.BasePropertiesExtractor
 ];
 ObjectExpressionKeysTransformer = ObjectExpressionKeysTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObjectExpressionExtractor)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObjectExpressionExtractor)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TObjectExpressionExtractorFactory_1.TObjectExpressionExtractorFactory !== "undefined" && TObjectExpressionExtractorFactory_1.TObjectExpressionExtractorFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], ObjectExpressionKeysTransformer);
 exports.ObjectExpressionKeysTransformer = ObjectExpressionKeysTransformer;
@@ -10700,9 +10887,9 @@ let ObjectExpressionTransformer = class ObjectExpressionTransformer extends Abst
     }
 };
 ObjectExpressionTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ObjectExpressionTransformer);
 exports.ObjectExpressionTransformer = ObjectExpressionTransformer;
@@ -10778,9 +10965,9 @@ let ObjectPatternPropertiesTransformer = class ObjectPatternPropertiesTransforme
     }
 };
 ObjectPatternPropertiesTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ObjectPatternPropertiesTransformer);
 exports.ObjectPatternPropertiesTransformer = ObjectPatternPropertiesTransformer;
@@ -10920,9 +11107,9 @@ let SplitStringTransformer = SplitStringTransformer_1 = class SplitStringTransfo
 };
 SplitStringTransformer.firstPassChunkLength = 1000;
 SplitStringTransformer = SplitStringTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], SplitStringTransformer);
 exports.SplitStringTransformer = SplitStringTransformer;
@@ -11027,9 +11214,9 @@ let TemplateLiteralTransformer = TemplateLiteralTransformer_1 = class TemplateLi
     }
 };
 TemplateLiteralTransformer = TemplateLiteralTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], TemplateLiteralTransformer);
 exports.TemplateLiteralTransformer = TemplateLiteralTransformer;
@@ -11155,7 +11342,7 @@ let BasePropertiesExtractor = BasePropertiesExtractor_1 = class BasePropertiesEx
     }
 };
 BasePropertiesExtractor = BasePropertiesExtractor_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], BasePropertiesExtractor);
 exports.BasePropertiesExtractor = BasePropertiesExtractor;
 
@@ -11251,11 +11438,100 @@ let ObjectExpressionToVariableDeclarationExtractor = class ObjectExpressionToVar
     }
 };
 ObjectExpressionToVariableDeclarationExtractor = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)),
     __metadata("design:paramtypes", [typeof (_a = typeof TObjectExpressionKeysTransformerCustomNodeFactory_1.TObjectExpressionKeysTransformerCustomNodeFactory !== "undefined" && TObjectExpressionKeysTransformerCustomNodeFactory_1.TObjectExpressionKeysTransformerCustomNodeFactory) === "function" ? _a : Object])
 ], ObjectExpressionToVariableDeclarationExtractor);
 exports.ObjectExpressionToVariableDeclarationExtractor = ObjectExpressionToVariableDeclarationExtractor;
+
+
+/***/ }),
+
+/***/ "./src/node-transformers/dead-code-injection-transformers/DeadCodeInjectionIdentifiersTransformer.ts":
+/*!***********************************************************************************************************!*\
+  !*** ./src/node-transformers/dead-code-injection-transformers/DeadCodeInjectionIdentifiersTransformer.ts ***!
+  \***********************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeadCodeInjectionIdentifiersTransformer = void 0;
+const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
+const ServiceIdentifiers_1 = __webpack_require__(/*! ../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
+const IIdentifierReplacer_1 = __webpack_require__(/*! ../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer */ "./src/interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer.ts");
+const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
+const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
+const IScopeIdentifiersTraverser_1 = __webpack_require__(/*! ../../interfaces/node/IScopeIdentifiersTraverser */ "./src/interfaces/node/IScopeIdentifiersTraverser.ts");
+const NodeTransformationStage_1 = __webpack_require__(/*! ../../enums/node-transformers/NodeTransformationStage */ "./src/enums/node-transformers/NodeTransformationStage.ts");
+const AbstractNodeTransformer_1 = __webpack_require__(/*! ../AbstractNodeTransformer */ "./src/node-transformers/AbstractNodeTransformer.ts");
+const NodeGuards_1 = __webpack_require__(/*! ../../node/NodeGuards */ "./src/node/NodeGuards.ts");
+let DeadCodeInjectionIdentifiersTransformer = class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransformer_1.AbstractNodeTransformer {
+    constructor(identifierReplacer, randomGenerator, options, scopeIdentifiersTraverser) {
+        super(randomGenerator, options);
+        this.identifierReplacer = identifierReplacer;
+        this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
+    }
+    getVisitor(nodeTransformationStage) {
+        switch (nodeTransformationStage) {
+            case NodeTransformationStage_1.NodeTransformationStage.RenameIdentifiers:
+                return {
+                    enter: (node, parentNode) => {
+                        if (parentNode && NodeGuards_1.NodeGuards.isProgramNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+            default:
+                return null;
+        }
+    }
+    transformNode(programNode, parentNode) {
+        this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(programNode, parentNode, (data) => {
+            const { reference, variableLexicalScopeNode } = data;
+            this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
+        });
+        return programNode;
+    }
+    transformScopeThroughIdentifiers(reference, lexicalScopeNode) {
+        if (reference.resolved) {
+            return;
+        }
+        const identifier = reference.identifier;
+        this.storeIdentifierName(identifier, lexicalScopeNode);
+        this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
+    }
+    storeIdentifierName(identifierNode, lexicalScopeNode) {
+        this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
+    }
+    replaceIdentifierName(identifierNode, lexicalScopeNode, reference) {
+        const newIdentifier = this.identifierReplacer
+            .replace(identifierNode, lexicalScopeNode);
+        reference.identifier.name = newIdentifier.name;
+    }
+};
+DeadCodeInjectionIdentifiersTransformer = __decorate([
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
+    __metadata("design:paramtypes", [typeof (_a = typeof IIdentifierReplacer_1.IIdentifierReplacer !== "undefined" && IIdentifierReplacer_1.IIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object, typeof (_d = typeof IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser !== "undefined" && IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser) === "function" ? _d : Object])
+], DeadCodeInjectionIdentifiersTransformer);
+exports.DeadCodeInjectionIdentifiersTransformer = DeadCodeInjectionIdentifiersTransformer;
 
 
 /***/ }),
@@ -11505,16 +11781,16 @@ DeadCodeInjectionTransformer.deadCodeInjectionRootAstHostNodeName = 'deadCodeInj
 DeadCodeInjectionTransformer.maxNestedBlockStatementsCount = 4;
 DeadCodeInjectionTransformer.minCollectedBlockStatementsCount = 5;
 DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers = [
+    NodeTransformer_1.NodeTransformer.DeadCodeInjectionIdentifiersTransformer,
     NodeTransformer_1.NodeTransformer.LabeledStatementTransformer,
-    NodeTransformer_1.NodeTransformer.ScopeIdentifiersTransformer,
-    NodeTransformer_1.NodeTransformer.ScopeThroughIdentifiersTransformer
+    NodeTransformer_1.NodeTransformer.ScopeIdentifiersTransformer
 ];
 DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TDeadNodeInjectionCustomNodeFactory_1.TDeadNodeInjectionCustomNodeFactory !== "undefined" && TDeadNodeInjectionCustomNodeFactory_1.TDeadNodeInjectionCustomNodeFactory) === "function" ? _a : Object, typeof (_b = typeof INodeTransformersRunner_1.INodeTransformersRunner !== "undefined" && INodeTransformersRunner_1.INodeTransformersRunner) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], DeadCodeInjectionTransformer);
 exports.DeadCodeInjectionTransformer = DeadCodeInjectionTransformer;
@@ -11641,9 +11917,9 @@ let DirectivePlacementTransformer = class DirectivePlacementTransformer extends 
     }
 };
 DirectivePlacementTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], DirectivePlacementTransformer);
 exports.DirectivePlacementTransformer = DirectivePlacementTransformer;
@@ -11719,10 +11995,10 @@ let EscapeSequenceTransformer = class EscapeSequenceTransformer extends Abstract
     }
 };
 EscapeSequenceTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IEscapeSequenceEncoder)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof IEscapeSequenceEncoder_1.IEscapeSequenceEncoder !== "undefined" && IEscapeSequenceEncoder_1.IEscapeSequenceEncoder) === "function" ? _c : Object])
 ], EscapeSequenceTransformer);
 exports.EscapeSequenceTransformer = EscapeSequenceTransformer;
@@ -11872,9 +12148,9 @@ CommentsTransformer.preservedWords = [
     '@preserve'
 ];
 CommentsTransformer = CommentsTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], CommentsTransformer);
 exports.CommentsTransformer = CommentsTransformer;
@@ -11978,12 +12254,12 @@ let CustomCodeHelpersTransformer = class CustomCodeHelpersTransformer extends Ab
     }
 };
 CustomCodeHelpersTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICallsGraphAnalyzer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICallsGraphAnalyzer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof ICallsGraphAnalyzer_1.ICallsGraphAnalyzer !== "undefined" && ICallsGraphAnalyzer_1.ICallsGraphAnalyzer) === "function" ? _a : Object, typeof (_b = typeof IPrevailingKindOfVariablesAnalyzer_1.IPrevailingKindOfVariablesAnalyzer !== "undefined" && IPrevailingKindOfVariablesAnalyzer_1.IPrevailingKindOfVariablesAnalyzer) === "function" ? _b : Object, typeof (_c = typeof TCustomCodeHelperGroupStorage_1.TCustomCodeHelperGroupStorage !== "undefined" && TCustomCodeHelperGroupStorage_1.TCustomCodeHelperGroupStorage) === "function" ? _c : Object, typeof (_d = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _d : Object, typeof (_e = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _e : Object])
 ], CustomCodeHelpersTransformer);
 exports.CustomCodeHelpersTransformer = CustomCodeHelpersTransformer;
@@ -12037,10 +12313,12 @@ let EvalCallExpressionTransformer = EvalCallExpressionTransformer_1 = class Eval
     }
     static extractEvalStringFromCallExpressionArgument(node) {
         if (NodeGuards_1.NodeGuards.isLiteralNode(node)) {
-            return EvalCallExpressionTransformer_1.extractEvalStringFromLiteralNode(node);
+            return EvalCallExpressionTransformer_1
+                .extractEvalStringFromLiteralNode(node);
         }
         if (NodeGuards_1.NodeGuards.isTemplateLiteralNode(node)) {
-            return EvalCallExpressionTransformer_1.extractEvalStringFromTemplateLiteralNode(node);
+            return EvalCallExpressionTransformer_1
+                .extractEvalStringFromTemplateLiteralNode(node);
         }
         return null;
     }
@@ -12089,7 +12367,8 @@ let EvalCallExpressionTransformer = EvalCallExpressionTransformer_1 = class Eval
         if (!callExpressionFirstArgument) {
             return callExpressionNode;
         }
-        const evalString = EvalCallExpressionTransformer_1.extractEvalStringFromCallExpressionArgument(callExpressionFirstArgument);
+        const evalString = EvalCallExpressionTransformer_1
+            .extractEvalStringFromCallExpressionArgument(callExpressionFirstArgument);
         if (!evalString) {
             return callExpressionNode;
         }
@@ -12119,9 +12398,9 @@ let EvalCallExpressionTransformer = EvalCallExpressionTransformer_1 = class Eval
     }
 };
 EvalCallExpressionTransformer = EvalCallExpressionTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], EvalCallExpressionTransformer);
 exports.EvalCallExpressionTransformer = EvalCallExpressionTransformer;
@@ -12190,9 +12469,9 @@ let MetadataTransformer = class MetadataTransformer extends AbstractNodeTransfor
     }
 };
 MetadataTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], MetadataTransformer);
 exports.MetadataTransformer = MetadataTransformer;
@@ -12287,10 +12566,10 @@ ObfuscatingGuardsTransformer.obfuscatingGuardsList = [
     ObfuscatingGuard_1.ObfuscatingGuard.ReservedStringObfuscatingGuard
 ];
 ObfuscatingGuardsTransformer = ObfuscatingGuardsTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeGuard)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeGuard)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TObfuscatingGuardFactory_1.TObfuscatingGuardFactory !== "undefined" && TObfuscatingGuardFactory_1.TObfuscatingGuardFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], ObfuscatingGuardsTransformer);
 exports.ObfuscatingGuardsTransformer = ObfuscatingGuardsTransformer;
@@ -12349,9 +12628,9 @@ let ParentificationTransformer = class ParentificationTransformer extends Abstra
     }
 };
 ParentificationTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ParentificationTransformer);
 exports.ParentificationTransformer = ParentificationTransformer;
@@ -12447,11 +12726,11 @@ let VariablePreserveTransformer = class VariablePreserveTransformer extends Abst
     }
 };
 VariablePreserveTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
     __metadata("design:paramtypes", [typeof (_a = typeof IIdentifierReplacer_1.IIdentifierReplacer !== "undefined" && IIdentifierReplacer_1.IIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object, typeof (_d = typeof IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser !== "undefined" && IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser) === "function" ? _d : Object])
 ], VariablePreserveTransformer);
 exports.VariablePreserveTransformer = VariablePreserveTransformer;
@@ -12499,7 +12778,7 @@ BlackListObfuscatingGuard.blackListGuards = [
     NodeGuards_1.NodeGuards.isDirectiveNode
 ];
 BlackListObfuscatingGuard = BlackListObfuscatingGuard_1 = __decorate([
-    (0, inversify_1.injectable)(),
+    inversify_1.injectable(),
     __metadata("design:paramtypes", [])
 ], BlackListObfuscatingGuard);
 exports.BlackListObfuscatingGuard = BlackListObfuscatingGuard;
@@ -12565,7 +12844,7 @@ let ConditionalCommentObfuscatingGuard = ConditionalCommentObfuscatingGuard_1 = 
 ConditionalCommentObfuscatingGuard.obfuscationEnableCommentRegExp = new RegExp('javascript-obfuscator *: *enable');
 ConditionalCommentObfuscatingGuard.obfuscationDisableCommentRegExp = new RegExp('javascript-obfuscator *: *disable');
 ConditionalCommentObfuscatingGuard = ConditionalCommentObfuscatingGuard_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], ConditionalCommentObfuscatingGuard);
 exports.ConditionalCommentObfuscatingGuard = ConditionalCommentObfuscatingGuard;
 
@@ -12622,8 +12901,8 @@ let ForceTransformStringObfuscatingGuard = class ForceTransformStringObfuscating
     }
 };
 ForceTransformStringObfuscatingGuard = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _a : Object])
 ], ForceTransformStringObfuscatingGuard);
 exports.ForceTransformStringObfuscatingGuard = ForceTransformStringObfuscatingGuard;
@@ -12674,8 +12953,8 @@ let IgnoredRequireImportObfuscatingGuard = class IgnoredRequireImportObfuscating
     }
 };
 IgnoredRequireImportObfuscatingGuard = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _a : Object])
 ], IgnoredRequireImportObfuscatingGuard);
 exports.IgnoredRequireImportObfuscatingGuard = IgnoredRequireImportObfuscatingGuard;
@@ -12733,8 +13012,8 @@ let ReservedStringObfuscatingGuard = class ReservedStringObfuscatingGuard {
     }
 };
 ReservedStringObfuscatingGuard = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _a : Object])
 ], ReservedStringObfuscatingGuard);
 exports.ReservedStringObfuscatingGuard = ReservedStringObfuscatingGuard;
@@ -12838,10 +13117,10 @@ let LabeledStatementTransformer = class LabeledStatementTransformer extends Abst
     }
 };
 LabeledStatementTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IIdentifierReplacer_1.IIdentifierReplacer !== "undefined" && IIdentifierReplacer_1.IIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], LabeledStatementTransformer);
 exports.LabeledStatementTransformer = LabeledStatementTransformer;
@@ -13069,11 +13348,11 @@ let ScopeIdentifiersTransformer = class ScopeIdentifiersTransformer extends Abst
     }
 };
 ScopeIdentifiersTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
     __metadata("design:paramtypes", [typeof (_a = typeof IIdentifierReplacer_1.IIdentifierReplacer !== "undefined" && IIdentifierReplacer_1.IIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object, typeof (_d = typeof IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser !== "undefined" && IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser) === "function" ? _d : Object])
 ], ScopeIdentifiersTransformer);
 exports.ScopeIdentifiersTransformer = ScopeIdentifiersTransformer;
@@ -13106,17 +13385,17 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ScopeThroughIdentifiersTransformer = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
-const IIdentifierReplacer_1 = __webpack_require__(/*! ../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer */ "./src/interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer.ts");
 const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
 const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
 const IScopeIdentifiersTraverser_1 = __webpack_require__(/*! ../../interfaces/node/IScopeIdentifiersTraverser */ "./src/interfaces/node/IScopeIdentifiersTraverser.ts");
+const IThroughIdentifierReplacer_1 = __webpack_require__(/*! ../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer */ "./src/interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer.ts");
 const NodeTransformationStage_1 = __webpack_require__(/*! ../../enums/node-transformers/NodeTransformationStage */ "./src/enums/node-transformers/NodeTransformationStage.ts");
 const AbstractNodeTransformer_1 = __webpack_require__(/*! ../AbstractNodeTransformer */ "./src/node-transformers/AbstractNodeTransformer.ts");
 const NodeGuards_1 = __webpack_require__(/*! ../../node/NodeGuards */ "./src/node/NodeGuards.ts");
 let ScopeThroughIdentifiersTransformer = class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer_1.AbstractNodeTransformer {
-    constructor(identifierReplacer, randomGenerator, options, scopeIdentifiersTraverser) {
+    constructor(throughIdentifierReplacer, scopeIdentifiersTraverser, randomGenerator, options) {
         super(randomGenerator, options);
-        this.identifierReplacer = identifierReplacer;
+        this.throughIdentifierReplacer = throughIdentifierReplacer;
         this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
     }
     getVisitor(nodeTransformationStage) {
@@ -13144,26 +13423,21 @@ let ScopeThroughIdentifiersTransformer = class ScopeThroughIdentifiersTransforme
         if (reference.resolved) {
             return;
         }
+        this.replaceIdentifierName(reference);
+    }
+    replaceIdentifierName(reference) {
         const identifier = reference.identifier;
-        this.storeIdentifierName(identifier, lexicalScopeNode);
-        this.replaceIdentifierName(identifier, lexicalScopeNode, reference);
-    }
-    storeIdentifierName(identifierNode, lexicalScopeNode) {
-        this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
-    }
-    replaceIdentifierName(identifierNode, lexicalScopeNode, reference) {
-        const newIdentifier = this.identifierReplacer
-            .replace(identifierNode, lexicalScopeNode);
+        const newIdentifier = this.throughIdentifierReplacer.replace(identifier);
         reference.identifier.name = newIdentifier.name;
     }
 };
 ScopeThroughIdentifiersTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierReplacer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
-    __metadata("design:paramtypes", [typeof (_a = typeof IIdentifierReplacer_1.IIdentifierReplacer !== "undefined" && IIdentifierReplacer_1.IIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object, typeof (_d = typeof IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser !== "undefined" && IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser) === "function" ? _d : Object])
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IThroughIdentifierReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IScopeIdentifiersTraverser)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof IThroughIdentifierReplacer_1.IThroughIdentifierReplacer !== "undefined" && IThroughIdentifierReplacer_1.IThroughIdentifierReplacer) === "function" ? _a : Object, typeof (_b = typeof IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser !== "undefined" && IScopeIdentifiersTraverser_1.IScopeIdentifiersTraverser) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
 ], ScopeThroughIdentifiersTransformer);
 exports.ScopeThroughIdentifiersTransformer = ScopeThroughIdentifiersTransformer;
 
@@ -13190,18 +13464,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IdentifierReplacer = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const TIdentifierNamesGeneratorFactory_1 = __webpack_require__(/*! ../../../types/container/generators/TIdentifierNamesGeneratorFactory */ "./src/types/container/generators/TIdentifierNamesGeneratorFactory.ts");
+const IGlobalIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage */ "./src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage.ts");
 const IOptions_1 = __webpack_require__(/*! ../../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
 const NodeFactory_1 = __webpack_require__(/*! ../../../node/NodeFactory */ "./src/node/NodeFactory.ts");
 let IdentifierReplacer = class IdentifierReplacer {
-    constructor(identifierNamesGeneratorFactory, options) {
+    constructor(identifierNamesGeneratorFactory, identifierNamesCacheStorage, options) {
         this.blockScopesMap = new Map();
         this.options = options;
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
     }
     storeGlobalName(identifierNode, lexicalScopeNode) {
@@ -13215,6 +13491,9 @@ let IdentifierReplacer = class IdentifierReplacer {
         }
         const namesMap = this.blockScopesMap.get(lexicalScopeNode);
         namesMap.set(identifierName, newIdentifierName);
+        if (this.options.identifierNamesCache) {
+            this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
+        }
     }
     storeLocalName(identifierNode, lexicalScopeNode) {
         const identifierName = identifierNode.name;
@@ -13255,12 +13534,75 @@ let IdentifierReplacer = class IdentifierReplacer {
     }
 };
 IdentifierReplacer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage !== "undefined" && IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], IdentifierReplacer);
 exports.IdentifierReplacer = IdentifierReplacer;
+
+
+/***/ }),
+
+/***/ "./src/node-transformers/rename-identifiers-transformers/through-replacer/ThroughIdentifierReplacer.ts":
+/*!*************************************************************************************************************!*\
+  !*** ./src/node-transformers/rename-identifiers-transformers/through-replacer/ThroughIdentifierReplacer.ts ***!
+  \*************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ThroughIdentifierReplacer = void 0;
+const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
+const ServiceIdentifiers_1 = __webpack_require__(/*! ../../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
+const IGlobalIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage */ "./src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage.ts");
+const IOptions_1 = __webpack_require__(/*! ../../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
+const NodeFactory_1 = __webpack_require__(/*! ../../../node/NodeFactory */ "./src/node/NodeFactory.ts");
+let ThroughIdentifierReplacer = class ThroughIdentifierReplacer {
+    constructor(identifierNamesCacheStorage, options) {
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
+        this.options = options;
+    }
+    replace(identifierNode) {
+        var _a;
+        const identifierName = identifierNode.name;
+        const newIdentifierName = this.options.identifierNamesCache && !this.isReservedName(identifierName)
+            ? (_a = this.identifierNamesCacheStorage.get(identifierName)) !== null && _a !== void 0 ? _a : identifierName
+            : identifierName;
+        return NodeFactory_1.NodeFactory.identifierNode(newIdentifierName);
+    }
+    isReservedName(name) {
+        if (!this.options.reservedNames.length) {
+            return false;
+        }
+        return this.options.reservedNames
+            .some((reservedName) => {
+            return new RegExp(reservedName, 'g').exec(name) !== null;
+        });
+    }
+};
+ThroughIdentifierReplacer = __decorate([
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage !== "undefined" && IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
+], ThroughIdentifierReplacer);
+exports.ThroughIdentifierReplacer = ThroughIdentifierReplacer;
 
 
 /***/ }),
@@ -13383,10 +13725,10 @@ let RenamePropertiesTransformer = RenamePropertiesTransformer_1 = class RenamePr
     }
 };
 RenamePropertiesTransformer = RenamePropertiesTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRenamePropertiesReplacer)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRenamePropertiesReplacer)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRenamePropertiesReplacer_1.IRenamePropertiesReplacer !== "undefined" && IRenamePropertiesReplacer_1.IRenamePropertiesReplacer) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], RenamePropertiesTransformer);
 exports.RenamePropertiesTransformer = RenamePropertiesTransformer;
@@ -13417,21 +13759,23 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var RenamePropertiesReplacer_1, _a, _b;
+var RenamePropertiesReplacer_1, _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RenamePropertiesReplacer = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const TIdentifierNamesGeneratorFactory_1 = __webpack_require__(/*! ../../../types/container/generators/TIdentifierNamesGeneratorFactory */ "./src/types/container/generators/TIdentifierNamesGeneratorFactory.ts");
 const IOptions_1 = __webpack_require__(/*! ../../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
+const IPropertyIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../../../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage */ "./src/interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage.ts");
 const ReservedDomProperties_json_1 = __importDefault(__webpack_require__(/*! ./ReservedDomProperties.json */ "./src/node-transformers/rename-properties-transformers/replacer/ReservedDomProperties.json"));
 const NodeGuards_1 = __webpack_require__(/*! ../../../node/NodeGuards */ "./src/node/NodeGuards.ts");
 const NodeFactory_1 = __webpack_require__(/*! ../../../node/NodeFactory */ "./src/node/NodeFactory.ts");
 let RenamePropertiesReplacer = RenamePropertiesReplacer_1 = class RenamePropertiesReplacer {
-    constructor(identifierNamesGeneratorFactory, options) {
+    constructor(identifierNamesGeneratorFactory, propertyIdentifierNamesCacheStorage, options) {
         this.excludedPropertyNames = new Set();
         this.propertyNamesMap = new Map();
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
+        this.propertyIdentifierNamesCacheStorage = propertyIdentifierNamesCacheStorage;
         this.options = options;
     }
     excludePropertyName(propertyName) {
@@ -13447,16 +13791,22 @@ let RenamePropertiesReplacer = RenamePropertiesReplacer_1 = class RenameProperti
         return node;
     }
     replacePropertyName(propertyName) {
-        var _a;
+        var _a, _b;
         if (this.isReservedName(propertyName)) {
             return propertyName;
         }
-        let renamedPropertyName = (_a = this.propertyNamesMap.get(propertyName)) !== null && _a !== void 0 ? _a : null;
+        let renamedPropertyName = this.options.identifierNamesCache
+            ? (_a = this.propertyIdentifierNamesCacheStorage.get(propertyName)) !== null && _a !== void 0 ? _a : null
+            : null;
+        renamedPropertyName = (_b = renamedPropertyName !== null && renamedPropertyName !== void 0 ? renamedPropertyName : this.propertyNamesMap.get(propertyName)) !== null && _b !== void 0 ? _b : null;
         if (renamedPropertyName !== null) {
             return renamedPropertyName;
         }
         renamedPropertyName = this.identifierNamesGenerator.generateNext();
         this.propertyNamesMap.set(propertyName, renamedPropertyName);
+        if (this.options.identifierNamesCache) {
+            this.propertyIdentifierNamesCacheStorage.set(propertyName, renamedPropertyName);
+        }
         return renamedPropertyName;
     }
     isReservedName(name) {
@@ -13482,10 +13832,11 @@ let RenamePropertiesReplacer = RenamePropertiesReplacer_1 = class RenameProperti
 };
 RenamePropertiesReplacer.reservedDomPropertiesList = new Set(ReservedDomProperties_json_1.default);
 RenamePropertiesReplacer = RenamePropertiesReplacer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IPropertyIdentifierNamesCacheStorage_1.IPropertyIdentifierNamesCacheStorage !== "undefined" && IPropertyIdentifierNamesCacheStorage_1.IPropertyIdentifierNamesCacheStorage) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], RenamePropertiesReplacer);
 exports.RenamePropertiesReplacer = RenamePropertiesReplacer;
 
@@ -13621,9 +13972,9 @@ let AbstractStatementSimplifyTransformer = class AbstractStatementSimplifyTransf
     }
 };
 AbstractStatementSimplifyTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], AbstractStatementSimplifyTransformer);
 exports.AbstractStatementSimplifyTransformer = AbstractStatementSimplifyTransformer;
@@ -13698,9 +14049,9 @@ let BlockStatementSimplifyTransformer = class BlockStatementSimplifyTransformer 
     }
 };
 BlockStatementSimplifyTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], BlockStatementSimplifyTransformer);
 exports.BlockStatementSimplifyTransformer = BlockStatementSimplifyTransformer;
@@ -13803,9 +14154,9 @@ let ExpressionStatementsMergeTransformer = class ExpressionStatementsMergeTransf
     }
 };
 ExpressionStatementsMergeTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ExpressionStatementsMergeTransformer);
 exports.ExpressionStatementsMergeTransformer = ExpressionStatementsMergeTransformer;
@@ -13924,9 +14275,9 @@ let IfStatementSimplifyTransformer = class IfStatementSimplifyTransformer extend
     }
 };
 IfStatementSimplifyTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], IfStatementSimplifyTransformer);
 exports.IfStatementSimplifyTransformer = IfStatementSimplifyTransformer;
@@ -14019,9 +14370,9 @@ let VariableDeclarationsMergeTransformer = class VariableDeclarationsMergeTransf
     }
 };
 VariableDeclarationsMergeTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], VariableDeclarationsMergeTransformer);
 exports.VariableDeclarationsMergeTransformer = VariableDeclarationsMergeTransformer;
@@ -14195,14 +14546,14 @@ StringArrayRotateFunctionTransformer.stringArrayRotateFunctionTransformers = [
 ];
 StringArrayRotateFunctionTransformer.comparisonExpressionAdditionalPartsCount = 7;
 StringArrayRotateFunctionTransformer = StringArrayRotateFunctionTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorageAnalyzer)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.INumberNumericalExpressionAnalyzer)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformersRunner)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorageAnalyzer)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelper)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.INumberNumericalExpressionAnalyzer)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof INodeTransformersRunner_1.INodeTransformersRunner !== "undefined" && INodeTransformersRunner_1.INodeTransformersRunner) === "function" ? _c : Object, typeof (_d = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _d : Object, typeof (_e = typeof IStringArrayStorageAnalyzer_1.IStringArrayStorageAnalyzer !== "undefined" && IStringArrayStorageAnalyzer_1.IStringArrayStorageAnalyzer) === "function" ? _e : Object, typeof (_f = typeof TCustomCodeHelperFactory_1.TCustomCodeHelperFactory !== "undefined" && TCustomCodeHelperFactory_1.TCustomCodeHelperFactory) === "function" ? _f : Object, typeof (_g = typeof INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer !== "undefined" && INumberNumericalExpressionAnalyzer_1.INumberNumericalExpressionAnalyzer) === "function" ? _g : Object])
 ], StringArrayRotateFunctionTransformer);
 exports.StringArrayRotateFunctionTransformer = StringArrayRotateFunctionTransformer;
@@ -14374,14 +14725,14 @@ let StringArrayScopeCallsWrapperTransformer = class StringArrayScopeCallsWrapper
     }
 };
 StringArrayScopeCallsWrapperTransformer = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayCustomNode)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayCustomNode)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof IVisitedLexicalScopeNodesStackStorage_1.IVisitedLexicalScopeNodesStackStorage !== "undefined" && IVisitedLexicalScopeNodesStackStorage_1.IVisitedLexicalScopeNodesStackStorage) === "function" ? _c : Object, typeof (_d = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _d : Object, typeof (_e = typeof IStringArrayScopeCallsWrapperNamesDataStorage_1.IStringArrayScopeCallsWrapperNamesDataStorage !== "undefined" && IStringArrayScopeCallsWrapperNamesDataStorage_1.IStringArrayScopeCallsWrapperNamesDataStorage) === "function" ? _e : Object, typeof (_f = typeof IStringArrayScopeCallsWrapperLexicalScopeDataStorage_1.IStringArrayScopeCallsWrapperLexicalScopeDataStorage !== "undefined" && IStringArrayScopeCallsWrapperLexicalScopeDataStorage_1.IStringArrayScopeCallsWrapperLexicalScopeDataStorage) === "function" ? _f : Object, typeof (_g = typeof TStringArrayCustomNodeFactory_1.TStringArrayCustomNodeFactory !== "undefined" && TStringArrayCustomNodeFactory_1.TStringArrayCustomNodeFactory) === "function" ? _g : Object])
 ], StringArrayScopeCallsWrapperTransformer);
 exports.StringArrayScopeCallsWrapperTransformer = StringArrayScopeCallsWrapperTransformer;
@@ -14608,17 +14959,17 @@ let StringArrayTransformer = StringArrayTransformer_1 = class StringArrayTransfo
 StringArrayTransformer.minShiftedIndexValue = -1000;
 StringArrayTransformer.maxShiftedIndexValue = 1000;
 StringArrayTransformer = StringArrayTransformer_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ILiteralNodesCacheStorage)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
-    __param(5, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)),
-    __param(6, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)),
-    __param(7, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorageAnalyzer)),
-    __param(8, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(9, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayCustomNode)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ILiteralNodesCacheStorage)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorage)),
+    __param(5, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)),
+    __param(6, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)),
+    __param(7, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStringArrayStorageAnalyzer)),
+    __param(8, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(9, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IStringArrayCustomNode)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof ILiteralNodesCacheStorage_1.ILiteralNodesCacheStorage !== "undefined" && ILiteralNodesCacheStorage_1.ILiteralNodesCacheStorage) === "function" ? _c : Object, typeof (_d = typeof IVisitedLexicalScopeNodesStackStorage_1.IVisitedLexicalScopeNodesStackStorage !== "undefined" && IVisitedLexicalScopeNodesStackStorage_1.IVisitedLexicalScopeNodesStackStorage) === "function" ? _d : Object, typeof (_e = typeof IStringArrayStorage_1.IStringArrayStorage !== "undefined" && IStringArrayStorage_1.IStringArrayStorage) === "function" ? _e : Object, typeof (_f = typeof IStringArrayScopeCallsWrapperNamesDataStorage_1.IStringArrayScopeCallsWrapperNamesDataStorage !== "undefined" && IStringArrayScopeCallsWrapperNamesDataStorage_1.IStringArrayScopeCallsWrapperNamesDataStorage) === "function" ? _f : Object, typeof (_g = typeof IStringArrayScopeCallsWrapperLexicalScopeDataStorage_1.IStringArrayScopeCallsWrapperLexicalScopeDataStorage !== "undefined" && IStringArrayScopeCallsWrapperLexicalScopeDataStorage_1.IStringArrayScopeCallsWrapperLexicalScopeDataStorage) === "function" ? _g : Object, typeof (_h = typeof IStringArrayStorageAnalyzer_1.IStringArrayStorageAnalyzer !== "undefined" && IStringArrayStorageAnalyzer_1.IStringArrayStorageAnalyzer) === "function" ? _h : Object, typeof (_j = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _j : Object, typeof (_k = typeof TStringArrayCustomNodeFactory_1.TStringArrayCustomNodeFactory !== "undefined" && TStringArrayCustomNodeFactory_1.TStringArrayCustomNodeFactory) === "function" ? _k : Object])
 ], StringArrayTransformer);
 exports.StringArrayTransformer = StringArrayTransformer;
@@ -15751,11 +16102,13 @@ let ScopeIdentifiersTraverser = ScopeIdentifiersTraverser_1 = class ScopeIdentif
         const variableLexicalScopeNode = NodeGuards_1.NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
             ? variableScope.block
             : null;
+        const isGlobalDeclaration = ScopeIdentifiersTraverser_1.globalScopeNames.includes(variableScope.type);
         if (!variableLexicalScopeNode) {
             return;
         }
         for (const reference of currentScope.through) {
             callback({
+                isGlobalDeclaration,
                 reference,
                 variableLexicalScopeNode
             });
@@ -15771,8 +16124,8 @@ ScopeIdentifiersTraverser.globalScopeNames = [
     'module'
 ];
 ScopeIdentifiersTraverser = ScopeIdentifiersTraverser_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IScopeAnalyzer)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IScopeAnalyzer)),
     __metadata("design:paramtypes", [typeof (_a = typeof IScopeAnalyzer_1.IScopeAnalyzer !== "undefined" && IScopeAnalyzer_1.IScopeAnalyzer) === "function" ? _a : Object])
 ], ScopeIdentifiersTraverser);
 exports.ScopeIdentifiersTraverser = ScopeIdentifiersTraverser;
@@ -15800,12 +16153,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var Options_1, _a, _b, _c, _d, _e, _f, _g, _h;
+var Options_1, _a, _b, _c, _d, _e, _f, _g, _h, _j;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Options = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const TIdentifierNamesCache_1 = __webpack_require__(/*! ../types/TIdentifierNamesCache */ "./src/types/TIdentifierNamesCache.ts");
 const TInputOptions_1 = __webpack_require__(/*! ../types/options/TInputOptions */ "./src/types/options/TInputOptions.ts");
 const TOptionsPreset_1 = __webpack_require__(/*! ../types/options/TOptionsPreset */ "./src/types/options/TOptionsPreset.ts");
 const TRenamePropertiesMode_1 = __webpack_require__(/*! ../types/options/TRenamePropertiesMode */ "./src/types/options/TRenamePropertiesMode.ts");
@@ -15826,12 +16180,13 @@ const MediumObfuscation_1 = __webpack_require__(/*! ./presets/MediumObfuscation 
 const HighObfuscation_1 = __webpack_require__(/*! ./presets/HighObfuscation */ "./src/options/presets/HighObfuscation.ts");
 const ValidationErrorsFormatter_1 = __webpack_require__(/*! ./ValidationErrorsFormatter */ "./src/options/ValidationErrorsFormatter.ts");
 const IsAllowedForObfuscationTargets_1 = __webpack_require__(/*! ./validators/IsAllowedForObfuscationTargets */ "./src/options/validators/IsAllowedForObfuscationTargets.ts");
+const IsIdentifierNamesCache_1 = __webpack_require__(/*! ./validators/IsIdentifierNamesCache */ "./src/options/validators/IsIdentifierNamesCache.ts");
 let Options = Options_1 = class Options {
     constructor(inputOptions, optionsNormalizer) {
         var _a;
         const optionsPreset = Options_1.getOptionsByPreset((_a = inputOptions.optionsPreset) !== null && _a !== void 0 ? _a : OptionsPreset_1.OptionsPreset.Default);
         Object.assign(this, optionsPreset, inputOptions);
-        const errors = (0, class_validator_1.validateSync)(this, Options_1.validatorOptions);
+        const errors = class_validator_1.validateSync(this, Options_1.validatorOptions);
         if (errors.length) {
             throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorsFormatter_1.ValidationErrorsFormatter.format(errors)}`);
         }
@@ -15859,159 +16214,163 @@ Options.validatorOptions = {
     }
 };
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "compact", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "controlFlowFlattening", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0),
-    (0, class_validator_1.Max)(1),
+    class_validator_1.IsNumber(),
+    class_validator_1.Min(0),
+    class_validator_1.Max(1),
     __metadata("design:type", Number)
 ], Options.prototype, "controlFlowFlatteningThreshold", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "deadCodeInjection", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
+    class_validator_1.IsNumber(),
     __metadata("design:type", Number)
 ], Options.prototype, "deadCodeInjectionThreshold", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "debugProtection", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "debugProtectionInterval", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsString)({
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsString({
         each: true
     }),
-    (0, IsAllowedForObfuscationTargets_1.IsAllowedForObfuscationTargets)([
+    IsAllowedForObfuscationTargets_1.IsAllowedForObfuscationTargets([
         ObfuscationTarget_1.ObfuscationTarget.Browser,
         ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval,
     ]),
     __metadata("design:type", Array)
 ], Options.prototype, "domainLock", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsString)({
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsString({
         each: true
     }),
     __metadata("design:type", Array)
 ], Options.prototype, "forceTransformStrings", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([
+    IsIdentifierNamesCache_1.IsIdentifierNamesCache(),
+    __metadata("design:type", typeof (_a = typeof TIdentifierNamesCache_1.TIdentifierNamesCache !== "undefined" && TIdentifierNamesCache_1.TIdentifierNamesCache) === "function" ? _a : Object)
+], Options.prototype, "identifierNamesCache", void 0);
+__decorate([
+    class_validator_1.IsIn([
         IdentifierNamesGenerator_1.IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
         IdentifierNamesGenerator_1.IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
         IdentifierNamesGenerator_1.IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
         IdentifierNamesGenerator_1.IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
     ]),
-    __metadata("design:type", typeof (_a = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _a : Object)
+    __metadata("design:type", typeof (_b = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _b : Object)
 ], Options.prototype, "identifierNamesGenerator", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
+    class_validator_1.IsString(),
     __metadata("design:type", String)
 ], Options.prototype, "identifiersPrefix", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsString)({
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsString({
         each: true
     }),
-    (0, class_validator_1.ValidateIf)((options) => options.identifierNamesGenerator === IdentifierNamesGenerator_1.IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator),
-    (0, class_validator_1.ArrayNotEmpty)(),
+    class_validator_1.ValidateIf((options) => options.identifierNamesGenerator === IdentifierNamesGenerator_1.IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator),
+    class_validator_1.ArrayNotEmpty(),
     __metadata("design:type", Array)
 ], Options.prototype, "identifiersDictionary", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "ignoreRequireImports", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
+    class_validator_1.IsString(),
     __metadata("design:type", String)
 ], Options.prototype, "inputFileName", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "log", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "numbersToExpressions", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([
+    class_validator_1.IsIn([
         OptionsPreset_1.OptionsPreset.Default,
         OptionsPreset_1.OptionsPreset.LowObfuscation,
         OptionsPreset_1.OptionsPreset.MediumObfuscation,
         OptionsPreset_1.OptionsPreset.HighObfuscation
     ]),
-    __metadata("design:type", typeof (_b = typeof TOptionsPreset_1.TOptionsPreset !== "undefined" && TOptionsPreset_1.TOptionsPreset) === "function" ? _b : Object)
+    __metadata("design:type", typeof (_c = typeof TOptionsPreset_1.TOptionsPreset !== "undefined" && TOptionsPreset_1.TOptionsPreset) === "function" ? _c : Object)
 ], Options.prototype, "optionsPreset", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "renameGlobals", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "renameProperties", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([RenamePropertiesMode_1.RenamePropertiesMode.Safe, RenamePropertiesMode_1.RenamePropertiesMode.Unsafe]),
-    __metadata("design:type", typeof (_c = typeof TRenamePropertiesMode_1.TRenamePropertiesMode !== "undefined" && TRenamePropertiesMode_1.TRenamePropertiesMode) === "function" ? _c : Object)
+    class_validator_1.IsIn([RenamePropertiesMode_1.RenamePropertiesMode.Safe, RenamePropertiesMode_1.RenamePropertiesMode.Unsafe]),
+    __metadata("design:type", typeof (_d = typeof TRenamePropertiesMode_1.TRenamePropertiesMode !== "undefined" && TRenamePropertiesMode_1.TRenamePropertiesMode) === "function" ? _d : Object)
 ], Options.prototype, "renamePropertiesMode", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsString)({
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsString({
         each: true
     }),
     __metadata("design:type", Array)
 ], Options.prototype, "reservedNames", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsString)({
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsString({
         each: true
     }),
     __metadata("design:type", Array)
 ], Options.prototype, "reservedStrings", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "rotateStringArray", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "selfDefending", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "shuffleStringArray", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "simplify", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "sourceMap", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.ValidateIf)((options) => Boolean(options.sourceMapBaseUrl)),
-    (0, class_validator_1.IsUrl)({
+    class_validator_1.IsString(),
+    class_validator_1.ValidateIf((options) => Boolean(options.sourceMapBaseUrl)),
+    class_validator_1.IsUrl({
         require_protocol: true,
         require_tld: false,
         require_valid_protocol: true
@@ -16019,85 +16378,85 @@ __decorate([
     __metadata("design:type", String)
 ], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
+    class_validator_1.IsString(),
     __metadata("design:type", String)
 ], Options.prototype, "sourceMapFileName", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([SourceMapMode_1.SourceMapMode.Inline, SourceMapMode_1.SourceMapMode.Separate]),
-    __metadata("design:type", typeof (_d = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _d : Object)
+    class_validator_1.IsIn([SourceMapMode_1.SourceMapMode.Inline, SourceMapMode_1.SourceMapMode.Separate]),
+    __metadata("design:type", typeof (_e = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _e : Object)
 ], Options.prototype, "sourceMapMode", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "splitStrings", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.ValidateIf)((options) => Boolean(options.splitStrings)),
-    (0, class_validator_1.Min)(1),
+    class_validator_1.IsNumber(),
+    class_validator_1.ValidateIf((options) => Boolean(options.splitStrings)),
+    class_validator_1.Min(1),
     __metadata("design:type", Number)
 ], Options.prototype, "splitStringsChunkLength", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "stringArray", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsIn)([StringArrayEncoding_1.StringArrayEncoding.None, StringArrayEncoding_1.StringArrayEncoding.Base64, StringArrayEncoding_1.StringArrayEncoding.Rc4], { each: true }),
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsIn([StringArrayEncoding_1.StringArrayEncoding.None, StringArrayEncoding_1.StringArrayEncoding.Base64, StringArrayEncoding_1.StringArrayEncoding.Rc4], { each: true }),
     __metadata("design:type", Array)
 ], Options.prototype, "stringArrayEncoding", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayNotEmpty)(),
-    (0, class_validator_1.ArrayUnique)(),
-    (0, class_validator_1.IsIn)([StringArrayIndexesType_1.StringArrayIndexesType.HexadecimalNumber, StringArrayIndexesType_1.StringArrayIndexesType.HexadecimalNumericString], { each: true }),
+    class_validator_1.IsArray(),
+    class_validator_1.ArrayNotEmpty(),
+    class_validator_1.ArrayUnique(),
+    class_validator_1.IsIn([StringArrayIndexesType_1.StringArrayIndexesType.HexadecimalNumber, StringArrayIndexesType_1.StringArrayIndexesType.HexadecimalNumericString], { each: true }),
     __metadata("design:type", Array)
 ], Options.prototype, "stringArrayIndexesType", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "stringArrayIndexShift", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "stringArrayWrappersChainedCalls", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0),
+    class_validator_1.IsNumber(),
+    class_validator_1.Min(0),
     __metadata("design:type", Number)
 ], Options.prototype, "stringArrayWrappersCount", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(2),
+    class_validator_1.IsNumber(),
+    class_validator_1.Min(2),
     __metadata("design:type", Number)
 ], Options.prototype, "stringArrayWrappersParametersMaxCount", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([StringArrayWrappersType_1.StringArrayWrappersType.Variable, StringArrayWrappersType_1.StringArrayWrappersType.Function]),
-    __metadata("design:type", typeof (_e = typeof TStringArrayWrappersType_1.TStringArrayWrappersType !== "undefined" && TStringArrayWrappersType_1.TStringArrayWrappersType) === "function" ? _e : Object)
+    class_validator_1.IsIn([StringArrayWrappersType_1.StringArrayWrappersType.Variable, StringArrayWrappersType_1.StringArrayWrappersType.Function]),
+    __metadata("design:type", typeof (_f = typeof TStringArrayWrappersType_1.TStringArrayWrappersType !== "undefined" && TStringArrayWrappersType_1.TStringArrayWrappersType) === "function" ? _f : Object)
 ], Options.prototype, "stringArrayWrappersType", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0),
-    (0, class_validator_1.Max)(1),
+    class_validator_1.IsNumber(),
+    class_validator_1.Min(0),
+    class_validator_1.Max(1),
     __metadata("design:type", Number)
 ], Options.prototype, "stringArrayThreshold", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([ObfuscationTarget_1.ObfuscationTarget.Browser, ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval, ObfuscationTarget_1.ObfuscationTarget.Node]),
-    __metadata("design:type", typeof (_f = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _f : Object)
+    class_validator_1.IsIn([ObfuscationTarget_1.ObfuscationTarget.Browser, ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval, ObfuscationTarget_1.ObfuscationTarget.Node]),
+    __metadata("design:type", typeof (_g = typeof TTypeFromEnum_1.TTypeFromEnum !== "undefined" && TTypeFromEnum_1.TTypeFromEnum) === "function" ? _g : Object)
 ], Options.prototype, "target", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "transformObjectKeys", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
+    class_validator_1.IsBoolean(),
     __metadata("design:type", Boolean)
 ], Options.prototype, "unicodeEscapeSequence", void 0);
 Options = Options_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.TInputOptions)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptionsNormalizer)),
-    __metadata("design:paramtypes", [typeof (_g = typeof TInputOptions_1.TInputOptions !== "undefined" && TInputOptions_1.TInputOptions) === "function" ? _g : Object, typeof (_h = typeof IOptionsNormalizer_1.IOptionsNormalizer !== "undefined" && IOptionsNormalizer_1.IOptionsNormalizer) === "function" ? _h : Object])
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TInputOptions)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptionsNormalizer)),
+    __metadata("design:paramtypes", [typeof (_h = typeof TInputOptions_1.TInputOptions !== "undefined" && TInputOptions_1.TInputOptions) === "function" ? _h : Object, typeof (_j = typeof IOptionsNormalizer_1.IOptionsNormalizer !== "undefined" && IOptionsNormalizer_1.IOptionsNormalizer) === "function" ? _j : Object])
 ], Options);
 exports.Options = Options;
 
@@ -16126,6 +16485,7 @@ const ControlFlowFlatteningThresholdRule_1 = __webpack_require__(/*! ./normalize
 const DeadCodeInjectionRule_1 = __webpack_require__(/*! ./normalizer-rules/DeadCodeInjectionRule */ "./src/options/normalizer-rules/DeadCodeInjectionRule.ts");
 const DeadCodeInjectionThresholdRule_1 = __webpack_require__(/*! ./normalizer-rules/DeadCodeInjectionThresholdRule */ "./src/options/normalizer-rules/DeadCodeInjectionThresholdRule.ts");
 const DomainLockRule_1 = __webpack_require__(/*! ./normalizer-rules/DomainLockRule */ "./src/options/normalizer-rules/DomainLockRule.ts");
+const IdentifierNamesCacheRule_1 = __webpack_require__(/*! ./normalizer-rules/IdentifierNamesCacheRule */ "./src/options/normalizer-rules/IdentifierNamesCacheRule.ts");
 const InputFileNameRule_1 = __webpack_require__(/*! ./normalizer-rules/InputFileNameRule */ "./src/options/normalizer-rules/InputFileNameRule.ts");
 const SeedRule_1 = __webpack_require__(/*! ./normalizer-rules/SeedRule */ "./src/options/normalizer-rules/SeedRule.ts");
 const SelfDefendingRule_1 = __webpack_require__(/*! ./normalizer-rules/SelfDefendingRule */ "./src/options/normalizer-rules/SelfDefendingRule.ts");
@@ -16137,7 +16497,9 @@ const StringArrayEncodingRule_1 = __webpack_require__(/*! ./normalizer-rules/Str
 const StringArrayWappersChainedCalls_1 = __webpack_require__(/*! ./normalizer-rules/StringArrayWappersChainedCalls */ "./src/options/normalizer-rules/StringArrayWappersChainedCalls.ts");
 let OptionsNormalizer = OptionsNormalizer_1 = class OptionsNormalizer {
     normalize(options) {
-        let normalizedOptions = Object.assign({}, options);
+        let normalizedOptions = {
+            ...options
+        };
         for (const normalizerRule of OptionsNormalizer_1.normalizerRules) {
             normalizedOptions = normalizerRule(normalizedOptions);
         }
@@ -16149,6 +16511,7 @@ OptionsNormalizer.normalizerRules = [
     DeadCodeInjectionRule_1.DeadCodeInjectionRule,
     DeadCodeInjectionThresholdRule_1.DeadCodeInjectionThresholdRule,
     DomainLockRule_1.DomainLockRule,
+    IdentifierNamesCacheRule_1.IdentifierNamesCacheRule,
     InputFileNameRule_1.InputFileNameRule,
     SeedRule_1.SeedRule,
     SelfDefendingRule_1.SelfDefendingRule,
@@ -16160,7 +16523,7 @@ OptionsNormalizer.normalizerRules = [
     StringArrayWappersChainedCalls_1.StringArrayWrappersChainedCallsRule,
 ];
 OptionsNormalizer = OptionsNormalizer_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], OptionsNormalizer);
 exports.OptionsNormalizer = OptionsNormalizer;
 
@@ -16293,6 +16656,41 @@ const DomainLockRule = (options) => {
     return options;
 };
 exports.DomainLockRule = DomainLockRule;
+
+
+/***/ }),
+
+/***/ "./src/options/normalizer-rules/IdentifierNamesCacheRule.ts":
+/*!******************************************************************!*\
+  !*** ./src/options/normalizer-rules/IdentifierNamesCacheRule.ts ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IdentifierNamesCacheRule = void 0;
+const IdentifierNamesCacheRule = (options) => {
+    let identifierNamesCache = options.identifierNamesCache;
+    if (identifierNamesCache && !identifierNamesCache.globalIdentifiers) {
+        identifierNamesCache = {
+            ...identifierNamesCache,
+            globalIdentifiers: {}
+        };
+    }
+    if (identifierNamesCache && !identifierNamesCache.propertyIdentifiers) {
+        identifierNamesCache = {
+            ...identifierNamesCache,
+            propertyIdentifiers: {}
+        };
+    }
+    options = {
+        ...options,
+        identifierNamesCache
+    };
+    return options;
+};
+exports.IdentifierNamesCacheRule = IdentifierNamesCacheRule;
 
 
 /***/ }),
@@ -16553,6 +16951,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     domainLock: [],
     exclude: [],
     forceTransformStrings: [],
+    identifierNamesCache: null,
     identifierNamesGenerator: IdentifierNamesGenerator_1.IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     identifiersPrefix: '',
     identifiersDictionary: [],
@@ -16748,7 +17147,7 @@ const StringSeparator_1 = __webpack_require__(/*! ../../enums/StringSeparator */
 const Default_1 = __webpack_require__(/*! ../presets/Default */ "./src/options/presets/Default.ts");
 function IsAllowedForObfuscationTargets(obfuscationTargets, validationOptions) {
     return (optionsObject, propertyName) => {
-        (0, class_validator_1.registerDecorator)({
+        class_validator_1.registerDecorator({
             propertyName,
             constraints: [obfuscationTargets],
             name: 'IsAllowedForObfuscationTargets',
@@ -16758,7 +17157,7 @@ function IsAllowedForObfuscationTargets(obfuscationTargets, validationOptions) {
                 validate(value, validationArguments) {
                     const options = validationArguments.object;
                     const defaultValue = Default_1.DEFAULT_PRESET[propertyName];
-                    const isDefaultValue = (0, fast_deep_equal_1.default)(value, defaultValue);
+                    const isDefaultValue = fast_deep_equal_1.default(value, defaultValue);
                     return isDefaultValue || obfuscationTargets.includes(options.target);
                 },
                 defaultMessage(validationArguments) {
@@ -16774,10 +17173,80 @@ exports.IsAllowedForObfuscationTargets = IsAllowedForObfuscationTargets;
 
 /***/ }),
 
-/***/ "./src/source-code/ObfuscatedCode.ts":
-/*!*******************************************!*\
-  !*** ./src/source-code/ObfuscatedCode.ts ***!
-  \*******************************************/
+/***/ "./src/options/validators/IsIdentifierNamesCache.ts":
+/*!**********************************************************!*\
+  !*** ./src/options/validators/IsIdentifierNamesCache.ts ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IsIdentifierNamesCache = void 0;
+const fast_deep_equal_1 = __importDefault(__webpack_require__(/*! fast-deep-equal */ "fast-deep-equal"));
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const Default_1 = __webpack_require__(/*! ../presets/Default */ "./src/options/presets/Default.ts");
+const validateDictionary = (value) => {
+    if (value === undefined) {
+        return true;
+    }
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+    const objectValues = Object.values(value);
+    if (!objectValues.length) {
+        return true;
+    }
+    for (const objectValue of objectValues) {
+        if (typeof objectValue !== 'string') {
+            return false;
+        }
+    }
+    return true;
+};
+function IsIdentifierNamesCache(validationOptions) {
+    return (optionsObject, propertyName) => {
+        class_validator_1.registerDecorator({
+            propertyName,
+            constraints: [],
+            name: 'IsIdentifierNamesCache',
+            options: validationOptions,
+            target: optionsObject.constructor,
+            validator: {
+                validate(value, validationArguments) {
+                    var _a, _b;
+                    const defaultValue = Default_1.DEFAULT_PRESET[propertyName];
+                    const isDefaultValue = fast_deep_equal_1.default(value, defaultValue);
+                    if (isDefaultValue || value === null) {
+                        return true;
+                    }
+                    if (typeof value !== 'object') {
+                        return false;
+                    }
+                    if (!validateDictionary((_a = value) === null || _a === void 0 ? void 0 : _a.globalIdentifiers)) {
+                        return false;
+                    }
+                    return validateDictionary((_b = value) === null || _b === void 0 ? void 0 : _b.propertyIdentifiers);
+                },
+                defaultMessage() {
+                    return 'Passed value must be an identifier names cache object or `null` value';
+                }
+            }
+        });
+    };
+}
+exports.IsIdentifierNamesCache = IsIdentifierNamesCache;
+
+
+/***/ }),
+
+/***/ "./src/source-code/ObfuscationResult.ts":
+/*!**********************************************!*\
+  !*** ./src/source-code/ObfuscationResult.ts ***!
+  \**********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -16794,23 +17263,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ObfuscatedCode = void 0;
+exports.ObfuscationResult = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ServiceIdentifiers_1 = __webpack_require__(/*! ../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
 const ICryptUtils_1 = __webpack_require__(/*! ../interfaces/utils/ICryptUtils */ "./src/interfaces/utils/ICryptUtils.ts");
+const IGlobalIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage */ "./src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage.ts");
+const IPropertyIdentifierNamesCacheStorage_1 = __webpack_require__(/*! ../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage */ "./src/interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage.ts");
+const IOptions_1 = __webpack_require__(/*! ../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
 const Initializable_1 = __webpack_require__(/*! ../decorators/Initializable */ "./src/decorators/Initializable.ts");
 const SourceMapMode_1 = __webpack_require__(/*! ../enums/source-map/SourceMapMode */ "./src/enums/source-map/SourceMapMode.ts");
-const IOptions_1 = __webpack_require__(/*! ../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
-let ObfuscatedCode = class ObfuscatedCode {
-    constructor(cryptUtils, options) {
+let ObfuscationResult = class ObfuscationResult {
+    constructor(cryptUtils, globalIdentifierNamesCacheStorage, propertyIdentifierNamesCacheStorage, options) {
         this.cryptUtils = cryptUtils;
+        this.globalIdentifierNamesCacheStorage = globalIdentifierNamesCacheStorage;
+        this.propertyIdentifierNamesCacheStorage = propertyIdentifierNamesCacheStorage;
         this.options = options;
     }
     initialize(obfuscatedCode, sourceMap) {
         this.obfuscatedCode = obfuscatedCode;
         this.sourceMap = sourceMap;
+    }
+    getIdentifierNamesCache() {
+        if (!this.options.identifierNamesCache) {
+            return null;
+        }
+        return {
+            globalIdentifiers: this.globalIdentifierNamesCacheStorage.getStorageAsDictionary(),
+            propertyIdentifiers: this.propertyIdentifierNamesCacheStorage.getStorageAsDictionary()
+        };
     }
     getObfuscatedCode() {
         return this.correctObfuscatedCode();
@@ -16842,20 +17324,22 @@ let ObfuscatedCode = class ObfuscatedCode {
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
-], ObfuscatedCode.prototype, "obfuscatedCode", void 0);
+], ObfuscationResult.prototype, "obfuscatedCode", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
-], ObfuscatedCode.prototype, "sourceMap", void 0);
-ObfuscatedCode = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtils)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __metadata("design:paramtypes", [typeof (_a = typeof ICryptUtils_1.ICryptUtils !== "undefined" && ICryptUtils_1.ICryptUtils) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
-], ObfuscatedCode);
-exports.ObfuscatedCode = ObfuscatedCode;
+], ObfuscationResult.prototype, "sourceMap", void 0);
+ObfuscationResult = __decorate([
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtils)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof ICryptUtils_1.ICryptUtils !== "undefined" && ICryptUtils_1.ICryptUtils) === "function" ? _a : Object, typeof (_b = typeof IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage !== "undefined" && IGlobalIdentifierNamesCacheStorage_1.IGlobalIdentifierNamesCacheStorage) === "function" ? _b : Object, typeof (_c = typeof IPropertyIdentifierNamesCacheStorage_1.IPropertyIdentifierNamesCacheStorage !== "undefined" && IPropertyIdentifierNamesCacheStorage_1.IPropertyIdentifierNamesCacheStorage) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object])
+], ObfuscationResult);
+exports.ObfuscationResult = ObfuscationResult;
 
 
 /***/ }),
@@ -16976,23 +17460,23 @@ let ArrayStorage = class ArrayStorage {
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", Array)
 ], ArrayStorage.prototype, "storage", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], ArrayStorage.prototype, "storageId", void 0);
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ArrayStorage.prototype, "initialize", null);
 ArrayStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ArrayStorage);
 exports.ArrayStorage = ArrayStorage;
@@ -17061,6 +17545,9 @@ let MapStorage = class MapStorage {
     getStorage() {
         return this.storage;
     }
+    getStorageAsDictionary() {
+        return Object.fromEntries(this.storage);
+    }
     getStorageId() {
         return this.storageId;
     }
@@ -17078,23 +17565,23 @@ let MapStorage = class MapStorage {
     }
 };
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", String)
 ], MapStorage.prototype, "storageId", void 0);
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof Map !== "undefined" && Map) === "function" ? _a : Object)
 ], MapStorage.prototype, "storage", void 0);
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MapStorage.prototype, "initialize", null);
 MapStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], MapStorage);
 exports.MapStorage = MapStorage;
@@ -17153,16 +17640,16 @@ CustomCodeHelperGroupStorage.customCodeHelperGroupsList = [
     CustomCodeHelperGroup_1.CustomCodeHelperGroup.StringArray
 ];
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CustomCodeHelperGroupStorage.prototype, "initialize", null);
 CustomCodeHelperGroupStorage = CustomCodeHelperGroupStorage_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelperGroup)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomCodeHelperGroup)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof TCustomCodeHelperGroupFactory_1.TCustomCodeHelperGroupFactory !== "undefined" && TCustomCodeHelperGroupFactory_1.TCustomCodeHelperGroupFactory) === "function" ? _a : Object, typeof (_b = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], CustomCodeHelperGroupStorage);
 exports.CustomCodeHelperGroupStorage = CustomCodeHelperGroupStorage;
@@ -17204,12 +17691,122 @@ let ControlFlowStorage = class ControlFlowStorage extends MapStorage_1.MapStorag
     }
 };
 ControlFlowStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], ControlFlowStorage);
 exports.ControlFlowStorage = ControlFlowStorage;
+
+
+/***/ }),
+
+/***/ "./src/storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage.ts":
+/*!**********************************************************************************!*\
+  !*** ./src/storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage.ts ***!
+  \**********************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlobalIdentifierNamesCacheStorage = void 0;
+const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
+const ServiceIdentifiers_1 = __webpack_require__(/*! ../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
+const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
+const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
+const MapStorage_1 = __webpack_require__(/*! ../MapStorage */ "./src/storages/MapStorage.ts");
+let GlobalIdentifierNamesCacheStorage = class GlobalIdentifierNamesCacheStorage extends MapStorage_1.MapStorage {
+    constructor(randomGenerator, options) {
+        super(randomGenerator, options);
+    }
+    initialize() {
+        var _a, _b;
+        super.initialize();
+        this.storage = new Map(Object.entries((_b = (_a = this.options.identifierNamesCache) === null || _a === void 0 ? void 0 : _a.globalIdentifiers) !== null && _b !== void 0 ? _b : {}));
+    }
+};
+__decorate([
+    inversify_1.postConstruct(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], GlobalIdentifierNamesCacheStorage.prototype, "initialize", null);
+GlobalIdentifierNamesCacheStorage = __decorate([
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
+], GlobalIdentifierNamesCacheStorage);
+exports.GlobalIdentifierNamesCacheStorage = GlobalIdentifierNamesCacheStorage;
+
+
+/***/ }),
+
+/***/ "./src/storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage.ts":
+/*!************************************************************************************!*\
+  !*** ./src/storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage.ts ***!
+  \************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PropertyIdentifierNamesCacheStorage = void 0;
+const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
+const ServiceIdentifiers_1 = __webpack_require__(/*! ../../container/ServiceIdentifiers */ "./src/container/ServiceIdentifiers.ts");
+const IOptions_1 = __webpack_require__(/*! ../../interfaces/options/IOptions */ "./src/interfaces/options/IOptions.ts");
+const IRandomGenerator_1 = __webpack_require__(/*! ../../interfaces/utils/IRandomGenerator */ "./src/interfaces/utils/IRandomGenerator.ts");
+const MapStorage_1 = __webpack_require__(/*! ../MapStorage */ "./src/storages/MapStorage.ts");
+let PropertyIdentifierNamesCacheStorage = class PropertyIdentifierNamesCacheStorage extends MapStorage_1.MapStorage {
+    constructor(randomGenerator, options) {
+        super(randomGenerator, options);
+    }
+    initialize() {
+        var _a, _b;
+        super.initialize();
+        this.storage = new Map(Object.entries((_b = (_a = this.options.identifierNamesCache) === null || _a === void 0 ? void 0 : _a.propertyIdentifiers) !== null && _b !== void 0 ? _b : {}));
+    }
+};
+__decorate([
+    inversify_1.postConstruct(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], PropertyIdentifierNamesCacheStorage.prototype, "initialize", null);
+PropertyIdentifierNamesCacheStorage = __decorate([
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
+], PropertyIdentifierNamesCacheStorage);
+exports.PropertyIdentifierNamesCacheStorage = PropertyIdentifierNamesCacheStorage;
 
 
 /***/ }),
@@ -17257,9 +17854,9 @@ let LiteralNodesCacheStorage = class LiteralNodesCacheStorage extends MapStorage
     }
 };
 LiteralNodesCacheStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], LiteralNodesCacheStorage);
 exports.LiteralNodesCacheStorage = LiteralNodesCacheStorage;
@@ -17301,9 +17898,9 @@ let StringArrayScopeCallsWrapperLexicalScopeDataStorage = class StringArrayScope
     }
 };
 StringArrayScopeCallsWrapperLexicalScopeDataStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], StringArrayScopeCallsWrapperLexicalScopeDataStorage);
 exports.StringArrayScopeCallsWrapperLexicalScopeDataStorage = StringArrayScopeCallsWrapperLexicalScopeDataStorage;
@@ -17345,9 +17942,9 @@ let StringArrayScopeCallsWrapperNamesDataStorage = class StringArrayScopeCallsWr
     }
 };
 StringArrayScopeCallsWrapperNamesDataStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object])
 ], StringArrayScopeCallsWrapperNamesDataStorage);
 exports.StringArrayScopeCallsWrapperNamesDataStorage = StringArrayScopeCallsWrapperNamesDataStorage;
@@ -17522,18 +18119,18 @@ StringArrayStorage.rc4KeyLength = 4;
 StringArrayStorage.rc4KeysCount = 50;
 StringArrayStorage.stringArrayNameLength = 4;
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], StringArrayStorage.prototype, "initialize", null);
 StringArrayStorage = StringArrayStorage_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(3, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(4, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtilsStringArray)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierNamesGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ICryptUtilsStringArray)),
     __metadata("design:paramtypes", [typeof (_a = typeof TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory !== "undefined" && TIdentifierNamesGeneratorFactory_1.TIdentifierNamesGeneratorFactory) === "function" ? _a : Object, typeof (_b = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _b : Object, typeof (_c = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _c : Object, typeof (_d = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _d : Object, typeof (_e = typeof ICryptUtilsStringArray_1.ICryptUtilsStringArray !== "undefined" && ICryptUtilsStringArray_1.ICryptUtilsStringArray) === "function" ? _e : Object])
 ], StringArrayStorage);
 exports.StringArrayStorage = StringArrayStorage;
@@ -17593,13 +18190,26 @@ let VisitedLexicalScopeNodesStackStorage = class VisitedLexicalScopeNodesStackSt
     }
 };
 VisitedLexicalScopeNodesStackStorage = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
-    __param(2, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IArrayUtils)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object, typeof (_b = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _b : Object, typeof (_c = typeof IArrayUtils_1.IArrayUtils !== "undefined" && IArrayUtils_1.IArrayUtils) === "function" ? _c : Object])
 ], VisitedLexicalScopeNodesStackStorage);
 exports.VisitedLexicalScopeNodesStackStorage = VisitedLexicalScopeNodesStackStorage;
+
+
+/***/ }),
+
+/***/ "./src/types/TIdentifierNamesCache.ts":
+/*!********************************************!*\
+  !*** ./src/types/TIdentifierNamesCache.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 
 /***/ }),
@@ -17799,10 +18409,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ "./src/types/container/source-code/TObfuscatedCodeFactory.ts":
-/*!*******************************************************************!*\
-  !*** ./src/types/container/source-code/TObfuscatedCodeFactory.ts ***!
-  \*******************************************************************/
+/***/ "./src/types/container/source-code/TObfuscationResultFactory.ts":
+/*!**********************************************************************!*\
+  !*** ./src/types/container/source-code/TObfuscationResultFactory.ts ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -17976,8 +18586,8 @@ let AbstractTransformerNamesGroupsBuilder = class AbstractTransformerNamesGroups
     }
 };
 AbstractTransformerNamesGroupsBuilder = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ILevelledTopologicalSorter)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ILevelledTopologicalSorter)),
     __metadata("design:paramtypes", [typeof (_a = typeof ILevelledTopologicalSorter_1.ILevelledTopologicalSorter !== "undefined" && ILevelledTopologicalSorter_1.ILevelledTopologicalSorter) === "function" ? _a : Object])
 ], AbstractTransformerNamesGroupsBuilder);
 exports.AbstractTransformerNamesGroupsBuilder = AbstractTransformerNamesGroupsBuilder;
@@ -18081,8 +18691,8 @@ let ArrayUtils = class ArrayUtils {
     }
 };
 ArrayUtils = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object])
 ], ArrayUtils);
 exports.ArrayUtils = ArrayUtils;
@@ -18193,8 +18803,8 @@ let CryptUtils = class CryptUtils {
     }
 };
 CryptUtils = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object])
 ], CryptUtils);
 exports.CryptUtils = CryptUtils;
@@ -18241,8 +18851,8 @@ let CryptUtilsStringArray = class CryptUtilsStringArray extends CryptUtils_1.Cry
     }
 };
 CryptUtilsStringArray = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IRandomGenerator)),
     __metadata("design:paramtypes", [typeof (_a = typeof IRandomGenerator_1.IRandomGenerator !== "undefined" && IRandomGenerator_1.IRandomGenerator) === "function" ? _a : Object])
 ], CryptUtilsStringArray);
 exports.CryptUtilsStringArray = CryptUtilsStringArray;
@@ -18305,7 +18915,7 @@ let EscapeSequenceEncoder = EscapeSequenceEncoder_1 = class EscapeSequenceEncode
 EscapeSequenceEncoder.ASCIICharactersRegExp = /[\x00-\x7F]/;
 EscapeSequenceEncoder.forceEscapeCharactersRegExp = /[\x00-\x1F\x7F-\x9F'"\\\s]/;
 EscapeSequenceEncoder = EscapeSequenceEncoder_1 = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], EscapeSequenceEncoder);
 exports.EscapeSequenceEncoder = EscapeSequenceEncoder;
 
@@ -18437,7 +19047,7 @@ let LevelledTopologicalSorter = class LevelledTopologicalSorter {
     }
 };
 LevelledTopologicalSorter = __decorate([
-    (0, inversify_1.injectable)()
+    inversify_1.injectable()
 ], LevelledTopologicalSorter);
 exports.LevelledTopologicalSorter = LevelledTopologicalSorter;
 
@@ -18603,25 +19213,25 @@ let RandomGenerator = RandomGenerator_1 = class RandomGenerator {
         if (inputSeedParts.length > 1) {
             return inputSeed;
         }
-        const sourceCodeMD5Hash = (0, md5_1.default)(this.sourceCode.getSourceCode());
+        const sourceCodeMD5Hash = md5_1.default(this.sourceCode.getSourceCode());
         return `${inputSeed}|${sourceCodeMD5Hash}`;
     }
 };
 RandomGenerator.randomGeneratorPool = `${AlphabetString_1.alphabetString}${AlphabetStringUppercase_1.alphabetStringUppercase}`;
 __decorate([
-    (0, Initializable_1.initializable)(),
+    Initializable_1.initializable(),
     __metadata("design:type", typeof (_a = typeof chance_1.Chance !== "undefined" && chance_1.Chance.Chance) === "function" ? _a : Object)
 ], RandomGenerator.prototype, "randomGenerator", void 0);
 __decorate([
-    (0, inversify_1.postConstruct)(),
+    inversify_1.postConstruct(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], RandomGenerator.prototype, "initialize", null);
 RandomGenerator = RandomGenerator_1 = __decorate([
-    (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.ISourceCode)),
-    __param(1, (0, inversify_1.inject)(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ISourceCode)),
+    __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)),
     __metadata("design:paramtypes", [typeof (_b = typeof ISourceCode_1.ISourceCode !== "undefined" && ISourceCode_1.ISourceCode) === "function" ? _b : Object, typeof (_c = typeof IOptions_1.IOptions !== "undefined" && IOptions_1.IOptions) === "function" ? _c : Object])
 ], RandomGenerator);
 exports.RandomGenerator = RandomGenerator;
@@ -18645,7 +19255,7 @@ exports.StringUtils = void 0;
 const js_string_escape_1 = __importDefault(__webpack_require__(/*! js-string-escape */ "js-string-escape"));
 class StringUtils {
     static escapeJsString(string) {
-        return (0, js_string_escape_1.default)(string);
+        return js_string_escape_1.default(string);
     }
 }
 exports.StringUtils = StringUtils;
@@ -18724,7 +19334,7 @@ module.exports = webpackEmptyContext;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('["$&","$\'","$*","$+","$1","$2","$3","$4","$5","$6","$7","$8","$9","$_","$`","$input","-moz-animation","-moz-animation-delay","-moz-animation-direction","-moz-animation-duration","-moz-animation-fill-mode","-moz-animation-iteration-count","-moz-animation-name","-moz-animation-play-state","-moz-animation-timing-function","-moz-appearance","-moz-backface-visibility","-moz-border-end","-moz-border-end-color","-moz-border-end-style","-moz-border-end-width","-moz-border-image","-moz-border-start","-moz-border-start-color","-moz-border-start-style","-moz-border-start-width","-moz-box-align","-moz-box-direction","-moz-box-flex","-moz-box-ordinal-group","-moz-box-orient","-moz-box-pack","-moz-box-sizing","-moz-float-edge","-moz-font-feature-settings","-moz-font-language-override","-moz-force-broken-image-icon","-moz-hyphens","-moz-image-region","-moz-margin-end","-moz-margin-start","-moz-orient","-moz-osx-font-smoothing","-moz-outline-radius","-moz-outline-radius-bottomleft","-moz-outline-radius-bottomright","-moz-outline-radius-topleft","-moz-outline-radius-topright","-moz-padding-end","-moz-padding-start","-moz-perspective","-moz-perspective-origin","-moz-tab-size","-moz-text-size-adjust","-moz-transform","-moz-transform-origin","-moz-transform-style","-moz-transition","-moz-transition-delay","-moz-transition-duration","-moz-transition-property","-moz-transition-timing-function","-moz-user-focus","-moz-user-input","-moz-user-modify","-moz-user-select","-moz-window-dragging","-webkit-align-content","-webkit-align-items","-webkit-align-self","-webkit-animation","-webkit-animation-delay","-webkit-animation-direction","-webkit-animation-duration","-webkit-animation-fill-mode","-webkit-animation-iteration-count","-webkit-animation-name","-webkit-animation-play-state","-webkit-animation-timing-function","-webkit-appearance","-webkit-backface-visibility","-webkit-background-clip","-webkit-background-origin","-webkit-background-size","-webkit-border-bottom-left-radius","-webkit-border-bottom-right-radius","-webkit-border-image","-webkit-border-radius","-webkit-border-top-left-radius","-webkit-border-top-right-radius","-webkit-box-align","-webkit-box-direction","-webkit-box-flex","-webkit-box-ordinal-group","-webkit-box-orient","-webkit-box-pack","-webkit-box-shadow","-webkit-box-sizing","-webkit-filter","-webkit-flex","-webkit-flex-basis","-webkit-flex-direction","-webkit-flex-flow","-webkit-flex-grow","-webkit-flex-shrink","-webkit-flex-wrap","-webkit-justify-content","-webkit-line-clamp","-webkit-mask","-webkit-mask-clip","-webkit-mask-composite","-webkit-mask-image","-webkit-mask-origin","-webkit-mask-position","-webkit-mask-position-x","-webkit-mask-position-y","-webkit-mask-repeat","-webkit-mask-size","-webkit-order","-webkit-perspective","-webkit-perspective-origin","-webkit-text-fill-color","-webkit-text-size-adjust","-webkit-text-stroke","-webkit-text-stroke-color","-webkit-text-stroke-width","-webkit-transform","-webkit-transform-origin","-webkit-transform-style","-webkit-transition","-webkit-transition-delay","-webkit-transition-duration","-webkit-transition-property","-webkit-transition-timing-function","-webkit-user-select","0","1","10","11","12","13","14","15","16","17","18","19","2","20","3","4","5","6","7","8","9","@@iterator","ABORT_ERR","ACTIVE","ACTIVE_ATTRIBUTES","ACTIVE_TEXTURE","ACTIVE_UNIFORMS","ACTIVE_UNIFORM_BLOCKS","ADDITION","ALIASED_LINE_WIDTH_RANGE","ALIASED_POINT_SIZE_RANGE","ALLOW_KEYBOARD_INPUT","ALLPASS","ALPHA","ALPHA_BITS","ALREADY_SIGNALED","ALT_MASK","ALWAYS","ANY_SAMPLES_PASSED","ANY_SAMPLES_PASSED_CONSERVATIVE","ANY_TYPE","ANY_UNORDERED_NODE_TYPE","ARRAY_BUFFER","ARRAY_BUFFER_BINDING","ATTACHED_SHADERS","ATTRIBUTE_NODE","AT_TARGET","AbortController","AbortSignal","AbsoluteOrientationSensor","AbstractRange","Accelerometer","AddSearchProvider","AggregateError","AnalyserNode","Animation","AnimationEffect","AnimationEvent","AnimationPlaybackEvent","AnimationTimeline","AnonXMLHttpRequest","Any","ApplicationCache","ApplicationCacheErrorEvent","Array","ArrayBuffer","ArrayType","Atomics","Attr","Audio","AudioBuffer","AudioBufferSourceNode","AudioContext","AudioDestinationNode","AudioListener","AudioNode","AudioParam","AudioParamMap","AudioProcessingEvent","AudioScheduledSourceNode","AudioStreamTrack","AudioWorklet","AudioWorkletNode","AuthenticatorAssertionResponse","AuthenticatorAttestationResponse","AuthenticatorResponse","AutocompleteErrorEvent","BACK","BAD_BOUNDARYPOINTS_ERR","BAD_REQUEST","BANDPASS","BLEND","BLEND_COLOR","BLEND_DST_ALPHA","BLEND_DST_RGB","BLEND_EQUATION","BLEND_EQUATION_ALPHA","BLEND_EQUATION_RGB","BLEND_SRC_ALPHA","BLEND_SRC_RGB","BLUE_BITS","BLUR","BOOL","BOOLEAN_TYPE","BOOL_VEC2","BOOL_VEC3","BOOL_VEC4","BOTH","BROWSER_DEFAULT_WEBGL","BUBBLING_PHASE","BUFFER_SIZE","BUFFER_USAGE","BYTE","BYTES_PER_ELEMENT","BackgroundFetchManager","BackgroundFetchRecord","BackgroundFetchRegistration","BarProp","BarcodeDetector","BaseAudioContext","BaseHref","BatteryManager","BeforeInstallPromptEvent","BeforeLoadEvent","BeforeUnloadEvent","BigInt","BigInt64Array","BigUint64Array","BiquadFilterNode","Blob","BlobEvent","Bluetooth","BluetoothCharacteristicProperties","BluetoothDevice","BluetoothRemoteGATTCharacteristic","BluetoothRemoteGATTDescriptor","BluetoothRemoteGATTServer","BluetoothRemoteGATTService","BluetoothUUID","Boolean","BroadcastChannel","ByteLengthQueuingStrategy","CAPTURING_PHASE","CCW","CDATASection","CDATA_SECTION_NODE","CHANGE","CHARSET_RULE","CHECKING","CLAMP_TO_EDGE","CLICK","CLOSED","CLOSING","COLOR","COLOR_ATTACHMENT0","COLOR_ATTACHMENT1","COLOR_ATTACHMENT10","COLOR_ATTACHMENT11","COLOR_ATTACHMENT12","COLOR_ATTACHMENT13","COLOR_ATTACHMENT14","COLOR_ATTACHMENT15","COLOR_ATTACHMENT2","COLOR_ATTACHMENT3","COLOR_ATTACHMENT4","COLOR_ATTACHMENT5","COLOR_ATTACHMENT6","COLOR_ATTACHMENT7","COLOR_ATTACHMENT8","COLOR_ATTACHMENT9","COLOR_BUFFER_BIT","COLOR_CLEAR_VALUE","COLOR_WRITEMASK","COMMENT_NODE","COMPARE_REF_TO_TEXTURE","COMPILE_STATUS","COMPRESSED_RGBA_S3TC_DXT1_EXT","COMPRESSED_RGBA_S3TC_DXT3_EXT","COMPRESSED_RGBA_S3TC_DXT5_EXT","COMPRESSED_RGB_S3TC_DXT1_EXT","COMPRESSED_TEXTURE_FORMATS","CONDITION_SATISFIED","CONFIGURATION_UNSUPPORTED","CONNECTING","CONSTANT_ALPHA","CONSTANT_COLOR","CONSTRAINT_ERR","CONTEXT_LOST_WEBGL","CONTROL_MASK","COPY_READ_BUFFER","COPY_READ_BUFFER_BINDING","COPY_WRITE_BUFFER","COPY_WRITE_BUFFER_BINDING","COUNTER_STYLE_RULE","CSS","CSS2Properties","CSSAnimation","CSSCharsetRule","CSSConditionRule","CSSCounterStyleRule","CSSFontFaceRule","CSSFontFeatureValuesRule","CSSGroupingRule","CSSImageValue","CSSImportRule","CSSKeyframeRule","CSSKeyframesRule","CSSKeywordValue","CSSMathInvert","CSSMathMax","CSSMathMin","CSSMathNegate","CSSMathProduct","CSSMathSum","CSSMathValue","CSSMatrixComponent","CSSMediaRule","CSSMozDocumentRule","CSSNameSpaceRule","CSSNamespaceRule","CSSNumericArray","CSSNumericValue","CSSPageRule","CSSPerspective","CSSPositionValue","CSSPrimitiveValue","CSSRotate","CSSRule","CSSRuleList","CSSScale","CSSSkew","CSSSkewX","CSSSkewY","CSSStyleDeclaration","CSSStyleRule","CSSStyleSheet","CSSStyleValue","CSSSupportsRule","CSSTransformComponent","CSSTransformValue","CSSTransition","CSSTranslate","CSSUnitValue","CSSUnknownRule","CSSUnparsedValue","CSSValue","CSSValueList","CSSVariableReferenceValue","CSSVariablesDeclaration","CSSVariablesRule","CSSViewportRule","CSS_ATTR","CSS_CM","CSS_COUNTER","CSS_CUSTOM","CSS_DEG","CSS_DIMENSION","CSS_EMS","CSS_EXS","CSS_FILTER_BLUR","CSS_FILTER_BRIGHTNESS","CSS_FILTER_CONTRAST","CSS_FILTER_CUSTOM","CSS_FILTER_DROP_SHADOW","CSS_FILTER_GRAYSCALE","CSS_FILTER_HUE_ROTATE","CSS_FILTER_INVERT","CSS_FILTER_OPACITY","CSS_FILTER_REFERENCE","CSS_FILTER_SATURATE","CSS_FILTER_SEPIA","CSS_GRAD","CSS_HZ","CSS_IDENT","CSS_IN","CSS_INHERIT","CSS_KHZ","CSS_MATRIX","CSS_MATRIX3D","CSS_MM","CSS_MS","CSS_NUMBER","CSS_PC","CSS_PERCENTAGE","CSS_PERSPECTIVE","CSS_PRIMITIVE_VALUE","CSS_PT","CSS_PX","CSS_RAD","CSS_RECT","CSS_RGBCOLOR","CSS_ROTATE","CSS_ROTATE3D","CSS_ROTATEX","CSS_ROTATEY","CSS_ROTATEZ","CSS_S","CSS_SCALE","CSS_SCALE3D","CSS_SCALEX","CSS_SCALEY","CSS_SCALEZ","CSS_SKEW","CSS_SKEWX","CSS_SKEWY","CSS_STRING","CSS_TRANSLATE","CSS_TRANSLATE3D","CSS_TRANSLATEX","CSS_TRANSLATEY","CSS_TRANSLATEZ","CSS_UNKNOWN","CSS_URI","CSS_VALUE_LIST","CSS_VH","CSS_VMAX","CSS_VMIN","CSS_VW","CULL_FACE","CULL_FACE_MODE","CURRENT_PROGRAM","CURRENT_QUERY","CURRENT_VERTEX_ATTRIB","CUSTOM","CW","Cache","CacheStorage","CanvasCaptureMediaStream","CanvasCaptureMediaStreamTrack","CanvasGradient","CanvasPattern","CanvasRenderingContext2D","CaretPosition","ChannelMergerNode","ChannelSplitterNode","CharacterData","ClientRect","ClientRectList","Clipboard","ClipboardEvent","ClipboardItem","CloseEvent","Collator","CommandEvent","Comment","CompileError","CompositionEvent","CompressionStream","Console","ConstantSourceNode","Controllers","ConvolverNode","CountQueuingStrategy","Counter","Credential","CredentialsContainer","Crypto","CryptoKey","CustomElementRegistry","CustomEvent","DATABASE_ERR","DATA_CLONE_ERR","DATA_ERR","DBLCLICK","DECR","DECR_WRAP","DELETE_STATUS","DEPTH","DEPTH24_STENCIL8","DEPTH32F_STENCIL8","DEPTH_ATTACHMENT","DEPTH_BITS","DEPTH_BUFFER_BIT","DEPTH_CLEAR_VALUE","DEPTH_COMPONENT","DEPTH_COMPONENT16","DEPTH_COMPONENT24","DEPTH_COMPONENT32F","DEPTH_FUNC","DEPTH_RANGE","DEPTH_STENCIL","DEPTH_STENCIL_ATTACHMENT","DEPTH_TEST","DEPTH_WRITEMASK","DEVICE_INELIGIBLE","DIRECTION_DOWN","DIRECTION_LEFT","DIRECTION_RIGHT","DIRECTION_UP","DISABLED","DISPATCH_REQUEST_ERR","DITHER","DOCUMENT_FRAGMENT_NODE","DOCUMENT_NODE","DOCUMENT_POSITION_CONTAINED_BY","DOCUMENT_POSITION_CONTAINS","DOCUMENT_POSITION_DISCONNECTED","DOCUMENT_POSITION_FOLLOWING","DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC","DOCUMENT_POSITION_PRECEDING","DOCUMENT_TYPE_NODE","DOMCursor","DOMError","DOMException","DOMImplementation","DOMImplementationLS","DOMMatrix","DOMMatrixReadOnly","DOMParser","DOMPoint","DOMPointReadOnly","DOMQuad","DOMRect","DOMRectList","DOMRectReadOnly","DOMRequest","DOMSTRING_SIZE_ERR","DOMSettableTokenList","DOMStringList","DOMStringMap","DOMTokenList","DOMTransactionEvent","DOM_DELTA_LINE","DOM_DELTA_PAGE","DOM_DELTA_PIXEL","DOM_INPUT_METHOD_DROP","DOM_INPUT_METHOD_HANDWRITING","DOM_INPUT_METHOD_IME","DOM_INPUT_METHOD_KEYBOARD","DOM_INPUT_METHOD_MULTIMODAL","DOM_INPUT_METHOD_OPTION","DOM_INPUT_METHOD_PASTE","DOM_INPUT_METHOD_SCRIPT","DOM_INPUT_METHOD_UNKNOWN","DOM_INPUT_METHOD_VOICE","DOM_KEY_LOCATION_JOYSTICK","DOM_KEY_LOCATION_LEFT","DOM_KEY_LOCATION_MOBILE","DOM_KEY_LOCATION_NUMPAD","DOM_KEY_LOCATION_RIGHT","DOM_KEY_LOCATION_STANDARD","DOM_VK_0","DOM_VK_1","DOM_VK_2","DOM_VK_3","DOM_VK_4","DOM_VK_5","DOM_VK_6","DOM_VK_7","DOM_VK_8","DOM_VK_9","DOM_VK_A","DOM_VK_ACCEPT","DOM_VK_ADD","DOM_VK_ALT","DOM_VK_ALTGR","DOM_VK_AMPERSAND","DOM_VK_ASTERISK","DOM_VK_AT","DOM_VK_ATTN","DOM_VK_B","DOM_VK_BACKSPACE","DOM_VK_BACK_QUOTE","DOM_VK_BACK_SLASH","DOM_VK_BACK_SPACE","DOM_VK_C","DOM_VK_CANCEL","DOM_VK_CAPS_LOCK","DOM_VK_CIRCUMFLEX","DOM_VK_CLEAR","DOM_VK_CLOSE_BRACKET","DOM_VK_CLOSE_CURLY_BRACKET","DOM_VK_CLOSE_PAREN","DOM_VK_COLON","DOM_VK_COMMA","DOM_VK_CONTEXT_MENU","DOM_VK_CONTROL","DOM_VK_CONVERT","DOM_VK_CRSEL","DOM_VK_CTRL","DOM_VK_D","DOM_VK_DECIMAL","DOM_VK_DELETE","DOM_VK_DIVIDE","DOM_VK_DOLLAR","DOM_VK_DOUBLE_QUOTE","DOM_VK_DOWN","DOM_VK_E","DOM_VK_EISU","DOM_VK_END","DOM_VK_ENTER","DOM_VK_EQUALS","DOM_VK_EREOF","DOM_VK_ESCAPE","DOM_VK_EXCLAMATION","DOM_VK_EXECUTE","DOM_VK_EXSEL","DOM_VK_F","DOM_VK_F1","DOM_VK_F10","DOM_VK_F11","DOM_VK_F12","DOM_VK_F13","DOM_VK_F14","DOM_VK_F15","DOM_VK_F16","DOM_VK_F17","DOM_VK_F18","DOM_VK_F19","DOM_VK_F2","DOM_VK_F20","DOM_VK_F21","DOM_VK_F22","DOM_VK_F23","DOM_VK_F24","DOM_VK_F25","DOM_VK_F26","DOM_VK_F27","DOM_VK_F28","DOM_VK_F29","DOM_VK_F3","DOM_VK_F30","DOM_VK_F31","DOM_VK_F32","DOM_VK_F33","DOM_VK_F34","DOM_VK_F35","DOM_VK_F36","DOM_VK_F4","DOM_VK_F5","DOM_VK_F6","DOM_VK_F7","DOM_VK_F8","DOM_VK_F9","DOM_VK_FINAL","DOM_VK_FRONT","DOM_VK_G","DOM_VK_GREATER_THAN","DOM_VK_H","DOM_VK_HANGUL","DOM_VK_HANJA","DOM_VK_HASH","DOM_VK_HELP","DOM_VK_HK_TOGGLE","DOM_VK_HOME","DOM_VK_HYPHEN_MINUS","DOM_VK_I","DOM_VK_INSERT","DOM_VK_J","DOM_VK_JUNJA","DOM_VK_K","DOM_VK_KANA","DOM_VK_KANJI","DOM_VK_L","DOM_VK_LEFT","DOM_VK_LEFT_TAB","DOM_VK_LESS_THAN","DOM_VK_M","DOM_VK_META","DOM_VK_MODECHANGE","DOM_VK_MULTIPLY","DOM_VK_N","DOM_VK_NONCONVERT","DOM_VK_NUMPAD0","DOM_VK_NUMPAD1","DOM_VK_NUMPAD2","DOM_VK_NUMPAD3","DOM_VK_NUMPAD4","DOM_VK_NUMPAD5","DOM_VK_NUMPAD6","DOM_VK_NUMPAD7","DOM_VK_NUMPAD8","DOM_VK_NUMPAD9","DOM_VK_NUM_LOCK","DOM_VK_O","DOM_VK_OEM_1","DOM_VK_OEM_102","DOM_VK_OEM_2","DOM_VK_OEM_3","DOM_VK_OEM_4","DOM_VK_OEM_5","DOM_VK_OEM_6","DOM_VK_OEM_7","DOM_VK_OEM_8","DOM_VK_OEM_COMMA","DOM_VK_OEM_MINUS","DOM_VK_OEM_PERIOD","DOM_VK_OEM_PLUS","DOM_VK_OPEN_BRACKET","DOM_VK_OPEN_CURLY_BRACKET","DOM_VK_OPEN_PAREN","DOM_VK_P","DOM_VK_PA1","DOM_VK_PAGEDOWN","DOM_VK_PAGEUP","DOM_VK_PAGE_DOWN","DOM_VK_PAGE_UP","DOM_VK_PAUSE","DOM_VK_PERCENT","DOM_VK_PERIOD","DOM_VK_PIPE","DOM_VK_PLAY","DOM_VK_PLUS","DOM_VK_PRINT","DOM_VK_PRINTSCREEN","DOM_VK_PROCESSKEY","DOM_VK_PROPERITES","DOM_VK_Q","DOM_VK_QUESTION_MARK","DOM_VK_QUOTE","DOM_VK_R","DOM_VK_REDO","DOM_VK_RETURN","DOM_VK_RIGHT","DOM_VK_S","DOM_VK_SCROLL_LOCK","DOM_VK_SELECT","DOM_VK_SEMICOLON","DOM_VK_SEPARATOR","DOM_VK_SHIFT","DOM_VK_SLASH","DOM_VK_SLEEP","DOM_VK_SPACE","DOM_VK_SUBTRACT","DOM_VK_T","DOM_VK_TAB","DOM_VK_TILDE","DOM_VK_U","DOM_VK_UNDERSCORE","DOM_VK_UNDO","DOM_VK_UNICODE","DOM_VK_UP","DOM_VK_V","DOM_VK_VOLUME_DOWN","DOM_VK_VOLUME_MUTE","DOM_VK_VOLUME_UP","DOM_VK_W","DOM_VK_WIN","DOM_VK_WINDOW","DOM_VK_WIN_ICO_00","DOM_VK_WIN_ICO_CLEAR","DOM_VK_WIN_ICO_HELP","DOM_VK_WIN_OEM_ATTN","DOM_VK_WIN_OEM_AUTO","DOM_VK_WIN_OEM_BACKTAB","DOM_VK_WIN_OEM_CLEAR","DOM_VK_WIN_OEM_COPY","DOM_VK_WIN_OEM_CUSEL","DOM_VK_WIN_OEM_ENLW","DOM_VK_WIN_OEM_FINISH","DOM_VK_WIN_OEM_FJ_JISHO","DOM_VK_WIN_OEM_FJ_LOYA","DOM_VK_WIN_OEM_FJ_MASSHOU","DOM_VK_WIN_OEM_FJ_ROYA","DOM_VK_WIN_OEM_FJ_TOUROKU","DOM_VK_WIN_OEM_JUMP","DOM_VK_WIN_OEM_PA1","DOM_VK_WIN_OEM_PA2","DOM_VK_WIN_OEM_PA3","DOM_VK_WIN_OEM_RESET","DOM_VK_WIN_OEM_WSCTRL","DOM_VK_X","DOM_VK_XF86XK_ADD_FAVORITE","DOM_VK_XF86XK_APPLICATION_LEFT","DOM_VK_XF86XK_APPLICATION_RIGHT","DOM_VK_XF86XK_AUDIO_CYCLE_TRACK","DOM_VK_XF86XK_AUDIO_FORWARD","DOM_VK_XF86XK_AUDIO_LOWER_VOLUME","DOM_VK_XF86XK_AUDIO_MEDIA","DOM_VK_XF86XK_AUDIO_MUTE","DOM_VK_XF86XK_AUDIO_NEXT","DOM_VK_XF86XK_AUDIO_PAUSE","DOM_VK_XF86XK_AUDIO_PLAY","DOM_VK_XF86XK_AUDIO_PREV","DOM_VK_XF86XK_AUDIO_RAISE_VOLUME","DOM_VK_XF86XK_AUDIO_RANDOM_PLAY","DOM_VK_XF86XK_AUDIO_RECORD","DOM_VK_XF86XK_AUDIO_REPEAT","DOM_VK_XF86XK_AUDIO_REWIND","DOM_VK_XF86XK_AUDIO_STOP","DOM_VK_XF86XK_AWAY","DOM_VK_XF86XK_BACK","DOM_VK_XF86XK_BACK_FORWARD","DOM_VK_XF86XK_BATTERY","DOM_VK_XF86XK_BLUE","DOM_VK_XF86XK_BLUETOOTH","DOM_VK_XF86XK_BOOK","DOM_VK_XF86XK_BRIGHTNESS_ADJUST","DOM_VK_XF86XK_CALCULATOR","DOM_VK_XF86XK_CALENDAR","DOM_VK_XF86XK_CD","DOM_VK_XF86XK_CLOSE","DOM_VK_XF86XK_COMMUNITY","DOM_VK_XF86XK_CONTRAST_ADJUST","DOM_VK_XF86XK_COPY","DOM_VK_XF86XK_CUT","DOM_VK_XF86XK_CYCLE_ANGLE","DOM_VK_XF86XK_DISPLAY","DOM_VK_XF86XK_DOCUMENTS","DOM_VK_XF86XK_DOS","DOM_VK_XF86XK_EJECT","DOM_VK_XF86XK_EXCEL","DOM_VK_XF86XK_EXPLORER","DOM_VK_XF86XK_FAVORITES","DOM_VK_XF86XK_FINANCE","DOM_VK_XF86XK_FORWARD","DOM_VK_XF86XK_FRAME_BACK","DOM_VK_XF86XK_FRAME_FORWARD","DOM_VK_XF86XK_GAME","DOM_VK_XF86XK_GO","DOM_VK_XF86XK_GREEN","DOM_VK_XF86XK_HIBERNATE","DOM_VK_XF86XK_HISTORY","DOM_VK_XF86XK_HOME_PAGE","DOM_VK_XF86XK_HOT_LINKS","DOM_VK_XF86XK_I_TOUCH","DOM_VK_XF86XK_KBD_BRIGHTNESS_DOWN","DOM_VK_XF86XK_KBD_BRIGHTNESS_UP","DOM_VK_XF86XK_KBD_LIGHT_ON_OFF","DOM_VK_XF86XK_LAUNCH0","DOM_VK_XF86XK_LAUNCH1","DOM_VK_XF86XK_LAUNCH2","DOM_VK_XF86XK_LAUNCH3","DOM_VK_XF86XK_LAUNCH4","DOM_VK_XF86XK_LAUNCH5","DOM_VK_XF86XK_LAUNCH6","DOM_VK_XF86XK_LAUNCH7","DOM_VK_XF86XK_LAUNCH8","DOM_VK_XF86XK_LAUNCH9","DOM_VK_XF86XK_LAUNCH_A","DOM_VK_XF86XK_LAUNCH_B","DOM_VK_XF86XK_LAUNCH_C","DOM_VK_XF86XK_LAUNCH_D","DOM_VK_XF86XK_LAUNCH_E","DOM_VK_XF86XK_LAUNCH_F","DOM_VK_XF86XK_LIGHT_BULB","DOM_VK_XF86XK_LOG_OFF","DOM_VK_XF86XK_MAIL","DOM_VK_XF86XK_MAIL_FORWARD","DOM_VK_XF86XK_MARKET","DOM_VK_XF86XK_MEETING","DOM_VK_XF86XK_MEMO","DOM_VK_XF86XK_MENU_KB","DOM_VK_XF86XK_MENU_PB","DOM_VK_XF86XK_MESSENGER","DOM_VK_XF86XK_MON_BRIGHTNESS_DOWN","DOM_VK_XF86XK_MON_BRIGHTNESS_UP","DOM_VK_XF86XK_MUSIC","DOM_VK_XF86XK_MY_COMPUTER","DOM_VK_XF86XK_MY_SITES","DOM_VK_XF86XK_NEW","DOM_VK_XF86XK_NEWS","DOM_VK_XF86XK_OFFICE_HOME","DOM_VK_XF86XK_OPEN","DOM_VK_XF86XK_OPEN_URL","DOM_VK_XF86XK_OPTION","DOM_VK_XF86XK_PASTE","DOM_VK_XF86XK_PHONE","DOM_VK_XF86XK_PICTURES","DOM_VK_XF86XK_POWER_DOWN","DOM_VK_XF86XK_POWER_OFF","DOM_VK_XF86XK_RED","DOM_VK_XF86XK_REFRESH","DOM_VK_XF86XK_RELOAD","DOM_VK_XF86XK_REPLY","DOM_VK_XF86XK_ROCKER_DOWN","DOM_VK_XF86XK_ROCKER_ENTER","DOM_VK_XF86XK_ROCKER_UP","DOM_VK_XF86XK_ROTATE_WINDOWS","DOM_VK_XF86XK_ROTATION_KB","DOM_VK_XF86XK_ROTATION_PB","DOM_VK_XF86XK_SAVE","DOM_VK_XF86XK_SCREEN_SAVER","DOM_VK_XF86XK_SCROLL_CLICK","DOM_VK_XF86XK_SCROLL_DOWN","DOM_VK_XF86XK_SCROLL_UP","DOM_VK_XF86XK_SEARCH","DOM_VK_XF86XK_SEND","DOM_VK_XF86XK_SHOP","DOM_VK_XF86XK_SPELL","DOM_VK_XF86XK_SPLIT_SCREEN","DOM_VK_XF86XK_STANDBY","DOM_VK_XF86XK_START","DOM_VK_XF86XK_STOP","DOM_VK_XF86XK_SUBTITLE","DOM_VK_XF86XK_SUPPORT","DOM_VK_XF86XK_SUSPEND","DOM_VK_XF86XK_TASK_PANE","DOM_VK_XF86XK_TERMINAL","DOM_VK_XF86XK_TIME","DOM_VK_XF86XK_TOOLS","DOM_VK_XF86XK_TOP_MENU","DOM_VK_XF86XK_TO_DO_LIST","DOM_VK_XF86XK_TRAVEL","DOM_VK_XF86XK_USER1KB","DOM_VK_XF86XK_USER2KB","DOM_VK_XF86XK_USER_PB","DOM_VK_XF86XK_UWB","DOM_VK_XF86XK_VENDOR_HOME","DOM_VK_XF86XK_VIDEO","DOM_VK_XF86XK_VIEW","DOM_VK_XF86XK_WAKE_UP","DOM_VK_XF86XK_WEB_CAM","DOM_VK_XF86XK_WHEEL_BUTTON","DOM_VK_XF86XK_WLAN","DOM_VK_XF86XK_WORD","DOM_VK_XF86XK_WWW","DOM_VK_XF86XK_XFER","DOM_VK_XF86XK_YELLOW","DOM_VK_XF86XK_ZOOM_IN","DOM_VK_XF86XK_ZOOM_OUT","DOM_VK_Y","DOM_VK_Z","DOM_VK_ZOOM","DONE","DONT_CARE","DOWNLOADING","DRAGDROP","DRAW_BUFFER0","DRAW_BUFFER1","DRAW_BUFFER10","DRAW_BUFFER11","DRAW_BUFFER12","DRAW_BUFFER13","DRAW_BUFFER14","DRAW_BUFFER15","DRAW_BUFFER2","DRAW_BUFFER3","DRAW_BUFFER4","DRAW_BUFFER5","DRAW_BUFFER6","DRAW_BUFFER7","DRAW_BUFFER8","DRAW_BUFFER9","DRAW_FRAMEBUFFER","DRAW_FRAMEBUFFER_BINDING","DST_ALPHA","DST_COLOR","DYNAMIC_COPY","DYNAMIC_DRAW","DYNAMIC_READ","DataChannel","DataTransfer","DataTransferItem","DataTransferItemList","DataView","Date","DateTimeFormat","DecompressionStream","DelayNode","DeprecationReportBody","DesktopNotification","DesktopNotificationCenter","DeviceLightEvent","DeviceMotionEvent","DeviceMotionEventAcceleration","DeviceMotionEventRotationRate","DeviceOrientationEvent","DeviceProximityEvent","DeviceStorage","DeviceStorageChangeEvent","Directory","DisplayNames","Document","DocumentFragment","DocumentTimeline","DocumentType","DragEvent","DynamicsCompressorNode","E","ELEMENT_ARRAY_BUFFER","ELEMENT_ARRAY_BUFFER_BINDING","ELEMENT_NODE","EMPTY","ENCODING_ERR","ENDED","END_TO_END","END_TO_START","ENTITY_NODE","ENTITY_REFERENCE_NODE","EPSILON","EQUAL","EQUALPOWER","ERROR","EXPONENTIAL_DISTANCE","Element","ElementInternals","ElementQuery","EnterPictureInPictureEvent","Entity","EntityReference","Error","ErrorEvent","EvalError","Event","EventException","EventSource","EventTarget","External","FASTEST","FIDOSDK","FILTER_ACCEPT","FILTER_INTERRUPT","FILTER_REJECT","FILTER_SKIP","FINISHED_STATE","FIRST_ORDERED_NODE_TYPE","FLOAT","FLOAT_32_UNSIGNED_INT_24_8_REV","FLOAT_MAT2","FLOAT_MAT2x3","FLOAT_MAT2x4","FLOAT_MAT3","FLOAT_MAT3x2","FLOAT_MAT3x4","FLOAT_MAT4","FLOAT_MAT4x2","FLOAT_MAT4x3","FLOAT_VEC2","FLOAT_VEC3","FLOAT_VEC4","FOCUS","FONT_FACE_RULE","FONT_FEATURE_VALUES_RULE","FRAGMENT_SHADER","FRAGMENT_SHADER_DERIVATIVE_HINT","FRAGMENT_SHADER_DERIVATIVE_HINT_OES","FRAMEBUFFER","FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE","FRAMEBUFFER_ATTACHMENT_BLUE_SIZE","FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING","FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE","FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE","FRAMEBUFFER_ATTACHMENT_GREEN_SIZE","FRAMEBUFFER_ATTACHMENT_OBJECT_NAME","FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE","FRAMEBUFFER_ATTACHMENT_RED_SIZE","FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE","FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE","FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER","FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL","FRAMEBUFFER_BINDING","FRAMEBUFFER_COMPLETE","FRAMEBUFFER_DEFAULT","FRAMEBUFFER_INCOMPLETE_ATTACHMENT","FRAMEBUFFER_INCOMPLETE_DIMENSIONS","FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT","FRAMEBUFFER_INCOMPLETE_MULTISAMPLE","FRAMEBUFFER_UNSUPPORTED","FRONT","FRONT_AND_BACK","FRONT_FACE","FUNC_ADD","FUNC_REVERSE_SUBTRACT","FUNC_SUBTRACT","FeaturePolicy","FeaturePolicyViolationReportBody","FederatedCredential","Feed","FeedEntry","File","FileError","FileList","FileReader","FileSystem","FileSystemDirectoryEntry","FileSystemDirectoryReader","FileSystemEntry","FileSystemFileEntry","FinalizationRegistry","FindInPage","Float32Array","Float64Array","FocusEvent","FontFace","FontFaceSet","FontFaceSetLoadEvent","FormData","FormDataEvent","FragmentDirective","Function","GENERATE_MIPMAP_HINT","GEQUAL","GREATER","GREEN_BITS","GainNode","Gamepad","GamepadAxisMoveEvent","GamepadButton","GamepadButtonEvent","GamepadEvent","GamepadHapticActuator","GamepadPose","Geolocation","GeolocationCoordinates","GeolocationPosition","GeolocationPositionError","GestureEvent","Global","Gyroscope","HALF_FLOAT","HAVE_CURRENT_DATA","HAVE_ENOUGH_DATA","HAVE_FUTURE_DATA","HAVE_METADATA","HAVE_NOTHING","HEADERS_RECEIVED","HIDDEN","HIERARCHY_REQUEST_ERR","HIGHPASS","HIGHSHELF","HIGH_FLOAT","HIGH_INT","HORIZONTAL","HORIZONTAL_AXIS","HRTF","HTMLAllCollection","HTMLAnchorElement","HTMLAppletElement","HTMLAreaElement","HTMLAudioElement","HTMLBRElement","HTMLBaseElement","HTMLBaseFontElement","HTMLBlockquoteElement","HTMLBodyElement","HTMLButtonElement","HTMLCanvasElement","HTMLCollection","HTMLCommandElement","HTMLContentElement","HTMLDListElement","HTMLDataElement","HTMLDataListElement","HTMLDetailsElement","HTMLDialogElement","HTMLDirectoryElement","HTMLDivElement","HTMLDocument","HTMLElement","HTMLEmbedElement","HTMLFieldSetElement","HTMLFontElement","HTMLFormControlsCollection","HTMLFormElement","HTMLFrameElement","HTMLFrameSetElement","HTMLHRElement","HTMLHeadElement","HTMLHeadingElement","HTMLHtmlElement","HTMLIFrameElement","HTMLImageElement","HTMLInputElement","HTMLIsIndexElement","HTMLKeygenElement","HTMLLIElement","HTMLLabelElement","HTMLLegendElement","HTMLLinkElement","HTMLMapElement","HTMLMarqueeElement","HTMLMediaElement","HTMLMenuElement","HTMLMenuItemElement","HTMLMetaElement","HTMLMeterElement","HTMLModElement","HTMLOListElement","HTMLObjectElement","HTMLOptGroupElement","HTMLOptionElement","HTMLOptionsCollection","HTMLOutputElement","HTMLParagraphElement","HTMLParamElement","HTMLPictureElement","HTMLPreElement","HTMLProgressElement","HTMLPropertiesCollection","HTMLQuoteElement","HTMLScriptElement","HTMLSelectElement","HTMLShadowElement","HTMLSlotElement","HTMLSourceElement","HTMLSpanElement","HTMLStyleElement","HTMLTableCaptionElement","HTMLTableCellElement","HTMLTableColElement","HTMLTableElement","HTMLTableRowElement","HTMLTableSectionElement","HTMLTemplateElement","HTMLTextAreaElement","HTMLTimeElement","HTMLTitleElement","HTMLTrackElement","HTMLUListElement","HTMLUnknownElement","HTMLVideoElement","HashChangeEvent","Headers","History","Hz","ICE_CHECKING","ICE_CLOSED","ICE_COMPLETED","ICE_CONNECTED","ICE_FAILED","ICE_GATHERING","ICE_WAITING","IDBCursor","IDBCursorWithValue","IDBDatabase","IDBDatabaseException","IDBFactory","IDBFileHandle","IDBFileRequest","IDBIndex","IDBKeyRange","IDBMutableFile","IDBObjectStore","IDBOpenDBRequest","IDBRequest","IDBTransaction","IDBVersionChangeEvent","IDLE","IIRFilterNode","IMPLEMENTATION_COLOR_READ_FORMAT","IMPLEMENTATION_COLOR_READ_TYPE","IMPORT_RULE","INCR","INCR_WRAP","INDEX_SIZE_ERR","INT","INTERLEAVED_ATTRIBS","INT_2_10_10_10_REV","INT_SAMPLER_2D","INT_SAMPLER_2D_ARRAY","INT_SAMPLER_3D","INT_SAMPLER_CUBE","INT_VEC2","INT_VEC3","INT_VEC4","INUSE_ATTRIBUTE_ERR","INVALID_ACCESS_ERR","INVALID_CHARACTER_ERR","INVALID_ENUM","INVALID_EXPRESSION_ERR","INVALID_FRAMEBUFFER_OPERATION","INVALID_INDEX","INVALID_MODIFICATION_ERR","INVALID_NODE_TYPE_ERR","INVALID_OPERATION","INVALID_STATE_ERR","INVALID_VALUE","INVERSE_DISTANCE","INVERT","IceCandidate","IdleDeadline","Image","ImageBitmap","ImageBitmapRenderingContext","ImageCapture","ImageData","Infinity","InputDeviceCapabilities","InputDeviceInfo","InputEvent","InputMethodContext","InstallTrigger","InstallTriggerImpl","Instance","Int16Array","Int32Array","Int8Array","Intent","InternalError","IntersectionObserver","IntersectionObserverEntry","Intl","IsSearchProviderInstalled","Iterator","JSON","KEEP","KEYDOWN","KEYFRAMES_RULE","KEYFRAME_RULE","KEYPRESS","KEYUP","KeyEvent","Keyboard","KeyboardEvent","KeyboardLayoutMap","KeyframeEffect","LENGTHADJUST_SPACING","LENGTHADJUST_SPACINGANDGLYPHS","LENGTHADJUST_UNKNOWN","LEQUAL","LESS","LINEAR","LINEAR_DISTANCE","LINEAR_MIPMAP_LINEAR","LINEAR_MIPMAP_NEAREST","LINES","LINE_LOOP","LINE_STRIP","LINE_WIDTH","LINK_STATUS","LIVE","LN10","LN2","LOADED","LOADING","LOG10E","LOG2E","LOWPASS","LOWSHELF","LOW_FLOAT","LOW_INT","LSException","LSParserFilter","LUMINANCE","LUMINANCE_ALPHA","LargestContentfulPaint","LayoutShift","LayoutShiftAttribution","LinearAccelerationSensor","LinkError","ListFormat","LocalMediaStream","Locale","Location","Lock","LockManager","MAX","MAX_3D_TEXTURE_SIZE","MAX_ARRAY_TEXTURE_LAYERS","MAX_CLIENT_WAIT_TIMEOUT_WEBGL","MAX_COLOR_ATTACHMENTS","MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS","MAX_COMBINED_TEXTURE_IMAGE_UNITS","MAX_COMBINED_UNIFORM_BLOCKS","MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS","MAX_CUBE_MAP_TEXTURE_SIZE","MAX_DRAW_BUFFERS","MAX_ELEMENTS_INDICES","MAX_ELEMENTS_VERTICES","MAX_ELEMENT_INDEX","MAX_FRAGMENT_INPUT_COMPONENTS","MAX_FRAGMENT_UNIFORM_BLOCKS","MAX_FRAGMENT_UNIFORM_COMPONENTS","MAX_FRAGMENT_UNIFORM_VECTORS","MAX_PROGRAM_TEXEL_OFFSET","MAX_RENDERBUFFER_SIZE","MAX_SAFE_INTEGER","MAX_SAMPLES","MAX_SERVER_WAIT_TIMEOUT","MAX_TEXTURE_IMAGE_UNITS","MAX_TEXTURE_LOD_BIAS","MAX_TEXTURE_MAX_ANISOTROPY_EXT","MAX_TEXTURE_SIZE","MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS","MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS","MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS","MAX_UNIFORM_BLOCK_SIZE","MAX_UNIFORM_BUFFER_BINDINGS","MAX_VALUE","MAX_VARYING_COMPONENTS","MAX_VARYING_VECTORS","MAX_VERTEX_ATTRIBS","MAX_VERTEX_OUTPUT_COMPONENTS","MAX_VERTEX_TEXTURE_IMAGE_UNITS","MAX_VERTEX_UNIFORM_BLOCKS","MAX_VERTEX_UNIFORM_COMPONENTS","MAX_VERTEX_UNIFORM_VECTORS","MAX_VIEWPORT_DIMS","MEDIA_ERR_ABORTED","MEDIA_ERR_DECODE","MEDIA_ERR_ENCRYPTED","MEDIA_ERR_NETWORK","MEDIA_ERR_SRC_NOT_SUPPORTED","MEDIA_KEYERR_CLIENT","MEDIA_KEYERR_DOMAIN","MEDIA_KEYERR_HARDWARECHANGE","MEDIA_KEYERR_OUTPUT","MEDIA_KEYERR_SERVICE","MEDIA_KEYERR_UNKNOWN","MEDIA_RULE","MEDIUM_FLOAT","MEDIUM_INT","META_MASK","MIDIAccess","MIDIConnectionEvent","MIDIInput","MIDIInputMap","MIDIMessageEvent","MIDIOutput","MIDIOutputMap","MIDIPort","MIN","MIN_PROGRAM_TEXEL_OFFSET","MIN_SAFE_INTEGER","MIN_VALUE","MIRRORED_REPEAT","MODE_ASYNCHRONOUS","MODE_SYNCHRONOUS","MODIFICATION","MOUSEDOWN","MOUSEDRAG","MOUSEMOVE","MOUSEOUT","MOUSEOVER","MOUSEUP","MOZ_KEYFRAMES_RULE","MOZ_KEYFRAME_RULE","MOZ_SOURCE_CURSOR","MOZ_SOURCE_ERASER","MOZ_SOURCE_KEYBOARD","MOZ_SOURCE_MOUSE","MOZ_SOURCE_PEN","MOZ_SOURCE_TOUCH","MOZ_SOURCE_UNKNOWN","MSGESTURE_FLAG_BEGIN","MSGESTURE_FLAG_CANCEL","MSGESTURE_FLAG_END","MSGESTURE_FLAG_INERTIA","MSGESTURE_FLAG_NONE","MSPOINTER_TYPE_MOUSE","MSPOINTER_TYPE_PEN","MSPOINTER_TYPE_TOUCH","MS_ASYNC_CALLBACK_STATUS_ASSIGN_DELEGATE","MS_ASYNC_CALLBACK_STATUS_CANCEL","MS_ASYNC_CALLBACK_STATUS_CHOOSEANY","MS_ASYNC_CALLBACK_STATUS_ERROR","MS_ASYNC_CALLBACK_STATUS_JOIN","MS_ASYNC_OP_STATUS_CANCELED","MS_ASYNC_OP_STATUS_ERROR","MS_ASYNC_OP_STATUS_SUCCESS","MS_MANIPULATION_STATE_ACTIVE","MS_MANIPULATION_STATE_CANCELLED","MS_MANIPULATION_STATE_COMMITTED","MS_MANIPULATION_STATE_DRAGGING","MS_MANIPULATION_STATE_INERTIA","MS_MANIPULATION_STATE_PRESELECT","MS_MANIPULATION_STATE_SELECTING","MS_MANIPULATION_STATE_STOPPED","MS_MEDIA_ERR_ENCRYPTED","MS_MEDIA_KEYERR_CLIENT","MS_MEDIA_KEYERR_DOMAIN","MS_MEDIA_KEYERR_HARDWARECHANGE","MS_MEDIA_KEYERR_OUTPUT","MS_MEDIA_KEYERR_SERVICE","MS_MEDIA_KEYERR_UNKNOWN","Map","Math","MathMLElement","MediaCapabilities","MediaCapabilitiesInfo","MediaController","MediaDeviceInfo","MediaDevices","MediaElementAudioSourceNode","MediaEncryptedEvent","MediaError","MediaKeyError","MediaKeyEvent","MediaKeyMessageEvent","MediaKeyNeededEvent","MediaKeySession","MediaKeyStatusMap","MediaKeySystemAccess","MediaKeys","MediaList","MediaMetadata","MediaQueryList","MediaQueryListEvent","MediaRecorder","MediaRecorderErrorEvent","MediaSession","MediaSettingsRange","MediaSource","MediaStream","MediaStreamAudioDestinationNode","MediaStreamAudioSourceNode","MediaStreamEvent","MediaStreamTrack","MediaStreamTrackAudioSourceNode","MediaStreamTrackEvent","Memory","MessageChannel","MessageEvent","MessagePort","Methods","MimeType","MimeTypeArray","Module","MouseEvent","MouseScrollEvent","MozAnimation","MozAnimationDelay","MozAnimationDirection","MozAnimationDuration","MozAnimationFillMode","MozAnimationIterationCount","MozAnimationName","MozAnimationPlayState","MozAnimationTimingFunction","MozAppearance","MozBackfaceVisibility","MozBinding","MozBorderBottomColors","MozBorderEnd","MozBorderEndColor","MozBorderEndStyle","MozBorderEndWidth","MozBorderImage","MozBorderLeftColors","MozBorderRightColors","MozBorderStart","MozBorderStartColor","MozBorderStartStyle","MozBorderStartWidth","MozBorderTopColors","MozBoxAlign","MozBoxDirection","MozBoxFlex","MozBoxOrdinalGroup","MozBoxOrient","MozBoxPack","MozBoxSizing","MozCSSKeyframeRule","MozCSSKeyframesRule","MozColumnCount","MozColumnFill","MozColumnGap","MozColumnRule","MozColumnRuleColor","MozColumnRuleStyle","MozColumnRuleWidth","MozColumnWidth","MozColumns","MozContactChangeEvent","MozFloatEdge","MozFontFeatureSettings","MozFontLanguageOverride","MozForceBrokenImageIcon","MozHyphens","MozImageRegion","MozMarginEnd","MozMarginStart","MozMmsEvent","MozMmsMessage","MozMobileMessageThread","MozOSXFontSmoothing","MozOrient","MozOsxFontSmoothing","MozOutlineRadius","MozOutlineRadiusBottomleft","MozOutlineRadiusBottomright","MozOutlineRadiusTopleft","MozOutlineRadiusTopright","MozPaddingEnd","MozPaddingStart","MozPerspective","MozPerspectiveOrigin","MozPowerManager","MozSettingsEvent","MozSmsEvent","MozSmsMessage","MozStackSizing","MozTabSize","MozTextAlignLast","MozTextDecorationColor","MozTextDecorationLine","MozTextDecorationStyle","MozTextSizeAdjust","MozTransform","MozTransformOrigin","MozTransformStyle","MozTransition","MozTransitionDelay","MozTransitionDuration","MozTransitionProperty","MozTransitionTimingFunction","MozUserFocus","MozUserInput","MozUserModify","MozUserSelect","MozWindowDragging","MozWindowShadow","MutationEvent","MutationObserver","MutationRecord","NAMESPACE_ERR","NAMESPACE_RULE","NEAREST","NEAREST_MIPMAP_LINEAR","NEAREST_MIPMAP_NEAREST","NEGATIVE_INFINITY","NETWORK_EMPTY","NETWORK_ERR","NETWORK_IDLE","NETWORK_LOADED","NETWORK_LOADING","NETWORK_NO_SOURCE","NEVER","NEW","NEXT","NEXT_NO_DUPLICATE","NICEST","NODE_AFTER","NODE_BEFORE","NODE_BEFORE_AND_AFTER","NODE_INSIDE","NONE","NON_TRANSIENT_ERR","NOTATION_NODE","NOTCH","NOTEQUAL","NOT_ALLOWED_ERR","NOT_FOUND_ERR","NOT_READABLE_ERR","NOT_SUPPORTED_ERR","NO_DATA_ALLOWED_ERR","NO_ERR","NO_ERROR","NO_MODIFICATION_ALLOWED_ERR","NUMBER_TYPE","NUM_COMPRESSED_TEXTURE_FORMATS","NaN","NamedNodeMap","NavigationPreloadManager","Navigator","NearbyLinks","NetworkInformation","Node","NodeFilter","NodeIterator","NodeList","Notation","Notification","NotifyPaintEvent","Number","NumberFormat","OBJECT_TYPE","OBSOLETE","OK","ONE","ONE_MINUS_CONSTANT_ALPHA","ONE_MINUS_CONSTANT_COLOR","ONE_MINUS_DST_ALPHA","ONE_MINUS_DST_COLOR","ONE_MINUS_SRC_ALPHA","ONE_MINUS_SRC_COLOR","OPEN","OPENED","OPENING","ORDERED_NODE_ITERATOR_TYPE","ORDERED_NODE_SNAPSHOT_TYPE","OTHER_ERROR","OUT_OF_MEMORY","Object","OfflineAudioCompletionEvent","OfflineAudioContext","OfflineResourceList","OffscreenCanvas","OffscreenCanvasRenderingContext2D","Option","OrientationSensor","OscillatorNode","OverconstrainedError","OverflowEvent","PACK_ALIGNMENT","PACK_ROW_LENGTH","PACK_SKIP_PIXELS","PACK_SKIP_ROWS","PAGE_RULE","PARSE_ERR","PATHSEG_ARC_ABS","PATHSEG_ARC_REL","PATHSEG_CLOSEPATH","PATHSEG_CURVETO_CUBIC_ABS","PATHSEG_CURVETO_CUBIC_REL","PATHSEG_CURVETO_CUBIC_SMOOTH_ABS","PATHSEG_CURVETO_CUBIC_SMOOTH_REL","PATHSEG_CURVETO_QUADRATIC_ABS","PATHSEG_CURVETO_QUADRATIC_REL","PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS","PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL","PATHSEG_LINETO_ABS","PATHSEG_LINETO_HORIZONTAL_ABS","PATHSEG_LINETO_HORIZONTAL_REL","PATHSEG_LINETO_REL","PATHSEG_LINETO_VERTICAL_ABS","PATHSEG_LINETO_VERTICAL_REL","PATHSEG_MOVETO_ABS","PATHSEG_MOVETO_REL","PATHSEG_UNKNOWN","PATH_EXISTS_ERR","PEAKING","PERMISSION_DENIED","PERSISTENT","PI","PIXEL_PACK_BUFFER","PIXEL_PACK_BUFFER_BINDING","PIXEL_UNPACK_BUFFER","PIXEL_UNPACK_BUFFER_BINDING","PLAYING_STATE","POINTS","POLYGON_OFFSET_FACTOR","POLYGON_OFFSET_FILL","POLYGON_OFFSET_UNITS","POSITION_UNAVAILABLE","POSITIVE_INFINITY","PREV","PREV_NO_DUPLICATE","PROCESSING_INSTRUCTION_NODE","PageChangeEvent","PageTransitionEvent","PaintRequest","PaintRequestList","PannerNode","PasswordCredential","Path2D","PaymentAddress","PaymentInstruments","PaymentManager","PaymentMethodChangeEvent","PaymentRequest","PaymentRequestUpdateEvent","PaymentResponse","Performance","PerformanceElementTiming","PerformanceEntry","PerformanceEventTiming","PerformanceLongTaskTiming","PerformanceMark","PerformanceMeasure","PerformanceNavigation","PerformanceNavigationTiming","PerformanceObserver","PerformanceObserverEntryList","PerformancePaintTiming","PerformanceResourceTiming","PerformanceServerTiming","PerformanceTiming","PeriodicSyncManager","PeriodicWave","PermissionStatus","Permissions","PhotoCapabilities","PictureInPictureWindow","Plugin","PluginArray","PluralRules","PointerEvent","PopStateEvent","PopupBlockedEvent","Presentation","PresentationAvailability","PresentationConnection","PresentationConnectionAvailableEvent","PresentationConnectionCloseEvent","PresentationConnectionList","PresentationReceiver","PresentationRequest","ProcessingInstruction","ProgressEvent","Promise","PromiseRejectionEvent","PropertyNodeList","Proxy","PublicKeyCredential","PushManager","PushSubscription","PushSubscriptionOptions","Q","QUERY_RESULT","QUERY_RESULT_AVAILABLE","QUOTA_ERR","QUOTA_EXCEEDED_ERR","QueryInterface","R11F_G11F_B10F","R16F","R16I","R16UI","R32F","R32I","R32UI","R8","R8I","R8UI","R8_SNORM","RASTERIZER_DISCARD","READ_BUFFER","READ_FRAMEBUFFER","READ_FRAMEBUFFER_BINDING","READ_ONLY","READ_ONLY_ERR","READ_WRITE","RED","RED_BITS","RED_INTEGER","REMOVAL","RENDERBUFFER","RENDERBUFFER_ALPHA_SIZE","RENDERBUFFER_BINDING","RENDERBUFFER_BLUE_SIZE","RENDERBUFFER_DEPTH_SIZE","RENDERBUFFER_GREEN_SIZE","RENDERBUFFER_HEIGHT","RENDERBUFFER_INTERNAL_FORMAT","RENDERBUFFER_RED_SIZE","RENDERBUFFER_SAMPLES","RENDERBUFFER_STENCIL_SIZE","RENDERBUFFER_WIDTH","RENDERER","RENDERING_INTENT_ABSOLUTE_COLORIMETRIC","RENDERING_INTENT_AUTO","RENDERING_INTENT_PERCEPTUAL","RENDERING_INTENT_RELATIVE_COLORIMETRIC","RENDERING_INTENT_SATURATION","RENDERING_INTENT_UNKNOWN","REPEAT","REPLACE","RG","RG16F","RG16I","RG16UI","RG32F","RG32I","RG32UI","RG8","RG8I","RG8UI","RG8_SNORM","RGB","RGB10_A2","RGB10_A2UI","RGB16F","RGB16I","RGB16UI","RGB32F","RGB32I","RGB32UI","RGB565","RGB5_A1","RGB8","RGB8I","RGB8UI","RGB8_SNORM","RGB9_E5","RGBA","RGBA16F","RGBA16I","RGBA16UI","RGBA32F","RGBA32I","RGBA32UI","RGBA4","RGBA8","RGBA8I","RGBA8UI","RGBA8_SNORM","RGBA_INTEGER","RGBColor","RGB_INTEGER","RG_INTEGER","ROTATION_CLOCKWISE","ROTATION_COUNTERCLOCKWISE","RTCCertificate","RTCDTMFSender","RTCDTMFToneChangeEvent","RTCDataChannel","RTCDataChannelEvent","RTCDtlsTransport","RTCError","RTCErrorEvent","RTCIceCandidate","RTCIceTransport","RTCPeerConnection","RTCPeerConnectionIceErrorEvent","RTCPeerConnectionIceEvent","RTCRtpReceiver","RTCRtpSender","RTCRtpTransceiver","RTCSctpTransport","RTCSessionDescription","RTCStatsReport","RTCTrackEvent","RadioNodeList","Range","RangeError","RangeException","ReadableStream","ReadableStreamDefaultReader","RecordErrorEvent","Rect","ReferenceError","Reflect","RegExp","RelativeOrientationSensor","RelativeTimeFormat","RemotePlayback","Report","ReportBody","ReportingObserver","Request","ResizeObserver","ResizeObserverEntry","ResizeObserverSize","Response","RuntimeError","SAMPLER_2D","SAMPLER_2D_ARRAY","SAMPLER_2D_ARRAY_SHADOW","SAMPLER_2D_SHADOW","SAMPLER_3D","SAMPLER_BINDING","SAMPLER_CUBE","SAMPLER_CUBE_SHADOW","SAMPLES","SAMPLE_ALPHA_TO_COVERAGE","SAMPLE_BUFFERS","SAMPLE_COVERAGE","SAMPLE_COVERAGE_INVERT","SAMPLE_COVERAGE_VALUE","SAWTOOTH","SCHEDULED_STATE","SCISSOR_BOX","SCISSOR_TEST","SCROLL_PAGE_DOWN","SCROLL_PAGE_UP","SDP_ANSWER","SDP_OFFER","SDP_PRANSWER","SECURITY_ERR","SELECT","SEPARATE_ATTRIBS","SERIALIZE_ERR","SEVERITY_ERROR","SEVERITY_FATAL_ERROR","SEVERITY_WARNING","SHADER_COMPILER","SHADER_TYPE","SHADING_LANGUAGE_VERSION","SHIFT_MASK","SHORT","SHOWING","SHOW_ALL","SHOW_ATTRIBUTE","SHOW_CDATA_SECTION","SHOW_COMMENT","SHOW_DOCUMENT","SHOW_DOCUMENT_FRAGMENT","SHOW_DOCUMENT_TYPE","SHOW_ELEMENT","SHOW_ENTITY","SHOW_ENTITY_REFERENCE","SHOW_NOTATION","SHOW_PROCESSING_INSTRUCTION","SHOW_TEXT","SIGNALED","SIGNED_NORMALIZED","SINE","SOUNDFIELD","SQLException","SQRT1_2","SQRT2","SQUARE","SRC_ALPHA","SRC_ALPHA_SATURATE","SRC_COLOR","SRGB","SRGB8","SRGB8_ALPHA8","START_TO_END","START_TO_START","STATIC_COPY","STATIC_DRAW","STATIC_READ","STENCIL","STENCIL_ATTACHMENT","STENCIL_BACK_FAIL","STENCIL_BACK_FUNC","STENCIL_BACK_PASS_DEPTH_FAIL","STENCIL_BACK_PASS_DEPTH_PASS","STENCIL_BACK_REF","STENCIL_BACK_VALUE_MASK","STENCIL_BACK_WRITEMASK","STENCIL_BITS","STENCIL_BUFFER_BIT","STENCIL_CLEAR_VALUE","STENCIL_FAIL","STENCIL_FUNC","STENCIL_INDEX","STENCIL_INDEX8","STENCIL_PASS_DEPTH_FAIL","STENCIL_PASS_DEPTH_PASS","STENCIL_REF","STENCIL_TEST","STENCIL_VALUE_MASK","STENCIL_WRITEMASK","STREAM_COPY","STREAM_DRAW","STREAM_READ","STRING_TYPE","STYLE_RULE","SUBPIXEL_BITS","SUPPORTS_RULE","SVGAElement","SVGAltGlyphDefElement","SVGAltGlyphElement","SVGAltGlyphItemElement","SVGAngle","SVGAnimateColorElement","SVGAnimateElement","SVGAnimateMotionElement","SVGAnimateTransformElement","SVGAnimatedAngle","SVGAnimatedBoolean","SVGAnimatedEnumeration","SVGAnimatedInteger","SVGAnimatedLength","SVGAnimatedLengthList","SVGAnimatedNumber","SVGAnimatedNumberList","SVGAnimatedPreserveAspectRatio","SVGAnimatedRect","SVGAnimatedString","SVGAnimatedTransformList","SVGAnimationElement","SVGCircleElement","SVGClipPathElement","SVGColor","SVGComponentTransferFunctionElement","SVGCursorElement","SVGDefsElement","SVGDescElement","SVGDiscardElement","SVGDocument","SVGElement","SVGElementInstance","SVGElementInstanceList","SVGEllipseElement","SVGException","SVGFEBlendElement","SVGFEColorMatrixElement","SVGFEComponentTransferElement","SVGFECompositeElement","SVGFEConvolveMatrixElement","SVGFEDiffuseLightingElement","SVGFEDisplacementMapElement","SVGFEDistantLightElement","SVGFEDropShadowElement","SVGFEFloodElement","SVGFEFuncAElement","SVGFEFuncBElement","SVGFEFuncGElement","SVGFEFuncRElement","SVGFEGaussianBlurElement","SVGFEImageElement","SVGFEMergeElement","SVGFEMergeNodeElement","SVGFEMorphologyElement","SVGFEOffsetElement","SVGFEPointLightElement","SVGFESpecularLightingElement","SVGFESpotLightElement","SVGFETileElement","SVGFETurbulenceElement","SVGFilterElement","SVGFontElement","SVGFontFaceElement","SVGFontFaceFormatElement","SVGFontFaceNameElement","SVGFontFaceSrcElement","SVGFontFaceUriElement","SVGForeignObjectElement","SVGGElement","SVGGeometryElement","SVGGlyphElement","SVGGlyphRefElement","SVGGradientElement","SVGGraphicsElement","SVGHKernElement","SVGImageElement","SVGLength","SVGLengthList","SVGLineElement","SVGLinearGradientElement","SVGMPathElement","SVGMarkerElement","SVGMaskElement","SVGMatrix","SVGMetadataElement","SVGMissingGlyphElement","SVGNumber","SVGNumberList","SVGPaint","SVGPathElement","SVGPathSeg","SVGPathSegArcAbs","SVGPathSegArcRel","SVGPathSegClosePath","SVGPathSegCurvetoCubicAbs","SVGPathSegCurvetoCubicRel","SVGPathSegCurvetoCubicSmoothAbs","SVGPathSegCurvetoCubicSmoothRel","SVGPathSegCurvetoQuadraticAbs","SVGPathSegCurvetoQuadraticRel","SVGPathSegCurvetoQuadraticSmoothAbs","SVGPathSegCurvetoQuadraticSmoothRel","SVGPathSegLinetoAbs","SVGPathSegLinetoHorizontalAbs","SVGPathSegLinetoHorizontalRel","SVGPathSegLinetoRel","SVGPathSegLinetoVerticalAbs","SVGPathSegLinetoVerticalRel","SVGPathSegList","SVGPathSegMovetoAbs","SVGPathSegMovetoRel","SVGPatternElement","SVGPoint","SVGPointList","SVGPolygonElement","SVGPolylineElement","SVGPreserveAspectRatio","SVGRadialGradientElement","SVGRect","SVGRectElement","SVGRenderingIntent","SVGSVGElement","SVGScriptElement","SVGSetElement","SVGStopElement","SVGStringList","SVGStyleElement","SVGSwitchElement","SVGSymbolElement","SVGTRefElement","SVGTSpanElement","SVGTextContentElement","SVGTextElement","SVGTextPathElement","SVGTextPositioningElement","SVGTitleElement","SVGTransform","SVGTransformList","SVGUnitTypes","SVGUseElement","SVGVKernElement","SVGViewElement","SVGViewSpec","SVGZoomAndPan","SVGZoomEvent","SVG_ANGLETYPE_DEG","SVG_ANGLETYPE_GRAD","SVG_ANGLETYPE_RAD","SVG_ANGLETYPE_UNKNOWN","SVG_ANGLETYPE_UNSPECIFIED","SVG_CHANNEL_A","SVG_CHANNEL_B","SVG_CHANNEL_G","SVG_CHANNEL_R","SVG_CHANNEL_UNKNOWN","SVG_COLORTYPE_CURRENTCOLOR","SVG_COLORTYPE_RGBCOLOR","SVG_COLORTYPE_RGBCOLOR_ICCCOLOR","SVG_COLORTYPE_UNKNOWN","SVG_EDGEMODE_DUPLICATE","SVG_EDGEMODE_NONE","SVG_EDGEMODE_UNKNOWN","SVG_EDGEMODE_WRAP","SVG_FEBLEND_MODE_COLOR","SVG_FEBLEND_MODE_COLOR_BURN","SVG_FEBLEND_MODE_COLOR_DODGE","SVG_FEBLEND_MODE_DARKEN","SVG_FEBLEND_MODE_DIFFERENCE","SVG_FEBLEND_MODE_EXCLUSION","SVG_FEBLEND_MODE_HARD_LIGHT","SVG_FEBLEND_MODE_HUE","SVG_FEBLEND_MODE_LIGHTEN","SVG_FEBLEND_MODE_LUMINOSITY","SVG_FEBLEND_MODE_MULTIPLY","SVG_FEBLEND_MODE_NORMAL","SVG_FEBLEND_MODE_OVERLAY","SVG_FEBLEND_MODE_SATURATION","SVG_FEBLEND_MODE_SCREEN","SVG_FEBLEND_MODE_SOFT_LIGHT","SVG_FEBLEND_MODE_UNKNOWN","SVG_FECOLORMATRIX_TYPE_HUEROTATE","SVG_FECOLORMATRIX_TYPE_LUMINANCETOALPHA","SVG_FECOLORMATRIX_TYPE_MATRIX","SVG_FECOLORMATRIX_TYPE_SATURATE","SVG_FECOLORMATRIX_TYPE_UNKNOWN","SVG_FECOMPONENTTRANSFER_TYPE_DISCRETE","SVG_FECOMPONENTTRANSFER_TYPE_GAMMA","SVG_FECOMPONENTTRANSFER_TYPE_IDENTITY","SVG_FECOMPONENTTRANSFER_TYPE_LINEAR","SVG_FECOMPONENTTRANSFER_TYPE_TABLE","SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN","SVG_FECOMPOSITE_OPERATOR_ARITHMETIC","SVG_FECOMPOSITE_OPERATOR_ATOP","SVG_FECOMPOSITE_OPERATOR_IN","SVG_FECOMPOSITE_OPERATOR_OUT","SVG_FECOMPOSITE_OPERATOR_OVER","SVG_FECOMPOSITE_OPERATOR_UNKNOWN","SVG_FECOMPOSITE_OPERATOR_XOR","SVG_INVALID_VALUE_ERR","SVG_LENGTHTYPE_CM","SVG_LENGTHTYPE_EMS","SVG_LENGTHTYPE_EXS","SVG_LENGTHTYPE_IN","SVG_LENGTHTYPE_MM","SVG_LENGTHTYPE_NUMBER","SVG_LENGTHTYPE_PC","SVG_LENGTHTYPE_PERCENTAGE","SVG_LENGTHTYPE_PT","SVG_LENGTHTYPE_PX","SVG_LENGTHTYPE_UNKNOWN","SVG_MARKERUNITS_STROKEWIDTH","SVG_MARKERUNITS_UNKNOWN","SVG_MARKERUNITS_USERSPACEONUSE","SVG_MARKER_ORIENT_ANGLE","SVG_MARKER_ORIENT_AUTO","SVG_MARKER_ORIENT_UNKNOWN","SVG_MASKTYPE_ALPHA","SVG_MASKTYPE_LUMINANCE","SVG_MATRIX_NOT_INVERTABLE","SVG_MEETORSLICE_MEET","SVG_MEETORSLICE_SLICE","SVG_MEETORSLICE_UNKNOWN","SVG_MORPHOLOGY_OPERATOR_DILATE","SVG_MORPHOLOGY_OPERATOR_ERODE","SVG_MORPHOLOGY_OPERATOR_UNKNOWN","SVG_PAINTTYPE_CURRENTCOLOR","SVG_PAINTTYPE_NONE","SVG_PAINTTYPE_RGBCOLOR","SVG_PAINTTYPE_RGBCOLOR_ICCCOLOR","SVG_PAINTTYPE_UNKNOWN","SVG_PAINTTYPE_URI","SVG_PAINTTYPE_URI_CURRENTCOLOR","SVG_PAINTTYPE_URI_NONE","SVG_PAINTTYPE_URI_RGBCOLOR","SVG_PAINTTYPE_URI_RGBCOLOR_ICCCOLOR","SVG_PRESERVEASPECTRATIO_NONE","SVG_PRESERVEASPECTRATIO_UNKNOWN","SVG_PRESERVEASPECTRATIO_XMAXYMAX","SVG_PRESERVEASPECTRATIO_XMAXYMID","SVG_PRESERVEASPECTRATIO_XMAXYMIN","SVG_PRESERVEASPECTRATIO_XMIDYMAX","SVG_PRESERVEASPECTRATIO_XMIDYMID","SVG_PRESERVEASPECTRATIO_XMIDYMIN","SVG_PRESERVEASPECTRATIO_XMINYMAX","SVG_PRESERVEASPECTRATIO_XMINYMID","SVG_PRESERVEASPECTRATIO_XMINYMIN","SVG_SPREADMETHOD_PAD","SVG_SPREADMETHOD_REFLECT","SVG_SPREADMETHOD_REPEAT","SVG_SPREADMETHOD_UNKNOWN","SVG_STITCHTYPE_NOSTITCH","SVG_STITCHTYPE_STITCH","SVG_STITCHTYPE_UNKNOWN","SVG_TRANSFORM_MATRIX","SVG_TRANSFORM_ROTATE","SVG_TRANSFORM_SCALE","SVG_TRANSFORM_SKEWX","SVG_TRANSFORM_SKEWY","SVG_TRANSFORM_TRANSLATE","SVG_TRANSFORM_UNKNOWN","SVG_TURBULENCE_TYPE_FRACTALNOISE","SVG_TURBULENCE_TYPE_TURBULENCE","SVG_TURBULENCE_TYPE_UNKNOWN","SVG_UNIT_TYPE_OBJECTBOUNDINGBOX","SVG_UNIT_TYPE_UNKNOWN","SVG_UNIT_TYPE_USERSPACEONUSE","SVG_WRONG_TYPE_ERR","SVG_ZOOMANDPAN_DISABLE","SVG_ZOOMANDPAN_MAGNIFY","SVG_ZOOMANDPAN_UNKNOWN","SYNC_CONDITION","SYNC_FENCE","SYNC_FLAGS","SYNC_FLUSH_COMMANDS_BIT","SYNC_GPU_COMMANDS_COMPLETE","SYNC_STATUS","SYNTAX_ERR","SavedPages","Screen","ScreenOrientation","Script","ScriptProcessorNode","ScrollAreaEvent","SecurityPolicyViolationEvent","Selection","Sensor","SensorErrorEvent","ServiceWorker","ServiceWorkerContainer","ServiceWorkerRegistration","SessionDescription","Set","ShadowRoot","SharedArrayBuffer","SharedWorker","SimpleGestureEvent","SourceBuffer","SourceBufferList","SpeechSynthesis","SpeechSynthesisErrorEvent","SpeechSynthesisEvent","SpeechSynthesisUtterance","SpeechSynthesisVoice","StaticRange","StereoPannerNode","StopIteration","Storage","StorageEvent","StorageManager","String","StructType","StylePropertyMap","StylePropertyMapReadOnly","StyleSheet","StyleSheetList","SubmitEvent","SubtleCrypto","Symbol","SyncManager","SyntaxError","TEMPORARY","TEXTPATH_METHODTYPE_ALIGN","TEXTPATH_METHODTYPE_STRETCH","TEXTPATH_METHODTYPE_UNKNOWN","TEXTPATH_SPACINGTYPE_AUTO","TEXTPATH_SPACINGTYPE_EXACT","TEXTPATH_SPACINGTYPE_UNKNOWN","TEXTURE","TEXTURE0","TEXTURE1","TEXTURE10","TEXTURE11","TEXTURE12","TEXTURE13","TEXTURE14","TEXTURE15","TEXTURE16","TEXTURE17","TEXTURE18","TEXTURE19","TEXTURE2","TEXTURE20","TEXTURE21","TEXTURE22","TEXTURE23","TEXTURE24","TEXTURE25","TEXTURE26","TEXTURE27","TEXTURE28","TEXTURE29","TEXTURE3","TEXTURE30","TEXTURE31","TEXTURE4","TEXTURE5","TEXTURE6","TEXTURE7","TEXTURE8","TEXTURE9","TEXTURE_2D","TEXTURE_2D_ARRAY","TEXTURE_3D","TEXTURE_BASE_LEVEL","TEXTURE_BINDING_2D","TEXTURE_BINDING_2D_ARRAY","TEXTURE_BINDING_3D","TEXTURE_BINDING_CUBE_MAP","TEXTURE_COMPARE_FUNC","TEXTURE_COMPARE_MODE","TEXTURE_CUBE_MAP","TEXTURE_CUBE_MAP_NEGATIVE_X","TEXTURE_CUBE_MAP_NEGATIVE_Y","TEXTURE_CUBE_MAP_NEGATIVE_Z","TEXTURE_CUBE_MAP_POSITIVE_X","TEXTURE_CUBE_MAP_POSITIVE_Y","TEXTURE_CUBE_MAP_POSITIVE_Z","TEXTURE_IMMUTABLE_FORMAT","TEXTURE_IMMUTABLE_LEVELS","TEXTURE_MAG_FILTER","TEXTURE_MAX_ANISOTROPY_EXT","TEXTURE_MAX_LEVEL","TEXTURE_MAX_LOD","TEXTURE_MIN_FILTER","TEXTURE_MIN_LOD","TEXTURE_WRAP_R","TEXTURE_WRAP_S","TEXTURE_WRAP_T","TEXT_NODE","TIMEOUT","TIMEOUT_ERR","TIMEOUT_EXPIRED","TIMEOUT_IGNORED","TOO_LARGE_ERR","TRANSACTION_INACTIVE_ERR","TRANSFORM_FEEDBACK","TRANSFORM_FEEDBACK_ACTIVE","TRANSFORM_FEEDBACK_BINDING","TRANSFORM_FEEDBACK_BUFFER","TRANSFORM_FEEDBACK_BUFFER_BINDING","TRANSFORM_FEEDBACK_BUFFER_MODE","TRANSFORM_FEEDBACK_BUFFER_SIZE","TRANSFORM_FEEDBACK_BUFFER_START","TRANSFORM_FEEDBACK_PAUSED","TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN","TRANSFORM_FEEDBACK_VARYINGS","TRIANGLE","TRIANGLES","TRIANGLE_FAN","TRIANGLE_STRIP","TYPE_BACK_FORWARD","TYPE_ERR","TYPE_MISMATCH_ERR","TYPE_NAVIGATE","TYPE_RELOAD","TYPE_RESERVED","Table","TaskAttributionTiming","Text","TextDecoder","TextDecoderStream","TextEncoder","TextEncoderStream","TextEvent","TextMetrics","TextTrack","TextTrackCue","TextTrackCueList","TextTrackList","TimeEvent","TimeRanges","Touch","TouchEvent","TouchList","TrackEvent","TransformStream","TransitionEvent","TreeWalker","TrustedHTML","TrustedScript","TrustedScriptURL","TrustedTypePolicy","TrustedTypePolicyFactory","TypeError","TypedObject","U2F","UIEvent","UNCACHED","UNIFORM_ARRAY_STRIDE","UNIFORM_BLOCK_ACTIVE_UNIFORMS","UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES","UNIFORM_BLOCK_BINDING","UNIFORM_BLOCK_DATA_SIZE","UNIFORM_BLOCK_INDEX","UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER","UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER","UNIFORM_BUFFER","UNIFORM_BUFFER_BINDING","UNIFORM_BUFFER_OFFSET_ALIGNMENT","UNIFORM_BUFFER_SIZE","UNIFORM_BUFFER_START","UNIFORM_IS_ROW_MAJOR","UNIFORM_MATRIX_STRIDE","UNIFORM_OFFSET","UNIFORM_SIZE","UNIFORM_TYPE","UNKNOWN_ERR","UNKNOWN_RULE","UNMASKED_RENDERER_WEBGL","UNMASKED_VENDOR_WEBGL","UNORDERED_NODE_ITERATOR_TYPE","UNORDERED_NODE_SNAPSHOT_TYPE","UNPACK_ALIGNMENT","UNPACK_COLORSPACE_CONVERSION_WEBGL","UNPACK_FLIP_Y_WEBGL","UNPACK_IMAGE_HEIGHT","UNPACK_PREMULTIPLY_ALPHA_WEBGL","UNPACK_ROW_LENGTH","UNPACK_SKIP_IMAGES","UNPACK_SKIP_PIXELS","UNPACK_SKIP_ROWS","UNSCHEDULED_STATE","UNSENT","UNSIGNALED","UNSIGNED_BYTE","UNSIGNED_INT","UNSIGNED_INT_10F_11F_11F_REV","UNSIGNED_INT_24_8","UNSIGNED_INT_2_10_10_10_REV","UNSIGNED_INT_5_9_9_9_REV","UNSIGNED_INT_SAMPLER_2D","UNSIGNED_INT_SAMPLER_2D_ARRAY","UNSIGNED_INT_SAMPLER_3D","UNSIGNED_INT_SAMPLER_CUBE","UNSIGNED_INT_VEC2","UNSIGNED_INT_VEC3","UNSIGNED_INT_VEC4","UNSIGNED_NORMALIZED","UNSIGNED_SHORT","UNSIGNED_SHORT_4_4_4_4","UNSIGNED_SHORT_5_5_5_1","UNSIGNED_SHORT_5_6_5","UNSPECIFIED_EVENT_TYPE_ERR","UPDATEREADY","URIError","URL","URLSearchParams","URLUnencoded","URL_MISMATCH_ERR","USB","USBAlternateInterface","USBConfiguration","USBConnectionEvent","USBDevice","USBEndpoint","USBInTransferResult","USBInterface","USBIsochronousInTransferPacket","USBIsochronousInTransferResult","USBIsochronousOutTransferPacket","USBIsochronousOutTransferResult","USBOutTransferResult","UTC","Uint16Array","Uint32Array","Uint8Array","Uint8ClampedArray","UserActivation","UserMessageHandler","UserMessageHandlersNamespace","UserProximityEvent","VALIDATE_STATUS","VALIDATION_ERR","VARIABLES_RULE","VENDOR","VERSION","VERSION_CHANGE","VERSION_ERR","VERTEX_ARRAY_BINDING","VERTEX_ATTRIB_ARRAY_BUFFER_BINDING","VERTEX_ATTRIB_ARRAY_DIVISOR","VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE","VERTEX_ATTRIB_ARRAY_ENABLED","VERTEX_ATTRIB_ARRAY_INTEGER","VERTEX_ATTRIB_ARRAY_NORMALIZED","VERTEX_ATTRIB_ARRAY_POINTER","VERTEX_ATTRIB_ARRAY_SIZE","VERTEX_ATTRIB_ARRAY_STRIDE","VERTEX_ATTRIB_ARRAY_TYPE","VERTEX_SHADER","VERTICAL","VERTICAL_AXIS","VER_ERR","VIEWPORT","VIEWPORT_RULE","VRDisplay","VRDisplayCapabilities","VRDisplayEvent","VREyeParameters","VRFieldOfView","VRFrameData","VRPose","VRStageParameters","VTTCue","VTTRegion","ValidityState","VideoPlaybackQuality","VideoStreamTrack","VisualViewport","WAIT_FAILED","WEBKIT_FILTER_RULE","WEBKIT_KEYFRAMES_RULE","WEBKIT_KEYFRAME_RULE","WEBKIT_REGION_RULE","WRONG_DOCUMENT_ERR","WakeLock","WakeLockSentinel","WasmAnyRef","WaveShaperNode","WeakMap","WeakRef","WeakSet","WebAssembly","WebGL2RenderingContext","WebGLActiveInfo","WebGLBuffer","WebGLContextEvent","WebGLFramebuffer","WebGLProgram","WebGLQuery","WebGLRenderbuffer","WebGLRenderingContext","WebGLSampler","WebGLShader","WebGLShaderPrecisionFormat","WebGLSync","WebGLTexture","WebGLTransformFeedback","WebGLUniformLocation","WebGLVertexArray","WebGLVertexArrayObject","WebKitAnimationEvent","WebKitBlobBuilder","WebKitCSSFilterRule","WebKitCSSFilterValue","WebKitCSSKeyframeRule","WebKitCSSKeyframesRule","WebKitCSSMatrix","WebKitCSSRegionRule","WebKitCSSTransformValue","WebKitDataCue","WebKitGamepad","WebKitMediaKeyError","WebKitMediaKeyMessageEvent","WebKitMediaKeySession","WebKitMediaKeys","WebKitMediaSource","WebKitMutationObserver","WebKitNamespace","WebKitPlaybackTargetAvailabilityEvent","WebKitPoint","WebKitShadowRoot","WebKitSourceBuffer","WebKitSourceBufferList","WebKitTransitionEvent","WebSocket","WebkitAlignContent","WebkitAlignItems","WebkitAlignSelf","WebkitAnimation","WebkitAnimationDelay","WebkitAnimationDirection","WebkitAnimationDuration","WebkitAnimationFillMode","WebkitAnimationIterationCount","WebkitAnimationName","WebkitAnimationPlayState","WebkitAnimationTimingFunction","WebkitAppearance","WebkitBackfaceVisibility","WebkitBackgroundClip","WebkitBackgroundOrigin","WebkitBackgroundSize","WebkitBorderBottomLeftRadius","WebkitBorderBottomRightRadius","WebkitBorderImage","WebkitBorderRadius","WebkitBorderTopLeftRadius","WebkitBorderTopRightRadius","WebkitBoxAlign","WebkitBoxDirection","WebkitBoxFlex","WebkitBoxOrdinalGroup","WebkitBoxOrient","WebkitBoxPack","WebkitBoxShadow","WebkitBoxSizing","WebkitFilter","WebkitFlex","WebkitFlexBasis","WebkitFlexDirection","WebkitFlexFlow","WebkitFlexGrow","WebkitFlexShrink","WebkitFlexWrap","WebkitJustifyContent","WebkitLineClamp","WebkitMask","WebkitMaskClip","WebkitMaskComposite","WebkitMaskImage","WebkitMaskOrigin","WebkitMaskPosition","WebkitMaskPositionX","WebkitMaskPositionY","WebkitMaskRepeat","WebkitMaskSize","WebkitOrder","WebkitPerspective","WebkitPerspectiveOrigin","WebkitTextFillColor","WebkitTextSizeAdjust","WebkitTextStroke","WebkitTextStrokeColor","WebkitTextStrokeWidth","WebkitTransform","WebkitTransformOrigin","WebkitTransformStyle","WebkitTransition","WebkitTransitionDelay","WebkitTransitionDuration","WebkitTransitionProperty","WebkitTransitionTimingFunction","WebkitUserSelect","WheelEvent","Window","Worker","Worklet","WritableStream","WritableStreamDefaultWriter","XMLDocument","XMLHttpRequest","XMLHttpRequestEventTarget","XMLHttpRequestException","XMLHttpRequestProgressEvent","XMLHttpRequestUpload","XMLSerializer","XMLStylesheetProcessingInstruction","XPathEvaluator","XPathException","XPathExpression","XPathNSResolver","XPathResult","XRBoundedReferenceSpace","XRDOMOverlayState","XRFrame","XRHitTestResult","XRHitTestSource","XRInputSource","XRInputSourceArray","XRInputSourceEvent","XRInputSourcesChangeEvent","XRLayer","XRPose","XRRay","XRReferenceSpace","XRReferenceSpaceEvent","XRRenderState","XRRigidTransform","XRSession","XRSessionEvent","XRSpace","XRSystem","XRTransientInputHitTestResult","XRTransientInputHitTestSource","XRView","XRViewerPose","XRViewport","XRWebGLLayer","XSLTProcessor","ZERO","_XD0M_","_YD0M_","__defineGetter__","__defineSetter__","__lookupGetter__","__lookupSetter__","__opera","__proto__","_browserjsran","a","aLink","abbr","abort","aborted","abs","absolute","acceleration","accelerationIncludingGravity","accelerator","accept","acceptCharset","acceptNode","accessKey","accessKeyLabel","accuracy","acos","acosh","action","actionURL","actions","activated","active","activeCues","activeElement","activeSourceBuffers","activeSourceCount","activeTexture","activeVRDisplays","actualBoundingBoxAscent","actualBoundingBoxDescent","actualBoundingBoxLeft","actualBoundingBoxRight","add","addAll","addBehavior","addCandidate","addColorStop","addCue","addElement","addEventListener","addFilter","addFromString","addFromUri","addIceCandidate","addImport","addListener","addModule","addNamed","addPageRule","addPath","addPointer","addRange","addRegion","addRule","addSearchEngine","addSourceBuffer","addStream","addTextTrack","addTrack","addTransceiver","addWakeLockListener","added","addedNodes","additionalName","additiveSymbols","addons","address","addressLine","adoptNode","adoptedStyleSheets","adr","advance","after","album","alert","algorithm","align","align-content","align-items","align-self","alignContent","alignItems","alignSelf","alignmentBaseline","alinkColor","all","allSettled","allow","allowFullscreen","allowPaymentRequest","allowedDirections","allowedFeatures","allowedToPlay","allowsFeature","alpha","alt","altGraphKey","altHtml","altKey","altLeft","alternate","alternateSetting","alternates","altitude","altitudeAccuracy","amplitude","ancestorOrigins","anchor","anchorNode","anchorOffset","anchors","and","angle","angularAcceleration","angularVelocity","animVal","animate","animatedInstanceRoot","animatedNormalizedPathSegList","animatedPathSegList","animatedPoints","animation","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","animationDelay","animationDirection","animationDuration","animationFillMode","animationIterationCount","animationName","animationPlayState","animationStartTime","animationTimingFunction","animationsPaused","anniversary","antialias","anticipatedRemoval","any","app","appCodeName","appMinorVersion","appName","appNotifications","appVersion","appearance","append","appendBuffer","appendChild","appendData","appendItem","appendMedium","appendNamed","appendRule","appendStream","appendWindowEnd","appendWindowStart","applets","applicationCache","applicationServerKey","apply","applyConstraints","applyElement","arc","arcTo","archive","areas","arguments","ariaAtomic","ariaAutoComplete","ariaBusy","ariaChecked","ariaColCount","ariaColIndex","ariaColSpan","ariaCurrent","ariaDescription","ariaDisabled","ariaExpanded","ariaHasPopup","ariaHidden","ariaKeyShortcuts","ariaLabel","ariaLevel","ariaLive","ariaModal","ariaMultiLine","ariaMultiSelectable","ariaOrientation","ariaPlaceholder","ariaPosInSet","ariaPressed","ariaReadOnly","ariaRelevant","ariaRequired","ariaRoleDescription","ariaRowCount","ariaRowIndex","ariaRowSpan","ariaSelected","ariaSetSize","ariaSort","ariaValueMax","ariaValueMin","ariaValueNow","ariaValueText","arrayBuffer","artist","artwork","as","asIntN","asUintN","asin","asinh","assert","assign","assignedElements","assignedNodes","assignedSlot","async","asyncIterator","atEnd","atan","atan2","atanh","atob","attachEvent","attachInternals","attachShader","attachShadow","attachments","attack","attestationObject","attrChange","attrName","attributeFilter","attributeName","attributeNamespace","attributeOldValue","attributeStyleMap","attributes","attribution","audioBitsPerSecond","audioTracks","audioWorklet","authenticatedSignedWrites","authenticatorData","autoIncrement","autobuffer","autocapitalize","autocomplete","autocorrect","autofocus","automationRate","autoplay","availHeight","availLeft","availTop","availWidth","availability","available","aversion","ax","axes","axis","ay","azimuth","b","back","backface-visibility","backfaceVisibility","background","background-attachment","background-blend-mode","background-clip","background-color","background-image","background-origin","background-position","background-position-x","background-position-y","background-repeat","background-size","backgroundAttachment","backgroundBlendMode","backgroundClip","backgroundColor","backgroundFetch","backgroundImage","backgroundOrigin","backgroundPosition","backgroundPositionX","backgroundPositionY","backgroundRepeat","backgroundSize","badInput","badge","balance","baseFrequencyX","baseFrequencyY","baseLatency","baseLayer","baseNode","baseOffset","baseURI","baseVal","baselineShift","battery","bday","before","beginElement","beginElementAt","beginPath","beginQuery","beginTransformFeedback","behavior","behaviorCookie","behaviorPart","behaviorUrns","beta","bezierCurveTo","bgColor","bgProperties","bias","big","bigint64","biguint64","binaryType","bind","bindAttribLocation","bindBuffer","bindBufferBase","bindBufferRange","bindFramebuffer","bindRenderbuffer","bindSampler","bindTexture","bindTransformFeedback","bindVertexArray","blendColor","blendEquation","blendEquationSeparate","blendFunc","blendFuncSeparate","blink","blitFramebuffer","blob","block-size","blockDirection","blockSize","blockedURI","blue","bluetooth","blur","body","bodyUsed","bold","bookmarks","booleanValue","border","border-block","border-block-color","border-block-end","border-block-end-color","border-block-end-style","border-block-end-width","border-block-start","border-block-start-color","border-block-start-style","border-block-start-width","border-block-style","border-block-width","border-bottom","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-color","border-end-end-radius","border-end-start-radius","border-image","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-inline","border-inline-color","border-inline-end","border-inline-end-color","border-inline-end-style","border-inline-end-width","border-inline-start","border-inline-start-color","border-inline-start-style","border-inline-start-width","border-inline-style","border-inline-width","border-left","border-left-color","border-left-style","border-left-width","border-radius","border-right","border-right-color","border-right-style","border-right-width","border-spacing","border-start-end-radius","border-start-start-radius","border-style","border-top","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","border-width","borderBlock","borderBlockColor","borderBlockEnd","borderBlockEndColor","borderBlockEndStyle","borderBlockEndWidth","borderBlockStart","borderBlockStartColor","borderBlockStartStyle","borderBlockStartWidth","borderBlockStyle","borderBlockWidth","borderBottom","borderBottomColor","borderBottomLeftRadius","borderBottomRightRadius","borderBottomStyle","borderBottomWidth","borderBoxSize","borderCollapse","borderColor","borderColorDark","borderColorLight","borderEndEndRadius","borderEndStartRadius","borderImage","borderImageOutset","borderImageRepeat","borderImageSlice","borderImageSource","borderImageWidth","borderInline","borderInlineColor","borderInlineEnd","borderInlineEndColor","borderInlineEndStyle","borderInlineEndWidth","borderInlineStart","borderInlineStartColor","borderInlineStartStyle","borderInlineStartWidth","borderInlineStyle","borderInlineWidth","borderLeft","borderLeftColor","borderLeftStyle","borderLeftWidth","borderRadius","borderRight","borderRightColor","borderRightStyle","borderRightWidth","borderSpacing","borderStartEndRadius","borderStartStartRadius","borderStyle","borderTop","borderTopColor","borderTopLeftRadius","borderTopRightRadius","borderTopStyle","borderTopWidth","borderWidth","bottom","bottomMargin","bound","boundElements","boundingClientRect","boundingHeight","boundingLeft","boundingTop","boundingWidth","bounds","boundsGeometry","box-decoration-break","box-shadow","box-sizing","boxDecorationBreak","boxShadow","boxSizing","break-after","break-before","break-inside","breakAfter","breakBefore","breakInside","broadcast","browserLanguage","btoa","bubbles","buffer","bufferData","bufferDepth","bufferSize","bufferSubData","buffered","bufferedAmount","bufferedAmountLowThreshold","buildID","buildNumber","button","buttonID","buttons","byteLength","byteOffset","bytesWritten","c","cache","caches","call","caller","canBeFormatted","canBeMounted","canBeShared","canHaveChildren","canHaveHTML","canInsertDTMF","canMakePayment","canPlayType","canPresent","canTrickleIceCandidates","cancel","cancelAndHoldAtTime","cancelAnimationFrame","cancelBubble","cancelIdleCallback","cancelScheduledValues","cancelVideoFrameCallback","cancelWatchAvailability","cancelable","candidate","canonicalUUID","canvas","capabilities","caption","caption-side","captionSide","capture","captureEvents","captureStackTrace","captureStream","caret-color","caretBidiLevel","caretColor","caretPositionFromPoint","caretRangeFromPoint","cast","catch","category","cbrt","cd","ceil","cellIndex","cellPadding","cellSpacing","cells","ch","chOff","chain","challenge","changeType","changedTouches","channel","channelCount","channelCountMode","channelInterpretation","char","charAt","charCode","charCodeAt","charIndex","charLength","characterData","characterDataOldValue","characterSet","characteristic","charging","chargingTime","charset","check","checkEnclosure","checkFramebufferStatus","checkIntersection","checkValidity","checked","childElementCount","childList","childNodes","children","chrome","ciphertext","cite","city","claimInterface","claimed","classList","className","classid","clear","clearAppBadge","clearAttributes","clearBufferfi","clearBufferfv","clearBufferiv","clearBufferuiv","clearColor","clearData","clearDepth","clearHalt","clearImmediate","clearInterval","clearLiveSeekableRange","clearMarks","clearMaxGCPauseAccumulator","clearMeasures","clearParameters","clearRect","clearResourceTimings","clearShadow","clearStencil","clearTimeout","clearWatch","click","clickCount","clientDataJSON","clientHeight","clientInformation","clientLeft","clientRect","clientRects","clientTop","clientWaitSync","clientWidth","clientX","clientY","clip","clip-path","clip-rule","clipBottom","clipLeft","clipPath","clipPathUnits","clipRight","clipRule","clipTop","clipboard","clipboardData","clone","cloneContents","cloneNode","cloneRange","close","closePath","closed","closest","clz","clz32","cm","cmp","code","codeBase","codePointAt","codeType","colSpan","collapse","collapseToEnd","collapseToStart","collapsed","collect","colno","color","color-adjust","color-interpolation","color-interpolation-filters","colorAdjust","colorDepth","colorInterpolation","colorInterpolationFilters","colorMask","colorType","cols","column-count","column-fill","column-gap","column-rule","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","columnCount","columnFill","columnGap","columnNumber","columnRule","columnRuleColor","columnRuleStyle","columnRuleWidth","columnSpan","columnWidth","columns","command","commit","commitPreferences","commitStyles","commonAncestorContainer","compact","compareBoundaryPoints","compareDocumentPosition","compareEndPoints","compareExchange","compareNode","comparePoint","compatMode","compatible","compile","compileShader","compileStreaming","complete","component","componentFromPoint","composed","composedPath","composite","compositionEndOffset","compositionStartOffset","compressedTexImage2D","compressedTexImage3D","compressedTexSubImage2D","compressedTexSubImage3D","computedStyleMap","concat","conditionText","coneInnerAngle","coneOuterAngle","coneOuterGain","configuration","configurationName","configurationValue","configurations","confirm","confirmComposition","confirmSiteSpecificTrackingException","confirmWebWideTrackingException","connect","connectEnd","connectShark","connectStart","connected","connection","connectionList","connectionSpeed","connectionState","connections","console","consolidate","constraint","constrictionActive","construct","constructor","contactID","contain","containerId","containerName","containerSrc","containerType","contains","containsNode","content","contentBoxSize","contentDocument","contentEditable","contentHint","contentOverflow","contentRect","contentScriptType","contentStyleType","contentType","contentWindow","context","contextMenu","contextmenu","continue","continuePrimaryKey","continuous","control","controlTransferIn","controlTransferOut","controller","controls","controlsList","convertPointFromNode","convertQuadFromNode","convertRectFromNode","convertToBlob","convertToSpecifiedUnits","cookie","cookieEnabled","coords","copyBufferSubData","copyFromChannel","copyTexImage2D","copyTexSubImage2D","copyTexSubImage3D","copyToChannel","copyWithin","correspondingElement","correspondingUseElement","corruptedVideoFrames","cos","cosh","count","countReset","counter-increment","counter-reset","counter-set","counterIncrement","counterReset","counterSet","country","cpuClass","cpuSleepAllowed","create","createAnalyser","createAnswer","createAttribute","createAttributeNS","createBiquadFilter","createBuffer","createBufferSource","createCDATASection","createCSSStyleSheet","createCaption","createChannelMerger","createChannelSplitter","createComment","createConstantSource","createContextualFragment","createControlRange","createConvolver","createDTMFSender","createDataChannel","createDelay","createDelayNode","createDocument","createDocumentFragment","createDocumentType","createDynamicsCompressor","createElement","createElementNS","createEntityReference","createEvent","createEventObject","createExpression","createFramebuffer","createFunction","createGain","createGainNode","createHTML","createHTMLDocument","createIIRFilter","createImageBitmap","createImageData","createIndex","createJavaScriptNode","createLinearGradient","createMediaElementSource","createMediaKeys","createMediaStreamDestination","createMediaStreamSource","createMediaStreamTrackSource","createMutableFile","createNSResolver","createNodeIterator","createNotification","createObjectStore","createObjectURL","createOffer","createOscillator","createPanner","createPattern","createPeriodicWave","createPolicy","createPopup","createProcessingInstruction","createProgram","createQuery","createRadialGradient","createRange","createRangeCollection","createReader","createRenderbuffer","createSVGAngle","createSVGLength","createSVGMatrix","createSVGNumber","createSVGPathSegArcAbs","createSVGPathSegArcRel","createSVGPathSegClosePath","createSVGPathSegCurvetoCubicAbs","createSVGPathSegCurvetoCubicRel","createSVGPathSegCurvetoCubicSmoothAbs","createSVGPathSegCurvetoCubicSmoothRel","createSVGPathSegCurvetoQuadraticAbs","createSVGPathSegCurvetoQuadraticRel","createSVGPathSegCurvetoQuadraticSmoothAbs","createSVGPathSegCurvetoQuadraticSmoothRel","createSVGPathSegLinetoAbs","createSVGPathSegLinetoHorizontalAbs","createSVGPathSegLinetoHorizontalRel","createSVGPathSegLinetoRel","createSVGPathSegLinetoVerticalAbs","createSVGPathSegLinetoVerticalRel","createSVGPathSegMovetoAbs","createSVGPathSegMovetoRel","createSVGPoint","createSVGRect","createSVGTransform","createSVGTransformFromMatrix","createSampler","createScript","createScriptProcessor","createScriptURL","createSession","createShader","createShadowRoot","createStereoPanner","createStyleSheet","createTBody","createTFoot","createTHead","createTextNode","createTextRange","createTexture","createTouch","createTouchList","createTransformFeedback","createTreeWalker","createVertexArray","createWaveShaper","creationTime","credentials","crossOrigin","crossOriginIsolated","crypto","csi","csp","cssFloat","cssRules","cssText","cssValueType","ctrlKey","ctrlLeft","cues","cullFace","currentDirection","currentLocalDescription","currentNode","currentPage","currentRect","currentRemoteDescription","currentScale","currentScript","currentSrc","currentState","currentStyle","currentTarget","currentTime","currentTranslate","currentView","cursor","curve","customElements","customError","cx","cy","d","data","dataFld","dataFormatAs","dataLoss","dataLossMessage","dataPageSize","dataSrc","dataTransfer","database","databases","dataset","dateTime","db","debug","debuggerEnabled","declare","decode","decodeAudioData","decodeURI","decodeURIComponent","decodedBodySize","decoding","decodingInfo","decrypt","default","defaultCharset","defaultChecked","defaultMuted","defaultPlaybackRate","defaultPolicy","defaultPrevented","defaultRequest","defaultSelected","defaultStatus","defaultURL","defaultValue","defaultView","defaultstatus","defer","define","defineMagicFunction","defineMagicVariable","defineProperties","defineProperty","deg","delay","delayTime","delegatesFocus","delete","deleteBuffer","deleteCaption","deleteCell","deleteContents","deleteData","deleteDatabase","deleteFramebuffer","deleteFromDocument","deleteIndex","deleteMedium","deleteObjectStore","deleteProgram","deleteProperty","deleteQuery","deleteRenderbuffer","deleteRow","deleteRule","deleteSampler","deleteShader","deleteSync","deleteTFoot","deleteTHead","deleteTexture","deleteTransformFeedback","deleteVertexArray","deliverChangeRecords","delivery","deliveryInfo","deliveryStatus","deliveryTimestamp","delta","deltaMode","deltaX","deltaY","deltaZ","dependentLocality","depthFar","depthFunc","depthMask","depthNear","depthRange","deref","deriveBits","deriveKey","description","deselectAll","designMode","desiredSize","destination","destinationURL","detach","detachEvent","detachShader","detail","details","detect","detune","device","deviceClass","deviceId","deviceMemory","devicePixelContentBoxSize","devicePixelRatio","deviceProtocol","deviceSubclass","deviceVersionMajor","deviceVersionMinor","deviceVersionSubminor","deviceXDPI","deviceYDPI","didTimeout","diffuseConstant","digest","dimensions","dir","dirName","direction","dirxml","disable","disablePictureInPicture","disableRemotePlayback","disableVertexAttribArray","disabled","dischargingTime","disconnect","disconnectShark","dispatchEvent","display","displayId","displayName","disposition","distanceModel","div","divisor","djsapi","djsproxy","doImport","doNotTrack","doScroll","doctype","document","documentElement","documentMode","documentURI","dolphin","dolphinGameCenter","dolphininfo","dolphinmeta","domComplete","domContentLoadedEventEnd","domContentLoadedEventStart","domInteractive","domLoading","domOverlayState","domain","domainLookupEnd","domainLookupStart","dominant-baseline","dominantBaseline","done","dopplerFactor","dotAll","downDegrees","downlink","download","downloadTotal","downloaded","dpcm","dpi","dppx","dragDrop","draggable","drawArrays","drawArraysInstanced","drawArraysInstancedANGLE","drawBuffers","drawCustomFocusRing","drawElements","drawElementsInstanced","drawElementsInstancedANGLE","drawFocusIfNeeded","drawImage","drawImageFromRect","drawRangeElements","drawSystemFocusRing","drawingBufferHeight","drawingBufferWidth","dropEffect","droppedVideoFrames","dropzone","dtmf","dump","dumpProfile","duplicate","durability","duration","dvname","dvnum","dx","dy","dynsrc","e","edgeMode","effect","effectAllowed","effectiveDirective","effectiveType","elapsedTime","element","elementFromPoint","elementTiming","elements","elementsFromPoint","elevation","ellipse","em","email","embeds","emma","empty","empty-cells","emptyCells","emptyHTML","emptyScript","emulatedPosition","enable","enableBackground","enableDelegations","enableStyleSheetsForSet","enableVertexAttribArray","enabled","enabledPlugin","encode","encodeInto","encodeURI","encodeURIComponent","encodedBodySize","encoding","encodingInfo","encrypt","enctype","end","endContainer","endElement","endElementAt","endOfStream","endOffset","endQuery","endTime","endTransformFeedback","ended","endpoint","endpointNumber","endpoints","endsWith","enterKeyHint","entities","entries","entryType","enumerate","enumerateDevices","enumerateEditable","environmentBlendMode","equals","error","errorCode","errorDetail","errorText","escape","estimate","eval","evaluate","event","eventPhase","every","ex","exception","exchange","exec","execCommand","execCommandShowHelp","execScript","exitFullscreen","exitPictureInPicture","exitPointerLock","exitPresent","exp","expand","expandEntityReferences","expando","expansion","expiration","expirationTime","expires","expiryDate","explicitOriginalTarget","expm1","exponent","exponentialRampToValueAtTime","exportKey","extend","extensions","extentNode","extentOffset","external","externalResourcesRequired","extractContents","extractable","eye","f","face","factoryReset","failureReason","fallback","family","familyName","farthestViewportElement","fastSeek","fatal","featureId","featurePolicy","featureSettings","features","fenceSync","fetch","fetchStart","fftSize","fgColor","fieldOfView","file","fileCreatedDate","fileHandle","fileModifiedDate","fileName","fileSize","fileUpdatedDate","filename","files","filesystem","fill","fill-opacity","fill-rule","fillLightMode","fillOpacity","fillRect","fillRule","fillStyle","fillText","filter","filterResX","filterResY","filterUnits","filters","finally","find","findIndex","findRule","findText","finish","finished","fireEvent","firesTouchEvents","firstChild","firstElementChild","firstPage","fixed","flags","flat","flatMap","flex","flex-basis","flex-direction","flex-flow","flex-grow","flex-shrink","flex-wrap","flexBasis","flexDirection","flexFlow","flexGrow","flexShrink","flexWrap","flipX","flipY","float","float32","float64","flood-color","flood-opacity","floodColor","floodOpacity","floor","flush","focus","focusNode","focusOffset","font","font-family","font-feature-settings","font-kerning","font-language-override","font-optical-sizing","font-size","font-size-adjust","font-stretch","font-style","font-synthesis","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-ligatures","font-variant-numeric","font-variant-position","font-variation-settings","font-weight","fontFamily","fontFeatureSettings","fontKerning","fontLanguageOverride","fontOpticalSizing","fontSize","fontSizeAdjust","fontSmoothingEnabled","fontStretch","fontStyle","fontSynthesis","fontVariant","fontVariantAlternates","fontVariantCaps","fontVariantEastAsian","fontVariantLigatures","fontVariantNumeric","fontVariantPosition","fontVariationSettings","fontWeight","fontcolor","fontfaces","fonts","fontsize","for","forEach","force","forceRedraw","form","formAction","formData","formEnctype","formMethod","formNoValidate","formTarget","format","formatToParts","forms","forward","forwardX","forwardY","forwardZ","foundation","fr","fragmentDirective","frame","frameBorder","frameElement","frameSpacing","framebuffer","framebufferHeight","framebufferRenderbuffer","framebufferTexture2D","framebufferTextureLayer","framebufferWidth","frames","freeSpace","freeze","frequency","frequencyBinCount","from","fromCharCode","fromCodePoint","fromElement","fromEntries","fromFloat32Array","fromFloat64Array","fromMatrix","fromPoint","fromQuad","fromRect","frontFace","fround","fullPath","fullScreen","fullscreen","fullscreenElement","fullscreenEnabled","fx","fy","gain","gamepad","gamma","gap","gatheringState","gatt","genderIdentity","generateCertificate","generateKey","generateMipmap","generateRequest","geolocation","gestureObject","get","getActiveAttrib","getActiveUniform","getActiveUniformBlockName","getActiveUniformBlockParameter","getActiveUniforms","getAdjacentText","getAll","getAllKeys","getAllResponseHeaders","getAllowlistForFeature","getAnimations","getAsFile","getAsString","getAttachedShaders","getAttribLocation","getAttribute","getAttributeNS","getAttributeNames","getAttributeNode","getAttributeNodeNS","getAttributeType","getAudioTracks","getAvailability","getBBox","getBattery","getBigInt64","getBigUint64","getBlob","getBookmark","getBoundingClientRect","getBounds","getBoxQuads","getBufferParameter","getBufferSubData","getByteFrequencyData","getByteTimeDomainData","getCSSCanvasContext","getCTM","getCandidateWindowClientRect","getCanonicalLocales","getCapabilities","getChannelData","getCharNumAtPosition","getCharacteristic","getCharacteristics","getClientExtensionResults","getClientRect","getClientRects","getCoalescedEvents","getCompositionAlternatives","getComputedStyle","getComputedTextLength","getComputedTiming","getConfiguration","getConstraints","getContext","getContextAttributes","getContributingSources","getCounterValue","getCueAsHTML","getCueById","getCurrentPosition","getCurrentTime","getData","getDatabaseNames","getDate","getDay","getDefaultComputedStyle","getDescriptor","getDescriptors","getDestinationInsertionPoints","getDevices","getDirectory","getDisplayMedia","getDistributedNodes","getEditable","getElementById","getElementsByClassName","getElementsByName","getElementsByTagName","getElementsByTagNameNS","getEnclosureList","getEndPositionOfChar","getEntries","getEntriesByName","getEntriesByType","getError","getExtension","getExtentOfChar","getEyeParameters","getFeature","getFile","getFiles","getFilesAndDirectories","getFingerprints","getFloat32","getFloat64","getFloatFrequencyData","getFloatTimeDomainData","getFloatValue","getFragDataLocation","getFrameData","getFramebufferAttachmentParameter","getFrequencyResponse","getFullYear","getGamepads","getHitTestResults","getHitTestResultsForTransientInput","getHours","getIdentityAssertion","getIds","getImageData","getIndexedParameter","getInstalledRelatedApps","getInt16","getInt32","getInt8","getInternalformatParameter","getIntersectionList","getItem","getItems","getKey","getKeyframes","getLayers","getLayoutMap","getLineDash","getLocalCandidates","getLocalParameters","getLocalStreams","getMarks","getMatchedCSSRules","getMaxGCPauseSinceClear","getMeasures","getMetadata","getMilliseconds","getMinutes","getModifierState","getMonth","getNamedItem","getNamedItemNS","getNativeFramebufferScaleFactor","getNotifications","getNotifier","getNumberOfChars","getOffsetReferenceSpace","getOutputTimestamp","getOverrideHistoryNavigationMode","getOverrideStyle","getOwnPropertyDescriptor","getOwnPropertyDescriptors","getOwnPropertyNames","getOwnPropertySymbols","getParameter","getParameters","getParent","getPathSegAtLength","getPhotoCapabilities","getPhotoSettings","getPointAtLength","getPose","getPredictedEvents","getPreference","getPreferenceDefault","getPresentationAttribute","getPreventDefault","getPrimaryService","getPrimaryServices","getProgramInfoLog","getProgramParameter","getPropertyCSSValue","getPropertyPriority","getPropertyShorthand","getPropertyType","getPropertyValue","getPrototypeOf","getQuery","getQueryParameter","getRGBColorValue","getRandomValues","getRangeAt","getReader","getReceivers","getRectValue","getRegistration","getRegistrations","getRemoteCandidates","getRemoteCertificates","getRemoteParameters","getRemoteStreams","getRenderbufferParameter","getResponseHeader","getRoot","getRootNode","getRotationOfChar","getSVGDocument","getSamplerParameter","getScreenCTM","getSeconds","getSelectedCandidatePair","getSelection","getSenders","getService","getSettings","getShaderInfoLog","getShaderParameter","getShaderPrecisionFormat","getShaderSource","getSimpleDuration","getSiteIcons","getSources","getSpeculativeParserUrls","getStartPositionOfChar","getStartTime","getState","getStats","getStatusForPolicy","getStorageUpdates","getStreamById","getStringValue","getSubStringLength","getSubscription","getSupportedConstraints","getSupportedExtensions","getSupportedFormats","getSyncParameter","getSynchronizationSources","getTags","getTargetRanges","getTexParameter","getTime","getTimezoneOffset","getTiming","getTotalLength","getTrackById","getTracks","getTransceivers","getTransform","getTransformFeedbackVarying","getTransformToElement","getTransports","getType","getTypeMapping","getUTCDate","getUTCDay","getUTCFullYear","getUTCHours","getUTCMilliseconds","getUTCMinutes","getUTCMonth","getUTCSeconds","getUint16","getUint32","getUint8","getUniform","getUniformBlockIndex","getUniformIndices","getUniformLocation","getUserMedia","getVRDisplays","getValues","getVarDate","getVariableValue","getVertexAttrib","getVertexAttribOffset","getVideoPlaybackQuality","getVideoTracks","getViewerPose","getViewport","getVoices","getWakeLockState","getWriter","getYear","givenName","global","globalAlpha","globalCompositeOperation","globalThis","glyphOrientationHorizontal","glyphOrientationVertical","glyphRef","go","grabFrame","grad","gradientTransform","gradientUnits","grammars","green","grid","grid-area","grid-auto-columns","grid-auto-flow","grid-auto-rows","grid-column","grid-column-end","grid-column-gap","grid-column-start","grid-gap","grid-row","grid-row-end","grid-row-gap","grid-row-start","grid-template","grid-template-areas","grid-template-columns","grid-template-rows","gridArea","gridAutoColumns","gridAutoFlow","gridAutoRows","gridColumn","gridColumnEnd","gridColumnGap","gridColumnStart","gridGap","gridRow","gridRowEnd","gridRowGap","gridRowStart","gridTemplate","gridTemplateAreas","gridTemplateColumns","gridTemplateRows","gripSpace","group","groupCollapsed","groupEnd","groupId","hadRecentInput","hand","handedness","hapticActuators","hardwareConcurrency","has","hasAttribute","hasAttributeNS","hasAttributes","hasBeenActive","hasChildNodes","hasComposition","hasEnrolledInstrument","hasExtension","hasExternalDisplay","hasFeature","hasFocus","hasInstance","hasLayout","hasOrientation","hasOwnProperty","hasPointerCapture","hasPosition","hasReading","hasStorageAccess","hash","head","headers","heading","height","hidden","hide","hideFocus","high","highWaterMark","hint","history","honorificPrefix","honorificSuffix","horizontalOverflow","host","hostCandidate","hostname","href","hrefTranslate","hreflang","hspace","html5TagCheckInerface","htmlFor","htmlText","httpEquiv","httpRequestStatusCode","hwTimestamp","hyphens","hypot","iccId","iceConnectionState","iceGatheringState","iceTransport","icon","iconURL","id","identifier","identity","idpLoginUrl","ignoreBOM","ignoreCase","ignoreDepthValues","image-orientation","image-rendering","imageHeight","imageOrientation","imageRendering","imageSizes","imageSmoothingEnabled","imageSmoothingQuality","imageSrcset","imageWidth","images","ime-mode","imeMode","implementation","importKey","importNode","importStylesheet","imports","impp","imul","in","in1","in2","inBandMetadataTrackDispatchType","inRange","includes","incremental","indeterminate","index","indexNames","indexOf","indexedDB","indicate","inertiaDestinationX","inertiaDestinationY","info","init","initAnimationEvent","initBeforeLoadEvent","initClipboardEvent","initCloseEvent","initCommandEvent","initCompositionEvent","initCustomEvent","initData","initDataType","initDeviceMotionEvent","initDeviceOrientationEvent","initDragEvent","initErrorEvent","initEvent","initFocusEvent","initGestureEvent","initHashChangeEvent","initKeyEvent","initKeyboardEvent","initMSManipulationEvent","initMessageEvent","initMouseEvent","initMouseScrollEvent","initMouseWheelEvent","initMutationEvent","initNSMouseEvent","initOverflowEvent","initPageEvent","initPageTransitionEvent","initPointerEvent","initPopStateEvent","initProgressEvent","initScrollAreaEvent","initSimpleGestureEvent","initStorageEvent","initTextEvent","initTimeEvent","initTouchEvent","initTransitionEvent","initUIEvent","initWebKitAnimationEvent","initWebKitTransitionEvent","initWebKitWheelEvent","initWheelEvent","initialTime","initialize","initiatorType","inline-size","inlineSize","inlineVerticalFieldOfView","inner","innerHTML","innerHeight","innerText","innerWidth","input","inputBuffer","inputEncoding","inputMethod","inputMode","inputSource","inputSources","inputType","inputs","insertAdjacentElement","insertAdjacentHTML","insertAdjacentText","insertBefore","insertCell","insertDTMF","insertData","insertItemBefore","insertNode","insertRow","insertRule","inset","inset-block","inset-block-end","inset-block-start","inset-inline","inset-inline-end","inset-inline-start","insetBlock","insetBlockEnd","insetBlockStart","insetInline","insetInlineEnd","insetInlineStart","installing","instanceRoot","instantiate","instantiateStreaming","instruments","int16","int32","int8","integrity","interactionMode","intercept","interfaceClass","interfaceName","interfaceNumber","interfaceProtocol","interfaceSubclass","interfaces","interimResults","internalSubset","interpretation","intersectionRatio","intersectionRect","intersectsNode","interval","invalidIteratorState","invalidateFramebuffer","invalidateSubFramebuffer","inverse","invertSelf","is","is2D","isActive","isAlternate","isArray","isBingCurrentSearchDefault","isBuffer","isCandidateWindowVisible","isChar","isCollapsed","isComposing","isConcatSpreadable","isConnected","isContentEditable","isContentHandlerRegistered","isContextLost","isDefaultNamespace","isDirectory","isDisabled","isEnabled","isEqual","isEqualNode","isExtensible","isExternalCTAP2SecurityKeySupported","isFile","isFinite","isFramebuffer","isFrozen","isGenerator","isHTML","isHistoryNavigation","isId","isIdentity","isInjected","isInteger","isIntersecting","isLockFree","isMap","isMultiLine","isNaN","isOpen","isPointInFill","isPointInPath","isPointInRange","isPointInStroke","isPrefAlternate","isPresenting","isPrimary","isProgram","isPropertyImplicit","isProtocolHandlerRegistered","isPrototypeOf","isQuery","isRenderbuffer","isSafeInteger","isSameNode","isSampler","isScript","isScriptURL","isSealed","isSecureContext","isSessionSupported","isShader","isSupported","isSync","isTextEdit","isTexture","isTransformFeedback","isTrusted","isTypeSupported","isUserVerifyingPlatformAuthenticatorAvailable","isVertexArray","isView","isVisible","isochronousTransferIn","isochronousTransferOut","isolation","italics","item","itemId","itemProp","itemRef","itemScope","itemType","itemValue","items","iterateNext","iterationComposite","iterator","javaEnabled","jobTitle","join","json","justify-content","justify-items","justify-self","justifyContent","justifyItems","justifySelf","k1","k2","k3","k4","kHz","keepalive","kernelMatrix","kernelUnitLengthX","kernelUnitLengthY","kerning","key","keyCode","keyFor","keyIdentifier","keyLightEnabled","keyLocation","keyPath","keyStatuses","keySystem","keyText","keyUsage","keyboard","keys","keytype","kind","knee","label","labels","lang","language","languages","largeArcFlag","lastChild","lastElementChild","lastEventId","lastIndex","lastIndexOf","lastInputTime","lastMatch","lastMessageSubject","lastMessageType","lastModified","lastModifiedDate","lastPage","lastParen","lastState","lastStyleSheetSet","latitude","layerX","layerY","layoutFlow","layoutGrid","layoutGridChar","layoutGridLine","layoutGridMode","layoutGridType","lbound","left","leftContext","leftDegrees","leftMargin","leftProjectionMatrix","leftViewMatrix","length","lengthAdjust","lengthComputable","letter-spacing","letterSpacing","level","lighting-color","lightingColor","limitingConeAngle","line","line-break","line-height","lineAlign","lineBreak","lineCap","lineDashOffset","lineHeight","lineJoin","lineNumber","lineTo","lineWidth","linearAcceleration","linearRampToValueAtTime","linearVelocity","lineno","lines","link","linkColor","linkProgram","links","list","list-style","list-style-image","list-style-position","list-style-type","listStyle","listStyleImage","listStylePosition","listStyleType","listener","load","loadEventEnd","loadEventStart","loadTime","loadTimes","loaded","loading","localDescription","localName","localService","localStorage","locale","localeCompare","location","locationbar","lock","locked","lockedFile","locks","log","log10","log1p","log2","logicalXDPI","logicalYDPI","longDesc","longitude","lookupNamespaceURI","lookupPrefix","loop","loopEnd","loopStart","looping","low","lower","lowerBound","lowerOpen","lowsrc","m11","m12","m13","m14","m21","m22","m23","m24","m31","m32","m33","m34","m41","m42","m43","m44","makeXRCompatible","manifest","manufacturer","manufacturerName","map","mapping","margin","margin-block","margin-block-end","margin-block-start","margin-bottom","margin-inline","margin-inline-end","margin-inline-start","margin-left","margin-right","margin-top","marginBlock","marginBlockEnd","marginBlockStart","marginBottom","marginHeight","marginInline","marginInlineEnd","marginInlineStart","marginLeft","marginRight","marginTop","marginWidth","mark","marker","marker-end","marker-mid","marker-offset","marker-start","markerEnd","markerHeight","markerMid","markerOffset","markerStart","markerUnits","markerWidth","marks","mask","mask-clip","mask-composite","mask-image","mask-mode","mask-origin","mask-position","mask-position-x","mask-position-y","mask-repeat","mask-size","mask-type","maskClip","maskComposite","maskContentUnits","maskImage","maskMode","maskOrigin","maskPosition","maskPositionX","maskPositionY","maskRepeat","maskSize","maskType","maskUnits","match","matchAll","matchMedia","matchMedium","matches","matrix","matrixTransform","max","max-block-size","max-height","max-inline-size","max-width","maxActions","maxAlternatives","maxBlockSize","maxChannelCount","maxChannels","maxConnectionsPerServer","maxDecibels","maxDistance","maxHeight","maxInlineSize","maxLayers","maxLength","maxMessageSize","maxPacketLifeTime","maxRetransmits","maxTouchPoints","maxValue","maxWidth","measure","measureText","media","mediaCapabilities","mediaDevices","mediaElement","mediaGroup","mediaKeys","mediaSession","mediaStream","mediaText","meetOrSlice","memory","menubar","mergeAttributes","message","messageClass","messageHandlers","messageType","metaKey","metadata","method","methodDetails","methodName","mid","mimeType","mimeTypes","min","min-block-size","min-height","min-inline-size","min-width","minBlockSize","minDecibels","minHeight","minInlineSize","minLength","minValue","minWidth","miterLimit","mix-blend-mode","mixBlendMode","mm","mode","modify","mount","move","moveBy","moveEnd","moveFirst","moveFocusDown","moveFocusLeft","moveFocusRight","moveFocusUp","moveNext","moveRow","moveStart","moveTo","moveToBookmark","moveToElementText","moveToPoint","movementX","movementY","mozAdd","mozAnimationStartTime","mozAnon","mozApps","mozAudioCaptured","mozAudioChannelType","mozAutoplayEnabled","mozCancelAnimationFrame","mozCancelFullScreen","mozCancelRequestAnimationFrame","mozCaptureStream","mozCaptureStreamUntilEnded","mozClearDataAt","mozContact","mozContacts","mozCreateFileHandle","mozCurrentTransform","mozCurrentTransformInverse","mozCursor","mozDash","mozDashOffset","mozDecodedFrames","mozExitPointerLock","mozFillRule","mozFragmentEnd","mozFrameDelay","mozFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozGetAll","mozGetAllKeys","mozGetAsFile","mozGetDataAt","mozGetMetadata","mozGetUserMedia","mozHasAudio","mozHasItem","mozHidden","mozImageSmoothingEnabled","mozIndexedDB","mozInnerScreenX","mozInnerScreenY","mozInputSource","mozIsTextField","mozItem","mozItemCount","mozItems","mozLength","mozLockOrientation","mozMatchesSelector","mozMovementX","mozMovementY","mozOpaque","mozOrientation","mozPaintCount","mozPaintedFrames","mozParsedFrames","mozPay","mozPointerLockElement","mozPresentedFrames","mozPreservesPitch","mozPressure","mozPrintCallback","mozRTCIceCandidate","mozRTCPeerConnection","mozRTCSessionDescription","mozRemove","mozRequestAnimationFrame","mozRequestFullScreen","mozRequestPointerLock","mozSetDataAt","mozSetImageElement","mozSourceNode","mozSrcObject","mozSystem","mozTCPSocket","mozTextStyle","mozTypesAt","mozUnlockOrientation","mozUserCancelled","mozVisibilityState","ms","msAnimation","msAnimationDelay","msAnimationDirection","msAnimationDuration","msAnimationFillMode","msAnimationIterationCount","msAnimationName","msAnimationPlayState","msAnimationStartTime","msAnimationTimingFunction","msBackfaceVisibility","msBlockProgression","msCSSOMElementFloatMetrics","msCaching","msCachingEnabled","msCancelRequestAnimationFrame","msCapsLockWarningOff","msClearImmediate","msClose","msContentZoomChaining","msContentZoomFactor","msContentZoomLimit","msContentZoomLimitMax","msContentZoomLimitMin","msContentZoomSnap","msContentZoomSnapPoints","msContentZoomSnapType","msContentZooming","msConvertURL","msCrypto","msDoNotTrack","msElementsFromPoint","msElementsFromRect","msExitFullscreen","msExtendedCode","msFillRule","msFirstPaint","msFlex","msFlexAlign","msFlexDirection","msFlexFlow","msFlexItemAlign","msFlexLinePack","msFlexNegative","msFlexOrder","msFlexPack","msFlexPositive","msFlexPreferredSize","msFlexWrap","msFlowFrom","msFlowInto","msFontFeatureSettings","msFullscreenElement","msFullscreenEnabled","msGetInputContext","msGetRegionContent","msGetUntransformedBounds","msGraphicsTrustStatus","msGridColumn","msGridColumnAlign","msGridColumnSpan","msGridColumns","msGridRow","msGridRowAlign","msGridRowSpan","msGridRows","msHidden","msHighContrastAdjust","msHyphenateLimitChars","msHyphenateLimitLines","msHyphenateLimitZone","msHyphens","msImageSmoothingEnabled","msImeAlign","msIndexedDB","msInterpolationMode","msIsStaticHTML","msKeySystem","msKeys","msLaunchUri","msLockOrientation","msManipulationViewsEnabled","msMatchMedia","msMatchesSelector","msMaxTouchPoints","msOrientation","msOverflowStyle","msPerspective","msPerspectiveOrigin","msPlayToDisabled","msPlayToPreferredSourceUri","msPlayToPrimary","msPointerEnabled","msRegionOverflow","msReleasePointerCapture","msRequestAnimationFrame","msRequestFullscreen","msSaveBlob","msSaveOrOpenBlob","msScrollChaining","msScrollLimit","msScrollLimitXMax","msScrollLimitXMin","msScrollLimitYMax","msScrollLimitYMin","msScrollRails","msScrollSnapPointsX","msScrollSnapPointsY","msScrollSnapType","msScrollSnapX","msScrollSnapY","msScrollTranslation","msSetImmediate","msSetMediaKeys","msSetPointerCapture","msTextCombineHorizontal","msTextSizeAdjust","msToBlob","msTouchAction","msTouchSelect","msTraceAsyncCallbackCompleted","msTraceAsyncCallbackStarting","msTraceAsyncOperationCompleted","msTraceAsyncOperationStarting","msTransform","msTransformOrigin","msTransformStyle","msTransition","msTransitionDelay","msTransitionDuration","msTransitionProperty","msTransitionTimingFunction","msUnlockOrientation","msUpdateAsyncCallbackRelation","msUserSelect","msVisibilityState","msWrapFlow","msWrapMargin","msWrapThrough","msWriteProfilerMark","msZoom","msZoomTo","mt","mul","multiEntry","multiSelectionObj","multiline","multiple","multiply","multiplySelf","mutableFile","muted","n","name","nameProp","namedItem","namedRecordset","names","namespaceURI","namespaces","naturalHeight","naturalWidth","navigate","navigation","navigationMode","navigationPreload","navigationStart","navigator","near","nearestViewportElement","negative","negotiated","netscape","networkState","newScale","newTranslate","newURL","newValue","newValueSpecifiedUnits","newVersion","newhome","next","nextElementSibling","nextHopProtocol","nextNode","nextPage","nextSibling","nickname","noHref","noModule","noResize","noShade","noValidate","noWrap","node","nodeName","nodeType","nodeValue","nonce","normalize","normalizedPathSegList","notationName","notations","note","noteGrainOn","noteOff","noteOn","notify","now","numOctaves","number","numberOfChannels","numberOfInputs","numberOfItems","numberOfOutputs","numberValue","oMatchesSelector","object","object-fit","object-position","objectFit","objectPosition","objectStore","objectStoreNames","objectType","observe","of","offscreenBuffering","offset","offset-anchor","offset-distance","offset-path","offset-rotate","offsetAnchor","offsetDistance","offsetHeight","offsetLeft","offsetNode","offsetParent","offsetPath","offsetRotate","offsetTop","offsetWidth","offsetX","offsetY","ok","oldURL","oldValue","oldVersion","olderShadowRoot","onLine","onabort","onabsolutedeviceorientation","onactivate","onactive","onaddsourcebuffer","onaddstream","onaddtrack","onafterprint","onafterscriptexecute","onafterupdate","onanimationcancel","onanimationend","onanimationiteration","onanimationstart","onappinstalled","onaudioend","onaudioprocess","onaudiostart","onautocomplete","onautocompleteerror","onauxclick","onbeforeactivate","onbeforecopy","onbeforecut","onbeforedeactivate","onbeforeeditfocus","onbeforeinstallprompt","onbeforepaste","onbeforeprint","onbeforescriptexecute","onbeforeunload","onbeforeupdate","onbeforexrselect","onbegin","onblocked","onblur","onbounce","onboundary","onbufferedamountlow","oncached","oncancel","oncandidatewindowhide","oncandidatewindowshow","oncandidatewindowupdate","oncanplay","oncanplaythrough","once","oncellchange","onchange","oncharacteristicvaluechanged","onchargingchange","onchargingtimechange","onchecking","onclick","onclose","onclosing","oncompassneedscalibration","oncomplete","onconnect","onconnecting","onconnectionavailable","onconnectionstatechange","oncontextmenu","oncontrollerchange","oncontrolselect","oncopy","oncuechange","oncut","ondataavailable","ondatachannel","ondatasetchanged","ondatasetcomplete","ondblclick","ondeactivate","ondevicechange","ondevicelight","ondevicemotion","ondeviceorientation","ondeviceorientationabsolute","ondeviceproximity","ondischargingtimechange","ondisconnect","ondisplay","ondownloading","ondrag","ondragend","ondragenter","ondragexit","ondragleave","ondragover","ondragstart","ondrop","ondurationchange","onemptied","onencrypted","onend","onended","onenter","onenterpictureinpicture","onerror","onerrorupdate","onexit","onfilterchange","onfinish","onfocus","onfocusin","onfocusout","onformdata","onfreeze","onfullscreenchange","onfullscreenerror","ongatheringstatechange","ongattserverdisconnected","ongesturechange","ongestureend","ongesturestart","ongotpointercapture","onhashchange","onhelp","onicecandidate","onicecandidateerror","oniceconnectionstatechange","onicegatheringstatechange","oninactive","oninput","oninputsourceschange","oninvalid","onkeydown","onkeypress","onkeystatuseschange","onkeyup","onlanguagechange","onlayoutcomplete","onleavepictureinpicture","onlevelchange","onload","onloadeddata","onloadedmetadata","onloadend","onloading","onloadingdone","onloadingerror","onloadstart","onlosecapture","onlostpointercapture","only","onmark","onmessage","onmessageerror","onmidimessage","onmousedown","onmouseenter","onmouseleave","onmousemove","onmouseout","onmouseover","onmouseup","onmousewheel","onmove","onmoveend","onmovestart","onmozfullscreenchange","onmozfullscreenerror","onmozorientationchange","onmozpointerlockchange","onmozpointerlockerror","onmscontentzoom","onmsfullscreenchange","onmsfullscreenerror","onmsgesturechange","onmsgesturedoubletap","onmsgestureend","onmsgesturehold","onmsgesturestart","onmsgesturetap","onmsgotpointercapture","onmsinertiastart","onmslostpointercapture","onmsmanipulationstatechanged","onmsneedkey","onmsorientationchange","onmspointercancel","onmspointerdown","onmspointerenter","onmspointerhover","onmspointerleave","onmspointermove","onmspointerout","onmspointerover","onmspointerup","onmssitemodejumplistitemremoved","onmsthumbnailclick","onmute","onnegotiationneeded","onnomatch","onnoupdate","onobsolete","onoffline","ononline","onopen","onorientationchange","onpagechange","onpagehide","onpageshow","onpaste","onpause","onpayerdetailchange","onpaymentmethodchange","onplay","onplaying","onpluginstreamstart","onpointercancel","onpointerdown","onpointerenter","onpointerleave","onpointerlockchange","onpointerlockerror","onpointermove","onpointerout","onpointerover","onpointerrawupdate","onpointerup","onpopstate","onprocessorerror","onprogress","onpropertychange","onratechange","onreading","onreadystatechange","onrejectionhandled","onrelease","onremove","onremovesourcebuffer","onremovestream","onremovetrack","onrepeat","onreset","onresize","onresizeend","onresizestart","onresourcetimingbufferfull","onresult","onresume","onrowenter","onrowexit","onrowsdelete","onrowsinserted","onscroll","onsearch","onsecuritypolicyviolation","onseeked","onseeking","onselect","onselectedcandidatepairchange","onselectend","onselectionchange","onselectstart","onshippingaddresschange","onshippingoptionchange","onshow","onsignalingstatechange","onsoundend","onsoundstart","onsourceclose","onsourceclosed","onsourceended","onsourceopen","onspeechend","onspeechstart","onsqueeze","onsqueezeend","onsqueezestart","onstalled","onstart","onstatechange","onstop","onstorage","onstoragecommit","onsubmit","onsuccess","onsuspend","onterminate","ontextinput","ontimeout","ontimeupdate","ontoggle","ontonechange","ontouchcancel","ontouchend","ontouchmove","ontouchstart","ontrack","ontransitioncancel","ontransitionend","ontransitionrun","ontransitionstart","onunhandledrejection","onunload","onunmute","onupdate","onupdateend","onupdatefound","onupdateready","onupdatestart","onupgradeneeded","onuserproximity","onversionchange","onvisibilitychange","onvoiceschanged","onvolumechange","onvrdisplayactivate","onvrdisplayconnect","onvrdisplaydeactivate","onvrdisplaydisconnect","onvrdisplaypresentchange","onwaiting","onwaitingforkey","onwarning","onwebkitanimationend","onwebkitanimationiteration","onwebkitanimationstart","onwebkitcurrentplaybacktargetiswirelesschanged","onwebkitfullscreenchange","onwebkitfullscreenerror","onwebkitkeyadded","onwebkitkeyerror","onwebkitkeymessage","onwebkitneedkey","onwebkitorientationchange","onwebkitplaybacktargetavailabilitychanged","onwebkitpointerlockchange","onwebkitpointerlockerror","onwebkitresourcetimingbufferfull","onwebkittransitionend","onwheel","onzoom","opacity","open","openCursor","openDatabase","openKeyCursor","opened","opener","opera","operationType","operator","opr","optimum","options","or","order","orderX","orderY","ordered","org","organization","orient","orientAngle","orientType","orientation","orientationX","orientationY","orientationZ","origin","originalPolicy","originalTarget","orphans","oscpu","outerHTML","outerHeight","outerText","outerWidth","outline","outline-color","outline-offset","outline-style","outline-width","outlineColor","outlineOffset","outlineStyle","outlineWidth","outputBuffer","outputLatency","outputs","overflow","overflow-anchor","overflow-block","overflow-inline","overflow-wrap","overflow-x","overflow-y","overflowAnchor","overflowBlock","overflowInline","overflowWrap","overflowX","overflowY","overrideMimeType","oversample","overscroll-behavior","overscroll-behavior-block","overscroll-behavior-inline","overscroll-behavior-x","overscroll-behavior-y","overscrollBehavior","overscrollBehaviorBlock","overscrollBehaviorInline","overscrollBehaviorX","overscrollBehaviorY","ownKeys","ownerDocument","ownerElement","ownerNode","ownerRule","ownerSVGElement","owningElement","p1","p2","p3","p4","packetSize","packets","pad","padEnd","padStart","padding","padding-block","padding-block-end","padding-block-start","padding-bottom","padding-inline","padding-inline-end","padding-inline-start","padding-left","padding-right","padding-top","paddingBlock","paddingBlockEnd","paddingBlockStart","paddingBottom","paddingInline","paddingInlineEnd","paddingInlineStart","paddingLeft","paddingRight","paddingTop","page","page-break-after","page-break-before","page-break-inside","pageBreakAfter","pageBreakBefore","pageBreakInside","pageCount","pageLeft","pageTop","pageX","pageXOffset","pageY","pageYOffset","pages","paint-order","paintOrder","paintRequests","paintType","paintWorklet","palette","pan","panningModel","parameters","parent","parentElement","parentNode","parentRule","parentStyleSheet","parentTextEdit","parentWindow","parse","parseAll","parseFloat","parseFromString","parseInt","part","participants","passive","password","pasteHTML","path","pathLength","pathSegList","pathSegType","pathSegTypeAsLetter","pathname","pattern","patternContentUnits","patternMismatch","patternTransform","patternUnits","pause","pauseAnimations","pauseOnExit","pauseProfilers","pauseTransformFeedback","paused","payerEmail","payerName","payerPhone","paymentManager","pc","peerIdentity","pending","pendingLocalDescription","pendingRemoteDescription","percent","performance","periodicSync","permission","permissionState","permissions","persist","persisted","personalbar","perspective","perspective-origin","perspectiveOrigin","phone","phoneticFamilyName","phoneticGivenName","photo","pictureInPictureElement","pictureInPictureEnabled","pictureInPictureWindow","ping","pipeThrough","pipeTo","pitch","pixelBottom","pixelDepth","pixelHeight","pixelLeft","pixelRight","pixelStorei","pixelTop","pixelUnitToMillimeterX","pixelUnitToMillimeterY","pixelWidth","place-content","place-items","place-self","placeContent","placeItems","placeSelf","placeholder","platform","platforms","play","playEffect","playState","playbackRate","playbackState","playbackTime","played","playoutDelayHint","playsInline","plugins","pluginspage","pname","pointer-events","pointerBeforeReferenceNode","pointerEnabled","pointerEvents","pointerId","pointerLockElement","pointerType","points","pointsAtX","pointsAtY","pointsAtZ","polygonOffset","pop","populateMatrix","popupWindowFeatures","popupWindowName","popupWindowURI","port","port1","port2","ports","posBottom","posHeight","posLeft","posRight","posTop","posWidth","pose","position","positionAlign","positionX","positionY","positionZ","postError","postMessage","postalCode","poster","pow","powerEfficient","powerOff","preMultiplySelf","precision","preferredStyleSheetSet","preferredStylesheetSet","prefix","preload","prepend","presentation","preserveAlpha","preserveAspectRatio","preserveAspectRatioString","pressed","pressure","prevValue","preventDefault","preventExtensions","preventSilentAccess","previousElementSibling","previousNode","previousPage","previousRect","previousScale","previousSibling","previousTranslate","primaryKey","primitiveType","primitiveUnits","principals","print","priority","privateKey","probablySupportsContext","process","processIceMessage","processingEnd","processingStart","product","productId","productName","productSub","profile","profileEnd","profiles","projectionMatrix","promise","prompt","properties","propertyIsEnumerable","propertyName","protocol","protocolLong","prototype","provider","pseudoClass","pseudoElement","pt","publicId","publicKey","published","pulse","push","pushManager","pushNotification","pushState","put","putImageData","px","quadraticCurveTo","qualifier","quaternion","query","queryCommandEnabled","queryCommandIndeterm","queryCommandState","queryCommandSupported","queryCommandText","queryCommandValue","querySelector","querySelectorAll","queueMicrotask","quote","quotes","r","r1","r2","race","rad","radiogroup","radiusX","radiusY","random","range","rangeCount","rangeMax","rangeMin","rangeOffset","rangeOverflow","rangeParent","rangeUnderflow","rate","ratio","raw","rawId","read","readAsArrayBuffer","readAsBinaryString","readAsBlob","readAsDataURL","readAsText","readBuffer","readEntries","readOnly","readPixels","readReportRequested","readText","readValue","readable","ready","readyState","reason","reboot","receivedAlert","receiver","receivers","recipient","reconnect","recordNumber","recordsAvailable","recordset","rect","red","redEyeReduction","redirect","redirectCount","redirectEnd","redirectStart","redirected","reduce","reduceRight","reduction","refDistance","refX","refY","referenceNode","referenceSpace","referrer","referrerPolicy","refresh","region","regionAnchorX","regionAnchorY","regionId","regions","register","registerContentHandler","registerElement","registerProperty","registerProtocolHandler","reject","rel","relList","relatedAddress","relatedNode","relatedPort","relatedTarget","release","releaseCapture","releaseEvents","releaseInterface","releaseLock","releasePointerCapture","releaseShaderCompiler","reliable","reliableWrite","reload","rem","remainingSpace","remote","remoteDescription","remove","removeAllRanges","removeAttribute","removeAttributeNS","removeAttributeNode","removeBehavior","removeChild","removeCue","removeEventListener","removeFilter","removeImport","removeItem","removeListener","removeNamedItem","removeNamedItemNS","removeNode","removeParameter","removeProperty","removeRange","removeRegion","removeRule","removeSiteSpecificTrackingException","removeSourceBuffer","removeStream","removeTrack","removeVariable","removeWakeLockListener","removeWebWideTrackingException","removed","removedNodes","renderHeight","renderState","renderTime","renderWidth","renderbufferStorage","renderbufferStorageMultisample","renderedBuffer","renderingMode","renotify","repeat","replace","replaceAdjacentText","replaceAll","replaceChild","replaceChildren","replaceData","replaceId","replaceItem","replaceNode","replaceState","replaceSync","replaceTrack","replaceWholeText","replaceWith","reportValidity","request","requestAnimationFrame","requestAutocomplete","requestData","requestDevice","requestFrame","requestFullscreen","requestHitTestSource","requestHitTestSourceForTransientInput","requestId","requestIdleCallback","requestMIDIAccess","requestMediaKeySystemAccess","requestPermission","requestPictureInPicture","requestPointerLock","requestPresent","requestReferenceSpace","requestSession","requestStart","requestStorageAccess","requestSubmit","requestVideoFrameCallback","requestingWindow","requireInteraction","required","requiredExtensions","requiredFeatures","reset","resetPose","resetTransform","resize","resizeBy","resizeTo","resolve","response","responseBody","responseEnd","responseReady","responseStart","responseText","responseType","responseURL","responseXML","restartIce","restore","result","resultIndex","resultType","results","resume","resumeProfilers","resumeTransformFeedback","retry","returnValue","rev","reverse","reversed","revocable","revokeObjectURL","rgbColor","right","rightContext","rightDegrees","rightMargin","rightProjectionMatrix","rightViewMatrix","role","rolloffFactor","root","rootBounds","rootElement","rootMargin","rotate","rotateAxisAngle","rotateAxisAngleSelf","rotateFromVector","rotateFromVectorSelf","rotateSelf","rotation","rotationAngle","rotationRate","round","row-gap","rowGap","rowIndex","rowSpan","rows","rtcpTransport","rtt","ruby-align","ruby-position","rubyAlign","rubyOverhang","rubyPosition","rules","runtime","runtimeStyle","rx","ry","s","safari","sample","sampleCoverage","sampleRate","samplerParameterf","samplerParameteri","sandbox","save","saveData","scale","scale3d","scale3dSelf","scaleNonUniform","scaleNonUniformSelf","scaleSelf","scheme","scissor","scope","scopeName","scoped","screen","screenBrightness","screenEnabled","screenLeft","screenPixelToMillimeterX","screenPixelToMillimeterY","screenTop","screenX","screenY","scriptURL","scripts","scroll","scroll-behavior","scroll-margin","scroll-margin-block","scroll-margin-block-end","scroll-margin-block-start","scroll-margin-bottom","scroll-margin-inline","scroll-margin-inline-end","scroll-margin-inline-start","scroll-margin-left","scroll-margin-right","scroll-margin-top","scroll-padding","scroll-padding-block","scroll-padding-block-end","scroll-padding-block-start","scroll-padding-bottom","scroll-padding-inline","scroll-padding-inline-end","scroll-padding-inline-start","scroll-padding-left","scroll-padding-right","scroll-padding-top","scroll-snap-align","scroll-snap-type","scrollAmount","scrollBehavior","scrollBy","scrollByLines","scrollByPages","scrollDelay","scrollHeight","scrollIntoView","scrollIntoViewIfNeeded","scrollLeft","scrollLeftMax","scrollMargin","scrollMarginBlock","scrollMarginBlockEnd","scrollMarginBlockStart","scrollMarginBottom","scrollMarginInline","scrollMarginInlineEnd","scrollMarginInlineStart","scrollMarginLeft","scrollMarginRight","scrollMarginTop","scrollMaxX","scrollMaxY","scrollPadding","scrollPaddingBlock","scrollPaddingBlockEnd","scrollPaddingBlockStart","scrollPaddingBottom","scrollPaddingInline","scrollPaddingInlineEnd","scrollPaddingInlineStart","scrollPaddingLeft","scrollPaddingRight","scrollPaddingTop","scrollRestoration","scrollSnapAlign","scrollSnapType","scrollTo","scrollTop","scrollTopMax","scrollWidth","scrollX","scrollY","scrollbar-color","scrollbar-width","scrollbar3dLightColor","scrollbarArrowColor","scrollbarBaseColor","scrollbarColor","scrollbarDarkShadowColor","scrollbarFaceColor","scrollbarHighlightColor","scrollbarShadowColor","scrollbarTrackColor","scrollbarWidth","scrollbars","scrolling","scrollingElement","sctp","sctpCauseCode","sdp","sdpLineNumber","sdpMLineIndex","sdpMid","seal","search","searchBox","searchBoxJavaBridge_","searchParams","sectionRowIndex","secureConnectionStart","security","seed","seekToNextFrame","seekable","seeking","select","selectAllChildren","selectAlternateInterface","selectConfiguration","selectNode","selectNodeContents","selectNodes","selectSingleNode","selectSubString","selected","selectedIndex","selectedOptions","selectedStyleSheetSet","selectedStylesheetSet","selection","selectionDirection","selectionEnd","selectionStart","selector","selectorText","self","send","sendAsBinary","sendBeacon","sender","sentAlert","sentTimestamp","separator","serialNumber","serializeToString","serverTiming","service","serviceWorker","session","sessionId","sessionStorage","set","setActionHandler","setActive","setAlpha","setAppBadge","setAttribute","setAttributeNS","setAttributeNode","setAttributeNodeNS","setBaseAndExtent","setBigInt64","setBigUint64","setBingCurrentSearchDefault","setCapture","setCodecPreferences","setColor","setCompositeOperation","setConfiguration","setCurrentTime","setCustomValidity","setData","setDate","setDragImage","setEnd","setEndAfter","setEndBefore","setEndPoint","setFillColor","setFilterRes","setFloat32","setFloat64","setFloatValue","setFormValue","setFullYear","setHeaderValue","setHours","setIdentityProvider","setImmediate","setInt16","setInt32","setInt8","setInterval","setItem","setKeyframes","setLineCap","setLineDash","setLineJoin","setLineWidth","setLiveSeekableRange","setLocalDescription","setMatrix","setMatrixValue","setMediaKeys","setMilliseconds","setMinutes","setMiterLimit","setMonth","setNamedItem","setNamedItemNS","setNonUserCodeExceptions","setOrientToAngle","setOrientToAuto","setOrientation","setOverrideHistoryNavigationMode","setPaint","setParameter","setParameters","setPeriodicWave","setPointerCapture","setPosition","setPositionState","setPreference","setProperty","setPrototypeOf","setRGBColor","setRGBColorICCColor","setRadius","setRangeText","setRemoteDescription","setRequestHeader","setResizable","setResourceTimingBufferSize","setRotate","setScale","setSeconds","setSelectionRange","setServerCertificate","setShadow","setSinkId","setSkewX","setSkewY","setStart","setStartAfter","setStartBefore","setStdDeviation","setStreams","setStringValue","setStrokeColor","setSuggestResult","setTargetAtTime","setTargetValueAtTime","setTime","setTimeout","setTransform","setTranslate","setUTCDate","setUTCFullYear","setUTCHours","setUTCMilliseconds","setUTCMinutes","setUTCMonth","setUTCSeconds","setUint16","setUint32","setUint8","setUri","setValidity","setValueAtTime","setValueCurveAtTime","setVariable","setVelocity","setVersion","setYear","settingName","settingValue","sex","shaderSource","shadowBlur","shadowColor","shadowOffsetX","shadowOffsetY","shadowRoot","shape","shape-image-threshold","shape-margin","shape-outside","shape-rendering","shapeImageThreshold","shapeMargin","shapeOutside","shapeRendering","sheet","shift","shiftKey","shiftLeft","shippingAddress","shippingOption","shippingType","show","showHelp","showModal","showModalDialog","showModelessDialog","showNotification","sidebar","sign","signal","signalingState","signature","silent","sin","singleNodeValue","sinh","sinkId","sittingToStandingTransform","size","sizeToContent","sizeX","sizeZ","sizes","skewX","skewXSelf","skewY","skewYSelf","slice","slope","slot","small","smil","smooth","smoothingTimeConstant","snapToLines","snapshotItem","snapshotLength","some","sort","sortingCode","source","sourceBuffer","sourceBuffers","sourceCapabilities","sourceFile","sourceIndex","sources","spacing","span","speak","speakAs","speaking","species","specified","specularConstant","specularExponent","speechSynthesis","speed","speedOfSound","spellcheck","splice","split","splitText","spreadMethod","sqrt","src","srcElement","srcFilter","srcObject","srcUrn","srcdoc","srclang","srcset","stack","stackTraceLimit","stacktrace","stageParameters","standalone","standby","start","startContainer","startIce","startMessages","startNotifications","startOffset","startProfiling","startRendering","startShark","startTime","startsWith","state","status","statusCode","statusMessage","statusText","statusbar","stdDeviationX","stdDeviationY","stencilFunc","stencilFuncSeparate","stencilMask","stencilMaskSeparate","stencilOp","stencilOpSeparate","step","stepDown","stepMismatch","stepUp","sticky","stitchTiles","stop","stop-color","stop-opacity","stopColor","stopImmediatePropagation","stopNotifications","stopOpacity","stopProfiling","stopPropagation","stopShark","stopped","storage","storageArea","storageName","storageStatus","store","storeSiteSpecificTrackingException","storeWebWideTrackingException","stpVersion","stream","streams","stretch","strike","string","stringValue","stringify","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","strokeDasharray","strokeDashoffset","strokeLinecap","strokeLinejoin","strokeMiterlimit","strokeOpacity","strokeRect","strokeStyle","strokeText","strokeWidth","style","styleFloat","styleMap","styleMedia","styleSheet","styleSheetSets","styleSheets","sub","subarray","subject","submit","submitFrame","submitter","subscribe","substr","substring","substringData","subtle","subtree","suffix","suffixes","summary","sup","supported","supportedContentEncodings","supportedEntryTypes","supports","supportsSession","surfaceScale","surroundContents","suspend","suspendRedraw","swapCache","swapNode","sweepFlag","symbols","sync","sysexEnabled","system","systemCode","systemId","systemLanguage","systemXDPI","systemYDPI","tBodies","tFoot","tHead","tabIndex","table","table-layout","tableLayout","tableValues","tag","tagName","tagUrn","tags","taintEnabled","takePhoto","takeRecords","tan","tangentialPressure","tanh","target","targetElement","targetRayMode","targetRaySpace","targetTouches","targetX","targetY","tcpType","tee","tel","terminate","test","texImage2D","texImage3D","texParameterf","texParameteri","texStorage2D","texStorage3D","texSubImage2D","texSubImage3D","text","text-align","text-align-last","text-anchor","text-combine-upright","text-decoration","text-decoration-color","text-decoration-line","text-decoration-skip-ink","text-decoration-style","text-decoration-thickness","text-emphasis","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-indent","text-justify","text-orientation","text-overflow","text-rendering","text-shadow","text-transform","text-underline-offset","text-underline-position","textAlign","textAlignLast","textAnchor","textAutospace","textBaseline","textCombineUpright","textContent","textDecoration","textDecorationBlink","textDecorationColor","textDecorationLine","textDecorationLineThrough","textDecorationNone","textDecorationOverline","textDecorationSkipInk","textDecorationStyle","textDecorationThickness","textDecorationUnderline","textEmphasis","textEmphasisColor","textEmphasisPosition","textEmphasisStyle","textIndent","textJustify","textJustifyTrim","textKashida","textKashidaSpace","textLength","textOrientation","textOverflow","textRendering","textShadow","textTracks","textTransform","textUnderlineOffset","textUnderlinePosition","then","threadId","threshold","thresholds","tiltX","tiltY","time","timeEnd","timeLog","timeOrigin","timeRemaining","timeStamp","timecode","timeline","timelineTime","timeout","timestamp","timestampOffset","timing","title","to","toArray","toBlob","toDataURL","toDateString","toElement","toExponential","toFixed","toFloat32Array","toFloat64Array","toGMTString","toISOString","toJSON","toLocaleDateString","toLocaleFormat","toLocaleLowerCase","toLocaleString","toLocaleTimeString","toLocaleUpperCase","toLowerCase","toMatrix","toMethod","toPrecision","toPrimitive","toSdp","toSource","toStaticHTML","toString","toStringTag","toSum","toTimeString","toUTCString","toUpperCase","toggle","toggleAttribute","toggleLongPressEnabled","tone","toneBuffer","tooLong","tooShort","toolbar","top","topMargin","total","totalFrameDelay","totalVideoFrames","touch-action","touchAction","touched","touches","trace","track","trackVisibility","transaction","transactions","transceiver","transferControlToOffscreen","transferFromImageBitmap","transferImageBitmap","transferIn","transferOut","transferSize","transferToImageBitmap","transform","transform-box","transform-origin","transform-style","transformBox","transformFeedbackVaryings","transformOrigin","transformPoint","transformString","transformStyle","transformToDocument","transformToFragment","transition","transition-delay","transition-duration","transition-property","transition-timing-function","transitionDelay","transitionDuration","transitionProperty","transitionTimingFunction","translate","translateSelf","translationX","translationY","transport","trim","trimEnd","trimLeft","trimRight","trimStart","trueSpeed","trunc","truncate","trustedTypes","turn","twist","type","typeDetail","typeMismatch","typeMustMatch","types","u2f","ubound","uint16","uint32","uint8","uint8Clamped","undefined","unescape","uneval","unicode","unicode-bidi","unicodeBidi","unicodeRange","uniform1f","uniform1fv","uniform1i","uniform1iv","uniform1ui","uniform1uiv","uniform2f","uniform2fv","uniform2i","uniform2iv","uniform2ui","uniform2uiv","uniform3f","uniform3fv","uniform3i","uniform3iv","uniform3ui","uniform3uiv","uniform4f","uniform4fv","uniform4i","uniform4iv","uniform4ui","uniform4uiv","uniformBlockBinding","uniformMatrix2fv","uniformMatrix2x3fv","uniformMatrix2x4fv","uniformMatrix3fv","uniformMatrix3x2fv","uniformMatrix3x4fv","uniformMatrix4fv","uniformMatrix4x2fv","uniformMatrix4x3fv","unique","uniqueID","uniqueNumber","unit","unitType","units","unloadEventEnd","unloadEventStart","unlock","unmount","unobserve","unpause","unpauseAnimations","unreadCount","unregister","unregisterContentHandler","unregisterProtocolHandler","unscopables","unselectable","unshift","unsubscribe","unsuspendRedraw","unsuspendRedrawAll","unwatch","unwrapKey","upDegrees","upX","upY","upZ","update","updateCommands","updateIce","updateInterval","updatePlaybackRate","updateRenderState","updateSettings","updateTiming","updateViaCache","updateWith","updated","updating","upgrade","upload","uploadTotal","uploaded","upper","upperBound","upperOpen","uri","url","urn","urns","usages","usb","usbVersionMajor","usbVersionMinor","usbVersionSubminor","useCurrentView","useMap","useProgram","usedSpace","user-select","userActivation","userAgent","userChoice","userHandle","userHint","userLanguage","userSelect","userVisibleOnly","username","usernameFragment","utterance","uuid","v8BreakIterator","vAlign","vLink","valid","validate","validateProgram","validationMessage","validity","value","valueAsDate","valueAsNumber","valueAsString","valueInSpecifiedUnits","valueMissing","valueOf","valueText","valueType","values","variable","variant","variationSettings","vector-effect","vectorEffect","velocityAngular","velocityExpansion","velocityX","velocityY","vendor","vendorId","vendorSub","verify","version","vertexAttrib1f","vertexAttrib1fv","vertexAttrib2f","vertexAttrib2fv","vertexAttrib3f","vertexAttrib3fv","vertexAttrib4f","vertexAttrib4fv","vertexAttribDivisor","vertexAttribDivisorANGLE","vertexAttribI4i","vertexAttribI4iv","vertexAttribI4ui","vertexAttribI4uiv","vertexAttribIPointer","vertexAttribPointer","vertical","vertical-align","verticalAlign","verticalOverflow","vh","vibrate","vibrationActuator","videoBitsPerSecond","videoHeight","videoTracks","videoWidth","view","viewBox","viewBoxString","viewTarget","viewTargetString","viewport","viewportAnchorX","viewportAnchorY","viewportElement","views","violatedDirective","visibility","visibilityState","visible","visualViewport","vlinkColor","vmax","vmin","voice","voiceURI","volume","vrml","vspace","vw","w","wait","waitSync","waiting","wake","wakeLock","wand","warn","wasClean","wasDiscarded","watch","watchAvailability","watchPosition","webdriver","webkitAddKey","webkitAlignContent","webkitAlignItems","webkitAlignSelf","webkitAnimation","webkitAnimationDelay","webkitAnimationDirection","webkitAnimationDuration","webkitAnimationFillMode","webkitAnimationIterationCount","webkitAnimationName","webkitAnimationPlayState","webkitAnimationTimingFunction","webkitAppearance","webkitAudioContext","webkitAudioDecodedByteCount","webkitAudioPannerNode","webkitBackfaceVisibility","webkitBackground","webkitBackgroundAttachment","webkitBackgroundClip","webkitBackgroundColor","webkitBackgroundImage","webkitBackgroundOrigin","webkitBackgroundPosition","webkitBackgroundPositionX","webkitBackgroundPositionY","webkitBackgroundRepeat","webkitBackgroundSize","webkitBackingStorePixelRatio","webkitBorderBottomLeftRadius","webkitBorderBottomRightRadius","webkitBorderImage","webkitBorderImageOutset","webkitBorderImageRepeat","webkitBorderImageSlice","webkitBorderImageSource","webkitBorderImageWidth","webkitBorderRadius","webkitBorderTopLeftRadius","webkitBorderTopRightRadius","webkitBoxAlign","webkitBoxDirection","webkitBoxFlex","webkitBoxOrdinalGroup","webkitBoxOrient","webkitBoxPack","webkitBoxShadow","webkitBoxSizing","webkitCancelAnimationFrame","webkitCancelFullScreen","webkitCancelKeyRequest","webkitCancelRequestAnimationFrame","webkitClearResourceTimings","webkitClosedCaptionsVisible","webkitConvertPointFromNodeToPage","webkitConvertPointFromPageToNode","webkitCreateShadowRoot","webkitCurrentFullScreenElement","webkitCurrentPlaybackTargetIsWireless","webkitDecodedFrameCount","webkitDirectionInvertedFromDevice","webkitDisplayingFullscreen","webkitDroppedFrameCount","webkitEnterFullScreen","webkitEnterFullscreen","webkitEntries","webkitExitFullScreen","webkitExitFullscreen","webkitExitPointerLock","webkitFilter","webkitFlex","webkitFlexBasis","webkitFlexDirection","webkitFlexFlow","webkitFlexGrow","webkitFlexShrink","webkitFlexWrap","webkitFullScreenKeyboardInputAllowed","webkitFullscreenElement","webkitFullscreenEnabled","webkitGenerateKeyRequest","webkitGetAsEntry","webkitGetDatabaseNames","webkitGetEntries","webkitGetEntriesByName","webkitGetEntriesByType","webkitGetFlowByName","webkitGetGamepads","webkitGetImageDataHD","webkitGetNamedFlows","webkitGetRegionFlowRanges","webkitGetUserMedia","webkitHasClosedCaptions","webkitHidden","webkitIDBCursor","webkitIDBDatabase","webkitIDBDatabaseError","webkitIDBDatabaseException","webkitIDBFactory","webkitIDBIndex","webkitIDBKeyRange","webkitIDBObjectStore","webkitIDBRequest","webkitIDBTransaction","webkitImageSmoothingEnabled","webkitIndexedDB","webkitInitMessageEvent","webkitIsFullScreen","webkitJustifyContent","webkitKeys","webkitLineClamp","webkitLineDashOffset","webkitLockOrientation","webkitMask","webkitMaskClip","webkitMaskComposite","webkitMaskImage","webkitMaskOrigin","webkitMaskPosition","webkitMaskPositionX","webkitMaskPositionY","webkitMaskRepeat","webkitMaskSize","webkitMatchesSelector","webkitMediaStream","webkitNotifications","webkitOfflineAudioContext","webkitOrder","webkitOrientation","webkitPeerConnection00","webkitPersistentStorage","webkitPerspective","webkitPerspectiveOrigin","webkitPointerLockElement","webkitPostMessage","webkitPreservesPitch","webkitPutImageDataHD","webkitRTCPeerConnection","webkitRegionOverset","webkitRelativePath","webkitRequestAnimationFrame","webkitRequestFileSystem","webkitRequestFullScreen","webkitRequestFullscreen","webkitRequestPointerLock","webkitResolveLocalFileSystemURL","webkitSetMediaKeys","webkitSetResourceTimingBufferSize","webkitShadowRoot","webkitShowPlaybackTargetPicker","webkitSlice","webkitSpeechGrammar","webkitSpeechGrammarList","webkitSpeechRecognition","webkitSpeechRecognitionError","webkitSpeechRecognitionEvent","webkitStorageInfo","webkitSupportsFullscreen","webkitTemporaryStorage","webkitTextFillColor","webkitTextSizeAdjust","webkitTextStroke","webkitTextStrokeColor","webkitTextStrokeWidth","webkitTransform","webkitTransformOrigin","webkitTransformStyle","webkitTransition","webkitTransitionDelay","webkitTransitionDuration","webkitTransitionProperty","webkitTransitionTimingFunction","webkitURL","webkitUnlockOrientation","webkitUserSelect","webkitVideoDecodedByteCount","webkitVisibilityState","webkitWirelessVideoPlaybackDisabled","webkitdirectory","webkitdropzone","webstore","weight","whatToShow","wheelDelta","wheelDeltaX","wheelDeltaY","whenDefined","which","white-space","whiteSpace","wholeText","widows","width","will-change","willChange","willValidate","window","withCredentials","word-break","word-spacing","word-wrap","wordBreak","wordSpacing","wordWrap","workerStart","wrap","wrapKey","writable","writableAuxiliaries","write","writeText","writeValue","writeWithoutResponse","writeln","writing-mode","writingMode","x","x1","x2","xChannelSelector","xmlEncoding","xmlStandalone","xmlVersion","xmlbase","xmllang","xmlspace","xor","xr","y","y1","y2","yChannelSelector","yandex","z","z-index","zIndex","zoom","zoomAndPan","zoomRectScreen"]');
+module.exports = JSON.parse('["$&","$\'","$*","$+","$1","$2","$3","$4","$5","$6","$7","$8","$9","$_","$`","$input","-moz-animation","-moz-animation-delay","-moz-animation-direction","-moz-animation-duration","-moz-animation-fill-mode","-moz-animation-iteration-count","-moz-animation-name","-moz-animation-play-state","-moz-animation-timing-function","-moz-appearance","-moz-backface-visibility","-moz-border-end","-moz-border-end-color","-moz-border-end-style","-moz-border-end-width","-moz-border-image","-moz-border-start","-moz-border-start-color","-moz-border-start-style","-moz-border-start-width","-moz-box-align","-moz-box-direction","-moz-box-flex","-moz-box-ordinal-group","-moz-box-orient","-moz-box-pack","-moz-box-sizing","-moz-float-edge","-moz-font-feature-settings","-moz-font-language-override","-moz-force-broken-image-icon","-moz-hyphens","-moz-image-region","-moz-margin-end","-moz-margin-start","-moz-orient","-moz-osx-font-smoothing","-moz-outline-radius","-moz-outline-radius-bottomleft","-moz-outline-radius-bottomright","-moz-outline-radius-topleft","-moz-outline-radius-topright","-moz-padding-end","-moz-padding-start","-moz-perspective","-moz-perspective-origin","-moz-tab-size","-moz-text-size-adjust","-moz-transform","-moz-transform-origin","-moz-transform-style","-moz-transition","-moz-transition-delay","-moz-transition-duration","-moz-transition-property","-moz-transition-timing-function","-moz-user-focus","-moz-user-input","-moz-user-modify","-moz-user-select","-moz-window-dragging","-webkit-align-content","-webkit-align-items","-webkit-align-self","-webkit-animation","-webkit-animation-delay","-webkit-animation-direction","-webkit-animation-duration","-webkit-animation-fill-mode","-webkit-animation-iteration-count","-webkit-animation-name","-webkit-animation-play-state","-webkit-animation-timing-function","-webkit-appearance","-webkit-backface-visibility","-webkit-background-clip","-webkit-background-origin","-webkit-background-size","-webkit-border-bottom-left-radius","-webkit-border-bottom-right-radius","-webkit-border-image","-webkit-border-radius","-webkit-border-top-left-radius","-webkit-border-top-right-radius","-webkit-box-align","-webkit-box-direction","-webkit-box-flex","-webkit-box-ordinal-group","-webkit-box-orient","-webkit-box-pack","-webkit-box-shadow","-webkit-box-sizing","-webkit-filter","-webkit-flex","-webkit-flex-basis","-webkit-flex-direction","-webkit-flex-flow","-webkit-flex-grow","-webkit-flex-shrink","-webkit-flex-wrap","-webkit-justify-content","-webkit-line-clamp","-webkit-mask","-webkit-mask-clip","-webkit-mask-composite","-webkit-mask-image","-webkit-mask-origin","-webkit-mask-position","-webkit-mask-position-x","-webkit-mask-position-y","-webkit-mask-repeat","-webkit-mask-size","-webkit-order","-webkit-perspective","-webkit-perspective-origin","-webkit-text-fill-color","-webkit-text-size-adjust","-webkit-text-stroke","-webkit-text-stroke-color","-webkit-text-stroke-width","-webkit-transform","-webkit-transform-origin","-webkit-transform-style","-webkit-transition","-webkit-transition-delay","-webkit-transition-duration","-webkit-transition-property","-webkit-transition-timing-function","-webkit-user-select","0","1","10","11","12","13","14","15","16","17","18","19","2","20","3","4","5","6","7","8","9","@@iterator","ABORT_ERR","ACTIVE","ACTIVE_ATTRIBUTES","ACTIVE_TEXTURE","ACTIVE_UNIFORMS","ACTIVE_UNIFORM_BLOCKS","ADDITION","ALIASED_LINE_WIDTH_RANGE","ALIASED_POINT_SIZE_RANGE","ALLOW_KEYBOARD_INPUT","ALLPASS","ALPHA","ALPHA_BITS","ALREADY_SIGNALED","ALT_MASK","ALWAYS","ANY_SAMPLES_PASSED","ANY_SAMPLES_PASSED_CONSERVATIVE","ANY_TYPE","ANY_UNORDERED_NODE_TYPE","ARRAY_BUFFER","ARRAY_BUFFER_BINDING","ATTACHED_SHADERS","ATTRIBUTE_NODE","AT_TARGET","AbortController","AbortSignal","AbsoluteOrientationSensor","AbstractRange","Accelerometer","AddSearchProvider","AggregateError","AnalyserNode","Animation","AnimationEffect","AnimationEvent","AnimationPlaybackEvent","AnimationTimeline","AnonXMLHttpRequest","Any","ApplicationCache","ApplicationCacheErrorEvent","Array","ArrayBuffer","ArrayType","Atomics","Attr","Audio","AudioBuffer","AudioBufferSourceNode","AudioContext","AudioDestinationNode","AudioListener","AudioNode","AudioParam","AudioParamMap","AudioProcessingEvent","AudioScheduledSourceNode","AudioStreamTrack","AudioWorklet","AudioWorkletNode","AuthenticatorAssertionResponse","AuthenticatorAttestationResponse","AuthenticatorResponse","AutocompleteErrorEvent","BACK","BAD_BOUNDARYPOINTS_ERR","BAD_REQUEST","BANDPASS","BLEND","BLEND_COLOR","BLEND_DST_ALPHA","BLEND_DST_RGB","BLEND_EQUATION","BLEND_EQUATION_ALPHA","BLEND_EQUATION_RGB","BLEND_SRC_ALPHA","BLEND_SRC_RGB","BLUE_BITS","BLUR","BOOL","BOOLEAN_TYPE","BOOL_VEC2","BOOL_VEC3","BOOL_VEC4","BOTH","BROWSER_DEFAULT_WEBGL","BUBBLING_PHASE","BUFFER_SIZE","BUFFER_USAGE","BYTE","BYTES_PER_ELEMENT","BackgroundFetchManager","BackgroundFetchRecord","BackgroundFetchRegistration","BarProp","BarcodeDetector","BaseAudioContext","BaseHref","BatteryManager","BeforeInstallPromptEvent","BeforeLoadEvent","BeforeUnloadEvent","BigInt","BigInt64Array","BigUint64Array","BiquadFilterNode","Blob","BlobEvent","Bluetooth","BluetoothCharacteristicProperties","BluetoothDevice","BluetoothRemoteGATTCharacteristic","BluetoothRemoteGATTDescriptor","BluetoothRemoteGATTServer","BluetoothRemoteGATTService","BluetoothUUID","Boolean","BroadcastChannel","ByteLengthQueuingStrategy","CAPTURING_PHASE","CCW","CDATASection","CDATA_SECTION_NODE","CHANGE","CHARSET_RULE","CHECKING","CLAMP_TO_EDGE","CLICK","CLOSED","CLOSING","COLOR","COLOR_ATTACHMENT0","COLOR_ATTACHMENT1","COLOR_ATTACHMENT10","COLOR_ATTACHMENT11","COLOR_ATTACHMENT12","COLOR_ATTACHMENT13","COLOR_ATTACHMENT14","COLOR_ATTACHMENT15","COLOR_ATTACHMENT2","COLOR_ATTACHMENT3","COLOR_ATTACHMENT4","COLOR_ATTACHMENT5","COLOR_ATTACHMENT6","COLOR_ATTACHMENT7","COLOR_ATTACHMENT8","COLOR_ATTACHMENT9","COLOR_BUFFER_BIT","COLOR_CLEAR_VALUE","COLOR_WRITEMASK","COMMENT_NODE","COMPARE_REF_TO_TEXTURE","COMPILE_STATUS","COMPRESSED_RGBA_S3TC_DXT1_EXT","COMPRESSED_RGBA_S3TC_DXT3_EXT","COMPRESSED_RGBA_S3TC_DXT5_EXT","COMPRESSED_RGB_S3TC_DXT1_EXT","COMPRESSED_TEXTURE_FORMATS","CONDITION_SATISFIED","CONFIGURATION_UNSUPPORTED","CONNECTING","CONSTANT_ALPHA","CONSTANT_COLOR","CONSTRAINT_ERR","CONTEXT_LOST_WEBGL","CONTROL_MASK","COPY_READ_BUFFER","COPY_READ_BUFFER_BINDING","COPY_WRITE_BUFFER","COPY_WRITE_BUFFER_BINDING","COUNTER_STYLE_RULE","CSS","CSS2Properties","CSSAnimation","CSSCharsetRule","CSSConditionRule","CSSCounterStyleRule","CSSFontFaceRule","CSSFontFeatureValuesRule","CSSGroupingRule","CSSImageValue","CSSImportRule","CSSKeyframeRule","CSSKeyframesRule","CSSKeywordValue","CSSMathInvert","CSSMathMax","CSSMathMin","CSSMathNegate","CSSMathProduct","CSSMathSum","CSSMathValue","CSSMatrixComponent","CSSMediaRule","CSSMozDocumentRule","CSSNameSpaceRule","CSSNamespaceRule","CSSNumericArray","CSSNumericValue","CSSPageRule","CSSPerspective","CSSPositionValue","CSSPrimitiveValue","CSSRotate","CSSRule","CSSRuleList","CSSScale","CSSSkew","CSSSkewX","CSSSkewY","CSSStyleDeclaration","CSSStyleRule","CSSStyleSheet","CSSStyleValue","CSSSupportsRule","CSSTransformComponent","CSSTransformValue","CSSTransition","CSSTranslate","CSSUnitValue","CSSUnknownRule","CSSUnparsedValue","CSSValue","CSSValueList","CSSVariableReferenceValue","CSSVariablesDeclaration","CSSVariablesRule","CSSViewportRule","CSS_ATTR","CSS_CM","CSS_COUNTER","CSS_CUSTOM","CSS_DEG","CSS_DIMENSION","CSS_EMS","CSS_EXS","CSS_FILTER_BLUR","CSS_FILTER_BRIGHTNESS","CSS_FILTER_CONTRAST","CSS_FILTER_CUSTOM","CSS_FILTER_DROP_SHADOW","CSS_FILTER_GRAYSCALE","CSS_FILTER_HUE_ROTATE","CSS_FILTER_INVERT","CSS_FILTER_OPACITY","CSS_FILTER_REFERENCE","CSS_FILTER_SATURATE","CSS_FILTER_SEPIA","CSS_GRAD","CSS_HZ","CSS_IDENT","CSS_IN","CSS_INHERIT","CSS_KHZ","CSS_MATRIX","CSS_MATRIX3D","CSS_MM","CSS_MS","CSS_NUMBER","CSS_PC","CSS_PERCENTAGE","CSS_PERSPECTIVE","CSS_PRIMITIVE_VALUE","CSS_PT","CSS_PX","CSS_RAD","CSS_RECT","CSS_RGBCOLOR","CSS_ROTATE","CSS_ROTATE3D","CSS_ROTATEX","CSS_ROTATEY","CSS_ROTATEZ","CSS_S","CSS_SCALE","CSS_SCALE3D","CSS_SCALEX","CSS_SCALEY","CSS_SCALEZ","CSS_SKEW","CSS_SKEWX","CSS_SKEWY","CSS_STRING","CSS_TRANSLATE","CSS_TRANSLATE3D","CSS_TRANSLATEX","CSS_TRANSLATEY","CSS_TRANSLATEZ","CSS_UNKNOWN","CSS_URI","CSS_VALUE_LIST","CSS_VH","CSS_VMAX","CSS_VMIN","CSS_VW","CULL_FACE","CULL_FACE_MODE","CURRENT_PROGRAM","CURRENT_QUERY","CURRENT_VERTEX_ATTRIB","CUSTOM","CW","Cache","CacheStorage","CanvasCaptureMediaStream","CanvasCaptureMediaStreamTrack","CanvasGradient","CanvasPattern","CanvasRenderingContext2D","CaretPosition","ChannelMergerNode","ChannelSplitterNode","CharacterData","ClientRect","ClientRectList","Clipboard","ClipboardEvent","ClipboardItem","CloseEvent","Collator","CommandEvent","Comment","CompileError","CompositionEvent","CompressionStream","Console","ConstantSourceNode","Controllers","ConvolverNode","CountQueuingStrategy","Counter","Credential","CredentialsContainer","Crypto","CryptoKey","CustomElementRegistry","CustomEvent","DATABASE_ERR","DATA_CLONE_ERR","DATA_ERR","DBLCLICK","DECR","DECR_WRAP","DELETE_STATUS","DEPTH","DEPTH24_STENCIL8","DEPTH32F_STENCIL8","DEPTH_ATTACHMENT","DEPTH_BITS","DEPTH_BUFFER_BIT","DEPTH_CLEAR_VALUE","DEPTH_COMPONENT","DEPTH_COMPONENT16","DEPTH_COMPONENT24","DEPTH_COMPONENT32F","DEPTH_FUNC","DEPTH_RANGE","DEPTH_STENCIL","DEPTH_STENCIL_ATTACHMENT","DEPTH_TEST","DEPTH_WRITEMASK","DEVICE_INELIGIBLE","DIRECTION_DOWN","DIRECTION_LEFT","DIRECTION_RIGHT","DIRECTION_UP","DISABLED","DISPATCH_REQUEST_ERR","DITHER","DOCUMENT_FRAGMENT_NODE","DOCUMENT_NODE","DOCUMENT_POSITION_CONTAINED_BY","DOCUMENT_POSITION_CONTAINS","DOCUMENT_POSITION_DISCONNECTED","DOCUMENT_POSITION_FOLLOWING","DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC","DOCUMENT_POSITION_PRECEDING","DOCUMENT_TYPE_NODE","DOMCursor","DOMError","DOMException","DOMImplementation","DOMImplementationLS","DOMMatrix","DOMMatrixReadOnly","DOMParser","DOMPoint","DOMPointReadOnly","DOMQuad","DOMRect","DOMRectList","DOMRectReadOnly","DOMRequest","DOMSTRING_SIZE_ERR","DOMSettableTokenList","DOMStringList","DOMStringMap","DOMTokenList","DOMTransactionEvent","DOM_DELTA_LINE","DOM_DELTA_PAGE","DOM_DELTA_PIXEL","DOM_INPUT_METHOD_DROP","DOM_INPUT_METHOD_HANDWRITING","DOM_INPUT_METHOD_IME","DOM_INPUT_METHOD_KEYBOARD","DOM_INPUT_METHOD_MULTIMODAL","DOM_INPUT_METHOD_OPTION","DOM_INPUT_METHOD_PASTE","DOM_INPUT_METHOD_SCRIPT","DOM_INPUT_METHOD_UNKNOWN","DOM_INPUT_METHOD_VOICE","DOM_KEY_LOCATION_JOYSTICK","DOM_KEY_LOCATION_LEFT","DOM_KEY_LOCATION_MOBILE","DOM_KEY_LOCATION_NUMPAD","DOM_KEY_LOCATION_RIGHT","DOM_KEY_LOCATION_STANDARD","DOM_VK_0","DOM_VK_1","DOM_VK_2","DOM_VK_3","DOM_VK_4","DOM_VK_5","DOM_VK_6","DOM_VK_7","DOM_VK_8","DOM_VK_9","DOM_VK_A","DOM_VK_ACCEPT","DOM_VK_ADD","DOM_VK_ALT","DOM_VK_ALTGR","DOM_VK_AMPERSAND","DOM_VK_ASTERISK","DOM_VK_AT","DOM_VK_ATTN","DOM_VK_B","DOM_VK_BACKSPACE","DOM_VK_BACK_QUOTE","DOM_VK_BACK_SLASH","DOM_VK_BACK_SPACE","DOM_VK_C","DOM_VK_CANCEL","DOM_VK_CAPS_LOCK","DOM_VK_CIRCUMFLEX","DOM_VK_CLEAR","DOM_VK_CLOSE_BRACKET","DOM_VK_CLOSE_CURLY_BRACKET","DOM_VK_CLOSE_PAREN","DOM_VK_COLON","DOM_VK_COMMA","DOM_VK_CONTEXT_MENU","DOM_VK_CONTROL","DOM_VK_CONVERT","DOM_VK_CRSEL","DOM_VK_CTRL","DOM_VK_D","DOM_VK_DECIMAL","DOM_VK_DELETE","DOM_VK_DIVIDE","DOM_VK_DOLLAR","DOM_VK_DOUBLE_QUOTE","DOM_VK_DOWN","DOM_VK_E","DOM_VK_EISU","DOM_VK_END","DOM_VK_ENTER","DOM_VK_EQUALS","DOM_VK_EREOF","DOM_VK_ESCAPE","DOM_VK_EXCLAMATION","DOM_VK_EXECUTE","DOM_VK_EXSEL","DOM_VK_F","DOM_VK_F1","DOM_VK_F10","DOM_VK_F11","DOM_VK_F12","DOM_VK_F13","DOM_VK_F14","DOM_VK_F15","DOM_VK_F16","DOM_VK_F17","DOM_VK_F18","DOM_VK_F19","DOM_VK_F2","DOM_VK_F20","DOM_VK_F21","DOM_VK_F22","DOM_VK_F23","DOM_VK_F24","DOM_VK_F25","DOM_VK_F26","DOM_VK_F27","DOM_VK_F28","DOM_VK_F29","DOM_VK_F3","DOM_VK_F30","DOM_VK_F31","DOM_VK_F32","DOM_VK_F33","DOM_VK_F34","DOM_VK_F35","DOM_VK_F36","DOM_VK_F4","DOM_VK_F5","DOM_VK_F6","DOM_VK_F7","DOM_VK_F8","DOM_VK_F9","DOM_VK_FINAL","DOM_VK_FRONT","DOM_VK_G","DOM_VK_GREATER_THAN","DOM_VK_H","DOM_VK_HANGUL","DOM_VK_HANJA","DOM_VK_HASH","DOM_VK_HELP","DOM_VK_HK_TOGGLE","DOM_VK_HOME","DOM_VK_HYPHEN_MINUS","DOM_VK_I","DOM_VK_INSERT","DOM_VK_J","DOM_VK_JUNJA","DOM_VK_K","DOM_VK_KANA","DOM_VK_KANJI","DOM_VK_L","DOM_VK_LEFT","DOM_VK_LEFT_TAB","DOM_VK_LESS_THAN","DOM_VK_M","DOM_VK_META","DOM_VK_MODECHANGE","DOM_VK_MULTIPLY","DOM_VK_N","DOM_VK_NONCONVERT","DOM_VK_NUMPAD0","DOM_VK_NUMPAD1","DOM_VK_NUMPAD2","DOM_VK_NUMPAD3","DOM_VK_NUMPAD4","DOM_VK_NUMPAD5","DOM_VK_NUMPAD6","DOM_VK_NUMPAD7","DOM_VK_NUMPAD8","DOM_VK_NUMPAD9","DOM_VK_NUM_LOCK","DOM_VK_O","DOM_VK_OEM_1","DOM_VK_OEM_102","DOM_VK_OEM_2","DOM_VK_OEM_3","DOM_VK_OEM_4","DOM_VK_OEM_5","DOM_VK_OEM_6","DOM_VK_OEM_7","DOM_VK_OEM_8","DOM_VK_OEM_COMMA","DOM_VK_OEM_MINUS","DOM_VK_OEM_PERIOD","DOM_VK_OEM_PLUS","DOM_VK_OPEN_BRACKET","DOM_VK_OPEN_CURLY_BRACKET","DOM_VK_OPEN_PAREN","DOM_VK_P","DOM_VK_PA1","DOM_VK_PAGEDOWN","DOM_VK_PAGEUP","DOM_VK_PAGE_DOWN","DOM_VK_PAGE_UP","DOM_VK_PAUSE","DOM_VK_PERCENT","DOM_VK_PERIOD","DOM_VK_PIPE","DOM_VK_PLAY","DOM_VK_PLUS","DOM_VK_PRINT","DOM_VK_PRINTSCREEN","DOM_VK_PROCESSKEY","DOM_VK_PROPERITES","DOM_VK_Q","DOM_VK_QUESTION_MARK","DOM_VK_QUOTE","DOM_VK_R","DOM_VK_REDO","DOM_VK_RETURN","DOM_VK_RIGHT","DOM_VK_S","DOM_VK_SCROLL_LOCK","DOM_VK_SELECT","DOM_VK_SEMICOLON","DOM_VK_SEPARATOR","DOM_VK_SHIFT","DOM_VK_SLASH","DOM_VK_SLEEP","DOM_VK_SPACE","DOM_VK_SUBTRACT","DOM_VK_T","DOM_VK_TAB","DOM_VK_TILDE","DOM_VK_U","DOM_VK_UNDERSCORE","DOM_VK_UNDO","DOM_VK_UNICODE","DOM_VK_UP","DOM_VK_V","DOM_VK_VOLUME_DOWN","DOM_VK_VOLUME_MUTE","DOM_VK_VOLUME_UP","DOM_VK_W","DOM_VK_WIN","DOM_VK_WINDOW","DOM_VK_WIN_ICO_00","DOM_VK_WIN_ICO_CLEAR","DOM_VK_WIN_ICO_HELP","DOM_VK_WIN_OEM_ATTN","DOM_VK_WIN_OEM_AUTO","DOM_VK_WIN_OEM_BACKTAB","DOM_VK_WIN_OEM_CLEAR","DOM_VK_WIN_OEM_COPY","DOM_VK_WIN_OEM_CUSEL","DOM_VK_WIN_OEM_ENLW","DOM_VK_WIN_OEM_FINISH","DOM_VK_WIN_OEM_FJ_JISHO","DOM_VK_WIN_OEM_FJ_LOYA","DOM_VK_WIN_OEM_FJ_MASSHOU","DOM_VK_WIN_OEM_FJ_ROYA","DOM_VK_WIN_OEM_FJ_TOUROKU","DOM_VK_WIN_OEM_JUMP","DOM_VK_WIN_OEM_PA1","DOM_VK_WIN_OEM_PA2","DOM_VK_WIN_OEM_PA3","DOM_VK_WIN_OEM_RESET","DOM_VK_WIN_OEM_WSCTRL","DOM_VK_X","DOM_VK_XF86XK_ADD_FAVORITE","DOM_VK_XF86XK_APPLICATION_LEFT","DOM_VK_XF86XK_APPLICATION_RIGHT","DOM_VK_XF86XK_AUDIO_CYCLE_TRACK","DOM_VK_XF86XK_AUDIO_FORWARD","DOM_VK_XF86XK_AUDIO_LOWER_VOLUME","DOM_VK_XF86XK_AUDIO_MEDIA","DOM_VK_XF86XK_AUDIO_MUTE","DOM_VK_XF86XK_AUDIO_NEXT","DOM_VK_XF86XK_AUDIO_PAUSE","DOM_VK_XF86XK_AUDIO_PLAY","DOM_VK_XF86XK_AUDIO_PREV","DOM_VK_XF86XK_AUDIO_RAISE_VOLUME","DOM_VK_XF86XK_AUDIO_RANDOM_PLAY","DOM_VK_XF86XK_AUDIO_RECORD","DOM_VK_XF86XK_AUDIO_REPEAT","DOM_VK_XF86XK_AUDIO_REWIND","DOM_VK_XF86XK_AUDIO_STOP","DOM_VK_XF86XK_AWAY","DOM_VK_XF86XK_BACK","DOM_VK_XF86XK_BACK_FORWARD","DOM_VK_XF86XK_BATTERY","DOM_VK_XF86XK_BLUE","DOM_VK_XF86XK_BLUETOOTH","DOM_VK_XF86XK_BOOK","DOM_VK_XF86XK_BRIGHTNESS_ADJUST","DOM_VK_XF86XK_CALCULATOR","DOM_VK_XF86XK_CALENDAR","DOM_VK_XF86XK_CD","DOM_VK_XF86XK_CLOSE","DOM_VK_XF86XK_COMMUNITY","DOM_VK_XF86XK_CONTRAST_ADJUST","DOM_VK_XF86XK_COPY","DOM_VK_XF86XK_CUT","DOM_VK_XF86XK_CYCLE_ANGLE","DOM_VK_XF86XK_DISPLAY","DOM_VK_XF86XK_DOCUMENTS","DOM_VK_XF86XK_DOS","DOM_VK_XF86XK_EJECT","DOM_VK_XF86XK_EXCEL","DOM_VK_XF86XK_EXPLORER","DOM_VK_XF86XK_FAVORITES","DOM_VK_XF86XK_FINANCE","DOM_VK_XF86XK_FORWARD","DOM_VK_XF86XK_FRAME_BACK","DOM_VK_XF86XK_FRAME_FORWARD","DOM_VK_XF86XK_GAME","DOM_VK_XF86XK_GO","DOM_VK_XF86XK_GREEN","DOM_VK_XF86XK_HIBERNATE","DOM_VK_XF86XK_HISTORY","DOM_VK_XF86XK_HOME_PAGE","DOM_VK_XF86XK_HOT_LINKS","DOM_VK_XF86XK_I_TOUCH","DOM_VK_XF86XK_KBD_BRIGHTNESS_DOWN","DOM_VK_XF86XK_KBD_BRIGHTNESS_UP","DOM_VK_XF86XK_KBD_LIGHT_ON_OFF","DOM_VK_XF86XK_LAUNCH0","DOM_VK_XF86XK_LAUNCH1","DOM_VK_XF86XK_LAUNCH2","DOM_VK_XF86XK_LAUNCH3","DOM_VK_XF86XK_LAUNCH4","DOM_VK_XF86XK_LAUNCH5","DOM_VK_XF86XK_LAUNCH6","DOM_VK_XF86XK_LAUNCH7","DOM_VK_XF86XK_LAUNCH8","DOM_VK_XF86XK_LAUNCH9","DOM_VK_XF86XK_LAUNCH_A","DOM_VK_XF86XK_LAUNCH_B","DOM_VK_XF86XK_LAUNCH_C","DOM_VK_XF86XK_LAUNCH_D","DOM_VK_XF86XK_LAUNCH_E","DOM_VK_XF86XK_LAUNCH_F","DOM_VK_XF86XK_LIGHT_BULB","DOM_VK_XF86XK_LOG_OFF","DOM_VK_XF86XK_MAIL","DOM_VK_XF86XK_MAIL_FORWARD","DOM_VK_XF86XK_MARKET","DOM_VK_XF86XK_MEETING","DOM_VK_XF86XK_MEMO","DOM_VK_XF86XK_MENU_KB","DOM_VK_XF86XK_MENU_PB","DOM_VK_XF86XK_MESSENGER","DOM_VK_XF86XK_MON_BRIGHTNESS_DOWN","DOM_VK_XF86XK_MON_BRIGHTNESS_UP","DOM_VK_XF86XK_MUSIC","DOM_VK_XF86XK_MY_COMPUTER","DOM_VK_XF86XK_MY_SITES","DOM_VK_XF86XK_NEW","DOM_VK_XF86XK_NEWS","DOM_VK_XF86XK_OFFICE_HOME","DOM_VK_XF86XK_OPEN","DOM_VK_XF86XK_OPEN_URL","DOM_VK_XF86XK_OPTION","DOM_VK_XF86XK_PASTE","DOM_VK_XF86XK_PHONE","DOM_VK_XF86XK_PICTURES","DOM_VK_XF86XK_POWER_DOWN","DOM_VK_XF86XK_POWER_OFF","DOM_VK_XF86XK_RED","DOM_VK_XF86XK_REFRESH","DOM_VK_XF86XK_RELOAD","DOM_VK_XF86XK_REPLY","DOM_VK_XF86XK_ROCKER_DOWN","DOM_VK_XF86XK_ROCKER_ENTER","DOM_VK_XF86XK_ROCKER_UP","DOM_VK_XF86XK_ROTATE_WINDOWS","DOM_VK_XF86XK_ROTATION_KB","DOM_VK_XF86XK_ROTATION_PB","DOM_VK_XF86XK_SAVE","DOM_VK_XF86XK_SCREEN_SAVER","DOM_VK_XF86XK_SCROLL_CLICK","DOM_VK_XF86XK_SCROLL_DOWN","DOM_VK_XF86XK_SCROLL_UP","DOM_VK_XF86XK_SEARCH","DOM_VK_XF86XK_SEND","DOM_VK_XF86XK_SHOP","DOM_VK_XF86XK_SPELL","DOM_VK_XF86XK_SPLIT_SCREEN","DOM_VK_XF86XK_STANDBY","DOM_VK_XF86XK_START","DOM_VK_XF86XK_STOP","DOM_VK_XF86XK_SUBTITLE","DOM_VK_XF86XK_SUPPORT","DOM_VK_XF86XK_SUSPEND","DOM_VK_XF86XK_TASK_PANE","DOM_VK_XF86XK_TERMINAL","DOM_VK_XF86XK_TIME","DOM_VK_XF86XK_TOOLS","DOM_VK_XF86XK_TOP_MENU","DOM_VK_XF86XK_TO_DO_LIST","DOM_VK_XF86XK_TRAVEL","DOM_VK_XF86XK_USER1KB","DOM_VK_XF86XK_USER2KB","DOM_VK_XF86XK_USER_PB","DOM_VK_XF86XK_UWB","DOM_VK_XF86XK_VENDOR_HOME","DOM_VK_XF86XK_VIDEO","DOM_VK_XF86XK_VIEW","DOM_VK_XF86XK_WAKE_UP","DOM_VK_XF86XK_WEB_CAM","DOM_VK_XF86XK_WHEEL_BUTTON","DOM_VK_XF86XK_WLAN","DOM_VK_XF86XK_WORD","DOM_VK_XF86XK_WWW","DOM_VK_XF86XK_XFER","DOM_VK_XF86XK_YELLOW","DOM_VK_XF86XK_ZOOM_IN","DOM_VK_XF86XK_ZOOM_OUT","DOM_VK_Y","DOM_VK_Z","DOM_VK_ZOOM","DONE","DONT_CARE","DOWNLOADING","DRAGDROP","DRAW_BUFFER0","DRAW_BUFFER1","DRAW_BUFFER10","DRAW_BUFFER11","DRAW_BUFFER12","DRAW_BUFFER13","DRAW_BUFFER14","DRAW_BUFFER15","DRAW_BUFFER2","DRAW_BUFFER3","DRAW_BUFFER4","DRAW_BUFFER5","DRAW_BUFFER6","DRAW_BUFFER7","DRAW_BUFFER8","DRAW_BUFFER9","DRAW_FRAMEBUFFER","DRAW_FRAMEBUFFER_BINDING","DST_ALPHA","DST_COLOR","DYNAMIC_COPY","DYNAMIC_DRAW","DYNAMIC_READ","DataChannel","DataTransfer","DataTransferItem","DataTransferItemList","DataView","Date","DateTimeFormat","DecompressionStream","DelayNode","DeprecationReportBody","DesktopNotification","DesktopNotificationCenter","DeviceLightEvent","DeviceMotionEvent","DeviceMotionEventAcceleration","DeviceMotionEventRotationRate","DeviceOrientationEvent","DeviceProximityEvent","DeviceStorage","DeviceStorageChangeEvent","Directory","DisplayNames","Document","DocumentFragment","DocumentTimeline","DocumentType","DragEvent","DynamicsCompressorNode","E","ELEMENT_ARRAY_BUFFER","ELEMENT_ARRAY_BUFFER_BINDING","ELEMENT_NODE","EMPTY","ENCODING_ERR","ENDED","END_TO_END","END_TO_START","ENTITY_NODE","ENTITY_REFERENCE_NODE","EPSILON","EQUAL","EQUALPOWER","ERROR","EXPONENTIAL_DISTANCE","exports","Element","ElementInternals","ElementQuery","EnterPictureInPictureEvent","Entity","EntityReference","Error","ErrorEvent","EvalError","Event","EventException","EventSource","EventTarget","External","FASTEST","FIDOSDK","FILTER_ACCEPT","FILTER_INTERRUPT","FILTER_REJECT","FILTER_SKIP","FINISHED_STATE","FIRST_ORDERED_NODE_TYPE","FLOAT","FLOAT_32_UNSIGNED_INT_24_8_REV","FLOAT_MAT2","FLOAT_MAT2x3","FLOAT_MAT2x4","FLOAT_MAT3","FLOAT_MAT3x2","FLOAT_MAT3x4","FLOAT_MAT4","FLOAT_MAT4x2","FLOAT_MAT4x3","FLOAT_VEC2","FLOAT_VEC3","FLOAT_VEC4","FOCUS","FONT_FACE_RULE","FONT_FEATURE_VALUES_RULE","FRAGMENT_SHADER","FRAGMENT_SHADER_DERIVATIVE_HINT","FRAGMENT_SHADER_DERIVATIVE_HINT_OES","FRAMEBUFFER","FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE","FRAMEBUFFER_ATTACHMENT_BLUE_SIZE","FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING","FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE","FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE","FRAMEBUFFER_ATTACHMENT_GREEN_SIZE","FRAMEBUFFER_ATTACHMENT_OBJECT_NAME","FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE","FRAMEBUFFER_ATTACHMENT_RED_SIZE","FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE","FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE","FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER","FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL","FRAMEBUFFER_BINDING","FRAMEBUFFER_COMPLETE","FRAMEBUFFER_DEFAULT","FRAMEBUFFER_INCOMPLETE_ATTACHMENT","FRAMEBUFFER_INCOMPLETE_DIMENSIONS","FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT","FRAMEBUFFER_INCOMPLETE_MULTISAMPLE","FRAMEBUFFER_UNSUPPORTED","FRONT","FRONT_AND_BACK","FRONT_FACE","FUNC_ADD","FUNC_REVERSE_SUBTRACT","FUNC_SUBTRACT","FeaturePolicy","FeaturePolicyViolationReportBody","FederatedCredential","Feed","FeedEntry","File","FileError","FileList","FileReader","FileSystem","FileSystemDirectoryEntry","FileSystemDirectoryReader","FileSystemEntry","FileSystemFileEntry","FinalizationRegistry","FindInPage","Float32Array","Float64Array","FocusEvent","FontFace","FontFaceSet","FontFaceSetLoadEvent","FormData","FormDataEvent","FragmentDirective","Function","GENERATE_MIPMAP_HINT","GEQUAL","GREATER","GREEN_BITS","GainNode","Gamepad","GamepadAxisMoveEvent","GamepadButton","GamepadButtonEvent","GamepadEvent","GamepadHapticActuator","GamepadPose","Geolocation","GeolocationCoordinates","GeolocationPosition","GeolocationPositionError","GestureEvent","Global","Gyroscope","HALF_FLOAT","HAVE_CURRENT_DATA","HAVE_ENOUGH_DATA","HAVE_FUTURE_DATA","HAVE_METADATA","HAVE_NOTHING","HEADERS_RECEIVED","HIDDEN","HIERARCHY_REQUEST_ERR","HIGHPASS","HIGHSHELF","HIGH_FLOAT","HIGH_INT","HORIZONTAL","HORIZONTAL_AXIS","HRTF","HTMLAllCollection","HTMLAnchorElement","HTMLAppletElement","HTMLAreaElement","HTMLAudioElement","HTMLBRElement","HTMLBaseElement","HTMLBaseFontElement","HTMLBlockquoteElement","HTMLBodyElement","HTMLButtonElement","HTMLCanvasElement","HTMLCollection","HTMLCommandElement","HTMLContentElement","HTMLDListElement","HTMLDataElement","HTMLDataListElement","HTMLDetailsElement","HTMLDialogElement","HTMLDirectoryElement","HTMLDivElement","HTMLDocument","HTMLElement","HTMLEmbedElement","HTMLFieldSetElement","HTMLFontElement","HTMLFormControlsCollection","HTMLFormElement","HTMLFrameElement","HTMLFrameSetElement","HTMLHRElement","HTMLHeadElement","HTMLHeadingElement","HTMLHtmlElement","HTMLIFrameElement","HTMLImageElement","HTMLInputElement","HTMLIsIndexElement","HTMLKeygenElement","HTMLLIElement","HTMLLabelElement","HTMLLegendElement","HTMLLinkElement","HTMLMapElement","HTMLMarqueeElement","HTMLMediaElement","HTMLMenuElement","HTMLMenuItemElement","HTMLMetaElement","HTMLMeterElement","HTMLModElement","HTMLOListElement","HTMLObjectElement","HTMLOptGroupElement","HTMLOptionElement","HTMLOptionsCollection","HTMLOutputElement","HTMLParagraphElement","HTMLParamElement","HTMLPictureElement","HTMLPreElement","HTMLProgressElement","HTMLPropertiesCollection","HTMLQuoteElement","HTMLScriptElement","HTMLSelectElement","HTMLShadowElement","HTMLSlotElement","HTMLSourceElement","HTMLSpanElement","HTMLStyleElement","HTMLTableCaptionElement","HTMLTableCellElement","HTMLTableColElement","HTMLTableElement","HTMLTableRowElement","HTMLTableSectionElement","HTMLTemplateElement","HTMLTextAreaElement","HTMLTimeElement","HTMLTitleElement","HTMLTrackElement","HTMLUListElement","HTMLUnknownElement","HTMLVideoElement","HashChangeEvent","Headers","History","Hz","ICE_CHECKING","ICE_CLOSED","ICE_COMPLETED","ICE_CONNECTED","ICE_FAILED","ICE_GATHERING","ICE_WAITING","IDBCursor","IDBCursorWithValue","IDBDatabase","IDBDatabaseException","IDBFactory","IDBFileHandle","IDBFileRequest","IDBIndex","IDBKeyRange","IDBMutableFile","IDBObjectStore","IDBOpenDBRequest","IDBRequest","IDBTransaction","IDBVersionChangeEvent","IDLE","IIRFilterNode","IMPLEMENTATION_COLOR_READ_FORMAT","IMPLEMENTATION_COLOR_READ_TYPE","IMPORT_RULE","INCR","INCR_WRAP","INDEX_SIZE_ERR","INT","INTERLEAVED_ATTRIBS","INT_2_10_10_10_REV","INT_SAMPLER_2D","INT_SAMPLER_2D_ARRAY","INT_SAMPLER_3D","INT_SAMPLER_CUBE","INT_VEC2","INT_VEC3","INT_VEC4","INUSE_ATTRIBUTE_ERR","INVALID_ACCESS_ERR","INVALID_CHARACTER_ERR","INVALID_ENUM","INVALID_EXPRESSION_ERR","INVALID_FRAMEBUFFER_OPERATION","INVALID_INDEX","INVALID_MODIFICATION_ERR","INVALID_NODE_TYPE_ERR","INVALID_OPERATION","INVALID_STATE_ERR","INVALID_VALUE","INVERSE_DISTANCE","INVERT","IceCandidate","IdleDeadline","Image","ImageBitmap","ImageBitmapRenderingContext","ImageCapture","ImageData","Infinity","InputDeviceCapabilities","InputDeviceInfo","InputEvent","InputMethodContext","InstallTrigger","InstallTriggerImpl","Instance","Int16Array","Int32Array","Int8Array","Intent","InternalError","IntersectionObserver","IntersectionObserverEntry","Intl","IsSearchProviderInstalled","Iterator","JSON","KEEP","KEYDOWN","KEYFRAMES_RULE","KEYFRAME_RULE","KEYPRESS","KEYUP","KeyEvent","Keyboard","KeyboardEvent","KeyboardLayoutMap","KeyframeEffect","LENGTHADJUST_SPACING","LENGTHADJUST_SPACINGANDGLYPHS","LENGTHADJUST_UNKNOWN","LEQUAL","LESS","LINEAR","LINEAR_DISTANCE","LINEAR_MIPMAP_LINEAR","LINEAR_MIPMAP_NEAREST","LINES","LINE_LOOP","LINE_STRIP","LINE_WIDTH","LINK_STATUS","LIVE","LN10","LN2","LOADED","LOADING","LOG10E","LOG2E","LOWPASS","LOWSHELF","LOW_FLOAT","LOW_INT","LSException","LSParserFilter","LUMINANCE","LUMINANCE_ALPHA","LargestContentfulPaint","LayoutShift","LayoutShiftAttribution","LinearAccelerationSensor","LinkError","ListFormat","LocalMediaStream","Locale","Location","Lock","LockManager","MAX","MAX_3D_TEXTURE_SIZE","MAX_ARRAY_TEXTURE_LAYERS","MAX_CLIENT_WAIT_TIMEOUT_WEBGL","MAX_COLOR_ATTACHMENTS","MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS","MAX_COMBINED_TEXTURE_IMAGE_UNITS","MAX_COMBINED_UNIFORM_BLOCKS","MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS","MAX_CUBE_MAP_TEXTURE_SIZE","MAX_DRAW_BUFFERS","MAX_ELEMENTS_INDICES","MAX_ELEMENTS_VERTICES","MAX_ELEMENT_INDEX","MAX_FRAGMENT_INPUT_COMPONENTS","MAX_FRAGMENT_UNIFORM_BLOCKS","MAX_FRAGMENT_UNIFORM_COMPONENTS","MAX_FRAGMENT_UNIFORM_VECTORS","MAX_PROGRAM_TEXEL_OFFSET","MAX_RENDERBUFFER_SIZE","MAX_SAFE_INTEGER","MAX_SAMPLES","MAX_SERVER_WAIT_TIMEOUT","MAX_TEXTURE_IMAGE_UNITS","MAX_TEXTURE_LOD_BIAS","MAX_TEXTURE_MAX_ANISOTROPY_EXT","MAX_TEXTURE_SIZE","MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS","MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS","MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS","MAX_UNIFORM_BLOCK_SIZE","MAX_UNIFORM_BUFFER_BINDINGS","MAX_VALUE","MAX_VARYING_COMPONENTS","MAX_VARYING_VECTORS","MAX_VERTEX_ATTRIBS","MAX_VERTEX_OUTPUT_COMPONENTS","MAX_VERTEX_TEXTURE_IMAGE_UNITS","MAX_VERTEX_UNIFORM_BLOCKS","MAX_VERTEX_UNIFORM_COMPONENTS","MAX_VERTEX_UNIFORM_VECTORS","MAX_VIEWPORT_DIMS","MEDIA_ERR_ABORTED","MEDIA_ERR_DECODE","MEDIA_ERR_ENCRYPTED","MEDIA_ERR_NETWORK","MEDIA_ERR_SRC_NOT_SUPPORTED","MEDIA_KEYERR_CLIENT","MEDIA_KEYERR_DOMAIN","MEDIA_KEYERR_HARDWARECHANGE","MEDIA_KEYERR_OUTPUT","MEDIA_KEYERR_SERVICE","MEDIA_KEYERR_UNKNOWN","MEDIA_RULE","MEDIUM_FLOAT","MEDIUM_INT","META_MASK","MIDIAccess","MIDIConnectionEvent","MIDIInput","MIDIInputMap","MIDIMessageEvent","MIDIOutput","MIDIOutputMap","MIDIPort","MIN","MIN_PROGRAM_TEXEL_OFFSET","MIN_SAFE_INTEGER","MIN_VALUE","MIRRORED_REPEAT","MODE_ASYNCHRONOUS","MODE_SYNCHRONOUS","MODIFICATION","MOUSEDOWN","MOUSEDRAG","MOUSEMOVE","MOUSEOUT","MOUSEOVER","MOUSEUP","MOZ_KEYFRAMES_RULE","MOZ_KEYFRAME_RULE","MOZ_SOURCE_CURSOR","MOZ_SOURCE_ERASER","MOZ_SOURCE_KEYBOARD","MOZ_SOURCE_MOUSE","MOZ_SOURCE_PEN","MOZ_SOURCE_TOUCH","MOZ_SOURCE_UNKNOWN","MSGESTURE_FLAG_BEGIN","MSGESTURE_FLAG_CANCEL","MSGESTURE_FLAG_END","MSGESTURE_FLAG_INERTIA","MSGESTURE_FLAG_NONE","MSPOINTER_TYPE_MOUSE","MSPOINTER_TYPE_PEN","MSPOINTER_TYPE_TOUCH","MS_ASYNC_CALLBACK_STATUS_ASSIGN_DELEGATE","MS_ASYNC_CALLBACK_STATUS_CANCEL","MS_ASYNC_CALLBACK_STATUS_CHOOSEANY","MS_ASYNC_CALLBACK_STATUS_ERROR","MS_ASYNC_CALLBACK_STATUS_JOIN","MS_ASYNC_OP_STATUS_CANCELED","MS_ASYNC_OP_STATUS_ERROR","MS_ASYNC_OP_STATUS_SUCCESS","MS_MANIPULATION_STATE_ACTIVE","MS_MANIPULATION_STATE_CANCELLED","MS_MANIPULATION_STATE_COMMITTED","MS_MANIPULATION_STATE_DRAGGING","MS_MANIPULATION_STATE_INERTIA","MS_MANIPULATION_STATE_PRESELECT","MS_MANIPULATION_STATE_SELECTING","MS_MANIPULATION_STATE_STOPPED","MS_MEDIA_ERR_ENCRYPTED","MS_MEDIA_KEYERR_CLIENT","MS_MEDIA_KEYERR_DOMAIN","MS_MEDIA_KEYERR_HARDWARECHANGE","MS_MEDIA_KEYERR_OUTPUT","MS_MEDIA_KEYERR_SERVICE","MS_MEDIA_KEYERR_UNKNOWN","Map","Math","MathMLElement","MediaCapabilities","MediaCapabilitiesInfo","MediaController","MediaDeviceInfo","MediaDevices","MediaElementAudioSourceNode","MediaEncryptedEvent","MediaError","MediaKeyError","MediaKeyEvent","MediaKeyMessageEvent","MediaKeyNeededEvent","MediaKeySession","MediaKeyStatusMap","MediaKeySystemAccess","MediaKeys","MediaList","MediaMetadata","MediaQueryList","MediaQueryListEvent","MediaRecorder","MediaRecorderErrorEvent","MediaSession","MediaSettingsRange","MediaSource","MediaStream","MediaStreamAudioDestinationNode","MediaStreamAudioSourceNode","MediaStreamEvent","MediaStreamTrack","MediaStreamTrackAudioSourceNode","MediaStreamTrackEvent","Memory","MessageChannel","MessageEvent","MessagePort","Methods","MimeType","MimeTypeArray","Module","MouseEvent","MouseScrollEvent","MozAnimation","MozAnimationDelay","MozAnimationDirection","MozAnimationDuration","MozAnimationFillMode","MozAnimationIterationCount","MozAnimationName","MozAnimationPlayState","MozAnimationTimingFunction","MozAppearance","MozBackfaceVisibility","MozBinding","MozBorderBottomColors","MozBorderEnd","MozBorderEndColor","MozBorderEndStyle","MozBorderEndWidth","MozBorderImage","MozBorderLeftColors","MozBorderRightColors","MozBorderStart","MozBorderStartColor","MozBorderStartStyle","MozBorderStartWidth","MozBorderTopColors","MozBoxAlign","MozBoxDirection","MozBoxFlex","MozBoxOrdinalGroup","MozBoxOrient","MozBoxPack","MozBoxSizing","MozCSSKeyframeRule","MozCSSKeyframesRule","MozColumnCount","MozColumnFill","MozColumnGap","MozColumnRule","MozColumnRuleColor","MozColumnRuleStyle","MozColumnRuleWidth","MozColumnWidth","MozColumns","MozContactChangeEvent","MozFloatEdge","MozFontFeatureSettings","MozFontLanguageOverride","MozForceBrokenImageIcon","MozHyphens","MozImageRegion","MozMarginEnd","MozMarginStart","MozMmsEvent","MozMmsMessage","MozMobileMessageThread","MozOSXFontSmoothing","MozOrient","MozOsxFontSmoothing","MozOutlineRadius","MozOutlineRadiusBottomleft","MozOutlineRadiusBottomright","MozOutlineRadiusTopleft","MozOutlineRadiusTopright","MozPaddingEnd","MozPaddingStart","MozPerspective","MozPerspectiveOrigin","MozPowerManager","MozSettingsEvent","MozSmsEvent","MozSmsMessage","MozStackSizing","MozTabSize","MozTextAlignLast","MozTextDecorationColor","MozTextDecorationLine","MozTextDecorationStyle","MozTextSizeAdjust","MozTransform","MozTransformOrigin","MozTransformStyle","MozTransition","MozTransitionDelay","MozTransitionDuration","MozTransitionProperty","MozTransitionTimingFunction","MozUserFocus","MozUserInput","MozUserModify","MozUserSelect","MozWindowDragging","MozWindowShadow","MutationEvent","MutationObserver","MutationRecord","NAMESPACE_ERR","NAMESPACE_RULE","NEAREST","NEAREST_MIPMAP_LINEAR","NEAREST_MIPMAP_NEAREST","NEGATIVE_INFINITY","NETWORK_EMPTY","NETWORK_ERR","NETWORK_IDLE","NETWORK_LOADED","NETWORK_LOADING","NETWORK_NO_SOURCE","NEVER","NEW","NEXT","NEXT_NO_DUPLICATE","NICEST","NODE_AFTER","NODE_BEFORE","NODE_BEFORE_AND_AFTER","NODE_INSIDE","NONE","NON_TRANSIENT_ERR","NOTATION_NODE","NOTCH","NOTEQUAL","NOT_ALLOWED_ERR","NOT_FOUND_ERR","NOT_READABLE_ERR","NOT_SUPPORTED_ERR","NO_DATA_ALLOWED_ERR","NO_ERR","NO_ERROR","NO_MODIFICATION_ALLOWED_ERR","NUMBER_TYPE","NUM_COMPRESSED_TEXTURE_FORMATS","NaN","NamedNodeMap","NavigationPreloadManager","Navigator","NearbyLinks","NetworkInformation","Node","NodeFilter","NodeIterator","NodeList","Notation","Notification","NotifyPaintEvent","Number","NumberFormat","OBJECT_TYPE","OBSOLETE","OK","ONE","ONE_MINUS_CONSTANT_ALPHA","ONE_MINUS_CONSTANT_COLOR","ONE_MINUS_DST_ALPHA","ONE_MINUS_DST_COLOR","ONE_MINUS_SRC_ALPHA","ONE_MINUS_SRC_COLOR","OPEN","OPENED","OPENING","ORDERED_NODE_ITERATOR_TYPE","ORDERED_NODE_SNAPSHOT_TYPE","OTHER_ERROR","OUT_OF_MEMORY","Object","OfflineAudioCompletionEvent","OfflineAudioContext","OfflineResourceList","OffscreenCanvas","OffscreenCanvasRenderingContext2D","Option","OrientationSensor","OscillatorNode","OverconstrainedError","OverflowEvent","PACK_ALIGNMENT","PACK_ROW_LENGTH","PACK_SKIP_PIXELS","PACK_SKIP_ROWS","PAGE_RULE","PARSE_ERR","PATHSEG_ARC_ABS","PATHSEG_ARC_REL","PATHSEG_CLOSEPATH","PATHSEG_CURVETO_CUBIC_ABS","PATHSEG_CURVETO_CUBIC_REL","PATHSEG_CURVETO_CUBIC_SMOOTH_ABS","PATHSEG_CURVETO_CUBIC_SMOOTH_REL","PATHSEG_CURVETO_QUADRATIC_ABS","PATHSEG_CURVETO_QUADRATIC_REL","PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS","PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL","PATHSEG_LINETO_ABS","PATHSEG_LINETO_HORIZONTAL_ABS","PATHSEG_LINETO_HORIZONTAL_REL","PATHSEG_LINETO_REL","PATHSEG_LINETO_VERTICAL_ABS","PATHSEG_LINETO_VERTICAL_REL","PATHSEG_MOVETO_ABS","PATHSEG_MOVETO_REL","PATHSEG_UNKNOWN","PATH_EXISTS_ERR","PEAKING","PERMISSION_DENIED","PERSISTENT","PI","PIXEL_PACK_BUFFER","PIXEL_PACK_BUFFER_BINDING","PIXEL_UNPACK_BUFFER","PIXEL_UNPACK_BUFFER_BINDING","PLAYING_STATE","POINTS","POLYGON_OFFSET_FACTOR","POLYGON_OFFSET_FILL","POLYGON_OFFSET_UNITS","POSITION_UNAVAILABLE","POSITIVE_INFINITY","PREV","PREV_NO_DUPLICATE","PROCESSING_INSTRUCTION_NODE","PageChangeEvent","PageTransitionEvent","PaintRequest","PaintRequestList","PannerNode","PasswordCredential","Path2D","PaymentAddress","PaymentInstruments","PaymentManager","PaymentMethodChangeEvent","PaymentRequest","PaymentRequestUpdateEvent","PaymentResponse","Performance","PerformanceElementTiming","PerformanceEntry","PerformanceEventTiming","PerformanceLongTaskTiming","PerformanceMark","PerformanceMeasure","PerformanceNavigation","PerformanceNavigationTiming","PerformanceObserver","PerformanceObserverEntryList","PerformancePaintTiming","PerformanceResourceTiming","PerformanceServerTiming","PerformanceTiming","PeriodicSyncManager","PeriodicWave","PermissionStatus","Permissions","PhotoCapabilities","PictureInPictureWindow","Plugin","PluginArray","PluralRules","PointerEvent","PopStateEvent","PopupBlockedEvent","Presentation","PresentationAvailability","PresentationConnection","PresentationConnectionAvailableEvent","PresentationConnectionCloseEvent","PresentationConnectionList","PresentationReceiver","PresentationRequest","ProcessingInstruction","ProgressEvent","Promise","PromiseRejectionEvent","PropertyNodeList","Proxy","PublicKeyCredential","PushManager","PushSubscription","PushSubscriptionOptions","Q","QUERY_RESULT","QUERY_RESULT_AVAILABLE","QUOTA_ERR","QUOTA_EXCEEDED_ERR","QueryInterface","R11F_G11F_B10F","R16F","R16I","R16UI","R32F","R32I","R32UI","R8","R8I","R8UI","R8_SNORM","RASTERIZER_DISCARD","READ_BUFFER","READ_FRAMEBUFFER","READ_FRAMEBUFFER_BINDING","READ_ONLY","READ_ONLY_ERR","READ_WRITE","RED","RED_BITS","RED_INTEGER","REMOVAL","RENDERBUFFER","RENDERBUFFER_ALPHA_SIZE","RENDERBUFFER_BINDING","RENDERBUFFER_BLUE_SIZE","RENDERBUFFER_DEPTH_SIZE","RENDERBUFFER_GREEN_SIZE","RENDERBUFFER_HEIGHT","RENDERBUFFER_INTERNAL_FORMAT","RENDERBUFFER_RED_SIZE","RENDERBUFFER_SAMPLES","RENDERBUFFER_STENCIL_SIZE","RENDERBUFFER_WIDTH","RENDERER","RENDERING_INTENT_ABSOLUTE_COLORIMETRIC","RENDERING_INTENT_AUTO","RENDERING_INTENT_PERCEPTUAL","RENDERING_INTENT_RELATIVE_COLORIMETRIC","RENDERING_INTENT_SATURATION","RENDERING_INTENT_UNKNOWN","REPEAT","REPLACE","RG","RG16F","RG16I","RG16UI","RG32F","RG32I","RG32UI","RG8","RG8I","RG8UI","RG8_SNORM","RGB","RGB10_A2","RGB10_A2UI","RGB16F","RGB16I","RGB16UI","RGB32F","RGB32I","RGB32UI","RGB565","RGB5_A1","RGB8","RGB8I","RGB8UI","RGB8_SNORM","RGB9_E5","RGBA","RGBA16F","RGBA16I","RGBA16UI","RGBA32F","RGBA32I","RGBA32UI","RGBA4","RGBA8","RGBA8I","RGBA8UI","RGBA8_SNORM","RGBA_INTEGER","RGBColor","RGB_INTEGER","RG_INTEGER","ROTATION_CLOCKWISE","ROTATION_COUNTERCLOCKWISE","RTCCertificate","RTCDTMFSender","RTCDTMFToneChangeEvent","RTCDataChannel","RTCDataChannelEvent","RTCDtlsTransport","RTCError","RTCErrorEvent","RTCIceCandidate","RTCIceTransport","RTCPeerConnection","RTCPeerConnectionIceErrorEvent","RTCPeerConnectionIceEvent","RTCRtpReceiver","RTCRtpSender","RTCRtpTransceiver","RTCSctpTransport","RTCSessionDescription","RTCStatsReport","RTCTrackEvent","RadioNodeList","Range","RangeError","RangeException","ReadableStream","ReadableStreamDefaultReader","RecordErrorEvent","Rect","ReferenceError","Reflect","RegExp","RelativeOrientationSensor","RelativeTimeFormat","RemotePlayback","Report","ReportBody","ReportingObserver","Request","ResizeObserver","ResizeObserverEntry","ResizeObserverSize","Response","RuntimeError","SAMPLER_2D","SAMPLER_2D_ARRAY","SAMPLER_2D_ARRAY_SHADOW","SAMPLER_2D_SHADOW","SAMPLER_3D","SAMPLER_BINDING","SAMPLER_CUBE","SAMPLER_CUBE_SHADOW","SAMPLES","SAMPLE_ALPHA_TO_COVERAGE","SAMPLE_BUFFERS","SAMPLE_COVERAGE","SAMPLE_COVERAGE_INVERT","SAMPLE_COVERAGE_VALUE","SAWTOOTH","SCHEDULED_STATE","SCISSOR_BOX","SCISSOR_TEST","SCROLL_PAGE_DOWN","SCROLL_PAGE_UP","SDP_ANSWER","SDP_OFFER","SDP_PRANSWER","SECURITY_ERR","SELECT","SEPARATE_ATTRIBS","SERIALIZE_ERR","SEVERITY_ERROR","SEVERITY_FATAL_ERROR","SEVERITY_WARNING","SHADER_COMPILER","SHADER_TYPE","SHADING_LANGUAGE_VERSION","SHIFT_MASK","SHORT","SHOWING","SHOW_ALL","SHOW_ATTRIBUTE","SHOW_CDATA_SECTION","SHOW_COMMENT","SHOW_DOCUMENT","SHOW_DOCUMENT_FRAGMENT","SHOW_DOCUMENT_TYPE","SHOW_ELEMENT","SHOW_ENTITY","SHOW_ENTITY_REFERENCE","SHOW_NOTATION","SHOW_PROCESSING_INSTRUCTION","SHOW_TEXT","SIGNALED","SIGNED_NORMALIZED","SINE","SOUNDFIELD","SQLException","SQRT1_2","SQRT2","SQUARE","SRC_ALPHA","SRC_ALPHA_SATURATE","SRC_COLOR","SRGB","SRGB8","SRGB8_ALPHA8","START_TO_END","START_TO_START","STATIC_COPY","STATIC_DRAW","STATIC_READ","STENCIL","STENCIL_ATTACHMENT","STENCIL_BACK_FAIL","STENCIL_BACK_FUNC","STENCIL_BACK_PASS_DEPTH_FAIL","STENCIL_BACK_PASS_DEPTH_PASS","STENCIL_BACK_REF","STENCIL_BACK_VALUE_MASK","STENCIL_BACK_WRITEMASK","STENCIL_BITS","STENCIL_BUFFER_BIT","STENCIL_CLEAR_VALUE","STENCIL_FAIL","STENCIL_FUNC","STENCIL_INDEX","STENCIL_INDEX8","STENCIL_PASS_DEPTH_FAIL","STENCIL_PASS_DEPTH_PASS","STENCIL_REF","STENCIL_TEST","STENCIL_VALUE_MASK","STENCIL_WRITEMASK","STREAM_COPY","STREAM_DRAW","STREAM_READ","STRING_TYPE","STYLE_RULE","SUBPIXEL_BITS","SUPPORTS_RULE","SVGAElement","SVGAltGlyphDefElement","SVGAltGlyphElement","SVGAltGlyphItemElement","SVGAngle","SVGAnimateColorElement","SVGAnimateElement","SVGAnimateMotionElement","SVGAnimateTransformElement","SVGAnimatedAngle","SVGAnimatedBoolean","SVGAnimatedEnumeration","SVGAnimatedInteger","SVGAnimatedLength","SVGAnimatedLengthList","SVGAnimatedNumber","SVGAnimatedNumberList","SVGAnimatedPreserveAspectRatio","SVGAnimatedRect","SVGAnimatedString","SVGAnimatedTransformList","SVGAnimationElement","SVGCircleElement","SVGClipPathElement","SVGColor","SVGComponentTransferFunctionElement","SVGCursorElement","SVGDefsElement","SVGDescElement","SVGDiscardElement","SVGDocument","SVGElement","SVGElementInstance","SVGElementInstanceList","SVGEllipseElement","SVGException","SVGFEBlendElement","SVGFEColorMatrixElement","SVGFEComponentTransferElement","SVGFECompositeElement","SVGFEConvolveMatrixElement","SVGFEDiffuseLightingElement","SVGFEDisplacementMapElement","SVGFEDistantLightElement","SVGFEDropShadowElement","SVGFEFloodElement","SVGFEFuncAElement","SVGFEFuncBElement","SVGFEFuncGElement","SVGFEFuncRElement","SVGFEGaussianBlurElement","SVGFEImageElement","SVGFEMergeElement","SVGFEMergeNodeElement","SVGFEMorphologyElement","SVGFEOffsetElement","SVGFEPointLightElement","SVGFESpecularLightingElement","SVGFESpotLightElement","SVGFETileElement","SVGFETurbulenceElement","SVGFilterElement","SVGFontElement","SVGFontFaceElement","SVGFontFaceFormatElement","SVGFontFaceNameElement","SVGFontFaceSrcElement","SVGFontFaceUriElement","SVGForeignObjectElement","SVGGElement","SVGGeometryElement","SVGGlyphElement","SVGGlyphRefElement","SVGGradientElement","SVGGraphicsElement","SVGHKernElement","SVGImageElement","SVGLength","SVGLengthList","SVGLineElement","SVGLinearGradientElement","SVGMPathElement","SVGMarkerElement","SVGMaskElement","SVGMatrix","SVGMetadataElement","SVGMissingGlyphElement","SVGNumber","SVGNumberList","SVGPaint","SVGPathElement","SVGPathSeg","SVGPathSegArcAbs","SVGPathSegArcRel","SVGPathSegClosePath","SVGPathSegCurvetoCubicAbs","SVGPathSegCurvetoCubicRel","SVGPathSegCurvetoCubicSmoothAbs","SVGPathSegCurvetoCubicSmoothRel","SVGPathSegCurvetoQuadraticAbs","SVGPathSegCurvetoQuadraticRel","SVGPathSegCurvetoQuadraticSmoothAbs","SVGPathSegCurvetoQuadraticSmoothRel","SVGPathSegLinetoAbs","SVGPathSegLinetoHorizontalAbs","SVGPathSegLinetoHorizontalRel","SVGPathSegLinetoRel","SVGPathSegLinetoVerticalAbs","SVGPathSegLinetoVerticalRel","SVGPathSegList","SVGPathSegMovetoAbs","SVGPathSegMovetoRel","SVGPatternElement","SVGPoint","SVGPointList","SVGPolygonElement","SVGPolylineElement","SVGPreserveAspectRatio","SVGRadialGradientElement","SVGRect","SVGRectElement","SVGRenderingIntent","SVGSVGElement","SVGScriptElement","SVGSetElement","SVGStopElement","SVGStringList","SVGStyleElement","SVGSwitchElement","SVGSymbolElement","SVGTRefElement","SVGTSpanElement","SVGTextContentElement","SVGTextElement","SVGTextPathElement","SVGTextPositioningElement","SVGTitleElement","SVGTransform","SVGTransformList","SVGUnitTypes","SVGUseElement","SVGVKernElement","SVGViewElement","SVGViewSpec","SVGZoomAndPan","SVGZoomEvent","SVG_ANGLETYPE_DEG","SVG_ANGLETYPE_GRAD","SVG_ANGLETYPE_RAD","SVG_ANGLETYPE_UNKNOWN","SVG_ANGLETYPE_UNSPECIFIED","SVG_CHANNEL_A","SVG_CHANNEL_B","SVG_CHANNEL_G","SVG_CHANNEL_R","SVG_CHANNEL_UNKNOWN","SVG_COLORTYPE_CURRENTCOLOR","SVG_COLORTYPE_RGBCOLOR","SVG_COLORTYPE_RGBCOLOR_ICCCOLOR","SVG_COLORTYPE_UNKNOWN","SVG_EDGEMODE_DUPLICATE","SVG_EDGEMODE_NONE","SVG_EDGEMODE_UNKNOWN","SVG_EDGEMODE_WRAP","SVG_FEBLEND_MODE_COLOR","SVG_FEBLEND_MODE_COLOR_BURN","SVG_FEBLEND_MODE_COLOR_DODGE","SVG_FEBLEND_MODE_DARKEN","SVG_FEBLEND_MODE_DIFFERENCE","SVG_FEBLEND_MODE_EXCLUSION","SVG_FEBLEND_MODE_HARD_LIGHT","SVG_FEBLEND_MODE_HUE","SVG_FEBLEND_MODE_LIGHTEN","SVG_FEBLEND_MODE_LUMINOSITY","SVG_FEBLEND_MODE_MULTIPLY","SVG_FEBLEND_MODE_NORMAL","SVG_FEBLEND_MODE_OVERLAY","SVG_FEBLEND_MODE_SATURATION","SVG_FEBLEND_MODE_SCREEN","SVG_FEBLEND_MODE_SOFT_LIGHT","SVG_FEBLEND_MODE_UNKNOWN","SVG_FECOLORMATRIX_TYPE_HUEROTATE","SVG_FECOLORMATRIX_TYPE_LUMINANCETOALPHA","SVG_FECOLORMATRIX_TYPE_MATRIX","SVG_FECOLORMATRIX_TYPE_SATURATE","SVG_FECOLORMATRIX_TYPE_UNKNOWN","SVG_FECOMPONENTTRANSFER_TYPE_DISCRETE","SVG_FECOMPONENTTRANSFER_TYPE_GAMMA","SVG_FECOMPONENTTRANSFER_TYPE_IDENTITY","SVG_FECOMPONENTTRANSFER_TYPE_LINEAR","SVG_FECOMPONENTTRANSFER_TYPE_TABLE","SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN","SVG_FECOMPOSITE_OPERATOR_ARITHMETIC","SVG_FECOMPOSITE_OPERATOR_ATOP","SVG_FECOMPOSITE_OPERATOR_IN","SVG_FECOMPOSITE_OPERATOR_OUT","SVG_FECOMPOSITE_OPERATOR_OVER","SVG_FECOMPOSITE_OPERATOR_UNKNOWN","SVG_FECOMPOSITE_OPERATOR_XOR","SVG_INVALID_VALUE_ERR","SVG_LENGTHTYPE_CM","SVG_LENGTHTYPE_EMS","SVG_LENGTHTYPE_EXS","SVG_LENGTHTYPE_IN","SVG_LENGTHTYPE_MM","SVG_LENGTHTYPE_NUMBER","SVG_LENGTHTYPE_PC","SVG_LENGTHTYPE_PERCENTAGE","SVG_LENGTHTYPE_PT","SVG_LENGTHTYPE_PX","SVG_LENGTHTYPE_UNKNOWN","SVG_MARKERUNITS_STROKEWIDTH","SVG_MARKERUNITS_UNKNOWN","SVG_MARKERUNITS_USERSPACEONUSE","SVG_MARKER_ORIENT_ANGLE","SVG_MARKER_ORIENT_AUTO","SVG_MARKER_ORIENT_UNKNOWN","SVG_MASKTYPE_ALPHA","SVG_MASKTYPE_LUMINANCE","SVG_MATRIX_NOT_INVERTABLE","SVG_MEETORSLICE_MEET","SVG_MEETORSLICE_SLICE","SVG_MEETORSLICE_UNKNOWN","SVG_MORPHOLOGY_OPERATOR_DILATE","SVG_MORPHOLOGY_OPERATOR_ERODE","SVG_MORPHOLOGY_OPERATOR_UNKNOWN","SVG_PAINTTYPE_CURRENTCOLOR","SVG_PAINTTYPE_NONE","SVG_PAINTTYPE_RGBCOLOR","SVG_PAINTTYPE_RGBCOLOR_ICCCOLOR","SVG_PAINTTYPE_UNKNOWN","SVG_PAINTTYPE_URI","SVG_PAINTTYPE_URI_CURRENTCOLOR","SVG_PAINTTYPE_URI_NONE","SVG_PAINTTYPE_URI_RGBCOLOR","SVG_PAINTTYPE_URI_RGBCOLOR_ICCCOLOR","SVG_PRESERVEASPECTRATIO_NONE","SVG_PRESERVEASPECTRATIO_UNKNOWN","SVG_PRESERVEASPECTRATIO_XMAXYMAX","SVG_PRESERVEASPECTRATIO_XMAXYMID","SVG_PRESERVEASPECTRATIO_XMAXYMIN","SVG_PRESERVEASPECTRATIO_XMIDYMAX","SVG_PRESERVEASPECTRATIO_XMIDYMID","SVG_PRESERVEASPECTRATIO_XMIDYMIN","SVG_PRESERVEASPECTRATIO_XMINYMAX","SVG_PRESERVEASPECTRATIO_XMINYMID","SVG_PRESERVEASPECTRATIO_XMINYMIN","SVG_SPREADMETHOD_PAD","SVG_SPREADMETHOD_REFLECT","SVG_SPREADMETHOD_REPEAT","SVG_SPREADMETHOD_UNKNOWN","SVG_STITCHTYPE_NOSTITCH","SVG_STITCHTYPE_STITCH","SVG_STITCHTYPE_UNKNOWN","SVG_TRANSFORM_MATRIX","SVG_TRANSFORM_ROTATE","SVG_TRANSFORM_SCALE","SVG_TRANSFORM_SKEWX","SVG_TRANSFORM_SKEWY","SVG_TRANSFORM_TRANSLATE","SVG_TRANSFORM_UNKNOWN","SVG_TURBULENCE_TYPE_FRACTALNOISE","SVG_TURBULENCE_TYPE_TURBULENCE","SVG_TURBULENCE_TYPE_UNKNOWN","SVG_UNIT_TYPE_OBJECTBOUNDINGBOX","SVG_UNIT_TYPE_UNKNOWN","SVG_UNIT_TYPE_USERSPACEONUSE","SVG_WRONG_TYPE_ERR","SVG_ZOOMANDPAN_DISABLE","SVG_ZOOMANDPAN_MAGNIFY","SVG_ZOOMANDPAN_UNKNOWN","SYNC_CONDITION","SYNC_FENCE","SYNC_FLAGS","SYNC_FLUSH_COMMANDS_BIT","SYNC_GPU_COMMANDS_COMPLETE","SYNC_STATUS","SYNTAX_ERR","SavedPages","Screen","ScreenOrientation","Script","ScriptProcessorNode","ScrollAreaEvent","SecurityPolicyViolationEvent","Selection","Sensor","SensorErrorEvent","ServiceWorker","ServiceWorkerContainer","ServiceWorkerRegistration","SessionDescription","Set","ShadowRoot","SharedArrayBuffer","SharedWorker","SimpleGestureEvent","SourceBuffer","SourceBufferList","SpeechSynthesis","SpeechSynthesisErrorEvent","SpeechSynthesisEvent","SpeechSynthesisUtterance","SpeechSynthesisVoice","StaticRange","StereoPannerNode","StopIteration","Storage","StorageEvent","StorageManager","String","StructType","StylePropertyMap","StylePropertyMapReadOnly","StyleSheet","StyleSheetList","SubmitEvent","SubtleCrypto","Symbol","SyncManager","SyntaxError","TEMPORARY","TEXTPATH_METHODTYPE_ALIGN","TEXTPATH_METHODTYPE_STRETCH","TEXTPATH_METHODTYPE_UNKNOWN","TEXTPATH_SPACINGTYPE_AUTO","TEXTPATH_SPACINGTYPE_EXACT","TEXTPATH_SPACINGTYPE_UNKNOWN","TEXTURE","TEXTURE0","TEXTURE1","TEXTURE10","TEXTURE11","TEXTURE12","TEXTURE13","TEXTURE14","TEXTURE15","TEXTURE16","TEXTURE17","TEXTURE18","TEXTURE19","TEXTURE2","TEXTURE20","TEXTURE21","TEXTURE22","TEXTURE23","TEXTURE24","TEXTURE25","TEXTURE26","TEXTURE27","TEXTURE28","TEXTURE29","TEXTURE3","TEXTURE30","TEXTURE31","TEXTURE4","TEXTURE5","TEXTURE6","TEXTURE7","TEXTURE8","TEXTURE9","TEXTURE_2D","TEXTURE_2D_ARRAY","TEXTURE_3D","TEXTURE_BASE_LEVEL","TEXTURE_BINDING_2D","TEXTURE_BINDING_2D_ARRAY","TEXTURE_BINDING_3D","TEXTURE_BINDING_CUBE_MAP","TEXTURE_COMPARE_FUNC","TEXTURE_COMPARE_MODE","TEXTURE_CUBE_MAP","TEXTURE_CUBE_MAP_NEGATIVE_X","TEXTURE_CUBE_MAP_NEGATIVE_Y","TEXTURE_CUBE_MAP_NEGATIVE_Z","TEXTURE_CUBE_MAP_POSITIVE_X","TEXTURE_CUBE_MAP_POSITIVE_Y","TEXTURE_CUBE_MAP_POSITIVE_Z","TEXTURE_IMMUTABLE_FORMAT","TEXTURE_IMMUTABLE_LEVELS","TEXTURE_MAG_FILTER","TEXTURE_MAX_ANISOTROPY_EXT","TEXTURE_MAX_LEVEL","TEXTURE_MAX_LOD","TEXTURE_MIN_FILTER","TEXTURE_MIN_LOD","TEXTURE_WRAP_R","TEXTURE_WRAP_S","TEXTURE_WRAP_T","TEXT_NODE","TIMEOUT","TIMEOUT_ERR","TIMEOUT_EXPIRED","TIMEOUT_IGNORED","TOO_LARGE_ERR","TRANSACTION_INACTIVE_ERR","TRANSFORM_FEEDBACK","TRANSFORM_FEEDBACK_ACTIVE","TRANSFORM_FEEDBACK_BINDING","TRANSFORM_FEEDBACK_BUFFER","TRANSFORM_FEEDBACK_BUFFER_BINDING","TRANSFORM_FEEDBACK_BUFFER_MODE","TRANSFORM_FEEDBACK_BUFFER_SIZE","TRANSFORM_FEEDBACK_BUFFER_START","TRANSFORM_FEEDBACK_PAUSED","TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN","TRANSFORM_FEEDBACK_VARYINGS","TRIANGLE","TRIANGLES","TRIANGLE_FAN","TRIANGLE_STRIP","TYPE_BACK_FORWARD","TYPE_ERR","TYPE_MISMATCH_ERR","TYPE_NAVIGATE","TYPE_RELOAD","TYPE_RESERVED","Table","TaskAttributionTiming","Text","TextDecoder","TextDecoderStream","TextEncoder","TextEncoderStream","TextEvent","TextMetrics","TextTrack","TextTrackCue","TextTrackCueList","TextTrackList","TimeEvent","TimeRanges","Touch","TouchEvent","TouchList","TrackEvent","TransformStream","TransitionEvent","TreeWalker","TrustedHTML","TrustedScript","TrustedScriptURL","TrustedTypePolicy","TrustedTypePolicyFactory","TypeError","TypedObject","U2F","UIEvent","UNCACHED","UNIFORM_ARRAY_STRIDE","UNIFORM_BLOCK_ACTIVE_UNIFORMS","UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES","UNIFORM_BLOCK_BINDING","UNIFORM_BLOCK_DATA_SIZE","UNIFORM_BLOCK_INDEX","UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER","UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER","UNIFORM_BUFFER","UNIFORM_BUFFER_BINDING","UNIFORM_BUFFER_OFFSET_ALIGNMENT","UNIFORM_BUFFER_SIZE","UNIFORM_BUFFER_START","UNIFORM_IS_ROW_MAJOR","UNIFORM_MATRIX_STRIDE","UNIFORM_OFFSET","UNIFORM_SIZE","UNIFORM_TYPE","UNKNOWN_ERR","UNKNOWN_RULE","UNMASKED_RENDERER_WEBGL","UNMASKED_VENDOR_WEBGL","UNORDERED_NODE_ITERATOR_TYPE","UNORDERED_NODE_SNAPSHOT_TYPE","UNPACK_ALIGNMENT","UNPACK_COLORSPACE_CONVERSION_WEBGL","UNPACK_FLIP_Y_WEBGL","UNPACK_IMAGE_HEIGHT","UNPACK_PREMULTIPLY_ALPHA_WEBGL","UNPACK_ROW_LENGTH","UNPACK_SKIP_IMAGES","UNPACK_SKIP_PIXELS","UNPACK_SKIP_ROWS","UNSCHEDULED_STATE","UNSENT","UNSIGNALED","UNSIGNED_BYTE","UNSIGNED_INT","UNSIGNED_INT_10F_11F_11F_REV","UNSIGNED_INT_24_8","UNSIGNED_INT_2_10_10_10_REV","UNSIGNED_INT_5_9_9_9_REV","UNSIGNED_INT_SAMPLER_2D","UNSIGNED_INT_SAMPLER_2D_ARRAY","UNSIGNED_INT_SAMPLER_3D","UNSIGNED_INT_SAMPLER_CUBE","UNSIGNED_INT_VEC2","UNSIGNED_INT_VEC3","UNSIGNED_INT_VEC4","UNSIGNED_NORMALIZED","UNSIGNED_SHORT","UNSIGNED_SHORT_4_4_4_4","UNSIGNED_SHORT_5_5_5_1","UNSIGNED_SHORT_5_6_5","UNSPECIFIED_EVENT_TYPE_ERR","UPDATEREADY","URIError","URL","URLSearchParams","URLUnencoded","URL_MISMATCH_ERR","USB","USBAlternateInterface","USBConfiguration","USBConnectionEvent","USBDevice","USBEndpoint","USBInTransferResult","USBInterface","USBIsochronousInTransferPacket","USBIsochronousInTransferResult","USBIsochronousOutTransferPacket","USBIsochronousOutTransferResult","USBOutTransferResult","UTC","Uint16Array","Uint32Array","Uint8Array","Uint8ClampedArray","UserActivation","UserMessageHandler","UserMessageHandlersNamespace","UserProximityEvent","VALIDATE_STATUS","VALIDATION_ERR","VARIABLES_RULE","VENDOR","VERSION","VERSION_CHANGE","VERSION_ERR","VERTEX_ARRAY_BINDING","VERTEX_ATTRIB_ARRAY_BUFFER_BINDING","VERTEX_ATTRIB_ARRAY_DIVISOR","VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE","VERTEX_ATTRIB_ARRAY_ENABLED","VERTEX_ATTRIB_ARRAY_INTEGER","VERTEX_ATTRIB_ARRAY_NORMALIZED","VERTEX_ATTRIB_ARRAY_POINTER","VERTEX_ATTRIB_ARRAY_SIZE","VERTEX_ATTRIB_ARRAY_STRIDE","VERTEX_ATTRIB_ARRAY_TYPE","VERTEX_SHADER","VERTICAL","VERTICAL_AXIS","VER_ERR","VIEWPORT","VIEWPORT_RULE","VRDisplay","VRDisplayCapabilities","VRDisplayEvent","VREyeParameters","VRFieldOfView","VRFrameData","VRPose","VRStageParameters","VTTCue","VTTRegion","ValidityState","VideoPlaybackQuality","VideoStreamTrack","VisualViewport","WAIT_FAILED","WEBKIT_FILTER_RULE","WEBKIT_KEYFRAMES_RULE","WEBKIT_KEYFRAME_RULE","WEBKIT_REGION_RULE","WRONG_DOCUMENT_ERR","WakeLock","WakeLockSentinel","WasmAnyRef","WaveShaperNode","WeakMap","WeakRef","WeakSet","WebAssembly","WebGL2RenderingContext","WebGLActiveInfo","WebGLBuffer","WebGLContextEvent","WebGLFramebuffer","WebGLProgram","WebGLQuery","WebGLRenderbuffer","WebGLRenderingContext","WebGLSampler","WebGLShader","WebGLShaderPrecisionFormat","WebGLSync","WebGLTexture","WebGLTransformFeedback","WebGLUniformLocation","WebGLVertexArray","WebGLVertexArrayObject","WebKitAnimationEvent","WebKitBlobBuilder","WebKitCSSFilterRule","WebKitCSSFilterValue","WebKitCSSKeyframeRule","WebKitCSSKeyframesRule","WebKitCSSMatrix","WebKitCSSRegionRule","WebKitCSSTransformValue","WebKitDataCue","WebKitGamepad","WebKitMediaKeyError","WebKitMediaKeyMessageEvent","WebKitMediaKeySession","WebKitMediaKeys","WebKitMediaSource","WebKitMutationObserver","WebKitNamespace","WebKitPlaybackTargetAvailabilityEvent","WebKitPoint","WebKitShadowRoot","WebKitSourceBuffer","WebKitSourceBufferList","WebKitTransitionEvent","WebSocket","WebkitAlignContent","WebkitAlignItems","WebkitAlignSelf","WebkitAnimation","WebkitAnimationDelay","WebkitAnimationDirection","WebkitAnimationDuration","WebkitAnimationFillMode","WebkitAnimationIterationCount","WebkitAnimationName","WebkitAnimationPlayState","WebkitAnimationTimingFunction","WebkitAppearance","WebkitBackfaceVisibility","WebkitBackgroundClip","WebkitBackgroundOrigin","WebkitBackgroundSize","WebkitBorderBottomLeftRadius","WebkitBorderBottomRightRadius","WebkitBorderImage","WebkitBorderRadius","WebkitBorderTopLeftRadius","WebkitBorderTopRightRadius","WebkitBoxAlign","WebkitBoxDirection","WebkitBoxFlex","WebkitBoxOrdinalGroup","WebkitBoxOrient","WebkitBoxPack","WebkitBoxShadow","WebkitBoxSizing","WebkitFilter","WebkitFlex","WebkitFlexBasis","WebkitFlexDirection","WebkitFlexFlow","WebkitFlexGrow","WebkitFlexShrink","WebkitFlexWrap","WebkitJustifyContent","WebkitLineClamp","WebkitMask","WebkitMaskClip","WebkitMaskComposite","WebkitMaskImage","WebkitMaskOrigin","WebkitMaskPosition","WebkitMaskPositionX","WebkitMaskPositionY","WebkitMaskRepeat","WebkitMaskSize","WebkitOrder","WebkitPerspective","WebkitPerspectiveOrigin","WebkitTextFillColor","WebkitTextSizeAdjust","WebkitTextStroke","WebkitTextStrokeColor","WebkitTextStrokeWidth","WebkitTransform","WebkitTransformOrigin","WebkitTransformStyle","WebkitTransition","WebkitTransitionDelay","WebkitTransitionDuration","WebkitTransitionProperty","WebkitTransitionTimingFunction","WebkitUserSelect","WheelEvent","Window","Worker","Worklet","WritableStream","WritableStreamDefaultWriter","XMLDocument","XMLHttpRequest","XMLHttpRequestEventTarget","XMLHttpRequestException","XMLHttpRequestProgressEvent","XMLHttpRequestUpload","XMLSerializer","XMLStylesheetProcessingInstruction","XPathEvaluator","XPathException","XPathExpression","XPathNSResolver","XPathResult","XRBoundedReferenceSpace","XRDOMOverlayState","XRFrame","XRHitTestResult","XRHitTestSource","XRInputSource","XRInputSourceArray","XRInputSourceEvent","XRInputSourcesChangeEvent","XRLayer","XRPose","XRRay","XRReferenceSpace","XRReferenceSpaceEvent","XRRenderState","XRRigidTransform","XRSession","XRSessionEvent","XRSpace","XRSystem","XRTransientInputHitTestResult","XRTransientInputHitTestSource","XRView","XRViewerPose","XRViewport","XRWebGLLayer","XSLTProcessor","ZERO","_XD0M_","_YD0M_","__defineGetter__","__defineSetter__","__lookupGetter__","__lookupSetter__","__opera","__proto__","_browserjsran","a","aLink","abbr","abort","aborted","abs","absolute","acceleration","accelerationIncludingGravity","accelerator","accept","acceptCharset","acceptNode","accessKey","accessKeyLabel","accuracy","acos","acosh","action","actionURL","actions","activated","active","activeCues","activeElement","activeSourceBuffers","activeSourceCount","activeTexture","activeVRDisplays","actualBoundingBoxAscent","actualBoundingBoxDescent","actualBoundingBoxLeft","actualBoundingBoxRight","add","addAll","addBehavior","addCandidate","addColorStop","addCue","addElement","addEventListener","addFilter","addFromString","addFromUri","addIceCandidate","addImport","addListener","addModule","addNamed","addPageRule","addPath","addPointer","addRange","addRegion","addRule","addSearchEngine","addSourceBuffer","addStream","addTextTrack","addTrack","addTransceiver","addWakeLockListener","added","addedNodes","additionalName","additiveSymbols","addons","address","addressLine","adoptNode","adoptedStyleSheets","adr","advance","after","album","alert","algorithm","align","align-content","align-items","align-self","alignContent","alignItems","alignSelf","alignmentBaseline","alinkColor","all","allSettled","allow","allowFullscreen","allowPaymentRequest","allowedDirections","allowedFeatures","allowedToPlay","allowsFeature","alpha","alt","altGraphKey","altHtml","altKey","altLeft","alternate","alternateSetting","alternates","altitude","altitudeAccuracy","amplitude","ancestorOrigins","anchor","anchorNode","anchorOffset","anchors","and","angle","angularAcceleration","angularVelocity","animVal","animate","animatedInstanceRoot","animatedNormalizedPathSegList","animatedPathSegList","animatedPoints","animation","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","animationDelay","animationDirection","animationDuration","animationFillMode","animationIterationCount","animationName","animationPlayState","animationStartTime","animationTimingFunction","animationsPaused","anniversary","antialias","anticipatedRemoval","any","app","appCodeName","appMinorVersion","appName","appNotifications","appVersion","appearance","append","appendBuffer","appendChild","appendData","appendItem","appendMedium","appendNamed","appendRule","appendStream","appendWindowEnd","appendWindowStart","applets","applicationCache","applicationServerKey","apply","applyConstraints","applyElement","arc","arcTo","archive","areas","arguments","ariaAtomic","ariaAutoComplete","ariaBusy","ariaChecked","ariaColCount","ariaColIndex","ariaColSpan","ariaCurrent","ariaDescription","ariaDisabled","ariaExpanded","ariaHasPopup","ariaHidden","ariaKeyShortcuts","ariaLabel","ariaLevel","ariaLive","ariaModal","ariaMultiLine","ariaMultiSelectable","ariaOrientation","ariaPlaceholder","ariaPosInSet","ariaPressed","ariaReadOnly","ariaRelevant","ariaRequired","ariaRoleDescription","ariaRowCount","ariaRowIndex","ariaRowSpan","ariaSelected","ariaSetSize","ariaSort","ariaValueMax","ariaValueMin","ariaValueNow","ariaValueText","arrayBuffer","artist","artwork","as","asIntN","asUintN","asin","asinh","assert","assign","assignedElements","assignedNodes","assignedSlot","async","asyncIterator","atEnd","atan","atan2","atanh","atob","attachEvent","attachInternals","attachShader","attachShadow","attachments","attack","attestationObject","attrChange","attrName","attributeFilter","attributeName","attributeNamespace","attributeOldValue","attributeStyleMap","attributes","attribution","audioBitsPerSecond","audioTracks","audioWorklet","authenticatedSignedWrites","authenticatorData","autoIncrement","autobuffer","autocapitalize","autocomplete","autocorrect","autofocus","automationRate","autoplay","availHeight","availLeft","availTop","availWidth","availability","available","aversion","ax","axes","axis","ay","azimuth","b","back","backface-visibility","backfaceVisibility","background","background-attachment","background-blend-mode","background-clip","background-color","background-image","background-origin","background-position","background-position-x","background-position-y","background-repeat","background-size","backgroundAttachment","backgroundBlendMode","backgroundClip","backgroundColor","backgroundFetch","backgroundImage","backgroundOrigin","backgroundPosition","backgroundPositionX","backgroundPositionY","backgroundRepeat","backgroundSize","badInput","badge","balance","baseFrequencyX","baseFrequencyY","baseLatency","baseLayer","baseNode","baseOffset","baseURI","baseVal","baselineShift","battery","bday","before","beginElement","beginElementAt","beginPath","beginQuery","beginTransformFeedback","behavior","behaviorCookie","behaviorPart","behaviorUrns","beta","bezierCurveTo","bgColor","bgProperties","bias","big","bigint64","biguint64","binaryType","bind","bindAttribLocation","bindBuffer","bindBufferBase","bindBufferRange","bindFramebuffer","bindRenderbuffer","bindSampler","bindTexture","bindTransformFeedback","bindVertexArray","blendColor","blendEquation","blendEquationSeparate","blendFunc","blendFuncSeparate","blink","blitFramebuffer","blob","block-size","blockDirection","blockSize","blockedURI","blue","bluetooth","blur","body","bodyUsed","bold","bookmarks","booleanValue","border","border-block","border-block-color","border-block-end","border-block-end-color","border-block-end-style","border-block-end-width","border-block-start","border-block-start-color","border-block-start-style","border-block-start-width","border-block-style","border-block-width","border-bottom","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-color","border-end-end-radius","border-end-start-radius","border-image","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-inline","border-inline-color","border-inline-end","border-inline-end-color","border-inline-end-style","border-inline-end-width","border-inline-start","border-inline-start-color","border-inline-start-style","border-inline-start-width","border-inline-style","border-inline-width","border-left","border-left-color","border-left-style","border-left-width","border-radius","border-right","border-right-color","border-right-style","border-right-width","border-spacing","border-start-end-radius","border-start-start-radius","border-style","border-top","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","border-width","borderBlock","borderBlockColor","borderBlockEnd","borderBlockEndColor","borderBlockEndStyle","borderBlockEndWidth","borderBlockStart","borderBlockStartColor","borderBlockStartStyle","borderBlockStartWidth","borderBlockStyle","borderBlockWidth","borderBottom","borderBottomColor","borderBottomLeftRadius","borderBottomRightRadius","borderBottomStyle","borderBottomWidth","borderBoxSize","borderCollapse","borderColor","borderColorDark","borderColorLight","borderEndEndRadius","borderEndStartRadius","borderImage","borderImageOutset","borderImageRepeat","borderImageSlice","borderImageSource","borderImageWidth","borderInline","borderInlineColor","borderInlineEnd","borderInlineEndColor","borderInlineEndStyle","borderInlineEndWidth","borderInlineStart","borderInlineStartColor","borderInlineStartStyle","borderInlineStartWidth","borderInlineStyle","borderInlineWidth","borderLeft","borderLeftColor","borderLeftStyle","borderLeftWidth","borderRadius","borderRight","borderRightColor","borderRightStyle","borderRightWidth","borderSpacing","borderStartEndRadius","borderStartStartRadius","borderStyle","borderTop","borderTopColor","borderTopLeftRadius","borderTopRightRadius","borderTopStyle","borderTopWidth","borderWidth","bottom","bottomMargin","bound","boundElements","boundingClientRect","boundingHeight","boundingLeft","boundingTop","boundingWidth","bounds","boundsGeometry","box-decoration-break","box-shadow","box-sizing","boxDecorationBreak","boxShadow","boxSizing","break-after","break-before","break-inside","breakAfter","breakBefore","breakInside","broadcast","browserLanguage","btoa","bubbles","buffer","bufferData","bufferDepth","bufferSize","bufferSubData","buffered","bufferedAmount","bufferedAmountLowThreshold","buildID","buildNumber","button","buttonID","buttons","byteLength","byteOffset","bytesWritten","c","cache","caches","call","caller","canBeFormatted","canBeMounted","canBeShared","canHaveChildren","canHaveHTML","canInsertDTMF","canMakePayment","canPlayType","canPresent","canTrickleIceCandidates","cancel","cancelAndHoldAtTime","cancelAnimationFrame","cancelBubble","cancelIdleCallback","cancelScheduledValues","cancelVideoFrameCallback","cancelWatchAvailability","cancelable","candidate","canonicalUUID","canvas","capabilities","caption","caption-side","captionSide","capture","captureEvents","captureStackTrace","captureStream","caret-color","caretBidiLevel","caretColor","caretPositionFromPoint","caretRangeFromPoint","cast","catch","category","cbrt","cd","ceil","cellIndex","cellPadding","cellSpacing","cells","ch","chOff","chain","challenge","changeType","changedTouches","channel","channelCount","channelCountMode","channelInterpretation","char","charAt","charCode","charCodeAt","charIndex","charLength","characterData","characterDataOldValue","characterSet","characteristic","charging","chargingTime","charset","check","checkEnclosure","checkFramebufferStatus","checkIntersection","checkValidity","checked","childElementCount","childList","childNodes","children","chrome","ciphertext","cite","city","claimInterface","claimed","classList","className","classid","clear","clearAppBadge","clearAttributes","clearBufferfi","clearBufferfv","clearBufferiv","clearBufferuiv","clearColor","clearData","clearDepth","clearHalt","clearImmediate","clearInterval","clearLiveSeekableRange","clearMarks","clearMaxGCPauseAccumulator","clearMeasures","clearParameters","clearRect","clearResourceTimings","clearShadow","clearStencil","clearTimeout","clearWatch","click","clickCount","clientDataJSON","clientHeight","clientInformation","clientLeft","clientRect","clientRects","clientTop","clientWaitSync","clientWidth","clientX","clientY","clip","clip-path","clip-rule","clipBottom","clipLeft","clipPath","clipPathUnits","clipRight","clipRule","clipTop","clipboard","clipboardData","clone","cloneContents","cloneNode","cloneRange","close","closePath","closed","closest","clz","clz32","cm","cmp","code","codeBase","codePointAt","codeType","colSpan","collapse","collapseToEnd","collapseToStart","collapsed","collect","colno","color","color-adjust","color-interpolation","color-interpolation-filters","colorAdjust","colorDepth","colorInterpolation","colorInterpolationFilters","colorMask","colorType","cols","column-count","column-fill","column-gap","column-rule","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","columnCount","columnFill","columnGap","columnNumber","columnRule","columnRuleColor","columnRuleStyle","columnRuleWidth","columnSpan","columnWidth","columns","command","commit","commitPreferences","commitStyles","commonAncestorContainer","compact","compareBoundaryPoints","compareDocumentPosition","compareEndPoints","compareExchange","compareNode","comparePoint","compatMode","compatible","compile","compileShader","compileStreaming","complete","component","componentFromPoint","composed","composedPath","composite","compositionEndOffset","compositionStartOffset","compressedTexImage2D","compressedTexImage3D","compressedTexSubImage2D","compressedTexSubImage3D","computedStyleMap","concat","conditionText","coneInnerAngle","coneOuterAngle","coneOuterGain","configuration","configurationName","configurationValue","configurations","confirm","confirmComposition","confirmSiteSpecificTrackingException","confirmWebWideTrackingException","connect","connectEnd","connectShark","connectStart","connected","connection","connectionList","connectionSpeed","connectionState","connections","console","consolidate","constraint","constrictionActive","construct","constructor","contactID","contain","containerId","containerName","containerSrc","containerType","contains","containsNode","content","contentBoxSize","contentDocument","contentEditable","contentHint","contentOverflow","contentRect","contentScriptType","contentStyleType","contentType","contentWindow","context","contextMenu","contextmenu","continue","continuePrimaryKey","continuous","control","controlTransferIn","controlTransferOut","controller","controls","controlsList","convertPointFromNode","convertQuadFromNode","convertRectFromNode","convertToBlob","convertToSpecifiedUnits","cookie","cookieEnabled","coords","copyBufferSubData","copyFromChannel","copyTexImage2D","copyTexSubImage2D","copyTexSubImage3D","copyToChannel","copyWithin","correspondingElement","correspondingUseElement","corruptedVideoFrames","cos","cosh","count","countReset","counter-increment","counter-reset","counter-set","counterIncrement","counterReset","counterSet","country","cpuClass","cpuSleepAllowed","create","createAnalyser","createAnswer","createAttribute","createAttributeNS","createBiquadFilter","createBuffer","createBufferSource","createCDATASection","createCSSStyleSheet","createCaption","createChannelMerger","createChannelSplitter","createComment","createConstantSource","createContextualFragment","createControlRange","createConvolver","createDTMFSender","createDataChannel","createDelay","createDelayNode","createDocument","createDocumentFragment","createDocumentType","createDynamicsCompressor","createElement","createElementNS","createEntityReference","createEvent","createEventObject","createExpression","createFramebuffer","createFunction","createGain","createGainNode","createHTML","createHTMLDocument","createIIRFilter","createImageBitmap","createImageData","createIndex","createJavaScriptNode","createLinearGradient","createMediaElementSource","createMediaKeys","createMediaStreamDestination","createMediaStreamSource","createMediaStreamTrackSource","createMutableFile","createNSResolver","createNodeIterator","createNotification","createObjectStore","createObjectURL","createOffer","createOscillator","createPanner","createPattern","createPeriodicWave","createPolicy","createPopup","createProcessingInstruction","createProgram","createQuery","createRadialGradient","createRange","createRangeCollection","createReader","createRenderbuffer","createSVGAngle","createSVGLength","createSVGMatrix","createSVGNumber","createSVGPathSegArcAbs","createSVGPathSegArcRel","createSVGPathSegClosePath","createSVGPathSegCurvetoCubicAbs","createSVGPathSegCurvetoCubicRel","createSVGPathSegCurvetoCubicSmoothAbs","createSVGPathSegCurvetoCubicSmoothRel","createSVGPathSegCurvetoQuadraticAbs","createSVGPathSegCurvetoQuadraticRel","createSVGPathSegCurvetoQuadraticSmoothAbs","createSVGPathSegCurvetoQuadraticSmoothRel","createSVGPathSegLinetoAbs","createSVGPathSegLinetoHorizontalAbs","createSVGPathSegLinetoHorizontalRel","createSVGPathSegLinetoRel","createSVGPathSegLinetoVerticalAbs","createSVGPathSegLinetoVerticalRel","createSVGPathSegMovetoAbs","createSVGPathSegMovetoRel","createSVGPoint","createSVGRect","createSVGTransform","createSVGTransformFromMatrix","createSampler","createScript","createScriptProcessor","createScriptURL","createSession","createShader","createShadowRoot","createStereoPanner","createStyleSheet","createTBody","createTFoot","createTHead","createTextNode","createTextRange","createTexture","createTouch","createTouchList","createTransformFeedback","createTreeWalker","createVertexArray","createWaveShaper","creationTime","credentials","crossOrigin","crossOriginIsolated","crypto","csi","csp","cssFloat","cssRules","cssText","cssValueType","ctrlKey","ctrlLeft","cues","cullFace","currentDirection","currentLocalDescription","currentNode","currentPage","currentRect","currentRemoteDescription","currentScale","currentScript","currentSrc","currentState","currentStyle","currentTarget","currentTime","currentTranslate","currentView","cursor","curve","customElements","customError","cx","cy","d","data","dataFld","dataFormatAs","dataLoss","dataLossMessage","dataPageSize","dataSrc","dataTransfer","database","databases","dataset","dateTime","db","debug","debuggerEnabled","declare","decode","decodeAudioData","decodeURI","decodeURIComponent","decodedBodySize","decoding","decodingInfo","decrypt","default","defaultCharset","defaultChecked","defaultMuted","defaultPlaybackRate","defaultPolicy","defaultPrevented","defaultRequest","defaultSelected","defaultStatus","defaultURL","defaultValue","defaultView","defaultstatus","defer","define","defineMagicFunction","defineMagicVariable","defineProperties","defineProperty","deg","delay","delayTime","delegatesFocus","delete","deleteBuffer","deleteCaption","deleteCell","deleteContents","deleteData","deleteDatabase","deleteFramebuffer","deleteFromDocument","deleteIndex","deleteMedium","deleteObjectStore","deleteProgram","deleteProperty","deleteQuery","deleteRenderbuffer","deleteRow","deleteRule","deleteSampler","deleteShader","deleteSync","deleteTFoot","deleteTHead","deleteTexture","deleteTransformFeedback","deleteVertexArray","deliverChangeRecords","delivery","deliveryInfo","deliveryStatus","deliveryTimestamp","delta","deltaMode","deltaX","deltaY","deltaZ","dependentLocality","depthFar","depthFunc","depthMask","depthNear","depthRange","deref","deriveBits","deriveKey","description","deselectAll","designMode","desiredSize","destination","destinationURL","detach","detachEvent","detachShader","detail","details","detect","detune","device","deviceClass","deviceId","deviceMemory","devicePixelContentBoxSize","devicePixelRatio","deviceProtocol","deviceSubclass","deviceVersionMajor","deviceVersionMinor","deviceVersionSubminor","deviceXDPI","deviceYDPI","didTimeout","diffuseConstant","digest","dimensions","dir","dirName","direction","dirxml","disable","disablePictureInPicture","disableRemotePlayback","disableVertexAttribArray","disabled","dischargingTime","disconnect","disconnectShark","dispatchEvent","display","displayId","displayName","disposition","distanceModel","div","divisor","djsapi","djsproxy","doImport","doNotTrack","doScroll","doctype","document","documentElement","documentMode","documentURI","dolphin","dolphinGameCenter","dolphininfo","dolphinmeta","domComplete","domContentLoadedEventEnd","domContentLoadedEventStart","domInteractive","domLoading","domOverlayState","domain","domainLookupEnd","domainLookupStart","dominant-baseline","dominantBaseline","done","dopplerFactor","dotAll","downDegrees","downlink","download","downloadTotal","downloaded","dpcm","dpi","dppx","dragDrop","draggable","drawArrays","drawArraysInstanced","drawArraysInstancedANGLE","drawBuffers","drawCustomFocusRing","drawElements","drawElementsInstanced","drawElementsInstancedANGLE","drawFocusIfNeeded","drawImage","drawImageFromRect","drawRangeElements","drawSystemFocusRing","drawingBufferHeight","drawingBufferWidth","dropEffect","droppedVideoFrames","dropzone","dtmf","dump","dumpProfile","duplicate","durability","duration","dvname","dvnum","dx","dy","dynsrc","e","edgeMode","effect","effectAllowed","effectiveDirective","effectiveType","elapsedTime","element","elementFromPoint","elementTiming","elements","elementsFromPoint","elevation","ellipse","em","email","embeds","emma","empty","empty-cells","emptyCells","emptyHTML","emptyScript","emulatedPosition","enable","enableBackground","enableDelegations","enableStyleSheetsForSet","enableVertexAttribArray","enabled","enabledPlugin","encode","encodeInto","encodeURI","encodeURIComponent","encodedBodySize","encoding","encodingInfo","encrypt","enctype","end","endContainer","endElement","endElementAt","endOfStream","endOffset","endQuery","endTime","endTransformFeedback","ended","endpoint","endpointNumber","endpoints","endsWith","enterKeyHint","entities","entries","entryType","enumerate","enumerateDevices","enumerateEditable","environmentBlendMode","equals","error","errorCode","errorDetail","errorText","escape","estimate","eval","evaluate","event","eventPhase","every","ex","exception","exchange","exec","execCommand","execCommandShowHelp","execScript","exitFullscreen","exitPictureInPicture","exitPointerLock","exitPresent","exp","expand","expandEntityReferences","expando","expansion","expiration","expirationTime","expires","expiryDate","explicitOriginalTarget","expm1","exponent","exponentialRampToValueAtTime","exportKey","extend","extensions","extentNode","extentOffset","external","externalResourcesRequired","extractContents","extractable","eye","f","face","factoryReset","failureReason","fallback","family","familyName","farthestViewportElement","fastSeek","fatal","featureId","featurePolicy","featureSettings","features","fenceSync","fetch","fetchStart","fftSize","fgColor","fieldOfView","file","fileCreatedDate","fileHandle","fileModifiedDate","fileName","fileSize","fileUpdatedDate","filename","files","filesystem","fill","fill-opacity","fill-rule","fillLightMode","fillOpacity","fillRect","fillRule","fillStyle","fillText","filter","filterResX","filterResY","filterUnits","filters","finally","find","findIndex","findRule","findText","finish","finished","fireEvent","firesTouchEvents","firstChild","firstElementChild","firstPage","fixed","flags","flat","flatMap","flex","flex-basis","flex-direction","flex-flow","flex-grow","flex-shrink","flex-wrap","flexBasis","flexDirection","flexFlow","flexGrow","flexShrink","flexWrap","flipX","flipY","float","float32","float64","flood-color","flood-opacity","floodColor","floodOpacity","floor","flush","focus","focusNode","focusOffset","font","font-family","font-feature-settings","font-kerning","font-language-override","font-optical-sizing","font-size","font-size-adjust","font-stretch","font-style","font-synthesis","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-ligatures","font-variant-numeric","font-variant-position","font-variation-settings","font-weight","fontFamily","fontFeatureSettings","fontKerning","fontLanguageOverride","fontOpticalSizing","fontSize","fontSizeAdjust","fontSmoothingEnabled","fontStretch","fontStyle","fontSynthesis","fontVariant","fontVariantAlternates","fontVariantCaps","fontVariantEastAsian","fontVariantLigatures","fontVariantNumeric","fontVariantPosition","fontVariationSettings","fontWeight","fontcolor","fontfaces","fonts","fontsize","for","forEach","force","forceRedraw","form","formAction","formData","formEnctype","formMethod","formNoValidate","formTarget","format","formatToParts","forms","forward","forwardX","forwardY","forwardZ","foundation","fr","fragmentDirective","frame","frameBorder","frameElement","frameSpacing","framebuffer","framebufferHeight","framebufferRenderbuffer","framebufferTexture2D","framebufferTextureLayer","framebufferWidth","frames","freeSpace","freeze","frequency","frequencyBinCount","from","fromCharCode","fromCodePoint","fromElement","fromEntries","fromFloat32Array","fromFloat64Array","fromMatrix","fromPoint","fromQuad","fromRect","frontFace","fround","fullPath","fullScreen","fullscreen","fullscreenElement","fullscreenEnabled","fx","fy","gain","gamepad","gamma","gap","gatheringState","gatt","genderIdentity","generateCertificate","generateKey","generateMipmap","generateRequest","geolocation","gestureObject","get","getActiveAttrib","getActiveUniform","getActiveUniformBlockName","getActiveUniformBlockParameter","getActiveUniforms","getAdjacentText","getAll","getAllKeys","getAllResponseHeaders","getAllowlistForFeature","getAnimations","getAsFile","getAsString","getAttachedShaders","getAttribLocation","getAttribute","getAttributeNS","getAttributeNames","getAttributeNode","getAttributeNodeNS","getAttributeType","getAudioTracks","getAvailability","getBBox","getBattery","getBigInt64","getBigUint64","getBlob","getBookmark","getBoundingClientRect","getBounds","getBoxQuads","getBufferParameter","getBufferSubData","getByteFrequencyData","getByteTimeDomainData","getCSSCanvasContext","getCTM","getCandidateWindowClientRect","getCanonicalLocales","getCapabilities","getChannelData","getCharNumAtPosition","getCharacteristic","getCharacteristics","getClientExtensionResults","getClientRect","getClientRects","getCoalescedEvents","getCompositionAlternatives","getComputedStyle","getComputedTextLength","getComputedTiming","getConfiguration","getConstraints","getContext","getContextAttributes","getContributingSources","getCounterValue","getCueAsHTML","getCueById","getCurrentPosition","getCurrentTime","getData","getDatabaseNames","getDate","getDay","getDefaultComputedStyle","getDescriptor","getDescriptors","getDestinationInsertionPoints","getDevices","getDirectory","getDisplayMedia","getDistributedNodes","getEditable","getElementById","getElementsByClassName","getElementsByName","getElementsByTagName","getElementsByTagNameNS","getEnclosureList","getEndPositionOfChar","getEntries","getEntriesByName","getEntriesByType","getError","getExtension","getExtentOfChar","getEyeParameters","getFeature","getFile","getFiles","getFilesAndDirectories","getFingerprints","getFloat32","getFloat64","getFloatFrequencyData","getFloatTimeDomainData","getFloatValue","getFragDataLocation","getFrameData","getFramebufferAttachmentParameter","getFrequencyResponse","getFullYear","getGamepads","getHitTestResults","getHitTestResultsForTransientInput","getHours","getIdentityAssertion","getIds","getImageData","getIndexedParameter","getInstalledRelatedApps","getInt16","getInt32","getInt8","getInternalformatParameter","getIntersectionList","getItem","getItems","getKey","getKeyframes","getLayers","getLayoutMap","getLineDash","getLocalCandidates","getLocalParameters","getLocalStreams","getMarks","getMatchedCSSRules","getMaxGCPauseSinceClear","getMeasures","getMetadata","getMilliseconds","getMinutes","getModifierState","getMonth","getNamedItem","getNamedItemNS","getNativeFramebufferScaleFactor","getNotifications","getNotifier","getNumberOfChars","getOffsetReferenceSpace","getOutputTimestamp","getOverrideHistoryNavigationMode","getOverrideStyle","getOwnPropertyDescriptor","getOwnPropertyDescriptors","getOwnPropertyNames","getOwnPropertySymbols","getParameter","getParameters","getParent","getPathSegAtLength","getPhotoCapabilities","getPhotoSettings","getPointAtLength","getPose","getPredictedEvents","getPreference","getPreferenceDefault","getPresentationAttribute","getPreventDefault","getPrimaryService","getPrimaryServices","getProgramInfoLog","getProgramParameter","getPropertyCSSValue","getPropertyPriority","getPropertyShorthand","getPropertyType","getPropertyValue","getPrototypeOf","getQuery","getQueryParameter","getRGBColorValue","getRandomValues","getRangeAt","getReader","getReceivers","getRectValue","getRegistration","getRegistrations","getRemoteCandidates","getRemoteCertificates","getRemoteParameters","getRemoteStreams","getRenderbufferParameter","getResponseHeader","getRoot","getRootNode","getRotationOfChar","getSVGDocument","getSamplerParameter","getScreenCTM","getSeconds","getSelectedCandidatePair","getSelection","getSenders","getService","getSettings","getShaderInfoLog","getShaderParameter","getShaderPrecisionFormat","getShaderSource","getSimpleDuration","getSiteIcons","getSources","getSpeculativeParserUrls","getStartPositionOfChar","getStartTime","getState","getStats","getStatusForPolicy","getStorageUpdates","getStreamById","getStringValue","getSubStringLength","getSubscription","getSupportedConstraints","getSupportedExtensions","getSupportedFormats","getSyncParameter","getSynchronizationSources","getTags","getTargetRanges","getTexParameter","getTime","getTimezoneOffset","getTiming","getTotalLength","getTrackById","getTracks","getTransceivers","getTransform","getTransformFeedbackVarying","getTransformToElement","getTransports","getType","getTypeMapping","getUTCDate","getUTCDay","getUTCFullYear","getUTCHours","getUTCMilliseconds","getUTCMinutes","getUTCMonth","getUTCSeconds","getUint16","getUint32","getUint8","getUniform","getUniformBlockIndex","getUniformIndices","getUniformLocation","getUserMedia","getVRDisplays","getValues","getVarDate","getVariableValue","getVertexAttrib","getVertexAttribOffset","getVideoPlaybackQuality","getVideoTracks","getViewerPose","getViewport","getVoices","getWakeLockState","getWriter","getYear","givenName","global","globalAlpha","globalCompositeOperation","globalThis","glyphOrientationHorizontal","glyphOrientationVertical","glyphRef","go","grabFrame","grad","gradientTransform","gradientUnits","grammars","green","grid","grid-area","grid-auto-columns","grid-auto-flow","grid-auto-rows","grid-column","grid-column-end","grid-column-gap","grid-column-start","grid-gap","grid-row","grid-row-end","grid-row-gap","grid-row-start","grid-template","grid-template-areas","grid-template-columns","grid-template-rows","gridArea","gridAutoColumns","gridAutoFlow","gridAutoRows","gridColumn","gridColumnEnd","gridColumnGap","gridColumnStart","gridGap","gridRow","gridRowEnd","gridRowGap","gridRowStart","gridTemplate","gridTemplateAreas","gridTemplateColumns","gridTemplateRows","gripSpace","group","groupCollapsed","groupEnd","groupId","hadRecentInput","hand","handedness","hapticActuators","hardwareConcurrency","has","hasAttribute","hasAttributeNS","hasAttributes","hasBeenActive","hasChildNodes","hasComposition","hasEnrolledInstrument","hasExtension","hasExternalDisplay","hasFeature","hasFocus","hasInstance","hasLayout","hasOrientation","hasOwnProperty","hasPointerCapture","hasPosition","hasReading","hasStorageAccess","hash","head","headers","heading","height","hidden","hide","hideFocus","high","highWaterMark","hint","history","honorificPrefix","honorificSuffix","horizontalOverflow","host","hostCandidate","hostname","href","hrefTranslate","hreflang","hspace","html5TagCheckInerface","htmlFor","htmlText","httpEquiv","httpRequestStatusCode","hwTimestamp","hyphens","hypot","iccId","iceConnectionState","iceGatheringState","iceTransport","icon","iconURL","id","identifier","identity","idpLoginUrl","ignoreBOM","ignoreCase","ignoreDepthValues","image-orientation","image-rendering","imageHeight","imageOrientation","imageRendering","imageSizes","imageSmoothingEnabled","imageSmoothingQuality","imageSrcset","imageWidth","images","ime-mode","imeMode","implementation","importKey","importNode","importStylesheet","imports","impp","imul","in","in1","in2","inBandMetadataTrackDispatchType","inRange","includes","incremental","indeterminate","index","indexNames","indexOf","indexedDB","indicate","inertiaDestinationX","inertiaDestinationY","info","init","initAnimationEvent","initBeforeLoadEvent","initClipboardEvent","initCloseEvent","initCommandEvent","initCompositionEvent","initCustomEvent","initData","initDataType","initDeviceMotionEvent","initDeviceOrientationEvent","initDragEvent","initErrorEvent","initEvent","initFocusEvent","initGestureEvent","initHashChangeEvent","initKeyEvent","initKeyboardEvent","initMSManipulationEvent","initMessageEvent","initMouseEvent","initMouseScrollEvent","initMouseWheelEvent","initMutationEvent","initNSMouseEvent","initOverflowEvent","initPageEvent","initPageTransitionEvent","initPointerEvent","initPopStateEvent","initProgressEvent","initScrollAreaEvent","initSimpleGestureEvent","initStorageEvent","initTextEvent","initTimeEvent","initTouchEvent","initTransitionEvent","initUIEvent","initWebKitAnimationEvent","initWebKitTransitionEvent","initWebKitWheelEvent","initWheelEvent","initialTime","initialize","initiatorType","inline-size","inlineSize","inlineVerticalFieldOfView","inner","innerHTML","innerHeight","innerText","innerWidth","input","inputBuffer","inputEncoding","inputMethod","inputMode","inputSource","inputSources","inputType","inputs","insertAdjacentElement","insertAdjacentHTML","insertAdjacentText","insertBefore","insertCell","insertDTMF","insertData","insertItemBefore","insertNode","insertRow","insertRule","inset","inset-block","inset-block-end","inset-block-start","inset-inline","inset-inline-end","inset-inline-start","insetBlock","insetBlockEnd","insetBlockStart","insetInline","insetInlineEnd","insetInlineStart","installing","instanceRoot","instantiate","instantiateStreaming","instruments","int16","int32","int8","integrity","interactionMode","intercept","interfaceClass","interfaceName","interfaceNumber","interfaceProtocol","interfaceSubclass","interfaces","interimResults","internalSubset","interpretation","intersectionRatio","intersectionRect","intersectsNode","interval","invalidIteratorState","invalidateFramebuffer","invalidateSubFramebuffer","inverse","invertSelf","is","is2D","isActive","isAlternate","isArray","isBingCurrentSearchDefault","isBuffer","isCandidateWindowVisible","isChar","isCollapsed","isComposing","isConcatSpreadable","isConnected","isContentEditable","isContentHandlerRegistered","isContextLost","isDefaultNamespace","isDirectory","isDisabled","isEnabled","isEqual","isEqualNode","isExtensible","isExternalCTAP2SecurityKeySupported","isFile","isFinite","isFramebuffer","isFrozen","isGenerator","isHTML","isHistoryNavigation","isId","isIdentity","isInjected","isInteger","isIntersecting","isLockFree","isMap","isMultiLine","isNaN","isOpen","isPointInFill","isPointInPath","isPointInRange","isPointInStroke","isPrefAlternate","isPresenting","isPrimary","isProgram","isPropertyImplicit","isProtocolHandlerRegistered","isPrototypeOf","isQuery","isRenderbuffer","isSafeInteger","isSameNode","isSampler","isScript","isScriptURL","isSealed","isSecureContext","isSessionSupported","isShader","isSupported","isSync","isTextEdit","isTexture","isTransformFeedback","isTrusted","isTypeSupported","isUserVerifyingPlatformAuthenticatorAvailable","isVertexArray","isView","isVisible","isochronousTransferIn","isochronousTransferOut","isolation","italics","item","itemId","itemProp","itemRef","itemScope","itemType","itemValue","items","iterateNext","iterationComposite","iterator","javaEnabled","jobTitle","join","json","justify-content","justify-items","justify-self","justifyContent","justifyItems","justifySelf","k1","k2","k3","k4","kHz","keepalive","kernelMatrix","kernelUnitLengthX","kernelUnitLengthY","kerning","key","keyCode","keyFor","keyIdentifier","keyLightEnabled","keyLocation","keyPath","keyStatuses","keySystem","keyText","keyUsage","keyboard","keys","keytype","kind","knee","label","labels","lang","language","languages","largeArcFlag","lastChild","lastElementChild","lastEventId","lastIndex","lastIndexOf","lastInputTime","lastMatch","lastMessageSubject","lastMessageType","lastModified","lastModifiedDate","lastPage","lastParen","lastState","lastStyleSheetSet","latitude","layerX","layerY","layoutFlow","layoutGrid","layoutGridChar","layoutGridLine","layoutGridMode","layoutGridType","lbound","left","leftContext","leftDegrees","leftMargin","leftProjectionMatrix","leftViewMatrix","length","lengthAdjust","lengthComputable","letter-spacing","letterSpacing","level","lighting-color","lightingColor","limitingConeAngle","line","line-break","line-height","lineAlign","lineBreak","lineCap","lineDashOffset","lineHeight","lineJoin","lineNumber","lineTo","lineWidth","linearAcceleration","linearRampToValueAtTime","linearVelocity","lineno","lines","link","linkColor","linkProgram","links","list","list-style","list-style-image","list-style-position","list-style-type","listStyle","listStyleImage","listStylePosition","listStyleType","listener","load","loadEventEnd","loadEventStart","loadTime","loadTimes","loaded","loading","localDescription","localName","localService","localStorage","locale","localeCompare","location","locationbar","lock","locked","lockedFile","locks","log","log10","log1p","log2","logicalXDPI","logicalYDPI","longDesc","longitude","lookupNamespaceURI","lookupPrefix","loop","loopEnd","loopStart","looping","low","lower","lowerBound","lowerOpen","lowsrc","m11","m12","m13","m14","m21","m22","m23","m24","m31","m32","m33","m34","m41","m42","m43","m44","makeXRCompatible","manifest","manufacturer","manufacturerName","map","mapping","margin","margin-block","margin-block-end","margin-block-start","margin-bottom","margin-inline","margin-inline-end","margin-inline-start","margin-left","margin-right","margin-top","marginBlock","marginBlockEnd","marginBlockStart","marginBottom","marginHeight","marginInline","marginInlineEnd","marginInlineStart","marginLeft","marginRight","marginTop","marginWidth","mark","marker","marker-end","marker-mid","marker-offset","marker-start","markerEnd","markerHeight","markerMid","markerOffset","markerStart","markerUnits","markerWidth","marks","mask","mask-clip","mask-composite","mask-image","mask-mode","mask-origin","mask-position","mask-position-x","mask-position-y","mask-repeat","mask-size","mask-type","maskClip","maskComposite","maskContentUnits","maskImage","maskMode","maskOrigin","maskPosition","maskPositionX","maskPositionY","maskRepeat","maskSize","maskType","maskUnits","match","matchAll","matchMedia","matchMedium","matches","matrix","matrixTransform","max","max-block-size","max-height","max-inline-size","max-width","maxActions","maxAlternatives","maxBlockSize","maxChannelCount","maxChannels","maxConnectionsPerServer","maxDecibels","maxDistance","maxHeight","maxInlineSize","maxLayers","maxLength","maxMessageSize","maxPacketLifeTime","maxRetransmits","maxTouchPoints","maxValue","maxWidth","measure","measureText","media","mediaCapabilities","mediaDevices","mediaElement","mediaGroup","mediaKeys","mediaSession","mediaStream","mediaText","meetOrSlice","memory","menubar","mergeAttributes","message","messageClass","messageHandlers","messageType","metaKey","metadata","method","methodDetails","methodName","mid","mimeType","mimeTypes","min","min-block-size","min-height","min-inline-size","min-width","minBlockSize","minDecibels","minHeight","minInlineSize","minLength","minValue","minWidth","miterLimit","mix-blend-mode","mixBlendMode","mm","mode","modify","mount","move","moveBy","moveEnd","moveFirst","moveFocusDown","moveFocusLeft","moveFocusRight","moveFocusUp","moveNext","moveRow","moveStart","moveTo","moveToBookmark","moveToElementText","moveToPoint","movementX","movementY","mozAdd","mozAnimationStartTime","mozAnon","mozApps","mozAudioCaptured","mozAudioChannelType","mozAutoplayEnabled","mozCancelAnimationFrame","mozCancelFullScreen","mozCancelRequestAnimationFrame","mozCaptureStream","mozCaptureStreamUntilEnded","mozClearDataAt","mozContact","mozContacts","mozCreateFileHandle","mozCurrentTransform","mozCurrentTransformInverse","mozCursor","mozDash","mozDashOffset","mozDecodedFrames","mozExitPointerLock","mozFillRule","mozFragmentEnd","mozFrameDelay","mozFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozGetAll","mozGetAllKeys","mozGetAsFile","mozGetDataAt","mozGetMetadata","mozGetUserMedia","mozHasAudio","mozHasItem","mozHidden","mozImageSmoothingEnabled","mozIndexedDB","mozInnerScreenX","mozInnerScreenY","mozInputSource","mozIsTextField","mozItem","mozItemCount","mozItems","mozLength","mozLockOrientation","mozMatchesSelector","mozMovementX","mozMovementY","mozOpaque","mozOrientation","mozPaintCount","mozPaintedFrames","mozParsedFrames","mozPay","mozPointerLockElement","mozPresentedFrames","mozPreservesPitch","mozPressure","mozPrintCallback","mozRTCIceCandidate","mozRTCPeerConnection","mozRTCSessionDescription","mozRemove","mozRequestAnimationFrame","mozRequestFullScreen","mozRequestPointerLock","mozSetDataAt","mozSetImageElement","mozSourceNode","mozSrcObject","mozSystem","mozTCPSocket","mozTextStyle","mozTypesAt","mozUnlockOrientation","mozUserCancelled","mozVisibilityState","ms","msAnimation","msAnimationDelay","msAnimationDirection","msAnimationDuration","msAnimationFillMode","msAnimationIterationCount","msAnimationName","msAnimationPlayState","msAnimationStartTime","msAnimationTimingFunction","msBackfaceVisibility","msBlockProgression","msCSSOMElementFloatMetrics","msCaching","msCachingEnabled","msCancelRequestAnimationFrame","msCapsLockWarningOff","msClearImmediate","msClose","msContentZoomChaining","msContentZoomFactor","msContentZoomLimit","msContentZoomLimitMax","msContentZoomLimitMin","msContentZoomSnap","msContentZoomSnapPoints","msContentZoomSnapType","msContentZooming","msConvertURL","msCrypto","msDoNotTrack","msElementsFromPoint","msElementsFromRect","msExitFullscreen","msExtendedCode","msFillRule","msFirstPaint","msFlex","msFlexAlign","msFlexDirection","msFlexFlow","msFlexItemAlign","msFlexLinePack","msFlexNegative","msFlexOrder","msFlexPack","msFlexPositive","msFlexPreferredSize","msFlexWrap","msFlowFrom","msFlowInto","msFontFeatureSettings","msFullscreenElement","msFullscreenEnabled","msGetInputContext","msGetRegionContent","msGetUntransformedBounds","msGraphicsTrustStatus","msGridColumn","msGridColumnAlign","msGridColumnSpan","msGridColumns","msGridRow","msGridRowAlign","msGridRowSpan","msGridRows","msHidden","msHighContrastAdjust","msHyphenateLimitChars","msHyphenateLimitLines","msHyphenateLimitZone","msHyphens","msImageSmoothingEnabled","msImeAlign","msIndexedDB","msInterpolationMode","msIsStaticHTML","msKeySystem","msKeys","msLaunchUri","msLockOrientation","msManipulationViewsEnabled","msMatchMedia","msMatchesSelector","msMaxTouchPoints","msOrientation","msOverflowStyle","msPerspective","msPerspectiveOrigin","msPlayToDisabled","msPlayToPreferredSourceUri","msPlayToPrimary","msPointerEnabled","msRegionOverflow","msReleasePointerCapture","msRequestAnimationFrame","msRequestFullscreen","msSaveBlob","msSaveOrOpenBlob","msScrollChaining","msScrollLimit","msScrollLimitXMax","msScrollLimitXMin","msScrollLimitYMax","msScrollLimitYMin","msScrollRails","msScrollSnapPointsX","msScrollSnapPointsY","msScrollSnapType","msScrollSnapX","msScrollSnapY","msScrollTranslation","msSetImmediate","msSetMediaKeys","msSetPointerCapture","msTextCombineHorizontal","msTextSizeAdjust","msToBlob","msTouchAction","msTouchSelect","msTraceAsyncCallbackCompleted","msTraceAsyncCallbackStarting","msTraceAsyncOperationCompleted","msTraceAsyncOperationStarting","msTransform","msTransformOrigin","msTransformStyle","msTransition","msTransitionDelay","msTransitionDuration","msTransitionProperty","msTransitionTimingFunction","msUnlockOrientation","msUpdateAsyncCallbackRelation","msUserSelect","msVisibilityState","msWrapFlow","msWrapMargin","msWrapThrough","msWriteProfilerMark","msZoom","msZoomTo","mt","mul","multiEntry","multiSelectionObj","multiline","multiple","multiply","multiplySelf","mutableFile","muted","n","name","nameProp","namedItem","namedRecordset","names","namespaceURI","namespaces","naturalHeight","naturalWidth","navigate","navigation","navigationMode","navigationPreload","navigationStart","navigator","near","nearestViewportElement","negative","negotiated","netscape","networkState","newScale","newTranslate","newURL","newValue","newValueSpecifiedUnits","newVersion","newhome","next","nextElementSibling","nextHopProtocol","nextNode","nextPage","nextSibling","nickname","noHref","noModule","noResize","noShade","noValidate","noWrap","node","nodeName","nodeType","nodeValue","nonce","normalize","normalizedPathSegList","notationName","notations","note","noteGrainOn","noteOff","noteOn","notify","now","numOctaves","number","numberOfChannels","numberOfInputs","numberOfItems","numberOfOutputs","numberValue","oMatchesSelector","object","object-fit","object-position","objectFit","objectPosition","objectStore","objectStoreNames","objectType","observe","of","offscreenBuffering","offset","offset-anchor","offset-distance","offset-path","offset-rotate","offsetAnchor","offsetDistance","offsetHeight","offsetLeft","offsetNode","offsetParent","offsetPath","offsetRotate","offsetTop","offsetWidth","offsetX","offsetY","ok","oldURL","oldValue","oldVersion","olderShadowRoot","onLine","onabort","onabsolutedeviceorientation","onactivate","onactive","onaddsourcebuffer","onaddstream","onaddtrack","onafterprint","onafterscriptexecute","onafterupdate","onanimationcancel","onanimationend","onanimationiteration","onanimationstart","onappinstalled","onaudioend","onaudioprocess","onaudiostart","onautocomplete","onautocompleteerror","onauxclick","onbeforeactivate","onbeforecopy","onbeforecut","onbeforedeactivate","onbeforeeditfocus","onbeforeinstallprompt","onbeforepaste","onbeforeprint","onbeforescriptexecute","onbeforeunload","onbeforeupdate","onbeforexrselect","onbegin","onblocked","onblur","onbounce","onboundary","onbufferedamountlow","oncached","oncancel","oncandidatewindowhide","oncandidatewindowshow","oncandidatewindowupdate","oncanplay","oncanplaythrough","once","oncellchange","onchange","oncharacteristicvaluechanged","onchargingchange","onchargingtimechange","onchecking","onclick","onclose","onclosing","oncompassneedscalibration","oncomplete","onconnect","onconnecting","onconnectionavailable","onconnectionstatechange","oncontextmenu","oncontrollerchange","oncontrolselect","oncopy","oncuechange","oncut","ondataavailable","ondatachannel","ondatasetchanged","ondatasetcomplete","ondblclick","ondeactivate","ondevicechange","ondevicelight","ondevicemotion","ondeviceorientation","ondeviceorientationabsolute","ondeviceproximity","ondischargingtimechange","ondisconnect","ondisplay","ondownloading","ondrag","ondragend","ondragenter","ondragexit","ondragleave","ondragover","ondragstart","ondrop","ondurationchange","onemptied","onencrypted","onend","onended","onenter","onenterpictureinpicture","onerror","onerrorupdate","onexit","onfilterchange","onfinish","onfocus","onfocusin","onfocusout","onformdata","onfreeze","onfullscreenchange","onfullscreenerror","ongatheringstatechange","ongattserverdisconnected","ongesturechange","ongestureend","ongesturestart","ongotpointercapture","onhashchange","onhelp","onicecandidate","onicecandidateerror","oniceconnectionstatechange","onicegatheringstatechange","oninactive","oninput","oninputsourceschange","oninvalid","onkeydown","onkeypress","onkeystatuseschange","onkeyup","onlanguagechange","onlayoutcomplete","onleavepictureinpicture","onlevelchange","onload","onloadeddata","onloadedmetadata","onloadend","onloading","onloadingdone","onloadingerror","onloadstart","onlosecapture","onlostpointercapture","only","onmark","onmessage","onmessageerror","onmidimessage","onmousedown","onmouseenter","onmouseleave","onmousemove","onmouseout","onmouseover","onmouseup","onmousewheel","onmove","onmoveend","onmovestart","onmozfullscreenchange","onmozfullscreenerror","onmozorientationchange","onmozpointerlockchange","onmozpointerlockerror","onmscontentzoom","onmsfullscreenchange","onmsfullscreenerror","onmsgesturechange","onmsgesturedoubletap","onmsgestureend","onmsgesturehold","onmsgesturestart","onmsgesturetap","onmsgotpointercapture","onmsinertiastart","onmslostpointercapture","onmsmanipulationstatechanged","onmsneedkey","onmsorientationchange","onmspointercancel","onmspointerdown","onmspointerenter","onmspointerhover","onmspointerleave","onmspointermove","onmspointerout","onmspointerover","onmspointerup","onmssitemodejumplistitemremoved","onmsthumbnailclick","onmute","onnegotiationneeded","onnomatch","onnoupdate","onobsolete","onoffline","ononline","onopen","onorientationchange","onpagechange","onpagehide","onpageshow","onpaste","onpause","onpayerdetailchange","onpaymentmethodchange","onplay","onplaying","onpluginstreamstart","onpointercancel","onpointerdown","onpointerenter","onpointerleave","onpointerlockchange","onpointerlockerror","onpointermove","onpointerout","onpointerover","onpointerrawupdate","onpointerup","onpopstate","onprocessorerror","onprogress","onpropertychange","onratechange","onreading","onreadystatechange","onrejectionhandled","onrelease","onremove","onremovesourcebuffer","onremovestream","onremovetrack","onrepeat","onreset","onresize","onresizeend","onresizestart","onresourcetimingbufferfull","onresult","onresume","onrowenter","onrowexit","onrowsdelete","onrowsinserted","onscroll","onsearch","onsecuritypolicyviolation","onseeked","onseeking","onselect","onselectedcandidatepairchange","onselectend","onselectionchange","onselectstart","onshippingaddresschange","onshippingoptionchange","onshow","onsignalingstatechange","onsoundend","onsoundstart","onsourceclose","onsourceclosed","onsourceended","onsourceopen","onspeechend","onspeechstart","onsqueeze","onsqueezeend","onsqueezestart","onstalled","onstart","onstatechange","onstop","onstorage","onstoragecommit","onsubmit","onsuccess","onsuspend","onterminate","ontextinput","ontimeout","ontimeupdate","ontoggle","ontonechange","ontouchcancel","ontouchend","ontouchmove","ontouchstart","ontrack","ontransitioncancel","ontransitionend","ontransitionrun","ontransitionstart","onunhandledrejection","onunload","onunmute","onupdate","onupdateend","onupdatefound","onupdateready","onupdatestart","onupgradeneeded","onuserproximity","onversionchange","onvisibilitychange","onvoiceschanged","onvolumechange","onvrdisplayactivate","onvrdisplayconnect","onvrdisplaydeactivate","onvrdisplaydisconnect","onvrdisplaypresentchange","onwaiting","onwaitingforkey","onwarning","onwebkitanimationend","onwebkitanimationiteration","onwebkitanimationstart","onwebkitcurrentplaybacktargetiswirelesschanged","onwebkitfullscreenchange","onwebkitfullscreenerror","onwebkitkeyadded","onwebkitkeyerror","onwebkitkeymessage","onwebkitneedkey","onwebkitorientationchange","onwebkitplaybacktargetavailabilitychanged","onwebkitpointerlockchange","onwebkitpointerlockerror","onwebkitresourcetimingbufferfull","onwebkittransitionend","onwheel","onzoom","opacity","open","openCursor","openDatabase","openKeyCursor","opened","opener","opera","operationType","operator","opr","optimum","options","or","order","orderX","orderY","ordered","org","organization","orient","orientAngle","orientType","orientation","orientationX","orientationY","orientationZ","origin","originalPolicy","originalTarget","orphans","oscpu","outerHTML","outerHeight","outerText","outerWidth","outline","outline-color","outline-offset","outline-style","outline-width","outlineColor","outlineOffset","outlineStyle","outlineWidth","outputBuffer","outputLatency","outputs","overflow","overflow-anchor","overflow-block","overflow-inline","overflow-wrap","overflow-x","overflow-y","overflowAnchor","overflowBlock","overflowInline","overflowWrap","overflowX","overflowY","overrideMimeType","oversample","overscroll-behavior","overscroll-behavior-block","overscroll-behavior-inline","overscroll-behavior-x","overscroll-behavior-y","overscrollBehavior","overscrollBehaviorBlock","overscrollBehaviorInline","overscrollBehaviorX","overscrollBehaviorY","ownKeys","ownerDocument","ownerElement","ownerNode","ownerRule","ownerSVGElement","owningElement","p1","p2","p3","p4","packetSize","packets","pad","padEnd","padStart","padding","padding-block","padding-block-end","padding-block-start","padding-bottom","padding-inline","padding-inline-end","padding-inline-start","padding-left","padding-right","padding-top","paddingBlock","paddingBlockEnd","paddingBlockStart","paddingBottom","paddingInline","paddingInlineEnd","paddingInlineStart","paddingLeft","paddingRight","paddingTop","page","page-break-after","page-break-before","page-break-inside","pageBreakAfter","pageBreakBefore","pageBreakInside","pageCount","pageLeft","pageTop","pageX","pageXOffset","pageY","pageYOffset","pages","paint-order","paintOrder","paintRequests","paintType","paintWorklet","palette","pan","panningModel","parameters","parent","parentElement","parentNode","parentRule","parentStyleSheet","parentTextEdit","parentWindow","parse","parseAll","parseFloat","parseFromString","parseInt","part","participants","passive","password","pasteHTML","path","pathLength","pathSegList","pathSegType","pathSegTypeAsLetter","pathname","pattern","patternContentUnits","patternMismatch","patternTransform","patternUnits","pause","pauseAnimations","pauseOnExit","pauseProfilers","pauseTransformFeedback","paused","payerEmail","payerName","payerPhone","paymentManager","pc","peerIdentity","pending","pendingLocalDescription","pendingRemoteDescription","percent","performance","periodicSync","permission","permissionState","permissions","persist","persisted","personalbar","perspective","perspective-origin","perspectiveOrigin","phone","phoneticFamilyName","phoneticGivenName","photo","pictureInPictureElement","pictureInPictureEnabled","pictureInPictureWindow","ping","pipeThrough","pipeTo","pitch","pixelBottom","pixelDepth","pixelHeight","pixelLeft","pixelRight","pixelStorei","pixelTop","pixelUnitToMillimeterX","pixelUnitToMillimeterY","pixelWidth","place-content","place-items","place-self","placeContent","placeItems","placeSelf","placeholder","platform","platforms","play","playEffect","playState","playbackRate","playbackState","playbackTime","played","playoutDelayHint","playsInline","plugins","pluginspage","pname","pointer-events","pointerBeforeReferenceNode","pointerEnabled","pointerEvents","pointerId","pointerLockElement","pointerType","points","pointsAtX","pointsAtY","pointsAtZ","polygonOffset","pop","populateMatrix","popupWindowFeatures","popupWindowName","popupWindowURI","port","port1","port2","ports","posBottom","posHeight","posLeft","posRight","posTop","posWidth","pose","position","positionAlign","positionX","positionY","positionZ","postError","postMessage","postalCode","poster","pow","powerEfficient","powerOff","preMultiplySelf","precision","preferredStyleSheetSet","preferredStylesheetSet","prefix","preload","prepend","presentation","preserveAlpha","preserveAspectRatio","preserveAspectRatioString","pressed","pressure","prevValue","preventDefault","preventExtensions","preventSilentAccess","previousElementSibling","previousNode","previousPage","previousRect","previousScale","previousSibling","previousTranslate","primaryKey","primitiveType","primitiveUnits","principals","print","priority","privateKey","probablySupportsContext","process","processIceMessage","processingEnd","processingStart","product","productId","productName","productSub","profile","profileEnd","profiles","projectionMatrix","promise","prompt","properties","propertyIsEnumerable","propertyName","protocol","protocolLong","prototype","provider","pseudoClass","pseudoElement","pt","publicId","publicKey","published","pulse","push","pushManager","pushNotification","pushState","put","putImageData","px","quadraticCurveTo","qualifier","quaternion","query","queryCommandEnabled","queryCommandIndeterm","queryCommandState","queryCommandSupported","queryCommandText","queryCommandValue","querySelector","querySelectorAll","queueMicrotask","quote","quotes","r","r1","r2","race","rad","radiogroup","radiusX","radiusY","random","range","rangeCount","rangeMax","rangeMin","rangeOffset","rangeOverflow","rangeParent","rangeUnderflow","rate","ratio","raw","rawId","read","readAsArrayBuffer","readAsBinaryString","readAsBlob","readAsDataURL","readAsText","readBuffer","readEntries","readOnly","readPixels","readReportRequested","readText","readValue","readable","ready","readyState","reason","reboot","receivedAlert","receiver","receivers","recipient","reconnect","recordNumber","recordsAvailable","recordset","rect","red","redEyeReduction","redirect","redirectCount","redirectEnd","redirectStart","redirected","reduce","reduceRight","reduction","refDistance","refX","refY","referenceNode","referenceSpace","referrer","referrerPolicy","refresh","region","regionAnchorX","regionAnchorY","regionId","regions","register","registerContentHandler","registerElement","registerProperty","registerProtocolHandler","reject","rel","relList","relatedAddress","relatedNode","relatedPort","relatedTarget","release","releaseCapture","releaseEvents","releaseInterface","releaseLock","releasePointerCapture","releaseShaderCompiler","reliable","reliableWrite","reload","rem","remainingSpace","remote","remoteDescription","remove","removeAllRanges","removeAttribute","removeAttributeNS","removeAttributeNode","removeBehavior","removeChild","removeCue","removeEventListener","removeFilter","removeImport","removeItem","removeListener","removeNamedItem","removeNamedItemNS","removeNode","removeParameter","removeProperty","removeRange","removeRegion","removeRule","removeSiteSpecificTrackingException","removeSourceBuffer","removeStream","removeTrack","removeVariable","removeWakeLockListener","removeWebWideTrackingException","removed","removedNodes","renderHeight","renderState","renderTime","renderWidth","renderbufferStorage","renderbufferStorageMultisample","renderedBuffer","renderingMode","renotify","repeat","replace","replaceAdjacentText","replaceAll","replaceChild","replaceChildren","replaceData","replaceId","replaceItem","replaceNode","replaceState","replaceSync","replaceTrack","replaceWholeText","replaceWith","reportValidity","request","requestAnimationFrame","requestAutocomplete","requestData","requestDevice","requestFrame","requestFullscreen","requestHitTestSource","requestHitTestSourceForTransientInput","requestId","requestIdleCallback","requestMIDIAccess","requestMediaKeySystemAccess","requestPermission","requestPictureInPicture","requestPointerLock","requestPresent","requestReferenceSpace","requestSession","requestStart","requestStorageAccess","requestSubmit","requestVideoFrameCallback","requestingWindow","requireInteraction","required","requiredExtensions","requiredFeatures","reset","resetPose","resetTransform","resize","resizeBy","resizeTo","resolve","response","responseBody","responseEnd","responseReady","responseStart","responseText","responseType","responseURL","responseXML","restartIce","restore","result","resultIndex","resultType","results","resume","resumeProfilers","resumeTransformFeedback","retry","returnValue","rev","reverse","reversed","revocable","revokeObjectURL","rgbColor","right","rightContext","rightDegrees","rightMargin","rightProjectionMatrix","rightViewMatrix","role","rolloffFactor","root","rootBounds","rootElement","rootMargin","rotate","rotateAxisAngle","rotateAxisAngleSelf","rotateFromVector","rotateFromVectorSelf","rotateSelf","rotation","rotationAngle","rotationRate","round","row-gap","rowGap","rowIndex","rowSpan","rows","rtcpTransport","rtt","ruby-align","ruby-position","rubyAlign","rubyOverhang","rubyPosition","rules","runtime","runtimeStyle","rx","ry","s","safari","sample","sampleCoverage","sampleRate","samplerParameterf","samplerParameteri","sandbox","save","saveData","scale","scale3d","scale3dSelf","scaleNonUniform","scaleNonUniformSelf","scaleSelf","scheme","scissor","scope","scopeName","scoped","screen","screenBrightness","screenEnabled","screenLeft","screenPixelToMillimeterX","screenPixelToMillimeterY","screenTop","screenX","screenY","scriptURL","scripts","scroll","scroll-behavior","scroll-margin","scroll-margin-block","scroll-margin-block-end","scroll-margin-block-start","scroll-margin-bottom","scroll-margin-inline","scroll-margin-inline-end","scroll-margin-inline-start","scroll-margin-left","scroll-margin-right","scroll-margin-top","scroll-padding","scroll-padding-block","scroll-padding-block-end","scroll-padding-block-start","scroll-padding-bottom","scroll-padding-inline","scroll-padding-inline-end","scroll-padding-inline-start","scroll-padding-left","scroll-padding-right","scroll-padding-top","scroll-snap-align","scroll-snap-type","scrollAmount","scrollBehavior","scrollBy","scrollByLines","scrollByPages","scrollDelay","scrollHeight","scrollIntoView","scrollIntoViewIfNeeded","scrollLeft","scrollLeftMax","scrollMargin","scrollMarginBlock","scrollMarginBlockEnd","scrollMarginBlockStart","scrollMarginBottom","scrollMarginInline","scrollMarginInlineEnd","scrollMarginInlineStart","scrollMarginLeft","scrollMarginRight","scrollMarginTop","scrollMaxX","scrollMaxY","scrollPadding","scrollPaddingBlock","scrollPaddingBlockEnd","scrollPaddingBlockStart","scrollPaddingBottom","scrollPaddingInline","scrollPaddingInlineEnd","scrollPaddingInlineStart","scrollPaddingLeft","scrollPaddingRight","scrollPaddingTop","scrollRestoration","scrollSnapAlign","scrollSnapType","scrollTo","scrollTop","scrollTopMax","scrollWidth","scrollX","scrollY","scrollbar-color","scrollbar-width","scrollbar3dLightColor","scrollbarArrowColor","scrollbarBaseColor","scrollbarColor","scrollbarDarkShadowColor","scrollbarFaceColor","scrollbarHighlightColor","scrollbarShadowColor","scrollbarTrackColor","scrollbarWidth","scrollbars","scrolling","scrollingElement","sctp","sctpCauseCode","sdp","sdpLineNumber","sdpMLineIndex","sdpMid","seal","search","searchBox","searchBoxJavaBridge_","searchParams","sectionRowIndex","secureConnectionStart","security","seed","seekToNextFrame","seekable","seeking","select","selectAllChildren","selectAlternateInterface","selectConfiguration","selectNode","selectNodeContents","selectNodes","selectSingleNode","selectSubString","selected","selectedIndex","selectedOptions","selectedStyleSheetSet","selectedStylesheetSet","selection","selectionDirection","selectionEnd","selectionStart","selector","selectorText","self","send","sendAsBinary","sendBeacon","sender","sentAlert","sentTimestamp","separator","serialNumber","serializeToString","serverTiming","service","serviceWorker","session","sessionId","sessionStorage","set","setActionHandler","setActive","setAlpha","setAppBadge","setAttribute","setAttributeNS","setAttributeNode","setAttributeNodeNS","setBaseAndExtent","setBigInt64","setBigUint64","setBingCurrentSearchDefault","setCapture","setCodecPreferences","setColor","setCompositeOperation","setConfiguration","setCurrentTime","setCustomValidity","setData","setDate","setDragImage","setEnd","setEndAfter","setEndBefore","setEndPoint","setFillColor","setFilterRes","setFloat32","setFloat64","setFloatValue","setFormValue","setFullYear","setHeaderValue","setHours","setIdentityProvider","setImmediate","setInt16","setInt32","setInt8","setInterval","setItem","setKeyframes","setLineCap","setLineDash","setLineJoin","setLineWidth","setLiveSeekableRange","setLocalDescription","setMatrix","setMatrixValue","setMediaKeys","setMilliseconds","setMinutes","setMiterLimit","setMonth","setNamedItem","setNamedItemNS","setNonUserCodeExceptions","setOrientToAngle","setOrientToAuto","setOrientation","setOverrideHistoryNavigationMode","setPaint","setParameter","setParameters","setPeriodicWave","setPointerCapture","setPosition","setPositionState","setPreference","setProperty","setPrototypeOf","setRGBColor","setRGBColorICCColor","setRadius","setRangeText","setRemoteDescription","setRequestHeader","setResizable","setResourceTimingBufferSize","setRotate","setScale","setSeconds","setSelectionRange","setServerCertificate","setShadow","setSinkId","setSkewX","setSkewY","setStart","setStartAfter","setStartBefore","setStdDeviation","setStreams","setStringValue","setStrokeColor","setSuggestResult","setTargetAtTime","setTargetValueAtTime","setTime","setTimeout","setTransform","setTranslate","setUTCDate","setUTCFullYear","setUTCHours","setUTCMilliseconds","setUTCMinutes","setUTCMonth","setUTCSeconds","setUint16","setUint32","setUint8","setUri","setValidity","setValueAtTime","setValueCurveAtTime","setVariable","setVelocity","setVersion","setYear","settingName","settingValue","sex","shaderSource","shadowBlur","shadowColor","shadowOffsetX","shadowOffsetY","shadowRoot","shape","shape-image-threshold","shape-margin","shape-outside","shape-rendering","shapeImageThreshold","shapeMargin","shapeOutside","shapeRendering","sheet","shift","shiftKey","shiftLeft","shippingAddress","shippingOption","shippingType","show","showHelp","showModal","showModalDialog","showModelessDialog","showNotification","sidebar","sign","signal","signalingState","signature","silent","sin","singleNodeValue","sinh","sinkId","sittingToStandingTransform","size","sizeToContent","sizeX","sizeZ","sizes","skewX","skewXSelf","skewY","skewYSelf","slice","slope","slot","small","smil","smooth","smoothingTimeConstant","snapToLines","snapshotItem","snapshotLength","some","sort","sortingCode","source","sourceBuffer","sourceBuffers","sourceCapabilities","sourceFile","sourceIndex","sources","spacing","span","speak","speakAs","speaking","species","specified","specularConstant","specularExponent","speechSynthesis","speed","speedOfSound","spellcheck","splice","split","splitText","spreadMethod","sqrt","src","srcElement","srcFilter","srcObject","srcUrn","srcdoc","srclang","srcset","stack","stackTraceLimit","stacktrace","stageParameters","standalone","standby","start","startContainer","startIce","startMessages","startNotifications","startOffset","startProfiling","startRendering","startShark","startTime","startsWith","state","status","statusCode","statusMessage","statusText","statusbar","stdDeviationX","stdDeviationY","stencilFunc","stencilFuncSeparate","stencilMask","stencilMaskSeparate","stencilOp","stencilOpSeparate","step","stepDown","stepMismatch","stepUp","sticky","stitchTiles","stop","stop-color","stop-opacity","stopColor","stopImmediatePropagation","stopNotifications","stopOpacity","stopProfiling","stopPropagation","stopShark","stopped","storage","storageArea","storageName","storageStatus","store","storeSiteSpecificTrackingException","storeWebWideTrackingException","stpVersion","stream","streams","stretch","strike","string","stringValue","stringify","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","strokeDasharray","strokeDashoffset","strokeLinecap","strokeLinejoin","strokeMiterlimit","strokeOpacity","strokeRect","strokeStyle","strokeText","strokeWidth","style","styleFloat","styleMap","styleMedia","styleSheet","styleSheetSets","styleSheets","sub","subarray","subject","submit","submitFrame","submitter","subscribe","substr","substring","substringData","subtle","subtree","suffix","suffixes","summary","sup","supported","supportedContentEncodings","supportedEntryTypes","supports","supportsSession","surfaceScale","surroundContents","suspend","suspendRedraw","swapCache","swapNode","sweepFlag","symbols","sync","sysexEnabled","system","systemCode","systemId","systemLanguage","systemXDPI","systemYDPI","tBodies","tFoot","tHead","tabIndex","table","table-layout","tableLayout","tableValues","tag","tagName","tagUrn","tags","taintEnabled","takePhoto","takeRecords","tan","tangentialPressure","tanh","target","targetElement","targetRayMode","targetRaySpace","targetTouches","targetX","targetY","tcpType","tee","tel","terminate","test","texImage2D","texImage3D","texParameterf","texParameteri","texStorage2D","texStorage3D","texSubImage2D","texSubImage3D","text","text-align","text-align-last","text-anchor","text-combine-upright","text-decoration","text-decoration-color","text-decoration-line","text-decoration-skip-ink","text-decoration-style","text-decoration-thickness","text-emphasis","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-indent","text-justify","text-orientation","text-overflow","text-rendering","text-shadow","text-transform","text-underline-offset","text-underline-position","textAlign","textAlignLast","textAnchor","textAutospace","textBaseline","textCombineUpright","textContent","textDecoration","textDecorationBlink","textDecorationColor","textDecorationLine","textDecorationLineThrough","textDecorationNone","textDecorationOverline","textDecorationSkipInk","textDecorationStyle","textDecorationThickness","textDecorationUnderline","textEmphasis","textEmphasisColor","textEmphasisPosition","textEmphasisStyle","textIndent","textJustify","textJustifyTrim","textKashida","textKashidaSpace","textLength","textOrientation","textOverflow","textRendering","textShadow","textTracks","textTransform","textUnderlineOffset","textUnderlinePosition","then","threadId","threshold","thresholds","tiltX","tiltY","time","timeEnd","timeLog","timeOrigin","timeRemaining","timeStamp","timecode","timeline","timelineTime","timeout","timestamp","timestampOffset","timing","title","to","toArray","toBlob","toDataURL","toDateString","toElement","toExponential","toFixed","toFloat32Array","toFloat64Array","toGMTString","toISOString","toJSON","toLocaleDateString","toLocaleFormat","toLocaleLowerCase","toLocaleString","toLocaleTimeString","toLocaleUpperCase","toLowerCase","toMatrix","toMethod","toPrecision","toPrimitive","toSdp","toSource","toStaticHTML","toString","toStringTag","toSum","toTimeString","toUTCString","toUpperCase","toggle","toggleAttribute","toggleLongPressEnabled","tone","toneBuffer","tooLong","tooShort","toolbar","top","topMargin","total","totalFrameDelay","totalVideoFrames","touch-action","touchAction","touched","touches","trace","track","trackVisibility","transaction","transactions","transceiver","transferControlToOffscreen","transferFromImageBitmap","transferImageBitmap","transferIn","transferOut","transferSize","transferToImageBitmap","transform","transform-box","transform-origin","transform-style","transformBox","transformFeedbackVaryings","transformOrigin","transformPoint","transformString","transformStyle","transformToDocument","transformToFragment","transition","transition-delay","transition-duration","transition-property","transition-timing-function","transitionDelay","transitionDuration","transitionProperty","transitionTimingFunction","translate","translateSelf","translationX","translationY","transport","trim","trimEnd","trimLeft","trimRight","trimStart","trueSpeed","trunc","truncate","trustedTypes","turn","twist","type","typeDetail","typeMismatch","typeMustMatch","types","u2f","ubound","uint16","uint32","uint8","uint8Clamped","undefined","unescape","uneval","unicode","unicode-bidi","unicodeBidi","unicodeRange","uniform1f","uniform1fv","uniform1i","uniform1iv","uniform1ui","uniform1uiv","uniform2f","uniform2fv","uniform2i","uniform2iv","uniform2ui","uniform2uiv","uniform3f","uniform3fv","uniform3i","uniform3iv","uniform3ui","uniform3uiv","uniform4f","uniform4fv","uniform4i","uniform4iv","uniform4ui","uniform4uiv","uniformBlockBinding","uniformMatrix2fv","uniformMatrix2x3fv","uniformMatrix2x4fv","uniformMatrix3fv","uniformMatrix3x2fv","uniformMatrix3x4fv","uniformMatrix4fv","uniformMatrix4x2fv","uniformMatrix4x3fv","unique","uniqueID","uniqueNumber","unit","unitType","units","unloadEventEnd","unloadEventStart","unlock","unmount","unobserve","unpause","unpauseAnimations","unreadCount","unregister","unregisterContentHandler","unregisterProtocolHandler","unscopables","unselectable","unshift","unsubscribe","unsuspendRedraw","unsuspendRedrawAll","unwatch","unwrapKey","upDegrees","upX","upY","upZ","update","updateCommands","updateIce","updateInterval","updatePlaybackRate","updateRenderState","updateSettings","updateTiming","updateViaCache","updateWith","updated","updating","upgrade","upload","uploadTotal","uploaded","upper","upperBound","upperOpen","uri","url","urn","urns","usages","usb","usbVersionMajor","usbVersionMinor","usbVersionSubminor","useCurrentView","useMap","useProgram","usedSpace","user-select","userActivation","userAgent","userChoice","userHandle","userHint","userLanguage","userSelect","userVisibleOnly","username","usernameFragment","utterance","uuid","v8BreakIterator","vAlign","vLink","valid","validate","validateProgram","validationMessage","validity","value","valueAsDate","valueAsNumber","valueAsString","valueInSpecifiedUnits","valueMissing","valueOf","valueText","valueType","values","variable","variant","variationSettings","vector-effect","vectorEffect","velocityAngular","velocityExpansion","velocityX","velocityY","vendor","vendorId","vendorSub","verify","version","vertexAttrib1f","vertexAttrib1fv","vertexAttrib2f","vertexAttrib2fv","vertexAttrib3f","vertexAttrib3fv","vertexAttrib4f","vertexAttrib4fv","vertexAttribDivisor","vertexAttribDivisorANGLE","vertexAttribI4i","vertexAttribI4iv","vertexAttribI4ui","vertexAttribI4uiv","vertexAttribIPointer","vertexAttribPointer","vertical","vertical-align","verticalAlign","verticalOverflow","vh","vibrate","vibrationActuator","videoBitsPerSecond","videoHeight","videoTracks","videoWidth","view","viewBox","viewBoxString","viewTarget","viewTargetString","viewport","viewportAnchorX","viewportAnchorY","viewportElement","views","violatedDirective","visibility","visibilityState","visible","visualViewport","vlinkColor","vmax","vmin","voice","voiceURI","volume","vrml","vspace","vw","w","wait","waitSync","waiting","wake","wakeLock","wand","warn","wasClean","wasDiscarded","watch","watchAvailability","watchPosition","webdriver","webkitAddKey","webkitAlignContent","webkitAlignItems","webkitAlignSelf","webkitAnimation","webkitAnimationDelay","webkitAnimationDirection","webkitAnimationDuration","webkitAnimationFillMode","webkitAnimationIterationCount","webkitAnimationName","webkitAnimationPlayState","webkitAnimationTimingFunction","webkitAppearance","webkitAudioContext","webkitAudioDecodedByteCount","webkitAudioPannerNode","webkitBackfaceVisibility","webkitBackground","webkitBackgroundAttachment","webkitBackgroundClip","webkitBackgroundColor","webkitBackgroundImage","webkitBackgroundOrigin","webkitBackgroundPosition","webkitBackgroundPositionX","webkitBackgroundPositionY","webkitBackgroundRepeat","webkitBackgroundSize","webkitBackingStorePixelRatio","webkitBorderBottomLeftRadius","webkitBorderBottomRightRadius","webkitBorderImage","webkitBorderImageOutset","webkitBorderImageRepeat","webkitBorderImageSlice","webkitBorderImageSource","webkitBorderImageWidth","webkitBorderRadius","webkitBorderTopLeftRadius","webkitBorderTopRightRadius","webkitBoxAlign","webkitBoxDirection","webkitBoxFlex","webkitBoxOrdinalGroup","webkitBoxOrient","webkitBoxPack","webkitBoxShadow","webkitBoxSizing","webkitCancelAnimationFrame","webkitCancelFullScreen","webkitCancelKeyRequest","webkitCancelRequestAnimationFrame","webkitClearResourceTimings","webkitClosedCaptionsVisible","webkitConvertPointFromNodeToPage","webkitConvertPointFromPageToNode","webkitCreateShadowRoot","webkitCurrentFullScreenElement","webkitCurrentPlaybackTargetIsWireless","webkitDecodedFrameCount","webkitDirectionInvertedFromDevice","webkitDisplayingFullscreen","webkitDroppedFrameCount","webkitEnterFullScreen","webkitEnterFullscreen","webkitEntries","webkitExitFullScreen","webkitExitFullscreen","webkitExitPointerLock","webkitFilter","webkitFlex","webkitFlexBasis","webkitFlexDirection","webkitFlexFlow","webkitFlexGrow","webkitFlexShrink","webkitFlexWrap","webkitFullScreenKeyboardInputAllowed","webkitFullscreenElement","webkitFullscreenEnabled","webkitGenerateKeyRequest","webkitGetAsEntry","webkitGetDatabaseNames","webkitGetEntries","webkitGetEntriesByName","webkitGetEntriesByType","webkitGetFlowByName","webkitGetGamepads","webkitGetImageDataHD","webkitGetNamedFlows","webkitGetRegionFlowRanges","webkitGetUserMedia","webkitHasClosedCaptions","webkitHidden","webkitIDBCursor","webkitIDBDatabase","webkitIDBDatabaseError","webkitIDBDatabaseException","webkitIDBFactory","webkitIDBIndex","webkitIDBKeyRange","webkitIDBObjectStore","webkitIDBRequest","webkitIDBTransaction","webkitImageSmoothingEnabled","webkitIndexedDB","webkitInitMessageEvent","webkitIsFullScreen","webkitJustifyContent","webkitKeys","webkitLineClamp","webkitLineDashOffset","webkitLockOrientation","webkitMask","webkitMaskClip","webkitMaskComposite","webkitMaskImage","webkitMaskOrigin","webkitMaskPosition","webkitMaskPositionX","webkitMaskPositionY","webkitMaskRepeat","webkitMaskSize","webkitMatchesSelector","webkitMediaStream","webkitNotifications","webkitOfflineAudioContext","webkitOrder","webkitOrientation","webkitPeerConnection00","webkitPersistentStorage","webkitPerspective","webkitPerspectiveOrigin","webkitPointerLockElement","webkitPostMessage","webkitPreservesPitch","webkitPutImageDataHD","webkitRTCPeerConnection","webkitRegionOverset","webkitRelativePath","webkitRequestAnimationFrame","webkitRequestFileSystem","webkitRequestFullScreen","webkitRequestFullscreen","webkitRequestPointerLock","webkitResolveLocalFileSystemURL","webkitSetMediaKeys","webkitSetResourceTimingBufferSize","webkitShadowRoot","webkitShowPlaybackTargetPicker","webkitSlice","webkitSpeechGrammar","webkitSpeechGrammarList","webkitSpeechRecognition","webkitSpeechRecognitionError","webkitSpeechRecognitionEvent","webkitStorageInfo","webkitSupportsFullscreen","webkitTemporaryStorage","webkitTextFillColor","webkitTextSizeAdjust","webkitTextStroke","webkitTextStrokeColor","webkitTextStrokeWidth","webkitTransform","webkitTransformOrigin","webkitTransformStyle","webkitTransition","webkitTransitionDelay","webkitTransitionDuration","webkitTransitionProperty","webkitTransitionTimingFunction","webkitURL","webkitUnlockOrientation","webkitUserSelect","webkitVideoDecodedByteCount","webkitVisibilityState","webkitWirelessVideoPlaybackDisabled","webkitdirectory","webkitdropzone","webstore","weight","whatToShow","wheelDelta","wheelDeltaX","wheelDeltaY","whenDefined","which","white-space","whiteSpace","wholeText","widows","width","will-change","willChange","willValidate","window","withCredentials","word-break","word-spacing","word-wrap","wordBreak","wordSpacing","wordWrap","workerStart","wrap","wrapKey","writable","writableAuxiliaries","write","writeText","writeValue","writeWithoutResponse","writeln","writing-mode","writingMode","x","x1","x2","xChannelSelector","xmlEncoding","xmlStandalone","xmlVersion","xmlbase","xmllang","xmlspace","xor","xr","y","y1","y2","yChannelSelector","yandex","z","z-index","zIndex","zoom","zoomAndPan","zoomRectScreen"]');
 
 /***/ }),
 

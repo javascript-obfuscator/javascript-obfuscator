@@ -76,7 +76,7 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate (): string {
         if (this.nodeTransformationStage === NodeTransformationStage.Finalizing) {
             return this.customCodeHelperObfuscator.obfuscateTemplate(
                 this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate(), {

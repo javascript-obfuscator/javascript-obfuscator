@@ -36,9 +36,9 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
     ];
 
     /**
-     * @type {NodeTransformer.ParentificationTransformer[]}
+     * @type {NodeTransformer[]}
      */
-    public readonly runAfter: NodeTransformer[] = [
+    public override readonly runAfter: NodeTransformer[] = [
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.VariablePreserveTransformer
     ];

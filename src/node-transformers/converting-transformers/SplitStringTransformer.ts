@@ -31,7 +31,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
     /**
      * @type {NodeTransformer[]}
      */
-    public runAfter: NodeTransformer[] = [
+    public override runAfter: NodeTransformer[] = [
         NodeTransformer.ObjectExpressionKeysTransformer,
         NodeTransformer.TemplateLiteralTransformer
     ];

@@ -1,9 +1,9 @@
-import { IObfuscatedCode } from './source-code/IObfuscatedCode';
+import { IObfuscationResult } from './source-code/IObfuscationResult';
 
 export interface IJavaScriptObfuscator {
     /**
      * @param sourceCode
-     * @returns IObfuscatedCode
+     * @returns IObfuscationResult
      */
-    obfuscate (sourceCode: string): IObfuscatedCode;
+    obfuscate (sourceCode: string): IObfuscationResult;
 }

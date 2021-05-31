@@ -8,7 +8,7 @@ import { StringSeparator } from '../../enums/StringSeparator';
 
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
-export class ObfuscatedCodeWriter {
+export class ObfuscatedCodeFileUtils {
     /**
      * @type {string}
      */

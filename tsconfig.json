@@ -6,14 +6,14 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
-      "es2017",
+      "es2019",
       "dom"
     ],
-    "target": "es2017",
+    "target": "es2018",
     "module": "commonjs",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "noImplicitOverride": false,
+    "noImplicitOverride": true,
     "noImplicitThis": false,
     "noUnusedLocals": true,
     "removeComments": true,

@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
+import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -14,6 +15,11 @@ import { NodeFactory } from '../../../node/NodeFactory';
 
 @injectable()
 export class IdentifierReplacer implements IIdentifierReplacer {
+    /**
+     * @type {IGlobalIdentifierNamesCacheStorage}
+     */
+    private readonly identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage;
+
     /**
      * @type {IIdentifierNamesGenerator}
      */
@@ -31,19 +37,23 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {IGlobalIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+            identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;
+        this.identifierNamesCacheStorage = identifierNamesCacheStorage;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
     }
 
     /**
-     * Store `nodeName` of global identifiers as key in map with random name as value.
+     * Store identifier node `name` of global identifiers as key in map with random name as value.
      * Reserved name will be ignored.
      *
      * @param {Node} identifierNode
@@ -65,10 +75,15 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
         namesMap.set(identifierName, newIdentifierName);
+
+        // Have to write all global identifier names to the identifier names cache storage
+        if (this.options.identifierNamesCache) {
+            this.identifierNamesCacheStorage.set(identifierName, newIdentifierName);
+        }
     }
 
     /**
-     * Store `nodeName` of local identifier as key in map with random name as value.
+     * Store identifier node `name` of local identifier as key in map with random name as value.
      * Reserved name will be ignored.
      *
      * @param {Identifier} identifierNode

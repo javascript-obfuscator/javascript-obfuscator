@@ -130,7 +130,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     }
 
     @postConstruct()
-    public initialize (): void {
+    public override initialize (): void {
         super.initialize();
 
         this.indexShiftAmount = this.options.stringArrayIndexShift
@@ -150,7 +150,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     /**
      * @param {string} value
      */
-    public get (value: string): IStringArrayStorageItemData {
+    public override get (value: string): IStringArrayStorageItemData {
         return this.getOrSetIfDoesNotExist(value);
     }
 
@@ -178,7 +178,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     /**
      * @returns {string}
      */
-    public getStorageId (): string {
+    public override getStorageId (): string {
         if (!this.stringArrayStorageName) {
             this.stringArrayStorageName = this.identifierNamesGenerator
                 .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);

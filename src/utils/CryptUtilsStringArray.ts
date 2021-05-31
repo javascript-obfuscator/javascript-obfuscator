@@ -13,7 +13,7 @@ export class CryptUtilsStringArray extends CryptUtils implements ICryptUtilsStri
     /**
      * @type {string}
      */
-    protected readonly base64Alphabet: string = base64alphabetSwapped;
+    protected override readonly base64Alphabet: string = base64alphabetSwapped;
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -30,7 +30,7 @@ export class CryptUtilsStringArray extends CryptUtils implements ICryptUtilsStri
      * @param {string} string
      * @returns {string}
      */
-    public btoa (string: string): string {
+    public override btoa (string: string): string {
         const output = super.btoa(string);
 
         return output.replace(/=+$/, '');

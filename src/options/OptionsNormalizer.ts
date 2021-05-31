@@ -9,6 +9,7 @@ import { ControlFlowFlatteningThresholdRule } from './normalizer-rules/ControlFl
 import { DeadCodeInjectionRule } from './normalizer-rules/DeadCodeInjectionRule';
 import { DeadCodeInjectionThresholdRule } from './normalizer-rules/DeadCodeInjectionThresholdRule';
 import { DomainLockRule } from './normalizer-rules/DomainLockRule';
+import { IdentifierNamesCacheRule } from './normalizer-rules/IdentifierNamesCacheRule';
 import { InputFileNameRule } from './normalizer-rules/InputFileNameRule';
 import { SeedRule } from './normalizer-rules/SeedRule';
 import { SelfDefendingRule } from './normalizer-rules/SelfDefendingRule';
@@ -29,6 +30,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         DeadCodeInjectionRule,
         DeadCodeInjectionThresholdRule,
         DomainLockRule,
+        IdentifierNamesCacheRule,
         InputFileNameRule,
         SeedRule,
         SelfDefendingRule,

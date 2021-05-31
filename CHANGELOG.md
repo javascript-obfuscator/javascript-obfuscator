@@ -1,11 +1,17 @@
 Change Log
 
-v2.14.0
+v2.15.0
 ---
 * Added support of `es2022` features: private identifiers and class properties
 
+v2.14.0
+---
+* Added `identifierNamesCache` option for reading and writing identifier names cache. See `README.md`.
+* **CLI**:  Added `--identifier-names-cache-path` option for reading and writing identifier names cache. See `README.md`.
+
 v2.13.0
 ---
+* Fixed invalid code generation for start/middle rest arguments when `controlFlowFlattenig` option is enabled. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/920
 * **Internal**: Added support of `node@16` and dropped support of `node@10`. This should not affect obfuscated code
 
 v2.12.0

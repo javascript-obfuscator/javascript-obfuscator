@@ -756,12 +756,12 @@ const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
 
 console.log(source1ObfuscationResult.getIdentifierNamesCache());
 /*
-{ 
-    globalIdentifiers: {
-        foo: '_0x5de86d',
-        bar: '_0x2a943b'
+    { 
+        globalIdentifiers: {
+            foo: '_0x5de86d',
+            bar: '_0x2a943b'
+        }
     }
-}
 */
 
 
@@ -784,9 +784,9 @@ const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
 
 console.log(source2ObfuscationResult.getObfuscatedCode());
 /*
-_0x5de86d(0x1);
-_0x2a943b();
-baz();
+    _0x5de86d(0x1);
+    _0x2a943b();
+    baz();
  */
 ```
 

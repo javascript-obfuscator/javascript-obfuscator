@@ -736,7 +736,7 @@ If an empty object (`{}`) is passed, enables the writing identifier names to the
 The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
 
 Example:
-```
+```ts
 const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
     `
         function foo(arg) {

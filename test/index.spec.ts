@@ -11,6 +11,7 @@ import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageA
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
+import './unit-tests/cli/utils/IdentifierNamesCacheFileUtils.spec';
 import './unit-tests/cli/utils/ObfuscatedCodeFileUtils.spec';
 import './unit-tests/cli/utils/SourceCodeFileUtils.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';

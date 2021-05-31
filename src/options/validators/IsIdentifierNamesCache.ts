@@ -68,10 +68,6 @@ export function IsIdentifierNamesCache (
                         return false;
                     }
 
-                    if (value === null) {
-                        return false;
-                    }
-
                     if (!validateDictionary((<TIdentifierNamesCache>value)?.globalIdentifiers)) {
                         return false;
                     }

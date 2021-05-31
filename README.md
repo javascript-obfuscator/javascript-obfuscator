@@ -718,14 +718,22 @@ Example:
 ### `identifierNamesCache`
 Type: `Object | null` Default: `null`
 
-The main goal for this option is the ability to use the same global identifier names during obfuscation of multiple sources/files.
+The main goal for this option is the ability to use the same identifier names during obfuscation of multiple sources/files.
+
+Currently the two types of the identifiers are supported:
+- Global identifiers:
+    * All global identifiers will be written to the cache;
+    * All matched **undeclared** global identifiers will be replaced by the values from the cache.
+- Property identifiers, only when `renameProperties` option is enabled:
+    * All property identifiers will be written to the cache;
+    * All matched property identifiers will be replaced by the values from the cache.
 
 #### Node.js API
 If a `null` value is passed, completely disables the cache.
 
-If an empty object (`{}`) is passed, enables the writing dictionary of all global original and obfuscated names to the object. This object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
+If an empty object (`{}`) is passed, enables the writing identifier names to the cache-object (`TIdentifierNamesCache` type). This cache-object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
 
-The result of `getIdentifierNamesCache` call could be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched **undeclared** global identifier names of next sources.
+The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
 
 Example:
 ```
@@ -747,7 +755,12 @@ const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
 )
 
 console.log(source1ObfuscationResult.getIdentifierNamesCache());
-// { foo: '_0x5de86d', bar: '_0x2a943b' }
+/*{ 
+    globalIdentifiers: {
+        foo: '_0x5de86d',
+        bar: '_0x2a943b'
+    }
+}*/
 
 
 
@@ -774,11 +787,11 @@ console.log(source2ObfuscationResult.getObfuscatedCode());
 ```
 
 #### CLI
-CLI has a different option `--identifier-names-cache-path` that allows defining a path to the existing `.json` file that will be used to read and write global identifier names cache.
+CLI has a different option `--identifier-names-cache-path` that allows defining a path to the existing `.json` file that will be used to read and write identifier names cache.
 
 If a path to the empty file will be passed - identifier names cache will be written to that file.
 
-This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched **undeclared** global identifier names of the next files.
+This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched identifier names of the next files.
 
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`
@@ -901,6 +914,8 @@ Type: `string` Default: `safe`
 Specifies `renameProperties` option mode:
 * `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors. With this mode some properties will be excluded from renaming.
 * `unsafe` - default behaviour before `2.11.0` release. Renames properties in an unsafe way without any restrictions.
+
+If one file is using properties from other file, use [`identifierNamesCache`](#identifiernamescache) option to keep the same property names between these files.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`

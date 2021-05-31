@@ -76,7 +76,47 @@ describe('`identifierNamesCache` validation', () => {
                 });
             });
 
-            describe('Variant #4: `null` value', () => {
+            describe('Variant #4: object with some empty identifier names cache', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesCache: {
+                                globalIdentifiers: {
+                                    foo: '_0x123456'
+                                }
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should pass validation', () => {
+                    assert.doesNotThrow(testFunc);
+                });
+            });
+
+            describe('Variant #5: empty object', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesCache: {}
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should pass validation', () => {
+                    assert.doesNotThrow(testFunc);
+                });
+            });
+
+            describe('Variant #5: `null` value', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {

@@ -13,11 +13,11 @@ import { DEFAULT_PRESET } from '../presets/Default';
  * @returns {boolean}
  */
 const validateDictionary = (value: unknown | TIdentifierNamesCacheDictionary): boolean => {
-    if (typeof value !== 'object') {
-        return false;
+    if (value === undefined) {
+        return true;
     }
 
-    if (value === null) {
+    if (typeof value !== 'object' || value === null) {
         return false;
     }
 

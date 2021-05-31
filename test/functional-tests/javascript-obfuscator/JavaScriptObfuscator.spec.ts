@@ -1140,7 +1140,7 @@ describe('JavaScriptObfuscator', () => {
 
             const samplesCount: number = 30;
 
-            let areCollisionsExists: boolean = false;
+            let collisionError: string | null = null;
             let obfuscateFunc: (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => string;
 
             before(() => {
@@ -1169,8 +1169,8 @@ describe('JavaScriptObfuscator', () => {
                     for (let i = 0; i < samplesCount; i++) {
                         try {
                             eval(obfuscateFunc(identifierNamesGenerator));
-                        } catch {
-                            areCollisionsExists = true;
+                        } catch (error) {
+                            collisionError = error.message;
                             break;
                         }
                     }
@@ -1178,7 +1178,7 @@ describe('JavaScriptObfuscator', () => {
             });
 
             it('It does not create identifier names collision', () => {
-                assert.equal(areCollisionsExists, false);
+                assert.isNull(collisionError);
             });
         });
 

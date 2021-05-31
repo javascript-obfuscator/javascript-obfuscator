@@ -70,10 +70,7 @@ export class IdentifierNamesCacheFileUtils {
 
         if (!fileData.content) {
             // Initial state of identifier names cache file
-            return {
-                globalIdentifiers: {},
-                propertyIdentifiers: {}
-            };
+            return {};
         }
 
         try {

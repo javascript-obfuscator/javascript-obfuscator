@@ -19,7 +19,7 @@ describe('IdentifierNamesCacheFileUtils', () => {
         propertyIdentifiers: {
             bar: '_0x654321'
         }
-    };
+    }
     const fileContent: string = JSON.stringify(expectedIdentifierNamesCache);
     const tmpDirectoryPath: string = path.join('test', 'tmp');
 
@@ -139,6 +139,67 @@ describe('IdentifierNamesCacheFileUtils', () => {
 
                 it('should throw an error if `identifierNamesCachePath` is a directory path', () => {
                     assert.throws(testFunc, expectedFilePathError);
+                });
+            });
+        });
+    });
+
+    describe('writeFile', () => {
+        describe('Variant #1: Should write identifier names cache back to the file', () => {
+            describe('Variant #1: identifier names cache file does not exist', () => {
+                const expectedUpdatedIdentifierNamesCache: TIdentifierNamesCache = {
+                    ...expectedIdentifierNamesCache,
+                    globalIdentifiers: {
+                        ...expectedIdentifierNamesCache.globalIdentifiers,
+                        baz: '_0x987654'
+                    }
+                };
+
+                const tmpFileName: string = 'cache.json';
+                const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+
+                let updatedIdentifierNamesCache: TIdentifierNamesCache | null;
+
+                before(() => {
+                    new IdentifierNamesCacheFileUtils(inputPath).writeFile(expectedUpdatedIdentifierNamesCache);
+                    updatedIdentifierNamesCache = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+                });
+
+                it('should correctly write updated identifier names to the cache file', () => {
+                    assert.deepEqual(updatedIdentifierNamesCache, expectedUpdatedIdentifierNamesCache);
+                });
+
+                after(() => {
+                    fs.unlinkSync(inputPath);
+                });
+            });
+
+            describe('Variant #2 identifier names cache file is exist', () => {
+                const expectedUpdatedIdentifierNamesCache: TIdentifierNamesCache = {
+                    ...expectedIdentifierNamesCache,
+                    globalIdentifiers: {
+                        ...expectedIdentifierNamesCache.globalIdentifiers,
+                        baz: '_0x987654'
+                    }
+                };
+
+                const tmpFileName: string = 'cache.json';
+                const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+
+                let updatedIdentifierNamesCache: TIdentifierNamesCache | null;
+
+                before(() => {
+                    fs.writeFileSync(inputPath, fileContent);
+                    new IdentifierNamesCacheFileUtils(inputPath).writeFile(expectedUpdatedIdentifierNamesCache);
+                    updatedIdentifierNamesCache = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+                });
+
+                it('should correctly write updated identifier names to the cache file', () => {
+                    assert.deepEqual(updatedIdentifierNamesCache, expectedUpdatedIdentifierNamesCache);
+                });
+
+                after(() => {
+                    fs.unlinkSync(inputPath);
                 });
             });
         });

@@ -407,5 +407,122 @@ describe('RenamePropertiesTransformer', () => {
                 });
             });
         });
+
+        describe('Property identifier names from property identifier names cache', () => {
+            describe('Variant #1: no property identifier names in the cache', () => {
+                const property1RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x1/;
+                const property2RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x2/;
+                const property3RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x3/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {}
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: should rename property', () => {
+                    assert.match(obfuscatedCode, property1RegExp);
+                });
+
+                it('Match #2: should rename property', () => {
+                    assert.match(obfuscatedCode, property2RegExp);
+                });
+
+                it('Match #3: should rename property', () => {
+                    assert.match(obfuscatedCode, property3RegExp);
+                });
+            });
+
+            describe('Variant #2: existing property identifier names in the cache', () => {
+                const property1RegExp: RegExp = /'bar_from_cache': *0x1/;
+                const property2RegExp: RegExp = /'baz_from_cache': *0x2/;
+                const property3RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x3/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {
+                                    bar: 'bar_from_cache',
+                                    baz: 'baz_from_cache'
+                                }
+                            }
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: should rename property based on the cache value', () => {
+                    assert.match(obfuscatedCode, property1RegExp);
+                });
+
+                it('Match #2: should rename property based on the cache value', () => {
+                    assert.match(obfuscatedCode, property2RegExp);
+                });
+
+                it('Match #3: should rename property', () => {
+                    assert.match(obfuscatedCode, property3RegExp);
+                });
+            });
+
+            describe('Variant #3: existing property identifier names in the cache, reserved name is defined', () => {
+                const property1RegExp: RegExp = /'bar_from_cache': *0x1/;
+                const property2RegExp: RegExp = /'baz': *0x2/;
+                const property3RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x3/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            identifierNamesCache: {
+                                globalIdentifiers: {},
+                                propertyIdentifiers: {
+                                    bar: 'bar_from_cache',
+                                    baz: 'baz_from_cache'
+                                }
+                            },
+                            reservedNames: ['^baz$']
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: should rename property based on the cache value', () => {
+                    assert.match(obfuscatedCode, property1RegExp);
+                });
+
+                it('Match #2: should keep original property name', () => {
+                    assert.match(obfuscatedCode, property2RegExp);
+                });
+
+                it('Match #3: should rename property', () => {
+                    assert.match(obfuscatedCode, property3RegExp);
+                });
+            });
+        });
     });
 });

@@ -70,15 +70,12 @@ export class MethodAndPropertyDefinitionTransformer extends AbstractNodeTransfor
     }
 
     /**
-     * TODO: remove all casts after @types/estree update
-     * TODO: make `classFieldNode` types just as `ESTree.MethodDefinition | ESTree.PropertyDefinition`
-     *
      * @param {MethodDefinition | PropertyDefinition} classFieldNode
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
     public transformNode (
-        classFieldNode: ESTree.Node & (ESTree.MethodDefinition | ESTree.PropertyDefinition),
+        classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         parentNode: ESTree.Node
     ): ESTree.Node {
         if (NodeGuards.isIdentifierNode(classFieldNode.key)) {

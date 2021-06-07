@@ -14,7 +14,7 @@ export function DomainLockTemplate (): string {
             let location;
             let hostname;
 
-            const isName_nlc = function(name, length, cs) {
+            const isName = function(name, length, cs) {
                 if (name.length != length) {
                     return false;
                 }
@@ -30,20 +30,20 @@ export function DomainLockTemplate (): string {
                 return true;
             };
 
-            const isName_cnl = function(cs, name, length) {
-              return isName_nlc(name, length, cs);
+            const isNameVariant1 = function(cs, name, length) {
+              return isName(name, length, cs);
             };
 
-            const isName_ncl = function(name, cs, length) {
-              return isName_cnl(cs, name, length);
+            const isNameVariant2 = function(name, cs, length) {
+              return isNameVariant1(cs, name, length);
             };
 
-            const isName_lnc = function(length, name, cs) {
-              return isName_nlc(name, length, cs);
+            const isNameVariant3 = function(length, name, cs) {
+              return isNameVariant2(name, cs, length);
             };
 
             for (let d in that) {
-                if (isName_nlc(d, 8, [7, 116, 5, 101, 3, 117, 0, 100])) {
+                if (isName(d, 8, [7, 116, 5, 101, 3, 117, 0, 100])) {
                     document = d;
                 
                     break;
@@ -51,7 +51,7 @@ export function DomainLockTemplate (): string {
             }
 
             for (let d1 in that[document]) {
-                if (isName_lnc(6, d1, [5, 110, 0, 100])) {
+                if (isNameVariant3(6, d1, [5, 110, 0, 100])) {
                     domain = d1;
 
                     break;
@@ -59,7 +59,7 @@ export function DomainLockTemplate (): string {
             }
 
             for (let d2 in that[document]) {
-                if (isName_ncl(d2, [7, 110, 0, 108], 8)) {
+                if (isNameVariant2(d2, [7, 110, 0, 108], 8)) {
                     location = d2;
 
                     break;
@@ -68,7 +68,7 @@ export function DomainLockTemplate (): string {
 
             if (!("~" > domain)) {
                 for (let d3 in that[document][location]) {
-                    if (isName_cnl([7, 101, 0, 104], d3, 8)) {
+                    if (isNameVariant1([7, 101, 0, 104], d3, 8)) {
                         hostname = d3;
                         
                         break;

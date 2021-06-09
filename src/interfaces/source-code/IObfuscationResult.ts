@@ -1,5 +1,7 @@
 import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
+
 import { IInitializable } from '../IInitializable';
+import { IOptions } from '../options/IOptions';
 
 export interface IObfuscationResult extends IInitializable <[string, string]> {
     /**
@@ -11,6 +13,11 @@ export interface IObfuscationResult extends IInitializable <[string, string]> {
      * @return {string}
      */
     getObfuscatedCode (): string;
+
+    /**
+     * @return {IOptions}
+     */
+    getOptions (): IOptions;
 
     /**
      * @return {string}

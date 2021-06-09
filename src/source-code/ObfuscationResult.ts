@@ -97,6 +97,13 @@ export class ObfuscationResult implements IObfuscationResult {
     }
 
     /**
+     * @returns {IOptions}
+     */
+    public getOptions (): IOptions {
+        return this.options;
+    }
+
+    /**
      * @returns {string}
      */
     public getSourceMap (): string {

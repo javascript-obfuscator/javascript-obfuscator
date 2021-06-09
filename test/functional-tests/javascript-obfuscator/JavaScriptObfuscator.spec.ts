@@ -1141,13 +1141,13 @@ describe('JavaScriptObfuscator', () => {
             const samplesCount: number = 30;
 
             let collisionError: string | null = null;
-            let obfuscateFunc: (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => string;
+            let obfuscateFunc: (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => IObfuscationResult;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
 
                 obfuscateFunc = (identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => {
-                    const obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    return JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             identifierNamesGenerator,
@@ -1156,9 +1156,7 @@ describe('JavaScriptObfuscator', () => {
                             identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'foozmos', 'cow', 'chikago'],
                             stringArray: true
                         }
-                    ).getObfuscatedCode();
-
-                    return obfuscatedCode;
+                    );
                 };
 
 
@@ -1167,10 +1165,14 @@ describe('JavaScriptObfuscator', () => {
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 ].forEach((identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>) => {
                     for (let i = 0; i < samplesCount; i++) {
+                        const obfuscationResult = obfuscateFunc(identifierNamesGenerator);
+                        const obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        const seed = obfuscationResult.getOptions().seed;
+
                         try {
-                            eval(obfuscateFunc(identifierNamesGenerator));
+                            eval(obfuscatedCode);
                         } catch (error) {
-                            collisionError = error.message;
+                            collisionError = `Seed: ${seed}. Error: ${error.message}`;
                             break;
                         }
                     }

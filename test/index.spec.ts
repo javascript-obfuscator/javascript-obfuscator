@@ -133,6 +133,7 @@ import './functional-tests/node-transformers/string-array-transformers/string-ar
 import './functional-tests/node-transformers/string-array-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
 import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
+import './functional-tests/options/domain-dest/Validation.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/options/identifier-names-cache/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';

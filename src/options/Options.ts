@@ -46,6 +46,7 @@ import { HIGH_OBFUSCATION_PRESET } from './presets/HighObfuscation';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
+import { IsDomainDestUrl } from './validators/IsDomainDestUrl';
 import { IsIdentifierNamesCache } from './validators/IsIdentifierNamesCache';
 
 @injectable()
@@ -137,11 +138,7 @@ export class Options implements IOptions {
     /**
      * @type {string}
      */
-    @IsString()
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
+    @IsDomainDestUrl()
     public readonly domainDest!: string;
 
     /**

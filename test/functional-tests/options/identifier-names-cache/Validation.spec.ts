@@ -233,7 +233,7 @@ describe('`identifierNamesCache` validation', () => {
                 });
             });
 
-            describe('Variant #4: cache with nullable dictionary fields', () => {
+            describe('Variant #5: cache with nullable dictionary fields', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {

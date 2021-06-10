@@ -1,5 +1,10 @@
 Change Log
 
+v2.15.0
+---
+* Added `domainDest` option that option allows the browser to be redirected to a passed domain if the source code isn't run on the domains specified by `domainLock`.
+* `ObfuscationResult` object now contains `getOptions` method to get options that were used during obfuscation
+
 v2.14.0
 ---
 * Added `identifierNamesCache` option for reading and writing identifier names cache. See `README.md`.

@@ -238,7 +238,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--domain-dest <string>',
-                'Allows the browser to be redirected to this domain if the source code isn\'t run on the domains specified by --domain-lock',
+                'Allows the browser to be redirected to a passed domain if the source code isn\'t run on the domains specified by --domain-lock',
             )
             .option(
                 '--exclude <list> (comma separated, without whitespaces)',

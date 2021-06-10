@@ -46,7 +46,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         TNode extends ESTree.Property | ESTree.MemberExpression | ESTree.MethodDefinition
     > (
         propertyNode: TNode,
-        propertyKeyNode: ESTree.Expression
+        propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier
     ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {
         if (NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
             return false;
@@ -123,7 +123,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {Property}
      */
     private transformPropertyNode (propertyNode: ESTree.Property): ESTree.Property {
-        const propertyKeyNode: ESTree.Expression = propertyNode.key;
+        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
 
         if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
             propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
@@ -138,7 +138,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {Property}
      */
     private transformMemberExpressionNode (memberExpressionNode: ESTree.MemberExpression): ESTree.MemberExpression {
-        const propertyKeyNode: ESTree.Expression = memberExpressionNode.property;
+        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = memberExpressionNode.property;
 
         if (RenamePropertiesTransformer.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
             memberExpressionNode.property = this.renamePropertiesReplacer.replace(propertyKeyNode);
@@ -152,7 +152,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {MethodDefinition}
      */
     private transformMethodDefinitionNode (methodDefinitionNode: ESTree.MethodDefinition): ESTree.MethodDefinition {
-        const propertyKeyNode: ESTree.Expression = methodDefinitionNode.key;
+        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = methodDefinitionNode.key;
 
         if (RenamePropertiesTransformer.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
             methodDefinitionNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);

@@ -361,6 +361,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    domainDest: 'about:blank',
     forceTransformStrings: [],
     identifierNamesCache: null,
     identifierNamesGenerator: 'hexadecimal',
@@ -421,6 +422,7 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
+    --domain-dest 'url' <string>
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
@@ -690,6 +692,13 @@ Allows to run the obfuscated source code only on specific domains and/or sub-dom
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
+
+### `domainDest`
+Type: `string` Default: `about:blank`
+
+##### :warning: This option does not work with `target: 'node'`
+
+Location to redirect the browser to when domainLock is triggered.
 
 ### `exclude`
 Type: `string[]` Default: `[]`

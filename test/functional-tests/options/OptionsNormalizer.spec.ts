@@ -159,6 +159,52 @@ describe('OptionsNormalizer', () => {
             });
         });
 
+        describe('domainDestRule', () => {
+            describe('Variant #1: `domainLock` option is set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        domainLock: [
+                            'localhost'
+                        ],
+                        domainDest: 'https://example.com'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        domainLock: [
+                            'localhost'
+                        ],
+                        domainDest: 'https://example.com'
+                    };
+                });
+
+                it('should not normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #2 `domainLock` option is not set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        domainLock: [],
+                        domainDest: 'https://example.com'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        domainLock: [],
+                        domainDest: 'about:blank'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+        });
+
         describe('domainLockRule', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({

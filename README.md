@@ -422,7 +422,7 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
-    --domain-dest 'url' <string>
+    --domain-dest <string>
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
@@ -698,7 +698,7 @@ Type: `string` Default: `about:blank`
 
 ##### :warning: This option does not work with `target: 'node'`
 
-Location to redirect the browser to when domainLock is triggered.
+Allows the browser to be redirected to a passed domain if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
 
 ### `exclude`
 Type: `string[]` Default: `[]`

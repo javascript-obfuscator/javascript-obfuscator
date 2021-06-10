@@ -20,7 +20,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @returns {string | null}
      */
     private static getPropertyNodeKeyName (propertyNode: ESTree.Property): string | null {
-        const propertyKeyNode: ESTree.Expression = propertyNode.key;
+        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
 
         if (
             NodeGuards.isLiteralNode(propertyKeyNode)

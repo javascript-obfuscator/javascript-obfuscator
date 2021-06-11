@@ -1,5 +1,9 @@
 Change Log
 
+v2.15.1
+---
+* **Hotfix**: `domainDest` => `domainLockRedirectUrl` option rename
+
 v2.15.0
 ---
 * Added `domainDest` option that option allows the browser to be redirected to a passed domain if the source code isn't run on the domains or URL specified by `domainLock`. Thank you https://github.com/erikdubbelboer!

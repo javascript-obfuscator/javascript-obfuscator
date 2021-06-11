@@ -107,10 +107,10 @@ export function DomainLockTemplate (): string {
             }
 
             if (!ok) {
-                const regExp2 = new RegExp("[{domainDestDiff}]", "g");
-                const domainDest = "{domainDest}".replace(regExp2, "");
+                const regExp2 = new RegExp("[{domainLockRedirectUrlDiff}]", "g");
+                const domainLockRedirectUrl = "{hiddenDomainLockRedirectUrl}".replace(regExp2, "");
 
-                that[document][location] = domainDest;
+                that[document][location] = domainLockRedirectUrl;
             }
         });
 

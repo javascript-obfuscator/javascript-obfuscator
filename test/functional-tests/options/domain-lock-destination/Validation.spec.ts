@@ -4,8 +4,8 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
-describe('`domainDest` validation', () => {
-    describe('IsDomainDestUrl', () => {
+describe('`domainLockRedirectUrl` validation', () => {
+    describe('IsDomainLockRedirectUrl', () => {
         describe('Variant #1: positive validation', () => {
             describe('Variant #1: string with url containing protocol, host and some path', () => {
                 let testFunc: () => string;
@@ -15,7 +15,7 @@ describe('`domainDest` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            domainDest: 'https://example.com/path'
+                            domainLockRedirectUrl: 'https://example.com/path'
                         }
                     ).getObfuscatedCode();
                 });
@@ -33,7 +33,7 @@ describe('`domainDest` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            domainDest: 'example.com/path'
+                            domainLockRedirectUrl: 'example.com/path'
                         }
                     ).getObfuscatedCode();
                 });
@@ -51,7 +51,7 @@ describe('`domainDest` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            domainDest: '/path'
+                            domainLockRedirectUrl: '/path'
                         }
                     ).getObfuscatedCode();
                 });
@@ -69,7 +69,7 @@ describe('`domainDest` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            domainDest: 'about:blank'
+                            domainLockRedirectUrl: 'about:blank'
                         }
                     ).getObfuscatedCode();
                 });
@@ -90,7 +90,7 @@ describe('`domainDest` validation', () => {
                         '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            domainDest: 'foo'
+                            domainLockRedirectUrl: 'foo'
                         }
                     ).getObfuscatedCode();
                 });

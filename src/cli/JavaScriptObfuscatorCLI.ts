@@ -237,8 +237,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--domain-dest <string>',
-                'Allows the browser to be redirected to a passed domain if the source code isn\'t run on the domains specified by --domain-lock',
+                '--domain-lock-redirect-url <string>',
+                'Allows the browser to be redirected to a passed URL if the source code isn\'t run on the domains specified by --domain-lock',
             )
             .option(
                 '--exclude <list> (comma separated, without whitespaces)',

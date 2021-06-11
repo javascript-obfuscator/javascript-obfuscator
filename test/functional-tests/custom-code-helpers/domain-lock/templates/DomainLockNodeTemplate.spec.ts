@@ -61,7 +61,7 @@ describe('DomainLockTemplate', () => {
 
     describe('Variant #1: current domain matches with `domainsString`', () => {
         const domainsString: string = ['www.example.com'].join(';');
-        const domainDest: string = 'about:blank';
+        const domainLockRedirectUrl: string = 'about:blank';
         const currentDomain: string = 'www.example.com';
 
         let testFunc: Function;
@@ -74,9 +74,9 @@ describe('DomainLockTemplate', () => {
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             const [
-                hiddenDomainDest,
-                domainDestDiff
-            ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                hiddenDomainLockRedirectUrl,
+                domainLockRedirectUrlDiff
+            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
             root = {
                 document: {
@@ -90,8 +90,8 @@ describe('DomainLockTemplate', () => {
                     domainLockFunctionName: 'domainLockFunction',
                     domainsStringDiff,
                     domains: hiddenDomainsString,
-                    domainDestDiff,
-                    hiddenDomainDest,
+                    domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                    hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                     globalVariableTemplate: '',
                     singleCallControllerFunctionName
                 },
@@ -108,7 +108,7 @@ describe('DomainLockTemplate', () => {
 
     describe('Variant #2: current domain matches with base domain of `domainsString`', () => {
         const domainsString: string = ['.example.com'].join(';');
-        const domainDest: string = 'about:blank';
+        const domainLockRedirectUrl: string = 'about:blank';
         const currentDomain: string = 'www.example.com';
 
         let testFunc: Function;
@@ -121,9 +121,9 @@ describe('DomainLockTemplate', () => {
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             const [
-                hiddenDomainDest,
-                domainDestDiff
-            ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                hiddenDomainLockRedirectUrl,
+                domainLockRedirectUrlDiff
+            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
             root = {
                 document: {
@@ -137,8 +137,8 @@ describe('DomainLockTemplate', () => {
                     domainLockFunctionName: 'domainLockFunction',
                     domainsStringDiff,
                     domains: hiddenDomainsString,
-                    domainDestDiff,
-                    hiddenDomainDest,
+                    domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                    hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                     globalVariableTemplate: '',
                     singleCallControllerFunctionName
                 },
@@ -155,7 +155,7 @@ describe('DomainLockTemplate', () => {
 
     describe('Variant #3: current domain matches with root domain of `domainsString`', () => {
         const domainsString: string = ['.example.com'].join(';');
-        const domainDest: string = 'about:blank';
+        const domainLockRedirectUrl: string = 'about:blank';
         const currentDomain: string = 'example.com';
 
         let testFunc: Function;
@@ -168,9 +168,9 @@ describe('DomainLockTemplate', () => {
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             const [
-                hiddenDomainDest,
-                domainDestDiff
-            ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                hiddenDomainLockRedirectUrl,
+                domainLockRedirectUrlDiff
+            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
             root = {
                 document: {
@@ -184,8 +184,8 @@ describe('DomainLockTemplate', () => {
                     domainLockFunctionName: 'domainLockFunction',
                     domainsStringDiff,
                     domains: hiddenDomainsString,
-                    domainDestDiff,
-                    hiddenDomainDest,
+                    domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                    hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                     globalVariableTemplate: '',
                     singleCallControllerFunctionName
                 },
@@ -203,7 +203,7 @@ describe('DomainLockTemplate', () => {
     describe('Variant #4: current root domain matches with `domainsString`', () => {
         describe('Variant #1', () => {
             const domainsString: string = ['example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'example.com';
 
             let testFunc: Function;
@@ -216,9 +216,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -232,8 +232,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -250,7 +250,7 @@ describe('DomainLockTemplate', () => {
 
         describe('Variant #2', () => {
             const domainsString: string = ['example.com', '.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'subdomain.example.com';
 
             let testFunc: Function;
@@ -263,9 +263,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -279,8 +279,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -297,7 +297,7 @@ describe('DomainLockTemplate', () => {
 
         describe('Variant #3', () => {
             const domainsString: string = ['.example.com', 'example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'subdomain.example.com';
 
             let testFunc: Function;
@@ -310,9 +310,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -326,8 +326,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -344,7 +344,7 @@ describe('DomainLockTemplate', () => {
 
         describe('Variant #4', () => {
             const domainsString: string = ['sub1.example.com', 'sub2.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'sub1.example.com';
 
             let testFunc: Function;
@@ -357,9 +357,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -373,8 +373,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -392,7 +392,7 @@ describe('DomainLockTemplate', () => {
 
     describe('Variant #5: current domain matches with base domain of `domainsString` item', () => {
         const domainsString: string = ['www.test.com', '.example.com'].join(';');
-        const domainDest: string = 'about:blank';
+        const domainLockRedirectUrl: string = 'about:blank';
         const currentDomain: string = 'subdomain.example.com';
 
         let testFunc: Function;
@@ -405,9 +405,9 @@ describe('DomainLockTemplate', () => {
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             const [
-                hiddenDomainDest,
-                domainDestDiff
-            ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                hiddenDomainLockRedirectUrl,
+                domainLockRedirectUrlDiff
+            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
             root = {
                 document: {
@@ -421,8 +421,8 @@ describe('DomainLockTemplate', () => {
                     domainLockFunctionName: 'domainLockFunction',
                     domainsStringDiff,
                     domains: hiddenDomainsString,
-                    domainDestDiff,
-                    hiddenDomainDest,
+                    domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                    hiddenDomainLockRedirectUrl,
                     globalVariableTemplate: '',
                     singleCallControllerFunctionName
                 },
@@ -440,7 +440,7 @@ describe('DomainLockTemplate', () => {
     describe('Variant #6: current domain doesn\'t match with `domainsString`', () => {
         describe('Variant #1', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'www.test.com';
 
             let testFunc: Function;
@@ -453,9 +453,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -469,8 +469,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -481,13 +481,13 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
 
         describe('Variant #2', () => {
             const domainsString: string = ['sub1.test.com', 'sub2.test.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'sub3.test.com';
 
             let testFunc: Function;
@@ -500,9 +500,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -515,8 +515,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -527,13 +527,13 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
 
         describe('Variant #3', () => {
             const domainsString: string = ['www.example.com', '.example.com', 'sub.test.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'www.test.com';
 
             let testFunc: Function;
@@ -546,9 +546,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -562,8 +562,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -574,13 +574,13 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
 
         describe('Variant #4', () => {
             const domainsString: string = ['.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'example1.com';
 
             let testFunc: Function;
@@ -593,9 +593,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -609,8 +609,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -621,13 +621,13 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
 
         describe('Variant #5', () => {
             const domainsString: string = ['example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentDomain: string = 'sub.example.com';
 
             let testFunc: Function;
@@ -640,9 +640,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -656,8 +656,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -668,7 +668,7 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
     });
@@ -676,7 +676,7 @@ describe('DomainLockTemplate', () => {
     describe('Variant #7: location.hostname', () => {
         describe('Variant #1: current location.hostname matches with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.example.com';
 
             let testFunc: Function;
@@ -689,9 +689,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -706,8 +706,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -724,7 +724,7 @@ describe('DomainLockTemplate', () => {
 
         describe('Variant #2: current location.hostname doesn\'t match with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.test.com';
 
             let testFunc: Function;
@@ -737,9 +737,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -754,8 +754,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -766,7 +766,7 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
     });
@@ -774,7 +774,7 @@ describe('DomainLockTemplate', () => {
     describe('Variant #8: domain and location.hostname presented', () => {
         describe('Variant #1: current domain matches with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.example.com';
 
             let testFunc: Function;
@@ -787,9 +787,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -805,8 +805,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -823,7 +823,7 @@ describe('DomainLockTemplate', () => {
 
         describe('Variant #2: current domain doesn\'t match with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const domainDest: string = 'about:blank';
+            const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.test.com';
 
             let testFunc: Function;
@@ -836,9 +836,9 @@ describe('DomainLockTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 const [
-                    hiddenDomainDest,
-                    domainDestDiff
-                ] = cryptUtils.hideString(domainDest, domainDest.length * 3);
+                    hiddenDomainLockRedirectUrl,
+                    domainLockRedirectUrlDiff
+                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
 
                 root = {
                     document: {
@@ -854,8 +854,8 @@ describe('DomainLockTemplate', () => {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
-                        domainDestDiff,
-                        domainDest: hiddenDomainDest,
+                        domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                        hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
                         globalVariableTemplate: '',
                         singleCallControllerFunctionName
                     },
@@ -866,7 +866,7 @@ describe('DomainLockTemplate', () => {
 
             it('should change document.location', () => {
                 assert.doesNotThrow(() => testFunc.apply(root));
-                assert.equal(root.document.location, domainDest);
+                assert.equal(root.document.location, domainLockRedirectUrl);
             });
         });
     });

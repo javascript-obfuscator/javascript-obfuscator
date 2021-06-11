@@ -46,7 +46,7 @@ import { HIGH_OBFUSCATION_PRESET } from './presets/HighObfuscation';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
-import { IsDomainDestUrl } from './validators/IsDomainDestUrl';
+import { IsDomainLockRedirectUrl } from './validators/IsDomainLockRedirectUrl';
 import { IsIdentifierNamesCache } from './validators/IsIdentifierNamesCache';
 
 @injectable()
@@ -138,8 +138,8 @@ export class Options implements IOptions {
     /**
      * @type {string}
      */
-    @IsDomainDestUrl()
-    public readonly domainDest!: string;
+    @IsDomainLockRedirectUrl()
+    public readonly domainLockRedirectUrl!: string;
 
     /**
      * @type {string[]}

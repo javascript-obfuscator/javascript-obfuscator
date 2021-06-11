@@ -13,10 +13,10 @@ import { IsAllowedForObfuscationTargets } from './IsAllowedForObfuscationTargets
 /**
  * @returns {PropertyDecorator}
  */
-export const IsDomainDestUrl = (): PropertyDecorator => {
+export const IsDomainLockRedirectUrl = (): PropertyDecorator => {
     return (target: any, key: string | symbol): void => {
-        ValidateIf(({domainDest}: TInputOptions) => {
-            return domainDest !== DEFAULT_PRESET.domainDest;
+        ValidateIf(({domainLockRedirectUrl}: TInputOptions) => {
+            return domainLockRedirectUrl !== DEFAULT_PRESET.domainLockRedirectUrl;
         })(target, key);
         IsUrl({
             require_protocol: false,

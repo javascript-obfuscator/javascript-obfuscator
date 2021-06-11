@@ -361,7 +361,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
-    domainDest: 'about:blank',
+    domainLockRedirectUrl: 'about:blank',
     forceTransformStrings: [],
     identifierNamesCache: null,
     identifierNamesGenerator: 'hexadecimal',
@@ -422,7 +422,7 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
-    --domain-dest <string>
+    --domain-lock-redirect-url <string>
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
@@ -690,17 +690,17 @@ Type: `string[]` Default: `[]`
 
 Allows to run the obfuscated source code only on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
 
-If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainDest`](#domaindest) option domain or URL.
+If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainLockRedirectUrl`](#domainlockredirecturl) option URL.
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
 
-### `domainDest`
+### `domainLockRedirectUrl`
 Type: `string` Default: `about:blank`
 
 ##### :warning: This option does not work with `target: 'node'`
 
-Allows the browser to be redirected to a passed domain or URL if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
+Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
 
 ### `exclude`
 Type: `string[]` Default: `[]`

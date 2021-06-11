@@ -159,7 +159,7 @@ describe('OptionsNormalizer', () => {
             });
         });
 
-        describe('domainDestRule', () => {
+        describe('domainLockRedirectUrlRule', () => {
             describe('Variant #1: `domainLock` option is set', () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
@@ -167,7 +167,7 @@ describe('OptionsNormalizer', () => {
                         domainLock: [
                             'localhost'
                         ],
-                        domainDest: 'https://example.com'
+                        domainLockRedirectUrl: 'https://example.com'
                     });
 
                     expectedOptionsPreset = {
@@ -175,7 +175,7 @@ describe('OptionsNormalizer', () => {
                         domainLock: [
                             'localhost'
                         ],
-                        domainDest: 'https://example.com'
+                        domainLockRedirectUrl: 'https://example.com'
                     };
                 });
 
@@ -189,13 +189,13 @@ describe('OptionsNormalizer', () => {
                     optionsPreset = getNormalizedOptions({
                         ...getDefaultOptions(),
                         domainLock: [],
-                        domainDest: 'https://example.com'
+                        domainLockRedirectUrl: 'https://example.com'
                     });
 
                     expectedOptionsPreset = {
                         ...getDefaultOptions(),
                         domainLock: [],
-                        domainDest: 'about:blank'
+                        domainLockRedirectUrl: 'about:blank'
                     };
                 });
 

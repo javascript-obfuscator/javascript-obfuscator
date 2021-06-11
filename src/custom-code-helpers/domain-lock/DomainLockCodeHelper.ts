@@ -89,14 +89,14 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
      */
     protected override getCodeHelperTemplate (): string {
         const domainsString: string = this.options.domainLock.join(';');
-        const domainsDest: string = this.options.domainDest;
+        const domainsLockRedirectUrl: string = this.options.domainLockRedirectUrl;
         const [hiddenDomainsString, domainsStringDiff]: string[] = this.cryptUtils.hideString(
             domainsString,
             domainsString.length * 3
         );
-        const [hiddenDomainDest, domainDestDiff]: string[] = this.cryptUtils.hideString(
-            domainsDest,
-            domainsDest.length * 3
+        const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff]: string[] = this.cryptUtils.hideString(
+            domainsLockRedirectUrl,
+            domainsLockRedirectUrl.length * 3
         );
         const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
@@ -107,8 +107,8 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
             domainLockFunctionName: this.domainLockFunctionName,
             domainsStringDiff,
             domains: hiddenDomainsString,
-            domainDestDiff,
-            domainDest: hiddenDomainDest,
+            domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+            hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
             globalVariableTemplate
         });
     }

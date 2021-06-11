@@ -361,6 +361,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    domainLockRedirectUrl: 'about:blank',
     forceTransformStrings: [],
     identifierNamesCache: null,
     identifierNamesGenerator: 'hexadecimal',
@@ -421,6 +422,7 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
+    --domain-lock-redirect-url <string>
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
@@ -688,8 +690,17 @@ Type: `string[]` Default: `[]`
 
 Allows to run the obfuscated source code only on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
 
+If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainLockRedirectUrl`](#domainlockredirecturl) option URL.
+
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
+
+### `domainLockRedirectUrl`
+Type: `string` Default: `about:blank`
+
+##### :warning: This option does not work with `target: 'node'`
+
+Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
 
 ### `exclude`
 Type: `string[]` Default: `[]`
@@ -736,7 +747,7 @@ If an empty object (`{}`) is passed, enables the writing identifier names to the
 The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
 
 Example:
-```
+```ts
 const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
     `
         function foo(arg) {
@@ -755,12 +766,14 @@ const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
 )
 
 console.log(source1ObfuscationResult.getIdentifierNamesCache());
-/*{ 
-    globalIdentifiers: {
-        foo: '_0x5de86d',
-        bar: '_0x2a943b'
+/*
+    { 
+        globalIdentifiers: {
+            foo: '_0x5de86d',
+            bar: '_0x2a943b'
+        }
     }
-}*/
+*/
 
 
 
@@ -781,9 +794,11 @@ const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
 )
 
 console.log(source2ObfuscationResult.getObfuscatedCode());
-// _0x5de86d(0x1);
-// _0x2a943b();
-// baz();
+/*
+    _0x5de86d(0x1);
+    _0x2a943b();
+    baz();
+ */
 ```
 
 #### CLI
@@ -1600,7 +1615,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_large)
 
-Copyright (C) 2016-2020 [Timofey Kachalov](http://github.com/sanex3339).
+Copyright (C) 2016-2021 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

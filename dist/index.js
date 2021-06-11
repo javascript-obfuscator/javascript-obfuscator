@@ -207,7 +207,7 @@ let JavaScriptObfuscator = JavaScriptObfuscator_1 = class JavaScriptObfuscator {
             sourceCode = '';
         }
         const timeStart = Date.now();
-        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.15.0", 1623003625223));
+        this.logger.info(LoggingMessage_1.LoggingMessage.Version, Utils_1.Utils.buildVersionMessage("2.16.0", 1623404313493));
         this.logger.info(LoggingMessage_1.LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage_1.LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getInputSeed());
         sourceCode = this.runCodeTransformationStage(sourceCode, CodeTransformationStage_1.CodeTransformationStage.PreparingTransformers);
@@ -396,7 +396,7 @@ class JavaScriptObfuscatorFacade {
     }
 }
 exports.JavaScriptObfuscator = JavaScriptObfuscatorFacade;
-JavaScriptObfuscatorFacade.version = (_a = "2.15.0") !== null && _a !== void 0 ? _a : 'unknown';
+JavaScriptObfuscatorFacade.version = (_a = "2.16.0") !== null && _a !== void 0 ? _a : 'unknown';
 
 
 /***/ }),
@@ -3939,15 +3939,19 @@ let DomainLockCodeHelper = class DomainLockCodeHelper extends AbstractCustomCode
     }
     getCodeHelperTemplate() {
         const domainsString = this.options.domainLock.join(';');
-        const [hiddenDomainsString, diff] = this.cryptUtils.hideString(domainsString, domainsString.length * 3);
+        const domainsLockRedirectUrl = this.options.domainLockRedirectUrl;
+        const [hiddenDomainsString, domainsStringDiff] = this.cryptUtils.hideString(domainsString, domainsString.length * 3);
+        const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = this.cryptUtils.hideString(domainsLockRedirectUrl, domainsLockRedirectUrl.length * 3);
         const globalVariableTemplate = this.options.target !== ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate_1.GlobalVariableNoEvalTemplate();
         return this.customCodeHelperFormatter.formatTemplate(DomainLockTemplate_1.DomainLockTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             domainLockFunctionName: this.domainLockFunctionName,
-            diff,
+            domainsStringDiff,
             domains: hiddenDomainsString,
+            domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+            hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
             globalVariableTemplate
         });
     }
@@ -4086,34 +4090,43 @@ function DomainLockTemplate() {
             
             {globalVariableTemplate}
             
-            const func = function () {
-                return {
-                    key: 'item',
-                    value: 'attribute',
-                    getAttribute: function () {
-                        for (let i = 0; i < 1000; i--) {
-                            const isPositive = i > 0;
-                            
-                            switch (isPositive) {
-                                case true:
-                                    return this.item + '_' + this.value + '_' + i;
-                                default:
-                                    this.item + '_' + this.value;
-                            }
-                        }
-                    }()
-                };
-            };
-                        
-            const regExp = new RegExp("[{diff}]", "g");
+            const regExp = new RegExp("[{domainsStringDiff}]", "g");
             const domains = "{domains}".replace(regExp, "").split(";");
             let document;
             let domain;
             let location;
             let hostname;
 
+            const isName = function(name, length, cs) {
+                if (name.length != length) {
+                    return false;
+                }
+
+                for (let i = 0; i < length; i++) {
+                    for (let j = 0; j < cs.length; j += 2) {
+                        if (i == cs[j] && name.charCodeAt(i) != cs[j+1]) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            };
+
+            const isNameVariant1 = function(cs, name, length) {
+              return isName(name, length, cs);
+            };
+
+            const isNameVariant2 = function(name, cs, length) {
+              return isNameVariant1(cs, name, length);
+            };
+
+            const isNameVariant3 = function(length, name, cs) {
+              return isNameVariant2(name, cs, length);
+            };
+
             for (let d in that) {
-                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
+                if (isName(d, 8, [7, 116, 5, 101, 3, 117, 0, 100])) {
                     document = d;
                 
                     break;
@@ -4121,24 +4134,24 @@ function DomainLockTemplate() {
             }
 
             for (let d1 in that[document]) {
-                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
+                if (isNameVariant3(6, d1, [5, 110, 0, 100])) {
                     domain = d1;
-                    
+
+                    break;
+                }
+            }
+
+            for (let d2 in that[document]) {
+                if (isNameVariant2(d2, [7, 110, 0, 108], 8)) {
+                    location = d2;
+
                     break;
                 }
             }
 
             if (!("~" > domain)) {
-                for (let d2 in that[document]) {
-                    if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
-                        location = d2;
-                        
-                        break;
-                    }
-                }
-
                 for (let d3 in that[document][location]) {
-                    if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
+                    if (isNameVariant1([7, 101, 0, 104], d3, 8)) {
                         hostname = d3;
                         
                         break;
@@ -4175,14 +4188,13 @@ function DomainLockTemplate() {
                     }
                 }
             }
-               
+
             if (!ok) {
-                data;
-            } else {
-                return;
+                const regExp2 = new RegExp("[{domainLockRedirectUrlDiff}]", "g");
+                const domainLockRedirectUrl = "{hiddenDomainLockRedirectUrl}".replace(regExp2, "");
+
+                that[document][location] = domainLockRedirectUrl;
             }
-            
-            func();
         });
 
         {domainLockFunctionName}();
@@ -15265,6 +15277,7 @@ const MediumObfuscation_1 = __webpack_require__(/*! ./presets/MediumObfuscation 
 const HighObfuscation_1 = __webpack_require__(/*! ./presets/HighObfuscation */ "./src/options/presets/HighObfuscation.ts");
 const ValidationErrorsFormatter_1 = __webpack_require__(/*! ./ValidationErrorsFormatter */ "./src/options/ValidationErrorsFormatter.ts");
 const IsAllowedForObfuscationTargets_1 = __webpack_require__(/*! ./validators/IsAllowedForObfuscationTargets */ "./src/options/validators/IsAllowedForObfuscationTargets.ts");
+const IsDomainLockRedirectUrl_1 = __webpack_require__(/*! ./validators/IsDomainLockRedirectUrl */ "./src/options/validators/IsDomainLockRedirectUrl.ts");
 const IsIdentifierNamesCache_1 = __webpack_require__(/*! ./validators/IsIdentifierNamesCache */ "./src/options/validators/IsIdentifierNamesCache.ts");
 let Options = Options_1 = class Options {
     constructor(inputOptions, optionsNormalizer) {
@@ -15344,6 +15357,10 @@ __decorate([
     ]),
     __metadata("design:type", Array)
 ], Options.prototype, "domainLock", void 0);
+__decorate([
+    IsDomainLockRedirectUrl_1.IsDomainLockRedirectUrl(),
+    __metadata("design:type", String)
+], Options.prototype, "domainLockRedirectUrl", void 0);
 __decorate([
     class_validator_1.IsArray(),
     class_validator_1.ArrayUnique(),
@@ -15568,6 +15585,7 @@ const inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 const ControlFlowFlatteningThresholdRule_1 = __webpack_require__(/*! ./normalizer-rules/ControlFlowFlatteningThresholdRule */ "./src/options/normalizer-rules/ControlFlowFlatteningThresholdRule.ts");
 const DeadCodeInjectionRule_1 = __webpack_require__(/*! ./normalizer-rules/DeadCodeInjectionRule */ "./src/options/normalizer-rules/DeadCodeInjectionRule.ts");
 const DeadCodeInjectionThresholdRule_1 = __webpack_require__(/*! ./normalizer-rules/DeadCodeInjectionThresholdRule */ "./src/options/normalizer-rules/DeadCodeInjectionThresholdRule.ts");
+const DomainLockRedirectUrlRule_1 = __webpack_require__(/*! ./normalizer-rules/DomainLockRedirectUrlRule */ "./src/options/normalizer-rules/DomainLockRedirectUrlRule.ts");
 const DomainLockRule_1 = __webpack_require__(/*! ./normalizer-rules/DomainLockRule */ "./src/options/normalizer-rules/DomainLockRule.ts");
 const IdentifierNamesCacheRule_1 = __webpack_require__(/*! ./normalizer-rules/IdentifierNamesCacheRule */ "./src/options/normalizer-rules/IdentifierNamesCacheRule.ts");
 const InputFileNameRule_1 = __webpack_require__(/*! ./normalizer-rules/InputFileNameRule */ "./src/options/normalizer-rules/InputFileNameRule.ts");
@@ -15594,6 +15612,7 @@ OptionsNormalizer.normalizerRules = [
     ControlFlowFlatteningThresholdRule_1.ControlFlowFlatteningThresholdRule,
     DeadCodeInjectionRule_1.DeadCodeInjectionRule,
     DeadCodeInjectionThresholdRule_1.DeadCodeInjectionThresholdRule,
+    DomainLockRedirectUrlRule_1.DomainLockRedirectUrlRule,
     DomainLockRule_1.DomainLockRule,
     IdentifierNamesCacheRule_1.IdentifierNamesCacheRule,
     InputFileNameRule_1.InputFileNameRule,
@@ -15726,6 +15745,30 @@ const DeadCodeInjectionThresholdRule = (options) => {
     return options;
 };
 exports.DeadCodeInjectionThresholdRule = DeadCodeInjectionThresholdRule;
+
+
+/***/ }),
+
+/***/ "./src/options/normalizer-rules/DomainLockRedirectUrlRule.ts":
+/*!*******************************************************************!*\
+  !*** ./src/options/normalizer-rules/DomainLockRedirectUrlRule.ts ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomainLockRedirectUrlRule = void 0;
+const Default_1 = __webpack_require__(/*! ../presets/Default */ "./src/options/presets/Default.ts");
+const DomainLockRedirectUrlRule = (options) => {
+    if (!options.domainLock.length) {
+        options = {
+            ...options,
+            domainLockRedirectUrl: Default_1.DEFAULT_PRESET.domainLockRedirectUrl
+        };
+    }
+    return options;
+};
+exports.DomainLockRedirectUrlRule = DomainLockRedirectUrlRule;
 
 
 /***/ }),
@@ -16082,6 +16125,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    domainLockRedirectUrl: 'about:blank',
     exclude: [],
     forceTransformStrings: [],
     identifierNamesCache: null,
@@ -16244,6 +16288,7 @@ exports.NO_ADDITIONAL_NODES_PRESET = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    domainLockRedirectUrl: 'about:blank',
     exclude: [],
     forceTransformStrings: [],
     identifierNamesGenerator: IdentifierNamesGenerator_1.IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
@@ -16330,6 +16375,39 @@ function IsAllowedForObfuscationTargets(obfuscationTargets, validationOptions) {
     };
 }
 exports.IsAllowedForObfuscationTargets = IsAllowedForObfuscationTargets;
+
+
+/***/ }),
+
+/***/ "./src/options/validators/IsDomainLockRedirectUrl.ts":
+/*!***********************************************************!*\
+  !*** ./src/options/validators/IsDomainLockRedirectUrl.ts ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IsDomainLockRedirectUrl = void 0;
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+const ObfuscationTarget_1 = __webpack_require__(/*! ../../enums/ObfuscationTarget */ "./src/enums/ObfuscationTarget.ts");
+const Default_1 = __webpack_require__(/*! ../presets/Default */ "./src/options/presets/Default.ts");
+const IsAllowedForObfuscationTargets_1 = __webpack_require__(/*! ./IsAllowedForObfuscationTargets */ "./src/options/validators/IsAllowedForObfuscationTargets.ts");
+const IsDomainLockRedirectUrl = () => {
+    return (target, key) => {
+        class_validator_1.ValidateIf(({ domainLockRedirectUrl }) => {
+            return domainLockRedirectUrl !== Default_1.DEFAULT_PRESET.domainLockRedirectUrl;
+        })(target, key);
+        class_validator_1.IsUrl({
+            require_protocol: false,
+            require_host: false
+        })(target, key);
+        IsAllowedForObfuscationTargets_1.IsAllowedForObfuscationTargets([
+            ObfuscationTarget_1.ObfuscationTarget.Browser,
+            ObfuscationTarget_1.ObfuscationTarget.BrowserNoEval,
+        ])(target, key);
+    };
+};
+exports.IsDomainLockRedirectUrl = IsDomainLockRedirectUrl;
 
 
 /***/ }),
@@ -16455,6 +16533,9 @@ let ObfuscationResult = class ObfuscationResult {
     }
     getObfuscatedCode() {
         return this.correctObfuscatedCode();
+    }
+    getOptions() {
+        return this.options;
     }
     getSourceMap() {
         return this.sourceMap;

@@ -18,6 +18,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    domainLockRedirectUrl: 'about:blank',
     exclude: [],
     forceTransformStrings: [],
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,

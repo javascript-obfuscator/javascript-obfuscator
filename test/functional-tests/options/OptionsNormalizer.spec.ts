@@ -159,6 +159,52 @@ describe('OptionsNormalizer', () => {
             });
         });
 
+        describe('domainLockRedirectUrlRule', () => {
+            describe('Variant #1: `domainLock` option is set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        domainLock: [
+                            'localhost'
+                        ],
+                        domainLockRedirectUrl: 'https://example.com'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        domainLock: [
+                            'localhost'
+                        ],
+                        domainLockRedirectUrl: 'https://example.com'
+                    };
+                });
+
+                it('should not normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #2 `domainLock` option is not set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        domainLock: [],
+                        domainLockRedirectUrl: 'https://example.com'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        domainLock: [],
+                        domainLockRedirectUrl: 'about:blank'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+        });
+
         describe('domainLockRule', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({

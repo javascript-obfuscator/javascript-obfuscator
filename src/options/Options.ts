@@ -46,6 +46,7 @@ import { HIGH_OBFUSCATION_PRESET } from './presets/HighObfuscation';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
+import { IsDomainLockRedirectUrl } from './validators/IsDomainLockRedirectUrl';
 import { IsIdentifierNamesCache } from './validators/IsIdentifierNamesCache';
 
 @injectable()
@@ -133,6 +134,12 @@ export class Options implements IOptions {
         ObfuscationTarget.BrowserNoEval,
     ])
     public readonly domainLock!: string[];
+
+    /**
+     * @type {string}
+     */
+    @IsDomainLockRedirectUrl()
+    public readonly domainLockRedirectUrl!: string;
 
     /**
      * @type {string[]}

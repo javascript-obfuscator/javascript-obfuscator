@@ -1,8 +1,17 @@
 Change Log
 
-v2.15.0
+v2.16.0
 ---
 * Added support of `es2022` features: private identifiers and class properties
+
+v2.15.1
+---
+* **Hotfix**: `domainDest` => `domainLockRedirectUrl` option rename
+
+v2.15.0
+---
+* Added `domainDest` option that option allows the browser to be redirected to a passed domain if the source code isn't run on the domains or URL specified by `domainLock`. Thank you https://github.com/erikdubbelboer!
+* `ObfuscationResult` object now contains `getOptions` method to get options that were used during obfuscation
 
 v2.14.0
 ---

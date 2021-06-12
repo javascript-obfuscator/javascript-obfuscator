@@ -24,7 +24,7 @@
     "@javascript-obfuscator/escodegen": "2.2.0",
     "@javascript-obfuscator/estraverse": "5.3.0",
     "@nuxtjs/opencollective": "0.3.2",
-    "acorn": "8.3.0",
+    "acorn": "8.4.0",
     "assert": "2.0.0",
     "chalk": "4.1.1",
     "chance": "1.1.7",
@@ -42,7 +42,7 @@
     "source-map-support": "0.5.19",
     "string-template": "1.0.0",
     "stringz": "2.1.0",
-    "tslib": "2.2.0"
+    "tslib": "2.3.0"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",

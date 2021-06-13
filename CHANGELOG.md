@@ -1,5 +1,9 @@
 Change Log
 
+v2.15.2
+---
+* Fixed invalid behaviour of `transformObjectKeys` option when object values contains `this` references
+
 v2.15.1
 ---
 * **Hotfix**: `domainDest` => `domainLockRedirectUrl` option rename

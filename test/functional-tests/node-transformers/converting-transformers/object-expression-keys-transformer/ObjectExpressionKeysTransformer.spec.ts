@@ -558,7 +558,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         });
 
         // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
-        describe('Variant #16: object expression inside inside variable declaration', () => {
+        describe('Variant #16: object expression inside variable declaration', () => {
             describe('Without reference on other property', () => {
                 describe('Variant #1: Single variable declarator and object expression parent node is expression node', () => {
                     const match: string = `` +
@@ -803,6 +803,120 @@ describe('ObjectExpressionKeysTransformer', () => {
                 });
 
                 it('shouldn transform object expressions keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #20: `this` expression', () => {
+            describe('Variant #1: `this` expression as object expression', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *'bar';` +
+                    `${variableMatch}\\['baz'] *= *'bark';` +
+                    `this\\['object'] *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/this-expression-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: `this` expression as property value without `this` reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *this\\['foo'];` +
+                    `var ${variableMatch} *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/this-expression-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: `this` expression as property value with `this` reference after object expression', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *this\\['foo'];` +
+                    `var ${variableMatch} *= *${variableMatch};` +
+                    `this\\['bar'] *= *'bar';` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/this-expression-3.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #4: `this` expression as property value with `this` reference before and after object expression', () => {
+                const match: string = `` +
+                    `this\\['foo'] *= *'foo';` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *this\\['foo'];` +
+                    `var ${variableMatch} *= *${variableMatch};` +
+                    `this\\['bar'] *= *'bar';` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/this-expression-4.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
@@ -1972,6 +2086,195 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             it('shouldn ignore object expressions keys transformation', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #14: sequence expression `this` reference', () => {
+            const match: string = `` +
+                `this\\['foo'] *= *0x1, *` +
+                `this\\['bar'] *= *{'bar' *: *this\\['foo']};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/sequence-expression-this-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore sequence expression object expression if it references other sequence expression `this` expression`', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #15: return statement sequence expression `this` reference', () => {
+            describe('Variant #1: reference on other sequence expression `this` expression`', () => {
+                const match: string = `` +
+                    `return this\\['foo'] *= *0x1, *` +
+                    `this\\['bar'] *= *{'bar' *: *this\\['foo']};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-this-reference-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore sequence expression object expression if it references other sequence expression `this` expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: reference on same sequence expression `this` expression', () => {
+                const match: string = `` +
+                    `return *\\(this\\['foo'] *= *${variableMatch}\\)\\['state'] *= *{'expanded' *: *this\\['foo']\\['props']}, *` +
+                    `this\\['foo']\\['state']\\['expanded'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-this-reference-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore sequence expression object expression if it references other sequence expression `this` expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #16: conditional expression `this` reference', () => {
+            describe('Variant #1: conditional expression identifier reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `this\\['foo'] *\\? *{'bar' *: *this\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/conditional-expression-this-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression `this` expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: return statement conditional expression `this` reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `return this\\['foo'] *\\? *{'bar' *: *this\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-conditional-expression-this-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression `this` expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: assignment expression conditional expression `this` reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `this\\['bar'] *= *this\\['foo'] *\\? *{'bar' *: *this\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/assignment-expression-conditional-expression-this-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression `this` expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #17: variable declarator `this` reference', () => {
+            const match: string = `` +
+                `var passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                `var foo *= *this\\['foo'], *bar *= *{'baz' *: *passthrough\\(this\\['foo']\\)};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-this-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore variable declarator object expression if it references other variable declarator `this` expression', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

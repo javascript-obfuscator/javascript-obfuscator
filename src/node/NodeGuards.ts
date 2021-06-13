@@ -486,6 +486,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isThisExpressionNode (node: ESTree.Node): node is ESTree.ThisExpression {
+        return node.type === NodeType.ThisExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isUnaryExpressionNode (node: ESTree.Node): node is ESTree.UnaryExpression {
         return node.type === NodeType.UnaryExpression;
     }

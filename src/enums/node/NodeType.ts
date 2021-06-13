@@ -50,6 +50,7 @@ export enum NodeType {
     TaggedTemplateExpression = 'TaggedTemplateExpression',
     TemplateElement = 'TemplateElement',
     TemplateLiteral = 'TemplateLiteral',
+    ThisExpression = 'ThisExpression',
     ThrowStatement = 'ThrowStatement',
     TryStatement = 'TryStatement',
     UnaryExpression = 'UnaryExpression',

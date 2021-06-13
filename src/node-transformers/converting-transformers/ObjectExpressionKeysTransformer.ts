@@ -20,6 +20,11 @@ import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
+     * @type {string}
+     */
+    private static readonly thisIdentifierName: string = 'this';
+
+    /**
      * @type {ObjectExpressionExtractor[]}
      */
     private static readonly objectExpressionExtractorNames: ObjectExpressionExtractor[] = [
@@ -74,6 +79,18 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Identifier | ThisExpression} node
+     * @returns {string}
+     */
+    private static getReferencedIdentifierName (node: ESTree.Identifier | ESTree.ThisExpression): string {
+        if (NodeGuards.isIdentifierNode(node)) {
+            return node.name;
+        } else {
+            return ObjectExpressionKeysTransformer.thisIdentifierName;
+        }
+    }
+
+    /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Node} objectExpressionHostNode
      * @returns {boolean}
@@ -94,17 +111,21 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                     isCurrentNode = true;
                 }
 
-                if (!NodeGuards.isIdentifierNode(node)) {
+                if (!NodeGuards.isIdentifierNode(node) && !NodeGuards.isThisExpressionNode(node)) {
                     return;
                 }
 
                 if (!isCurrentNode) {
-                    identifierNamesSet.push(node.name);
+                    identifierNamesSet.push(ObjectExpressionKeysTransformer.getReferencedIdentifierName(node));
 
                     return;
                 }
 
-                if (identifierNamesSet.includes(node.name)) {
+                const hasReferencedIdentifierName: boolean = identifierNamesSet.includes(
+                    ObjectExpressionKeysTransformer.getReferencedIdentifierName(node)
+                );
+
+                if (hasReferencedIdentifierName) {
                     isReferencedIdentifierName = true;
                 }
             },

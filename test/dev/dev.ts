@@ -5,22 +5,42 @@
 
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
-            function foo() {
-               global.baz = 3;
-            }
+            (function(){
+                if (true) {
+                    var foo = function () {
+                        console.log('abc');
+                    };
+                    var bar = function () {
+                        console.log('def');
+                    };
+                    var baz = function () {
+                        console.log('ghi');
+                    };
+                    var bark = function () {
+                        console.log('jkl');
+                    };
+                    var hawk = function () {
+                        console.log('mno');
+                    };
             
-            function bar(...args) {
-                console.log(2);
-            }
+                    foo();
+                    bar();
+                    baz();
+                    bark();
+                    hawk();
+                }
+            })();
         `,
         {
             compact: false,
-            identifierNamesCache: {
-                globalIdentifiers: {},
-                propertyIdentifiers: {}
-            },
-            renameGlobals: true,
-            renameProperties: true
+            simplify: false,
+            stringArray: true,
+            stringArrayThreshold: 1,
+            stringArrayWrappersChainedCalls: true,
+            deadCodeInjection: true,
+            deadCodeInjectionThreshold: 1,
+            identifierNamesGenerator: 'mangled',
+            seed: 1
         }
     );
 

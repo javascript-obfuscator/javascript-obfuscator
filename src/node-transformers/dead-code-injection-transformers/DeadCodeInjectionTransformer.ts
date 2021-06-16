@@ -53,6 +53,13 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     ];
 
     /**
+     * @type {NodeTransformer[]}
+     */
+    public override readonly runAfter: NodeTransformer[] = [
+        NodeTransformer.ScopeIdentifiersTransformer
+    ];
+
+    /**
      * @type {Set <BlockStatement>}
      */
     private readonly deadCodeInjectionRootAstHostNodeSet: Set <ESTree.BlockStatement> = new Set();
@@ -237,7 +244,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     }
                 };
 
-            case NodeTransformationStage.Finalizing:
+            case NodeTransformationStage.RenameIdentifiers:
                 if (!this.deadCodeInjectionRootAstHostNodeSet.size) {
                     return null;
                 }

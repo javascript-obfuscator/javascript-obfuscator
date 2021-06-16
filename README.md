@@ -333,17 +333,6 @@ To prevent this set the unique prefix for all global identifiers for each obfusc
 
 When using CLI this prefix will be added automatically.
 
-## Antiviruses false positive virus alerts
-
-Some input source code that will obfuscated with some obfuscation options can trigger false positive alerts in a few antiviruses. If you will get this false positive triggers, try to play with obfuscation options.
-
-* Try to change `stringArrayEncoding` option value between `rc4` and `base64` values or disable it completely;
-* Try to change `identifierNamesGenerator` option value from `hexadecimal` on `mangled`;
-* Try to disable `selfDefending`.
-
-If this wont help - attach your source code and describe your obfuscation options here:
-https://github.com/javascript-obfuscator/javascript-obfuscator/issues/51
-
 ## JavaScript Obfuscator Options
 
 Following options are available for the JS Obfuscator:
@@ -1536,9 +1525,6 @@ The README on the master branch might not match that of the latest stable releas
 ### Why CLI command not working?
 
 Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
-
-### Error `maximum call stack size exceeded`
-Likely this is `selfDefending` mechanism. Something is changing source code after obfuscation with `selfDefending` option.
 
 ### Online version?
 

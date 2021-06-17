@@ -11,7 +11,6 @@ export function StringArrayBase64DecodeTemplate (
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const base64DecodeFunctionIdentifier: string = randomGenerator.getRandomString(identifierLength);
-    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
 
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
@@ -28,20 +27,20 @@ export function StringArrayBase64DecodeTemplate (
                 return decodeURIComponent(newStringChars);
             };
             
-            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
+            {stringArrayCacheName} = arguments;
             
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
         const firstValue = {stringArrayName}[0];
         const cacheKey = index + firstValue;
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
-                        
-        if (cachedValue === undefined) {
+        const cachedValue = {stringArrayCacheName}[cacheKey];
+        
+        if (!cachedValue) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
+            {stringArrayCacheName}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

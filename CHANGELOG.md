@@ -1,5 +1,9 @@
 Change Log
 
+v2.15.4
+---
+* Improved `stringArray` calls wrapper code
+
 v2.15.3
 ---
 * Slightly improved integration between `deadCodeInjection` and `stringArrayWrappersChainedCalls` options

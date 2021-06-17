@@ -11,7 +11,6 @@ export function StringArrayRC4DecodeTemplate (
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const rc4Identifier: string = randomGenerator.getRandomString(identifierLength);
-    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const onceIdentifier: string = randomGenerator.getRandomString(identifierLength);
 
     return `
@@ -19,18 +18,18 @@ export function StringArrayRC4DecodeTemplate (
             {atobPolyfill}
             
             {rc4Polyfill}
-            {stringArrayCallsWrapperName}.${rc4Identifier} = rc4;
+            {stringArrayCallsWrapperName}.${rc4Identifier} = {rc4FunctionName};
             
-            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
+            {stringArrayCacheName} = arguments;
             
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
   
         const firstValue = {stringArrayName}[0];
         const cacheKey = index + firstValue;
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
+        const cachedValue = {stringArrayCacheName}[cacheKey];
 
-        if (cachedValue === undefined) {
+        if (!cachedValue) {
             if ({stringArrayCallsWrapperName}.${onceIdentifier} === undefined) {
                 {selfDefendingCode}
                 
@@ -38,7 +37,7 @@ export function StringArrayRC4DecodeTemplate (
             }
             
             value = {stringArrayCallsWrapperName}.${rc4Identifier}(value, key);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
+            {stringArrayCacheName}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

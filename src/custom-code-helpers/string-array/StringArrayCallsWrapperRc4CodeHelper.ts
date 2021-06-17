@@ -13,12 +13,14 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
      */
     protected override getDecodeStringArrayTemplate (): string {
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
+        const rc4FunctionName: string = this.randomGenerator.getRandomString(6);
 
         const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
             atobFunctionName
         });
         const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(Rc4Template(), {
-            atobFunctionName
+            atobFunctionName,
+            rc4FunctionName
         });
 
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
@@ -27,10 +29,12 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
             StringArrayRC4DecodeTemplate(this.randomGenerator),
             {
                 atobPolyfill,
+                rc4FunctionName,
                 rc4Polyfill,
                 selfDefendingCode,
                 stringArrayName: this.stringArrayName,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayCacheName: this.stringArrayCacheName
             }
         );
     }

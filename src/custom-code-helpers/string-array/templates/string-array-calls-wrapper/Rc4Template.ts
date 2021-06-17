@@ -3,7 +3,7 @@
  */
 export function Rc4Template (): string {
     return `
-        const rc4 = function (str, key) {
+        const {rc4FunctionName} = function (str, key) {
             let s = [], j = 0, x, res = '', newStr = '';
            
             str = {atobFunctionName}(str);

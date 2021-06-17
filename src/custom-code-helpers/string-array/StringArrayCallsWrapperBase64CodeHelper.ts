@@ -26,7 +26,8 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
                 atobFunctionName,
                 selfDefendingCode,
                 stringArrayName: this.stringArrayName,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayCacheName: this.stringArrayCacheName
             }
         );
     }

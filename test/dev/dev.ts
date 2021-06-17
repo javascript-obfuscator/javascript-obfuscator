@@ -1,46 +1,24 @@
 'use strict';
 
+import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
-            (function(){
-                if (true) {
-                    var foo = function () {
-                        console.log('abc');
-                    };
-                    var bar = function () {
-                        console.log('def');
-                    };
-                    var baz = function () {
-                        console.log('ghi');
-                    };
-                    var bark = function () {
-                        console.log('jkl');
-                    };
-                    var hawk = function () {
-                        console.log('mno');
-                    };
-            
-                    foo();
-                    bar();
-                    baz();
-                    bark();
-                    hawk();
-                }
-            })();
+            console.log('foo');
+            console.log('bar');
+            console.log('bar');
         `,
         {
+            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             simplify: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayWrappersChainedCalls: true,
-            deadCodeInjection: true,
-            deadCodeInjectionThreshold: 1,
-            identifierNamesGenerator: 'mangled',
-            seed: 1
+            stringArrayEncoding: ['base64'],
+            identifierNamesGenerator: 'mangled'
         }
     );
 

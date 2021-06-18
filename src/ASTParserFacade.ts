@@ -70,7 +70,7 @@ export class ASTParserFacade {
             sourceType
         };
 
-        const program: ESTree.Program = <any>acorn
+        const program: acorn.Node & ESTree.Program = <acorn.Node & ESTree.Program>acorn
             .parse(sourceCode, config);
 
         if (comments.length) {

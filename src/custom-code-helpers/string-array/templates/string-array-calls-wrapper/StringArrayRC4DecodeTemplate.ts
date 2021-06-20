@@ -16,7 +16,6 @@ export function StringArrayRC4DecodeTemplate (
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
-            
             {rc4Polyfill}
             {stringArrayCallsWrapperName}.${rc4Identifier} = {rc4FunctionName};
             

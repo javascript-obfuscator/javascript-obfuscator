@@ -10,23 +10,13 @@ export function StringArrayBase64DecodeTemplate (
 ): string {
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
-    const base64DecodeFunctionIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const base64Identifier: string = randomGenerator.getRandomString(identifierLength);
 
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
-            
-            {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
-                const string = {atobFunctionName}(str);
-                let newStringChars = [];
-                
-                for (let i = 0, length = string.length; i < length; i++) {
-                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);
-                }
-                
-                return decodeURIComponent(newStringChars);
-            };
-            
+            {stringArrayCallsWrapperName}.${base64Identifier} = {atobFunctionName};
+
             {stringArrayCacheName} = arguments;
             
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
@@ -39,7 +29,7 @@ export function StringArrayBase64DecodeTemplate (
         if (!cachedValue) {
             {selfDefendingCode}
             
-            value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);
+            value = {stringArrayCallsWrapperName}.${base64Identifier}(value);
             {stringArrayCacheName}[cacheKey] = value;
         } else {
             value = cachedValue;

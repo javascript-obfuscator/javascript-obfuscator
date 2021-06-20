@@ -1,5 +1,9 @@
 Change Log
 
+v2.15.5
+---
+* Improved `stringArray` calls wrapper decode code
+
 v2.15.4
 ---
 * Improved `stringArray` calls wrapper code

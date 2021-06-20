@@ -11,6 +11,8 @@ export function AtobTemplate (): string {
             const chars = '${base64alphabetSwapped}';
 
             let output = '';
+            let tempEncodedString = '';
+            
             for (
                 let bc = 0, bs, buffer, idx = 0;
                 buffer = input.charAt(idx++);
@@ -19,7 +21,12 @@ export function AtobTemplate (): string {
             ) {
                 buffer = chars.indexOf(buffer);
             }
-            return output;
+            
+             for (let k = 0, length = output.length; k < length; k++) {
+                tempEncodedString += '%' + ('00' + output.charCodeAt(k).toString(16)).slice(-2);
+            }
+        
+            return decodeURIComponent(tempEncodedString);
         };
     `;
 }

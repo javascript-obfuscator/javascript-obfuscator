@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "2.15.4",
+  "version": "2.15.5",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -57,7 +57,7 @@
     "@types/mkdirp": "1.0.1",
     "@types/mocha": "8.2.2",
     "@types/multimatch": "4.0.0",
-    "@types/node": "15.12.2",
+    "@types/node": "15.12.3",
     "@types/rimraf": "3.0.0",
     "@types/sinon": "10.0.2",
     "@types/string-template": "1.0.2",
@@ -75,7 +75,7 @@
     "eslint-plugin-unicorn": "33.0.1",
     "fork-ts-checker-notifier-webpack-plugin": "4.0.0",
     "fork-ts-checker-webpack-plugin": "6.2.10",
-    "mocha": "9.0.0",
+    "mocha": "9.0.1",
     "nyc": "15.1.0",
     "pjson": "1.0.9",
     "pre-commit": "1.2.2",

@@ -998,5 +998,46 @@ describe('DeadCodeInjectionTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #12 - correct integration with `stringArrayWrappersChainedCalls` option', () => {
+            const regExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *${variableMatch}; *` +
+                `if *\\(${variableMatch}\\(${hexMatch}\\) *[=|!]== *${variableMatch}\\(${hexMatch}\\)\\) *\\{`+
+                    `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
+                `\\} *else *\\{`+
+                    `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
+                `\\}`,
+                'g'
+            );
+            const expectedMatchesLength: number = 5;
+
+            let matchesLength: number = 0;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 1,
+                        stringArrayWrappersChainedCalls: true
+                    }
+                ).getObfuscatedCode();
+                const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
+
+                if (matches) {
+                    matchesLength = matches.length;
+                }
+            });
+
+            it('should unwrap dead code injection root AST host node before the string array transformer', () => {
+                assert.equal(matchesLength, expectedMatchesLength);
+            });
+        });
     });
 });

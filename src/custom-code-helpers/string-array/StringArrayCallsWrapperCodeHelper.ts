@@ -39,6 +39,12 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     protected stringArrayCallsWrapperName!: string;
 
     /**
+     * @type {string}
+     */
+    @initializable()
+    protected stringArrayCacheName!: string;
+
+    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -84,6 +90,8 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
         this.indexShiftAmount = indexShiftAmount;
+
+        this.stringArrayCacheName = this.randomGenerator.getRandomString(6);
     }
 
     /**
@@ -107,6 +115,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
                 decodeCodeHelperTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName,
+                stringArrayCacheName: this.stringArrayCacheName,
                 indexShiftAmount: this.indexShiftAmount
             }),
             {

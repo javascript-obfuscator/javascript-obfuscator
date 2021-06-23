@@ -27,7 +27,9 @@ import { swapLettersCase } from '../../../../../helpers/swapLettersCase';
 describe('StringArrayCallsWrapperTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
+    const stringArrayCacheName: string = 'stringArrayCache';
     const atobFunctionName: string = 'atob';
+    const rc4FunctionName: string = 'rc4';
 
     let cryptUtilsSwappedAlphabet: ICryptUtilsStringArray,
         randomGenerator: IRandomGenerator;
@@ -62,12 +64,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         atobPolyfill,
                         atobFunctionName,
                         selfDefendingCode: '',
+                        stringArrayCacheName,
                         stringArrayCallsWrapperName
                     }
                 );
                 const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                     decodeCodeHelperTemplate: atobDecodeTemplate,
                     indexShiftAmount,
+                    stringArrayCacheName,
                     stringArrayCallsWrapperName,
                     stringArrayName
                 });
@@ -105,12 +109,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         atobPolyfill,
                         atobFunctionName,
                         selfDefendingCode: '',
+                        stringArrayCacheName,
                         stringArrayCallsWrapperName
                     }
                 );
                 const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                     decodeCodeHelperTemplate: atobDecodeTemplate,
                     indexShiftAmount,
+                    stringArrayCacheName,
                     stringArrayCallsWrapperName,
                     stringArrayName
                 });
@@ -146,12 +152,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         atobPolyfill,
                         atobFunctionName,
                         selfDefendingCode: '',
+                        stringArrayCacheName,
                         stringArrayCallsWrapperName
                     }
                 );
                 const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                     decodeCodeHelperTemplate: atobDecodeTemplate,
                     indexShiftAmount,
+                    stringArrayCacheName,
                     stringArrayCallsWrapperName,
                     stringArrayName
                 });
@@ -190,20 +198,24 @@ describe('StringArrayCallsWrapperTemplate', () => {
                     atobFunctionName
                 });
                 const rc4Polyfill = format(Rc4Template(), {
-                    atobFunctionName
+                    atobFunctionName,
+                    rc4FunctionName
                 });
                 const rc4decodeCodeHelperTemplate: string = format(
                     StringArrayRC4DecodeTemplate(randomGenerator),
                     {
                         atobPolyfill,
                         rc4Polyfill,
+                        rc4FunctionName,
                         selfDefendingCode: '',
+                        stringArrayCacheName,
                         stringArrayCallsWrapperName
                     }
                 );
                 const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                     decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
                     indexShiftAmount,
+                    stringArrayCacheName,
                     stringArrayCallsWrapperName,
                     stringArrayName
                 });
@@ -237,20 +249,24 @@ describe('StringArrayCallsWrapperTemplate', () => {
                     atobFunctionName
                 });
                 const rc4Polyfill = format(Rc4Template(), {
-                    atobFunctionName
+                    atobFunctionName,
+                    rc4FunctionName
                 });
                 const rc4decodeCodeHelperTemplate: string = format(
                     StringArrayRC4DecodeTemplate(randomGenerator),
                     {
                         atobPolyfill,
                         rc4Polyfill,
+                        rc4FunctionName,
                         selfDefendingCode: '',
+                        stringArrayCacheName,
                         stringArrayCallsWrapperName
                     }
                 );
                 const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                     decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
                     indexShiftAmount,
+                    stringArrayCacheName,
                     stringArrayCallsWrapperName,
                     stringArrayName
                 });

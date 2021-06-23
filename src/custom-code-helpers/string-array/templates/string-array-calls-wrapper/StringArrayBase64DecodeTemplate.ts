@@ -10,38 +10,27 @@ export function StringArrayBase64DecodeTemplate (
 ): string {
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
-    const base64DecodeFunctionIdentifier: string = randomGenerator.getRandomString(identifierLength);
-    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const base64Identifier: string = randomGenerator.getRandomString(identifierLength);
 
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
-            
-            {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
-                const string = {atobFunctionName}(str);
-                let newStringChars = [];
-                
-                for (let i = 0, length = string.length; i < length; i++) {
-                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);
-                }
-                
-                return decodeURIComponent(newStringChars);
-            };
-            
-            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
+            {stringArrayCallsWrapperName}.${base64Identifier} = {atobFunctionName};
+
+            {stringArrayCacheName} = arguments;
             
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
         const firstValue = {stringArrayName}[0];
         const cacheKey = index + firstValue;
-        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
-                        
-        if (cachedValue === undefined) {
+        const cachedValue = {stringArrayCacheName}[cacheKey];
+        
+        if (!cachedValue) {
             {selfDefendingCode}
             
-            value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);
-            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
+            value = {stringArrayCallsWrapperName}.${base64Identifier}(value);
+            {stringArrayCacheName}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

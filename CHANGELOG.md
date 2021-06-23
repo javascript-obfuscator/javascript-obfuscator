@@ -4,6 +4,18 @@ v2.16.0
 ---
 * Added support of `es2022` features: private identifiers and class properties
 
+v2.15.5
+---
+* Improved `stringArray` calls wrapper decode code
+
+v2.15.4
+---
+* Improved `stringArray` calls wrapper code
+
+v2.15.3
+---
+* Slightly improved integration between `deadCodeInjection` and `stringArrayWrappersChainedCalls` options
+
 v2.15.2
 ---
 * Fixed invalid behaviour of `transformObjectKeys` option when object values contains `this` references. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/937

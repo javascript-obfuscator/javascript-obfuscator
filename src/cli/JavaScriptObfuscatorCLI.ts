@@ -56,7 +56,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      * @type {commander.CommanderStatic}
      */
     @initializable()
-    private commands!: commander.CommanderStatic;
+    private commands!: commander.Command;
 
     /**
      * @type {IdentifierNamesCacheFileUtils}
@@ -144,7 +144,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     }
 
     public initialize (): void {
-        this.commands = <commander.CommanderStatic>(new commander.Command());
+        this.commands = new commander.Command();
 
         this.configureCommands();
         this.configureHelp();

@@ -1,5 +1,9 @@
 Change Log
 
+v2.15.6
+---
+* Added limit for `debugProtection` function recursion calls
+
 v2.15.5
 ---
 * Improved `stringArray` calls wrapper decode code

@@ -669,7 +669,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: Can freeze your browser if you open the Developer Tools.
 
-This option makes it almost impossible to use the `debugger` function of the Developer Tools (both on WebKit-based and Mozilla Firefox).
+This option makes it harder to use the `debugger` function of the Developer Tools (both on WebKit-based and Mozilla Firefox).
 
 ### `debugProtectionInterval`
 Type: `boolean` Default: `false`

@@ -13,12 +13,20 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
-            simplify: false,
+            compact: true,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1,
+            deadCodeInjection: true,
+            deadCodeInjectionThreshold: 1,
+            debugProtection: true,
+            debugProtectionInterval: true,
+            disableConsoleOutput: false,
+            rotateStringArray: true,
+            selfDefending: true,
             stringArray: true,
             stringArrayThreshold: 1,
-            stringArrayEncoding: ['base64'],
-            identifierNamesGenerator: 'mangled'
+            transformObjectKeys: true,
+            unicodeEscapeSequence: false
         }
     );
 

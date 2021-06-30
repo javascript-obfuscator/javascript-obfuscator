@@ -213,4 +213,37 @@ describe('DebugProtectionFunctionCallTemplate', function () {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });
+
+    describe('Variant #7: limited debug protection recursion', () => {
+        const evaluationTimeout: number = 50;
+        const expectedEvaluationResult: number = 1;
+
+        let obfuscatedCode: string,
+            evaluationResult: number = 0;
+
+        beforeEach(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/single-call.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    debugProtection: true
+                }
+            ).getObfuscatedCode();
+
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
+        });
+
+        it('should correctly evaluate code', () => {
+            assert.equal(evaluationResult, expectedEvaluationResult);
+        });
+    });
 });

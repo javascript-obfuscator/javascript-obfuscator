@@ -5,10 +5,11 @@ export function DebugProtectionFunctionTemplate (): string {
     return `
         function {debugProtectionFunctionName} (ret) {
             function debuggerProtection (counter) {
-            
-                {debuggerTemplate}
+                if (counter.toString()['1'] % counter.toString()['3'] != ![]) {
+                    {debuggerTemplate}
                 
-                debuggerProtection(++counter);
+                    debuggerProtection(++counter);
+                } 
             }
             
             try {

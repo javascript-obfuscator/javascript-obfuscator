@@ -4,6 +4,7 @@
   },
   "compilerOptions": {
     "emitDecoratorMetadata": true,
+    "exactOptionalPropertyTypes": false,
     "experimentalDecorators": true,
     "lib": [
       "es2019",

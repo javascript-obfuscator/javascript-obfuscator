@@ -4454,10 +4454,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@4.4.0-dev.20210701:
-  version "4.4.0-dev.20210701"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.0-dev.20210701.tgz#ab6083b5b1c81cf51e3b331646fd8735b4bc82d8"
-  integrity sha512-noUHlum9wzLJF5m33SHAZjBYC8Sn7CjDLvAnIRDJUdqM1VyYSWkz4rX7CELSswTxlObZj3+b02cQZTyB37DYfw==
+typescript@4.4.0-beta:
+  version "4.4.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.0-beta.tgz#a5b8a3a0d260fa5ce84daa3ab58f7102ad19a655"
+  integrity sha512-qMxA8NzN3igwX8Mii7MXGNW+YeFAkUKyKg+x4F1CCFsO36LqISf1EXXSOLDuRIdGjdVvV53grRxfHjOW65YfMA==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"

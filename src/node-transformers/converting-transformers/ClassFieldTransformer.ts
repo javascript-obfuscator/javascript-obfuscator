@@ -16,17 +16,20 @@ import { NodeGuards } from '../../node/NodeGuards';
 /**
  * replaces:
  *     foo () { //... };
+ *     foo = 1;
  *
  * or
  *     'foo' () { //... };
+ *     'foo' = 1;
  *
  * on:
  *     ['foo'] () { //... };
+ *     ['foo'] = 1;
  *
  * Literal node will be obfuscated by LiteralTransformer
  */
 @injectable()
-export class MethodAndPropertyDefinitionTransformer extends AbstractNodeTransformer {
+export class ClassFieldTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
@@ -99,7 +102,7 @@ export class MethodAndPropertyDefinitionTransformer extends AbstractNodeTransfor
         keyNode: ESTree.Identifier
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
-            !MethodAndPropertyDefinitionTransformer.ignoredNames.includes(keyNode.name)
+            !ClassFieldTransformer.ignoredNames.includes(keyNode.name)
             && !classFieldNode.computed
         ) {
             classFieldNode.computed = true;
@@ -120,7 +123,7 @@ export class MethodAndPropertyDefinitionTransformer extends AbstractNodeTransfor
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
             typeof keyNode.value === 'string'
-            && !MethodAndPropertyDefinitionTransformer.ignoredNames.includes(keyNode.value)
+            && !ClassFieldTransformer.ignoredNames.includes(keyNode.value)
             && !classFieldNode.computed
         ) {
             classFieldNode.computed = true;

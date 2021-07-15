@@ -7,23 +7,17 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         `
-            const isTrue = something => !!(something?.bob || something?.sally);
-            const throwsError = () => {
-              throw new Error("Should not be here!");
-            };
-           
-            const myFunction2 = () => {
-              return isTrue() ? { my: "object", nested: { anotherParam: new throwsError() } } : "The only place we should be";
-            };
-           
-            
-            console.log(myFunction2());
+            console.log('foo');
+            console.log('bar');
+            console.log('bar');
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             simplify: false,
-            transformObjectKeys: true,
+            stringArray: true,
+            stringArrayThreshold: 1,
+            stringArrayEncoding: ['base64'],
             identifierNamesGenerator: 'mangled'
         }
     );

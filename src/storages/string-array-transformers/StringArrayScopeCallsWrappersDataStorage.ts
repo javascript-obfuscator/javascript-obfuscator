@@ -2,19 +2,19 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
-import { TStringArrayScopeCallsWrapperNamesDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperNamesDataByEncoding';
+import { TStringArrayScopeCallsWrappersDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrappersDataByEncoding';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayScopeCallsWrapperNamesDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperNamesDataStorage';
+import { IStringArrayScopeCallsWrappersDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrappersDataStorage';
 
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class StringArrayScopeCallsWrapperNamesDataStorage extends MapStorage <
+export class StringArrayScopeCallsWrappersDataStorage extends MapStorage <
     TNodeWithLexicalScopeStatements,
-    TStringArrayScopeCallsWrapperNamesDataByEncoding
-> implements IStringArrayScopeCallsWrapperNamesDataStorage {
+    TStringArrayScopeCallsWrappersDataByEncoding
+> implements IStringArrayScopeCallsWrappersDataStorage {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

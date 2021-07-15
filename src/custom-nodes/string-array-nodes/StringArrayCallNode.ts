@@ -11,7 +11,6 @@ import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStringArrayScopeCallsWrapperParameterIndexesData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperParameterIndexesData';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
@@ -19,6 +18,7 @@ import { initializable } from '../../decorators/Initializable';
 import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
+import { IStringArrayScopeCallsWrapperData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperData';
 
 @injectable()
 export class StringArrayCallNode extends AbstractStringArrayCallNode {
@@ -41,16 +41,10 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     private indexShiftAmount!: number;
 
     /**
-     * @type {string}
+     * @type {IStringArrayScopeCallsWrapperData}
      */
     @initializable()
-    private stringArrayCallsWrapperName!: string;
-
-    /**
-     * @type {IStringArrayScopeCallsWrapperParameterIndexesData | null}
-     */
-    @initializable()
-    private stringArrayCallsWrapperParameterIndexesData!: IStringArrayScopeCallsWrapperParameterIndexesData | null;
+    private stringArrayCallsWrapperData!: IStringArrayScopeCallsWrapperData;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -84,23 +78,20 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     }
 
     /**
-     * @param {string} stringArrayCallsWrapperName
-     * @param {IStringArrayScopeCallsWrapperParameterIndexesData | null} stringArrayCallsWrapperParameterIndexesData
      * @param {number} index
      * @param {number} indexShiftAmount
+     * @param {IStringArrayScopeCallsWrapperData} stringArrayCallsWrapperData
      * @param {string | null} decodeKey
      */
     public initialize (
-        stringArrayCallsWrapperName: string,
-        stringArrayCallsWrapperParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null,
         index: number,
         indexShiftAmount: number,
+        stringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData,
         decodeKey: string | null
     ): void {
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
-        this.stringArrayCallsWrapperParameterIndexesData = stringArrayCallsWrapperParameterIndexesData;
         this.index = index;
         this.indexShiftAmount = indexShiftAmount;
+        this.stringArrayCallsWrapperData = stringArrayCallsWrapperData;
         this.decodeKey = decodeKey;
     }
 
@@ -108,7 +99,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const resultIndex: number = this.indexShiftAmount + this.index;
+        const resultIndex: number = this.indexShiftAmount + this.stringArrayCallsWrapperData.index + this.index;
 
         const indexNode: ESTree.Expression = this.getStringArrayIndexNode(resultIndex);
         const rc4KeyLiteralNode: ESTree.Literal | null = this.decodeKey
@@ -117,7 +108,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
 
         // filling call expression arguments with a fake arguments first
         const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
-            !this.stringArrayCallsWrapperParameterIndexesData
+            !this.stringArrayCallsWrapperData.parameterIndexesData
                 // root string array calls wrapper
                 ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
                 // scope string array calls wrapper
@@ -126,14 +117,14 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
         );
 
         callExpressionArgs.splice(
-            this.stringArrayCallsWrapperParameterIndexesData?.valueIndexParameterIndex ?? 0,
+            this.stringArrayCallsWrapperData.parameterIndexesData?.valueIndexParameterIndex ?? 0,
             1,
             indexNode
         );
 
-        if (this.stringArrayCallsWrapperParameterIndexesData) {
+        if (this.stringArrayCallsWrapperData.parameterIndexesData) {
             callExpressionArgs.splice(
-                this.stringArrayCallsWrapperParameterIndexesData.decodeKeyParameterIndex,
+                this.stringArrayCallsWrapperData.parameterIndexesData.decodeKeyParameterIndex,
                 1,
                 // use rc4 key literal node if exists or a node with fake string array wrapper index
                 rc4KeyLiteralNode ?? this.getFakeStringArrayIndexNode(resultIndex)
@@ -147,7 +138,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
 
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.callExpressionNode(
-                NodeFactory.identifierNode(this.stringArrayCallsWrapperName),
+                NodeFactory.identifierNode(this.stringArrayCallsWrapperData.name),
                 callExpressionArgs
             )
         );

@@ -1,6 +1,8 @@
 import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
-export interface IStringArrayScopeCallsWrapperNamesData {
+import { IStringArrayScopeCallsWrapperData } from './IStringArrayScopeCallsWrapperData';
+
+export interface IStringArrayScopeCallsWrappersData {
     /**
      * @type {TStringArrayEncoding}
      */
@@ -9,5 +11,5 @@ export interface IStringArrayScopeCallsWrapperNamesData {
     /**
      * @type {string[]}
      */
-    names: string[];
+    scopeCallsWrappersData: IStringArrayScopeCallsWrapperData[];
 }

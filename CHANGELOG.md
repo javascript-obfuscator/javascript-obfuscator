@@ -2,6 +2,8 @@ Change Log
 
 v2.16.0
 ---
+* `stringArrayWrappersType: 'function'` now generates different indexes between each wrapper inside the same lexical scope
+* `stringArrayWrappersType: 'function'` now generates different parameters order between each wrapper inside the same lexical scope
 * `stringArrayWrappersType: 'function'` now appends `FunctionDeclaration` functions instead of `FunctionExpression` functions. This allows to append these wrappers at random positions inside each scope
 
 v2.15.6

@@ -54,7 +54,7 @@ export enum ServiceIdentifiers {
     IScopeAnalyzer = 'IScopeAnalyzer',
     IStringArrayIndexNode = 'IStringArrayIndexNode',
     IStringArrayScopeCallsWrapperLexicalScopeDataStorage = 'IStringArrayScopeCallsWrapperLexicalScopeDataStorage',
-    IStringArrayScopeCallsWrapperNamesDataStorage = 'IStringArrayScopeCallsWrapperNamesDataStorage',
+    IStringArrayScopeCallsWrappersDataStorage = 'IStringArrayScopeCallsWrappersDataStorage',
     IStringArrayStorage = 'IStringArrayStorage',
     IStringArrayStorageAnalyzer = 'IStringArrayStorageAnalyzer',
     IThroughIdentifierReplacer = 'IThroughIdentifierReplacer',

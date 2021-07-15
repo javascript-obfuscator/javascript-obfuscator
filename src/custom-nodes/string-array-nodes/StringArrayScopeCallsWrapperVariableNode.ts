@@ -9,6 +9,7 @@ import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayScopeCallsWrapperData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperData';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
@@ -20,16 +21,16 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArrayCallNode {
     /**
-     * @type {string}
+     * @type {IStringArrayScopeCallsWrapperData}
      */
     @initializable()
-    private stringArrayCallsWrapperName!: string;
+    private stringArrayCallsWrapperData!: IStringArrayScopeCallsWrapperData;
 
     /**
-     * @type {string}
+     * @type {IStringArrayScopeCallsWrapperData}
      */
     @initializable()
-    private stringArrayScopeCallsWrapperName!: string;
+    private stringArrayScopeCallsWrapperData!: IStringArrayScopeCallsWrapperData;
 
 
     /**
@@ -64,15 +65,15 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
     }
 
     /**
-     * @param {string} stringArrayScopeCallsWrapperName
-     * @param {string} stringArrayCallsWrapperName
+     * @param {IStringArrayScopeCallsWrapperData} stringArrayScopeCallsWrapperData
+     * @param {IStringArrayScopeCallsWrapperData} stringArrayCallsWrapperData
      */
     public initialize (
-        stringArrayScopeCallsWrapperName: string,
-        stringArrayCallsWrapperName: string
+        stringArrayScopeCallsWrapperData: IStringArrayScopeCallsWrapperData,
+        stringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData
     ): void {
-        this.stringArrayScopeCallsWrapperName = stringArrayScopeCallsWrapperName;
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        this.stringArrayScopeCallsWrapperData = stringArrayScopeCallsWrapperData;
+        this.stringArrayCallsWrapperData = stringArrayCallsWrapperData;
     }
 
     /**
@@ -82,8 +83,8 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperName),
-                    NodeFactory.identifierNode(this.stringArrayCallsWrapperName)
+                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperData.name),
+                    NodeFactory.identifierNode(this.stringArrayCallsWrapperData.name)
                 )
             ],
             'const',

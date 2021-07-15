@@ -1,5 +1,9 @@
 Change Log
 
+v2.16.0
+---
+* `stringArrayWrappersType: 'function'` now appends `FunctionDeclaration` functions instead of `FunctionExpression` functions. This allows to append these wrappers at random positions inside each scope
+
 v2.15.6
 ---
 * To increase performance and prevent possible runtime errors `transformObjectKeys` option now completely ignores objects with `CallExpression` or `NewExpression` nodes. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/948

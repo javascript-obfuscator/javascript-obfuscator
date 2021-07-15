@@ -2,7 +2,7 @@ Change Log
 
 v2.15.6
 ---
-* To increase performance and prevent possible runtime errors `transformObjectKeys` option now completely ignores objects with `CallExpression` nodes. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/948
+* To increase performance and prevent possible runtime errors `transformObjectKeys` option now completely ignores objects with `CallExpression` or `NewExpression` nodes. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/948
 
 v2.15.5
 ---

@@ -318,6 +318,14 @@ export class NodeGuards {
     }
 
     /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNewExpressionNode (node: ESTree.Node): node is ESTree.NewExpression {
+        return node.type === NodeType.NewExpression;
+    }
+
+    /**
      * @param {Object} object
      * @returns {boolean}
      */

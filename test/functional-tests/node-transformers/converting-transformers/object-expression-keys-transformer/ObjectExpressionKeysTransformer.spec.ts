@@ -2427,5 +2427,122 @@ describe('ObjectExpressionKeysTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #19: new expression as property value', () => {
+            describe('Variant #1: new expression as a direct property value', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{` +
+                        `'foo': *'bar',` +
+                        `'baz': *new ${variableMatch}\\(\\)` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/new-expression-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore object expression if it contains a new expression as a direct property value', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: new expression as an indirect property value', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{` +
+                        `'foo': *'bar',` +
+                        `'baz': *'call' *\\+ *new ${variableMatch}\\(\\)` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/new-expression-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore object expression if it contains a new expression as an indirect property value', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: new expression as a nested object expression as property value', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{` +
+                        `'foo': *'bar',` +
+                        `'baz': *{` +
+                            `'bark': *new ${variableMatch}\\(\\)` +
+                        `}` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/new-expression-3.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore object expression if it contains a new expression as a nested object expression as property value', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #4: new expression as a a property value after object expression property', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{` +
+                        `'foo': *'bar',` +
+                        `'baz': *${variableMatch},` +
+                        `'eagle': *new ${variableMatch}\\(\\)` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/new-expression-4.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore object expression if it contains a new expression and the previous property value is object expression', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
     });
 });

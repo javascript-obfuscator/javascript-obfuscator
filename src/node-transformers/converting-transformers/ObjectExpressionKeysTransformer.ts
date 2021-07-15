@@ -162,21 +162,24 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private static isObjectExpressionWithCallExpression (objectExpressionNode: ESTree.ObjectExpression): boolean {
-        let isObjectExpressionWithCallExpressionValue: boolean = false;
+        let isCallExpressionLikeNodeFound: boolean = false;
 
         estraverse.traverse(objectExpressionNode, {
             enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                if (!NodeGuards.isCallExpressionNode(node)) {
+                const isCallExpressionLikeNode = NodeGuards.isCallExpressionNode(node)
+                    || NodeGuards.isNewExpressionNode(node);
+
+                if (!isCallExpressionLikeNode) {
                     return;
                 }
 
-                isObjectExpressionWithCallExpressionValue = true;
+                isCallExpressionLikeNodeFound = true;
 
                 return estraverse.VisitorOption.Break;
             }
         });
 
-        return isObjectExpressionWithCallExpressionValue;
+        return isCallExpressionLikeNodeFound;
     }
 
     /**

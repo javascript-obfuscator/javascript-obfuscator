@@ -72,6 +72,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                 objectExpressionNode,
                 objectExpressionParentNode
             )
+            || ObjectExpressionKeysTransformer.isObjectExpressionWithCallExpression(
+                objectExpressionNode,
+            )
             || ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
                 objectExpressionNode,
                 objectExpressionHostStatement
@@ -152,6 +155,28 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     ): boolean {
         return NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode)
             && objectExpressionNodeParentNode.body === objectExpressionNode;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @returns {boolean}
+     */
+    private static isObjectExpressionWithCallExpression (objectExpressionNode: ESTree.ObjectExpression): boolean {
+        let isObjectExpressionWithCallExpressionValue: boolean = false;
+
+        estraverse.traverse(objectExpressionNode, {
+            enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                if (!NodeGuards.isCallExpressionNode(node)) {
+                    return;
+                }
+
+                isObjectExpressionWithCallExpressionValue = true;
+
+                return estraverse.VisitorOption.Break;
+            }
+        });
+
+        return isObjectExpressionWithCallExpressionValue;
     }
 
     /**

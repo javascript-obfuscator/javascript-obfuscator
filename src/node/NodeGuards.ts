@@ -105,6 +105,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isConditionalExpressionNode (node: ESTree.Node): node is ESTree.ConditionalExpression {
+        return node.type === NodeType.ConditionalExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }
@@ -283,6 +291,14 @@ export class NodeGuards {
      */
     public static isLiteralNode (node: ESTree.Node): node is ESTree.Literal {
         return node.type === NodeType.Literal;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isLogicalExpressionNode (node: ESTree.Node): node is ESTree.LogicalExpression {
+        return node.type === NodeType.LogicalExpression;
     }
 
     /**

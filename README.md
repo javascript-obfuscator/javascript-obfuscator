@@ -1281,8 +1281,8 @@ Type: `string` Default: `variable`
 Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
 
 Available values:
-* `'variable'`: appends variable wrappers. Fast performance.
-* `'function'`: appends function wrappers. Slower performance than with `variable` but provides more strict obfuscation
+* `'variable'`: appends variable wrappers at the top of each scope. Fast performance.
+* `'function'`: appends function wrappers at random positions inside each scope. Slower performance than with `variable` but provides more strict obfuscation.
 
 Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
 
@@ -1304,9 +1304,6 @@ const a = [
     'bar',
     'foo'
 ];
-const d = function (c, g) {
-    return b(g - 0x3e1, c);
-};
 const foo = d(0x567, 0x568);
 function b(c, d) {
     b = function (e, f) {
@@ -1317,14 +1314,17 @@ function b(c, d) {
     return b(c, d);
 }
 function test() {
-    const e = function (c, g) {
-        return b(c - 0x396, g);
-    };
-    const f = function (c, g) {
-        return b(c - 0x396, g);
-    };
     const c = e(0x51c, 0x51b);
+    function e (c, g) {
+        return b(c - 0x396, g);
+    }
     console[f(0x51b, 0x51d)](foo, c);
+    function f (c, g) {
+        return b(c - 0x396, g);
+    }
+}
+function d (c, g) {
+    return b(g - 0x3e1, c);
 }
 test();
 ```

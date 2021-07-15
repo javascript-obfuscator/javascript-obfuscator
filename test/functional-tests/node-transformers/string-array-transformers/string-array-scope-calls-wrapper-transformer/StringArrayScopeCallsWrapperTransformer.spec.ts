@@ -644,20 +644,29 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #1: base', () => {
                 describe('Variant #1: `hexadecimal-number` indexes type', () => {
-                    const stringArrayCallRegExp: RegExp = new RegExp(
-                        'const f *= *function *\\(c, *d\\) *{' +
+                    const getStringArrayCallsWrapperMatch = (stringArrayCallsWrapperName: string) =>
+                        `function *${stringArrayCallsWrapperName} *\\(c, *d\\) *{` +
                             `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
-                        '};.*' +
+                        '}';
+
+                    const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        getStringArrayCallsWrapperMatch('f')
+                    );
+                    const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function test *\\( *\\) *{.*' +
+                            `${getStringArrayCallsWrapperMatch('g')}.*?` +
+                        '}'
+                    );
+                    const stringArrayCallsWrapperCallsRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const bar *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const baz *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
-                        'function test *\\( *\\) *{' +
-                            'const g *= *function *\\(c, *d\\) *{' +
-                                `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
-                            '};' +
-                            `const c *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);` +
-                            `const d *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);` +
-                            `const e *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);` +
+                        'function test *\\( *\\) *{.*' +
+                            `const c *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
+                            `const d *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
+                            `const e *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
                         '}'
                     );
 
@@ -689,8 +698,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         ).areSuccessEvaluations;
                     });
 
-                    it('should add correct scope calls wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    it('Match #1: should add correct scope calls wrapper 1', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp1);
+                    });
+
+                    it('Match #2: should add correct scope calls wrapper 2', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp2);
+                    });
+
+                    it('Match #3: should add correct scope calls wrappers calls', () => {
+                        assert.match(obfuscatedCode, stringArrayCallsWrapperCallsRegExp);
                     });
 
                     it('should evaluate code without errors', () => {
@@ -699,20 +716,29 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 });
 
                 describe('Variant #2: `hexadecimal-numeric-string` indexes type', () => {
-                    const stringArrayCallRegExp: RegExp = new RegExp(
-                        'const f *= *function *\\(c, *d\\) *{' +
+                    const getStringArrayCallsWrapperMatch = (stringArrayCallsWrapperName: string) =>
+                        `function *${stringArrayCallsWrapperName} *\\(c, *d\\) *{` +
                             `return b\\([cd] *-(?: -)?'${hexadecimalIndexMatch}', *[cd]\\);` +
-                        '};.*' +
+                        '}';
+
+                    const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        getStringArrayCallsWrapperMatch('f')
+                    );
+                    const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function test *\\( *\\) *{.*' +
+                            `${getStringArrayCallsWrapperMatch('g')}.*?` +
+                        '}'
+                    );
+                    const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
                         `const bar *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
                         `const baz *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
-                        'function test *\\( *\\) *{' +
-                            'const g *= *function *\\(c, *d\\) *{' +
-                                `return b\\([cd] *-(?: -)?'${hexadecimalIndexMatch}', *[cd]\\);` +
-                            '};' +
-                            `const c *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const d *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);` +
-                            `const e *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);` +
+                        'function test *\\( *\\) *{.*' +
+                            `const c *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
+                            `const d *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
+                            `const e *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
                         '}'
                     );
 
@@ -744,8 +770,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         ).areSuccessEvaluations;
                     });
 
-                    it('should add correct scope calls wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    it('Match #1: should add correct scope calls wrapper 1', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp1);
+                    });
+
+                    it('Match #2: should add correct scope calls wrapper 2', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp2);
+                    });
+
+                    it('Match #3: should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallsWrapperCallRegExp);
                     });
 
                     it('should evaluate code without errors', () => {
@@ -755,24 +789,32 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             });
 
             describe('Variant #2: correct chained calls', () => {
-                const stringArrayCallRegExp: RegExp = new RegExp(
-                    'const f *= *function *\\(c, *d\\) *{' +
+                const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
+                    'const a *= *\\[.*?];.*?' +
+                    'function *f *\\(c, *d\\) *{' +
                         `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
-                    '};.*' +
-                    `const foo *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    `const bar *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    `const baz *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    'function test *\\( *\\) *{' +
-                        'const g *= *function *\\(c, *d\\) *{' +
+                    '}.*'
+                );
+                const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
+                    'const a *= *\\[.*?];.*?' +
+                    'function test *\\( *\\) *{.*' +
+                        'function *g *\\(c, *d\\) *{' +
                             `return f\\(` +
                                 // order of arguments depends on the parent wrapper parameters order
                                 `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
                                 `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?` +
                             `\\);` +
-                        '};' +
-                        `const c *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
-                        `const d *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
-                        `const e *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
+                        '}.*' +
+                    '}'
+                );
+                const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
+                    `const foo *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                    `const bar *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                    `const baz *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                    'function test *\\( *\\) *{.*' +
+                        `const c *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        `const d *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        `const e *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                     '}'
                 );
 
@@ -801,8 +843,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     ).areSuccessEvaluations;
                 });
 
-                it('should add correct scope calls wrappers', () => {
-                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                it('Match #1: should add correct scope calls wrapper 1', () => {
+                    assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp1);
+                });
+
+                it('Match #2: should add correct scope calls wrapper 2', () => {
+                    assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp2);
+                });
+
+                it('Match #3: should add correct scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallsWrapperCallRegExp);
                 });
 
                 it('should evaluate code without errors', () => {
@@ -811,15 +861,20 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             });
 
             describe('Variant #3: no wrappers on a root scope', () => {
-                const stringArrayCallRegExp: RegExp = new RegExp(
-                    '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'function test *\\( *\\) *{' +
-                        'const f *= *function *\\(c, *d\\) *{' +
+                const stringArrayScopeCallsWrapperRegExp: RegExp = new RegExp(
+                    'const a *= *\\[.*?];.*' +
+                    'function test *\\( *\\) *{.*' +
+                        'function *f*\\(c, *d\\) *{' +
                             `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
-                        '};' +
-                        `const c *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
-                        `const d *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
-                        `const e *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);` +
+                        '}.*' +
+                    '}'
+                );
+                const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
+                    '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                    'function test *\\( *\\) *{.*' +
+                        `const c *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        `const d *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        `const e *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                     '}'
                 );
 
@@ -848,8 +903,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     ).areSuccessEvaluations;
                 });
 
-                it('should add correct scope calls wrappers', () => {
-                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                it('Match #1: should add correct scope calls wrapper', () => {
+                    assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp);
+                });
+
+                it('Match #2: should add correct scope calls wrappers', () => {
+                    assert.match(obfuscatedCode, stringArrayCallsWrapperCallRegExp);
                 });
 
                 it('should evaluate code without errors', () => {
@@ -1026,15 +1085,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     const stringArrayWrapperArgumentsRegExpString: string = Array(5)
                         .fill(`-? *${hexadecimalIndexMatch}`)
                         .join(', *');
-                    const stringArrayCallRegExp: RegExp = new RegExp(
-                        'const f *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+
+                    const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
-                        '};.*' +
-                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        'function test *\\( *\\) *{' +
-                            'const g *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                        '}.*'
+                    );
+                    const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function test *\\( *\\) *{.*' +
+                            'function *g *\\(c, *d, *e, *h, *i\\) *{' +
                                 `return f\\(` +
                                     // order of arguments depends on the parent wrapper parameters order
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
@@ -1043,10 +1104,18 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
                                 `\\);` +
-                            '};' +
-                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
-                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
-                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            '}.*' +
+                        '}'
+                    );
+
+                    const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
+                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        'function test *\\( *\\) *{.*' +
+                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                         '}'
                     );
 
@@ -1076,8 +1145,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         ).areSuccessEvaluations;
                     });
 
-                    it('should add correct scope calls wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    it('Match #1: should add correct scope calls wrapper 1', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp1);
+                    });
+
+                    it('Match #2: should add correct scope calls wrapper 2', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp2);
+                    });
+
+                    it('Match #3: should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallsWrapperCallRegExp);
                     });
 
                     it('should evaluate code without errors', () => {
@@ -1089,15 +1166,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     const stringArrayWrapperArgumentsRegExpString: string = Array(5)
                         .fill(`(?:-? *${hexadecimalIndexMatch}|(?:'.{4}'))`)
                         .join(', *');
-                    const stringArrayCallRegExp: RegExp = new RegExp(
-                        'const f *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+
+                    const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
-                        '};.*' +
-                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        'function test *\\( *\\) *{' +
-                            'const g *= *function *\\(c, *d, *e, *h, *i\\) *{' +
+                        '}.*'
+                    );
+                    const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
+                        'const a *= *\\[.*?];.*?' +
+                        'function test *\\( *\\) *{.*' +
+                            'function *g *\\(c, *d, *e, *h, *i\\) *{' +
                                 `return f\\(` +
                                     // order of arguments depends on the parent wrapper parameters order
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
@@ -1106,10 +1185,18 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
                                     `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
                                 `\\);` +
-                            '};' +
-                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
-                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
-                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);` +
+                            '}.*' +
+                        '}'
+                    );
+
+                    const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
+                        `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                        'function test *\\( *\\) *{.*' +
+                            `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                         '}'
                     );
 
@@ -1142,8 +1229,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         ).areSuccessEvaluations;
                     });
 
-                    it('should add correct scope calls wrappers', () => {
-                        assert.match(obfuscatedCode, stringArrayCallRegExp);
+                    it('Match #1: should add correct scope calls wrapper 1', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp1);
+                    });
+
+                    it('Match #2: should add correct scope calls wrapper 2', () => {
+                        assert.match(obfuscatedCode, stringArrayScopeCallsWrapperRegExp2);
+                    });
+
+                    it('Match #3: should add correct scope calls wrappers', () => {
+                        assert.match(obfuscatedCode, stringArrayCallsWrapperCallRegExp);
                     });
 
                     it('should evaluate code without errors', () => {

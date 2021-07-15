@@ -172,17 +172,13 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
                     stringArrayScopeCallsWrapperLexicalScopeData,
                 );
 
-                const stringArrayScopeCallsWrapperNode: TStatement[] = this.getStringArrayScopeCallsWrapperNode(
+                this.getAndAppendStringArrayScopeCallsWrapperNode(
+                    lexicalScopeBodyNode,
                     stringArrayScopeCallsWrapperName,
                     stringArrayScopeCallsWrapperParameterIndexes,
                     upperStringArrayCallsWrapperName,
                     upperStringArrayCallsWrapperParameterIndexes,
-                    upperStringArrayCallsWrapperShiftedIndex
-                );
-
-                NodeAppender.prepend(
-                    lexicalScopeBodyNode,
-                    stringArrayScopeCallsWrapperNode
+                    upperStringArrayCallsWrapperShiftedIndex,
                 );
             }
         }
@@ -263,23 +259,31 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
     }
 
     /**
+     * @param {TNodeWithLexicalScopeStatements} lexicalScopeBodyNode
      * @param {string} stringArrayScopeCallsWrapperName
      * @param {IStringArrayScopeCallsWrapperParameterIndexesData | null} stringArrayScopeCallsWrapperParameterIndexes
      * @param {string} upperStringArrayCallsWrapperName
      * @param {IStringArrayScopeCallsWrapperParameterIndexesData | null} upperStringArrayCallsWrapperParameterIndexes
      * @param {number} stringArrayScopeCallsWrapperShiftedIndex
-     * @returns {TStatement[]}
      */
-    private getStringArrayScopeCallsWrapperNode (
+    private getAndAppendStringArrayScopeCallsWrapperNode (
+        lexicalScopeBodyNode: TNodeWithLexicalScopeStatements,
         stringArrayScopeCallsWrapperName: string,
         stringArrayScopeCallsWrapperParameterIndexes: IStringArrayScopeCallsWrapperParameterIndexesData | null,
         upperStringArrayCallsWrapperName: string,
         upperStringArrayCallsWrapperParameterIndexes: IStringArrayScopeCallsWrapperParameterIndexesData | null,
         stringArrayScopeCallsWrapperShiftedIndex: number
-    ): TStatement[] {
+    ): void {
+        let stringArrayScopeCallsWrapperNode: TStatement[];
+
         switch (this.options.stringArrayWrappersType) {
-            case StringArrayWrappersType.Function:
-                return this.getStringArrayScopeCallsWrapperFunctionNode(
+            case StringArrayWrappersType.Function: {
+                const randomIndex: number = this.randomGenerator.getRandomInteger(
+                    0,
+                    lexicalScopeBodyNode.body.length - 1
+                );
+
+                stringArrayScopeCallsWrapperNode = this.getStringArrayScopeCallsWrapperFunctionNode(
                     stringArrayScopeCallsWrapperName,
                     stringArrayScopeCallsWrapperParameterIndexes,
                     upperStringArrayCallsWrapperName,
@@ -287,12 +291,27 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
                     stringArrayScopeCallsWrapperShiftedIndex
                 );
 
+                NodeAppender.insertAtIndex(
+                    lexicalScopeBodyNode,
+                    stringArrayScopeCallsWrapperNode,
+                    randomIndex
+                );
+
+                break;
+            }
+
             case StringArrayWrappersType.Variable:
-            default:
-                return this.getStringArrayScopeCallsWrapperVariableNode(
+            default: {
+                stringArrayScopeCallsWrapperNode = this.getStringArrayScopeCallsWrapperVariableNode(
                     stringArrayScopeCallsWrapperName,
                     upperStringArrayCallsWrapperName
                 );
+
+                NodeAppender.prepend(
+                    lexicalScopeBodyNode,
+                    stringArrayScopeCallsWrapperNode
+                );
+            }
         }
     }
 

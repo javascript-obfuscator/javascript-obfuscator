@@ -165,8 +165,9 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
             decodeKeyIdentifierNode
         );
 
-        // stage 3: function expression node
-        const functionExpressionNode: ESTree.FunctionExpression =  NodeFactory.functionExpressionNode(
+        // stage 3: function declaration node
+        const functionDeclarationNode: ESTree.FunctionDeclaration =  NodeFactory.functionDeclarationNode(
+            this.stringArrayScopeCallsWrapperName,
             parameters,
             NodeFactory.blockStatementNode([
                 NodeFactory.returnStatementNode(
@@ -178,22 +179,14 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
             ])
         );
 
-        const structure: TStatement = NodeFactory.variableDeclarationNode(
-            [
-                NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(this.stringArrayScopeCallsWrapperName),
-                    functionExpressionNode
-                )
-            ],
-            'const',
-        );
+        const structure: TStatement = functionDeclarationNode;
 
         NodeUtils.parentizeAst(structure);
 
         // stage 4: rename
         // have to generate names for both parameter and call identifiers
         for (const parameter of parameters) {
-            parameter.name = this.identifierNamesGenerator.generateForLexicalScope(functionExpressionNode);
+            parameter.name = this.identifierNamesGenerator.generateForLexicalScope(functionDeclarationNode);
         }
 
         return [structure];

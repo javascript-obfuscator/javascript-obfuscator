@@ -9,7 +9,6 @@ import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-a
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IPropertyIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IPropertyIdentifierNamesCacheStorage';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { IStringArrayScopeCallsWrappersDataStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrappersDataStorage';
 import { IStringArrayStorage } from '../../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IVisitedLexicalScopeNodesStackStorage } from '../../../interfaces/storages/string-array-transformers/IVisitedLexicalScopeNodesStackStorage';
@@ -19,7 +18,6 @@ import { CustomCodeHelperGroupStorage } from '../../../storages/custom-code-help
 import { GlobalIdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/GlobalIdentifierNamesCacheStorage';
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
 import { PropertyIdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage';
-import { StringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrapperLexicalScopeDataStorage';
 import { StringArrayScopeCallsWrappersDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrappersDataStorage';
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
 import { VisitedLexicalScopeNodesStackStorage } from '../../../storages/string-array-transformers/VisitedLexicalScopeNodesStackStorage';
@@ -44,10 +42,6 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
 
     bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)
         .to(StringArrayStorage)
-        .inSingletonScope();
-
-    bind<IStringArrayScopeCallsWrapperLexicalScopeDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)
-        .to(StringArrayScopeCallsWrapperLexicalScopeDataStorage)
         .inSingletonScope();
 
     bind<IStringArrayScopeCallsWrappersDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrappersDataStorage)

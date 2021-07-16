@@ -53,7 +53,6 @@ export enum ServiceIdentifiers {
     ISourceCode = 'ISourceCode',
     IScopeAnalyzer = 'IScopeAnalyzer',
     IStringArrayIndexNode = 'IStringArrayIndexNode',
-    IStringArrayScopeCallsWrapperLexicalScopeDataStorage = 'IStringArrayScopeCallsWrapperLexicalScopeDataStorage',
     IStringArrayScopeCallsWrappersDataStorage = 'IStringArrayScopeCallsWrappersDataStorage',
     IStringArrayStorage = 'IStringArrayStorage',
     IStringArrayStorageAnalyzer = 'IStringArrayStorageAnalyzer',

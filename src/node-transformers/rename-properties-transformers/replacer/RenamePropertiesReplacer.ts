@@ -106,6 +106,8 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      */
     private replacePropertyName (propertyName: string): string {
         if (this.isReservedName(propertyName)) {
+            this.identifierNamesGenerator.preserveName(propertyName);
+
             return propertyName;
         }
 

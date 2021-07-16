@@ -9,6 +9,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { checkCodeEvaluation } from '../../../../helpers/checkCodeEvaluation';
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -1244,6 +1245,59 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     it('should evaluate code without errors', () => {
                         assert.isTrue(areSuccessEvaluations);
                     });
+                });
+            });
+
+            describe('Variant #6: different indexes for calls wrappers', () => {
+                const getStringArrayScopeCallsWrapperMatch = (stringArrayScopeCallsWrapperName: string) =>
+                    `function *${stringArrayScopeCallsWrapperName} *\\(e, *f\\) *{` +
+                        `return b\\([ef] *-(?: -)?(${hexadecimalIndexMatch}), *[ef]\\);` +
+                    '}.*';
+
+                const stringArrayScopeCallsWrapperIndexRegExp1: RegExp = new RegExp(
+                    getStringArrayScopeCallsWrapperMatch('c')
+                );
+                const stringArrayScopeCallsWrapperIndexRegExp2: RegExp = new RegExp(
+                    getStringArrayScopeCallsWrapperMatch('d')
+                );
+
+                const differentIndexesMatchesSamplesCount: number = 20;
+                let differentIndexesMatchesCount: number = 0;
+                let differentIndexesMatchesDelta: number = 3;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-calls-wrappers-different-indexes.js');
+
+                    for (let i = 0; i < differentIndexesMatchesSamplesCount; i++) {
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayWrappersChainedCalls: true,
+                                stringArrayWrappersCount: 2,
+                                stringArrayWrappersParametersMaxCount: 2,
+                                stringArrayWrappersType: StringArrayWrappersType.Function
+                            }
+                        ).getObfuscatedCode();
+
+                        const indexMatch1 = getRegExpMatch(obfuscatedCode, stringArrayScopeCallsWrapperIndexRegExp1);
+                        const indexMatch2 = getRegExpMatch(obfuscatedCode, stringArrayScopeCallsWrapperIndexRegExp2);
+
+                        if (indexMatch1 !== indexMatch2) {
+                            differentIndexesMatchesCount++;
+                        }
+                    }
+                });
+
+                it('Should generate a different indexes for different string array scope calls wrappers', () => {
+                    assert.closeTo(
+                        differentIndexesMatchesCount,
+                        differentIndexesMatchesSamplesCount,
+                        differentIndexesMatchesDelta
+                    );
                 });
             });
         });

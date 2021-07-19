@@ -1,4 +1,6 @@
+import * as fs from 'fs';
 import { assert } from 'chai';
+import { resolveSources } from 'source-map-resolve';
 
 import { TDictionary } from '../../../src/types/TDictionary';
 import { TIdentifierNamesCache } from '../../../src/types/TIdentifierNamesCache';
@@ -7,6 +9,7 @@ import { TOptionsPreset } from '../../../src/types/options/TOptionsPreset';
 import { TTypeFromEnum } from '../../../src/types/utils/TTypeFromEnum';
 
 import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfuscationResult';
+import { ISourceMap } from '../../../src/interfaces/source-code/ISourceMap';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
@@ -107,11 +110,13 @@ describe('JavaScriptObfuscator', () => {
 
         describe('`sourceMap` option is `true`', () => {
             describe('`sourceMapMode` is `separate`', () => {
-                let obfuscatedCode: string,
-                    sourceMap: string;
+                let code: string,
+                    obfuscatedCode: string,
+                    sourceMap: ISourceMap,
+                    resolvedSources: string;
 
-                beforeEach(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                beforeEach((done) => {
+                    code = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
@@ -121,26 +126,46 @@ describe('JavaScriptObfuscator', () => {
                     );
 
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
+                    sourceMap = JSON.parse(obfuscationResult.getSourceMap());
+                    resolveSources(sourceMap, '/', fs.readFile, (error, result) => {
+                        resolvedSources = typeof result.sourcesContent[0] === 'string'
+                            ? result.sourcesContent[0]
+                            : '';
+                        done();
+                    });
                 });
 
                 it('should return correct obfuscated code', () => {
                     assert.isOk(obfuscatedCode);
                 });
 
-                it('should return correct source map', () => {
-                    assert.isOk(sourceMap);
+                it('should return correct source map mappings', () => {
+                    assert.isOk(sourceMap.mappings);
+                });
+
+                it('should define placeholder `sources` field for source map', () => {
+                    assert.deepEqual(sourceMap.sources, ['sourceMap']);
+                });
+
+                it('should define `sourcesContent` field for source map', () => {
+                    assert.isOk(sourceMap.sourcesContent);
+                });
+
+                it('should resolve correct sources from source map', () => {
+                    assert.equal(resolvedSources, code);
                 });
             });
 
             describe('`sourceMapMode` is `inline`', () => {
                 const regExp: RegExp = /sourceMappingURL=data:application\/json;base64/;
 
-                let obfuscatedCode: string,
-                    sourceMap: string;
+                let code: string,
+                    obfuscatedCode: string,
+                    sourceMap: ISourceMap,
+                    resolvedSources: string;
 
-                beforeEach(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                beforeEach((done) => {
+                    code = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
@@ -151,7 +176,13 @@ describe('JavaScriptObfuscator', () => {
                     );
 
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
+                    sourceMap = JSON.parse(obfuscationResult.getSourceMap());
+                    resolveSources(sourceMap, '/', fs.readFile, (error, result) => {
+                        resolvedSources = typeof result.sourcesContent[0] === 'string'
+                            ? result.sourcesContent[0]
+                            : '';
+                        done();
+                    });
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -162,8 +193,21 @@ describe('JavaScriptObfuscator', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
 
-                it('should return correct source map', () => {
-                    assert.isOk(sourceMap);
+                it('should return correct source map mappings', () => {
+                    assert.isOk(sourceMap.mappings);
+                });
+
+                it('should define placeholder `sources` field for source map', () => {
+                    assert.deepEqual(sourceMap.sources, ['sourceMap']);
+                });
+
+                it('should define `sourcesContent` field for source map', () => {
+                    assert.isOk(sourceMap.sourcesContent);
+                });
+
+                it('should resolve correct sources from source map', () => {
+                    console.log(resolvedSources);
+                    assert.equal(resolvedSources, code);
                 });
             });
 

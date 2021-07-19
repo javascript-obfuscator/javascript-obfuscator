@@ -8,6 +8,7 @@ import { ICryptUtils } from '../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
+import { cryptUtilsAtob } from '../../helpers/cryptUtilsAtob';
 
 describe('CryptUtils', () => {
     let cryptUtils: ICryptUtils;
@@ -21,30 +22,65 @@ describe('CryptUtils', () => {
 
     describe('btoa', () => {
        describe('Variant #1: basic', () => {
-           const expectedString: string = 'c3RyaW5n';
+           const expectedEncodedString: string = 'c3RyaW5n';
+           const expectedDecodedString: string = 'string';
 
-           let string: string;
+           let encodedString: string,
+               decodedString: string;
 
            before(() => {
-               string = cryptUtils.btoa('string');
+               encodedString = cryptUtils.btoa('string');
+               decodedString = cryptUtilsAtob(encodedString);
            });
 
            it('should create a base-64 encoded string from a given string', () => {
-               assert.equal(string, expectedString);
+               assert.equal(encodedString, expectedEncodedString);
+           });
+
+           it('should create encoded string that can be successfully decoded', () => {
+               assert.equal(decodedString, expectedDecodedString);
            });
        });
 
         describe('Variant #2: padding characters', () => {
-            const expectedString: string = 'c3RyaQ==';
+            const expectedEncodedString: string = 'c3RyaQ==';
+            const expectedDecodedString: string = 'stri';
 
-            let string: string;
+            let encodedString: string,
+                decodedString: string;
 
             before(() => {
-                string = cryptUtils.btoa('stri');
+                encodedString = cryptUtils.btoa('stri');
+                decodedString = cryptUtilsAtob(encodedString);
             });
 
             it('should create a base-64 encoded string from a given string with padding characters', () => {
-                assert.equal(string, expectedString);
+                assert.equal(encodedString, expectedEncodedString);
+            });
+
+            it('should create encoded string that can be successfully decoded', () => {
+                assert.equal(decodedString, expectedDecodedString);
+            });
+        });
+
+        describe('Variant #3: cyrillic string', () => {
+            const expectedEncodedString: string = '0YLQtdGB0YI=';
+            const expectedDecodedString: string = 'тест';
+
+            let encodedString: string,
+                decodedString: string;
+
+            before(() => {
+                encodedString = cryptUtils.btoa('тест');
+                decodedString = cryptUtilsAtob(encodedString);
+            });
+
+            it('should create a base-64 encoded string from a given string', () => {
+                assert.equal(encodedString, expectedEncodedString);
+            });
+
+            it('should create encoded string with a cyrillic characters that can be successfully decoded', () => {
+                assert.equal(decodedString, expectedDecodedString);
             });
         });
     });

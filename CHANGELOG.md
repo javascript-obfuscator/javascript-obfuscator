@@ -1,5 +1,10 @@
 Change Log
 
+v2.17.0
+---
+* **New option**: `sourceMapSourcesMode` allows to control `sources` and `sourcesContent` fields of the source map
+* Fixed some cases with wrong source map file name generation when `sourceMapFileName` option is set
+
 v2.16.0
 ---
 * `stringArrayWrappersType: 'function'` now generates different indexes between each wrapper inside the same lexical scope

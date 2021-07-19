@@ -180,7 +180,8 @@ describe('NodeLiteralUtils', () => {
 
                     before(() => {
                         exportAllDeclarationNode = NodeFactory.exportAllDeclarationNode(
-                            literalNode
+                            literalNode,
+                            null
                         );
 
                         literalNode.parentNode = exportAllDeclarationNode;

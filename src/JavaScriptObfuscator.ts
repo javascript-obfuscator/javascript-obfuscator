@@ -27,6 +27,7 @@ import { ecmaVersion } from './constants/EcmaVersion';
 import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
 import { Utils } from './utils/Utils';
+import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
@@ -247,20 +248,23 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     private generateCode (sourceCode: string, astTree: ESTree.Program): IGeneratorOutput {
         const escodegenParams: escodegen.GenerateOptions = {
-            ...JavaScriptObfuscator.escodegenParams
-        };
-
-        if (this.options.sourceMap) {
-            escodegenParams.sourceMap = this.options.inputFileName || 'sourceMap';
-            escodegenParams.sourceContent = sourceCode;
-        }
-
-        const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, {
-            ...escodegenParams,
+            ...JavaScriptObfuscator.escodegenParams,
             format: {
                 compact: this.options.compact
+            },
+            ...this.options.sourceMap && {
+                ...this.options.sourceMapSourcesMode === SourceMapSourcesMode.SourcesContent
+                    ? {
+                        sourceMap: 'sourceMap',
+                        sourceContent: sourceCode
+                    }
+                    : {
+                        sourceMap: this.options.inputFileName
+                    }
             }
-        });
+        };
+
+        const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
 
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
 

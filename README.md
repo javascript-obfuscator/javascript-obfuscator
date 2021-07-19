@@ -377,6 +377,7 @@ Following options are available for the JS Obfuscator:
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: 'separate',
+    sourceMapSourcesMode: 'sources-content',
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
@@ -438,6 +439,7 @@ Following options are available for the JS Obfuscator:
     --source-map-base-url <string>
     --source-map-file-name <string>
     --source-map-mode <string> [inline, separate]
+    --source-map-sources-mode <string> [sources, sources-content]
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
@@ -1070,6 +1072,13 @@ Type: `string` Default: `separate`
 Specifies source map generation mode:
 * `inline` - add source map at the end of each .js files;
 * `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
+
+### `sourceMapSourcesMode`
+Type: `string` Default: `sources-content`
+
+Allows to control `sources` and `sourcesContent` fields of the source map:
+* `sources-content` - adds dummy `sources` field, adds `sourcesContent` field with the original source code;
+* `sources` - adds `sources` field with a valid source description, does not add `sourcesContent` field.
 
 ### `splitStrings`
 Type: `boolean` Default: `false`

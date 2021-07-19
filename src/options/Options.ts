@@ -49,6 +49,7 @@ import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
 import { IsDomainLockRedirectUrl } from './validators/IsDomainLockRedirectUrl';
 import { IsIdentifierNamesCache } from './validators/IsIdentifierNamesCache';
+import { IsInputFileName } from './validators/IsInputFileName';
 
 @injectable()
 export class Options implements IOptions {
@@ -195,7 +196,7 @@ export class Options implements IOptions {
     /**
      * @type {string}
      */
-    @IsString()
+    @IsInputFileName()
     public readonly inputFileName!: string;
 
     /**

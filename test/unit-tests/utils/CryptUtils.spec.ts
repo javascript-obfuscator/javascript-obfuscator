@@ -8,7 +8,7 @@ import { ICryptUtils } from '../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
-import { cryptUtilsAtob } from '../../helpers/cryptUtilsAtob';
+import { atob } from '../../helpers/atob';
 
 describe('CryptUtils', () => {
     let cryptUtils: ICryptUtils;
@@ -30,7 +30,7 @@ describe('CryptUtils', () => {
 
            before(() => {
                encodedString = cryptUtils.btoa('string');
-               decodedString = cryptUtilsAtob(encodedString);
+               decodedString = atob(encodedString);
            });
 
            it('should create a base-64 encoded string from a given string', () => {
@@ -51,7 +51,7 @@ describe('CryptUtils', () => {
 
             before(() => {
                 encodedString = cryptUtils.btoa('stri');
-                decodedString = cryptUtilsAtob(encodedString);
+                decodedString = atob(encodedString);
             });
 
             it('should create a base-64 encoded string from a given string with padding characters', () => {
@@ -72,7 +72,7 @@ describe('CryptUtils', () => {
 
             before(() => {
                 encodedString = cryptUtils.btoa('тест');
-                decodedString = cryptUtilsAtob(encodedString);
+                decodedString = atob(encodedString);
             });
 
             it('should create a base-64 encoded string from a given string', () => {

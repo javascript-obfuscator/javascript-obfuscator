@@ -12,6 +12,7 @@ import { IObfuscationResult } from '../../../src/interfaces/source-code/IObfusca
 import { ISourceMap } from '../../../src/interfaces/source-code/ISourceMap';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
+import { SourceMapSourcesMode } from '../../../src/enums/source-map/SourceMapSourcesMode';
 import { StringArrayEncoding } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayIndexesType } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -249,6 +250,128 @@ describe('JavaScriptObfuscator', () => {
 
                 it('should return empty source map property `mappings`', () => {
                     assert.isNotOk(sourceMapMappings);
+                });
+            });
+
+            describe('`sourceMapSourceMode` is set', () => {
+                describe('`sourcesContent` value', () => {
+                    let code: string,
+                        obfuscatedCode: string,
+                        sourceMap: ISourceMap,
+                        resolvedSources: string;
+
+                    beforeEach((done) => {
+                        code = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                sourceMap: true,
+                                sourceMapSourcesMode: SourceMapSourcesMode.SourcesContent
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        sourceMap = JSON.parse(obfuscationResult.getSourceMap());
+                        resolveSources(sourceMap, '/', fs.readFile, (error, result) => {
+                            resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                ? result.sourcesContent[0]
+                                : '';
+                            done();
+                        });
+                    });
+
+                    it('should return correct obfuscated code', () => {
+                        assert.isOk(obfuscatedCode);
+                    });
+
+                    it('should return correct source map mappings', () => {
+                        assert.isOk(sourceMap.mappings);
+                    });
+
+                    it('should define `sources` field for source map', () => {
+                        assert.property(sourceMap, 'sources');
+                    });
+
+                    it('should define `sourcesContent` field for source map', () => {
+                        assert.property(sourceMap, 'sourcesContent');
+                    });
+
+                    it('should define placeholder `sources` field for source map', () => {
+                        assert.deepEqual(sourceMap.sources, ['sourceMap']);
+                    });
+
+                    it('should define `sourcesContent` value with source code', () => {
+                        assert.deepEqual(sourceMap.sourcesContent[0], code);
+                    });
+
+                    it('should resolve correct sources from source map', () => {
+                        assert.equal(resolvedSources, code);
+                    });
+                });
+
+                describe('`sources` value', () => {
+                    describe('`inputFileName` option is set', () => {
+                        let code: string,
+                            obfuscatedCode: string,
+                            sourceMap: ISourceMap;
+
+                        beforeEach(() => {
+                            code = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    inputFileName: 'someFile.js',
+                                    sourceMap: true,
+                                    sourceMapSourcesMode: SourceMapSourcesMode.Sources
+                                }
+                            );
+
+                            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                            sourceMap = JSON.parse(obfuscationResult.getSourceMap());
+                        });
+
+                        it('should return correct obfuscated code', () => {
+                            assert.isOk(obfuscatedCode);
+                        });
+
+                        it('should return correct source map mappings', () => {
+                            assert.isOk(sourceMap.mappings);
+                        });
+
+                        it('should define `sources` field for source map', () => {
+                            assert.property(sourceMap, 'sources');
+                        });
+
+                        it('should not define `sourcesContent` field for source map', () => {
+                            assert.notProperty(sourceMap, 'sourcesContent');
+                        });
+
+                        it('should define placeholder `sources` field for source map', () => {
+                            assert.deepEqual(sourceMap.sources, ['someFile.js']);
+                        });
+                    })
+
+                    describe('`inputFileName` option is not set', () => {
+                        let testFunc: () => IObfuscationResult;
+
+                        beforeEach(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                            testFunc = () => JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    sourceMap: true,
+                                    sourceMapSourcesMode: SourceMapSourcesMode.Sources
+                                }
+                            );
+                        });
+
+                        it('should throw an error', () => {
+                            assert.throws(testFunc, Error);
+                        });
+                    });
                 });
             });
         });

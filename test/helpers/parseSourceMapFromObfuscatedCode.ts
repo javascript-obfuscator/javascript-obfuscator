@@ -1,11 +1,11 @@
 import { ISourceMap } from '../../src/interfaces/source-code/ISourceMap';
 
-import { cryptUtilsAtob } from './cryptUtilsAtob';
+import { atob } from './atob';
 
 /**
  * @param {string} obfuscatedCodeWithInlineSourceMap
  * @returns {ISourceMap}
  */
 export function parseSourceMapFromObfuscatedCode (obfuscatedCodeWithInlineSourceMap: string): ISourceMap {
-    return JSON.parse(cryptUtilsAtob(obfuscatedCodeWithInlineSourceMap.split('base64,')[1]));
+    return JSON.parse(atob(obfuscatedCodeWithInlineSourceMap.split('base64,')[1]));
 }

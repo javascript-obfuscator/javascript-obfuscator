@@ -259,7 +259,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
                         sourceContent: sourceCode
                     }
                     : {
-                        sourceMap: this.options.inputFileName
+                        sourceMap: this.options.inputFileName || 'sourceMap'
                     }
             }
         };

@@ -5,6 +5,7 @@ import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
+import { SourceMapSourcesMode } from '../../enums/source-map/SourceMapSourcesMode';
 import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -46,6 +47,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
+    sourceMapSourcesMode: SourceMapSourcesMode.SourcesContent,
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,

@@ -136,6 +136,7 @@ import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock-destination/Validation.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/options/identifier-names-cache/Validation.spec';
+import './functional-tests/options/input-file-name/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';
 
 /**

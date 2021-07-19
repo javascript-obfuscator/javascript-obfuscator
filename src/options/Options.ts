@@ -35,6 +35,7 @@ import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { RenamePropertiesMode } from '../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { SourceMapSourcesMode } from '../enums/source-map/SourceMapSourcesMode';
 import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -48,6 +49,7 @@ import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
 import { IsDomainLockRedirectUrl } from './validators/IsDomainLockRedirectUrl';
 import { IsIdentifierNamesCache } from './validators/IsIdentifierNamesCache';
+import { IsInputFileName } from './validators/IsInputFileName';
 
 @injectable()
 export class Options implements IOptions {
@@ -194,7 +196,7 @@ export class Options implements IOptions {
     /**
      * @type {string}
      */
-    @IsString()
+    @IsInputFileName()
     public readonly inputFileName!: string;
 
     /**
@@ -311,6 +313,12 @@ export class Options implements IOptions {
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
     public readonly sourceMapMode!: TTypeFromEnum<typeof SourceMapMode>;
+
+    /**
+     * @type {SourceMapSourcesMode}
+     */
+    @IsIn([SourceMapSourcesMode.Sources, SourceMapSourcesMode.SourcesContent])
+    public readonly sourceMapSourcesMode!: TTypeFromEnum<typeof SourceMapSourcesMode>;
 
     /**
      * @type {boolean}

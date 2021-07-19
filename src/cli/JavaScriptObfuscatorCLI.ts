@@ -17,6 +17,7 @@ import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { RenamePropertiesMode } from '../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { SourceMapSourcesMode } from '../enums/source-map/SourceMapSourcesMode';
 import { StringArrayEncoding } from '../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
@@ -53,10 +54,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     public static readonly obfuscatedFilePrefix: string = '-obfuscated';
 
     /**
-     * @type {commander.CommanderStatic}
+     * @type {commander.Command}
      */
     @initializable()
-    private commands!: commander.CommanderStatic;
+    private commands!: commander.Command;
 
     /**
      * @type {IdentifierNamesCacheFileUtils}
@@ -144,7 +145,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     }
 
     public initialize (): void {
-        this.commands = <commander.CommanderStatic>(new commander.Command());
+        this.commands = new commander.Command();
 
         this.configureCommands();
         this.configureHelp();
@@ -351,6 +352,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Specify source map output mode. ' +
                 `Values: ${CLIUtils.stringifyOptionAvailableValues(SourceMapMode)}. ` +
                 `Default: ${SourceMapMode.Separate}`
+            )
+            .option(
+                '--source-map-sources-mode <string>',
+                'Specify source map sources mode. ' +
+                `Values: ${CLIUtils.stringifyOptionAvailableValues(SourceMapSourcesMode)}. ` +
+                `Default: ${SourceMapSourcesMode.SourcesContent}`
             )
             .option(
                 '--split-strings <boolean>',

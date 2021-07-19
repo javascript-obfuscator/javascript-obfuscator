@@ -9,6 +9,7 @@ import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
+import { SourceMapSourcesMode } from '../../enums/source-map/SourceMapSourcesMode';
 
 export interface IOptions {
     readonly compact: boolean;
@@ -45,6 +46,7 @@ export interface IOptions {
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
     readonly sourceMapMode: TTypeFromEnum<typeof SourceMapMode>;
+    readonly sourceMapSourcesMode: TTypeFromEnum<typeof SourceMapSourcesMode>;
     readonly splitStrings: boolean;
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;

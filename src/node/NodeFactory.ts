@@ -183,13 +183,16 @@ export class NodeFactory {
 
     /**
      * @param {Literal} source
+     * @param {Identifier | null} exported
      * @returns {ExportAllDeclaration}
      */
     public static exportAllDeclarationNode (
-        source: ESTree.Literal
+        source: ESTree.Literal,
+        exported: ESTree.Identifier | null
     ): ESTree.ExportAllDeclaration {
         return {
             type: NodeType.ExportAllDeclaration,
+            exported,
             source,
             metadata: { ignoredNode: false }
         };

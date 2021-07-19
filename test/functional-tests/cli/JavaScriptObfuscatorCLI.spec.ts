@@ -3,12 +3,16 @@ import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 import * as sinon from 'sinon';
+import { resolveSources } from 'source-map-resolve';
 
 import { assert } from 'chai';
+
+import { ISourceMap } from '../../../src/interfaces/source-code/ISourceMap';
 
 import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 
 import { JavaScriptObfuscatorCLI } from '../../../src/JavaScriptObfuscatorCLIFacade';
+import { parseSourceMapFromObfuscatedCode } from '../../helpers/parseSourceMapFromObfuscatedCode';
 
 describe('JavaScriptObfuscatorCLI', function (): void {
     this.timeout(100000);
@@ -530,12 +534,12 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
             describe('Variant #1: `--sourceMapMode` option value is `separate`', () => {
                 describe('Variant #1: default behaviour', () => {
-                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
-
                     let isFileExist: boolean,
-                        sourceMapObject: any;
+                        resolvedSources: string,
+                        sourceCodeContent: string,
+                        sourceMapObject: ISourceMap;
 
-                    before(() => {
+                    before((done) => {
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
@@ -551,10 +555,18 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         ]);
 
                         try {
-                            const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
+                            sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                            const sourceMapContent: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
 
                             isFileExist = true;
-                            sourceMapObject = JSON.parse(content);
+                            sourceMapObject = JSON.parse(sourceMapContent);
+
+                            resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                    ? result.sourcesContent[0]
+                                    : '';
+                                done();
+                            });
                         } catch (e) {
                             isFileExist = false;
                         }
@@ -568,16 +580,12 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'version');
                     });
 
-                    it('source map from created file should contains property `sources`', () => {
-                        assert.property(sourceMapObject, 'sources');
-                    });
-
-                    it('source map source should has correct name', () => {
-                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
-                    });
-
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
+                    });
+
+                    it('should resolve correct sources from source map', () => {
+                        assert.equal(resolvedSources, sourceCodeContent);
                     });
 
                     after(() => {
@@ -587,12 +595,12 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #2: `sourceMapBaseUrl` option is set', () => {
-                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
-
                     let isFileExist: boolean,
-                        sourceMapObject: any;
+                        resolvedSources: string,
+                        sourceCodeContent: string,
+                        sourceMapObject: ISourceMap;
 
-                    before(() => {
+                    before((done) => {
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
@@ -610,10 +618,18 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         ]);
 
                         try {
-                            const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
+                            sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                            const sourceMapContent: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
 
                             isFileExist = true;
-                            sourceMapObject = JSON.parse(content);
+                            sourceMapObject = JSON.parse(sourceMapContent);
+
+                            resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                    ? result.sourcesContent[0]
+                                    : '';
+                                done();
+                            });
                         } catch (e) {
                             isFileExist = false;
                         }
@@ -627,16 +643,12 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'version');
                     });
 
-                    it('source map from created file should contains property `sources`', () => {
-                        assert.property(sourceMapObject, 'sources');
-                    });
-
-                    it('source map source should has correct name', () => {
-                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
-                    });
-
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
+                    });
+
+                    it('should resolve correct sources from source map', () => {
+                        assert.equal(resolvedSources, sourceCodeContent);
                     });
 
                     after(() => {
@@ -646,15 +658,16 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #3: `--sourceMapFileName` option is set', () => {
-                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
                     const sourceMapFileName: string = 'test';
                     const sourceMapFilePath: string = `${sourceMapFileName}.js.map`;
                     const outputSourceMapFilePath: string = path.join(outputDirName, sourceMapFilePath);
 
                     let isFileExist: boolean,
-                        sourceMapObject: any;
+                        resolvedSources: string,
+                        sourceCodeContent: string,
+                        sourceMapObject: ISourceMap;
 
-                    before(() => {
+                    before((done) => {
                         JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
@@ -672,10 +685,18 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         ]);
 
                         try {
-                            const content: string = fs.readFileSync(outputSourceMapFilePath, { encoding: 'utf8' });
+                            sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                            const sourceMapContent: string = fs.readFileSync(outputSourceMapFilePath, { encoding: 'utf8' });
 
                             isFileExist = true;
-                            sourceMapObject = JSON.parse(content);
+                            sourceMapObject = JSON.parse(sourceMapContent);
+
+                            resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                    ? result.sourcesContent[0]
+                                    : '';
+                                done();
+                            });
                         } catch (e) {
                             isFileExist = false;
                         }
@@ -689,16 +710,12 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'version');
                     });
 
-                    it('source map from created file should contains property `sources`', () => {
-                        assert.property(sourceMapObject, 'sources');
-                    });
-
-                    it('source map source should has correct name', () => {
-                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
-                    });
-
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
+                    });
+
+                    it('should resolve correct sources from source map', () => {
+                        assert.equal(resolvedSources, sourceCodeContent);
                     });
 
                     after(() => {
@@ -706,37 +723,340 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         fs.unlinkSync(outputSourceMapFilePath);
                     });
                 });
+
+                describe('Variant #4: `sourceMapSourcesMode` option is set', () => {
+                    describe('Variant #1: `sourcesContent` value', () => {
+                        const expectedSourceMapSourceName: string = 'sourceMap';
+
+                        let isFileExist: boolean,
+                            resolvedSources: string,
+                            sourceCodeContent: string,
+                            sourceMapObject: ISourceMap;
+
+                        before((done) => {
+                            JavaScriptObfuscatorCLI.obfuscate([
+                                'node',
+                                'javascript-obfuscator',
+                                fixtureFilePath,
+                                '--output',
+                                outputFilePath,
+                                '--compact',
+                                'true',
+                                '--self-defending',
+                                '0',
+                                '--source-map',
+                                'true',
+                                '--source-map-sources-mode',
+                                'sources-content'
+                            ]);
+
+                            try {
+                                sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                                const sourceMapContent: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
+
+                                isFileExist = true;
+                                sourceMapObject = JSON.parse(sourceMapContent);
+
+                                resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                    resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                        ? result.sourcesContent[0]
+                                        : '';
+                                    done();
+                                });
+                            } catch (e) {
+                                isFileExist = false;
+                            }
+                        });
+
+                        it('should create file with source map in the same directory as output file', () => {
+                            assert.equal(isFileExist, true);
+                        });
+
+                        it('source map from created file should contains property `sources`', () => {
+                            assert.property(sourceMapObject, 'sources');
+                        });
+
+                        it('source map from created file should contains property `sourcesContent`', () => {
+                            assert.property(sourceMapObject, 'sourcesContent');
+                        });
+
+                        it('source map source should has correct sources', () => {
+                            assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                        });
+
+                        it('source map source should has correct sources content', () => {
+                            assert.equal(sourceMapObject.sourcesContent[0], sourceCodeContent);
+                        });
+
+                        it('should resolve correct sources from source map', () => {
+                            assert.equal(resolvedSources, sourceCodeContent);
+                        });
+
+                        after(() => {
+                            rimraf.sync(outputFilePath);
+                            rimraf.sync(outputSourceMapPath);
+                        });
+                    });
+
+                    describe('Variant #2: `sources` value', () => {
+                        const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
+                        let isFileExist: boolean,
+                            resolvedSources: string,
+                            sourceCodeContent: string,
+                            sourceMapObject: ISourceMap;
+
+                        before((done) => {
+                            JavaScriptObfuscatorCLI.obfuscate([
+                                'node',
+                                'javascript-obfuscator',
+                                fixtureFilePath,
+                                '--output',
+                                outputFilePath,
+                                '--compact',
+                                'true',
+                                '--self-defending',
+                                '0',
+                                '--source-map',
+                                'true',
+                                '--source-map-sources-mode',
+                                'sources'
+                            ]);
+
+                            try {
+                                sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                                const sourceMapContent: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' });
+
+                                isFileExist = true;
+                                sourceMapObject = JSON.parse(sourceMapContent);
+
+                                resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                    resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                        ? result.sourcesContent[0]
+                                        : '';
+                                    done();
+                                });
+                            } catch (e) {
+                                isFileExist = false;
+                            }
+                        });
+
+                        it('should create file with source map in the same directory as output file', () => {
+                            assert.equal(isFileExist, true);
+                        });
+
+                        it('source map from created file should contains property `sources`', () => {
+                            assert.property(sourceMapObject, 'sources');
+                        });
+
+                        it('source map from created file should not contains property `sourcesContent`', () => {
+                            assert.notProperty(sourceMapObject, 'sourcesContent');
+                        });
+
+                        it('source map source should has correct sources', () => {
+                            assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                        });
+
+                        it('should resolve correct sources from source map', () => {
+                            assert.equal(resolvedSources, sourceCodeContent);
+                        });
+
+                        after(() => {
+                            rimraf.sync(outputFilePath);
+                            rimraf.sync(outputSourceMapPath);
+                        });
+                    });
+                });
             });
 
             describe('Variant #2: `--sourceMapMode` option is `inline`', () => {
-                let isFileExist: boolean;
+                describe('Variant #1: default behaviour', () => {
+                    let isFileExist: boolean,
+                        resolvedSources: string,
+                        sourceCodeContent: string,
+                        sourceMapObject: ISourceMap;
 
-                before(() => {
-                    JavaScriptObfuscatorCLI.obfuscate([
-                        'node',
-                        'javascript-obfuscator',
-                        fixtureFilePath,
-                        '--output',
-                        outputFilePath,
-                        '--compact',
-                        'true',
-                        '--self-defending',
-                        '0',
-                        '--source-map',
-                        'true',
-                        '--source-map-mode',
-                        'inline'
-                    ]);
+                    before((done) => {
+                        JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            fixtureFilePath,
+                            '--output',
+                            outputFilePath,
+                            '--compact',
+                            'true',
+                            '--self-defending',
+                            '0',
+                            '--source-map',
+                            'true',
+                            '--source-map-mode',
+                            'inline'
+                        ]);
 
-                    isFileExist = fs.existsSync(outputSourceMapPath);
+                        isFileExist = fs.existsSync(outputSourceMapPath);
+
+                        sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                        const obfuscatedCodeContent = fs.readFileSync(outputFilePath, { encoding: 'utf8' });
+
+                        sourceMapObject = parseSourceMapFromObfuscatedCode(obfuscatedCodeContent);
+
+                        resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                            resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                ? result.sourcesContent[0]
+                                : '';
+                            done();
+                        });
+                    });
+
+                    it('shouldn\'t create file with source map', () => {
+                        assert.equal(isFileExist, false);
+                    });
+
+                    it('should resolve correct sources from source map', () => {
+                        assert.equal(resolvedSources, sourceCodeContent);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(outputFilePath);
+                    });
                 });
 
-                it('shouldn\'t create file with source map', () => {
-                    assert.equal(isFileExist, false);
-                });
+                describe('Variant #2: `sourceMapSourcesMode` option is set', () => {
+                    describe('Variant #1: `sourcesContent` value', () => {
+                        const expectedSourceMapSourceName: string = 'sourceMap';
 
-                after(() => {
-                    fs.unlinkSync(outputFilePath);
+                        let isFileExist: boolean,
+                            resolvedSources: string,
+                            sourceCodeContent: string,
+                            sourceMapObject: ISourceMap;
+
+                        before((done) => {
+                            JavaScriptObfuscatorCLI.obfuscate([
+                                'node',
+                                'javascript-obfuscator',
+                                fixtureFilePath,
+                                '--output',
+                                outputFilePath,
+                                '--compact',
+                                'true',
+                                '--self-defending',
+                                '0',
+                                '--source-map',
+                                'true',
+                                '--source-map-mode',
+                                'inline',
+                                '--source-map-sources-mode',
+                                'sources-content'
+                            ]);
+
+                            isFileExist = fs.existsSync(outputSourceMapPath);
+
+                            sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                            const obfuscatedCodeContent = fs.readFileSync(outputFilePath, { encoding: 'utf8' });
+                            sourceMapObject = parseSourceMapFromObfuscatedCode(obfuscatedCodeContent);
+
+                            resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                    ? result.sourcesContent[0]
+                                    : '';
+                                done();
+                            });
+                        });
+
+                        it('shouldn\'t create file with source map', () => {
+                            assert.equal(isFileExist, false);
+                        });
+
+                        it('source map from created file should contains property `sources`', () => {
+                            assert.property(sourceMapObject, 'sources');
+                        });
+
+                        it('source map from created file should contains property `sourcesContent`', () => {
+                            assert.property(sourceMapObject, 'sourcesContent');
+                        });
+
+                        it('source map source should has correct sources', () => {
+                            assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                        });
+
+                        it('source map source should has correct sources content', () => {
+                            assert.equal(sourceMapObject.sourcesContent[0], sourceCodeContent);
+                        });
+
+                        it('should resolve correct sources from source map', () => {
+                            assert.equal(resolvedSources, sourceCodeContent);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(outputFilePath);
+                        });
+                    });
+
+                    describe('Variant #2: `sources` value', () => {
+                        const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
+                        let isFileExist: boolean,
+                            resolvedSources: string,
+                            sourceCodeContent: string,
+                            sourceMapObject: ISourceMap;
+
+                        before((done) => {
+                            JavaScriptObfuscatorCLI.obfuscate([
+                                'node',
+                                'javascript-obfuscator',
+                                fixtureFilePath,
+                                '--output',
+                                outputFilePath,
+                                '--compact',
+                                'true',
+                                '--self-defending',
+                                '0',
+                                '--source-map',
+                                'true',
+                                '--source-map-mode',
+                                'inline',
+                                '--source-map-sources-mode',
+                                'sources'
+                            ]);
+
+                            isFileExist = fs.existsSync(outputSourceMapPath);
+
+                            sourceCodeContent = fs.readFileSync(fixtureFilePath, { encoding: 'utf8' });
+                            const obfuscatedCodeContent = fs.readFileSync(outputFilePath, { encoding: 'utf8' });
+                            sourceMapObject = parseSourceMapFromObfuscatedCode(obfuscatedCodeContent);
+
+                            resolveSources(sourceMapObject, fixtureFilePath, fs.readFile, (error, result) => {
+                                resolvedSources = typeof result.sourcesContent[0] === 'string'
+                                    ? result.sourcesContent[0]
+                                    : '';
+                                done();
+                            });
+                        });
+
+                        it('shouldn\'t create file with source map', () => {
+                            assert.equal(isFileExist, false);
+                        });
+
+                        it('source map from created file should contains property `sources`', () => {
+                            assert.property(sourceMapObject, 'sources');
+                        });
+
+                        it('source map from created file should contains property `sourcesContent`', () => {
+                            assert.notProperty(sourceMapObject, 'sourcesContent');
+                        });
+
+                        it('source map source should has correct sources', () => {
+                            assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                        });
+
+                        it('should resolve correct sources from source map', () => {
+                            assert.equal(resolvedSources, sourceCodeContent);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(outputFilePath);
+                        });
+                    });
                 });
             });
         });

@@ -8,13 +8,9 @@ export function SelfDefendingNoEvalTemplate (): string {
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
             {globalVariableTemplate}
         
-            const test = function () {
-                const regExp = that.RegExp('([\\\\S]+([\\\\s]+[\\\\S]+)+)+[\\\\S]}');
-                
-                return !regExp.test({selfDefendingFunctionName});
-            };
-            
-            return test();
+            return that
+                .RegExp('([\\\\S]+([\\\\s]+[\\\\S]+)+)+[\\\\S]}')
+                .test({selfDefendingFunctionName});
         });
         
         {selfDefendingFunctionName}();

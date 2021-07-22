@@ -10,7 +10,7 @@ export function SelfDefendingTemplate (): string {
                 const regExp = test
                     .constructor('return /" + this + "/')
                     .call()
-                    .constructor('^([^ ]+([\\\\x20\\\\x09]+[^\\\\x20\\\\x09]+)+)+[^\\\\x20\\\\x09]}');
+                    .constructor('([\\\\S]+([\\\\s]+[\\\\S]+)+)+[\\\\S]}');
                 
                 return !regExp.test({selfDefendingFunctionName});
             };

@@ -13,7 +13,8 @@ import { beautifyCode } from '../../../../helpers/beautifyCode';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('SelfDefendingNoEvalTemplate', function () {
-    const evaluationTimeout: number = 3500;
+    const correctEvaluationTimeout: number = 100;
+    const redosEvaluationTimeout: number = 3500;
 
     this.timeout(10000);
 
@@ -36,7 +37,7 @@ describe('SelfDefendingNoEvalTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
                 .then((result: string | null) => {
                     if (!result) {
                         return;
@@ -70,7 +71,7 @@ describe('SelfDefendingNoEvalTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
                 .then((result: string | null) => {
                     if (!result) {
                         return;
@@ -105,7 +106,7 @@ describe('SelfDefendingNoEvalTemplate', function () {
                 }
             ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
                 .then((result: string | null) => {
                     if (!result) {
                         return;
@@ -140,7 +141,7 @@ describe('SelfDefendingNoEvalTemplate', function () {
                 ).getObfuscatedCode();
                 obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
 
-                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
                     .then((result: string | null) => {
                         if (!result) {
                             return;
@@ -174,7 +175,7 @@ describe('SelfDefendingNoEvalTemplate', function () {
                 ).getObfuscatedCode();
                 obfuscatedCode = beautifyCode(obfuscatedCode, 'tab');
 
-                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
                     .then((result: string | null) => {
                         if (!result) {
                             return;

@@ -9,7 +9,7 @@ export function SelfDefendingNoEvalTemplate (): string {
             {globalVariableTemplate}
         
             const test = function () {
-                const regExp = that.RegExp('^([^ ]+([\\\\x20\\\\x09]+[^\\\\x20\\\\x09]+)+)+[^\\\\x20\\\\x09]}');
+                const regExp = that.RegExp('([\\\\S]+([\\\\s]+[\\\\S]+)+)+[\\\\S]}');
                 
                 return !regExp.test({selfDefendingFunctionName});
             };

@@ -117,35 +117,70 @@ describe('SelfDefendingTemplate', function () {
     });
 
     describe('Variant #4: obfuscated code with beautified self defending code', () => {
-        const expectedEvaluationResult: number = 0;
+        describe('Variant #1: beautify with spaces', () => {
+            const expectedEvaluationResult: number = 0;
 
-        let obfuscatedCode: string,
-            evaluationResult: number = 0;
+            let obfuscatedCode: string,
+                evaluationResult: number = 0;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    selfDefending: true
-                }
-            ).getObfuscatedCode();
-            obfuscatedCode = beautifyCode(obfuscatedCode);
-
-            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
-                .then((result: string | null) => {
-                    if (!result) {
-                        return;
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        selfDefending: true
                     }
+                ).getObfuscatedCode();
+                obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
 
-                    evaluationResult = parseInt(result, 10);
-                });
+                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                    .then((result: string | null) => {
+                        if (!result) {
+                            return;
+                        }
+
+                        evaluationResult = parseInt(result, 10);
+                    });
+            });
+
+            it('should enter code in infinity loop', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
         });
 
-        it('should enter code in infinity loop', () => {
-            assert.equal(evaluationResult, expectedEvaluationResult);
+        describe('Variant #2: beautify with tabs', () => {
+            const expectedEvaluationResult: number = 0;
+
+            let obfuscatedCode: string,
+                evaluationResult: number = 0;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        selfDefending: true
+                    }
+                ).getObfuscatedCode();
+                obfuscatedCode = beautifyCode(obfuscatedCode, 'tab');
+
+                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                    .then((result: string | null) => {
+                        if (!result) {
+                            return;
+                        }
+
+                        evaluationResult = parseInt(result, 10);
+                    });
+            });
+
+            it('should enter code in infinity loop', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
         });
     });
 });

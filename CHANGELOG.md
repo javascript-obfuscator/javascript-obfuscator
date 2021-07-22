@@ -1,5 +1,9 @@
 Change Log
 
+v2.17.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/959
+
 v2.17.0
 ---
 * **New option**: `sourceMapSourcesMode` allows to control `sources` and `sourcesContent` fields of the source map

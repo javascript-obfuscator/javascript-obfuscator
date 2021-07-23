@@ -9,7 +9,7 @@ export function SelfDefendingTemplate (): string {
             return {selfDefendingFunctionName}
                 .constructor('return /" + this + "/')
                 .call()
-                .constructor('(.*)+\\\\S}')
+                .constructor('(.*)+.*}')
                 .test({selfDefendingFunctionName});
         });
         

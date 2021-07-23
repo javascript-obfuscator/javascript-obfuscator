@@ -968,6 +968,35 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('Private identifiers support', () => {
+            const regExp: RegExp = new RegExp(
+                'class Foo *{ *' +
+                    '#bar *= *0x1; *' +
+                    '\\[\'method\'] *\\(\\) *{ *' +
+                        'this\.#bar *= *0x2;' +
+                    '} *' +
+                '}'
+            );
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/private-identifier.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support private identifiers', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

@@ -1,13 +1,17 @@
 Change Log
 
-v2.18.1
+v2.18.2
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/959
+
+v2.18.1
+---
+* Updated `@javascript-obfuscator/escodegen` with fixed generation of private property names
 
 v2.18.0
 ---
 * Added support of `es2022` features: private identifiers and class properties
-* Dropped support for `node@15`. 
+* Dropped support for `node@15`
 * Increased minimum supported `node` versions: `^12.22.0 || ^14.17.0 || >=16.0.0`
 
 v2.17.0

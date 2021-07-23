@@ -18,8 +18,9 @@ const initializeMethodName: 'initialize' = 'initialize';
 export function initializable (): (target: IInitializable, propertyKey: string | symbol) => any {
     return (target: IInitializable, propertyKey: string | symbol): PropertyDescriptor => {
         const initializeMethod: Function = target[initializeMethodName];
+        const isInvalidInitializeMethod = !initializeMethod || typeof initializeMethod !== 'function';
 
-        if (!initializeMethod || typeof initializeMethod !== 'function') {
+        if (isInvalidInitializeMethod) {
             throw new Error(`\`${initializeMethodName}\` method with initialization logic not ` +
                 `found. \`@${decoratorName}\` decorator requires \`${initializeMethodName}\` method`);
         }

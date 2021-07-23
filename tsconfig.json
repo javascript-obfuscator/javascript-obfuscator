@@ -4,6 +4,7 @@
   },
   "compilerOptions": {
     "emitDecoratorMetadata": true,
+    "exactOptionalPropertyTypes": false,
     "experimentalDecorators": true,
     "lib": [
       "es2019",
@@ -17,7 +18,8 @@
     "noImplicitThis": false,
     "noUnusedLocals": true,
     "removeComments": true,
-    "strict": true
+    "strict": true,
+    "useUnknownInCatchVariables": false
   },
   "exclude": [
     "node_modules"

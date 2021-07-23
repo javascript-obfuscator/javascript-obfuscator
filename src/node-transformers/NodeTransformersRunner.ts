@@ -161,8 +161,9 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
                 }
 
                 const visitorResult: TVisitorResult = visitorFunction(node, parentNode);
+                const isValidVisitorResult = visitorResult && NodeGuards.isNode(visitorResult);
 
-                if (!visitorResult || !NodeGuards.isNode(visitorResult)) {
+                if (!isValidVisitorResult) {
                     continue;
                 }
 

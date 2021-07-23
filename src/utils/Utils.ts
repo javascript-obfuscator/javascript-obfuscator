@@ -15,7 +15,9 @@ export class Utils {
      * @returns {string}
      */
     public static buildVersionMessage (version?: string, buildTimestamp?: string): string {
-        if (!version || !buildTimestamp) {
+        const isUnknownVersion = !version || !buildTimestamp;
+
+        if (isUnknownVersion) {
             return 'unknown';
         }
 

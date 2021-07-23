@@ -11,3 +11,4 @@ npm-debug.log
 /tmp
 /test/benchmark/**/**
 *dockerfile
+/test*.js

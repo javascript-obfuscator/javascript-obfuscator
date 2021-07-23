@@ -105,6 +105,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isConditionalExpressionNode (node: ESTree.Node): node is ESTree.ConditionalExpression {
+        return node.type === NodeType.ConditionalExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }
@@ -289,6 +297,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isLogicalExpressionNode (node: ESTree.Node): node is ESTree.LogicalExpression {
+        return node.type === NodeType.LogicalExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isMemberExpressionNode (node: ESTree.Node): node is ESTree.MemberExpression {
         return node.type === NodeType.MemberExpression;
     }
@@ -299,6 +315,14 @@ export class NodeGuards {
      */
     public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
         return node.type === NodeType.MethodDefinition;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNewExpressionNode (node: ESTree.Node): node is ESTree.NewExpression {
+        return node.type === NodeType.NewExpression;
     }
 
     /**

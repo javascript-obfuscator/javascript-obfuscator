@@ -1,8 +1,25 @@
 Change Log
 
-v2.16.0
+v2.18.0
 ---
 * Added support of `es2022` features: private identifiers and class properties
+
+v2.17.0
+---
+* **New option**: `sourceMapSourcesMode` allows to control `sources` and `sourcesContent` fields of the source map
+* `inputFileName` option now required when using NodeJS API and `sourceMapSourcesMode` option has `sources` value`
+* Fixed some cases with wrong source map file name generation when `sourceMapFileName` option is set
+
+v2.16.0
+---
+* `stringArrayWrappersType: 'function'` now generates different indexes between each wrapper inside the same lexical scope
+* `stringArrayWrappersType: 'function'` now generates different parameters order between each wrapper inside the same lexical scope
+* `stringArrayWrappersType: 'function'` now appends `FunctionDeclaration` functions instead of `FunctionExpression` functions. This allows to append these wrappers at random positions inside each scope
+* `renameProperties` option now won't generate duplicated property names in some cases
+
+v2.15.6
+---
+* To increase performance and prevent possible runtime errors `transformObjectKeys` option now completely ignores objects with `CallExpression` or `NewExpression` nodes. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/948
 
 v2.15.5
 ---

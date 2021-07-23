@@ -301,6 +301,24 @@ describe('OptionsNormalizer', () => {
                     assert.deepEqual(optionsPreset, expectedOptionsPreset);
                 });
             });
+
+            describe('Variant #5: relative path', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        inputFileName: 'baz/bar/foo.js'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        inputFileName: 'baz/bar/foo.js'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
         });
 
         describe('identifierNamesCacheRule', () => {

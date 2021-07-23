@@ -98,9 +98,19 @@ export class ObfuscatedCodeFileUtils {
 
         if (sourceMapFileName) {
             const indexOfLastSeparator: number = normalizedOutputCodePath.lastIndexOf(path.sep);
-            const sourceMapPath: string = parsedOutputCodePath.ext && indexOfLastSeparator > 0
-                ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
-                : normalizedOutputCodePath;
+            let sourceMapPath: string;
+
+            if (parsedOutputCodePath.ext) {
+                // File path with directory, like: `foo/bar.js`, or without, like: `bar.js`
+                const isFilePathWithDirectory: boolean = indexOfLastSeparator > 0;
+
+                sourceMapPath = isFilePathWithDirectory
+                    ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
+                    : '';
+            } else {
+                sourceMapPath = normalizedOutputCodePath;
+            }
+
             // remove possible drive letter for win32 environment
             const normalizedSourceMapFilePath: string = sourceMapFileName.replace(/^[a-zA-Z]:\\*/, '');
 

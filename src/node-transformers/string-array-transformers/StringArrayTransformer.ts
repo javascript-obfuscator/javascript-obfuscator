@@ -7,7 +7,7 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
 import { TStatement } from '../../types/node/TStatement';
-import { TStringArrayScopeCallsWrapperNamesDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrapperNamesDataByEncoding';
+import { TStringArrayScopeCallsWrappersDataByEncoding } from '../../types/node-transformers/string-array-transformers/TStringArrayScopeCallsWrappersDataByEncoding';
 import { TStringArrayCustomNodeFactory } from '../../types/container/custom-nodes/TStringArrayCustomNodeFactory';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -16,9 +16,7 @@ import { ILiteralNodesCacheStorage } from '../../interfaces/storages/string-arra
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayScopeCallsWrapperData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperData';
-import { IStringArrayScopeCallsWrapperLexicalScopeData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeData';
-import { IStringArrayScopeCallsWrapperLexicalScopeDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperLexicalScopeDataStorage';
-import { IStringArrayScopeCallsWrapperNamesDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrapperNamesDataStorage';
+import { IStringArrayScopeCallsWrappersDataStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayScopeCallsWrappersDataStorage';
 import { IStringArrayScopeCallsWrapperParameterIndexesData } from '../../interfaces/node-transformers/string-array-transformers/IStringArrayScopeCallsWrapperParameterIndexesData';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
@@ -57,7 +55,6 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         NodeTransformer.StringArrayRotateFunctionTransformer
     ];
 
-
     /**
      * @type {IIdentifierNamesGenerator}
      */
@@ -79,14 +76,9 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
 
     /**
-     * @type {IStringArrayScopeCallsWrapperLexicalScopeDataStorage}
+     * @type {IStringArrayScopeCallsWrappersDataStorage}
      */
-    private readonly stringArrayScopeCallsWrapperLexicalScopeDataStorage: IStringArrayScopeCallsWrapperLexicalScopeDataStorage;
-
-    /**
-     * @type {IStringArrayScopeCallsWrapperNamesDataStorage}
-     */
-    private readonly stringArrayScopeCallsWrapperNamesDataStorage: IStringArrayScopeCallsWrapperNamesDataStorage;
+    private readonly stringArrayScopeCallsWrappersDataStorage: IStringArrayScopeCallsWrappersDataStorage;
 
     /**
      * @type {TStringArrayCustomNodeFactory}
@@ -104,8 +96,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @param {ILiteralNodesCacheStorage} literalNodesCacheStorage
      * @param {IVisitedLexicalScopeNodesStackStorage} visitedLexicalScopeNodesStackStorage
      * @param {IStringArrayStorage} stringArrayStorage
-     * @param {IStringArrayScopeCallsWrapperNamesDataStorage} stringArrayScopeCallsWrapperNamesDataStorage
-     * @param {IStringArrayScopeCallsWrapperLexicalScopeDataStorage} stringArrayScopeCallsWrapperLexicalScopeDataStorage
+     * @param {IStringArrayScopeCallsWrappersDataStorage} stringArrayScopeCallsWrappersDataStorage
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {TStringArrayCustomNodeFactory} stringArrayTransformerCustomNodeFactory
@@ -116,10 +107,8 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.ILiteralNodesCacheStorage) literalNodesCacheStorage: ILiteralNodesCacheStorage,
         @inject(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage) visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
-        @inject(ServiceIdentifiers.IStringArrayScopeCallsWrapperNamesDataStorage)
-            stringArrayScopeCallsWrapperNamesDataStorage: IStringArrayScopeCallsWrapperNamesDataStorage,
-        @inject(ServiceIdentifiers.IStringArrayScopeCallsWrapperLexicalScopeDataStorage)
-            stringArrayScopeCallsWrapperLexicalScopeDataStorage: IStringArrayScopeCallsWrapperLexicalScopeDataStorage,
+        @inject(ServiceIdentifiers.IStringArrayScopeCallsWrappersDataStorage)
+            stringArrayScopeCallsWrappersDataStorage: IStringArrayScopeCallsWrappersDataStorage,
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
@@ -131,8 +120,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         this.literalNodesCacheStorage = literalNodesCacheStorage;
         this.visitedLexicalScopeNodesStackStorage = visitedLexicalScopeNodesStackStorage;
         this.stringArrayStorage = stringArrayStorage;
-        this.stringArrayScopeCallsWrapperNamesDataStorage = stringArrayScopeCallsWrapperNamesDataStorage;
-        this.stringArrayScopeCallsWrapperLexicalScopeDataStorage = stringArrayScopeCallsWrapperLexicalScopeDataStorage;
+        this.stringArrayScopeCallsWrappersDataStorage = stringArrayScopeCallsWrappersDataStorage;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.stringArrayTransformerCustomNodeFactory = stringArrayTransformerCustomNodeFactory;
@@ -219,21 +207,17 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @returns {Expression}
      */
     private getStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Expression {
-        const {
-            name: stringArrayCallsWrapperName,
-            index,
-            parameterIndexesData
-        } = this.getStringArrayCallsWrapperData(stringArrayStorageItemData);
-        const {decodeKey } = stringArrayStorageItemData;
+        const stringArrayScopeCallsWrapperData: IStringArrayScopeCallsWrapperData =
+            this.getStringArrayScopeCallsWrapperData(stringArrayStorageItemData);
+        const {decodeKey, index} = stringArrayStorageItemData;
 
         const stringArrayCallCustomNode: ICustomNode<TInitialData<StringArrayCallNode>> =
             this.stringArrayTransformerCustomNodeFactory(StringArrayCustomNode.StringArrayCallNode);
 
         stringArrayCallCustomNode.initialize(
-            stringArrayCallsWrapperName,
-            parameterIndexesData,
             index,
             this.stringArrayStorage.getIndexShiftAmount(),
+            stringArrayScopeCallsWrapperData,
             decodeKey
         );
 
@@ -250,29 +234,29 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
      * @returns {IStringArrayScopeCallsWrapperData}
      */
-    private getStringArrayCallsWrapperData (
+    private getStringArrayScopeCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
     ): IStringArrayScopeCallsWrapperData {
         return !this.options.stringArrayWrappersCount
-            ? this.getRootStringArrayCallsWrapperData(stringArrayStorageItemData)
-            : this.getUpperStringArrayCallsWrapperData(stringArrayStorageItemData);
+            ? this.getRootStringArrayScopeCallsWrapperData(stringArrayStorageItemData)
+            : this.getUpperStringArrayScopeCallsWrapperData(stringArrayStorageItemData);
     }
 
     /**
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
      * @returns {IStringArrayScopeCallsWrapperData}
      */
-    private getRootStringArrayCallsWrapperData (
+    private getRootStringArrayScopeCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
     ): IStringArrayScopeCallsWrapperData {
-        const {encoding, index} = stringArrayStorageItemData;
+        const {encoding} = stringArrayStorageItemData;
 
         const rootStringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(encoding);
 
         return {
             name: rootStringArrayCallsWrapperName,
-            parameterIndexesData: null,
-            index
+            index: 0,
+            parameterIndexesData: null
         };
     }
 
@@ -280,143 +264,103 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
      * @returns {IStringArrayScopeCallsWrapperData}
      */
-    private getUpperStringArrayCallsWrapperData (
+    private getUpperStringArrayScopeCallsWrapperData (
         stringArrayStorageItemData: IStringArrayStorageItemData
     ): IStringArrayScopeCallsWrapperData {
-        const {encoding, index} = stringArrayStorageItemData;
+        const {encoding} = stringArrayStorageItemData;
         const currentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | null =
             this.visitedLexicalScopeNodesStackStorage.getLastElement() ?? null;
-        const parentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | null =
-            this.visitedLexicalScopeNodesStackStorage.getPenultimateElement() ?? null;
 
         if (!currentLexicalScopeBodyNode) {
             throw new Error('Cannot find current lexical scope body node');
         }
 
-        const stringArrayScopeCallsWrapperNamesDataByEncoding: TStringArrayScopeCallsWrapperNamesDataByEncoding =
-            this.getAndUpdateStringArrayScopeCallsWrapperNamesDataByEncoding(
+        const stringArrayScopeCallsWrappersDataByEncoding: TStringArrayScopeCallsWrappersDataByEncoding =
+            this.getAndUpdateStringArrayScopeCallsWrappersDataByEncoding(
                 currentLexicalScopeBodyNode,
                 stringArrayStorageItemData
             );
-        const stringArrayScopeCallsWrapperLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData =
-            this.getAndUpdateStringArrayScopeCallsWrapperLexicalScopeData(
-                currentLexicalScopeBodyNode,
-                parentLexicalScopeBodyNode
-            );
 
-        const stringArrayScopeCallsWrapperNames: string[] = stringArrayScopeCallsWrapperNamesDataByEncoding[encoding]?.names ?? [];
-        const randomUpperStringArrayCallsWrapperName: string = this.randomGenerator
+        const stringArrayScopeCallsWrappersData: IStringArrayScopeCallsWrapperData[] =
+            stringArrayScopeCallsWrappersDataByEncoding[encoding]?.scopeCallsWrappersData ?? [];
+
+        return this.randomGenerator
             .getRandomGenerator()
-            .pickone(stringArrayScopeCallsWrapperNames);
-
-        const resultIndex: number = stringArrayScopeCallsWrapperLexicalScopeData
-            ? stringArrayScopeCallsWrapperLexicalScopeData.resultShiftedIndex + index
-            : index;
-
-        return {
-            name: randomUpperStringArrayCallsWrapperName,
-            index: resultIndex,
-            parameterIndexesData: stringArrayScopeCallsWrapperLexicalScopeData.callsWrappersParameterIndexesData
-        };
+            .pickone(stringArrayScopeCallsWrappersData);
     }
 
     /**
      * @param {TNodeWithLexicalScopeStatements} currentLexicalScopeBodyNode
      * @param {IStringArrayStorageItemData} stringArrayStorageItemData
-     * @returns {TStringArrayScopeCallsWrapperNamesDataByEncoding}
+     * @returns {TStringArrayScopeCallsWrappersDataByEncoding}
      */
-    private getAndUpdateStringArrayScopeCallsWrapperNamesDataByEncoding (
+    private getAndUpdateStringArrayScopeCallsWrappersDataByEncoding (
         currentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements,
-        stringArrayStorageItemData: IStringArrayStorageItemData
-    ): TStringArrayScopeCallsWrapperNamesDataByEncoding {
+        stringArrayStorageItemData: IStringArrayStorageItemData,
+    ): TStringArrayScopeCallsWrappersDataByEncoding {
         const {encoding} = stringArrayStorageItemData;
-        const stringArrayScopeCallsWrapperNamesDataByEncoding: TStringArrayScopeCallsWrapperNamesDataByEncoding =
-            this.stringArrayScopeCallsWrapperNamesDataStorage.get(currentLexicalScopeBodyNode)
+        const stringArrayScopeCallsWrappersDataByEncoding: TStringArrayScopeCallsWrappersDataByEncoding =
+            this.stringArrayScopeCallsWrappersDataStorage.get(currentLexicalScopeBodyNode)
             ?? {};
 
-        const stringArrayScopeCallsWrapperNames: string[] = stringArrayScopeCallsWrapperNamesDataByEncoding[encoding]?.names ?? [];
-        const isFilledScopeCallsWrapperNamesList: boolean = stringArrayScopeCallsWrapperNames.length === this.options.stringArrayWrappersCount;
+        const stringArrayScopeCallsWrappersData: IStringArrayScopeCallsWrapperData[] =
+            stringArrayScopeCallsWrappersDataByEncoding[encoding]?.scopeCallsWrappersData ?? [];
+        const isFilledScopeCallsWrapperNamesList: boolean =
+            stringArrayScopeCallsWrappersData.length === this.options.stringArrayWrappersCount;
 
         if (isFilledScopeCallsWrapperNamesList) {
-            return stringArrayScopeCallsWrapperNamesDataByEncoding;
+            return stringArrayScopeCallsWrappersDataByEncoding;
         }
 
         // have to use `generateForGlobalScope` for program node for correct attach prefix to the calls wrapper name
         const nextScopeCallsWrapperName: string = NodeGuards.isProgramNode(currentLexicalScopeBodyNode)
             ? this.identifierNamesGenerator.generateForGlobalScope()
             : this.identifierNamesGenerator.generateNext();
+        const nextScopeCallsWrapperShiftedIndex: number =
+            this.getStringArrayCallsWrapperShiftedIndex();
+        const nextScopeCallsWrapperParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null =
+            this.getStringArrayCallsWrapperParameterIndexesData();
 
-        stringArrayScopeCallsWrapperNamesDataByEncoding[encoding] = {
+        stringArrayScopeCallsWrappersDataByEncoding[encoding] = {
             encoding,
-            names: [
-                ...stringArrayScopeCallsWrapperNames,
-                nextScopeCallsWrapperName
+            scopeCallsWrappersData: [
+                ...stringArrayScopeCallsWrappersData,
+                {
+                    name: nextScopeCallsWrapperName,
+                    index: nextScopeCallsWrapperShiftedIndex,
+                    parameterIndexesData: nextScopeCallsWrapperParameterIndexesData
+                }
             ]
         };
 
-        this.stringArrayScopeCallsWrapperNamesDataStorage.set(
+        this.stringArrayScopeCallsWrappersDataStorage.set(
             currentLexicalScopeBodyNode,
-            stringArrayScopeCallsWrapperNamesDataByEncoding
+            stringArrayScopeCallsWrappersDataByEncoding
         );
 
-        return stringArrayScopeCallsWrapperNamesDataByEncoding;
+        return stringArrayScopeCallsWrappersDataByEncoding;
     }
 
     /**
-     * @param {TNodeWithLexicalScopeStatements} currentLexicalScopeBodyNode
-     * @param {TNodeWithLexicalScopeStatements | null} parentLexicalScopeBodyNode
-     * @returns {IStringArrayScopeCallsWrapperLexicalScopeData}
-     * @private
+     * @returns {number}
      */
-    private getAndUpdateStringArrayScopeCallsWrapperLexicalScopeData (
-        currentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements,
-        parentLexicalScopeBodyNode: TNodeWithLexicalScopeStatements | null
-    ): IStringArrayScopeCallsWrapperLexicalScopeData {
-        const storedLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData | null =
-            this.stringArrayScopeCallsWrapperLexicalScopeDataStorage.get(currentLexicalScopeBodyNode)
-            ?? null;
-
-        if (storedLexicalScopeData) {
-            return storedLexicalScopeData;
-        }
-
-        const parentLexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData | null = parentLexicalScopeBodyNode
-            ? this.stringArrayScopeCallsWrapperLexicalScopeDataStorage.get(parentLexicalScopeBodyNode) ?? null
-            : null;
-
-        const callsWrappersParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null =
-            this.options.stringArrayWrappersType === StringArrayWrappersType.Function
-            ? this.getStringArrayCallsWrapperParameterIndexesData()
-            : null;
-        const scopeShiftedIndex: number = this.options.stringArrayWrappersType === StringArrayWrappersType.Function
+    private getStringArrayCallsWrapperShiftedIndex (): number {
+        return this.options.stringArrayWrappersType === StringArrayWrappersType.Function
             ? this.randomGenerator.getRandomInteger(
                 StringArrayTransformer.minShiftedIndexValue,
                 StringArrayTransformer.maxShiftedIndexValue
             )
             : 0;
-        const resultShiftedIndex: number = parentLexicalScopeData
-            ? parentLexicalScopeData.resultShiftedIndex + scopeShiftedIndex
-            : scopeShiftedIndex;
-
-        const lexicalScopeData: IStringArrayScopeCallsWrapperLexicalScopeData = {
-            callsWrappersParameterIndexesData,
-            parentLexicalScopeBodyNode,
-            resultShiftedIndex,
-            scopeShiftedIndex
-        };
-
-        this.stringArrayScopeCallsWrapperLexicalScopeDataStorage.set(
-            currentLexicalScopeBodyNode,
-            lexicalScopeData
-        );
-
-        return lexicalScopeData;
     }
 
     /**
-     * @returns {IStringArrayScopeCallsWrapperParameterIndexesData}
+     * @returns {IStringArrayScopeCallsWrapperParameterIndexesData | null}
      */
-    private getStringArrayCallsWrapperParameterIndexesData (): IStringArrayScopeCallsWrapperParameterIndexesData {
+    private getStringArrayCallsWrapperParameterIndexesData (): IStringArrayScopeCallsWrapperParameterIndexesData | null {
+        if (this.options.stringArrayWrappersType !== StringArrayWrappersType.Function) {
+            return null;
+        }
+
         const minIndexValue: number = 0;
         const maxIndexValue: number = this.options.stringArrayWrappersParametersMaxCount - 1;
 

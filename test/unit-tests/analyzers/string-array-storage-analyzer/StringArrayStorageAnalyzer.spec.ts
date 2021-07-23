@@ -56,6 +56,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
             before(() => {
                 stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: true,
                     stringArrayThreshold: 1
                 });
 
@@ -74,11 +75,11 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
 
-            it('Variant #3: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #3: should return correct string array storage item data for literal node #3', () => {
                 assert.deepEqual(stringArrayStorageItemData3, expectedStringArrayStorageItemData3);
             });
         });
@@ -101,6 +102,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
             before(() => {
                 stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: true,
                     stringArrayThreshold: 1
                 });
 
@@ -118,7 +120,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
         });
@@ -141,6 +143,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
             before(() => {
                 stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: true,
                     stringArrayThreshold: 1
                 });
 
@@ -158,7 +161,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
         });
@@ -181,6 +184,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
             before(() => {
                 stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: true,
                     stringArrayThreshold: 1
                 });
 
@@ -208,7 +212,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
         });
@@ -232,6 +236,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
             before(() => {
                 stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: true,
                     stringArrayThreshold: 1
                 });
 
@@ -249,7 +254,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
         });
@@ -274,6 +279,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArray: true,
                         stringArrayThreshold: 0
                     });
 
@@ -291,7 +297,7 @@ describe('StringArrayStorageAnalyzer', () => {
                     assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
                 });
 
-                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                     assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
                 });
             });
@@ -315,6 +321,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArray: true,
                         stringArrayThreshold: 1
                     });
 
@@ -332,7 +339,7 @@ describe('StringArrayStorageAnalyzer', () => {
                     assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
                 });
 
-                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                     assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
                 });
             });
@@ -375,7 +382,7 @@ describe('StringArrayStorageAnalyzer', () => {
                 assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
             });
 
-            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+            it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                 assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
             });
         });
@@ -393,6 +400,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArray: true,
                         stringArrayThreshold: 0
                     });
 
@@ -410,7 +418,7 @@ describe('StringArrayStorageAnalyzer', () => {
                     assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
                 });
 
-                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                     assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
                 });
             });
@@ -433,6 +441,7 @@ describe('StringArrayStorageAnalyzer', () => {
 
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                        stringArray: true,
                         stringArrayThreshold: 0.5,
                         seed: 3
                     });

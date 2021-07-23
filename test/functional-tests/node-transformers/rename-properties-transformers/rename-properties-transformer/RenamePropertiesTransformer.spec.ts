@@ -12,7 +12,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('RenamePropertiesTransformer', () => {
     describe('transformNode', () => {
         describe('Mode: `unsafe`', () => {
-            describe('Hexadecimal identifier names generator', () => {
+            describe('Variant #1: Hexadecimal identifier names generator', () => {
                 describe('Variant #1: base properties rename', () => {
                     const property1RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x1/;
                     const property2RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x2/;
@@ -54,7 +54,7 @@ describe('RenamePropertiesTransformer', () => {
                 });
             });
 
-            describe('Mangled identifier names generator', () => {
+            describe('Variant #2: Mangled identifier names generator', () => {
                 describe('Variant #1: base properties mangle', () => {
                     const property1RegExp: RegExp = /'a': *0x1/;
                     const property2RegExp: RegExp = /'b': *0x2/;
@@ -335,7 +335,7 @@ describe('RenamePropertiesTransformer', () => {
                 });
             });
 
-            describe('Ignored literal node type', () => {
+            describe('Variant #3: Ignored literal node type', () => {
                 describe('Variant #1: boolean literal node', () => {
                     const regExp: RegExp = /var obj *= *{}; *obj\[!!\[]] *= *0x1;/;
 
@@ -357,6 +357,31 @@ describe('RenamePropertiesTransformer', () => {
                     it('Match #1: should skip literal property with invalid type', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
+                });
+            });
+
+            describe('Variant #4: Prevent generation of the property names that are equal to the existing object property names', () => {
+                const regExp: RegExp = /var object *= *{'b': *'field', *'c': *'value'};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/duplicated-generated-names-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: 'mangled',
+                            reservedNames: ['^a$']
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: should skip literal property with invalid type', () => {
+                    assert.match(obfuscatedCode, regExp);
                 });
             });
         });
@@ -404,6 +429,31 @@ describe('RenamePropertiesTransformer', () => {
 
                 it('Should rename property references', () => {
                     assert.match(obfuscatedCode, referencesRegExp);
+                });
+            });
+
+            describe('Variant #2: Prevent generation of the property names that are equal to the existing object property names', () => {
+                const regExp: RegExp = /var object *= *{'b': *'field', *'c': *'value'};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/duplicated-generated-names-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Safe,
+                            identifierNamesGenerator: 'mangled',
+                            reservedNames: ['^a$']
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('Match #1: should skip literal property with invalid type', () => {
+                    assert.match(obfuscatedCode, regExp);
                 });
             });
         });

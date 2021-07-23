@@ -45,7 +45,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
 * PayPal credit card [https://www.paypal.com/donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=javascript-obfuscator@yandex.ru&lc=US&no_note=0&item_name=Support+javascript-obfuscator&cn=&curency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 * PayPal https://www.paypal.me/javascriptobfuscator
-* (Bitcoin) 1Nv2773RDNzodHDxuxaYkTvwBkYRHmPhnG
+* (Bitcoin) bc1q203p8nyrstwm7vwzjg3h9l9t6y9ka0umw0rx96
 
 Huge thanks to all supporters!
 
@@ -377,6 +377,7 @@ Following options are available for the JS Obfuscator:
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: 'separate',
+    sourceMapSourcesMode: 'sources-content',
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
@@ -438,6 +439,7 @@ Following options are available for the JS Obfuscator:
     --source-map-base-url <string>
     --source-map-file-name <string>
     --source-map-mode <string> [inline, separate]
+    --source-map-sources-mode <string> [sources, sources-content]
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
@@ -840,6 +842,7 @@ Prevents obfuscation of `require` imports. Could be helpful in some cases when f
 Type: `string` Default: `''`
 
 Allows to set name of the input file with source code. This name will be used internally for source map generation.
+Required when using NodeJS API and `sourceMapSourcesMode` option has `sources` value`.
 
 ### `log`
 Type: `boolean` Default: `false`
@@ -1071,6 +1074,13 @@ Specifies source map generation mode:
 * `inline` - add source map at the end of each .js files;
 * `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
+### `sourceMapSourcesMode`
+Type: `string` Default: `sources-content`
+
+Allows to control `sources` and `sourcesContent` fields of the source map:
+* `sources-content` - adds dummy `sources` field, adds `sourcesContent` field with the original source code;
+* `sources` - adds `sources` field with a valid source description, does not add `sourcesContent` field. When using NodeJS API it's required to define `inputFileName` option that will be used as `sources` field value.
+
 ### `splitStrings`
 Type: `boolean` Default: `false`
 
@@ -1281,8 +1291,8 @@ Type: `string` Default: `variable`
 Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
 
 Available values:
-* `'variable'`: appends variable wrappers. Fast performance.
-* `'function'`: appends function wrappers. Slower performance than with `variable` but provides more strict obfuscation
+* `'variable'`: appends variable wrappers at the top of each scope. Fast performance.
+* `'function'`: appends function wrappers at random positions inside each scope. Slower performance than with `variable` but provides more strict obfuscation.
 
 Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
 
@@ -1304,9 +1314,6 @@ const a = [
     'bar',
     'foo'
 ];
-const d = function (c, g) {
-    return b(g - 0x3e1, c);
-};
 const foo = d(0x567, 0x568);
 function b(c, d) {
     b = function (e, f) {
@@ -1317,14 +1324,17 @@ function b(c, d) {
     return b(c, d);
 }
 function test() {
-    const e = function (c, g) {
-        return b(c - 0x396, g);
-    };
-    const f = function (c, g) {
-        return b(c - 0x396, g);
-    };
     const c = e(0x51c, 0x51b);
+    function e (c, g) {
+        return b(c - 0x396, g);
+    }
     console[f(0x51b, 0x51d)](foo, c);
+    function f (c, g) {
+        return b(c - 0x396, g);
+    }
+}
+function d (c, g) {
+    return b(g - 0x3e1, c);
 }
 test();
 ```

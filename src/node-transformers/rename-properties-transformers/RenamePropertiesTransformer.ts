@@ -43,7 +43,10 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private static isValidPropertyNode<
-        TNode extends ESTree.Property | ESTree.MemberExpression | ESTree.MethodDefinition
+        TNode extends ESTree.Property
+            | ESTree.PropertyDefinition
+            | ESTree.MemberExpression
+            | ESTree.MethodDefinition
     > (
         propertyNode: TNode,
         propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier
@@ -107,6 +110,10 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
             return this.transformPropertyNode(node);
         }
 
+        if (NodeGuards.isPropertyDefinitionNode(node)) {
+            return this.transformPropertyDefinitionNode(node);
+        }
+
         if (NodeGuards.isMemberExpressionNode(node)) {
             return this.transformMemberExpressionNode(node);
         }
@@ -128,6 +135,20 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
             propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
             propertyNode.shorthand = false;
+        }
+
+        return propertyNode;
+    }
+
+    /**
+     * @param {PropertyDefinition} propertyNode
+     * @returns {PropertyDefinition}
+     */
+    private transformPropertyDefinitionNode (propertyNode: ESTree.PropertyDefinition): ESTree.PropertyDefinition {
+        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
+
+        if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
+            propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
         }
 
         return propertyNode;
@@ -165,6 +186,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @param {Node} parentNode
      */
+    // eslint-disable-next-line complexity
     private analyzeAutoExcludedPropertyNames (
         node: ESTree.Node,
         parentNode: ESTree.Node
@@ -177,6 +199,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
             (NodeGuards.isPropertyNode(parentNode) && parentNode.key === node)
             || NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node
             || NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node
+            || NodeGuards.isPropertyDefinitionNode(parentNode) && parentNode.key === node
         ) {
             return;
         }

@@ -95,6 +95,16 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isClassBodyNode (
+        node: ESTree.Node
+    ): node is ESTree.ClassBody {
+        return node.type === NodeType.ClassBody;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isClassDeclarationNode (
         node: ESTree.Node
     ): node is ESTree.ClassDeclaration & { id: ESTree.Identifier } {
@@ -440,6 +450,14 @@ export class NodeGuards {
      */
     public static isPropertyNode (node: ESTree.Node): node is ESTree.Property {
         return node.type === NodeType.Property;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isPropertyDefinitionNode (node: ESTree.Node): node is ESTree.PropertyDefinition {
+        return node.type === NodeType.PropertyDefinition;
     }
 
     /**

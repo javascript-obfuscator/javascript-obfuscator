@@ -9,7 +9,7 @@ export function SelfDefendingNoEvalTemplate (): string {
             {globalVariableTemplate}
         
             return that
-                .RegExp('([\\\\S]+([\\\\s]+[\\\\S]+)+)+[\\\\S]}')
+                .RegExp('(.*)+\\\\S}')
                 .test({selfDefendingFunctionName});
         });
         

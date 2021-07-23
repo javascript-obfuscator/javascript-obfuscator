@@ -7,16 +7,16 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { evaluateInWorker } from '../../../../helpers/evaluateInWorker';
-import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { beautifyCode } from '../../../../helpers/beautifyCode';
+import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('SelfDefendingNoEvalTemplate', function () {
     const correctEvaluationTimeout: number = 100;
-    const redosEvaluationTimeout: number = 3500;
+    const redosEvaluationTimeout: number = 10000;
 
-    this.timeout(10000);
+    this.timeout(30000);
 
     describe('Variant #1: correctly obfuscate code with `HexadecimalIdentifierNamesGenerator``', () => {
         const expectedEvaluationResult: number = 1;
@@ -182,6 +182,84 @@ describe('SelfDefendingNoEvalTemplate', function () {
                         }
 
                         evaluationResult = parseInt(result, 10);
+                    });
+            });
+
+            it('should enter code in infinity loop', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+    });
+
+    describe('Variant #5: JavaScript obfuscator code', () => {
+        describe('Variant #1: correct evaluation', () => {
+            const evaluationTimeout: number = 5000;
+            const expectedEvaluationResult: string = 'var foo=0x1;';
+
+            let obfuscatedCode: string,
+                evaluationResult: string = '';
+
+            before(() => {
+                const code: string = readFileAsString(process.cwd() + '/dist/index.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    `
+                        ${code}
+                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                    `,
+                    {
+                        disableConsoleOutput: true,
+                        selfDefending: true,
+                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                        target: ObfuscationTarget.BrowserNoEval
+                    }
+                ).getObfuscatedCode();
+
+                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                    .then((result: string | null) => {
+                        if (!result) {
+                            return;
+                        }
+
+                        evaluationResult = result;
+                    });
+            });
+
+            it('should correctly evaluate code with enabled self defending', () => {
+                assert.equal(evaluationResult, expectedEvaluationResult);
+            });
+        });
+
+        describe('Variant #2: beautify with spaces', () => {
+            const expectedEvaluationResult: string = '';
+
+            let obfuscatedCode: string,
+                evaluationResult: string = '';
+
+            before(() => {
+                const code: string = readFileAsString(process.cwd() + '/dist/index.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    `
+                        ${code}
+                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                    `,
+                    {
+                        disableConsoleOutput: true,
+                        selfDefending: true,
+                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                        target: ObfuscationTarget.BrowserNoEval
+                    }
+                ).getObfuscatedCode();
+                obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
+
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
+                    .then((result: string | null) => {
+                        if (!result) {
+                            return;
+                        }
+
+                        evaluationResult = result;
                     });
             });
 

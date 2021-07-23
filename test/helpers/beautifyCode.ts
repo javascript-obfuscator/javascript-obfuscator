@@ -1,16 +1,16 @@
+const beautify = require('js-beautify').js;
+
 /**
- * Adds some spaces between some language constructions
+ * Beautifies code
  *
  * @param {string} code
  * @param {" " | "  "} character
  * @returns {string}
  */
 export function beautifyCode (code: string, character: 'space' | 'tab'): string {
-    const spaceCharacter: string = character === 'space' ? '\x20' : '\x09';
+    const indentCharacter: string = character === 'space' ? '\x20' : '\x09';
 
-    return code
-        .replace(/function\(\){/g, 'function () {')
-        .replace(/(!?=+)/g, ' $1 ')
-        .replace(/,/g, `,${spaceCharacter}`)
-        .replace(/;/g, `;\n${spaceCharacter}`);
+    return beautify(code, {
+        indent_char: indentCharacter
+    });
 }

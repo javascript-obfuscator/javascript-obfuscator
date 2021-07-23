@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=12"
+    "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",

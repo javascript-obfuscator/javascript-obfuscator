@@ -12,27 +12,29 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
                     let test = {}
                 }
                 
-                methodA = () => {
-                    console.log('methodA');
+                static methodA = () => {
+                    console.log('method_A');
                 }
                 
                 methodB () {
-                    console.log('methodB');
+                    console.log('method_B');
                     
-                    this.methodA();
+                    Test.methodA();
                 }
             }
             
             const instance = new Test();
             
-            instance.methodA();
+            Test.methodA();
             instance.methodB();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             stringArray: true,
-            stringArrayThreshold: 1
+            stringArrayThreshold: 1,
+            transformObjectKeys: true,
+            renameProperties: true
         }
     ).getObfuscatedCode();
 

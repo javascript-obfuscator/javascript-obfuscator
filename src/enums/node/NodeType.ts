@@ -11,6 +11,7 @@ export enum NodeType {
     CallExpression = 'CallExpression',
     CatchClause = 'CatchClause',
     ChainExpression = 'ChainExpression',
+    ClassBody = 'ClassBody',
     ClassDeclaration = 'ClassDeclaration',
     ConditionalExpression = 'ConditionalExpression',
     ContinueStatement = 'ContinueStatement',

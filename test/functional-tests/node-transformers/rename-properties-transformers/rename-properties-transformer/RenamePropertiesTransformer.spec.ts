@@ -13,7 +13,7 @@ describe('RenamePropertiesTransformer', () => {
     describe('transformNode', () => {
         describe('Mode: `unsafe`', () => {
             describe('Variant #1: Hexadecimal identifier names generator', () => {
-                describe('Variant #1: base properties rename', () => {
+                describe('Variant #1: object properties rename', () => {
                     const property1RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x1/;
                     const property2RegExp: RegExp = /'(_0x[a-f0-9]{4,6})': *0x2/;
                     const property3RegExp: RegExp = /\['(_0x[a-f0-9]{4,6})']: *0x3/;
@@ -52,10 +52,49 @@ describe('RenamePropertiesTransformer', () => {
                         assert.match(obfuscatedCode, property4RegExp);
                     });
                 });
+
+                describe('Variant #2: class property definitions rename', () => {
+                    const propertyDefinition1RegExp: RegExp = /\['(_0x[a-f0-9]{4,6})'] *= *0x1;/;
+                    const propertyDefinition2RegExp: RegExp = /static \['(_0x[a-f0-9]{4,6})'] *= *0x2/;
+                    const propertyDefinition3RegExp: RegExp = /\['(_0x[a-f0-9]{4,6})'] *= *0x3/;
+                    const propertyDefinition4RegExp: RegExp = /\[hawk] *= *0x4/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/property-definition-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameProperties: true,
+                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('Match #1: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition1RegExp);
+                    });
+
+                    it('Match #2: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition2RegExp);
+                    });
+
+                    it('Match #3: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition3RegExp);
+                    });
+
+                    it('Match #4: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition4RegExp);
+                    });
+                });
             });
 
             describe('Variant #2: Mangled identifier names generator', () => {
-                describe('Variant #1: base properties mangle', () => {
+                describe('Variant #1: object properties mangle', () => {
                     const property1RegExp: RegExp = /'a': *0x1/;
                     const property2RegExp: RegExp = /'b': *0x2/;
                     const property3RegExp: RegExp = /\['c']: *0x3/;
@@ -95,7 +134,46 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #2: base properties rename with rename globals', () => {
+                describe('Variant #2: class property definitions rename', () => {
+                    const propertyDefinition1RegExp: RegExp = /\['a'] *= *0x1;/;
+                    const propertyDefinition2RegExp: RegExp = /static \['b'] *= *0x2/;
+                    const propertyDefinition3RegExp: RegExp = /\['c'] *= *0x3/;
+                    const propertyDefinition4RegExp: RegExp = /\[hawk] *= *0x4/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/property-definition-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameProperties: true,
+                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('Match #1: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition1RegExp);
+                    });
+
+                    it('Match #2: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition2RegExp);
+                    });
+
+                    it('Match #3: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition3RegExp);
+                    });
+
+                    it('Match #4: should rename property definition', () => {
+                        assert.match(obfuscatedCode, propertyDefinition4RegExp);
+                    });
+                });
+
+                describe('Variant #3: base properties rename with rename globals', () => {
                     const variable1RegExp: RegExp = /const d *= *'hawk'/;
                     const variable2RegExp: RegExp = /const e *= *{/;
                     const property1RegExp: RegExp = /'a': *0x1/;
@@ -146,7 +224,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #3: properties rename of nested objects', () => {
+                describe('Variant #4: properties rename of nested objects', () => {
                     const regExp: RegExp = new RegExp('' +
                         'const foo *= *{' +
                             '\'a\': *{' +
@@ -177,7 +255,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #4: properties rename of rest element', () => {
+                describe('Variant #5: properties rename of rest element', () => {
                     const regExp: RegExp = new RegExp('' +
                         'const foo *= *{' +
                             '\'a\': *0x1' +
@@ -207,7 +285,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #5: reserved dom properties', () => {
+                describe('Variant #6: reserved dom properties', () => {
                     const regExp: RegExp = new RegExp('' +
                         'const foo *= *{' +
                             '\'a\': *0x1,' +
@@ -239,7 +317,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #6: reserved names properties', () => {
+                describe('Variant #7: reserved names properties', () => {
                     const regExp: RegExp = new RegExp('' +
                         'const foo *= *{' +
                             '\'a\': *0x1,' +
@@ -272,7 +350,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #7: class methods', () => {
+                describe('Variant #8: class methods', () => {
                     const regExp: RegExp = new RegExp('' +
                         'class Foo *{' +
                             '\\[\'a\'] *\\(\\) *{}' +
@@ -303,7 +381,7 @@ describe('RenamePropertiesTransformer', () => {
                     });
                 });
 
-                describe('Variant #8: integration with `splitStrings` option', () => {
+                describe('Variant #9: integration with `splitStrings` option', () => {
                     const propertyRegExp: RegExp = new RegExp(
                         'const foo *= *{' +
                             '\'a\': *\'long\' *\\+ *\'Prop\' *\\+ *\'erty\' *\\+ *\'Valu\' *\\+ *\'e\'' +
@@ -394,8 +472,10 @@ describe('RenamePropertiesTransformer', () => {
                         '\'a\': *0x2 *' +
                     '}; *' +
                     'class Class *{ *' +
-                        'static\\[\'baz\'] *\\(\\) *{} *' +
-                        'static\\[\'b\'] *\\(\\) *{} *' +
+                        '\\[\'baz\'] *= *0x1; *' +
+                        'static *\\[\'b\'] *= *0x2;*' +
+                        'static *\\[\'hawk\'] *\\(\\) *{} *' +
+                        'static *\\[\'c\'] *\\(\\) *{} *' +
                     '}' +
                 '');
                 const referencesRegExp: RegExp = new RegExp('' +
@@ -403,7 +483,9 @@ describe('RenamePropertiesTransformer', () => {
                         'object\\[\'foo\'], *' +
                         'object\\[\'a\'], *' +
                         'Class\\[\'baz\'], *' +
-                        'Class\\[\'b\'] *' +
+                        'Class\\[\'b\'], *' +
+                        'Class\\[\'hawk\'], *' +
+                        'Class\\[\'c\'] *' +
                     '\\);' +
                 '');
 

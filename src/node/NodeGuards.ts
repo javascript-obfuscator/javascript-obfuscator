@@ -95,6 +95,16 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isClassBodyNode (
+        node: ESTree.Node
+    ): node is ESTree.ClassBody {
+        return node.type === NodeType.ClassBody;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isClassDeclarationNode (
         node: ESTree.Node
     ): node is ESTree.ClassDeclaration & { id: ESTree.Identifier } {

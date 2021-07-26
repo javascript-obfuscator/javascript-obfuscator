@@ -7,10 +7,11 @@ export function SelfDefendingTemplate (): string {
     return `
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
             return {selfDefendingFunctionName}
-                .constructor('return /" + this + "/')
-                .call()
-                .constructor('((.*)+)+$')
-                .test({selfDefendingFunctionName});
+                .toString()
+                .search('(((.+)+)+)+$')
+                .toString()
+                .constructor({selfDefendingFunctionName})
+                .search('(((.+)+)+)+$');
         });
         
         {selfDefendingFunctionName}();

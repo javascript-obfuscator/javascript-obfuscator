@@ -30,11 +30,9 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            transformObjectKeys: true,
-            renameProperties: true
+            selfDefending: true
         }
     ).getObfuscatedCode();
 

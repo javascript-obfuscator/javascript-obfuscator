@@ -21,7 +21,7 @@ import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGro
 import { CallsControllerFunctionCodeHelper } from '../../calls-controller/CallsControllerFunctionCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
-import { SelfDefendingUnicodeCodeHelper } from '../SelfDefendingUnicodeCodeHelper';
+import { SelfDefendingCodeHelper } from '../SelfDefendingCodeHelper';
 
 @injectable()
 export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -84,8 +84,8 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
 
         // selfDefendingUnicode helper nodes append
         this.appendCustomNodeIfExist(
-            CustomCodeHelper.SelfDefendingUnicode,
-            (customCodeHelper: ICustomCodeHelper<TInitialData<SelfDefendingUnicodeCodeHelper>>) => {
+            CustomCodeHelper.SelfDefending,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<SelfDefendingCodeHelper>>) => {
                 customCodeHelper.initialize(callsControllerFunctionName, selfDefendingFunctionName);
 
                 NodeAppender.prepend(selfDefendingFunctionHostNode, customCodeHelper.getNode());
@@ -110,12 +110,12 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
             return;
         }
 
-        const selfDefendingUnicodeCodeHelper: ICustomCodeHelper<TInitialData<SelfDefendingUnicodeCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.SelfDefendingUnicode);
+        const selfDefendingCodeHelper: ICustomCodeHelper<TInitialData<SelfDefendingCodeHelper>> =
+            this.customCodeHelperFactory(CustomCodeHelper.SelfDefending);
         const callsControllerFunctionCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.CallsControllerFunction);
 
-        this.customCodeHelpers.set(CustomCodeHelper.SelfDefendingUnicode, selfDefendingUnicodeCodeHelper);
+        this.customCodeHelpers.set(CustomCodeHelper.SelfDefending, selfDefendingCodeHelper);
         this.customCodeHelpers.set(CustomCodeHelper.CallsControllerFunction, callsControllerFunctionCodeHelper);
     }
 }

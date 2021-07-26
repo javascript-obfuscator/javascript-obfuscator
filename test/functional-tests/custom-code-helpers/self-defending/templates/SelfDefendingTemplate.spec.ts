@@ -1,7 +1,6 @@
 import { assert } from 'chai';
 
-
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { TInputOptions } from '../../../../../src/types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
@@ -14,6 +13,11 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('SelfDefendingTemplate', function () {
     const correctEvaluationTimeout: number = 100;
     const redosEvaluationTimeout: number = 10000;
+
+    const baseOptions: TInputOptions = {
+        optionsPreset: 'high-obfuscation',
+        debugProtection: false
+    };
 
     this.timeout(30000);
 
@@ -29,7 +33,7 @@ describe('SelfDefendingTemplate', function () {
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_ADDITIONAL_NODES_PRESET,
+                    ...baseOptions,
                     selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                 }
@@ -62,7 +66,7 @@ describe('SelfDefendingTemplate', function () {
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_ADDITIONAL_NODES_PRESET,
+                    baseOptions,
                     selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 }
@@ -95,7 +99,7 @@ describe('SelfDefendingTemplate', function () {
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_ADDITIONAL_NODES_PRESET,
+                    baseOptions,
                     selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
                     identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle']
@@ -130,7 +134,7 @@ describe('SelfDefendingTemplate', function () {
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_ADDITIONAL_NODES_PRESET,
+                        ...baseOptions,
                         selfDefending: true
                     }
                 ).getObfuscatedCode();
@@ -163,7 +167,7 @@ describe('SelfDefendingTemplate', function () {
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_ADDITIONAL_NODES_PRESET,
+                        ...baseOptions,
                         selfDefending: true
                     }
                 ).getObfuscatedCode();
@@ -202,7 +206,6 @@ describe('SelfDefendingTemplate', function () {
                         module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
                     `,
                     {
-                        disableConsoleOutput: true,
                         selfDefending: true,
                         identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                     }
@@ -238,7 +241,6 @@ describe('SelfDefendingTemplate', function () {
                         module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
                     `,
                     {
-                        disableConsoleOutput: true,
                         selfDefending: true,
                         identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                     }

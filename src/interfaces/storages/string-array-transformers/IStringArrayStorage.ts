@@ -20,6 +20,11 @@ export interface IStringArrayStorage extends IMapStorage <string, IStringArraySt
     getStorageName (): string;
 
     /**
+     * @returns {string}
+     */
+    getStorageFunctionName (): string;
+
+    /**
      * @param {TStringArrayEncoding | null} stringArrayEncoding
      * @returns {string}
      */

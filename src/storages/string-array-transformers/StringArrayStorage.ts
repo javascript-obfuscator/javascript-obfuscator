@@ -92,6 +92,11 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     /**
      * @type {string}
      */
+    private storageFunctionName!: string;
+
+    /**
+     * @type {string}
+     */
     private stringArrayStorageName!: string;
 
     /**
@@ -171,13 +176,6 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     /**
      * @returns {string}
      */
-    public getStorageName (): string {
-        return this.getStorageId();
-    }
-
-    /**
-     * @returns {string}
-     */
     public override getStorageId (): string {
         if (!this.stringArrayStorageName) {
             this.stringArrayStorageName = this.identifierNamesGenerator
@@ -185,6 +183,25 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
         }
 
         return this.stringArrayStorageName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getStorageName (): string {
+        return this.getStorageId();
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getStorageFunctionName (): string {
+        if (!this.storageFunctionName) {
+            this.storageFunctionName = this.identifierNamesGenerator
+                .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+        }
+
+        return this.storageFunctionName;
     }
 
     /**

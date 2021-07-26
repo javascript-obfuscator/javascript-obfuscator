@@ -122,9 +122,14 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         // stringArray helper initialize
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
+        const stringArrayFunctionName: string = this.stringArrayStorage.getStorageFunctionName();
         const stringArrayName: string = this.stringArrayStorage.getStorageName();
 
-        stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayName);
+        stringArrayCodeHelper.initialize(
+            this.stringArrayStorage,
+            stringArrayFunctionName,
+            stringArrayName
+        );
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
 
         // stringArrayCallsWrapper helper initialize

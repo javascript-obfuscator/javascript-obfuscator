@@ -3,7 +3,9 @@
  */
 export function StringArrayRotateFunctionTemplate (): string {
     return `
-        (function (array, comparisonValue) {
+        (function (stringArrayFunction, comparisonValue) {
+            const stringArray = stringArrayFunction();
+        
             while (true) {
                 try {
                     const expression = {comparisonExpressionCode};
@@ -11,12 +13,12 @@ export function StringArrayRotateFunctionTemplate (): string {
                     if (expression === comparisonValue) {
                         break;
                     } else {
-                        array['push'](array['shift']());
+                        stringArray['push'](stringArray['shift']());
                     }
                 } catch (e) {
-                    array['push'](array['shift']());
+                    stringArray['push'](stringArray['shift']());
                 }
             }
-        })({stringArrayName}, {comparisonValue});
+        })({stringArrayFunctionName}, {comparisonValue});
     `;
 }

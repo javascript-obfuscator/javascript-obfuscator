@@ -30,13 +30,13 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @type {string}
      */
     @initializable()
-    protected stringArrayName!: string;
+    protected stringArrayCallsWrapperName!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    protected stringArrayCallsWrapperName!: string;
+    protected stringArrayFunctionName!: string;
 
     /**
      * @type {string}
@@ -78,16 +78,16 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     }
 
     /**
-     * @param {string} stringArrayName
+     * @param {string} stringArrayFunctionName
      * @param {string} stringArrayCallsWrapperName
      * @param {number} indexShiftAmount
      */
     public initialize (
-        stringArrayName: string,
+        stringArrayFunctionName: string,
         stringArrayCallsWrapperName: string,
         indexShiftAmount: number
     ): void {
-        this.stringArrayName = stringArrayName;
+        this.stringArrayFunctionName = stringArrayFunctionName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
         this.indexShiftAmount = indexShiftAmount;
 
@@ -108,14 +108,14 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     protected override getCodeHelperTemplate (): string {
         const decodeCodeHelperTemplate: string = this.getDecodeStringArrayTemplate();
 
-        const preservedNames: string[] = [`^${this.stringArrayName}$`];
+        const preservedNames: string[] = [`^${this.stringArrayFunctionName}$`];
 
         return this.customCodeHelperObfuscator.obfuscateTemplate(
             this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeCodeHelperTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName,
                 stringArrayCacheName: this.stringArrayCacheName,
+                stringArrayFunctionName: this.stringArrayFunctionName,
                 indexShiftAmount: this.indexShiftAmount
             }),
             {
@@ -145,8 +145,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
                 this.escapeSequenceEncoder
             ),
             {
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
             }
         );
     }

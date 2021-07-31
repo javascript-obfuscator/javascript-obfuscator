@@ -30,9 +30,14 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
+            compact: false,
+            simplify: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            selfDefending: true
+            stringArrayEncoding: ['rc4', 'base64'],
+            stringArrayWrappersCount: 5,
+            rotateStringArray: true,
+            identifierNamesGenerator: 'mangled'
         }
     ).getObfuscatedCode();
 

@@ -25,7 +25,6 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
                 atobPolyfill,
                 atobFunctionName,
                 selfDefendingCode,
-                stringArrayName: this.stringArrayName,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayCacheName: this.stringArrayCacheName
             }

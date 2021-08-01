@@ -96,9 +96,9 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
 
     describe('Preserve string array name', () => {
         const callsWrapperRegExp: RegExp = new RegExp(`` +
-            `function *c *\\(b, *d\\) *{ *` +
+            `function *b *\\(c, *d\\) *{ *` +
                 `var e *= *a\\(\\); *` +
-                `c *= *function *\\(f, *g\\) *{` +
+                `b *= *function *\\(f, *g\\) *{` +
                     `f *= *f *- *0x0; *` +
                     `var h *= *e\\[f]; *` +
         ``);

@@ -124,12 +124,10 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         // stringArray helper initialize
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
-        const stringArrayName: string = this.identifierNamesGenerator.generateNext();
 
         stringArrayCodeHelper.initialize(
             this.stringArrayStorage,
-            stringArrayFunctionName,
-            stringArrayName
+            stringArrayFunctionName
         );
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
 

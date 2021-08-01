@@ -451,7 +451,7 @@ describe('JavaScriptObfuscator', () => {
                         'return foo_0x([a-f0-9]){4}\\(\\); *' +
                     '}'
                 );
-                const stringArrayCallRegExp: RegExp = /var foo_0x(\w){4,6} *= *foo_0x(\w){4}\(0x0\);$/;
+                const stringArrayCallRegExp: RegExp = /var foo_0x(\w){4,6} *= *foo_0x(\w){4}\(0x0\);/;
 
                 let obfuscatedCode: string;
 
@@ -543,7 +543,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('latin literal variable value', () => {
             const stringArrayLatinRegExp: RegExp = getStringArrayRegExp(['abc']);
-            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);$/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -576,7 +576,7 @@ describe('JavaScriptObfuscator', () => {
                     'return _0x(\\w){4}\\(\\); *' +
                 '}'
             );
-            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);$/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 

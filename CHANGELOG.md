@@ -1,7 +1,8 @@
 Change Log
 
-v2.18.2
+v2.19.0
 ---
+* Improved `selfDefending` option
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/959
 
 v2.18.1

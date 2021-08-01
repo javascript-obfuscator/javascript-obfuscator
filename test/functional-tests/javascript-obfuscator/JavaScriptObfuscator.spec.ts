@@ -27,6 +27,7 @@ import { OptionsPreset } from '../../../src/enums/options/presets/OptionsPreset'
 
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
+import { getStringArrayRegExp } from '../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../helpers/readFileAsString';
 
 describe('JavaScriptObfuscator', () => {
@@ -444,7 +445,12 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
-                const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
+                const stringArrayRegExp: RegExp = new RegExp(
+                    'function foo_0x([a-f0-9]){4} *\\(\\) *{' +
+                        'var _0x([a-f0-9]){4,6} *= *\\[\'abc\'];.*' +
+                        'return foo_0x([a-f0-9]){4}\\(\\); *' +
+                    '}'
+                );
                 const stringArrayCallRegExp: RegExp = /var foo_0x(\w){4,6} *= *foo_0x(\w){4}\(0x0\);$/;
 
                 let obfuscatedCode: string;
@@ -536,7 +542,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('latin literal variable value', () => {
-            const stringArrayLatinRegExp: RegExp = /^var _0x(\w){4} *= *\['abc'\];/;
+            const stringArrayLatinRegExp: RegExp = getStringArrayRegExp(['abc']);
             const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);$/;
 
             let obfuscatedCode: string;
@@ -564,7 +570,12 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('cyrillic literal variable value', () => {
-            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
+            const stringArrayCyrillicRegExp: RegExp = new RegExp(
+                'function _0x(\\w){4} *\\(\\) *{' +
+                    'var _0x([a-f0-9]){4,6} *= *\\[\'абц\'];.*' +
+                    'return _0x(\\w){4}\\(\\); *' +
+                '}'
+            );
             const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);$/;
 
             let obfuscatedCode: string;
@@ -689,7 +700,12 @@ describe('JavaScriptObfuscator', () => {
                 const code1: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
                 const code2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
 
-                const regExp: RegExp = /var (_0x(\w){4}) *= *\['.*'\];/;
+                const regExp: RegExp = new RegExp(
+                    'function _0x(\\w){4} *\\(\\) *{' +
+                        'var _0x([a-f0-9]){4,6} *= *\\[\'.*\'];.*' +
+                        'return _0x(\\w){4}\\(\\); *' +
+                    '}'
+                );
 
                 let match1: string,
                     match2: string;

@@ -2,12 +2,13 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 describe('StringArrayCodeHelper', () => {
-    const regExp: RegExp = /^var _0x([a-f0-9]){4} *= *\[/;
+    const regExp: RegExp = getStringArrayRegExp(['test']);
 
     describe('`stringArray` option is set', () => {
         let obfuscatedCode: string;

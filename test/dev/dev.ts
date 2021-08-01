@@ -37,7 +37,8 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             stringArrayEncoding: ['rc4', 'base64'],
             stringArrayWrappersCount: 5,
             rotateStringArray: true,
-            identifierNamesGenerator: 'mangled'
+            identifierNamesGenerator: 'mangled',
+            selfDefending: true
         }
     ).getObfuscatedCode();
 

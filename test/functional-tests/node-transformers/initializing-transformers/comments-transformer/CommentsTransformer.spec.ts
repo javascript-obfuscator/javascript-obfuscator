@@ -5,6 +5,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 
 describe('CommentsTransformer', () => {
     const lineSeparatorEscaped: string = '\\r?\\n';
@@ -142,7 +143,10 @@ describe('CommentsTransformer', () => {
 
     describe('Variant #7: simple comment with preserved words and additional code helper is inserted', () => {
         describe('Variant #1: `stringArray` code helper', () => {
-            const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var _0x([a-f0-9]){4} *= *\['abc'];/;
+            const regExp: RegExp = new RegExp(
+                '^\\/\\/ *@license *test *comment *\\n*.*' +
+                getStringArrayRegExp(['abc']).source
+            );
 
             let obfuscatedCode: string;
 

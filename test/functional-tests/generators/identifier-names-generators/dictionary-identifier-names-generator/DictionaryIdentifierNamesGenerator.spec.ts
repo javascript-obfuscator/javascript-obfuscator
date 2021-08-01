@@ -4,8 +4,9 @@ import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/id
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
-import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
+import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -13,10 +14,19 @@ describe('DictionaryIdentifierNamesGenerator', () => {
     describe('generateWithPrefix', () => {
         describe('Variant #1: should not generate same name for string array as existing name in code', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const a[cABC] *= *\['_aa', *'_ab'];/;
-                const variableDeclarationIdentifierNameRegExp1: RegExp = /const aa *= *a[cABC]\(0x0\);/;
-                const variableDeclarationIdentifierNameRegExp2: RegExp = /const ab *= *a[cABC]\(0x1\);/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
+                    ['_aa', '_ab'],
+                    {
+                        name: '\\w*',
+                        kind: 'const'
+                    }
+                );
+                const variableDeclarationIdentifierNameRegExp1: RegExp = /const (\w*) *= *\w*\(0x0\);/;
+                const variableDeclarationIdentifierNameRegExp2: RegExp = /const (\w*) *= *\w*\(0x1\);/;
 
+                let stringArrayName: string = '';
+                let variableDeclarationIdentifierName1: string = '';
+                let variableDeclarationIdentifierName2: string = '';
                 let obfuscatedCode: string;
 
                 before(() => {
@@ -34,26 +44,45 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             stringArrayThreshold: 1
                         }
                     ).getObfuscatedCode();
+
+                    stringArrayName = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
+                    variableDeclarationIdentifierName1 = getRegExpMatch(
+                        obfuscatedCode,
+                        variableDeclarationIdentifierNameRegExp1
+                    );
+                    variableDeclarationIdentifierName2 = getRegExpMatch(
+                        obfuscatedCode,
+                        variableDeclarationIdentifierNameRegExp2
+                    );
                 });
 
-                it('Match #1: should generate correct identifier for string array', () => {
+                it('Should generate correct identifier for string array', () => {
                     assert.match(obfuscatedCode, stringArrayStorageRegExp);
                 });
 
-                it('Match #2: should keep identifier name for existing variable declaration', () => {
-                    assert.match(obfuscatedCode, variableDeclarationIdentifierNameRegExp1);
+                it('Should keep identifier name for existing variable declaration #1', () => {
+                    assert.notEqual(stringArrayName, variableDeclarationIdentifierName1);
                 });
 
-                it('Match #3: should keep identifier name for existing variable declaration', () => {
-                    assert.match(obfuscatedCode, variableDeclarationIdentifierNameRegExp2);
+                it('Should keep identifier name for existing variable declaration #2', () => {
+                    assert.notEqual(stringArrayName, variableDeclarationIdentifierName2);
                 });
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const a[cABC] *= *\['_aa', *'_ab'];/;
-                const lastVariableDeclarationIdentifierNameRegExp1: RegExp = /const a[cABC] *= *a[cABC]\(0x0\);/;
-                const lastVariableDeclarationIdentifierNameRegExp2: RegExp = /const a[cABC] *= *a[cABC]\(0x1\);/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
+                    ['_aa', '_ab'],
+                    {
+                        name: '\\w*',
+                        kind: 'const'
+                    }
+                );
+                const variableDeclarationIdentifierNameRegExp1: RegExp = /const (\w*) *= *\w*\(0x0\);/;
+                const variableDeclarationIdentifierNameRegExp2: RegExp = /const (\w*) *= *\w*\(0x1\);/;
 
+                let stringArrayName: string = '';
+                let variableDeclarationIdentifierName1: string = '';
+                let variableDeclarationIdentifierName2: string = '';
                 let obfuscatedCode: string;
 
                 before(() => {
@@ -64,7 +93,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                            identifiersDictionary: ['a', 'b', 'c'],
+                            identifiersDictionary: ['a', 'b', 'c', 'd'],
                             identifiersPrefix: 'a',
                             renameGlobals: true,
                             transformObjectKeys: true,
@@ -72,18 +101,28 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             stringArrayThreshold: 1
                         }
                     ).getObfuscatedCode();
+
+                    stringArrayName = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
+                    variableDeclarationIdentifierName1 = getRegExpMatch(
+                        obfuscatedCode,
+                        variableDeclarationIdentifierNameRegExp1
+                    );
+                    variableDeclarationIdentifierName2 = getRegExpMatch(
+                        obfuscatedCode,
+                        variableDeclarationIdentifierNameRegExp2
+                    );
                 });
 
-                it('Match #1: should generate correct identifier for string array', () => {
+                it('Should generate correct identifier for string array', () => {
                     assert.match(obfuscatedCode, stringArrayStorageRegExp);
                 });
 
-                it('Match #2: should keep identifier name for existing variable declaration', () => {
-                    assert.match(obfuscatedCode, lastVariableDeclarationIdentifierNameRegExp1);
+                it('Should keep identifier name for existing variable declaration #1', () => {
+                    assert.notEqual(stringArrayName, variableDeclarationIdentifierName1);
                 });
 
-                it('Match #3: should keep identifier name for existing variable declaration', () => {
-                    assert.match(obfuscatedCode, lastVariableDeclarationIdentifierNameRegExp2);
+                it('Should keep identifier name for existing variable declaration #2', () => {
+                    assert.notEqual(stringArrayName, variableDeclarationIdentifierName2);
                 });
             });
         });
@@ -91,11 +130,17 @@ describe('DictionaryIdentifierNamesGenerator', () => {
         describe('Variant #2: should not generate same prefixed name for identifier in code as prefixed name of string array', function () {
             this.timeout(10000);
 
-            const samplesCount: number = 20;
+            const samplesCount: number = 30;
 
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const ([abAB]{1,3}) *= *\['first', *'abc'];/;
-                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\(0x0\);/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
+                    ['first', 'abc'],
+                    {
+                        name: '\\w*',
+                        kind: 'const'
+                    }
+                );
+                const variableDeclarationIdentifierNameRegExp: RegExp = /const (\w*) *= *\w*\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 
@@ -133,8 +178,14 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const ([abAB]{1,3}) *= *\['first', *'abc'];/;
-                const variableDeclarationIdentifierNameRegExp: RegExp = /const ([abAB]{1,3}){1,2} *= *[abAB]{1,3}\(0x0\);/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
+                    ['first', 'abc'],
+                    {
+                        name: '\\w*',
+                        kind: 'const'
+                    }
+                );
+                const variableDeclarationIdentifierNameRegExp: RegExp = /const (\w*) *= *\w*\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 

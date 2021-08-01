@@ -16,16 +16,19 @@ import { Rc4Template } from '../../../../../../src/custom-code-helpers/string-ar
 import { StringArrayBase64DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
 import { StringArrayCallsWrapperTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
 import { StringArrayRC4DecodeTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array-calls-wrapper/StringArrayRC4DecodeTemplate';
+import { StringArrayTemplate } from '../../../../../../src/custom-code-helpers/string-array/templates/string-array/StringArrayTemplate';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
 import { InversifyContainerFacade } from '../../../../../../src/container/InversifyContainerFacade';
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { minimizeCode } from '../../../../../helpers/minimizeCode';
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 import { swapLettersCase } from '../../../../../helpers/swapLettersCase';
 
 describe('StringArrayCallsWrapperTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
+    const stringArrayFunctionName: string = 'stringArrayFunctionName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
     const stringArrayCacheName: string = 'stringArrayCache';
     const atobFunctionName: string = 'atob';
@@ -45,243 +48,510 @@ describe('StringArrayCallsWrapperTemplate', () => {
     });
 
     describe('Variant #1: `base64` encoding', () => {
-        describe('Variant #1: index shift amount is `0`', () => {
-            const index: string = '0x0';
+        describe('Variant #1: `selfDefending` option is disabled', () => {
+            const selfDefendingEnabled: boolean = false;
 
-            const indexShiftAmount: number = 0;
+            describe('Variant #1: index shift amount is `0`', () => {
+                const index: string = '0x0';
 
-            const expectedDecodedValue: string = 'test1';
+                const indexShiftAmount: number = 0;
 
-            let decodedValue: string;
+                const expectedDecodedValue: string = 'test1';
 
-            before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
-                    atobFunctionName
-                });
-                const atobDecodeTemplate: string = format(
-                    StringArrayBase64DecodeTemplate(randomGenerator),
-                    {
-                        atobPolyfill,
-                        atobFunctionName,
-                        selfDefendingCode: '',
+                let decodedValue: string;
+
+                before(() => {
+                    const stringArrayTemplate = format(StringArrayTemplate(), {
+                        stringArrayName,
+                        stringArrayFunctionName,
+                        stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('test1')}'`
+                    });
+                    const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                        atobFunctionName
+                    });
+                    const atobDecodeTemplate: string = format(
+                        StringArrayBase64DecodeTemplate(randomGenerator),
+                        {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        }
+                    );
+                    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                        decodeCodeHelperTemplate: atobDecodeTemplate,
+                        indexShiftAmount,
                         stringArrayCacheName,
-                        stringArrayCallsWrapperName
-                    }
-                );
-                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
-                    decodeCodeHelperTemplate: atobDecodeTemplate,
-                    indexShiftAmount,
-                    stringArrayCacheName,
-                    stringArrayCallsWrapperName,
-                    stringArrayName
+                        stringArrayCallsWrapperName,
+                        stringArrayFunctionName
+                    });
+
+                    decodedValue = Function(`
+                        ${stringArrayTemplate}
+                    
+                        ${stringArrayCallsWrapperTemplate}
+                        
+                        return ${stringArrayCallsWrapperName}(${index});
+                    `)();
                 });
 
-                decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa('test1')}'];
-            
-                ${stringArrayCallsWrapperTemplate}
-                
-                return ${stringArrayCallsWrapperName}(${index});
-            `)();
+                it('should correctly return decoded value', () => {
+                    assert.deepEqual(decodedValue, expectedDecodedValue);
+                });
             });
 
-            it('should correctly return decoded value', () => {
-                assert.deepEqual(decodedValue, expectedDecodedValue);
+            describe('Variant #2: index shift amount is `5`', () => {
+                const index: string = '0x5';
+
+                const indexShiftAmount: number = 5;
+
+                const expectedDecodedValue: string = 'test1';
+
+                let decodedValue: string;
+
+                before(() => {
+                    const stringArrayTemplate = format(StringArrayTemplate(), {
+                        stringArrayName,
+                        stringArrayFunctionName,
+                        stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('test1')}'`
+                    });
+                    const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                        atobFunctionName
+                    });
+                    const atobDecodeTemplate: string = format(
+                        StringArrayBase64DecodeTemplate(randomGenerator),
+                        {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        }
+                    );
+                    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                        decodeCodeHelperTemplate: atobDecodeTemplate,
+                        indexShiftAmount,
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName,
+                        stringArrayFunctionName
+                    });
+
+                    decodedValue = Function(`
+                        ${stringArrayTemplate}
+                    
+                        ${stringArrayCallsWrapperTemplate}
+                        
+                        return ${stringArrayCallsWrapperName}(${index});
+                    `)();
+                });
+
+                it('should correctly return decoded value', () => {
+                    assert.deepEqual(decodedValue, expectedDecodedValue);
+                });
+            });
+
+            describe('Variant #3: no regexp inside atob template', () => {
+                const indexShiftAmount: number = 0;
+
+                const expectedRegExpTestValue: string = '12345';
+
+                let decodedValue: string;
+
+                before(() => {
+                    const stringArrayTemplate = format(StringArrayTemplate(), {
+                        stringArrayName,
+                        stringArrayFunctionName,
+                        stringArrayStorageItems: `'${swapLettersCase('c3RyaQ==')}'`
+                    });
+                    const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                        atobFunctionName
+                    });
+                    const atobDecodeTemplate: string = format(
+                        StringArrayBase64DecodeTemplate(randomGenerator),
+                        {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        }
+                    );
+                    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                        decodeCodeHelperTemplate: atobDecodeTemplate,
+                        indexShiftAmount,
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName,
+                        stringArrayFunctionName
+                    });
+
+                    decodedValue = Function(`
+                        ${stringArrayTemplate}
+                    
+                        ${stringArrayCallsWrapperTemplate}
+                        
+                        /(.+)/.test("12345");
+                        ${stringArrayCallsWrapperName}(0x0);
+                                        
+                        return RegExp.$1;
+                    `)();
+                });
+
+                it('should correctly return RegExp.$1 match without mutation by atob template', () => {
+                    assert.deepEqual(decodedValue, expectedRegExpTestValue);
+                });
             });
         });
 
-        describe('Variant #2: index shift amount is `5`', () => {
-            const index: string = '0x5';
+        describe('Variant #2: `selfDefending` option is enabled', () => {
+            const selfDefendingEnabled: boolean = true;
 
-            const indexShiftAmount: number = 5;
+            describe('Variant #1: correct code evaluation for single-line code', () => {
+                describe('Variant #1: index shift amount is `0`', () => {
+                    const index: string = '0x0';
 
-            const expectedDecodedValue: string = 'test1';
+                    const indexShiftAmount: number = 0;
 
-            let decodedValue: string;
+                    const expectedDecodedValue: string = 'test1test1';
 
-            before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
-                    atobFunctionName
+                    let decodedValue: string;
+
+                    before(async() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('test1test1')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(
+                            StringArrayBase64DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                atobFunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = await minimizeCode(
+                            format(StringArrayCallsWrapperTemplate(), {
+                                decodeCodeHelperTemplate: atobDecodeTemplate,
+                                indexShiftAmount,
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName,
+                                stringArrayFunctionName
+                            })
+                        );
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should correctly return decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
                 });
-                const atobDecodeTemplate: string = format(
-                    StringArrayBase64DecodeTemplate(randomGenerator),
-                    {
-                        atobPolyfill,
-                        atobFunctionName,
-                        selfDefendingCode: '',
-                        stringArrayCacheName,
-                        stringArrayCallsWrapperName
-                    }
-                );
-                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
-                    decodeCodeHelperTemplate: atobDecodeTemplate,
-                    indexShiftAmount,
-                    stringArrayCacheName,
-                    stringArrayCallsWrapperName,
-                    stringArrayName
-                });
-
-                decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa('test1')}'];
-            
-                ${stringArrayCallsWrapperTemplate}
-                
-                return ${stringArrayCallsWrapperName}(${index});
-            `)();
             });
 
-            it('should correctly return decoded value', () => {
-                assert.deepEqual(decodedValue, expectedDecodedValue);
-            });
-        });
+            describe('Variant #2: invalid code evaluation for multi-line code', () => {
+                describe('Variant #1: index shift amount is `0`', () => {
+                    const index: string = '0x0';
 
-        describe('Variant #3: no regexp inside atob template', () => {
-            const indexShiftAmount: number = 0;
+                    const indexShiftAmount: number = 0;
 
-            const expectedRegExpTestValue: string = '12345';
+                    const expectedDecodedValue: string = 'test18est1';
 
-            let decodedValue: string;
+                    let decodedValue: string;
 
-            before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
-                    atobFunctionName
+                    before(() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('test1test1')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(
+                            StringArrayBase64DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                atobFunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                            decodeCodeHelperTemplate: atobDecodeTemplate,
+                            indexShiftAmount,
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName,
+                            stringArrayFunctionName
+                        });
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should correctly return decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
                 });
-                const atobDecodeTemplate: string = format(
-                    StringArrayBase64DecodeTemplate(randomGenerator),
-                    {
-                        atobPolyfill,
-                        atobFunctionName,
-                        selfDefendingCode: '',
-                        stringArrayCacheName,
-                        stringArrayCallsWrapperName
-                    }
-                );
-                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
-                    decodeCodeHelperTemplate: atobDecodeTemplate,
-                    indexShiftAmount,
-                    stringArrayCacheName,
-                    stringArrayCallsWrapperName,
-                    stringArrayName
-                });
-
-                decodedValue = Function(`
-                var ${stringArrayName} = ['${swapLettersCase('c3RyaQ==')}'];
-            
-                ${stringArrayCallsWrapperTemplate}
-                
-                /(.+)/.test("12345");
-                ${stringArrayCallsWrapperName}(0x0);
-                                
-                return RegExp.$1;
-            `)();
-            });
-
-            it('should correctly return RegExp.$1 match without mutation by atob template', () => {
-                assert.deepEqual(decodedValue, expectedRegExpTestValue);
             });
         });
     });
 
     describe('Variant #2: `rc4` encoding', () => {
-        describe('Variant #1: index shift amount is `0`', () => {
-            const index: string = '0x0';
-            const key: string = 'key';
+        describe('Variant #1: `selfDefending` option is disabled', () => {
+            const selfDefendingEnabled: boolean = false;
 
-            const indexShiftAmount: number = 0;
+            describe('Variant #1: index shift amount is `0`', () => {
+                const index: string = '0x0';
+                const key: string = 'key';
 
-            const expectedDecodedValue: string = 'test1';
+                const indexShiftAmount: number = 0;
 
-            let decodedValue: string;
+                const expectedDecodedValue: string = 'test1';
 
-            before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
-                    atobFunctionName
-                });
-                const rc4Polyfill = format(Rc4Template(), {
-                    atobFunctionName,
-                    rc4FunctionName
-                });
-                const rc4decodeCodeHelperTemplate: string = format(
-                    StringArrayRC4DecodeTemplate(randomGenerator),
-                    {
-                        atobPolyfill,
-                        rc4Polyfill,
-                        rc4FunctionName,
-                        selfDefendingCode: '',
+                let decodedValue: string;
+
+                before(() => {
+                    const stringArrayTemplate = format(StringArrayTemplate(), {
+                        stringArrayName,
+                        stringArrayFunctionName,
+                        stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'`
+                    });
+                    const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                        atobFunctionName
+                    });
+                    const rc4Polyfill = format(Rc4Template(), {
+                        atobFunctionName,
+                        rc4FunctionName
+                    });
+                    const rc4decodeCodeHelperTemplate: string = format(
+                        StringArrayRC4DecodeTemplate(randomGenerator),
+                        {
+                            atobPolyfill,
+                            rc4Polyfill,
+                            rc4FunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        }
+                    );
+                    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                        decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
+                        indexShiftAmount,
                         stringArrayCacheName,
-                        stringArrayCallsWrapperName
-                    }
-                );
-                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
-                    decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
-                    indexShiftAmount,
-                    stringArrayCacheName,
-                    stringArrayCallsWrapperName,
-                    stringArrayName
+                        stringArrayCallsWrapperName,
+                        stringArrayFunctionName
+                    });
+
+                    decodedValue = Function(`
+                        ${stringArrayTemplate}
+                    
+                        ${stringArrayCallsWrapperTemplate}
+                        
+                        return ${stringArrayCallsWrapperName}('${index}', '${key}');
+                    `)();
                 });
 
-                decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'];
-            
-                ${stringArrayCallsWrapperTemplate}
-                
-                return ${stringArrayCallsWrapperName}('${index}', '${key}');
-            `)();
+                it('should correctly return decoded value', () => {
+                    assert.deepEqual(decodedValue, expectedDecodedValue);
+                });
             });
 
-            it('should correctly return decoded value', () => {
-                assert.deepEqual(decodedValue, expectedDecodedValue);
+            describe('Variant #2: index shift amount is `5`', () => {
+                const index: string = '0x5';
+                const key: string = 'key';
+
+                const indexShiftAmount: number = 5;
+
+                const expectedDecodedValue: string = 'test1';
+
+                let decodedValue: string;
+
+                before(() => {
+                    const stringArrayTemplate = format(StringArrayTemplate(), {
+                        stringArrayName,
+                        stringArrayFunctionName,
+                        stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'`
+                    });
+                    const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                        atobFunctionName
+                    });
+                    const rc4Polyfill = format(Rc4Template(), {
+                        atobFunctionName,
+                        rc4FunctionName
+                    });
+                    const rc4decodeCodeHelperTemplate: string = format(
+                        StringArrayRC4DecodeTemplate(randomGenerator),
+                        {
+                            atobPolyfill,
+                            rc4Polyfill,
+                            rc4FunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        }
+                    );
+                    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                        decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
+                        indexShiftAmount,
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName,
+                        stringArrayFunctionName
+                    });
+
+                    decodedValue = Function(`
+                        ${stringArrayTemplate}
+                    
+                        ${stringArrayCallsWrapperTemplate}
+                        
+                        return ${stringArrayCallsWrapperName}('${index}', '${key}');
+                    `)();
+                });
+
+                it('should correctly return decoded value', () => {
+                    assert.deepEqual(decodedValue, expectedDecodedValue);
+                });
             });
         });
 
-        describe('Variant #2: index shift amount is `5`', () => {
-            const index: string = '0x5';
-            const key: string = 'key';
+        describe('Variant #2: `selfDefending` option is enabled', () => {
+            const selfDefendingEnabled: boolean = true;
 
-            const indexShiftAmount: number = 5;
+            describe('Variant #1: correct code evaluation for single-line code', () => {
+                describe('Variant #1: index shift amount is `0`', () => {
+                    const index: string = '0x0';
+                    const key: string = 'key';
 
-            const expectedDecodedValue: string = 'test1';
+                    const indexShiftAmount: number = 0;
 
-            let decodedValue: string;
+                    const expectedDecodedValue: string = 'test1';
 
-            before(() => {
-                const atobPolyfill = format(AtobTemplate(), {
-                    atobFunctionName
+                    let decodedValue: string;
+
+                    before(async() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const rc4Polyfill = format(Rc4Template(), {
+                            atobFunctionName,
+                            rc4FunctionName
+                        });
+                        const rc4decodeCodeHelperTemplate: string = format(
+                            StringArrayRC4DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                rc4Polyfill,
+                                rc4FunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = await minimizeCode(
+                            format(StringArrayCallsWrapperTemplate(), {
+                                decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
+                                indexShiftAmount,
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName,
+                                stringArrayFunctionName
+                            })
+                        );
+
+                        console.log(stringArrayCallsWrapperTemplate);
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}('${index}', '${key}');
+                        `)();
+                    });
+
+                    it('should correctly return decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
                 });
-                const rc4Polyfill = format(Rc4Template(), {
-                    atobFunctionName,
-                    rc4FunctionName
-                });
-                const rc4decodeCodeHelperTemplate: string = format(
-                    StringArrayRC4DecodeTemplate(randomGenerator),
-                    {
-                        atobPolyfill,
-                        rc4Polyfill,
-                        rc4FunctionName,
-                        selfDefendingCode: '',
-                        stringArrayCacheName,
-                        stringArrayCallsWrapperName
-                    }
-                );
-                const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
-                    decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
-                    indexShiftAmount,
-                    stringArrayCacheName,
-                    stringArrayCallsWrapperName,
-                    stringArrayName
-                });
-
-                decodedValue = Function(`
-                var ${stringArrayName} = ['${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'];
-            
-                ${stringArrayCallsWrapperTemplate}
-                
-                return ${stringArrayCallsWrapperName}('${index}', '${key}');
-            `)();
             });
 
-            it('should correctly return decoded value', () => {
-                assert.deepEqual(decodedValue, expectedDecodedValue);
+            describe('Variant #2: invalid code evaluation for multi-line code', () => {
+                describe('Variant #1: index shift amount is `0`', () => {
+                    const index: string = '0x0';
+                    const key: string = 'key';
+
+                    const indexShiftAmount: number = 0;
+
+                    const expectedDecodedValue: string = 'test\u001c';
+
+                    let decodedValue: string;
+
+                    before(() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa(cryptUtilsSwappedAlphabet.rc4('test1', key))}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const rc4Polyfill = format(Rc4Template(), {
+                            atobFunctionName,
+                            rc4FunctionName
+                        });
+                        const rc4decodeCodeHelperTemplate: string = format(
+                            StringArrayRC4DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                rc4Polyfill,
+                                rc4FunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                            decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
+                            indexShiftAmount,
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName,
+                            stringArrayFunctionName
+                        });
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}('${index}', '${key}');
+                        `)();
+                    });
+
+                    it('should correctly return decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
+                });
             });
         });
     });

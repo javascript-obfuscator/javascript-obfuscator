@@ -15,13 +15,19 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
         const rc4FunctionName: string = this.randomGenerator.getRandomString(6);
 
-        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
-            atobFunctionName
-        });
-        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(Rc4Template(), {
-            atobFunctionName,
-            rc4FunctionName
-        });
+        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(
+            AtobTemplate(this.options.selfDefending),
+            {
+                atobFunctionName
+            }
+        );
+        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(
+            Rc4Template(),
+            {
+                atobFunctionName,
+                rc4FunctionName
+            }
+        );
 
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
 

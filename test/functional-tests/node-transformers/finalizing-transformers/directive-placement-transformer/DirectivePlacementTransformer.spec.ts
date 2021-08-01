@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -11,7 +12,10 @@ describe('DirectivePlacementTransformer', function () {
 
     describe('Variant #1: program scope', () => {
         describe('Variant #1: directive at the top of program scope', () => {
-            const directiveRegExp: RegExp = /^'use strict'; *var _0x([a-f0-9]){4} *= *\['test'];/;
+            const directiveRegExp: RegExp = new RegExp(
+                '^\'use strict\';.*' +
+                getStringArrayRegExp(['test']).source
+            );
 
             let obfuscatedCode: string;
 
@@ -34,9 +38,8 @@ describe('DirectivePlacementTransformer', function () {
         });
 
         describe('Variant #2: directive-like string literal at the middle of program scope', () => {
+            const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['test', 'use\\\\x20strict']);
             const directiveRegExp: RegExp = new RegExp(
-                '^var _0x([a-f0-9]){4} *= *\\[\'test\', *\'use\\\\x20strict\']; *' +
-                '.*?' +
                 'var test *= *_0x([a-f0-9]){4}\\(0x0\\);.*' +
                 '_0x([a-f0-9]){4}\\(0x1\\);'
             );
@@ -56,7 +59,11 @@ describe('DirectivePlacementTransformer', function () {
                 ).getObfuscatedCode();
             });
 
-            it('should keep directive-like string literal at the middle of program scope', () => {
+            it('should add directive-like string literal to the string array', () => {
+                assert.match(obfuscatedCode, stringArrayStorageRegExp);
+            });
+
+            it('should add call to the directive-like string literal from the string array', () => {
                 assert.match(obfuscatedCode, directiveRegExp);
             });
         });

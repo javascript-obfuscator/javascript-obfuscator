@@ -17,12 +17,12 @@ export function AtobTemplate (selfDefending: boolean): string {
             for (
                 let bc = 0, bs, buffer, idx = 0;
                 buffer = input.charAt(idx++);
-                ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4) 
+                ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4)
                     ? output += ${((): string => {
                         const basePart: string = 'String.fromCharCode(255 & bs >> (-2 * bc & 6))';
                         
                         return selfDefending
-                            ? `(func.charCodeAt(idx + 10) - 10 ? ${basePart} : bc)`
+                            ? `((func.charCodeAt(idx + 10) - 10 !== 0) ? ${basePart} : bc)`
                             : basePart;
                     })()}
                     : 0

@@ -207,7 +207,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             const selfDefendingEnabled: boolean = true;
 
             describe('Variant #1: correct code evaluation for single-line code', () => {
-                describe('Variant #1: index shift amount is `0`', () => {
+                describe('Variant #1: long decoded string', () => {
                     const index: string = '0x0';
 
                     const indexShiftAmount: number = 0;
@@ -258,10 +258,62 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         assert.deepEqual(decodedValue, expectedDecodedValue);
                     });
                 });
+
+                describe('Variant #2: 3-characters decoded string', () => {
+                    const index: string = '0x0';
+
+                    const indexShiftAmount: number = 0;
+
+                    const expectedDecodedValue: string = 'foo';
+
+                    let decodedValue: string;
+
+                    before(async() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('foo')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(
+                            StringArrayBase64DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                atobFunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = await minimizeCode(
+                            format(StringArrayCallsWrapperTemplate(), {
+                                decodeCodeHelperTemplate: atobDecodeTemplate,
+                                indexShiftAmount,
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName,
+                                stringArrayFunctionName
+                            })
+                        );
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should correctly return decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
+                });
             });
 
             describe('Variant #2: invalid code evaluation for multi-line code', () => {
-                describe('Variant #1: index shift amount is `0`', () => {
+                describe('Variant #1: long decoded string', () => {
                     const index: string = '0x0';
 
                     const indexShiftAmount: number = 0;
@@ -306,7 +358,57 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         `)();
                     });
 
-                    it('should correctly return decoded value', () => {
+                    it('should return invalid decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
+                });
+
+                describe('Variant #2: 3-characters decoded string', () => {
+                    const index: string = '0x0';
+
+                    const indexShiftAmount: number = 0;
+
+                    const expectedDecodedValue: string = 'foo';
+
+                    let decodedValue: string;
+
+                    before(() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('foo')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(
+                            StringArrayBase64DecodeTemplate(randomGenerator),
+                            {
+                                atobPolyfill,
+                                atobFunctionName,
+                                selfDefendingCode: '',
+                                stringArrayCacheName,
+                                stringArrayCallsWrapperName
+                            }
+                        );
+                        const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                            decodeCodeHelperTemplate: atobDecodeTemplate,
+                            indexShiftAmount,
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName,
+                            stringArrayFunctionName
+                        });
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+                        
+                            ${stringArrayCallsWrapperTemplate}
+                            
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should return invalid decoded value', () => {
                         assert.deepEqual(decodedValue, expectedDecodedValue);
                     });
                 });
@@ -435,7 +537,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             const selfDefendingEnabled: boolean = true;
 
             describe('Variant #1: correct code evaluation for single-line code', () => {
-                describe('Variant #1: index shift amount is `0`', () => {
+                describe('Variant #1: long decoded string', () => {
                     const index: string = '0x0';
                     const key: string = 'key';
 
@@ -497,7 +599,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
             });
 
             describe('Variant #2: invalid code evaluation for multi-line code', () => {
-                describe('Variant #1: index shift amount is `0`', () => {
+                describe('Variant #1: long decoded string', () => {
                     const index: string = '0x0';
                     const key: string = 'key';
 

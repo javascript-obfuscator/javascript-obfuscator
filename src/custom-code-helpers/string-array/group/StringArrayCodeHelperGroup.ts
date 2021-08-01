@@ -119,12 +119,18 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             return;
         }
 
+        const stringArrayFunctionName: string = this.stringArrayStorage.getStorageName();
+
         // stringArray helper initialize
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
-        const stringArrayFunctionName: string = this.stringArrayStorage.getStorageName();
+        const stringArrayName: string = this.identifierNamesGenerator.generateNext();
 
-        stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayFunctionName);
+        stringArrayCodeHelper.initialize(
+            this.stringArrayStorage,
+            stringArrayFunctionName,
+            stringArrayName
+        );
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
 
         // stringArrayCallsWrapper helper initialize
@@ -133,6 +139,7 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
                 this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
             const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+
             stringArrayCallsWrapperCodeHelper.initialize(
                 stringArrayFunctionName,
                 stringArrayCallsWrapperName,
@@ -160,7 +167,7 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     private getScopeStatementRandomIndex (scopeStatements: TStatement[]): number {
         return this.randomGenerator.getRandomInteger(
             0,
-            Math.max(0, scopeStatements.length - 1)
+            Math.max(0, scopeStatements.length)
         );
     }
 }

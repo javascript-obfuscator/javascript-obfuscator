@@ -219,30 +219,40 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @returns {TStatement}
      */
     private getStringArrayRotateFunctionNode (): TStatement {
-        const comparisonValue: number = this.randomGenerator.getRandomInteger(100000, 1_000_000);
+        const comparisonValue: number = this.getComparisonValue();
         const comparisonExpressionNumberNumericalExpressionData: TNumberNumericalExpressionData =
             this.numberNumericalExpressionAnalyzer.analyze(
                 comparisonValue,
                 StringArrayRotateFunctionTransformer.comparisonExpressionAdditionalPartsCount
             );
 
+        let index: number = 1;
         const comparisonExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter.convertIntegerNumberData(
             comparisonExpressionNumberNumericalExpressionData,
             ((number: number, isPositiveNumber) => {
+                const multipliedNumber: number = number * index;
                 const literalNode: ESTree.Literal = NodeFactory.literalNode(
-                    `${number}${this.randomGenerator.getRandomString(6)}`
+                    `${multipliedNumber}${this.randomGenerator.getRandomString(6)}`
                 );
                 const parseIntCallExpression: ESTree.CallExpression = NodeFactory.callExpressionNode(
                     NodeFactory.identifierNode('parseInt'),
                     [literalNode]
                 );
 
-                return isPositiveNumber
-                    ? parseIntCallExpression
-                    : NodeFactory.unaryExpressionNode(
-                        '-',
-                        parseIntCallExpression
-                    );
+                const binaryExpressionNode: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
+                    '/',
+                    isPositiveNumber
+                        ? parseIntCallExpression
+                        : NodeFactory.unaryExpressionNode(
+                            '-',
+                            parseIntCallExpression
+                        ),
+                    NodeFactory.literalNode(index, index.toString())
+                );
+
+                index++;
+
+                return binaryExpressionNode;
             })
         );
 
@@ -264,5 +274,14 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      */
     private isComparisonExpressionStringLiteralNode (stringLiteralNode: TStringLiteralNode): boolean {
         return /\d/.test(stringLiteralNode.value);
+    }
+
+    /**
+     * Extracted to a standalone method to correctly stub this behaviour
+     *
+     * @returns {number}
+     */
+    private getComparisonValue (): number {
+        return this.randomGenerator.getRandomInteger(100000, 1_000_000);
     }
 }

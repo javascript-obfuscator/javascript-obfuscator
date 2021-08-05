@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.node.json",
   "compilerOptions": {
-    "outDir": "../types",
+    "outDir": "../typings",
     "declaration": true,
     "emitDeclarationOnly": true,
     "skipLibCheck": true

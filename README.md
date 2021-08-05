@@ -683,6 +683,8 @@ If checked, an interval is used to force the debug mode on the Console tab, maki
 ### `disableConsoleOutput`
 Type: `boolean` Default: `false`
 
+##### :warning: This option disables `console` calls globally for all scripts
+
 Disables the use of `console.log`, `console.info`, `console.error`, `console.warn`, `console.debug`, `console.exception` and `console.trace` by replacing them with empty functions. This makes the use of the debugger harder.
 
 ### `domainLock`

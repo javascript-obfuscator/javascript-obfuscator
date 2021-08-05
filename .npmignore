@@ -6,4 +6,5 @@ coverage
 examples
 images
 webpack
+src
 test

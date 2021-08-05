@@ -84,8 +84,8 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
     });
 
     describe('Preserve string array name', () => {
-        const arrayRotateRegExp: RegExp = /c\['push']\(c\['shift']\(\)\);/;
-        const comparisonRegExp: RegExp = /if *\(e *=== *d\) *{/;
+        const arrayRotateRegExp: RegExp = /e\['push']\(e\['shift']\(\)\);/;
+        const comparisonRegExp: RegExp = /if *\(f *=== *d\) *{/;
 
         let obfuscatedCode: string;
 

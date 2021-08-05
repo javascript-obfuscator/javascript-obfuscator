@@ -6,15 +6,12 @@
 export function SelfDefendingTemplate (): string {
     return `
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
-            const test = function () {
-                const regExp = test
-                    .constructor('return /" + this + "/')()
-                    .constructor('^([^ ]+( +[^ ]+)+)+[^ ]}');
-                
-                return !regExp.test({selfDefendingFunctionName});
-            };
-            
-            return test();
+            return {selfDefendingFunctionName}
+                .toString()
+                .search('(((.+)+)+)+$')
+                .toString()
+                .constructor({selfDefendingFunctionName})
+                .search('(((.+)+)+)+$');
         });
         
         {selfDefendingFunctionName}();

@@ -5,6 +5,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayIndexesType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -57,7 +58,7 @@ describe('EscapeSequenceTransformer', function () {
     });
 
     describe('Variant #3: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
-        const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
+        const stringArrayRegExp: RegExp = getStringArrayRegExp(['\\\\x74\\\\x65\\\\x73\\\\x74']);
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('\\x30\\x78\\x30'\);/;
 
         let obfuscatedCode: string;

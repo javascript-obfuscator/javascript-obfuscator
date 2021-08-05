@@ -22,7 +22,7 @@ export function StringArrayBase64DecodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
-        const firstValue = {stringArrayName}[0];
+        const firstValue = stringArray[0];
         const cacheKey = index + firstValue;
         const cachedValue = {stringArrayCacheName}[cacheKey];
         

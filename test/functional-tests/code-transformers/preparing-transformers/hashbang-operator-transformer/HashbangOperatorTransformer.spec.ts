@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -59,8 +60,8 @@ describe('HashbangOperatorTransformer', () => {
 
     describe('Variant #3: `stringArray` option enabled', () => {
         const regExp: RegExp = new RegExp(
-            `^#!\/usr\/bin\/env node${lineSeparator}` +
-            `var _0x(\\w){4} *= *\\['abc'];`
+            `^#!\/usr\/bin\/env node${lineSeparator}.*` +
+            `${getStringArrayRegExp(['abc']).source}`
         );
 
         let obfuscatedCode: string;

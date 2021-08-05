@@ -24,7 +24,7 @@ import { DebugProtectionFunctionIntervalCodeHelper } from '../../../custom-code-
 import { DebugProtectionFunctionCodeHelper } from '../../../custom-code-helpers/debug-protection/DebugProtectionFunctionCodeHelper';
 import { DomainLockCodeHelper } from '../../../custom-code-helpers/domain-lock/DomainLockCodeHelper';
 import { CallsControllerFunctionCodeHelper } from '../../../custom-code-helpers/calls-controller/CallsControllerFunctionCodeHelper';
-import { SelfDefendingUnicodeCodeHelper } from '../../../custom-code-helpers/self-defending/SelfDefendingUnicodeCodeHelper';
+import { SelfDefendingCodeHelper } from '../../../custom-code-helpers/self-defending/SelfDefendingCodeHelper';
 import { StringArrayCallsWrapperCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperCodeHelper';
 import { StringArrayCallsWrapperBase64CodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperBase64CodeHelper';
 import { StringArrayCallsWrapperRc4CodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCallsWrapperRc4CodeHelper';
@@ -58,8 +58,8 @@ export const customCodeHelpersModule: interfaces.ContainerModule = new Container
         .whenTargetNamed(CustomCodeHelper.CallsControllerFunction);
 
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
-        .to(SelfDefendingUnicodeCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.SelfDefendingUnicode);
+        .to(SelfDefendingCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.SelfDefending);
 
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCallsWrapperCodeHelper)

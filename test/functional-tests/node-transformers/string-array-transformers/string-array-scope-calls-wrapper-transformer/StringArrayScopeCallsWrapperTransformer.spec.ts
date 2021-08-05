@@ -651,11 +651,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         '}';
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         getStringArrayCallsWrapperMatch('f')
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function test *\\( *\\) *{.*' +
                             `${getStringArrayCallsWrapperMatch('g')}.*?` +
                         '}'
@@ -723,11 +721,9 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         '}';
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         getStringArrayCallsWrapperMatch('f')
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function test *\\( *\\) *{.*' +
                             `${getStringArrayCallsWrapperMatch('g')}.*?` +
                         '}'
@@ -791,13 +787,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #2: correct chained calls', () => {
                 const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
-                    'const a *= *\\[.*?];.*?' +
                     'function *f *\\(c, *d\\) *{' +
                         `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
                     '}.*'
                 );
                 const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                    'const a *= *\\[.*?];.*?' +
                     'function test *\\( *\\) *{.*' +
                         'function *g *\\(c, *d\\) *{' +
                             `return f\\(` +
@@ -863,7 +857,6 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #3: no wrappers on a root scope', () => {
                 const stringArrayScopeCallsWrapperRegExp: RegExp = new RegExp(
-                    'const a *= *\\[.*?];.*' +
                     'function test *\\( *\\) *{.*' +
                         'function *f*\\(c, *d\\) *{' +
                             `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
@@ -1088,13 +1081,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         .join(', *');
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
                         '}.*'
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function test *\\( *\\) *{.*' +
                             'function *g *\\(c, *d, *e, *h, *i\\) *{' +
                                 `return f\\(` +
@@ -1169,13 +1160,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         .join(', *');
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
                         '}.*'
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'const a *= *\\[.*?];.*?' +
                         'function test *\\( *\\) *{.*' +
                             'function *g *\\(c, *d, *e, *h, *i\\) *{' +
                                 `return f\\(` +

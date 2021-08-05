@@ -13,9 +13,12 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
     protected override getDecodeStringArrayTemplate (): string {
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
 
-        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(AtobTemplate(), {
-            atobFunctionName: atobFunctionName
-        });
+        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(
+            AtobTemplate(this.options.selfDefending),
+            {
+                atobFunctionName: atobFunctionName
+            }
+        );
 
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
 
@@ -25,7 +28,6 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
                 atobPolyfill,
                 atobFunctionName,
                 selfDefendingCode,
-                stringArrayName: this.stringArrayName,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayCacheName: this.stringArrayCacheName
             }

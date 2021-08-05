@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -31,7 +32,7 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['property', *'bar'\];/;
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'bar']);
                 const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x1\)\]\(\)\{\}/;
 
                 let obfuscatedCode: string;
@@ -103,7 +104,7 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['property', *'constructor', *'bar'];/;
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'constructor', 'bar']);
                 const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x2\)\]\(\)\{\}/;
 
                 let obfuscatedCode: string;
@@ -203,7 +204,7 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['property', *'bar'\];/;
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'bar']);
                 const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x0\)\] *= *0x1;/;
 
                 let obfuscatedCode: string;
@@ -254,7 +255,7 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['property', *'constructor', *'bar'];/;
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'constructor', 'bar']);
                 const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x0\)\] *= *0x1;/;
 
                 let obfuscatedCode: string;

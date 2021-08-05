@@ -31,7 +31,7 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @type {string}
      */
     @initializable()
-    private stringArrayName!: string;
+    private stringArrayFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -59,14 +59,14 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
 
     /**
      * @param {IStringArrayStorage} stringArrayStorage
-     * @param {string} stringArrayName
+     * @param {string} stringArrayFunctionName
      */
     public initialize (
         stringArrayStorage: IStringArrayStorage,
-        stringArrayName: string
+        stringArrayFunctionName: string
     ): void {
         this.stringArrayStorage = stringArrayStorage;
-        this.stringArrayName = stringArrayName;
+        this.stringArrayFunctionName = stringArrayFunctionName;
     }
 
     /**
@@ -81,8 +81,11 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected override getCodeHelperTemplate (): string {
+        const stringArrayName: string = this.identifierNamesGenerator.generateNext();
+
         return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
-            stringArrayName: this.stringArrayName,
+            stringArrayFunctionName: this.stringArrayFunctionName,
+            stringArrayName: stringArrayName,
             stringArrayStorageItems: this.getEncodedStringArrayStorageItems()
         });
     }

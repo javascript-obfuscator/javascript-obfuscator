@@ -4,14 +4,15 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('BlackListObfuscatingGuard', () => {
     describe('check', () => {
         describe('`\'use strict\';` operator', () => {
             const useStrictOperatorRegExp: RegExp = /'use *strict';/;
-            const stringArrayLatinRegExp: RegExp = /var _0x(\w){4} *= *\['abc'\];/;
-            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\);$/;
+            const stringArrayLatinRegExp: RegExp = getStringArrayRegExp(['abc']);
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\)/;
 
             let obfuscatedCode: string;
 

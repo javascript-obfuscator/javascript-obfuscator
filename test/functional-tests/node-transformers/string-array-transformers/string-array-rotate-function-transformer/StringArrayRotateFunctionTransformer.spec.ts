@@ -1,7 +1,9 @@
 import { assert } from 'chai';
+import * as sinon from 'sinon';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { evaluateInWorker } from '../../../../helpers/evaluateInWorker';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
@@ -10,8 +12,12 @@ import { StringArrayIndexesType } from '../../../../../src/enums/node-transforme
 import { StringArrayWrappersType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { NumberNumericalExpressionAnalyzer } from '../../../../../src/analyzers/number-numerical-expression-analyzer/NumberNumericalExpressionAnalyzer';
+import { StringArrayRotateFunctionTransformer } from '../../../../../src/node-transformers/string-array-transformers/StringArrayRotateFunctionTransformer';
 
-describe('StringArrayRotateFunctionTransformer', () => {
+describe('StringArrayRotateFunctionTransformer', function () {
+    this.timeout(120000);
+
     describe('Code helper append', () => {
         const regExp: RegExp = /while *\(!!\[]\) *\{/;
 
@@ -194,6 +200,58 @@ describe('StringArrayRotateFunctionTransformer', () => {
             it('It should correctly evaluate obfuscated code', () => {
                 assert.equal(hasRuntimeErrors, false);
             });
+        });
+
+        describe('Prevent early successful comparison', () => {
+            const evaluationTimeout:  number = 1000;
+            const samplesCount: number = 100;
+
+            let numberNumericalExpressionAnalyzerAnalyzeStub: sinon.SinonStub;
+            let stringArrayRotateFunctionTransformerGetComparisonValueStub: sinon.SinonStub;
+
+            let obfuscatedCode: string;
+            let evaluationError: Error | null = null;
+
+            before(async () => {
+                stringArrayRotateFunctionTransformerGetComparisonValueStub = sinon
+                    .stub(<any>StringArrayRotateFunctionTransformer.prototype, 'getComparisonValue')
+                    .returns(5);
+                numberNumericalExpressionAnalyzerAnalyzeStub = sinon
+                    .stub(NumberNumericalExpressionAnalyzer.prototype, 'analyze')
+                    .returns([[1, 2], 0, 3]);
+
+                const code: string = readFileAsString(__dirname + '/fixtures/early-successful-comparison.js');
+
+                for (let i = 0; i < samplesCount; i++) {
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            seed: i,
+                            rotateStringArray: true,
+                            shuffleStringArray: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    try {
+                        await evaluateInWorker(obfuscatedCode, evaluationTimeout);
+                    } catch (error) {
+                        evaluationError = error
+
+                        break;
+                    }
+                }
+            });
+
+            it('should correctly evaluate code', () => {
+                assert.equal(evaluationError, null);
+            });
+
+            after(() => {
+                numberNumericalExpressionAnalyzerAnalyzeStub.restore();
+                stringArrayRotateFunctionTransformerGetComparisonValueStub.restore();
+            })
         });
     });
 });

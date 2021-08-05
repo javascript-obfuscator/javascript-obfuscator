@@ -5,7 +5,7 @@ export enum CustomCodeHelper {
     DebugProtectionFunctionInterval = 'DebugProtectionFunctionInterval',
     DebugProtectionFunction = 'DebugProtectionFunction',
     DomainLock = 'DomainLock',
-    SelfDefendingUnicode = 'SelfDefendingUnicode',
+    SelfDefending = 'SelfDefending',
     StringArray = 'StringArray',
     StringArrayCallsWrapper = 'StringArrayCallsWrapper',
     StringArrayCallsWrapperBase64 = 'StringArrayCallsWrapperBase64',

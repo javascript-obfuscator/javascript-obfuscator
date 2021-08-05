@@ -9,19 +9,15 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
-
 import { initializable } from '../../decorators/Initializable';
 
 import { SelfDefendingTemplate } from './templates/SelfDefendingTemplate';
-import { SelfDefendingNoEvalTemplate } from './templates/SelfDefendingNoEvalTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
-import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 
 @injectable()
-export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
+export class SelfDefendingCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @type {string}
      */
@@ -79,17 +75,9 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected override getCodeHelperTemplate (): string {
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? this.getGlobalVariableTemplate()
-            : GlobalVariableNoEvalTemplate();
-        const selfDefendingTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? SelfDefendingTemplate()
-            : SelfDefendingNoEvalTemplate();
-
-        return this.customCodeHelperFormatter.formatTemplate(selfDefendingTemplate, {
+        return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
-            selfDefendingFunctionName: this.selfDefendingFunctionName,
-            globalVariableTemplate
+            selfDefendingFunctionName: this.selfDefendingFunctionName
         });
     }
 }

@@ -5,6 +5,7 @@ import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-h
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
+import { TStatement } from '../../../types/node/TStatement';
 import { TStringArrayEncoding } from '../../../types/options/TStringArrayEncoding';
 
 import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
@@ -22,7 +23,6 @@ import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGro
 import { NodeAppender } from '../../../node/NodeAppender';
 import { StringArrayCallsWrapperCodeHelper } from '../StringArrayCallsWrapperCodeHelper';
 import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
-import { TStatement } from '../../../types/node/TStatement';
 
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -82,31 +82,31 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         }
 
         // stringArray helper nodes append
+        const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
+
         this.appendCustomNodeIfExist(
             CustomCodeHelper.StringArray,
             (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>>) => {
-                NodeAppender.prepend(nodeWithStatements, customCodeHelper.getNode());
+                NodeAppender.insertAtIndex(
+                    nodeWithStatements,
+                    customCodeHelper.getNode(),
+                    this.getScopeStatementRandomIndex(scopeStatements)
+                );
             }
         );
 
         // stringArrayCallsWrapper helper nodes append
-        const stringArrayEncodingsLength: number = this.options.stringArrayEncoding.length;
-        // Stating from index 1 and forward. 0 index is reserved for string array itself.
-        let randomIndex: number = 1;
-        for (let i = 0; i < stringArrayEncodingsLength; i++, randomIndex++) {
-            const stringArrayEncoding: TStringArrayEncoding = this.options.stringArrayEncoding[i];
+        for (const stringArrayEncoding of this.options.stringArrayEncoding) {
             const stringArrayCallsWrapperCodeHelperName: CustomCodeHelper = this.getStringArrayCallsWrapperCodeHelperName(stringArrayEncoding);
-
-            const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
-            randomIndex = this.randomGenerator.getRandomInteger(
-                randomIndex,
-                scopeStatements.length - 1
-            );
 
             this.appendCustomNodeIfExist(
                 stringArrayCallsWrapperCodeHelperName,
                 (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
-                    NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), randomIndex);
+                    NodeAppender.insertAtIndex(
+                        nodeWithStatements,
+                        customCodeHelper.getNode(),
+                        this.getScopeStatementRandomIndex(scopeStatements)
+                    );
                 }
             );
         }
@@ -119,12 +119,16 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             return;
         }
 
+        const stringArrayFunctionName: string = this.stringArrayStorage.getStorageName();
+
         // stringArray helper initialize
         const stringArrayCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.StringArray);
-        const stringArrayName: string = this.stringArrayStorage.getStorageName();
 
-        stringArrayCodeHelper.initialize(this.stringArrayStorage, stringArrayName);
+        stringArrayCodeHelper.initialize(
+            this.stringArrayStorage,
+            stringArrayFunctionName
+        );
         this.customCodeHelpers.set(CustomCodeHelper.StringArray, stringArrayCodeHelper);
 
         // stringArrayCallsWrapper helper initialize
@@ -133,8 +137,9 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
             const stringArrayCallsWrapperCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>> =
                 this.customCodeHelperFactory(stringArrayCallsWrapperCodeHelperName);
             const stringArrayCallsWrapperName: string = this.stringArrayStorage.getStorageCallsWrapperName(stringArrayEncoding);
+
             stringArrayCallsWrapperCodeHelper.initialize(
-                stringArrayName,
+                stringArrayFunctionName,
                 stringArrayCallsWrapperName,
                 this.stringArrayStorage.getIndexShiftAmount()
             );
@@ -151,5 +156,16 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         return StringArrayCodeHelperGroup
                 .stringArrayCallsWrapperCodeHelperMap.get(stringArrayEncoding)
             ?? CustomCodeHelper.StringArrayCallsWrapper;
+    }
+
+    /**
+     * @param {TStatement[]} scopeStatements
+     * @returns {number}
+     */
+    private getScopeStatementRandomIndex (scopeStatements: TStatement[]): number {
+        return this.randomGenerator.getRandomInteger(
+            0,
+            Math.max(0, scopeStatements.length)
+        );
     }
 }

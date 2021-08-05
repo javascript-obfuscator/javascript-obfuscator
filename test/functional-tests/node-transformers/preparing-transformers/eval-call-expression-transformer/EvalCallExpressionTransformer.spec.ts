@@ -4,10 +4,11 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/N
 
 import { StringArrayIndexesType } from '../../../../../src/enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 describe('EvalCallExpressionTransformer', () => {
     describe('Variant #1: identifier reference', () => {
@@ -95,7 +96,7 @@ describe('EvalCallExpressionTransformer', () => {
 
     describe('Variant #4: string array calls wrapper call', () => {
         describe('Variant #1: hexadecimal number indexes type', () => {
-            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+            const stringArrayRegExp: RegExp = getStringArrayRegExp(['log', 'bar']);
             const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(0\)]\(_0x([a-f0-9]){4,6}\(1\)\);'\);/;
 
             let obfuscatedCode: string;
@@ -126,7 +127,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
 
         describe('Variant #1: hexadecimal numeric string indexes type', () => {
-            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+            const stringArrayRegExp: RegExp = getStringArrayRegExp(['log', 'bar']);
             const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
             let obfuscatedCode: string;

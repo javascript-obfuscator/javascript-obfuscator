@@ -35,7 +35,7 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      * @type {string}
      */
     @initializable()
-    private stringArrayName!: string;
+    private stringArrayFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -62,16 +62,16 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
     }
 
     /**
-     * @param {string} stringArrayName
+     * @param {string} stringArrayFunctionName
      * @param {number} comparisonValue
      * @param {Expression} comparisonExpressionNode
      */
     public initialize (
-        stringArrayName: string,
+        stringArrayFunctionName: string,
         comparisonValue: number,
         comparisonExpressionNode: Expression
     ): void {
-        this.stringArrayName = stringArrayName;
+        this.stringArrayFunctionName = stringArrayFunctionName;
         this.comparisonValue = comparisonValue;
         this.comparisonExpressionNode = comparisonExpressionNode;
     }
@@ -95,7 +95,7 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
             {
                 comparisonExpressionCode,
                 comparisonValue: this.comparisonValue,
-                stringArrayName: this.stringArrayName
+                stringArrayFunctionName: this.stringArrayFunctionName
             }
         );
     }

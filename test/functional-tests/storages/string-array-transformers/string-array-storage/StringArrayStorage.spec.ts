@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -15,7 +16,7 @@ describe('StringArrayStorage', () => {
             const delta: number = 0.1;
             const expectedVariantProbability: number = 1;
 
-            const stringArrayVariantRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\[(?:'.*?', *)?'test'(?:, *'.*?')?];/g;
+            const stringArrayVariantRegExp: RegExp = /var.*= *\[(?:'.*?', *)?'test'(?:, *'.*?')?];.*/;
             const literalNodeVariantRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x.\);/g;
 
             let stringArrayVariantProbability: number,
@@ -74,8 +75,8 @@ describe('StringArrayStorage', () => {
             const literalNodeVariantsCount: number = 1;
 
             const stringArrayVariantRegExps: RegExp[] = [
-                /var _0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'(?:, *'.*?')+];/g,
-                /var _0x([a-f0-9]){4} *= *\[(?:'.*?', *)+'foo', *'bar', *'baz'];/g
+                /var.*= *\['foo', *'bar', *'baz'(?:, *'.*?')+];.*/,
+                /var.*= *\[(?:'.*?', *)+'foo', *'bar', *'baz'];.*/,
             ];
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
@@ -155,7 +156,7 @@ describe('StringArrayStorage', () => {
             const delta: number = 0.1;
             const expectedVariantProbability: number = 1;
 
-            const stringArrayVariantRegExp1: RegExp = /var _0x([a-f0-9]){4} *= *\['test'];/g;
+            const stringArrayVariantRegExp1: RegExp = getStringArrayRegExp(['test']);
             const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
 
             let stringArrayVariant1Probability: number,
@@ -212,12 +213,12 @@ describe('StringArrayStorage', () => {
             const variantsCount: number = 6;
 
             const stringArrayVariantRegExps: RegExp[] = [
-                /var _0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'];/g,
-                /var _0x([a-f0-9]){4} *= *\['foo', *'baz', *'bar'];/g,
-                /var _0x([a-f0-9]){4} *= *\['bar', *'foo', *'baz'];/g,
-                /var _0x([a-f0-9]){4} *= *\['bar', *'baz', *'foo'];/g,
-                /var _0x([a-f0-9]){4} *= *\['baz', *'foo', *'bar'];/g,
-                /var _0x([a-f0-9]){4} *= *\['baz', *'bar', *'foo'];/g
+                getStringArrayRegExp(['foo', 'bar', 'baz']),
+                getStringArrayRegExp(['foo', 'baz', 'bar']),
+                getStringArrayRegExp(['bar', 'foo', 'baz']),
+                getStringArrayRegExp(['bar', 'baz', 'foo']),
+                getStringArrayRegExp(['baz', 'foo', 'bar']),
+                getStringArrayRegExp(['baz', 'bar', 'foo'])
             ];
 
             const literalNodeVariantRegExps: RegExp[] = [

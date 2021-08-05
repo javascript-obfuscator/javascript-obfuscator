@@ -5,19 +5,27 @@ import { base64alphabetSwapped } from '../../../../constants/Base64AlphabetSwapp
  *
  * @returns {string}
  */
-export function AtobTemplate (): string {
+export function AtobTemplate (selfDefending: boolean): string {
     return `
         var {atobFunctionName} = function (input) {
             const chars = '${base64alphabetSwapped}';
 
             let output = '';
             let tempEncodedString = '';
+            ${selfDefending ? 'let func = output + {atobFunctionName};' : ''}
             
             for (
                 let bc = 0, bs, buffer, idx = 0;
                 buffer = input.charAt(idx++);
-                ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
-                    bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
+                ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4)
+                    ? output += ${((): string => {
+                        const basePart: string = 'String.fromCharCode(255 & bs >> (-2 * bc & 6))';
+                        
+                        return selfDefending
+                            ? `((func.charCodeAt(idx + 10) - 10 !== 0) ? ${basePart} : bc)`
+                            : basePart;
+                    })()}
+                    : 0
             ) {
                 buffer = chars.indexOf(buffer);
             }

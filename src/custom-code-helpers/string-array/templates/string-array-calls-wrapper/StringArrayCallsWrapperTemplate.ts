@@ -7,10 +7,12 @@
 export function StringArrayCallsWrapperTemplate (): string {
     return `
         function {stringArrayCallsWrapperName} ({stringArrayCacheName}, key) {
+            const stringArray = {stringArrayFunctionName}();
+            
             {stringArrayCallsWrapperName} = function (index, key) {
                 index = index - {indexShiftAmount};
                 
-                let value = {stringArrayName}[index];
+                let value = stringArray[index];
                 
                 {decodeCodeHelperTemplate}
             

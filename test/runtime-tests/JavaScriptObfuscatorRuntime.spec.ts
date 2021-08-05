@@ -207,14 +207,16 @@ describe('JavaScriptObfuscator runtime eval', function () {
             beforeEach(() => {
                 const code: string = readFileAsString(process.cwd() + '/dist/index.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                const obfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...baseOptions,
                         ...options,
                         renameProperties: false
                     }
-                ).getObfuscatedCode();
+                );
+                const obfuscatorOptions = obfuscationResult.getOptions();
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
                 return evaluateInWorker(
                     `
@@ -232,7 +234,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         evaluationResult = result;
                     })
                     .catch((error: Error) => {
-                        evaluationResult = `${error.message}. ${error.stack}. Code: ${obfuscatedCode}`;
+                        evaluationResult = `${error.message}. ${error.stack}. Options: ${JSON.stringify(obfuscatorOptions)} Code: ${obfuscationResult}`;
                     });
             });
 

@@ -4,6 +4,7 @@ import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/id
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getStringArrayRegExp } from '../../../../helpers/get-string-array-regexp';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
@@ -12,7 +13,10 @@ describe('MangledIdentifierNamesGenerator', () => {
     describe('generateWithPrefix', () => {
         describe('Variant #1: should not generate same name for string array as existing name in code', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const ab *= *\['abc'];/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['abc'], {
+                    kind: 'const',
+                    name: 'ab'
+                });
                 const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const aa *= *ac\(0x0\);/;
 
                 let obfuscatedCode: string;
@@ -43,7 +47,10 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const ab *= *\['abc'];/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['abc'], {
+                    kind: 'const',
+                    name: 'ab'
+                });
                 const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const aB *= *ac\(0x0\);/;
 
                 let obfuscatedCode: string;
@@ -77,7 +84,10 @@ describe('MangledIdentifierNamesGenerator', () => {
 
         describe('Variant #2: should not generate same prefixed name for identifier in code as prefixed name of string array', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const aa *= *\['abc', *'last'];/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['abc', 'last'], {
+                    kind: 'const',
+                    name: 'aa'
+                });
                 const functionDeclarationIdentifierNameRegExp: RegExp = /function foo *\(\) *{/;
                 const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const ac *= *ab\(0x1\);/;
 
@@ -113,7 +123,10 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = /const aa *= *\['abc', *'last'];/;
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['abc', 'last'], {
+                    kind: 'const',
+                    name: 'aa'
+                });
                 const functionDeclarationIdentifierNameRegExp: RegExp = /function ac *\(\) *{/;
                 const lastVariableDeclarationIdentifierNameRegExp: RegExp = /const ad *= *ab\(0x1\);/;
 
@@ -221,7 +234,10 @@ describe('MangledIdentifierNamesGenerator', () => {
 
         describe('Variant #2: Should generate different names set for different lexical scopes when string array is enabled', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayIdentifierRegExp: RegExp = /var a *= *\['abc'];/;
+                const stringArrayIdentifierRegExp: RegExp = getStringArrayRegExp(['abc'], {
+                    kind: 'var',
+                    name: 'a'
+                });
                 const variableIdentifierRegExp: RegExp = /var foo *= *b\(0x0\);/;
                 const functionDeclarationRegExp1: RegExp = /function bar *\(c, *d\) *{}/;
                 const functionDeclarationRegExp2: RegExp = /function baz *\(c, *d\) *{}/;
@@ -260,7 +276,10 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayIdentifierRegExp: RegExp = /var a *= *\['abc'];/;
+                const stringArrayIdentifierRegExp: RegExp = getStringArrayRegExp(['abc'], {
+                    kind: 'var',
+                    name: 'a'
+                });
                 const variableIdentifierRegExp: RegExp = /var c *= *b\(0x0\);/;
                 const functionDeclarationRegExp1: RegExp = /function d *\(f, *g\) *{}/;
                 const functionDeclarationRegExp2: RegExp = /function e *\(f, *g\) *{}/;

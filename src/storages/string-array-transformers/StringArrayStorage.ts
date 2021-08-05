@@ -52,7 +52,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     /**
      * @type {number}
      */
-    private static readonly stringArrayNameLength: number = 4;
+    private static readonly stringArrayFunctionNameLength: number = 4;
 
     /**
      * @type {IArrayUtils}
@@ -181,7 +181,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
     public override getStorageId (): string {
         if (!this.stringArrayStorageName) {
             this.stringArrayStorageName = this.identifierNamesGenerator
-                .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+                .generateForGlobalScope(StringArrayStorage.stringArrayFunctionNameLength);
         }
 
         return this.stringArrayStorageName;
@@ -200,7 +200,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
         }
 
         const newStorageCallsWrapperName: string = this.identifierNamesGenerator
-            .generateForGlobalScope(StringArrayStorage.stringArrayNameLength);
+            .generateForGlobalScope(StringArrayStorage.stringArrayFunctionNameLength);
 
         this.stringArrayStorageCallsWrapperNamesMap.set(
             stringArrayEncoding,

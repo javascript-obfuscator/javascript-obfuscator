@@ -3,6 +3,14 @@
  */
 export function StringArrayTemplate (): string {
     return `
-        const {stringArrayName} = [{stringArrayStorageItems}];
+        function {stringArrayFunctionName} () {
+            const {stringArrayName} = [{stringArrayStorageItems}];
+            
+            {stringArrayFunctionName} = function () {
+                return {stringArrayName};
+            };
+            
+            return {stringArrayFunctionName}();
+        }
     `;
 }

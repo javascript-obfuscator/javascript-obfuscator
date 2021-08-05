@@ -1,43 +1,25 @@
 'use strict';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { readFileAsString } from '../helpers/readFileAsString';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
+    const code: string = readFileAsString(__dirname + '/../functional-tests/javascript-obfuscator/fixtures/custom-nodes-identifier-names-collision.js');
 
-    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-        `
-            class Test {
-                constructor () {
-                    let test = {}
-                }
-                
-                static methodA = () => {
-                    console.log('method_A');
-                }
-                
-                methodB () {
-                    console.log('method_B');
-                    
-                    Test.methodA();
-                }
-            }
-            
-            const instance = new Test();
-            
-            Test.methodA();
-            instance.methodB();
-        `,
+    let obfuscationResult = JavaScriptObfuscator.obfuscate(
+        code,
         {
-            ...NO_ADDITIONAL_NODES_PRESET,
+            identifierNamesGenerator: 'mangled',
             compact: false,
             stringArray: true,
-            stringArrayThreshold: 1,
-            transformObjectKeys: true,
-            renameProperties: true
+            seed: 429105580
         }
-    ).getObfuscatedCode();
+    );
+
+    let obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+    let identifierNamesCache = obfuscationResult.getIdentifierNamesCache();
 
     console.log(obfuscatedCode);
     console.log(eval(obfuscatedCode));
+    console.log(identifierNamesCache);
 })();

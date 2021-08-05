@@ -19,7 +19,7 @@
   "bin": {
     "javascript-obfuscator": "./bin/javascript-obfuscator"
   },
-  "types": "types/index.d.ts",
+  "types": "typings/index.d.ts",
   "dependencies": {
     "@javascript-obfuscator/escodegen": "2.2.1",
     "@javascript-obfuscator/estraverse": "5.3.0",
@@ -102,6 +102,7 @@
     "start": "yarn run watch",
     "webpack:prod": "webpack --config ./webpack/webpack.node.config.js --config ./webpack/webpack.browser.config.js --mode production",
     "build": "yarn run webpack:prod && yarn run eslint && yarn test",
+    "build:typings": "tsc --project src/tsconfig.typings.json",
     "watch": "webpack --config ./webpack/webpack.node.config.js --mode development --watch",
     "test:dev": "ts-node --type-check test/dev/dev.ts",
     "test:devCompilePerformance": "ts-node test/dev/dev-compile-performance.ts",
@@ -116,7 +117,7 @@
     "git:addFiles": "git add .",
     "postinstall": "opencollective",
     "precommit": "npm run build",
-    "prepublishOnly": "npm run build && tsc --project ./src/tsconfig.declarations.json",
+    "prepublishOnly": "npm run build && npm run build:typings",
     "prepare": "husky install"
   },
   "author": {

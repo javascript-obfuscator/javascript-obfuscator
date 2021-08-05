@@ -3,7 +3,7 @@
 .nyc_output
 coverage
 /dist
-/types
+/typings
 npm-debug.log
 *.js.map
 /coverage

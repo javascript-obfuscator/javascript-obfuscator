@@ -76,11 +76,11 @@
     "eslint-plugin-unicorn": "34.0.1",
     "fork-ts-checker-notifier-webpack-plugin": "4.0.0",
     "fork-ts-checker-webpack-plugin": "6.2.12",
+    "husky": "^7.0.1",
     "js-beautify": "1.14.0",
     "mocha": "9.0.2",
     "nyc": "15.1.0",
     "pjson": "1.0.9",
-    "pre-commit": "1.2.2",
     "rimraf": "3.0.2",
     "sinon": "11.1.1",
     "source-map-resolve": "0.6.0",
@@ -115,11 +115,10 @@
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",
     "postinstall": "opencollective",
-    "prepublishOnly": "npm run build && tsc --project ./src/tsconfig.declarations.json"
+    "precommit": "npm run build",
+    "prepublishOnly": "npm run build && tsc --project ./src/tsconfig.declarations.json",
+    "prepare": "husky install"
   },
-  "pre-commit": [
-    "npm run build"
-  ],
   "author": {
     "name": "Timofey Kachalov"
   },

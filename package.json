@@ -19,7 +19,7 @@
   "bin": {
     "javascript-obfuscator": "./bin/javascript-obfuscator"
   },
-  "types": "index.d.ts",
+  "types": "types/index.d.ts",
   "dependencies": {
     "@javascript-obfuscator/escodegen": "2.2.1",
     "@javascript-obfuscator/estraverse": "5.3.0",
@@ -114,11 +114,11 @@
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",
-    "postinstall": "opencollective"
+    "postinstall": "opencollective",
+    "prepublishOnly": "npm run build && tsc --project ./src/tsconfig.declarations.json"
   },
   "pre-commit": [
-    "build",
-    "git:addFiles"
+    "npm run build"
   ],
   "author": {
     "name": "Timofey Kachalov"

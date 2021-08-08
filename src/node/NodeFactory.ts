@@ -63,7 +63,7 @@ export class NodeFactory {
     public static binaryExpressionNode (
         operator: ESTree.BinaryOperator,
         left: ESTree.Expression,
-        right: ESTree.Expression,
+        right: ESTree.Expression
     ): ESTree.BinaryExpression {
         return {
             type: NodeType.BinaryExpression,

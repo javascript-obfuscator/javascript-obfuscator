@@ -139,7 +139,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
                             this.prepareNode(node);
                         }
 
-                        if (parentNode && NodeGuards.isLiteralNode(node) && !NodeMetadata.isReplacedLiteral(node)) {
+                        if (
+                            parentNode
+                            && NodeGuards.isLiteralNode(node)
+                            && !NodeMetadata.isStringArrayCallLiteralNode(node)
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -187,15 +191,18 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const cacheKey: string = this.literalNodesCacheStorage.buildKey(literalValue, stringArrayStorageItemData);
         const useCachedValue: boolean = this.literalNodesCacheStorage.shouldUseCachedValue(cacheKey, stringArrayStorageItemData);
 
+        let resultNode: ESTree.Node;
+
         if (useCachedValue) {
-            return <ESTree.Node>this.literalNodesCacheStorage.get(cacheKey);
+            const nodeFromCache: ESTree.Node = <ESTree.Node>this.literalNodesCacheStorage.get(cacheKey);
+
+            resultNode = NodeUtils.clone(nodeFromCache);
+        } else {
+            resultNode = stringArrayStorageItemData
+                ? this.getStringArrayCallNode(stringArrayStorageItemData)
+                : literalNode;
+            this.literalNodesCacheStorage.set(cacheKey, resultNode);
         }
-
-        const resultNode: ESTree.Node = stringArrayStorageItemData
-            ? this.getStringArrayCallNode(stringArrayStorageItemData)
-            : literalNode;
-
-        this.literalNodesCacheStorage.set(cacheKey, resultNode);
 
         NodeUtils.parentizeNode(resultNode, parentNode);
 

@@ -43,9 +43,7 @@ export class VisitedLexicalScopeNodesStackStorage extends ArrayStorage <TNodeWit
      * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
     public getPenultimateElement (): TNodeWithLexicalScopeStatements | undefined {
-        const storageLength: number = this.getLength();
-
-        return this.get(storageLength - 2) ?? undefined;
+        return this.arrayUtils.getLastElementByIndex(this.getStorage(), 1);
     }
 
     /**

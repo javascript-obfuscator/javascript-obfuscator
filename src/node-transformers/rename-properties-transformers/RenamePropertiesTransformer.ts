@@ -9,11 +9,12 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
-import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class RenamePropertiesTransformer extends AbstractNodeTransformer {
@@ -106,20 +107,20 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+        let propertyNode: ESTree.Node | null = null;
+
         if (NodeGuards.isPropertyNode(node)) {
-            return this.transformPropertyNode(node);
+            propertyNode = this.transformPropertyNode(node);
+        } else if (NodeGuards.isPropertyDefinitionNode(node)) {
+            propertyNode = this.transformPropertyDefinitionNode(node);
+        } else if (NodeGuards.isMemberExpressionNode(node)) {
+            propertyNode = this.transformMemberExpressionNode(node);
+        } else if (NodeGuards.isMethodDefinitionNode(node)) {
+            propertyNode = this.transformMethodDefinitionNode(node);
         }
 
-        if (NodeGuards.isPropertyDefinitionNode(node)) {
-            return this.transformPropertyDefinitionNode(node);
-        }
-
-        if (NodeGuards.isMemberExpressionNode(node)) {
-            return this.transformMemberExpressionNode(node);
-        }
-
-        if (NodeGuards.isMethodDefinitionNode(node)) {
-            return this.transformMethodDefinitionNode(node);
+        if (propertyNode) {
+            NodeUtils.parentizeNode(propertyNode, parentNode);
         }
 
         return node;

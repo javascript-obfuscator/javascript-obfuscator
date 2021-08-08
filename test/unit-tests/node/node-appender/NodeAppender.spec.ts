@@ -13,12 +13,12 @@ import { ICallsGraphAnalyzer } from '../../../../src/interfaces/analyzers/calls-
 import { ICallsGraphData } from '../../../../src/interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
+import { removeRangesFromStructure } from '../../../helpers/removeRangesFromStructure';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 import { NodeAppender } from '../../../../src/node/NodeAppender';
 import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
-import { removeRangesFromStructure } from '../../../helpers/removeRangesFromStructure';
 
 /**
  * @param fixturePath
@@ -252,6 +252,46 @@ describe('NodeAppender', () => {
 
         it('should prepend given node to a `BlockStatement` node body', () => {
             assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+
+    describe('remove', () => {
+        describe('Variant #1: valid index', () => {
+            let astTree: ESTree.Program,
+                expectedAstTree: ESTree.Program;
+
+            before(() => {
+                astTree = convertCodeToAst('/fixtures/remove-node/valid-index.js');
+                expectedAstTree = convertCodeToAst('/fixtures/remove-node/valid-index-expected.js');
+
+                astTree = NodeUtils.parentizeAst(astTree);
+                expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
+
+                NodeAppender.remove(astTree, <ESTree.Statement>astTree.body[2]);
+            });
+
+            it('should remove given node from a `BlockStatement` node body', () => {
+                assert.deepEqual(astTree, expectedAstTree);
+            });
+        });
+
+        describe('Variant #2: invalid index', () => {
+            let astTree: ESTree.Program,
+                expectedAstTree: ESTree.Program;
+
+            before(() => {
+                astTree = convertCodeToAst('/fixtures/remove-node/invalid-index.js');
+                expectedAstTree = convertCodeToAst('/fixtures/remove-node/invalid-index-expected.js');
+
+                astTree = NodeUtils.parentizeAst(astTree);
+                expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
+
+                NodeAppender.remove(astTree, <ESTree.Statement>astTree.body[5]);
+            });
+
+            it('should keep `BlockStatement` as is', () => {
+                assert.deepEqual(astTree, expectedAstTree);
+            });
         });
     });
 });

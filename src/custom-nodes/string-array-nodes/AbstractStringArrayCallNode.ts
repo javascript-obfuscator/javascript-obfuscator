@@ -105,7 +105,7 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
         const stringArrayCallIndexNode: ESTree.Expression = this.stringArrayIndexNodeFactory(stringArrayIndexNodeName)
             .getNode(normalizedIndex);
 
-        NodeMetadata.set(stringArrayCallIndexNode, { replacedLiteral: true });
+        NodeMetadata.set(stringArrayCallIndexNode, { stringArrayCallLiteralNode: true });
 
         const hexadecimalNode: ESTree.Expression = isPositive
             ? stringArrayCallIndexNode
@@ -126,7 +126,7 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     protected getRc4KeyLiteralNode (decodeKey: string): ESTree.Literal {
         const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(decodeKey);
 
-        NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
+        NodeMetadata.set(rc4KeyLiteralNode, { stringArrayCallLiteralNode: true });
 
         return rc4KeyLiteralNode;
     }

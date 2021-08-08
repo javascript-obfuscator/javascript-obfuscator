@@ -47,6 +47,8 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     splitStrings: false,
     splitStringsChunkLength: 0,
     stringArray: false,
+    stringArrayCallsTransform: false,
+    stringArrayCallsTransformThreshold: 0,
     stringArrayEncoding: [
         StringArrayEncoding.None
     ],

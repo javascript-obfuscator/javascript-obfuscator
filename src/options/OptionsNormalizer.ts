@@ -20,6 +20,7 @@ import { SplitStringsChunkLengthRule } from './normalizer-rules/SplitStringsChun
 import { StringArrayRule } from './normalizer-rules/StringArrayRule';
 import { StringArrayEncodingRule } from './normalizer-rules/StringArrayEncodingRule';
 import { StringArrayWrappersChainedCallsRule } from './normalizer-rules/StringArrayWappersChainedCalls';
+import { StringArrayCallsTransformRule } from './normalizer-rules/StringArrayCallsTransform';
 
 @injectable()
 export class OptionsNormalizer implements IOptionsNormalizer {
@@ -39,6 +40,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         SourceMapBaseUrlRule,
         SourceMapFileNameRule,
         SplitStringsChunkLengthRule,
+        StringArrayCallsTransformRule,
         StringArrayRule,
         StringArrayEncodingRule,
         StringArrayWrappersChainedCallsRule,

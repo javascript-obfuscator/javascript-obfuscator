@@ -43,7 +43,10 @@ export class NodeMetadata {
      * @param {Node} literalNode
      * @returns {boolean}
      */
-    public static isReplacedLiteral (literalNode: ESTree.Literal): boolean {
-        return NodeMetadata.get<ESTree.LiteralNodeMetadata, 'replacedLiteral'>(literalNode, 'replacedLiteral') === true;
+    public static isStringArrayCallLiteralNode (literalNode: ESTree.Literal): boolean {
+        return NodeMetadata.get<
+            ESTree.LiteralNodeMetadata,
+            'stringArrayCallLiteralNode'
+        >(literalNode, 'stringArrayCallLiteralNode') === true;
     }
 }

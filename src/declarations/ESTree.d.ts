@@ -14,7 +14,7 @@ declare module 'estree' {
     }
 
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
-        replacedLiteral?: boolean;
+        stringArrayCallLiteralNode?: boolean;
     }
 
     /**

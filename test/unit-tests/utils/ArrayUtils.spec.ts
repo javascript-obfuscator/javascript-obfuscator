@@ -215,6 +215,68 @@ describe('ArrayUtils', () => {
         });
     });
 
+    describe('getLastElementByIndex', () => {
+        describe('empty array', () => {
+            const array: string[] = [];
+            const expectedLastElement: undefined = undefined;
+
+            let lastElement: string | undefined;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElementByIndex(array, 1);
+            });
+
+            it('should return undefined if array is empty', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+
+        describe('array length: `1` and index is out of array boundary', () => {
+            const array: string[] = ['foo'];
+            const expectedLastElement: undefined = undefined;
+
+            let lastElement: string | undefined;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElementByIndex(array, 2);
+            });
+
+            it('should return undefined', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+
+        describe('array length: `3` and index is `0`', () => {
+            const array: string[] = ['foo', 'bar', 'baz'];
+            const expectedLastElement: string = 'baz';
+
+            let lastElement: string | undefined;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElementByIndex(array, 0);
+            });
+
+            it('should return element with a correct index', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+
+        describe('array length: `3` and index is `1`', () => {
+            const array: string[] = ['foo', 'bar', 'baz'];
+            const expectedLastElement: string = 'bar';
+
+            let lastElement: string | undefined;
+
+            before(() => {
+                lastElement = arrayUtils.getLastElementByIndex(array, 1);
+            });
+
+            it('should return element with a correct index', () => {
+                assert.equal(lastElement, expectedLastElement);
+            });
+        });
+    });
+
     describe('rotate', () => {
         let array: number[],
             rotatedArray: number[];

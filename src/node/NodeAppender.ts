@@ -162,6 +162,24 @@ export class NodeAppender {
 
     /**
      * @param {TNodeWithStatements} nodeWithStatements
+     * @param {Statement} statement
+     */
+    public static remove (nodeWithStatements: TNodeWithStatements, statement: ESTree.Statement): void {
+        const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
+        const indexInScopeStatement: number = scopeStatements.indexOf(statement);
+
+        if (indexInScopeStatement === -1) {
+            return;
+        }
+
+        const updatedStatements: TStatement[] = [...scopeStatements];
+        updatedStatements.splice(indexInScopeStatement, 1);
+
+        NodeAppender.setScopeStatements(nodeWithStatements, updatedStatements);
+    }
+
+    /**
+     * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} statements
      * @returns {TStatement[]}
      */

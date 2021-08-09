@@ -62,9 +62,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
 
     /**
-     * @type {Set<TNodeWithStatements>}
+     * @type {WeakMap<TNodeWithStatements, VariableDeclaration>}
      */
-    private readonly hostNodesWithControlFlowNode: Set<TNodeWithStatements> = new Set();
+    private readonly hostNodesWithControlFlowNode: WeakMap<TNodeWithStatements, ESTree.VariableDeclaration> = new WeakMap();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -157,8 +157,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
-        NodeAppender.prepend(hostNode, controlFlowStorageCustomNode.getNode());
-        this.hostNodesWithControlFlowNode.add(hostNode);
+
+        const controlFlowStorageNode: ESTree.VariableDeclaration = this.getControlFlowStorageNode(controlFlowStorage);
+
+        NodeAppender.prepend(hostNode, [controlFlowStorageNode]);
+        this.hostNodesWithControlFlowNode.set(hostNode, controlFlowStorageNode);
 
         NodeUtils.parentizeAst(functionNode);
 
@@ -173,12 +176,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
 
         if (this.controlFlowData.has(hostNode)) {
-            if (this.hostNodesWithControlFlowNode.has(hostNode)) {
-                if (NodeGuards.isSwitchCaseNode(hostNode)) {
-                    hostNode.consequent.shift();
-                } else {
-                    hostNode.body.shift();
-                }
+            const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
+                this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
+
+            if (existingControlFlowStorageNode) {
+                NodeAppender.remove(hostNode, existingControlFlowStorageNode);
             }
 
             const hostControlFlowStorage: TControlFlowStorage = <TControlFlowStorage>this.controlFlowData.get(hostNode);
@@ -187,6 +189,25 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         return controlFlowStorage;
+    }
+
+    /**
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {VariableDeclaration}
+     */
+    private getControlFlowStorageNode (controlFlowStorage: TControlFlowStorage): ESTree.VariableDeclaration {
+        const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
+
+        controlFlowStorageCustomNode.initialize(controlFlowStorage);
+
+        const controlFlowStorageNode: ESTree.Node = controlFlowStorageCustomNode.getNode()[0];
+
+        if (!NodeGuards.isVariableDeclarationNode(controlFlowStorageNode)) {
+            throw new Error('`controlFlowStorageNode` should contain `VariableDeclaration` node with control flow storage object');
+        }
+
+        return controlFlowStorageNode;
     }
 
     /**

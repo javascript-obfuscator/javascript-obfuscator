@@ -80,14 +80,14 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        if (!this.options.splitStrings) {
+            return null;
+        }
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (!this.options.splitStrings) {
-                            return;
-                        }
-
                         if (parentNode && NodeGuards.isLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
@@ -115,7 +115,6 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
         // pass #1: split string on a large chunks with length of `firstPassChunkLength`
         const firstPassChunksNode: ESTree.Node = this.transformLiteralNodeByChunkLength(
             literalNode,
-            parentNode,
             SplitStringTransformer.firstPassChunkLength
         );
 
@@ -123,28 +122,28 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
         const secondPassChunksNode: ESTree.Node = estraverse.replace(firstPassChunksNode, {
             // eslint-disable-next-line @typescript-eslint/no-shadow
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isLiteralNode(node)) {
+                if (NodeGuards.isLiteralNode(node)) {
                     return this.transformLiteralNodeByChunkLength(
                         node,
-                        parentNode,
                         this.options.splitStringsChunkLength
                     );
                 }
             }
         });
 
+        NodeUtils.parentizeNode(secondPassChunksNode, parentNode);
+        NodeUtils.parentizeAst(secondPassChunksNode);
+
         return secondPassChunksNode;
     }
 
     /**
      * @param {Literal} literalNode
-     * @param {Node} parentNode
      * @param {number} chunkLength
      * @returns {Node}
      */
     private transformLiteralNodeByChunkLength (
         literalNode: ESTree.Literal,
-        parentNode: ESTree.Node,
         chunkLength: number
     ): ESTree.Node {
         if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
@@ -163,13 +162,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             chunkLength
         );
 
-        const binaryExpressionNode: ESTree.BinaryExpression =
-            this.transformStringChunksToBinaryExpressionNode(stringChunks);
-
-        NodeUtils.parentizeAst(binaryExpressionNode);
-        NodeUtils.parentizeNode(binaryExpressionNode, parentNode);
-
-        return binaryExpressionNode;
+        return this.transformStringChunksToBinaryExpressionNode(stringChunks);
     }
 
     /**

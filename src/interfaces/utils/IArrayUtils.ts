@@ -25,6 +25,13 @@ export interface IArrayUtils {
     getLastElement <T> (array: T[]): T | undefined;
 
     /**
+     * @param {T[]} array
+     * @param {number} index
+     * @returns {T | undefined}
+     */
+    getLastElementByIndex <T> (array: T[], index: number): T | undefined;
+
+    /**
      * @param array
      * @param times
      * @returns {T[]}

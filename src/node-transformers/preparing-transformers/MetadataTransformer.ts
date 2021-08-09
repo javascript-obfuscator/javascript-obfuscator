@@ -65,7 +65,7 @@ export class MetadataTransformer extends AbstractNodeTransformer {
         NodeMetadata.set(node, { ignoredNode: false });
 
         if (NodeGuards.isLiteralNode(node)) {
-            NodeMetadata.set(node, { replacedLiteral: false });
+            NodeMetadata.set(node, { stringArrayCallLiteralNode: false });
         }
 
         return node;

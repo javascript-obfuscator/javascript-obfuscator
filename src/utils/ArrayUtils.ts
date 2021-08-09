@@ -85,9 +85,18 @@ export class ArrayUtils implements IArrayUtils {
      * @returns {T | undefined}
      */
     public getLastElement <T> (array: T[]): T | undefined {
+        return this.getLastElementByIndex(array, 0);
+    }
+
+    /**
+     * @param {T[]} array
+     * @param {number} index
+     * @returns {T | undefined}
+     */
+    public getLastElementByIndex <T> (array: T[], index: number): T | undefined {
         const arrayLength: number = array.length;
 
-        return array[arrayLength - 1] ?? undefined;
+        return array[arrayLength - 1 - index] ?? undefined;
     }
 
     /**

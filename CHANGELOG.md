@@ -2,6 +2,7 @@ Change Log
 
 v2.19.0
 ---
+* **New options**: `stringArrayCallsTransform` and `stringArrayCallsTransformThreshold` 
 * Fixed very rare cases when `rotateStringArray` couldn't rotate array properly
 * Improved `selfDefending` option
 * Installed `npm` package now has `types` directory and doesn't have `src` directory

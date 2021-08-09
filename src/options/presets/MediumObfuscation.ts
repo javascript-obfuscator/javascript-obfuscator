@@ -14,6 +14,7 @@ export const MEDIUM_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     optionsPreset: OptionsPreset.MediumObfuscation,
     splitStrings: true,
     splitStringsChunkLength: 10,
+    stringArrayCallsTransformThreshold: 0.75,
     stringArrayEncoding: [
         StringArrayEncoding.Base64
     ],

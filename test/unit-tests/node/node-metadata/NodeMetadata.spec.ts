@@ -39,10 +39,10 @@ describe('NodeMetadata', () => {
             node = NodeFactory.literalNode('foo');
             node.metadata = {};
             node.metadata.stringArrayCallLiteralNode = true;
-            value = NodeMetadata.get<ESTree.LiteralNodeMetadata, 'stringArrayCallLiteralNode'>(
-                node,
+            value = NodeMetadata.get<
+                ESTree.LiteralNodeMetadata,
                 'stringArrayCallLiteralNode'
-            );
+            >(node, 'stringArrayCallLiteralNode');
         });
 
         it('should get metadata value of the node', () => {
@@ -86,7 +86,7 @@ describe('NodeMetadata', () => {
         });
     });
 
-    describe('isReplacedLiteral', () => {
+    describe('isStringArrayCallLiteralNode', () => {
         const expectedValue: boolean = true;
 
         let node: ESTree.Literal,

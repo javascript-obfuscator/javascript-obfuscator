@@ -144,6 +144,9 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
         NodeUtils.parentizeNode(secondPassChunksNode, parentNode);
         NodeUtils.parentizeAst(secondPassChunksNode);
 
+        NodeUtils.parentizeNode(secondPassChunksNode, parentNode);
+        NodeUtils.parentizeAst(secondPassChunksNode);
+
         return secondPassChunksNode;
     }
 

@@ -50,26 +50,6 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     }
 
     /**
-     * @param {Map<string, Map<string, string[]>>} identifierDataByControlFlowStorageId
-     * @param {string} controlFlowStorageId
-     * @returns {Map<string, string[]>}
-     */
-    protected static getStorageKeysByIdForCurrentStorage (
-        identifierDataByControlFlowStorageId: Map<string, Map<string, string[]>>,
-        controlFlowStorageId: string
-    ): Map<string, string[]> {
-        let storageKeysById: Map<string, string[]>;
-
-        if (identifierDataByControlFlowStorageId.has(controlFlowStorageId)) {
-            storageKeysById = <Map<string, string[]>>identifierDataByControlFlowStorageId.get(controlFlowStorageId);
-        } else {
-            storageKeysById = new Map <string, string[]>();
-        }
-
-        return storageKeysById;
-    }
-
-    /**
      * @param {ICustomNode} customNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @param {string} replacerId
@@ -83,22 +63,21 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         usingExistingIdentifierChance: number
     ): string {
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
-        const storageKeysById: Map<string, string[]> = AbstractControlFlowReplacer
-            .getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
-        const storageKeysForCurrentId: string[] | undefined = storageKeysById.get(replacerId);
+        const storageKeysById: Map<string, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
+            ?? new Map <string, string[]>();
+        const storageKeysForCurrentId: string[] | null = storageKeysById.get(replacerId) ?? null;
 
-        if (
-            this.randomGenerator.getMathRandom() < usingExistingIdentifierChance &&
-            storageKeysForCurrentId &&
-            storageKeysForCurrentId.length
-        ) {
+        const shouldPickFromStorageKeysById = this.randomGenerator.getMathRandom() < usingExistingIdentifierChance
+            && storageKeysForCurrentId?.length;
+
+        if (shouldPickFromStorageKeysById) {
             return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
         }
 
         const generateStorageKey: (length: number) => string = (length: number) => {
             const key: string = this.randomGenerator.getRandomString(length);
 
-            if (controlFlowStorage.getStorage().has(key)) {
+            if (controlFlowStorage.has(key)) {
                 return generateStorageKey(length);
             }
 

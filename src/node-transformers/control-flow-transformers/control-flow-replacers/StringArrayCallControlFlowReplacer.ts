@@ -6,7 +6,6 @@ import * as ESTree from 'estree';
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TInitialData } from '../../../types/TInitialData';
-import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -14,18 +13,17 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
-import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeLiteralUtils } from '../../../node/NodeLiteralUtils';
-import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
+import { NodeMetadata } from '../../../node/NodeMetadata';
+import { StringLiteralControlFlowReplacer } from './StringLiteralControlFlowReplacer';
 import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
+import { NodeLiteralUtils } from '../../../node/NodeLiteralUtils';
 
 @injectable()
-export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplacer {
+export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlowReplacer {
     /**
      * @type {number}
      */
-    protected static readonly usingExistingIdentifierChance: number = 1;
+    protected static override readonly usingExistingIdentifierChance: number = 1;
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
@@ -47,16 +45,18 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {NodeGuards}
      */
-    public replace (
+    public override replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
-        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
-            return literalNode;
-        }
+        const isStringArrayCallLiteralNode = NodeMetadata.isStringArrayCallLiteralNode(literalNode)
+            && (
+                NodeLiteralUtils.isNumberLiteralNode(literalNode)
+                || NodeLiteralUtils.isStringLiteralNode(literalNode)
+            );
 
-        if (!NodeLiteralUtils.isStringLiteralNode(literalNode) || literalNode.value.length < 3) {
+        if (!isStringArrayCallLiteralNode) {
             return literalNode;
         }
 
@@ -70,32 +70,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
             literalFunctionCustomNode,
             controlFlowStorage,
             replacerId,
-            StringLiteralControlFlowReplacer.usingExistingIdentifierChance
+            StringArrayCallControlFlowReplacer.usingExistingIdentifierChance
         );
 
         return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey);
-    }
-
-    /**
-     * @param {string} controlFlowStorageId
-     * @param {string} storageKey
-     * @returns {NodeGuards}
-     */
-    protected getControlFlowStorageCallNode (
-        controlFlowStorageId: string,
-        storageKey: string
-    ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<StringLiteralControlFlowStorageCallNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
-
-        controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);
-
-        const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
-
-        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
-        }
-
-        return statementNode.expression;
     }
 }

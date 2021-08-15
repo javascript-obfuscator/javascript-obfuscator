@@ -32,16 +32,6 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map <string, ControlFlowReplacer>}
-     */
-    private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
-        [NodeType.BinaryExpression, ControlFlowReplacer.BinaryExpressionControlFlowReplacer],
-        [NodeType.CallExpression, ControlFlowReplacer.CallExpressionControlFlowReplacer],
-        [NodeType.LogicalExpression, ControlFlowReplacer.LogicalExpressionControlFlowReplacer],
-        [NodeType.Literal, ControlFlowReplacer.StringLiteralControlFlowReplacer]
-    ]);
-
-    /**
      * @type {number}
      */
     private static readonly hostNodeSearchMinDepth: number = 0;
@@ -50,6 +40,16 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @type {number}
      */
     private static readonly hostNodeSearchMaxDepth: number = 2;
+
+    /**
+     * @type {Map <string, ControlFlowReplacer>}
+     */
+    protected readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
+        [NodeType.BinaryExpression, ControlFlowReplacer.BinaryExpressionControlFlowReplacer],
+        [NodeType.CallExpression, ControlFlowReplacer.CallExpressionControlFlowReplacer],
+        [NodeType.LogicalExpression, ControlFlowReplacer.LogicalExpressionControlFlowReplacer],
+        [NodeType.Literal, ControlFlowReplacer.StringLiteralControlFlowReplacer]
+    ]);
 
     /**
      * @type {Map<ESTree.Node, TControlFlowStorage>}
@@ -113,14 +113,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.ControlFlowFlattening:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (
-                            parentNode && (
-                                NodeGuards.isFunctionDeclarationNode(node) ||
-                                NodeGuards.isFunctionExpressionNode(node) ||
-                                NodeGuards.isArrowFunctionExpressionNode(node)
-                            )
-                        ) {
+                    leave: (
+                        node: ESTree.Node,
+                        parentNode: ESTree.Node | null
+                    ): ESTree.Node | estraverse.VisitorOption | void => {
+                        if (parentNode && NodeGuards.isFunctionNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -133,7 +130,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Function} functionNode
-     * @param {NodeGuards} parentNode
+     * @param {Node} parentNode
      * @returns {Function}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
@@ -146,7 +143,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const hostNode: TNodeWithStatements = this.getHostNode(functionNode.body);
         const controlFlowStorage: TControlFlowStorage = this.getControlFlowStorage(hostNode);
 
-        this.controlFlowData.set(hostNode, controlFlowStorage);
         this.transformFunctionBody(functionNode.body, controlFlowStorage);
 
         if (!controlFlowStorage.getLength()) {
@@ -160,42 +156,19 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         const controlFlowStorageNode: ESTree.VariableDeclaration = this.getControlFlowStorageNode(controlFlowStorage);
 
+        NodeUtils.parentizeAst(controlFlowStorageNode);
         NodeAppender.prepend(hostNode, [controlFlowStorageNode]);
+
         this.hostNodesWithControlFlowNode.set(hostNode, controlFlowStorageNode);
 
-        NodeUtils.parentizeAst(functionNode);
-
         return functionNode;
-    }
-
-    /**
-     * @param {TNodeWithStatements} hostNode
-     * @returns {TControlFlowStorage}
-     */
-    private getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
-        const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
-
-        if (this.controlFlowData.has(hostNode)) {
-            const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
-                this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
-
-            if (existingControlFlowStorageNode) {
-                NodeAppender.remove(hostNode, existingControlFlowStorageNode);
-            }
-
-            const hostControlFlowStorage: TControlFlowStorage = <TControlFlowStorage>this.controlFlowData.get(hostNode);
-
-            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
-        }
-
-        return controlFlowStorage;
     }
 
     /**
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {VariableDeclaration}
      */
-    private getControlFlowStorageNode (controlFlowStorage: TControlFlowStorage): ESTree.VariableDeclaration {
+    protected getControlFlowStorageNode (controlFlowStorage: TControlFlowStorage): ESTree.VariableDeclaration {
         const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
 
@@ -208,6 +181,31 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         return controlFlowStorageNode;
+    }
+
+    /**
+     * @param {TNodeWithStatements} hostNode
+     * @returns {TControlFlowStorage}
+     */
+    private getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
+        const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
+
+        const hostControlFlowStorage: TControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
+
+        if (hostControlFlowStorage) {
+            const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
+                this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
+
+            if (existingControlFlowStorageNode) {
+                NodeAppender.remove(hostNode, existingControlFlowStorageNode);
+            }
+
+            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
+        }
+
+        this.controlFlowData.set(hostNode, controlFlowStorage);
+
+        return controlFlowStorage;
     }
 
     /**
@@ -239,11 +237,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private isVisitedFunctionNode (node: ESTree.Node): boolean {
-        return (
-            NodeGuards.isFunctionDeclarationNode(node) ||
-            NodeGuards.isFunctionExpressionNode(node) ||
-            NodeGuards.isArrowFunctionExpressionNode(node)
-        ) && this.visitedFunctionNodes.has(node);
+        return NodeGuards.isFunctionNode(node) && this.visitedFunctionNodes.has(node);
     }
 
     /**
@@ -253,15 +247,18 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: TControlFlowStorage): void {
         estraverse.replace(functionNodeBody, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node => {
-                if (NodeMetadata.isIgnoredNode(node)) {
-                    return estraverse.VisitorOption.Skip;
+                const shouldBreakTraverse = !parentNode
+                    || NodeMetadata.isIgnoredNode(node)
+                    || this.isVisitedFunctionNode(node);
+
+                if (shouldBreakTraverse) {
+                    return estraverse.VisitorOption.Break;
                 }
 
-                if (this.isVisitedFunctionNode(node) || !parentNode) {
-                    return estraverse.VisitorOption.Skip;
-                }
+                const controlFlowReplacerName: ControlFlowReplacer | null = this.controlFlowReplacersMap.get(node.type)
+                    ?? null;
 
-                if (!FunctionControlFlowTransformer.controlFlowReplacersMap.has(node.type)) {
+                if (!controlFlowReplacerName) {
                     return node;
                 }
 
@@ -269,17 +266,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                const controlFlowReplacerName: ControlFlowReplacer = <ControlFlowReplacer>FunctionControlFlowTransformer
-                    .controlFlowReplacersMap.get(node.type);
+                const replacedNode: ESTree.Node = this.controlFlowReplacerFactory(controlFlowReplacerName)
+                    .replace(node, parentNode, controlFlowStorage);
 
-                if (controlFlowReplacerName === undefined) {
-                    return node;
-                }
+                NodeUtils.parentizeNode(replacedNode, parentNode);
 
-                return {
-                    ...this.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage),
-                    parentNode
-                };
+                return replacedNode;
             }
         });
     }

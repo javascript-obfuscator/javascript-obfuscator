@@ -21,13 +21,13 @@ import { CodeTransformationStage } from './enums/code-transformers/CodeTransform
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from './enums/node-transformers/NodeTransformationStage';
+import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 import { ecmaVersion } from './constants/EcmaVersion';
 
 import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
 import { Utils } from './utils/Utils';
-import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
@@ -90,6 +90,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ScopeIdentifiersTransformer,
         NodeTransformer.ScopeThroughIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
+        NodeTransformer.StringArrayControlFlowTransformer,
         NodeTransformer.StringArrayRotateFunctionTransformer,
         NodeTransformer.StringArrayScopeCallsWrapperTransformer,
         NodeTransformer.StringArrayTransformer,

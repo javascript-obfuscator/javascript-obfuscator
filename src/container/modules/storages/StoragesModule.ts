@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
 import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { ILiteralNodesCacheStorage } from '../../../interfaces/storages/string-array-transformers/ILiteralNodesCacheStorage';
@@ -61,12 +62,18 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
             return (): TControlFlowStorage => {
                 const constructor: interfaces.Newable<TControlFlowStorage> = context.container
                     .get<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage);
+                const identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory = context.container
+                    .get<TIdentifierNamesGeneratorFactory>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator);
                 const randomGenerator: IRandomGenerator = context.container
                     .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
                 const options: IOptions = context.container
                     .get<IOptions>(ServiceIdentifiers.IOptions);
 
-                const storage: TControlFlowStorage = new constructor(randomGenerator, options);
+                const storage: TControlFlowStorage = new constructor(
+                    identifierNamesGeneratorFactory,
+                    randomGenerator,
+                    options
+                );
 
                 storage.initialize();
 

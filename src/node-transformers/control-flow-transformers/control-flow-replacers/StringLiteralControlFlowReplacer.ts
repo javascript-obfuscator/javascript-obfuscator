@@ -5,7 +5,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -29,27 +31,37 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(controlFlowCustomNodeFactory, randomGenerator, options);
+        super(
+            controlFlowCustomNodeFactory,
+            identifierNamesGeneratorFactory,
+            randomGenerator,
+            options
+        );
     }
 
     /**
      * @param {Literal} literalNode
-     * @param {NodeGuards} parentNode
+     * @param {Node} parentNode
+     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {NodeGuards}
+     * @returns {Node}
      */
     public replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
+        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
@@ -68,6 +80,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             literalFunctionCustomNode,
+            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             replacerId,
             StringLiteralControlFlowReplacer.usingExistingIdentifierChance

@@ -5,7 +5,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -25,27 +27,37 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(controlFlowCustomNodeFactory, randomGenerator, options);
+        super(
+            controlFlowCustomNodeFactory,
+            identifierNamesGeneratorFactory,
+            randomGenerator,
+            options
+        );
     }
 
     /**
      * @param {BinaryExpression} binaryExpressionNode
      * @param {Node} parentNode
+     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
+        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const operator: ESTree.BinaryOperator = binaryExpressionNode.operator;
@@ -56,6 +68,7 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             binaryExpressionFunctionCustomNode,
+            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             operator,
             BinaryExpressionControlFlowReplacer.usingExistingIdentifierChance

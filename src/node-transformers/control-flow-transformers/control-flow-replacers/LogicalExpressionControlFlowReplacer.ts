@@ -5,7 +5,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -27,27 +29,37 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(controlFlowCustomNodeFactory, randomGenerator, options);
+        super(
+            controlFlowCustomNodeFactory,
+            identifierNamesGeneratorFactory,
+            randomGenerator,
+            options
+        );
     }
 
     /**
      * @param {LogicalExpression} logicalExpressionNode
-     * @param {NodeGuards} parentNode
+     * @param {Node} parentNode
+     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {NodeGuards}
+     * @returns {Node}
      */
     public replace (
         logicalExpressionNode: ESTree.LogicalExpression,
         parentNode: ESTree.Node,
+        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         if (this.checkForProhibitedExpressions(logicalExpressionNode.left, logicalExpressionNode.right)) {
@@ -62,6 +74,7 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             logicalExpressionFunctionCustomNode,
+            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             operator,
             LogicalExpressionControlFlowReplacer.usingExistingIdentifierChance

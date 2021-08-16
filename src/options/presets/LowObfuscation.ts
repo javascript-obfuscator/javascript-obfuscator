@@ -11,5 +11,7 @@ export const LOW_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     rotateStringArray: true,
     selfDefending: true,
     shuffleStringArray: true,
-    simplify: true
+    simplify: true,
+    stringArrayCallsTransform: false,
+    stringArrayCallsTransformThreshold: 0
 });

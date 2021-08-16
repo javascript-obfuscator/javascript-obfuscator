@@ -38,6 +38,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
         splitStrings: true,
         splitStringsChunkLength: 3,
         stringArray: true,
+        stringArrayCallsTransform: true,
+        stringArrayCallsTransformThreshold: 1,
         stringArrayEncoding: [
             StringArrayEncoding.None,
             StringArrayEncoding.Base64,

@@ -54,32 +54,32 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.Node, TControlFlowStorage>}
      */
-    private readonly controlFlowData: Map <ESTree.Node, TControlFlowStorage> = new Map();
-
-    /**
-     * @type {Set<ESTree.Function>}
-     */
-    private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
+    protected readonly controlFlowData: Map <ESTree.Node, TControlFlowStorage> = new Map();
 
     /**
      * @type {WeakMap<TNodeWithStatements, VariableDeclaration>}
      */
-    private readonly hostNodesWithControlFlowNode: WeakMap<TNodeWithStatements, ESTree.VariableDeclaration> = new WeakMap();
+    protected readonly hostNodesWithControlFlowNode: WeakMap<TNodeWithStatements, ESTree.VariableDeclaration> = new WeakMap();
 
     /**
      * @type {TControlFlowReplacerFactory}
      */
-    private readonly controlFlowReplacerFactory: TControlFlowReplacerFactory;
+    protected readonly controlFlowReplacerFactory: TControlFlowReplacerFactory;
 
     /**
      * @type {TControlFlowStorageFactory}
      */
-    private readonly controlFlowStorageFactory: TControlFlowStorageFactory;
+    protected readonly controlFlowStorageFactory: TControlFlowStorageFactory;
 
     /**
      * @type {TControlFlowCustomNodeFactory}
      */
-    private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
+    protected readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
+
+    /**
+     * @type {WeakSet<ESTree.Function>}
+     */
+    protected readonly visitedFunctionNodes: WeakSet<ESTree.Function> = new WeakSet();
 
     /**
      * @param {TControlFlowStorageFactory} controlFlowStorageFactory
@@ -110,6 +110,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        if (!this.options.controlFlowFlattening) {
+            return null;
+        }
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.ControlFlowFlattening:
                 return {
@@ -143,25 +147,122 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const hostNode: TNodeWithStatements = this.getHostNode(functionNode.body);
         const controlFlowStorage: TControlFlowStorage = this.getControlFlowStorage(hostNode);
 
-        this.transformFunctionBody(functionNode.body, controlFlowStorage);
+        this.transformFunctionBody(functionNode, controlFlowStorage);
 
         if (!controlFlowStorage.getLength()) {
             return functionNode;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
-
-        controlFlowStorageCustomNode.initialize(controlFlowStorage);
-
         const controlFlowStorageNode: ESTree.VariableDeclaration = this.getControlFlowStorageNode(controlFlowStorage);
 
-        NodeUtils.parentizeAst(controlFlowStorageNode);
-        NodeAppender.prepend(hostNode, [controlFlowStorageNode]);
-
-        this.hostNodesWithControlFlowNode.set(hostNode, controlFlowStorageNode);
+        this.appendControlFlowStorageNode(hostNode, controlFlowStorageNode);
 
         return functionNode;
+    }
+
+    /**
+     * @param {BlockStatement} functionNode
+     * @param {TControlFlowStorage} controlFlowStorage
+     */
+    protected transformFunctionBody (functionNode: ESTree.Function, controlFlowStorage: TControlFlowStorage): void {
+        estraverse.replace(functionNode.body, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node =>
+                this.transformFunctionBodyNode(node, parentNode, functionNode, controlFlowStorage)
+        });
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
+     * @param {Function} functionNode
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {ESTraverse.VisitorOption | Node}
+     */
+    protected transformFunctionBodyNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node | null,
+        functionNode: ESTree.Function,
+        controlFlowStorage: TControlFlowStorage
+    ): estraverse.VisitorOption | ESTree.Node {
+        const shouldSkipTraverse = !parentNode
+            || NodeMetadata.isIgnoredNode(node)
+            || this.isVisitedFunctionNode(node);
+
+        if (shouldSkipTraverse) {
+            return estraverse.VisitorOption.Skip;
+        }
+
+        const controlFlowReplacerName: ControlFlowReplacer | null = this.controlFlowReplacersMap.get(node.type)
+            ?? null;
+
+        if (!controlFlowReplacerName) {
+            return node;
+        }
+
+        if (!this.isAllowedTransformationByThreshold()) {
+            return node;
+        }
+
+        const replacedNode: ESTree.Node = this.controlFlowReplacerFactory(controlFlowReplacerName)
+            .replace(
+                node,
+                parentNode,
+                functionNode,
+                controlFlowStorage
+            );
+
+        NodeUtils.parentizeNode(replacedNode, parentNode);
+
+        return replacedNode;
+    }
+
+    /**
+     * @param {BlockStatement} functionNodeBody
+     * @returns {TNodeWithStatements}
+     */
+    protected getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithStatements {
+        const blockScopesOfNode: TNodeWithStatements[] = NodeStatementUtils.getParentNodesWithStatements(functionNodeBody);
+
+        if (blockScopesOfNode.length === 1) {
+            return functionNodeBody;
+        } else {
+            blockScopesOfNode.pop();
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
+            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
+            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
+        }
+
+        return this.randomGenerator.getRandomGenerator().pickone(blockScopesOfNode);
+    }
+
+    /**
+     * @param {TNodeWithStatements} hostNode
+     * @returns {TControlFlowStorage}
+     */
+    protected getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
+        const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
+
+        const hostControlFlowStorage: TControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
+
+        if (hostControlFlowStorage) {
+            const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
+                this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
+
+            if (existingControlFlowStorageNode) {
+                NodeAppender.remove(hostNode, existingControlFlowStorageNode);
+            }
+
+            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
+        }
+
+        this.controlFlowData.set(hostNode, controlFlowStorage);
+
+        return controlFlowStorage;
     }
 
     /**
@@ -185,94 +286,30 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {TNodeWithStatements} hostNode
-     * @returns {TControlFlowStorage}
+     * @param {VariableDeclaration} controlFlowStorageNode
      */
-    private getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
-        const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
+    protected appendControlFlowStorageNode (
+        hostNode: TNodeWithStatements,
+        controlFlowStorageNode: ESTree.VariableDeclaration
+    ): void {
+        NodeUtils.parentizeAst(controlFlowStorageNode);
+        NodeAppender.prepend(hostNode, [controlFlowStorageNode]);
 
-        const hostControlFlowStorage: TControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
-
-        if (hostControlFlowStorage) {
-            const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
-                this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
-
-            if (existingControlFlowStorageNode) {
-                NodeAppender.remove(hostNode, existingControlFlowStorageNode);
-            }
-
-            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
-        }
-
-        this.controlFlowData.set(hostNode, controlFlowStorage);
-
-        return controlFlowStorage;
-    }
-
-    /**
-     * @param {BlockStatement} functionNodeBody
-     * @returns {TNodeWithStatements}
-     */
-    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithStatements {
-        const blockScopesOfNode: TNodeWithStatements[] = NodeStatementUtils.getParentNodesWithStatements(functionNodeBody);
-
-        if (blockScopesOfNode.length === 1) {
-            return functionNodeBody;
-        } else {
-            blockScopesOfNode.pop();
-        }
-
-        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
-            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
-        }
-
-        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
-            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
-        }
-
-        return this.randomGenerator.getRandomGenerator().pickone(blockScopesOfNode);
+        this.hostNodesWithControlFlowNode.set(hostNode, controlFlowStorageNode);
     }
 
     /**
      * @param {NodeGuards} node
      * @returns {boolean}
      */
-    private isVisitedFunctionNode (node: ESTree.Node): boolean {
+    protected isVisitedFunctionNode (node: ESTree.Node): boolean {
         return NodeGuards.isFunctionNode(node) && this.visitedFunctionNodes.has(node);
     }
 
     /**
-     * @param {BlockStatement} functionNodeBody
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {boolean}
      */
-    private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: TControlFlowStorage): void {
-        estraverse.replace(functionNodeBody, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node => {
-                const shouldBreakTraverse = !parentNode
-                    || NodeMetadata.isIgnoredNode(node)
-                    || this.isVisitedFunctionNode(node);
-
-                if (shouldBreakTraverse) {
-                    return estraverse.VisitorOption.Break;
-                }
-
-                const controlFlowReplacerName: ControlFlowReplacer | null = this.controlFlowReplacersMap.get(node.type)
-                    ?? null;
-
-                if (!controlFlowReplacerName) {
-                    return node;
-                }
-
-                if (this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
-                    return node;
-                }
-
-                const replacedNode: ESTree.Node = this.controlFlowReplacerFactory(controlFlowReplacerName)
-                    .replace(node, parentNode, controlFlowStorage);
-
-                NodeUtils.parentizeNode(replacedNode, parentNode);
-
-                return replacedNode;
-            }
-        });
+    protected isAllowedTransformationByThreshold (): boolean {
+        return this.randomGenerator.getMathRandom() <= this.options.controlFlowFlatteningThreshold;
     }
 }

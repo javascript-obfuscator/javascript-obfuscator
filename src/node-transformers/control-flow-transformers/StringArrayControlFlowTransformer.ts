@@ -6,7 +6,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
+import { TControlFlowStorage } from '../../types/storages/TControlFlowStorage';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
+import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -37,6 +39,11 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
     protected override readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
         [NodeType.Literal, ControlFlowReplacer.StringArrayCallControlFlowReplacer]
     ]);
+
+    /**
+     * @type {WeakSet<VariableDeclaration>}
+     */
+    protected readonly controlFlowStorageNodes: WeakSet<ESTree.VariableDeclaration> = new WeakSet();
 
     /**
      * @param {TControlFlowStorageFactory} controlFlowStorageFactory
@@ -85,5 +92,48 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
             default:
                 return null;
         }
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
+     * @param {Function} functionNode
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {ESTraverse.VisitorOption | Node}
+     */
+    protected override transformFunctionBodyNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node | null,
+        functionNode: ESTree.Function,
+        controlFlowStorage: TControlFlowStorage
+    ): estraverse.VisitorOption | ESTree.Node {
+        const shouldBreakTraverse = NodeGuards.isVariableDeclarationNode(node)
+            && this.controlFlowStorageNodes.has(node);
+
+        if (shouldBreakTraverse) {
+            return estraverse.VisitorOption.Break;
+        }
+
+        return super.transformFunctionBodyNode(node, parentNode, functionNode, controlFlowStorage);
+    }
+
+    /**
+     * @param {TNodeWithStatements} hostNode
+     * @param {VariableDeclaration} controlFlowStorageNode
+     */
+    protected override appendControlFlowStorageNode (
+        hostNode: TNodeWithStatements,
+        controlFlowStorageNode: ESTree.VariableDeclaration
+    ): void {
+        super.appendControlFlowStorageNode(hostNode, controlFlowStorageNode);
+
+        this.controlFlowStorageNodes.add(controlFlowStorageNode);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    protected override isAllowedTransformationByThreshold (): boolean {
+        return this.randomGenerator.getMathRandom() <= this.options.stringArrayCallsTransformThreshold;
     }
 }

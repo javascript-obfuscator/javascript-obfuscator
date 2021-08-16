@@ -5,7 +5,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -28,27 +30,37 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(controlFlowCustomNodeFactory, randomGenerator, options);
+        super(
+            controlFlowCustomNodeFactory,
+            identifierNamesGeneratorFactory,
+            randomGenerator,
+            options
+        );
     }
 
     /**
      * @param {CallExpression} callExpressionNode
-     * @param {NodeGuards} parentNode
+     * @param {Node} parentNode
+     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {NodeGuards}
+     * @returns {Node}
      */
     public replace (
         callExpressionNode: ESTree.CallExpression,
         parentNode: ESTree.Node,
+        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const callee: ESTree.Expression = <ESTree.Expression>callExpressionNode.callee;
@@ -66,6 +78,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             callExpressionFunctionCustomNode,
+            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             replacerId,
             CallExpressionControlFlowReplacer.usingExistingIdentifierChance

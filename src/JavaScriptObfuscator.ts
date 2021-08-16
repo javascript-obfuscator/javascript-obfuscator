@@ -221,9 +221,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.DeadCodeInjection);
         }
 
-        if (this.options.controlFlowFlattening) {
-            astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
-        }
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
 
         if (this.options.renameProperties) {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameProperties);

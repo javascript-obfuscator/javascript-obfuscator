@@ -381,10 +381,12 @@ Following options are available for the JS Obfuscator:
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
+    stringArrayCallsTransform: true,
+    stringArrayCallsTransformThreshold: 0.5,
+    stringArrayEncoding: [],
     stringArrayIndexesType: [
         'hexadecimal-number'
     ],
-    stringArrayEncoding: [],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
@@ -443,8 +445,10 @@ Following options are available for the JS Obfuscator:
     --split-strings <boolean>
     --split-strings-chunk-length <number>
     --string-array <boolean>
-    --string-array-indexes-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
+    --string-array-calls-transform <boolean>
+    --string-array-calls-transform-threshold <number>
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
+    --string-array-indexes-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
     --string-array-index-shift <boolean>
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
@@ -1111,6 +1115,20 @@ Type: `boolean` Default: `true`
 
 Removes string literals and place them in a special array. For instance, the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
 
+### `stringArrayCallsTransform`
+Type: `boolean` Default: `true`
+
+##### :warning: [`stringArray`](#stringarray) option must be enabled
+
+Enables the transformation of calls to the [`stringArray`](#stringarray). All arguments of these calls may be extracted to different object depending on [`stringArrayCallsTransformThreshold`](#stringarraycallstransformthreshold) value.
+
+### `stringArrayCallsTransformThreshold`
+Type: `number` Default: `0.5`
+
+##### :warning: [`stringArray`](#stringarray) and [`stringArrayCallsTransformThreshold`](#stringarraycallstransformthreshold) options must be enabled
+
+You can use this setting to adjust the probability (from 0 to 1) that calls to the string array will be transformed.
+
 ### `stringArrayEncoding`
 Type: `string[]` Default: `[]`
 
@@ -1419,7 +1437,7 @@ Unicode escape sequence increases code size greatly and strings easily can be re
 ## Preset Options
 ### High obfuscation, low performance
 
-Performance will 50-100% slower than without obfuscation
+The performance will be much slower than without obfuscation
 
 ```javascript
 {
@@ -1442,6 +1460,8 @@ Performance will 50-100% slower than without obfuscation
     splitStrings: true,
     splitStringsChunkLength: 5,
     stringArray: true,
+    stringArray: true,
+    stringArrayCallsTransform: true,
     stringArrayEncoding: ['rc4'],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 5,
@@ -1456,7 +1476,7 @@ Performance will 50-100% slower than without obfuscation
 
 ### Medium obfuscation, optimal performance
 
-Performance will 30-35% slower than without obfuscation
+The performance will be slower than without obfuscation
 
 ```javascript
 {
@@ -1479,6 +1499,8 @@ Performance will 30-35% slower than without obfuscation
     splitStrings: true,
     splitStringsChunkLength: 10,
     stringArray: true,
+    stringArrayCallsTransform: true,
+    stringArrayCallsTransformThreshold: 0.75,
     stringArrayEncoding: ['base64'],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 2,
@@ -1493,7 +1515,7 @@ Performance will 30-35% slower than without obfuscation
 
 ### Low obfuscation, High performance
 
-Performance will slightly slower than without obfuscation
+The performance will be at a relatively normal level
 
 ```javascript
 {
@@ -1513,6 +1535,7 @@ Performance will slightly slower than without obfuscation
     simplify: true,
     splitStrings: false,
     stringArray: true,
+    stringArrayCallsTransform: false,
     stringArrayEncoding: [],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,
@@ -1544,6 +1567,8 @@ Performance will slightly slower than without obfuscation
     simplify: true,
     splitStrings: false,
     stringArray: true,
+    stringArrayCallsTransform: true,
+    stringArrayCallsTransformThreshold: 0.5,
     stringArrayEncoding: [],
     stringArrayIndexShift: true,
     stringArrayWrappersCount: 1,

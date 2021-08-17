@@ -101,6 +101,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @returns {IVisitor | null}
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        if (!this.options.controlFlowFlattening) {
+            return null;
+        }
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.ControlFlowFlattening:
                 return {

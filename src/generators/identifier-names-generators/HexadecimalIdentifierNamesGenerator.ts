@@ -70,4 +70,13 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
         return this.generateNext(nameLength);
     }
+
+    /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForLabel (label: string, nameLength?: number): string {
+        return this.generateNext(nameLength);
+    }
 }

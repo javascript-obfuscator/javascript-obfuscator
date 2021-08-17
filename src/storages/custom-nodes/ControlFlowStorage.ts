@@ -10,6 +10,7 @@ import { MapStorage } from '../MapStorage';
 @injectable()
 export class ControlFlowStorage extends MapStorage <string, ICustomNode> {
     /**
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */

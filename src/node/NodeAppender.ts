@@ -15,10 +15,9 @@ export class NodeAppender {
     public static append (nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
         statements = NodeAppender.parentizeScopeStatementsBeforeAppend(nodeWithStatements, statements);
 
-        NodeAppender.setScopeStatements(nodeWithStatements, [
-            ...NodeAppender.getScopeStatements(nodeWithStatements),
-            ...statements
-        ]);
+        const updatedStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements).concat(statements);
+
+        NodeAppender.setScopeStatements(nodeWithStatements, updatedStatements);
     }
 
     /**
@@ -154,10 +153,9 @@ export class NodeAppender {
     public static prepend (nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
         statements = NodeAppender.parentizeScopeStatementsBeforeAppend(nodeWithStatements, statements);
 
-        NodeAppender.setScopeStatements(nodeWithStatements, [
-            ...statements,
-            ...NodeAppender.getScopeStatements(nodeWithStatements),
-        ]);
+        const updatedStatements: TStatement[] = statements.concat(NodeAppender.getScopeStatements(nodeWithStatements));
+
+        NodeAppender.setScopeStatements(nodeWithStatements, updatedStatements);
     }
 
     /**

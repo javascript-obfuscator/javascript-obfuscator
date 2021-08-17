@@ -21,13 +21,13 @@ import { CodeTransformationStage } from './enums/code-transformers/CodeTransform
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { NodeTransformationStage } from './enums/node-transformers/NodeTransformationStage';
+import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 import { ecmaVersion } from './constants/EcmaVersion';
 
 import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
 import { Utils } from './utils/Utils';
-import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
@@ -90,6 +90,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ScopeIdentifiersTransformer,
         NodeTransformer.ScopeThroughIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
+        NodeTransformer.StringArrayControlFlowTransformer,
         NodeTransformer.StringArrayRotateFunctionTransformer,
         NodeTransformer.StringArrayScopeCallsWrapperTransformer,
         NodeTransformer.StringArrayTransformer,
@@ -220,17 +221,15 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.DeadCodeInjection);
         }
 
-        if (this.options.controlFlowFlattening) {
-            astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
-        }
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
 
         if (this.options.renameProperties) {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameProperties);
         }
 
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Converting);
-        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameIdentifiers);
         astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.StringArray);
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameIdentifiers);
 
         if (this.options.simplify) {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.Simplifying);

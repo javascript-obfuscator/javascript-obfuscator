@@ -13,6 +13,7 @@ export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     debugProtectionInterval: true,
     optionsPreset: OptionsPreset.HighObfuscation,
     splitStringsChunkLength: 5,
+    stringArrayCallsTransformThreshold: 1,
     stringArrayEncoding: [
         StringArrayEncoding.Rc4
     ],

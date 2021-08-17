@@ -19,7 +19,7 @@ export class StringLiteralNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private literalValue!: string;
+    private literalValue!: string | number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -45,7 +45,7 @@ export class StringLiteralNode extends AbstractCustomNode {
     /**
      * @param {string} literalValue
      */
-    public initialize (literalValue: string): void {
+    public initialize (literalValue: string | number): void {
         this.literalValue = literalValue;
     }
 

@@ -1,25 +1,47 @@
 'use strict';
 
-import { readFileAsString } from '../helpers/readFileAsString';
+import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
-    const code: string = readFileAsString(__dirname + '/../functional-tests/javascript-obfuscator/fixtures/custom-nodes-identifier-names-collision.js');
 
-    let obfuscationResult = JavaScriptObfuscator.obfuscate(
-        code,
+    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+        `
+            function foo () {
+                var bar = 'bar';
+                
+                function baz () {
+                    var baz = 'baz';
+                    
+                    return baz;
+                }
+                
+                return bar + baz();
+            }
+            
+            console.log(foo());
+        `,
         {
+            seed: 1,
             identifierNamesGenerator: 'mangled',
             compact: false,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1,
+            simplify: false,
             stringArray: true,
-            seed: 429105580
+            stringArrayIndexesType: [
+                'hexadecimal-number',
+                'hexadecimal-numeric-string'
+            ],
+            stringArrayThreshold: 1,
+            stringArrayCallsTransform: true,
+            stringArrayCallsTransformThreshold: 1,
+            rotateStringArray: true,
+            stringArrayWrappersType: StringArrayWrappersType.Function,
+            transformObjectKeys: true,
         }
-    );
-
-    let obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-    let identifierNamesCache = obfuscationResult.getIdentifierNamesCache();
+    ).getObfuscatedCode();
 
     console.log(obfuscatedCode);
     console.log(eval(obfuscatedCode));
-    console.log(identifierNamesCache);
 })();

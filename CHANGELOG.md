@@ -1,5 +1,9 @@
 Change Log
 
+v2.20.0
+---
+* **New options**: `stringArrayCallsTransform` and `stringArrayCallsTransformThreshold`
+
 v2.19.0
 ---
 * Fixed very rare cases when `rotateStringArray` couldn't rotate array properly

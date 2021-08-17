@@ -32,6 +32,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly lexicalScopesPreservedNamesMap: Map<TNodeWithLexicalScope, Set<string>> = new Map();
 
     /**
+     * @type {Map<string, Set<string>>}
+     */
+    protected readonly labelsPreservedNamesMap: Map<string, Set<string>> = new Map();
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -76,6 +81,19 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
 
     /**
      * @param {string} name
+     * @param {string} label
+     */
+    public preserveNameForLabel (name: string, label: string): void {
+        const preservedNamesForLexicalScopeSet: Set<string> =
+            this.labelsPreservedNamesMap.get(label) ?? new Set();
+
+        preservedNamesForLexicalScopeSet.add(name);
+
+        this.labelsPreservedNamesMap.set(label, preservedNamesForLexicalScopeSet);
+    }
+
+    /**
+     * @param {string} name
      * @returns {boolean}
      */
     public isValidIdentifierName (name: string): boolean {
@@ -110,6 +128,26 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
 
     /**
      * @param {string} name
+     * @param {string} label
+     * @returns {boolean}
+     */
+    public isValidIdentifierNameForLabel (name: string, label: string): boolean {
+        if (!this.isValidIdentifierName(name)) {
+            return false;
+        }
+
+        const preservedNamesForLexicalScopeSet: Set<string> | null =
+            this.labelsPreservedNamesMap.get(label) ?? null;
+
+        if (!preservedNamesForLexicalScopeSet) {
+            return true;
+        }
+
+        return !preservedNamesForLexicalScopeSet.has(name);
+    }
+
+    /**
+     * @param {string} name
      * @returns {boolean}
      */
     private notReservedName (name: string): boolean {
@@ -133,6 +171,13 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @returns {string}
      */
     public abstract generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
+
+    /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generateForLabel (label: string, nameLength?: number): string;
 
     /**
      * @param {number} nameLength

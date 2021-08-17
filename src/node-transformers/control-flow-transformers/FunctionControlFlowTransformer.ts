@@ -207,7 +207,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             .replace(
                 node,
                 parentNode,
-                functionNode,
                 controlFlowStorage
             );
 

@@ -117,6 +117,22 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     }
 
     /**
+     * @param {string} label
+     * @returns {string}
+     */
+    public generateForLabel (label: string): string {
+        const identifierName: string = this.generateNewDictionaryName();
+
+        if (!this.isValidIdentifierNameForLabel(identifierName, label)) {
+            return this.generateForLabel(label);
+        }
+
+        this.preserveNameForLabel(identifierName, label);
+
+        return identifierName;
+    }
+
+    /**
      * @returns {string}
      */
     private generateNewDictionaryName (): string {

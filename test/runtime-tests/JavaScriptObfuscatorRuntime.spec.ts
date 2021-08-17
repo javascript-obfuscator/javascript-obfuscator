@@ -59,7 +59,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         unicodeEscapeSequence: true
     };
 
-    this.timeout(200000);
+    this.timeout(600000);
 
     const options: Partial<TInputOptions>[] = [
         {

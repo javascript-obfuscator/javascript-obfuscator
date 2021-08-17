@@ -7,7 +7,6 @@ import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-n
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
-import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -53,14 +52,12 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     /**
      * @param {CallExpression} callExpressionNode
      * @param {Node} parentNode
-     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     public replace (
         callExpressionNode: ESTree.CallExpression,
         parentNode: ESTree.Node,
-        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const callee: ESTree.Expression = <ESTree.Expression>callExpressionNode.callee;
@@ -78,7 +75,6 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             callExpressionFunctionCustomNode,
-            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             replacerId,
             CallExpressionControlFlowReplacer.usingExistingIdentifierChance

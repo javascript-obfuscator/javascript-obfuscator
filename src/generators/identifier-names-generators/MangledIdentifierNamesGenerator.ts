@@ -26,6 +26,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static readonly lastMangledNameInScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
 
     /**
+     * @type {WeakMap<string, string>}
+     */
+    private static readonly lastMangledNameForLabelMap: Map <string, string> = new Map();
+
+    /**
      * @type {string[]}
      */
     private static readonly nameSequence: string[] = [
@@ -120,6 +125,28 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         this.updatePreviousMangledName(identifierName);
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
+
+        return identifierName;
+    }
+
+    /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForLabel (label: string, nameLength?: number): string {
+        const lastMangledNameForLabel: string = this.getLastMangledNameForLabel(label);
+
+        let identifierName: string = lastMangledNameForLabel;
+
+        do {
+            identifierName = this.generateNewMangledName(identifierName);
+        } while (!this.isValidIdentifierNameForLabel(identifierName, label));
+
+        MangledIdentifierNamesGenerator.lastMangledNameForLabelMap.set(label, identifierName);
+
+        this.updatePreviousMangledName(identifierName);
+        this.preserveNameForLabel(identifierName, label);
 
         return identifierName;
     }
@@ -252,5 +279,16 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         }
 
         return MangledIdentifierNamesGenerator.initMangledNameCharacter;
+    }
+
+    /**
+     * @param {string} label
+     * @returns {string}
+     */
+    private getLastMangledNameForLabel (label: string): string {
+        const lastMangledName: string | null = MangledIdentifierNamesGenerator.lastMangledNameForLabelMap
+            .get(label) ?? null;
+
+        return lastMangledName ?? MangledIdentifierNamesGenerator.initMangledNameCharacter;
     }
 }

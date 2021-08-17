@@ -35,7 +35,7 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             ],
             stringArrayThreshold: 1,
             stringArrayCallsTransform: true,
-            stringArrayCallsTransformThreshold: 0.5,
+            stringArrayCallsTransformThreshold: 1,
             rotateStringArray: true,
             stringArrayWrappersType: StringArrayWrappersType.Function,
             transformObjectKeys: true,

@@ -7,7 +7,6 @@ import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-n
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
-import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -52,14 +51,12 @@ export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlow
     /**
      * @param {Literal} literalNode
      * @param {Node} parentNode
-     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     public override replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
-        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const isStringArrayCallLiteralNode = NodeMetadata.isStringArrayCallLiteralNode(literalNode)
@@ -80,12 +77,28 @@ export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlow
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             literalFunctionCustomNode,
-            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             replacerId,
             StringArrayCallControlFlowReplacer.usingExistingIdentifierChance
         );
 
         return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey);
+    }
+
+    /**
+     * Generates storage key based on a current control flow storage identifier
+     *
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {string}
+     */
+    public override generateStorageKey (controlFlowStorage: TControlFlowStorage): string {
+        const key: string = this.identifierNamesGenerator
+            .generateForLabel(controlFlowStorage.getStorageId());
+
+        if (controlFlowStorage.has(key)) {
+            return this.generateStorageKey(controlFlowStorage);
+        }
+
+        return key;
     }
 }

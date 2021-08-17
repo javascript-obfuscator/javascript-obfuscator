@@ -7,7 +7,6 @@ import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-n
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
-import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -57,7 +56,6 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
-        controlFlowStorageLexicalScopeNode: TNodeWithLexicalScope,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const operator: ESTree.BinaryOperator = binaryExpressionNode.operator;
@@ -68,7 +66,6 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             binaryExpressionFunctionCustomNode,
-            controlFlowStorageLexicalScopeNode,
             controlFlowStorage,
             operator,
             BinaryExpressionControlFlowReplacer.usingExistingIdentifierChance

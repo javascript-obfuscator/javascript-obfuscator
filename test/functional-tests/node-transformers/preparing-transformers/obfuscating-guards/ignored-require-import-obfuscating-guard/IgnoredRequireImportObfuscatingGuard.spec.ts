@@ -40,7 +40,8 @@ describe('IgnoredRequireImportObfuscatingGuard', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
                 'const foo *= *require\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\);.*' +
                 'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\';.*' +
-                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x1\\);'
+                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x1\\);' +
+                'const qux *= *import\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\);.*'
             );
 
             let obfuscatedCode: string;

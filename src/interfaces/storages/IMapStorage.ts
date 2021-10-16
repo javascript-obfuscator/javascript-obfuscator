@@ -3,6 +3,8 @@ import { TDictionary } from '../../types/TDictionary';
 import { IInitializable } from '../IInitializable';
 
 export interface IMapStorage <K, V> extends IInitializable {
+    clear (): void;
+
     /**
      * @param {K} key
      * @returns {V | undefined}

@@ -42,9 +42,9 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     private readonly stringArrayStorage: IStringArrayStorage;
 
     /**
-     * @type {Map<ESTree.Literal, IStringArrayStorageItemData>}
+     * @type {WeakMap<ESTree.Literal, IStringArrayStorageItemData>}
      */
-    private readonly stringArrayStorageData: Map<ESTree.Literal, IStringArrayStorageItemData> = new Map();
+    private readonly stringArrayStorageData: WeakMap<ESTree.Literal, IStringArrayStorageItemData> = new WeakMap();
 
     /**
      * @param {IStringArrayStorage} stringArrayStorage

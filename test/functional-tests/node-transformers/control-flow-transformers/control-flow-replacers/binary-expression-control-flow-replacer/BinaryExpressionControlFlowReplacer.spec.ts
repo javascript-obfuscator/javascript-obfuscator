@@ -14,7 +14,7 @@ describe('BinaryExpressionControlFlowReplacer', function () {
 
         describe('Variant #1 - single binary expression', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}'\\]\\(0x1, *0x2\\);`
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(0x1, *0x2\\);`
             );
 
             let obfuscatedCode: string;
@@ -45,10 +45,10 @@ describe('BinaryExpressionControlFlowReplacer', function () {
             const delta: number = 0.1;
 
             const controlFlowStorageCallRegExp1: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(0x1, *0x2\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(0x1, *0x2\\);`
             );
             const controlFlowStorageCallRegExp2: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(0x2, *0x3\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(0x2, *0x3\\);`
             );
 
             let matchErrorsCount: number = 0,

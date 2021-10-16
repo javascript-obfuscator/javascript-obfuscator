@@ -14,7 +14,7 @@ describe('CallExpressionControlFlowReplacer', function () {
 
         describe('Variant #1 - single call expression', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}'\\]\\(${variableMatch}, *0x1, *0x2\\);`
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(${variableMatch}, *0x1, *0x2\\);`
             );
 
             let obfuscatedCode: string;
@@ -45,10 +45,10 @@ describe('CallExpressionControlFlowReplacer', function () {
             const delta: number = 0.1;
 
             const controlFlowStorageCallRegExp1: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(${variableMatch}, *0x1, *0x2\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(${variableMatch}, *0x1, *0x2\\);`
             );
             const controlFlowStorageCallRegExp2: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(${variableMatch}, *0x2, *0x3\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(${variableMatch}, *0x2, *0x3\\);`
             );
 
             let matchErrorsCount: number = 0,
@@ -130,10 +130,10 @@ describe('CallExpressionControlFlowReplacer', function () {
 
         describe('Variant #4 - rest as start call argument', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `${variableMatch}\\['${variableMatch}']\\(${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
             );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'${variableMatch}' *: *function *\\(${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
                     `return *${variableMatch}\\(\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);
@@ -164,10 +164,10 @@ describe('CallExpressionControlFlowReplacer', function () {
 
         describe('Variant #5 - rest as middle call argument', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `${variableMatch}\\['${variableMatch}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
             );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'${variableMatch}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
                     `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);
@@ -198,10 +198,10 @@ describe('CallExpressionControlFlowReplacer', function () {
 
         describe('Variant #6 - rest as last call argument', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `${variableMatch}\\['${variableMatch}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}\\);`
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}\\);`
             );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'${variableMatch}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
                    `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);

@@ -1,6 +1,8 @@
 import { IInitializable } from '../IInitializable';
 
 export interface IArrayStorage <V> extends IInitializable {
+    clear (): void;
+
     /**
      * @param {number} key
      * @returns {V | undefined}

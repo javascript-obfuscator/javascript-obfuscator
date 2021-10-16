@@ -11,10 +11,10 @@ describe('StringLiteralControlFlowReplacer', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
 
         const controlFlowStorageStringLiteralRegExp: RegExp = new RegExp(
-            `var ${variableMatch} *= *\\{'${variableMatch}' *: *'test'\\};`
+            `var ${variableMatch} *= *\\{'\\w{5}' *: *'test'\\};`
         );
         const controlFlowStorageCallRegExp: RegExp = new RegExp(
-            `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}'\\];`
+            `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\];`
         );
 
         let obfuscatedCode: string;

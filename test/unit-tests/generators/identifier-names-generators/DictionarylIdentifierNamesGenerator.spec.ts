@@ -224,4 +224,39 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
         });
     });
+
+    describe('generateForLabel', () => {
+        const label1: string = 'label1';
+        const label2: string = 'label2';
+
+        const dictionaryNames1: string[] = [];
+        const dictionaryNames2: string[] = [];
+
+        let identifierNamesGenerator: IIdentifierNamesGenerator;
+
+        before(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load('', '', {
+                identifiersPrefix: 'foo',
+                identifiersDictionary: ['a', 'b', 'c']
+            });
+            identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+            );
+
+            dictionaryNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            dictionaryNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            dictionaryNames1.push(identifierNamesGenerator.generateForLabel(label1));
+
+            dictionaryNames2.push(identifierNamesGenerator.generateForLabel(label2));
+            dictionaryNames2.push(identifierNamesGenerator.generateForLabel(label2));
+            dictionaryNames2.push(identifierNamesGenerator.generateForLabel(label2));
+        });
+
+        it('should return different dictionary names for different labels', () => {
+            assert.notDeepEqual(dictionaryNames1, dictionaryNames2);
+        });
+    });
 });

@@ -1,15 +1,14 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { IMapStorage } from '../interfaces/storages/IMapStorage';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
+import { IWeakMapStorage } from '../interfaces/storages/IWeakMapStorage';
 
 import { initializable } from '../decorators/Initializable';
-import { TDictionary } from '../types/TDictionary';
 
 @injectable()
-export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
+export abstract class WeakMapStorage <K extends object, V> implements IWeakMapStorage <K, V> {
     /**
      * @type {string}
      */
@@ -17,10 +16,10 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     protected storageId!: string;
 
     /**
-     * @type {Map <K, V>}
+     * @type {WeakMap <K, V>}
      */
     @initializable()
-    protected storage!: Map <K, V>;
+    protected storage!: WeakMap <K, V>;
 
     /**
      * @type {IOptions}
@@ -50,10 +49,6 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
-    public clear (): void {
-        this.storage.clear();
-    }
-
     /**
      * @param {K} key
      * @returns {V | undefined}
@@ -70,45 +65,17 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
         const value: V | undefined = this.get(key);
 
         if (!value) {
-            throw new Error(`No value found in map storage with key \`${key}\``);
+            throw new Error(`No value found in weak map storage with key \`${key}\``);
         }
 
         return value;
     }
 
     /**
-     * @param {V} value
-     * @returns {K | null}
+     * @returns {WeakMap<K, V>}
      */
-    public getKeyOf (value: V): K | null {
-        for (const [key, storageValue] of this.storage) {
-            if (value === storageValue) {
-                return key;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @returns {number}
-     */
-    public getLength (): number {
-        return this.storage.size;
-    }
-
-    /**
-     * @returns {Map<K, V>}
-     */
-    public getStorage (): Map <K, V> {
+    public getStorage (): WeakMap <K, V> {
         return this.storage;
-    }
-
-    /**
-     * @returns {TDictionary<V>}
-     */
-    public getStorageAsDictionary (): TDictionary<V> {
-        return Object.fromEntries(this.storage);
     }
 
     /**
@@ -124,18 +91,6 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      */
     public has (key: K): boolean {
         return this.storage.has(key);
-    }
-
-    /**
-     * @param {this} storage
-     * @param {boolean} mergeId
-     */
-    public mergeWith (storage: this, mergeId: boolean = false): void {
-        this.storage = new Map <K, V>([...this.storage, ...storage.getStorage()]);
-
-        if (mergeId) {
-            this.storageId = storage.getStorageId();
-        }
     }
 
     /**

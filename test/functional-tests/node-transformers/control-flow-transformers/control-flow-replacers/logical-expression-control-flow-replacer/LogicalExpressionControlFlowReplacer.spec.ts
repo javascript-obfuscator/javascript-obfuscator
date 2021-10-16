@@ -14,7 +14,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
 
         describe('Variant #1 - single logical expression', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}'\\]\\(!!\\[\\], *!\\[\\]\\);`
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(!!\\[\\], *!\\[\\]\\);`
             );
 
             let obfuscatedCode: string;
@@ -45,10 +45,10 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             const delta: number = 0.1;
 
             const controlFlowStorageCallRegExp1: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(!!\\[\\], *!\\[\\]\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(!!\\[\\], *!\\[\\]\\);`
             );
             const controlFlowStorageCallRegExp2: RegExp = new RegExp(
-                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['${variableMatch}'\\])\\(!\\[\\], *!!\\[\\]\\);`
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(!\\[\\], *!!\\[\\]\\);`
             );
 
             let matchErrorsCount: number = 0,
@@ -105,7 +105,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
 
         describe('Variant #3 - single logical expression with unary expression', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}'\\]\\(!${variableMatch}, *!${variableMatch}\\);`
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(!${variableMatch}, *!${variableMatch}\\);`
             );
 
             let obfuscatedCode: string;

@@ -52,9 +52,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
-     * @type {Map<ESTree.Node, TControlFlowStorage>}
+     * @type {WeakMap<TNodeWithStatements, TControlFlowStorage>}
      */
-    protected readonly controlFlowData: Map <ESTree.Node, TControlFlowStorage> = new Map();
+    protected readonly controlFlowData: WeakMap <TNodeWithStatements, TControlFlowStorage> = new WeakMap();
 
     /**
      * @type {WeakMap<TNodeWithStatements, VariableDeclaration>}

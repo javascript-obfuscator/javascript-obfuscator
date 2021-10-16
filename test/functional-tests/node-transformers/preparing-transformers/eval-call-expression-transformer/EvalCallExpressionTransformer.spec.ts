@@ -320,14 +320,14 @@ describe('EvalCallExpressionTransformer', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
             `var ${variableMatch} *= *\\{` +
-                `'${variableMatch}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `\\}` +
             `\\};` +
         ``;
         const controlFlowStorageNodeRegExp: RegExp = new RegExp(controlFlowStorageNodeMatch);
         const evalExpressionRegExp: RegExp = new RegExp(
-            `eval *\\('${variableMatch}\\[\\\\'${variableMatch}\\\\']\\(${variableMatch}, *${variableMatch}\\);'\\);`
+            `eval *\\('${variableMatch}\\[\\\\'\\w{5}\\\\']\\(${variableMatch}, *${variableMatch}\\);'\\);`
         );
 
         let obfuscatedCode: string;

@@ -257,11 +257,11 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #9: correct integration with control flow flattening object #1', () => {
             const match: string = `` +
                 `var ${variableMatch} *= *{};` +
-                `${variableMatch}\\['${variableMatch}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
+                `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
                 `var ${variableMatch} *= *${variableMatch};` +
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}']\\(0x1, *0x2\\);` +
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -289,7 +289,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #10: correct integration with control flow flattening object #2', () => {
             const match: string = `` +
                 `var ${variableMatch} *= *{};` +
-                `${variableMatch}\\['${variableMatch}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
+                `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
                 `var ${variableMatch} *= *${variableMatch};` +
@@ -297,7 +297,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['foo'] *= *0x1;` +
                 `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['bar'] *= *0x2;` +
-                `var ${variableMatch} *= *${variableMatch}\\['${variableMatch}']\\(${variableMatch}\\['foo'], *${variableMatch}\\['bar']\\);` +
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(${variableMatch}\\['foo'], *${variableMatch}\\['bar']\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
 

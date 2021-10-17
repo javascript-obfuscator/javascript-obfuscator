@@ -12,7 +12,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
-export class IgnoredRequireImportObfuscatingGuard implements IObfuscatingGuard {
+export class IgnoredImportObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {IOptions}
      */
@@ -29,18 +29,34 @@ export class IgnoredRequireImportObfuscatingGuard implements IObfuscatingGuard {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isDynamicImport (node: ESTree.Node): boolean {
+        return NodeGuards.isImportExpressionNode(node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isRequireImport (node: ESTree.Node): boolean {
+        return NodeGuards.isCallExpressionNode(node)
+            && NodeGuards.isIdentifierNode(node.callee)
+            && node.callee.name === 'require';
+    }
+
+    /**
+     * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
     public check (node: ESTree.Node): ObfuscatingGuardResult {
-        if (this.options.ignoreRequireImports) {
-            if (
-                NodeGuards.isCallExpressionNode(node)
-                && NodeGuards.isIdentifierNode(node.callee)
-                && node.callee.name === 'require'
-            ) { return ObfuscatingGuardResult.Ignore; }
-            if (
-                NodeGuards.isImportExpressionNode(node)
-            ) { return ObfuscatingGuardResult.Ignore; }
+        if (this.options.ignoreImports) {
+            const isIgnoredImport = IgnoredImportObfuscatingGuard.isDynamicImport(node)
+                || IgnoredImportObfuscatingGuard.isRequireImport(node);
+
+            if (isIgnoredImport) {
+                return ObfuscatingGuardResult.Ignore;
+            }
         }
 
         return ObfuscatingGuardResult.Transform;

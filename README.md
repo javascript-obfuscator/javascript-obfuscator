@@ -421,7 +421,7 @@ Following options are available for the JS Obfuscator:
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
-    --ignore-require-imports <boolean>
+    --ignore-imports <boolean>
     --log <boolean>
     --numbers-to-expressions <boolean>
     --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]

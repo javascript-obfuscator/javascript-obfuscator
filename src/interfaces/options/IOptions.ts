@@ -27,7 +27,7 @@ export interface IOptions {
     readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;
-    readonly ignoreRequireImports: boolean;
+    readonly ignoreImports: boolean;
     readonly inputFileName: string;
     readonly log: boolean;
     readonly numbersToExpressions: boolean;

@@ -25,7 +25,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     identifiersPrefix: '',
     identifiersDictionary: [],
-    ignoreRequireImports: false,
+    ignoreImports: false,
     inputFileName: '',
     log: false,
     numbersToExpressions: false,

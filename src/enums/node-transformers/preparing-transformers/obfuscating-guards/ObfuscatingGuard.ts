@@ -2,6 +2,6 @@ export enum ObfuscatingGuard {
     BlackListObfuscatingGuard = 'BlackListObfuscatingGuard',
     ConditionalCommentObfuscatingGuard = 'ConditionalCommentObfuscatingGuard',
     ForceTransformStringObfuscatingGuard = 'ForceTransformStringObfuscatingGuard',
-    IgnoredRequireImportObfuscatingGuard = 'IgnoredRequireImportObfuscatingGuard',
+    IgnoredImportObfuscatingGuard = 'IgnoredImportObfuscatingGuard',
     ReservedStringObfuscatingGuard = 'ReservedStringObfuscatingGuard'
 }

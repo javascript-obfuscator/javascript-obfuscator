@@ -1,5 +1,9 @@
 Change Log
 
+v3.0.0
+---
+* **Breaking change:** `ignoreRequireImports` option renamed to `ignoreImports`
+
 v2.19.1
 ---
 * Updated `@javascript-obfuscator/escodegen` with fixed parenthesis of `default export` IIFE

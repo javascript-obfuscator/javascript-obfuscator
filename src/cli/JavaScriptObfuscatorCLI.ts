@@ -271,7 +271,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--ignore-require-imports <boolean>', 'Prevents obfuscation of `require` imports',
+                '--ignore-imports <boolean>', 'Prevents obfuscation of `require` and `dynamic` imports',
                 BooleanSanitizer
             )
             .option(

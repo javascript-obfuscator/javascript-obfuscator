@@ -191,7 +191,7 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly ignoreRequireImports!: boolean;
+    public readonly ignoreImports!: boolean;
 
     /**
      * @type {string}

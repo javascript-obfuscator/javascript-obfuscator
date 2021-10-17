@@ -1272,7 +1272,7 @@ describe('JavaScriptObfuscator', () => {
                         numbersToExpressions: true,
                         simplify: true,
                         renameProperties: true,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayEncoding: [
                             StringArrayEncoding.Base64,
@@ -1406,7 +1406,7 @@ describe('JavaScriptObfuscator', () => {
                 debugProtection: true,
                 debugProtectionInterval: true,
                 disableConsoleOutput: false,
-                rotateStringArray: true,
+                stringArrayRotate: true,
                 selfDefending: true,
                 stringArray: true,
                 stringArrayThreshold: 1,

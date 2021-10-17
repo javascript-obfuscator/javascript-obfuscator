@@ -12,13 +12,13 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
     if (!options.stringArray) {
         options = {
             ...options,
-            rotateStringArray: false,
-            shuffleStringArray: false,
             stringArray: false,
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ],
             stringArrayIndexShift: false,
+            stringArrayRotate: false,
+            stringArrayShuffle: false,
             stringArrayWrappersChainedCalls: false,
             stringArrayWrappersCount: 0,
             stringArrayThreshold: 0

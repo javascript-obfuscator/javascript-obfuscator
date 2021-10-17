@@ -3,6 +3,9 @@ Change Log
 v3.0.0
 ---
 * **Breaking change:** `ignoreRequireImports` option renamed to `ignoreImports`
+* **Breaking change:** `rotateStringArray` option renamed to `stringArrayRotate`
+* **Breaking change:** `shuffleStringArray` option renamed to `stringArrayShuffle`
+* `ignoreImports` now ignores `dynamic` imports in addition to `require` imports
 
 v2.19.1
 ---

@@ -31,7 +31,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -53,7 +53,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: false,
+                        stringArrayRotate: false,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -75,7 +75,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 0.00001
                     }
@@ -97,7 +97,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 0
                     }
@@ -119,7 +119,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -155,7 +155,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
                             numbersToExpressions: true,
                             simplify: true,
                             renameProperties: true,
-                            rotateStringArray: true,
+                            stringArrayRotate: true,
                             selfDefending: true,
                             splitStrings: true,
                             splitStringsChunkLength: 3,
@@ -227,8 +227,8 @@ describe('StringArrayRotateFunctionTransformer', function () {
                         code,
                         {
                             seed: i,
-                            rotateStringArray: true,
-                            shuffleStringArray: true,
+                            stringArrayRotate: true,
+                            stringArrayShuffle: true,
                             stringArray: true,
                             stringArrayThreshold: 1
                         }

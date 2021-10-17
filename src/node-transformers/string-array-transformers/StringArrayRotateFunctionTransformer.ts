@@ -136,7 +136,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @returns {IVisitor | null}
      */
     public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
-        if (!this.options.rotateStringArray) {
+        if (!this.options.stringArrayRotate) {
             return null;
         }
 

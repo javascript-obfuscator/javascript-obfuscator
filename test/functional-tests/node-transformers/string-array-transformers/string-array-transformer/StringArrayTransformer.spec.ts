@@ -233,7 +233,7 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #2: `rotateStringArray` option is enabled', () => {
+        describe('Variant #2: `stringArrayRotate` option is enabled', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
@@ -244,7 +244,7 @@ describe('StringArrayTransformer', function () {
                         stringArray: true,
                         stringArrayThreshold: 1,
                         stringArrayIndexShift: true,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 ).getObfuscatedCode();
 
@@ -265,7 +265,7 @@ describe('StringArrayTransformer', function () {
             });
         });
 
-        describe('Variant #3: `shuffleStringArray` option is enabled', () => {
+        describe('Variant #3: `stringArrayShuffle` option is enabled', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
@@ -276,7 +276,7 @@ describe('StringArrayTransformer', function () {
                         stringArray: true,
                         stringArrayThreshold: 1,
                         stringArrayIndexShift: true,
-                        shuffleStringArray: true
+                        stringArrayShuffle: true
                     }
                 ).getObfuscatedCode();
 
@@ -328,8 +328,8 @@ describe('StringArrayTransformer', function () {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
-                        shuffleStringArray: true,
+                        stringArrayRotate: true,
+                        stringArrayShuffle: true,
                         stringArray: true,
                         stringArrayEncoding: [
                             StringArrayEncoding.Rc4

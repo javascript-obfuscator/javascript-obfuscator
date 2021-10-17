@@ -6,13 +6,14 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-describe('IgnoredRequireImportObfuscatingGuard', () => {
+describe('IgnoredImportObfuscatingGuard', () => {
     describe('check', () => {
-        describe('`ignoreRequireImports` option is enabled', () => {
+        describe('`ignoreImports` option is enabled', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
                 'const foo *= *require\\(\'\\./foo\'\\);.*' +
                 'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\';.*' +
-                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x0\\);'
+                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x0\\);.*' +
+                'const bark *= *await import\\(\'\\./bark\'\\);'
             );
 
             let obfuscatedCode: string;
@@ -24,24 +25,24 @@ describe('IgnoredRequireImportObfuscatingGuard', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        ignoreRequireImports: true,
+                        ignoreImports: true,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();
             });
 
-            it('match #1: shouldn\'t obfuscate require import', () => {
+            it('match #1: shouldn\'t obfuscate imports', () => {
                 assert.match(obfuscatedCode, obfuscatingGuardRegExp);
             });
         });
 
-        describe('`ignoreRequireImports` option is disabled', () => {
+        describe('`ignoreImports` option is disabled', () => {
             const obfuscatingGuardRegExp: RegExp = new RegExp(
                 'const foo *= *require\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\);.*' +
                 'import _0x(?:[a-f0-9]){4,6} from *\'\\./bar\';.*' +
-                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x1\\);' +
-                'const qux *= *import\\(_0x(?:[a-f0-9]){4,6}\\(0x0\\)\\);.*'
+                'const baz *= *_0x(?:[a-f0-9]){4,6}\\(0x1\\);.*' +
+                'const bark *= *await import\\(_0x(?:[a-f0-9]){4,6}\\(0x2\\)\\);'
             );
 
             let obfuscatedCode: string;
@@ -53,14 +54,14 @@ describe('IgnoredRequireImportObfuscatingGuard', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        ignoreRequireImports: false,
+                        ignoreImports: false,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
                 ).getObfuscatedCode();
             });
 
-            it('match #1: should obfuscate require import', () => {
+            it('match #1: should obfuscate imports', () => {
                 assert.match(obfuscatedCode, obfuscatingGuardRegExp);
             });
         });

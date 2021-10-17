@@ -191,7 +191,7 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly ignoreRequireImports!: boolean;
+    public readonly ignoreImports!: boolean;
 
     /**
      * @type {string}
@@ -264,19 +264,7 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly rotateStringArray!: boolean;
-
-    /**
-     * @type {boolean}
-     */
-    @IsBoolean()
     public readonly selfDefending!: boolean;
-
-    /**
-     * @type {boolean}
-     */
-    @IsBoolean()
-    public readonly shuffleStringArray!: boolean;
 
     /**
      * @type {boolean}
@@ -362,6 +350,18 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly stringArrayIndexShift!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly stringArrayRotate!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly stringArrayShuffle!: boolean;
 
     /**
      * @type {boolean}

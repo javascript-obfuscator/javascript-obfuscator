@@ -139,7 +139,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
                 StringArrayStorage.maximumIndexShiftAmount
             )
             : 0;
-        this.rotationAmount = this.options.rotateStringArray
+        this.rotationAmount = this.options.stringArrayRotate
             ? this.randomGenerator.getRandomInteger(
                 StringArrayStorage.minimumRotationAmount,
                 StringArrayStorage.maximumRotationAmount

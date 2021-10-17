@@ -27,7 +27,7 @@ export interface IOptions {
     readonly identifierNamesGenerator: TTypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;
-    readonly ignoreRequireImports: boolean;
+    readonly ignoreImports: boolean;
     readonly inputFileName: string;
     readonly log: boolean;
     readonly numbersToExpressions: boolean;
@@ -37,10 +37,8 @@ export interface IOptions {
     readonly renamePropertiesMode: TRenamePropertiesMode;
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
-    readonly rotateStringArray: boolean;
     readonly seed: string | number;
     readonly selfDefending: boolean;
-    readonly shuffleStringArray: boolean;
     readonly simplify: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
@@ -53,6 +51,8 @@ export interface IOptions {
     readonly stringArrayEncoding: TStringArrayEncoding[];
     readonly stringArrayIndexesType: TStringArrayIndexesType[];
     readonly stringArrayIndexShift: boolean;
+    readonly stringArrayRotate: boolean;
+    readonly stringArrayShuffle: boolean;
     readonly stringArrayWrappersChainedCalls: boolean;
     readonly stringArrayWrappersCount: number;
     readonly stringArrayWrappersParametersMaxCount: number;

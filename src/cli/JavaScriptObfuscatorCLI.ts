@@ -271,7 +271,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--ignore-require-imports <boolean>', 'Prevents obfuscation of `require` imports',
+                '--ignore-imports <boolean>', 'Prevents obfuscation of `require` and `dynamic` imports',
                 BooleanSanitizer
             )
             .option(
@@ -313,10 +313,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 `Default: ${RenamePropertiesMode.Safe}`
             )
             .option(
-                '--rotate-string-array <boolean>', 'Enable rotation of string array values during obfuscation',
-                BooleanSanitizer
-            )
-            .option(
                 '--seed <string|number>',
                 'Sets seed for random generator. This is useful for creating repeatable results.',
                 parseFloat
@@ -324,10 +320,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--self-defending <boolean>',
                 'Disables self-defending for obfuscated code',
-                BooleanSanitizer
-            )
-            .option(
-                '--shuffle-string-array <boolean>', 'Randomly shuffles string array items',
                 BooleanSanitizer
             )
             .option(
@@ -391,6 +383,14 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--string-array-index-shift <boolean>',
                 'Enables additional index shift for all string array calls',
+                BooleanSanitizer
+            )
+            .option(
+                '--string-array-rotate <boolean>', 'Enable rotation of string array values during obfuscation',
+                BooleanSanitizer
+            )
+            .option(
+                '--string-array-shuffle <boolean>', 'Randomly shuffles string array items',
                 BooleanSanitizer
             )
             .option(

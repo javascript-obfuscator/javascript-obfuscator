@@ -33,7 +33,7 @@ describe('StringArrayStorage', () => {
                        code,
                        {
                            ...NO_ADDITIONAL_NODES_PRESET,
-                           rotateStringArray: true,
+                           stringArrayRotate: true,
                            stringArray: true,
                            stringArrayThreshold: 1
                        }
@@ -100,7 +100,7 @@ describe('StringArrayStorage', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            rotateStringArray: true,
+                            stringArrayRotate: true,
                             stringArray: true,
                             stringArrayThreshold: 1
                         }
@@ -173,7 +173,7 @@ describe('StringArrayStorage', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            shuffleStringArray: true,
+                            stringArrayShuffle: true,
                             stringArray: true,
                             stringArrayThreshold: 1
                         }
@@ -268,7 +268,7 @@ describe('StringArrayStorage', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
-                            shuffleStringArray: true,
+                            stringArrayShuffle: true,
                             stringArray: true,
                             stringArrayThreshold: 1
                         }

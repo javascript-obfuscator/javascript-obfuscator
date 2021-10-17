@@ -31,7 +31,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
         ObfuscatingGuard.BlackListObfuscatingGuard,
         ObfuscatingGuard.ConditionalCommentObfuscatingGuard,
         ObfuscatingGuard.ForceTransformStringObfuscatingGuard,
-        ObfuscatingGuard.IgnoredRequireImportObfuscatingGuard,
+        ObfuscatingGuard.IgnoredImportObfuscatingGuard,
         ObfuscatingGuard.ReservedStringObfuscatingGuard
     ];
 

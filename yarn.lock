@@ -477,10 +477,10 @@
   resolved "https://registry.npmjs.org/@istanbuljs/schema/-/schema-0.1.2.tgz"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@javascript-obfuscator/escodegen@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@javascript-obfuscator/escodegen/-/escodegen-2.2.1.tgz#a87932d93e9a50d2b47942c15d6c0f1300db6179"
-  integrity sha512-QNqNXSTd5cbA2eImhI0aK52DxWMqX8ahWnd0B+icYmK/dS+7dXl+yvomJog3lHpZvshr0ItkHeZxSyYmvWhfrg==
+"@javascript-obfuscator/escodegen@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@javascript-obfuscator/escodegen/-/escodegen-2.2.2.tgz#518aa621f6258fa369eb48b865e54dc58fc44cfa"
+  integrity sha512-0VoGJun/lpGEPv8J8R8fpwt1iAGyctUjHTQoYoCbKY2rcGc6d+NycrqSMo61vRXhZiTnHgud1UF8dOI7UAPdTw==
   dependencies:
     "@javascript-obfuscator/estraverse" "^5.3.0"
     esprima "^4.0.1"

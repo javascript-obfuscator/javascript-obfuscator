@@ -1,5 +1,9 @@
 Change Log
 
+v2.19.1
+---
+* Updated `@javascript-obfuscator/escodegen` with fixed parenthesis of `default export` IIFE
+
 v2.19.0
 ---
 * Fixed very rare cases when `rotateStringArray` couldn't rotate array properly

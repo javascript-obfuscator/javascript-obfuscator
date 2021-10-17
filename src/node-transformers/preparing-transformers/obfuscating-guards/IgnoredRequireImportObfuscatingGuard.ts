@@ -32,13 +32,15 @@ export class IgnoredRequireImportObfuscatingGuard implements IObfuscatingGuard {
      * @returns {ObfuscatingGuardResult}
      */
     public check (node: ESTree.Node): ObfuscatingGuardResult {
-        if (
-            this.options.ignoreRequireImports
-            && NodeGuards.isCallExpressionNode(node)
-            && NodeGuards.isIdentifierNode(node.callee)
-            && node.callee.name === 'require'
-        ) {
-            return ObfuscatingGuardResult.Ignore;
+        if (this.options.ignoreRequireImports) {
+            if (
+                NodeGuards.isCallExpressionNode(node)
+                && NodeGuards.isIdentifierNode(node.callee)
+                && node.callee.name === 'require'
+            ) { return ObfuscatingGuardResult.Ignore; }
+            if (
+                NodeGuards.isImportExpressionNode(node)
+            ) { return ObfuscatingGuardResult.Ignore; }
         }
 
         return ObfuscatingGuardResult.Transform;

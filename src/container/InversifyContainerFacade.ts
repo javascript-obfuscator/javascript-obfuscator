@@ -22,6 +22,7 @@ import { storagesModule } from './modules/storages/StoragesModule';
 import { stringArrayTransformersModule } from './modules/node-transformers/StringArrayTransformersModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
+import { TConstructor } from '../types/TConstructor';
 import { TInputOptions } from '../types/options/TInputOptions';
 
 import { ICodeTransformersRunner } from '../interfaces/code-transformers/ICodeTransformersRunner';
@@ -88,21 +89,21 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param {interfaces.ServiceIdentifier<interfaces.Newable<U>>} serviceIdentifier
-     * @param {interfaces.ServiceIdentifier<interfaces.Newable<Object>>[]} dependencies
-     * @returns {U}
+     * @param {interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>} serviceIdentifier
+     * @param {interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>} dependencies
+     * @returns {(context: interfaces.Context) => (bindingName: T) => U}
      */
     public static getConstructorFactory <T extends string, U> (
-        serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
-        ...dependencies: interfaces.ServiceIdentifier<interfaces.Newable<Record<string, any>>>[]
+        serviceIdentifier: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
+        ...dependencies: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
-            const cache: Map<T, interfaces.Newable<U>> = new Map();
+            const cache: Map<T, TConstructor<Record<string, any>[], U>> = new Map();
             const cachedDependencies: Record<string, any>[] = [];
 
             return (bindingName: T): U => {
                 dependencies.forEach((
-                    dependency: interfaces.ServiceIdentifier<interfaces.Newable<Record<string, any>>>,
+                    dependency: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
                     index: number
                 ) => {
                     if (!cachedDependencies[index]) {
@@ -111,11 +112,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
                 });
 
                 if (cache.has(bindingName)) {
-                    return new (<interfaces.Newable<U>>cache.get(bindingName))(...cachedDependencies);
+                    return new (<TConstructor<Record<string, any>[], U>>cache.get(bindingName))(...cachedDependencies);
                 }
 
-                const constructor: interfaces.Newable<U> = context.container
-                    .getNamed<interfaces.Newable<U>>(
+                const constructor = context.container
+                    .getNamed<TConstructor<Record<string, any>[], U>>(
                         serviceIdentifier,
                         bindingName
                     );
@@ -186,7 +187,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
         this.container
             .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
-            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
+            .toFactory<IObfuscationResult, [string, string]>((context: interfaces.Context) => {
                 return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscationResult => {
                     const obfuscationResult: IObfuscationResult = context.container
                         .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);

@@ -83,5 +83,5 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         };
     }
     bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-        .toFactory<IIdentifierNamesGenerator>(identifierNameGeneratorFactory());
+        .toFactory<IIdentifierNamesGenerator, [IOptions]>(identifierNameGeneratorFactory());
 });

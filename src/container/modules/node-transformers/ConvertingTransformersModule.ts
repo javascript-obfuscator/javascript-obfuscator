@@ -79,7 +79,7 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
 
     // object expression extractor factory
     bind<IObjectExpressionExtractor>(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
-        .toFactory<IObjectExpressionExtractor>(InversifyContainerFacade
+        .toFactory<IObjectExpressionExtractor, [ObjectExpressionExtractor]>(InversifyContainerFacade
             .getCacheFactory<ObjectExpressionExtractor, IObjectExpressionExtractor>(
                 ServiceIdentifiers.IObjectExpressionExtractor
             ));

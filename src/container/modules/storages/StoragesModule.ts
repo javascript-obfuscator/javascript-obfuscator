@@ -2,6 +2,7 @@ import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TConstructor } from '../../../types/TConstructor';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
 import { IGlobalIdentifierNamesCacheStorage } from '../../../interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
@@ -59,8 +60,10 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
     bind<TControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage)
         .toFactory<TControlFlowStorage>((context: interfaces.Context) => {
             return (): TControlFlowStorage => {
-                const constructor: interfaces.Newable<TControlFlowStorage> = context.container
-                    .get<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage);
+                const constructor = context.container
+                    .get<TConstructor<[IRandomGenerator, IOptions], TControlFlowStorage>>(
+                        ServiceIdentifiers.Newable__TControlFlowStorage
+                    );
                 const randomGenerator: IRandomGenerator = context.container
                     .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
                 const options: IOptions = context.container

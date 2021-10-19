@@ -102,7 +102,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-        .toFactory<ICustomNode>(InversifyContainerFacade
+        .toFactory<ICustomNode, [ControlFlowCustomNode]>(InversifyContainerFacade
             .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
@@ -113,7 +113,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // dead code injection customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
-        .toFactory<ICustomNode>(InversifyContainerFacade
+        .toFactory<ICustomNode, [DeadCodeInjectionCustomNode]>(InversifyContainerFacade
             .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
@@ -124,7 +124,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // object expression keys transformer customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
-        .toFactory<ICustomNode>(InversifyContainerFacade
+        .toFactory<ICustomNode, [ObjectExpressionKeysTransformerCustomNode]>(InversifyContainerFacade
             .getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
@@ -135,7 +135,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // string array customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayCustomNode)
-        .toFactory<ICustomNode>(InversifyContainerFacade
+        .toFactory<ICustomNode, [StringArrayCustomNode]>(InversifyContainerFacade
             .getConstructorFactory<StringArrayCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
@@ -149,6 +149,6 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // string array index node factory
     bind<IStringArrayIndexNode>(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-        .toFactory<IStringArrayIndexNode>(InversifyContainerFacade
+        .toFactory<IStringArrayIndexNode, [StringArrayIndexNode]>(InversifyContainerFacade
             .getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode));
 });

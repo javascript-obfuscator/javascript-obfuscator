@@ -74,7 +74,7 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
 
     // obfuscating guards factory
     bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard)
-        .toFactory<IObfuscatingGuard>(InversifyContainerFacade
+        .toFactory<IObfuscatingGuard, [ObfuscatingGuard]>(InversifyContainerFacade
             .getCacheFactory<ObfuscatingGuard, IObfuscatingGuard>(
                 ServiceIdentifiers.INodeGuard
             ));

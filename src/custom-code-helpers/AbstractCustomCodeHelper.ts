@@ -63,7 +63,7 @@ export abstract class AbstractCustomCodeHelper <
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    protected constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,

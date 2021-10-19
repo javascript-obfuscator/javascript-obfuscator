@@ -44,6 +44,6 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
 
     // control flow replacer factory
     bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer)
-        .toFactory<IControlFlowReplacer>(InversifyContainerFacade
+        .toFactory<IControlFlowReplacer, [ControlFlowReplacer]>(InversifyContainerFacade
             .getCacheFactory<ControlFlowReplacer, IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer));
 });

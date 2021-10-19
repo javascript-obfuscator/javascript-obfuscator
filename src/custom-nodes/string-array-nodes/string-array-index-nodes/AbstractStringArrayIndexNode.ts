@@ -24,7 +24,7 @@ export abstract class AbstractStringArrayIndexNode implements IStringArrayIndexN
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    protected constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

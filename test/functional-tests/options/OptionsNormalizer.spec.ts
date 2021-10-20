@@ -739,30 +739,30 @@ describe('OptionsNormalizer', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
-                    shuffleStringArray: true,
                     stringArray: false,
                     stringArrayCallsTransform: true,
                     stringArrayCallsTransformThreshold: 1,
                     stringArrayEncoding: [StringArrayEncoding.Rc4],
                     stringArrayIndexShift: true,
+                    stringArrayRotate: true,
+                    stringArrayShuffle: true,
                     stringArrayWrappersChainedCalls: true,
                     stringArrayWrappersCount: 5,
-                    stringArrayThreshold: 0.5,
-                    rotateStringArray: true
+                    stringArrayThreshold: 0.5
                 });
 
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
-                    shuffleStringArray: false,
                     stringArray: false,
                     stringArrayCallsTransform: false,
                     stringArrayCallsTransformThreshold: 0,
                     stringArrayEncoding: [StringArrayEncoding.None],
                     stringArrayIndexShift: false,
+                    stringArrayRotate: false,
+                    stringArrayShuffle: false,
                     stringArrayWrappersChainedCalls: false,
                     stringArrayWrappersCount: 0,
-                    stringArrayThreshold: 0,
-                    rotateStringArray: false
+                    stringArrayThreshold: 0
                 };
             });
 

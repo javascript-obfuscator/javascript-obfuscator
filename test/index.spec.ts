@@ -108,7 +108,7 @@ import './functional-tests/node-transformers/preparing-transformers/eval-call-ex
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/force-transform-string-obfuscating-guard/ForceTransformStringObfuscatingGuard.spec';
-import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/ignored-require-import-obfuscating-guard/IgnoredRequireImportObfuscatingGuard.spec';
+import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/ignored-import-obfuscating-guard/IgnoredImportObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/variable-preserve-transformer/VariablePreserveTransformer.spec';
 import './functional-tests/node-transformers/rename-identifiers-transformers/identifier-replacer/IdentifierReplacer.spec';

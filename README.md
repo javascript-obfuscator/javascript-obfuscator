@@ -112,7 +112,7 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
         controlFlowFlatteningThreshold: 1,
         numbersToExpressions: true,
         simplify: true,
-        shuffleStringArray: true,
+        stringArrayShuffle: true,
         splitStrings: true,
         stringArrayThreshold: 1
     }
@@ -368,10 +368,8 @@ Following options are available for the JS Obfuscator:
     renamePropertiesMode: 'safe',
     reservedNames: [],
     reservedStrings: [],
-    rotateStringArray: true,
     seed: 0,
     selfDefending: false,
-    shuffleStringArray: true,
     simplify: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
@@ -388,6 +386,8 @@ Following options are available for the JS Obfuscator:
         'hexadecimal-number'
     ],
     stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersParametersMaxCount: 2,
@@ -423,7 +423,7 @@ Following options are available for the JS Obfuscator:
     --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
-    --ignore-require-imports <boolean>
+    --ignore-imports <boolean>
     --log <boolean>
     --numbers-to-expressions <boolean>
     --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]
@@ -432,10 +432,8 @@ Following options are available for the JS Obfuscator:
     --rename-properties-mode <string> [safe, unsafe]
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
-    --rotate-string-array <boolean>
     --seed <string|number>
     --self-defending <boolean>
-    --shuffle-string-array <boolean>
     --simplify <boolean>
     --source-map <boolean>
     --source-map-base-url <string>
@@ -450,6 +448,8 @@ Following options are available for the JS Obfuscator:
     --string-array-encoding '<list>' (comma separated) [none, base64, rc4]
     --string-array-indexes-type '<list>' (comma separated) [hexadecimal-number, hexadecimal-numeric-string]
     --string-array-index-shift <boolean>
+    --string-array-rotate <boolean>
+    --string-array-shuffle <boolean>
     --string-array-wrappers-count <number>
     --string-array-wrappers-chained-calls <boolean>
     --string-array-wrappers-parameters-max-count <number>
@@ -972,13 +972,6 @@ Example:
 	}
 ```
 
-### `rotateStringArray`
-Type: `boolean` Default: `true`
-
-##### :warning: [`stringArray`](#stringarray) must be enabled
-
-Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
-
 ### `seed`
 Type: `string|number` Default: `0`
 
@@ -993,13 +986,6 @@ Type: `boolean` Default: `false`
 ##### :warning: This option forcibly sets `compact` value to `true`
 
 This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.
-
-### `shuffleStringArray`
-Type: `boolean` Default: `true`
-
-##### :warning: [`stringArray`](#stringarray) must be enabled
-
-Randomly shuffles the `stringArray` array items.
 
 ### `simplify`
 Type: `boolean` Default: `true`
@@ -1180,6 +1166,20 @@ Type: `boolean` Default: `true`
 ##### :warning: `stringArray` option must be enabled
 
 Enables additional index shift for all string array calls
+
+### `stringArrayRotate`
+Type: `boolean` Default: `true`
+
+##### :warning: [`stringArray`](#stringarray) must be enabled
+
+Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
+
+### `stringArrayShuffle`
+Type: `boolean` Default: `true`
+
+##### :warning: [`stringArray`](#stringarray) must be enabled
+
+Randomly shuffles the `stringArray` array items.
 
 ### `stringArrayWrappersCount`
 Type: `number` Default: `1`
@@ -1453,9 +1453,7 @@ The performance will be much slower than without obfuscation
     log: false,
     numbersToExpressions: true,
     renameGlobals: false,
-    rotateStringArray: true,
     selfDefending: true,
-    shuffleStringArray: true,
     simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 5,
@@ -1464,6 +1462,8 @@ The performance will be much slower than without obfuscation
     stringArrayCallsTransform: true,
     stringArrayEncoding: ['rc4'],
     stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
     stringArrayWrappersCount: 5,
     stringArrayWrappersChainedCalls: true,    
     stringArrayWrappersParametersMaxCount: 5,
@@ -1492,9 +1492,7 @@ The performance will be slower than without obfuscation
     log: false,
     numbersToExpressions: true,
     renameGlobals: false,
-    rotateStringArray: true,
     selfDefending: true,
-    shuffleStringArray: true,
     simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 10,
@@ -1503,6 +1501,8 @@ The performance will be slower than without obfuscation
     stringArrayCallsTransformThreshold: 0.75,
     stringArrayEncoding: ['base64'],
     stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
     stringArrayWrappersCount: 2,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersParametersMaxCount: 4,
@@ -1529,15 +1529,15 @@ The performance will be at a relatively normal level
     log: false,
     numbersToExpressions: false,
     renameGlobals: false,
-    rotateStringArray: true,
     selfDefending: true,
-    shuffleStringArray: true,
     simplify: true,
     splitStrings: false,
     stringArray: true,
     stringArrayCallsTransform: false,
     stringArrayEncoding: [],
     stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersParametersMaxCount: 2,
@@ -1561,9 +1561,7 @@ The performance will be at a relatively normal level
     log: false,
     numbersToExpressions: false,
     renameGlobals: false,
-    rotateStringArray: true,
     selfDefending: false,
-    shuffleStringArray: true,
     simplify: true,
     splitStrings: false,
     stringArray: true,
@@ -1571,6 +1569,8 @@ The performance will be at a relatively normal level
     stringArrayCallsTransformThreshold: 0.5,
     stringArrayEncoding: [],
     stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
     stringArrayWrappersCount: 1,
     stringArrayWrappersChainedCalls: true,
     stringArrayWrappersParametersMaxCount: 2,

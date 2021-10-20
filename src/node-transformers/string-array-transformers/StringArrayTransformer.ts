@@ -162,11 +162,11 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             this.stringArrayStorageAnalyzer.analyze(programNode);
         }
 
-        if (this.options.shuffleStringArray) {
+        if (this.options.stringArrayShuffle) {
             this.stringArrayStorage.shuffleStorage();
         }
 
-        if (this.options.rotateStringArray) {
+        if (this.options.stringArrayRotate) {
             this.stringArrayStorage.rotateStorage();
         }
     }

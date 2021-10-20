@@ -33,7 +33,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         simplify: true,
         renameProperties: true,
         renamePropertiesMode: RenamePropertiesMode.Unsafe,
-        rotateStringArray: true,
+        stringArrayRotate: true,
         selfDefending: true,
         splitStrings: true,
         splitStringsChunkLength: 3,

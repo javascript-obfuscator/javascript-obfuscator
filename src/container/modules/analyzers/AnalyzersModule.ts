@@ -60,7 +60,7 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
 
     // callee data extractor factory
     bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
-        .toFactory<ICalleeDataExtractor>(InversifyContainerFacade
+        .toFactory<ICalleeDataExtractor, [CalleeDataExtractor]>(InversifyContainerFacade
             .getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(
                 ServiceIdentifiers.ICalleeDataExtractor
             ));

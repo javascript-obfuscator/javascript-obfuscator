@@ -22,7 +22,7 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -44,7 +44,7 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: false,
+                        stringArrayRotate: false,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -70,7 +70,7 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        rotateStringArray: true,
+                        stringArrayRotate: true,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -97,7 +97,7 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                    rotateStringArray: true,
+                    stringArrayRotate: true,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }

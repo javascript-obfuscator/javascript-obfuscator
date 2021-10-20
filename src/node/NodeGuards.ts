@@ -270,6 +270,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isImportExpressionNode (node: ESTree.Node): node is ESTree.ImportExpression {
+        return node.type === NodeType.ImportExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isImportSpecifierNode (node: ESTree.Node): node is ESTree.ImportSpecifier {
         return node.type === NodeType.ImportSpecifier;
     }

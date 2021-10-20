@@ -25,7 +25,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 );
 
@@ -55,7 +55,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 );
 
@@ -85,7 +85,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 );
 
@@ -113,7 +113,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 );
 
@@ -141,7 +141,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
-                        rotateStringArray: true
+                        stringArrayRotate: true
                     }
                 );
 

@@ -8,10 +8,10 @@ export const LOW_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     ...DEFAULT_PRESET,
     disableConsoleOutput: true,
     optionsPreset: OptionsPreset.LowObfuscation,
-    rotateStringArray: true,
+    stringArrayRotate: true,
     selfDefending: true,
-    shuffleStringArray: true,
     simplify: true,
     stringArrayCallsTransform: false,
-    stringArrayCallsTransformThreshold: 0
+    stringArrayCallsTransformThreshold: 0,
+    stringArrayShuffle: true
 });

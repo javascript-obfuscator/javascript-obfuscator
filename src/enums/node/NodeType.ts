@@ -28,6 +28,7 @@ export enum NodeType {
     Identifier = 'Identifier',
     IfStatement = 'IfStatement',
     ImportDeclaration = 'ImportDeclaration',
+    ImportExpression = 'ImportExpression',
     ImportDefaultSpecifier = 'ImportDefaultSpecifier',
     ImportNamespaceSpecifier = 'ImportNamespaceSpecifier',
     ImportSpecifier = 'ImportSpecifier',

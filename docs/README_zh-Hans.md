@@ -8,29 +8,24 @@
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
-JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
+JavaScript Obfuscator 是一个强大的免费 JavaScript 混淆器，包含多种功能，为你的源代码提供保护。
 
-**Key features:**
+**主要特点:**
 
-- variables renaming
-- strings extraction and encryption
-- dead code injection
-- control flow flattening
-- various code transformations
+- 变量重命名
+- 字符串提取和加密
+- 死代码注入
+- 控制流扁平化
+- 各种代码转换
 - and [more](#javascript-obfuscator-options)...
 
-The example of obfuscated code: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
+混淆代码的例子: [github.com](https://github.com/javascript-obfuscator/javascript-obfuscator/blob/master/examples/javascript-obfuscator.js)
 
-#### Online version:
+#### 在线版本:
 
 [obfuscator.io](https://obfuscator.io)
 
-#### Other Language README:
-
-[简体中文](./docs/README_zh-Hans.md)
-[繁體中文](./docs/README_zh-Hant.md)
-
-#### Plugins:
+#### 插件:
 
 - Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
 - Webpack loader: [obfuscator-loader](https://github.com/javascript-obfuscator/obfuscator-loader)
@@ -49,30 +44,30 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 [![xscode](https://img.shields.io/badge/Available%20on-xs%3Acode-blue?style=?style=plastic&logo=appveyor&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////////VXz1bAAAAAJ0Uk5T/wDltzBKAAAAlUlEQVR42uzXSwqAMAwE0Mn9L+3Ggtgkk35QwcnSJo9S+yGwM9DCooCbgn4YrJ4CIPUcQF7/XSBbx2TEz4sAZ2q1RAECBAiYBlCtvwN+KiYAlG7UDGj59MViT9hOwEqAhYCtAsUZvL6I6W8c2wcbd+LIWSCHSTeSAAECngN4xxIDSK9f4B9t377Wd7H5Nt7/Xz8eAgwAvesLRjYYPuUAAAAASUVORK5CYII=)](https://xscode.com/sanex3339/javascript-obfuscator)
 
-#### You can support this project by donating:
+#### 你可以通过捐赠来支持这个项目:
 
 - (OpenCollective) https://opencollective.com/javascript-obfuscator
 - PayPal credit card [https://www.paypal.com/donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=javascript-obfuscator@yandex.ru&lc=US&no_note=0&item_name=Support+javascript-obfuscator&cn=&curency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 - PayPal https://www.paypal.me/javascriptobfuscator
 - (Bitcoin) bc1q203p8nyrstwm7vwzjg3h9l9t6y9ka0umw0rx96
 
-Huge thanks to all supporters!
+衷心感谢所有的支持者!
 
-#### _NOTE! the README on the master branch might not match that of the latest stable release!_
+#### _注意！主分支上的 README 可能与最新稳定版的 README 不一致！_
 
-#### If you have a question, check this section first: [FAQ](#frequently-asked-questions)
+#### 如果你有问题，请先查看这一部分: [FAQ](#frequently-asked-questions)
 
-## :warning: Important
+## :warning: 重要的事
 
-##### Only obfuscate the code that belongs to you.
+##### 只对属于你的代码进行混淆。
 
-It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
+不建议混淆 vendor 的脚本和 polyfills，因为被混淆的代码会慢 15-80%（取决于选项），而且文件会明显增大。
 
-## Installation
+## 安装
 
-#### Using Yarn or NPM
+#### 使用 Yarn 或者 NPM
 
-Install the package with Yarn or NPM and add it to your `dependencies` or `devDependencies`:
+用 Yarn 或 NPM 安装软件包，并将其添加到你的`dependencies`或`devDependencies`:
 
 ```sh
 $ yarn add --dev javascript-obfuscator
@@ -84,21 +79,21 @@ or
 $ npm install --save-dev javascript-obfuscator
 ```
 
-#### In a Browser
+#### 在浏览器中
 
-From CDN:
+使用 CDN:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
 ```
 
-From `node_modules`:
+使用 `node_modules`:
 
 ```html
 <script src="./node_modules/javascript-obfuscator/dist/index.browser.js"></script>
 ```
 
-## Usage
+## 使用方法
 
 ```javascript
 var JavaScriptObfuscator = require("javascript-obfuscator");
@@ -241,24 +236,24 @@ function _0x33e4(_0x1809b5, _0x37ef6e) {
 
 ### `obfuscate(sourceCode, options)`
 
-Returns `ObfuscationResult` object which contains two public methods:
+返回`ObfuscationResult`对象，其中包含两个公共方法:
 
-- `getObfuscatedCode()` - returns `string` with obfuscated code;
-- `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`;
-- `getIdentifierNamesCache()` - returns object with identifier names cache if `identifierNamesCache` option is enabled, `null` overwise.
+- `getObfuscatedCode()` - 返回带有混淆代码的 `string`;
+- `getSourceMap()` - 如果 [`sourceMap`](#sourcemap) 选项开启 - 如果[sourceMapMode](#sourcemapmode)选项设置为 `inline`，则返回带有源地图的 `string` 或一个空字符串;
+- `getIdentifierNamesCache()` - 如果 `identifierNamesCache` 选项被启用，则返回带有标识符名称缓存的对象，反之则为 `null`。
 
-Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
+对`ObfuscationResult`对象调用`toString()`将返回`string`与混淆的代码。
 
-Method takes two parameters, `sourceCode` and `options` – the source code and the options respectively:
+方法需要两个参数，`sourceCode`和`options` -- 分别是源代码和选项:
 
-- `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;
-- `options` (`Object`, default: `null`) – an object with options.
+- `sourceCode` (`string`, default: `null`) – 任何有效的源代码，以字符串形式传递;
+- `options` (`Object`, default: `null`) – 一个 Object 类型的选项.
 
-For available options, see [options](#options).
+关于可用的选项，请参见 [options](#options).
 
 ### `obfuscateMultiple(sourceCodesObject, options)`
 
-Accepts `sourceCodesObject` that is a map which keys are identifiers of source codes and values are source codes:
+接受 `sourceCodesObject`，它是一个映射，键是源代码的标识符，值是源代码:
 
 ```
 {
@@ -267,19 +262,19 @@ Accepts `sourceCodesObject` that is a map which keys are identifiers of source c
 }
 ```
 
-Returns a map object which keys are identifiers of source codes and values are `ObfuscationResult` objects.
+返回一个映射对象，键是源代码的标识符，值是`ObfuscationResult`对象。
 
 ### `getOptionsByPreset(optionsPreset)`
 
-Returns an options object for the passed options preset name.
+返回所传递的选项预设名称的一个选项对象。
 
-## CLI usage
+## CLI 使用方法
 
-See [CLI options](#cli-options).
+请看 [CLI options](#cli-options).
 
-#### Obfuscate single file
+#### 混淆单个文件
 
-Usage:
+使用方法:
 
 ```sh
 javascript-obfuscator input_file_name.js [options]
@@ -288,11 +283,11 @@ javascript-obfuscator input_file_name.js --output output_folder_name [options]
 javascript-obfuscator input_folder_name --output output_folder_name [options]
 ```
 
-Obfuscation of single input file with `.js` extension.
+对以`.js`为扩展名的单一输入文件进行混淆。
 
-If the destination path is not specified with the `--output` option, the obfuscated file will be saved into the input file directory, with `INPUT_FILE_NAME-obfuscated.js` name.
+如果没有用`--output`选项指定目标路径，被混淆的文件将被保存到输入文件目录，名称为`INPUT_FILE_NAME-obfuscated.js`。
 
-Some examples:
+一些例子:
 
 ```sh
 javascript-obfuscator samples/sample.js --compact true --self-defending false
@@ -302,9 +297,9 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 // creates a new file output/output.js
 ```
 
-#### Obfuscate directory recursively
+#### 递归式混淆目录
 
-Usage:
+使用方法:
 
 ```sh
 javascript-obfuscator ./dist [options]
@@ -314,18 +309,18 @@ javascript-obfuscator ./dist --output ./dist/obfuscated [options]
 // creates a folder structure with obfuscated files under `./dist/obfuscated` path
 ```
 
-Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
+对输入目录下的所有`.js`文件进行混淆处理。如果该目录中包含已经被混淆的文件，并带有`-obfuscated`后缀，这些文件将被忽略。
 
-Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
+被混淆的文件将被保存在输入目录下的`INPUT_FILE_NAME-obfuscated.js`名称下。
 
-## Conditional comments
+## 有条件的注释
 
-You can disable and enable obfuscation for specific parts of the code by adding following comments:
+你可以通过添加以下注释来禁用和启用代码中特定部分的混淆功能:
 
 - disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
 - enable: `// javascript-obfuscator:enable` or `/* javascript-obfuscator:enable */`.
 
-Example:
+例子:
 
 ```javascript
 // input
@@ -338,27 +333,27 @@ var _0xabc123 = 0x1;
 var bar = 2;
 ```
 
-Conditional comments affect only direct transformations of AST-tree nodes. All child transformations still will be applied to the AST-tree nodes.
+条件性注释只影响 AST-树节点的直接转换。所有的子变换仍然会被应用到 AST-树节点上。
 
-For example:
+比如:
 
-- Obfuscation of the variable's name at its declaration is called direct transformation;
-- Obfuscation of the variable's name beyond its declaration is called child transformation.
+- 在变量的声明中对其名称进行模糊处理被称为直接转换;
+- 变量的名称在其声明之外的模糊化被称为子的转变。
 
-## Kind of variables
+## 变量的种类
 
-Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
+插入节点的变量种类将被自动检测，基于源代码中最普遍的变量种类。
 
-## Conflicts of identifier names between different files
+## 不同文件之间的标识符名称的冲突
 
-During obfuscation of the different files, the same names can be generated for the global identifiers between these files.
-To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersprefix) option.
+在不同文件的混淆过程中，这些文件的全局标识符可能会产生相同的名称。
+为了防止这种情况，用[`identifiersPrefix`](#identifiersprefix)选项为每个被混淆的文件的所有全局标识符设置唯一的前缀。
 
-When using CLI this prefix will be added automatically.
+当使用 CLI 时，这个前缀将被自动添加。
 
-## JavaScript Obfuscator Options
+## JavaScript 混淆器选项
 
-Following options are available for the JS Obfuscator:
+以下是 JS 混淆器的可用选项:
 
 #### options:
 
@@ -484,21 +479,21 @@ Following options are available for the JS Obfuscator:
 
 Type: `boolean` Default: `true`
 
-Compact code output on one line.
+将代码紧凑的输出到一行上
 
 ### `config`
 
 Type: `string` Default: ``
 
-Name of JS/JSON config file which contains obfuscator options. These will be overridden by options passed directly to CLI
+包含混淆器选项的 JS/JSON 配置文件的名称。这些将被直接传递给 CLI 的选项所覆盖。
 
 ### `controlFlowFlattening`
 
 Type: `boolean` Default: `false`
 
-##### :warning: This option greatly affects the performance up to 1.5x slower runtime speed. Use [`controlFlowFlatteningThreshold`](#controlflowflatteningthreshold) to set percentage of nodes that will affected by control flow flattening.
+##### :warning: 这个选项对性能影响很大，运行时速度会慢 1.5 倍。使用[`controlFlowFlatteningThreshold`](#controlflowflatteningthreshold)来设置受控制流扁平化影响的节点的百分比。
 
-Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
+启用代码控制流扁平化。控制流扁平化是一种阻碍程序理解的源代码的结构转换。
 
 Example:
 
@@ -569,21 +564,21 @@ Example:
 
 Type: `number` Default: `0.75` Min: `0` Max: `1`
 
-The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to any given node.
+[`controlflowFlattening`](#controlflowflattening)转换被应用到任何给定节点的概率。
 
-This setting is especially useful for large code size because large amounts of control flow transformations can slow down your code and increase code size.
+这个设置对大的代码量特别有用，因为大量的控制流转换会减慢你的代码速度并增加代码量。
 
-`controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
+`controlFlowFlatteningThreshold: 0` 等同于 `controlFlowFlattening: false`.
 
 ### `deadCodeInjection`
 
 Type: `boolean` Default: `false`
 
-##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection.
+##### :warning: 大幅增加混淆代码的大小（高达 200%），只在混淆代码的大小不重要时使用。使用[`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold)来设置受死代码注入影响的节点的百分比。
 
-##### :warning: This option forcibly enables `stringArray` option.
+##### :warning: 这个选项强行启用了 `stringArray` 选项。
 
-With this option, random blocks of dead code will be added to the obfuscated code.
+有了这个选项，随机的死代码块将被添加到混淆的代码中。
 
 Example:
 
@@ -696,71 +691,71 @@ function _0x43a7(_0x12cf56, _0x587376) {
 
 Type: `number` Default: `0.4` Min: `0` Max: `1`
 
-Allows to set percentage of nodes that will affected by `deadCodeInjection`.
+允许设置受 `deadCodeInjection` 影响的节点的百分比。
 
 ### `debugProtection`
 
 Type: `boolean` Default: `false`
 
-##### :warning: Can freeze your browser if you open the Developer Tools.
+##### :warning: 如果你打开开发者工具，可以冻结你的浏览器。
 
-This option makes it almost impossible to use the `debugger` function of the Developer Tools (both on WebKit-based and Mozilla Firefox).
+这个选项使得几乎不可能使用开发工具的 `debugger` 功能（在基于 WebKit 和 Mozilla Firefox 上）。
 
 ### `debugProtectionInterval`
 
 Type: `boolean` Default: `false`
 
-##### :warning: Can freeze your browser! Use at own risk.
+##### :warning: 可以冻结你的浏览器! 使用风险自负。
 
-If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
+如果勾选，就会在控制台选项卡上使用一个间隔来强制调试模式，使其难以使用开发工具的其他功能。如果[`debugProtection`](#debugprotection)被启用，则会发挥作用。
 
 ### `disableConsoleOutput`
 
 Type: `boolean` Default: `false`
 
-##### :warning: This option disables `console` calls globally for all scripts
+##### :warning: 该选项在全局范围内禁用所有脚本的 `console` 调用。
 
-Disables the use of `console.log`, `console.info`, `console.error`, `console.warn`, `console.debug`, `console.exception` and `console.trace` by replacing them with empty functions. This makes the use of the debugger harder.
+禁止使用`console.log`、`console.info`、`console.error`、`console.warning`、`console.debug`、`console.exception`和`console.trace`，用空函数替换它们。这使得调试器的使用更加困难。
 
 ### `domainLock`
 
 Type: `string[]` Default: `[]`
 
-##### :warning: This option does not work with `target: 'node'`
+##### :warning: 该选项与`target: 'node'`不起作用。
 
-Allows to run the obfuscated source code only on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
+允许只在特定的域和/或子域中运行被混淆的源代码。这使得别人很难直接复制和粘贴你的源代码并在其他地方运行它。
 
-If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainLockRedirectUrl`](#domainlockredirecturl) option URL.
+如果源代码没有在这个选项指定的域上运行，浏览器将被重定向到一个传递到[`domainLockRedirectUrl`](#domainlockredirecturl)选项的 URL。
 
-##### Multiple domains and sub-domains
+##### 多域名和子域名
 
-It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
+可以将你的代码锁定在一个以上的域或子域。例如，要锁定它，使代码只在**www.example.com**上运行，请添加`www.example.com`。要使它在根域包括任何子域（`example.com`，`sub.example.com`）上运行，使用`.example.com`。
 
 ### `domainLockRedirectUrl`
 
 Type: `string` Default: `about:blank`
 
-##### :warning: This option does not work with `target: 'node'`
+##### :warning: 该选项与`target: 'node'`不起作用。
 
-Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
+如果源代码没有在[`domainLock`](#domainlock)指定的域中运行，允许浏览器被重定向到一个通过的 URL。
 
 ### `exclude`
 
 Type: `string[]` Default: `[]`
 
-A file names or globs which indicates files to exclude from obfuscation.
+一个文件名或 globs，表示要从混淆中排除的文件。
 
 ### `forceTransformStrings`
 
 Type: `string[]` Default: `[]`
 
-Enables force transformation of string literals, which being matched by passed RegExp patterns.
+启用被传递的正则表达式匹配的字符串字面的强制转换。
 
-##### :warning: This option affects only strings that shouldn't be transformed by [`stringArrayThreshold`](#stringarraythreshold) (or possible other thresholds in the future)
+##### :warning: 这个选项只影响那些不应该被[`stringArrayThreshold`](#stringarraythreshold)转化的字符串（或者将来可能的其他阈值）。
 
-The option has a priority over `reservedStrings` option but hasn't a priority over `conditional comments`.
+该选项比 `reservedStrings` 选项有优先权，但没有比 `conditional comments` 有优先权。
 
-Example:
+例子:
 
 ```ts
 {
@@ -772,26 +767,26 @@ Example:
 
 Type: `Object | null` Default: `null`
 
-The main goal for this option is the ability to use the same identifier names during obfuscation of multiple sources/files.
+这个选项的主要目的是能够在混淆多个来源/文件的过程中使用相同的标识符名称。
 
-Currently the two types of the identifiers are supported:
+目前支持两种类型的标识符:
 
-- Global identifiers:
-  - All global identifiers will be written to the cache;
-  - All matched **undeclared** global identifiers will be replaced by the values from the cache.
-- Property identifiers, only when `renameProperties` option is enabled:
-  - All property identifiers will be written to the cache;
-  - All matched property identifiers will be replaced by the values from the cache.
+- 全局标识符:
+  - 所有全局标识符将被写入缓存;
+  - 所有匹配的**未声明的**全局标识符将被缓存中的值替换。
+- 属性标识符，只有当 `renameProperties` 选项被启用时:
+  - 所有的属性标识将被写入缓存中;
+  - 所有匹配的属性标识符将被缓存中的值取代。
 
 #### Node.js API
 
-If a `null` value is passed, completely disables the cache.
+如果传递一个`null`值，则完全禁用缓存。
 
-If an empty object (`{}`) is passed, enables the writing identifier names to the cache-object (`TIdentifierNamesCache` type). This cache-object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
+如果传递了一个空对象（`{}`），就可以将标识符名称写入缓存对象（`TIdentifierNamesCache`类型）。这个缓存对象将通过`ObfuscationResult`对象的`getIdentifierNamesCache`方法调用被访问。
 
-The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
+产生的缓存对象接下来可以作为`identifierNamesGenerator`选项值，在混淆所有匹配的下一个来源的标识符名称时使用这些名称。
 
-Example:
+例子:
 
 ```ts
 const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -823,11 +818,11 @@ console.log(source1ObfuscationResult.getIdentifierNamesCache());
 
 const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
   `
-        // Expecting that these global functions are defined in another obfuscated file
+        // 期待这些全局函数被定义在另一个混淆的文件中
         foo(1);
         bar();
         
-        // Expecting that this global function is defined in third-party package
+        // 期待这个全局函数被定义在第三方软件包中
         baz();
     `,
   {
@@ -847,63 +842,63 @@ console.log(source2ObfuscationResult.getObfuscatedCode());
 
 #### CLI
 
-CLI has a different option `--identifier-names-cache-path` that allows defining a path to the existing `.json` file that will be used to read and write identifier names cache.
+CLI 有一个不同的选项`--identifier-names-cache-path`，允许定义现有`.json`文件的路径，该文件将用于读写标识符名称缓存。
 
-If a path to the empty file will be passed - identifier names cache will be written to that file.
+如果一个空文件的路径将被传递 -- 标识符名称缓存将被写入该文件。
 
-This file with existing cache can be used again as `--identifier-names-cache-path` option value for using these names during obfuscation of all matched identifier names of the next files.
+这个有缓存的文件可以再次作为 `--identifier-names-cache-path` 选项值，在混淆所有匹配的下一个文件的标识符名称时使用这些名称。
 
 ### `identifierNamesGenerator`
 
 Type: `string` Default: `hexadecimal`
 
-Sets identifier names generator.
+设置标识符名称生成器。
 
-Available values:
+支持的值:
 
-- `dictionary`: identifier names from [`identifiersDictionary`](#identifiersdictionary) list
-- `hexadecimal`: identifier names like `_0xabc123`
-- `mangled`: short identifier names like `a`, `b`, `c`
-- `mangled-shuffled`: same as `mangled` but with shuffled alphabet
+- `dictionary`: 标识符名称来自[`identifiersDictionary`](#identifiersdictionary)列表
+- `hexadecimal`: 识别符名称，如 `_0xabc123`
+- `mangled`: 短的标识符名称，如 `a`, `b`, `c`
+- `mangled-shuffled`: 与 `mangled`相同，但有洗牌的字母
 
 ### `identifiersDictionary`
 
 Type: `string[]` Default: `[]`
 
-Sets identifiers dictionary for [`identifierNamesGenerator`](#identifiernamesgenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
+为[`identifierNamesGenerator`](#identifiernamesgenerator)设置标识符字典：`dictionary`选项。字典中的每个标识符将被用于几个变体，每个字符的大小写都不同。因此，字典中的标识符的数量应该取决于原始源代码中的标识符数量。
 
 ### `identifiersPrefix`
 
 Type: `string` Default: `''`
 
-Sets prefix for all global identifiers.
+设置所有全局标识符的前缀。
 
-Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
+当你想对多个文件进行混淆处理时，请使用这个选项。这个选项有助于避免这些文件的全局标识符之间的冲突。每个文件的前缀都应该是不同的。
 
 ### `ignoreRequireImports`
 
 Type: `boolean` Default: `false`
 
-Prevents obfuscation of `require` imports. Could be helpful in some cases when for some reason runtime environment requires these imports with static strings only.
+防止 `require` 导入的混淆。在某些情况下，由于某些原因，运行时环境要求这些导入只有静态字符串，这可能是有帮助的。
 
 ### `inputFileName`
 
 Type: `string` Default: `''`
 
-Allows to set name of the input file with source code. This name will be used internally for source map generation.
-Required when using NodeJS API and `sourceMapSourcesMode` option has `sources` value`.
+允许设置带有源代码的输入文件的名称。这个名字将在内部用于生成源代码地图。
+当使用 NodeJS API 和`sourceMapSourcesMode`选项有`sources`值时需要。
 
 ### `log`
 
 Type: `boolean` Default: `false`
 
-Enables logging of the information to the console.
+启用将信息记录到控制台的功能。
 
 ### `numbersToExpressions`
 
 Type: `boolean` Default: `false`
 
-Enables numbers conversion to expressions
+使得数字转换为表达式
 
 Example:
 
@@ -919,38 +914,38 @@ const foo = -0xd93 + -0x10b4 + 0x41 * 0x67 + 0x84e * 0x3 + -0xff8;
 
 Type: `string` Default: `default`
 
-Allows to set [options preset](#preset-options).
+允许设置 [options preset](#preset-options).
 
-Available values:
+支持的值:
 
 - `default`;
 - `low-obfuscation`;
 - `medium-obfuscation`;
 - `high-obfuscation`.
 
-All addition options will be merged with selected options preset.
+所有增加的选项都将与选定的选项预设合并。
 
 ### `renameGlobals`
 
 Type: `boolean` Default: `false`
 
-##### :warning: this option can break your code. Enable it only if you know what it does!
+##### :warning: 这个选项会破坏你的代码。只有在你知道它的作用时才启用它!
 
-Enables obfuscation of global variable and function names **with declaration**.
+启用全局变量和函数名称的混淆**与声明**。
 
 ### `renameProperties`
 
 Type: `boolean` Default: `false`
 
-##### :warning: this option **MAY** break your code. Enable it only if you know what it does!
+##### :warning: 这个选项 **可能会** 破坏你的代码。只有当你知道它的作用时才启用它!
 
-Enables renaming of property names. All built-in DOM properties and properties in core JavaScript classes will be ignored.
+启用属性名称的重命名。所有内置的 DOM 属性和核心 JavaScript 类中的属性将被忽略。
 
-To switch between `safe` and `unsafe` modes of this option use [`renamePropertiesMode`](#renamepropertiesmode) option.
+要在该选项的 `safe` 和 `unsafe` 模式之间切换，请使用[`renamePropertiesMode`](#renamepropertiesmode)选项。
 
-To set format of renamed property names use [`identifierNamesGenerator`](#identifiernamesgenerator) option.
+要设置重命名属性名称的格式，请使用[`identifierNamesGenerator`](#identifiernamesgenerator)选项。
 
-To control which properties will be renamed use [`reservedNames`](#reservednames) option.
+要控制哪些属性将被重命名，请使用[`reservedNames`](#reservednames)选项。
 
 Example:
 
@@ -985,22 +980,22 @@ Example:
 
 Type: `string` Default: `safe`
 
-##### :warning: Even in `safe` mode, [`renameProperties`](#renameproperties) option **MAY** break your code.
+##### :warning: 即使在 `safe` 模式下，[`renameProperties`](#renameproperties)选项 **可能会** 破坏你的代码。
 
-Specifies `renameProperties` option mode:
+指定 `renameProperties` 选项模式:
 
-- `safe` - default behaviour after `2.11.0` release. Trying to rename properties in a more safe way to prevent runtime errors. With this mode some properties will be excluded from renaming.
-- `unsafe` - default behaviour before `2.11.0` release. Renames properties in an unsafe way without any restrictions.
+- `safe` - `2.11.0` 发布后的默认行为。试图以更安全的方式重命名属性，以防止运行时错误。在这种模式下，一些属性将被排除在重命名之外。
+- `unsafe` - 在`2.11.0`发布前的默认行为。以一种不安全的方式重命名属性，没有任何限制。
 
-If one file is using properties from other file, use [`identifierNamesCache`](#identifiernamescache) option to keep the same property names between these files.
+如果一个文件使用其他文件的属性，使用[`identifierNamesCache`](#identifiernamescache)选项来保持这些文件之间相同的属性名称。
 
 ### `reservedNames`
 
 Type: `string[]` Default: `[]`
 
-Disables obfuscation and generation of identifiers, which being matched by passed RegExp patterns.
+禁用混淆和标识符的生成，这些标识符被传递的正则表达式匹配。
 
-Example:
+例子:
 
 ```ts
 {
@@ -1012,9 +1007,9 @@ Example:
 
 Type: `string[]` Default: `[]`
 
-Disables transformation of string literals, which being matched by passed RegExp patterns.
+禁用被传递的正则表达式匹配的字符串字面的转换。
 
-Example:
+例子:
 
 ```ts
 {
@@ -1026,29 +1021,29 @@ Example:
 
 Type: `string|number` Default: `0`
 
-This option sets seed for random generator. This is useful for creating repeatable results.
+该选项为随机发生器设置种子。这对于创造可重复的结果很有用。
 
-If seed is `0` - random generator will work without seed.
+如果种子是 `0` -- 随机发生器将在没有种子的情况下工作。
 
 ### `selfDefending`
 
 Type: `boolean` Default: `false`
 
-##### :warning: Don't change obfuscated code in any way after obfuscation with this option, because any change like uglifying of code can trigger self defending and code wont work anymore!
+##### :warning: 在使用该选项进行混淆后，不要以任何方式改变被混淆的代码，因为任何像美化代码这样的改变都会引发自我防卫，代码将不再起作用。
 
-##### :warning: This option forcibly sets `compact` value to `true`
+##### :warning: 该选项强行将 `compact` 值设为 `true`。
 
-This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.
+这个选项使输出的代码对格式化和变量重命名有抵抗力。如果有人试图在被混淆的代码上使用 JavaScript 美化器，那么代码就不会再起作用了，这使得理解和修改代码变得更加困难。
 
 ### `simplify`
 
 Type: `boolean` Default: `true`
 
-Enables additional code obfuscation through simplification.
+通过简化实现了额外的代码混淆。
 
-##### :warning: in future releases obfuscation of `boolean` literals (`true` => `!![]`) will be moved under this option.
+##### :warning: 在未来的版本中，混淆 `boolean` 字样（`true` => `![]`）将被移到这个选项下。
 
-Example:
+例子:
 
 ```ts
 // input
@@ -1084,23 +1079,23 @@ if (condition1) {
 
 Type: `boolean` Default: `false`
 
-Enables source map generation for obfuscated code.
+启用混淆代码的源码地图生成。
 
-Source maps can be useful to help you debug your obfuscated JavaScript source code. If you want or need to debug in production, you can upload the separate source map file to a secret location and then point your browser there.
+源码地图可以帮助你调试你的混淆的 JavaScript 源代码。如果你想或需要在生产中调试，你可以把单独的源码图文件上传到一个秘密的位置，然后把你的浏览器指向那里。
 
 ### `sourceMapBaseUrl`
 
 Type: `string` Default: ``
 
-Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#sourcemapmode).
+当 [`sourceMapMode:'separate'`](#sourcemapmode) 时，将基础网址设置为源地图导入网址。
 
-CLI example:
+CLI 例子:
 
 ```
 javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000'
 ```
 
-Result:
+结果:
 
 ```
 //# sourceMappingURL=http://localhost:9000/out.js.map
@@ -1110,15 +1105,15 @@ Result:
 
 Type: `string` Default: ``
 
-Sets file name for output source map when `sourceMapMode: 'separate'`.
+当 `sourceMapMode:'separate'` 时，为输出源地图设置文件名。
 
-CLI example:
+CLI 例子:
 
 ```
 javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000' --source-map-file-name example
 ```
 
-Result:
+结果:
 
 ```
 //# sourceMappingURL=http://localhost:9000/example.js.map
@@ -1128,25 +1123,25 @@ Result:
 
 Type: `string` Default: `separate`
 
-Specifies source map generation mode:
+指定源码地图生成模式:
 
-- `inline` - add source map at the end of each .js files;
-- `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
+- `inline` - 在每个.js 文件的末尾添加源码地图;
+- `separate` - 生成相应的'.map'文件，其中包含源码图。如果你通过 CLI 运行混淆器 -- 在带有混淆代码的文件末尾添加源地图文件的链接`//# sourceMappingUrl=file.js.map`。
 
 ### `sourceMapSourcesMode`
 
 Type: `string` Default: `sources-content`
 
-Allows to control `sources` and `sourcesContent` fields of the source map:
+允许控制源码地图的`sources`和`sourcesContent`字段:
 
-- `sources-content` - adds dummy `sources` field, adds `sourcesContent` field with the original source code;
-- `sources` - adds `sources` field with a valid source description, does not add `sourcesContent` field. When using NodeJS API it's required to define `inputFileName` option that will be used as `sources` field value.
+- `sources-content` - 添加假的 `sources` 字段，添加`sourcesContent` 字段与原始源代码;
+- `sources` - 添加 `sources` 字段的有效源描述，不添加`sourcesContent` 字段。当使用 NodeJS API 时，需要定义 `inputFileName` 选项，它将被用作 `sources` 字段值。
 
 ### `splitStrings`
 
 Type: `boolean` Default: `false`
 
-Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitstringschunklength) option value.
+将字面字符串分割成长度为 [`splitStringsChunkLength`](#splitstringschunklength) 选项值的块状物。
 
 Example:
 
@@ -1166,33 +1161,33 @@ Example:
 
 Type: `number` Default: `10`
 
-Sets chunk length of [`splitStrings`](#splitstrings) option.
+设置 [`splitStrings`](#splitstrings) 选项的分块长度。
 
 ### `stringArray`
 
 Type: `boolean` Default: `true`
 
-Removes string literals and place them in a special array. For instance, the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
+移除字符串字面，并将其置于一个特殊的数组中。例如， `var m = "Hello World";` 中的字符串 `"Hello World "` 将被替换为 `var m = _0x12c456[0x1];` 这样的字符串。
 
 ### `stringArrayEncoding`
 
 Type: `string[]` Default: `[]`
 
-##### :warning: `stringArray` option must be enabled
+##### :warning: 必须启用 `stringArray` 选项
 
-This option can slow down your script.
+这个选项会减慢你的代码速度。
 
-Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+使用`base64`或`rc4`对[`stringArray`](#stringarray)的所有字符串字面进行编码，并插入一个特殊的代码，用于在运行时将其解码。
 
-Each `stringArray` value will be encoded by the randomly picked encoding from the passed list. This makes possible to use multiple encodings.
+每个 `stringArray` 的值都会被从传递的列表中随机挑选的编码所编码。这使得使用多种编码成为可能。
 
-Available values:
+支持的值:
 
-- `'none'` (`boolean`): doesn't encode `stringArray` value
-- `'base64'` (`string`): encodes `stringArray` value using `base64`
-- `'rc4'` (`string`): encodes `stringArray` value using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It's recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option when using `rc4` encoding to prevent very large size of obfuscated code.
+- `'none'` (`boolean`): 不对 `stringArray` 值进行编码
+- `'base64'` (`string`): 使用 `base64` 对 `stringArray` 值进行编码。
+- `'rc4'` (`string`): 使用 `rc4` 对 `stringArray` 值进行编码。 **比`base64`慢 30-50%，但更难获得初始值。** 建议在使用`rc4`编码时禁用[`unicodeEscapeSequence`](#unicodeescapesequence)选项，以防止混淆后的代码尺寸非常大。
 
-For example with the following option values some `stringArray` value won't be encoded, and some values will be encoded with `base64` and `rc4` encoding:
+例如，在下面的选项值中，一些 `stringArray` 值不会被编码，而一些值将被编码为 `base64` 和 `rc4` 编码:
 
 ```ts
 stringArrayEncoding: ["none", "base64", "rc4"];
@@ -1202,57 +1197,57 @@ stringArrayEncoding: ["none", "base64", "rc4"];
 
 Type: `string[]` Default: `['hexadecimal-number']`
 
-##### :warning: `stringArray` option must be enabled
+##### :warning: `stringArray` 选项必须被启用
 
-Allows to control the type of string array call indexes.
+允许控制字符串数组调用索引的类型。
 
-Each `stringArray` call index will be transformed by the randomly picked type from the passed list. This makes possible to use multiple types.
+每个 `stringArray` 的调用索引将被从传递的列表中随机挑选的类型所转换。这使得使用多种类型成为可能。
 
-Available values:
+支持的值:
 
-- `'hexadecimal-number'` (`default`): transforms string array call indexes as hexadecimal numbers
-- `'hexadecimal-numeric-string'`: transforms string array call indexes as hexadecimal numeric string
+- `'hexadecimal-number'` (`default`): 将字符串数组的调用索引转化为十六进制数字
+- `'hexadecimal-numeric-string'`: 将字符串数组的调用索引转化为十六进制的数字字符串
 
-Before `2.9.0` release `javascript-obfuscator` transformed all string array call indexes with `hexadecimal-numeric-string` type. This makes some manual deobfuscation slightly harder but it allows easy detection of these calls by automatic deobfuscators.
+在 `2.9.0` 版本之前，`javascript-obfuscator` 将所有字符串数组的调用索引转化为 `hexadecimal-numeric-string` 类型。这使得一些手动去混淆变得稍微困难，但它允许自动去混淆器轻松检测这些调用。
 
-The new `hexadecimal-number` type approaches to make harder auto-detect of string array call patterns in the code.
+新的 `hexadecimal-number` 类型方法使代码中的字符串数组调用模式更难自动检测。
 
-More types will be added in the future.
+今后将增加更多的类型。
 
 ### `stringArrayIndexShift`
 
 Type: `boolean` Default: `true`
 
-##### :warning: `stringArray` option must be enabled
+##### :warning: `stringArray` 选项必须被启用
 
-Enables additional index shift for all string array calls
+启用所有字符串阵列调用的额外索引移位
 
 ### `stringArrayRotate`
 
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringarray) must be enabled
+##### :warning: [`stringArray`](#stringarray) 必须被启用
 
-Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
+将 `stringArray` 数组移动一个固定的、随机的（在代码混淆时产生的）位置。这使得被移除的字符串的顺序更难匹配到它们原来的位置。
 
 ### `stringArrayShuffle`
 
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringarray) must be enabled
+##### :warning: [`stringArray`](#stringarray) 必须被启用
 
-Randomly shuffles the `stringArray` array items.
+随机洗刷 `stringArray` 数组中的项目。
 
 ### `stringArrayWrappersCount`
 
 Type: `number` Default: `1`
 
-##### :warning: [`stringArray`](#stringarray) option must be enabled
+##### :warning: [`stringArray`](#stringarray) 选项必须被启用
 
-Sets the count of wrappers for the `string array` inside each root or function scope.
-The actual count of wrappers inside each scope is limited by a count of `literal` nodes within this scope.
+设置每个根或函数作用域内的 `string array` 的包装器的数量。
+每个作用域内的包装器的实际数量由该作用域内的 `literal` 节点的数量限制。
 
-Example:
+例子:
 
 ```ts
 // Input
@@ -1297,11 +1292,11 @@ const eagle = _0x48f96e(0xe5);
 
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) 和 [`stringArrayWrappersCount`](#stringarraywrapperscount) 选项必须被启用
 
-Enables the chained calls between `string array` wrappers.
+启用 `string array` 包装器之间的链式调用。
 
-Example:
+例子:
 
 ```ts
 // Input
@@ -1350,29 +1345,29 @@ function test() {
 
 Type: `number` Default: `2`
 
-##### :warning: [`stringArray`](#stringarray) option must be enabled
+##### :warning: [`stringArray`](#stringarray) 选项必须被启用
 
-##### :warning: Currently this option affects only wrappers added by [`stringArrayWrappersType`](#stringarraywrapperstype) `function` option value
+##### :warning: 目前这个选项只影响由 [`stringArrayWrappersType`](#stringarraywrapperstype) `function` 选项值添加的包装器。
 
-Allows to control the maximum number of string array wrappers parameters.
-Default and minimum value is `2`. Recommended value between `2` and `5`.
+允许控制字符串数组包装器参数的最大数量。
+默认值和最小值是`2`。建议值在`2`和`5`之间。
 
 ### `stringArrayWrappersType`
 
 Type: `string` Default: `variable`
 
-##### :warning: [`stringArray`](#stringarray) and [`stringArrayWrappersCount`](#stringarraywrapperscount) options must be enabled
+##### :warning: [`stringArray`](#stringarray) 和 [`stringArrayWrappersCount`](#stringarraywrapperscount) 选项必须被启用
 
-Allows to select a type of the wrappers that are appending by the `stringArrayWrappersCount` option.
+允许选择通过 `stringArrayWrappersCount` 选项追加的包装器的类型。
 
-Available values:
+支持的值:
 
-- `'variable'`: appends variable wrappers at the top of each scope. Fast performance.
-- `'function'`: appends function wrappers at random positions inside each scope. Slower performance than with `variable` but provides more strict obfuscation.
+- `'variable'`: 在每个作用域的顶部追加变量包装器。快速的性能。
+- `'function'`: 在每个范围内的随机位置添加函数包装器。性能比 `variable` 慢，但提供了更严格的混淆。
 
-Highly recommended to use `function` wrappers for higher obfuscation when a performance loss doesn't have a high impact on an obfuscated application.
+当性能损失对被混淆的应用程序影响不大时，强烈建议使用 `function` 包装器来实现更高的混淆。
 
-Example of the `'function'` option value:
+`'function'` 选项值的例子:
 
 ```ts
 // input
@@ -1416,34 +1411,34 @@ test();
 
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-##### :warning: [`stringArray`](#stringarray) option must be enabled
+##### :warning: [`stringArray`](#stringarray) 选项必须被启用
 
-You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringArray`.
+你可以使用这个设置来调整一个字符串字头被插入到 `stringArray` 的概率（从 0 到 1）。
 
-This setting is especially useful for large code size because it repeatedly calls to the `string array` and can slow down your code.
+这个设置对大的代码量特别有用，因为它反复调用 `string array` ，会使你的代码变慢。
 
-`stringArrayThreshold: 0` equals to `stringArray: false`.
+`stringArrayThreshold: 0` 等同于 `stringArray: false`.
 
 ### `target`
 
 Type: `string` Default: `browser`
 
-Allows to set target environment for obfuscated code.
+允许为混淆的代码设置目标环境。
 
-Available values:
+可用的值:
 
 - `browser`;
 - `browser-no-eval`;
 - `node`.
 
-Currently output code for `browser` and `node` targets is identical, but some browser-specific options are not allowed to use with `node` target.
-Output code for `browser-no-eval` target is not using `eval`.
+目前 `browser` 和 `node` 目标的输出代码是相同的，但一些浏览器特有的选项不允许在 `node` 目标下使用。
+`browser-no-eval` 目标的输出代码没有办法使用 `eval`。
 
 ### `transformObjectKeys`
 
 Type: `boolean` Default: `false`
 
-Enables transformation of object keys.
+启用对象键的转换。
 
 Example:
 
@@ -1483,15 +1478,15 @@ function _0x390c(_0x33d6b6, _0x4735f4) {
 
 Type: `boolean` Default: `false`
 
-Allows to enable/disable string conversion to unicode escape sequence.
+允许启用/禁用字符串转换为 unicode 转义序列。
 
-Unicode escape sequence increases code size greatly and strings easily can be reverted to their original view. Recommended to enable this option only for small source code.
+Unicode 转义序列大大增加了代码的大小，而且字符串很容易被恢复到原来的视图。建议只对小的源代码启用这个选项。
 
-## Preset Options
+## 预设方案
 
-### High obfuscation, low performance
+### 高混淆性，低性能
 
-Performance will 50-100% slower than without obfuscation
+性能将比没有混淆的情况下慢 50-100%
 
 ```javascript
 {
@@ -1526,9 +1521,9 @@ Performance will 50-100% slower than without obfuscation
 }
 ```
 
-### Medium obfuscation, optimal performance
+### 中等程度的混淆，最佳性能
 
-Performance will 30-35% slower than without obfuscation
+性能将比没有混淆的情况下慢 30-35%
 
 ```javascript
 {
@@ -1563,9 +1558,9 @@ Performance will 30-35% slower than without obfuscation
 }
 ```
 
-### Low obfuscation, High performance
+### 低混淆性，高性能
 
-Performance will slightly slower than without obfuscation
+性能将比没有混淆的情况下略微慢一些
 
 ```javascript
 {
@@ -1596,7 +1591,7 @@ Performance will slightly slower than without obfuscation
 }
 ```
 
-### Default preset, High performance
+### 默认预设，高性能
 
 ```javascript
 {
@@ -1629,43 +1624,43 @@ Performance will slightly slower than without obfuscation
 
 <!-- ##options-end## -->
 
-## Frequently Asked Questions
+## 常见问题
 
-### What javascript versions are supported?
+### 支持什么版本的 javascript?
 
-`es3`, `es5`, `es2015`, `es2016`, `es2017`, `es2018`, `es2019` and partially `es2020`
+`es3`, `es5`, `es2015`, `es2016`, `es2017`, `es2018`, `es2019` 和部分 `es2020`
 
-### I want to use feature that described in `README.md` but it's not working!
+### 我想使用 `README.md` 中描述的功能，但它不工作！为什么？
 
-The README on the master branch might not match that of the latest stable release.
+主分支上的 README 可能与最新的稳定版不一致。
 
-### Why CLI command not working?
+### 为什么 CLI 命令不工作?
 
-Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
+尝试运行`npm link javascript-obfuscator`命令或用`npm i -g javascript-obfuscator`全局安装它
 
-### Online version?
+### 在线版本?
 
 [obfuscator.io](https://obfuscator.io)
 
-### JSX support?
+### JSX 支持?
 
-No. JSX support isn't planned.
+不，没有计划支持 JSX
 
-### How to change kind of variables of inserted nodes (`var`, `let` or `const`)?
+### 如何改变插入节点的变量种类（ `var`，`let`或`const` ）？
 
-See: [`Kind of variables`](#kind-of-variables)
+请看: [`Kind of variables`](#kind-of-variables)
 
-### Why I got `null` value instead of `BigInt` number?
+### 为什么我得到的是 `null` 值而不是 `BigInt` 数字？
 
-`BigInt` obfuscation works correctly only in environments that support `BigInt` values. See [ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
+`BigInt` 混淆只在支持 `BigInt` 值的环境中正确工作。见[ESTree spec](https://github.com/estree/estree/blob/master/es2020.md#bigintliteral)
 
-### I enabled `renameProperties` option, and my code broke! What to do?
+### 我启用了 `renameProperties` 选项，但我的代码被破坏了! 该怎么做？
 
-Try `renamePropertiesMode: 'safe'` option, if it still doesn't work, just disable this option.
+试试 `renamePropertiesMode: 'safe'` 选项，如果还是不行，就禁用这个选项。
 
-## Backers
+## 支持者
 
-Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/javascript-obfuscator#backer)]
+通过每月捐款支持我们，帮助我们继续开展活动。 [[Become a backer](https://opencollective.com/javascript-obfuscator#backer)]
 
 <a href="https://opencollective.com/javascript-obfuscator/backer/0/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/backer/0/avatar.svg"></a>
 <a href="https://opencollective.com/javascript-obfuscator/backer/1/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/backer/1/avatar.svg"></a>
@@ -1698,9 +1693,9 @@ Support us with a monthly donation and help us continue our activities. [[Become
 <a href="https://opencollective.com/javascript-obfuscator/backer/28/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/javascript-obfuscator/backer/29/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/backer/29/avatar.svg"></a>
 
-## Sponsors
+## 赞助商
 
-Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/javascript-obfuscator#sponsor)]
+成为赞助商，您的商标将出现在我们在 Github 上的 README 上，并带有您网站的链接。 [[Become a sponsor](https://opencollective.com/javascript-obfuscator#sponsor)]
 
 <a href="https://opencollective.com/javascript-obfuscator/sponsor/0/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/javascript-obfuscator/sponsor/1/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/sponsor/1/avatar.svg"></a>

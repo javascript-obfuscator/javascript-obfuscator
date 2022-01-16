@@ -1,5 +1,9 @@
 Change Log
 
+v3.0.1
+---
+* Dependencies update
+
 v3.0.0
 ---
 * **Breaking change:** `ignoreRequireImports` option renamed to `ignoreImports`

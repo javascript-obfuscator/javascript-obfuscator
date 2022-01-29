@@ -545,6 +545,18 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Statement[]} body
+     * @returns {StaticBlock}
+     */
+    public static staticBlockNode (body: ESTree.Statement[] = []): ESTree.StaticBlock {
+        return {
+            type: NodeType.StaticBlock,
+            body,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Expression} discriminant
      * @param {SwitchCase[]} cases
      * @returns {SwitchStatement}

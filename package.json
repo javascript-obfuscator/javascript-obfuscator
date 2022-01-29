@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -21,7 +21,7 @@
   },
   "types": "typings/index.d.ts",
   "dependencies": {
-    "@javascript-obfuscator/escodegen": "2.2.2",
+    "@javascript-obfuscator/escodegen": "2.3.0",
     "@javascript-obfuscator/estraverse": "5.4.0",
     "@nuxtjs/opencollective": "0.3.2",
     "acorn": "8.7.0",

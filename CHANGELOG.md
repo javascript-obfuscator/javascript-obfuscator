@@ -1,5 +1,9 @@
 Change Log
 
+v3.1.0
+---
+* Added support of `es2022` features: class static block
+
 v3.0.1
 ---
 * Dependencies update

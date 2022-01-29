@@ -365,7 +365,9 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static isNodeWithBlockLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
-        return NodeGuards.isNodeWithLexicalScope(node) || NodeGuards.isBlockStatementNode(node);
+        return NodeGuards.isNodeWithLexicalScope(node)
+            || NodeGuards.isBlockStatementNode(node)
+            || NodeGuards.isStaticBlockNode(node);
     }
 
     /**
@@ -417,6 +419,7 @@ export class NodeGuards {
     public static isNodeWithStatements (node: ESTree.Node): node is TNodeWithStatements {
         return NodeGuards.isProgramNode(node)
             || NodeGuards.isBlockStatementNode(node)
+            || NodeGuards.isStaticBlockNode(node)
             || NodeGuards.isSwitchCaseNode(node);
     }
 
@@ -498,6 +501,16 @@ export class NodeGuards {
      */
     public static isSpreadElementNode (node: ESTree.Node): node is ESTree.SpreadElement {
         return node.type === NodeType.SpreadElement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    // TODO: add type guard after @types/estree update
+    public static isStaticBlockNode (node: ESTree.Node): boolean {
+        // TODO: Update @types/estree
+        return (<any>node).type === NodeType.StaticBlock;
     }
 
     /**

@@ -3,6 +3,7 @@
 import * as acorn from 'acorn';
 import * as escodegen from '@javascript-obfuscator/escodegen';
 import * as eslintScope from 'eslint-scope';
+import { BlockStatement } from 'estree';
 
 declare module 'estree' {
     /**
@@ -52,5 +53,9 @@ declare module 'estree' {
     interface SimpleLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
+    }
+
+    interface StaticBlock extends Omit<BlockStatement, 'type'> {
+        type: 'StaticBlock'
     }
 }

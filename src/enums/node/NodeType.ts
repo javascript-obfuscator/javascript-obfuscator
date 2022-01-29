@@ -47,6 +47,7 @@ export enum NodeType {
     ReturnStatement = 'ReturnStatement',
     SequenceExpression = 'SequenceExpression',
     SpreadElement = 'SpreadElement',
+    StaticBlock = 'StaticBlock',
     Super = 'Super',
     SwitchCase = 'SwitchCase',
     SwitchStatement = 'SwitchStatement',

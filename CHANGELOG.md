@@ -3,6 +3,7 @@ Change Log
 v3.0.1
 ---
 * Dependencies update
+* Fixed performance for Apple M1 chip
 
 v3.0.0
 ---

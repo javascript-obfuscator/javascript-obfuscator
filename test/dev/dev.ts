@@ -3,12 +3,7 @@
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
     const code: string = `
-        class Foo {
-            static {
-                let abc = 2;
-                abc = 3;
-            }
-        }
+        class Foo {}
     `;
 
     let obfuscationResult = JavaScriptObfuscator.obfuscate(

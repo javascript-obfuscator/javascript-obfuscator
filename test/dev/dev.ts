@@ -1,18 +1,15 @@
 'use strict';
 
-import { readFileAsString } from '../helpers/readFileAsString';
-
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
-    const code: string = readFileAsString(__dirname + '/../functional-tests/javascript-obfuscator/fixtures/custom-nodes-identifier-names-collision.js');
+    const code: string = `
+        class Foo {}
+    `;
 
     let obfuscationResult = JavaScriptObfuscator.obfuscate(
         code,
         {
-            identifierNamesGenerator: 'mangled',
-            compact: false,
-            stringArray: true,
-            seed: 429105580
+            compact: false
         }
     );
 

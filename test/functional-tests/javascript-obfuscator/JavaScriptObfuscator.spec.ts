@@ -984,6 +984,42 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('Class static block support', () => {
+            const regExp: RegExp = new RegExp(
+                'let _0x(\\w){4,6} *= *0x1; *' +
+                'class _0x(\\w){4,6} *{ *' +
+                    'static *\\[\'_0x(\\w){4,6}\']; *' +
+                    'static *{ *' +
+                        'let _0x(\\w){4,6} *= *0x2; *' +
+                        '_0x(\\w){4,6}\\[\'_0x(\\w){4,6}\'] *= *0x3; *' +
+                        '_0x(\\w){4,6} *= *0x4; *' +
+                        '_0x(\\w){4,6} *= *0x5; *' +
+                    '} *' +
+                '}'
+            );
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/class-static-block-support-1.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        renameProperties: true
+                    }
+                ).getObfuscatedCode();
+
+                console.log(obfuscatedCode);
+            });
+
+            it('should support class static block await', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('Private identifiers support', () => {
             const regExp: RegExp = new RegExp(
                 'class Foo *{ *' +

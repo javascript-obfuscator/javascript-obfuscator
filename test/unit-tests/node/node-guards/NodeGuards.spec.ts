@@ -705,7 +705,23 @@ describe('NodeGuards', () => {
                 });
             });
 
-            describe('Variant #3: switch case node', () => {
+            describe('Variant #3: static block node', () => {
+                const expectedResult: boolean = true;
+                // TODO: remove typecast after @types/estree update
+                const node: ESTree.Node = <any>NodeFactory.staticBlockNode();
+
+                let result: boolean;
+
+                before(() => {
+                    result = NodeGuards.isNodeWithStatements(node);
+                });
+
+                it('should check if node has statements', () => {
+                    assert.equal(result, expectedResult);
+                });
+            });
+
+            describe('Variant #4: switch case node', () => {
                 const expectedResult: boolean = true;
                 const node: ESTree.Node = NodeFactory.switchCaseNode(
                     NodeFactory.literalNode(1),

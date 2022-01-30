@@ -1,8 +1,17 @@
 Change Log
 
-v3.1.0
+v3.2.0
 ---
 * **New options**: `stringArrayCallsTransform` and `stringArrayCallsTransformThreshold`
+
+v3.1.0
+---
+* Added support of `es2022` features: class static block
+
+v3.0.1
+---
+* Dependencies update
+* Fixed performance for Apple M1 chip
 
 v3.0.0
 ---

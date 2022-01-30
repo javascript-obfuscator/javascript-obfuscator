@@ -2,6 +2,7 @@ import { injectable, } from 'inversify';
 
 import * as eslintScope from 'eslint-scope';
 import * as estraverse from '@javascript-obfuscator/estraverse';
+import { KEYS, VisitorKeys } from 'eslint-visitor-keys';
 import * as ESTree from 'estree';
 
 import { IScopeAnalyzer } from '../../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
@@ -15,8 +16,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     /**
      * @type {eslintScope.AnalysisOptions}
      */
-    private static readonly eslintScopeOptions: eslintScope.AnalysisOptions = {
+    private static readonly eslintScopeOptions: eslintScope.AnalysisOptions & {
+        childVisitorKeys: VisitorKeys;
+    } = {
         ecmaVersion,
+        childVisitorKeys: KEYS,
         optimistic: true
     };
 

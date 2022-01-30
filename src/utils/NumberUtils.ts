@@ -104,13 +104,14 @@ export class NumberUtils {
             currentFactor <= root;
             currentFactor += incrementValue
         ) {
-            if (number % currentFactor !== 0) {
+            const compliment: number = number / currentFactor;
+            const check = (number - Math.floor(compliment) * currentFactor) !== 0;
+
+            if (check) {
                 continue;
             }
 
             factors.push(...[-currentFactor, currentFactor]);
-
-            const compliment: number = number / currentFactor;
 
             if (compliment !== currentFactor) {
                 factors.push(...[-compliment, compliment]);

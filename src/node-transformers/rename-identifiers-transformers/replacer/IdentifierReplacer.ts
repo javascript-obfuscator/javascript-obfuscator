@@ -26,9 +26,9 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
-     * @type {Map<TNodeWithLexicalScope, Map<string, string>>}
+     * @type {WeakMap<TNodeWithLexicalScope, Map<string, string>>}
      */
-    private readonly blockScopesMap: Map<TNodeWithLexicalScope, Map<string, string>> = new Map();
+    private readonly blockScopesMap: WeakMap<TNodeWithLexicalScope, Map<string, string>> = new WeakMap();
 
     /**
      * @type {IOptions}
@@ -68,13 +68,10 @@ export class IdentifierReplacer implements IIdentifierReplacer {
 
         const newIdentifierName: string = this.identifierNamesGenerator.generateForGlobalScope();
 
-        if (!this.blockScopesMap.has(lexicalScopeNode)) {
-            this.blockScopesMap.set(lexicalScopeNode, new Map());
-        }
-
-        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
+        const namesMap: Map<string, string> = this.blockScopesMap.get(lexicalScopeNode) ?? new Map();
 
         namesMap.set(identifierName, newIdentifierName);
+        this.blockScopesMap.set(lexicalScopeNode, namesMap);
 
         // Have to write all global identifier names to the identifier names cache storage
         if (this.options.identifierNamesCache) {
@@ -97,14 +94,10 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         }
 
         const newIdentifierName: string = this.identifierNamesGenerator.generateForLexicalScope(lexicalScopeNode);
-
-        if (!this.blockScopesMap.has(lexicalScopeNode)) {
-            this.blockScopesMap.set(lexicalScopeNode, new Map());
-        }
-
-        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
+        const namesMap: Map<string, string> | null = this.blockScopesMap.get(lexicalScopeNode) ?? new Map();
 
         namesMap.set(identifierName, newIdentifierName);
+        this.blockScopesMap.set(lexicalScopeNode, namesMap);
     }
 
     /**
@@ -113,14 +106,16 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @returns {Identifier}
      */
     public replace (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
-        let identifierName: string = identifierNode.name;
+        const namesMap: Map<string, string> | null = this.blockScopesMap.get(lexicalScopeNode) ?? null;
 
-        if (this.blockScopesMap.has(lexicalScopeNode)) {
-            const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
+        if (!namesMap) {
+            return identifierNode;
+        }
 
-            if (namesMap.has(identifierName)) {
-                identifierName = <string>namesMap.get(identifierName);
-            }
+        const identifierName: string | null = namesMap.get(identifierNode.name) ?? null;
+
+        if (!identifierName) {
+            return identifierNode;
         }
 
         return NodeFactory.identifierNode(identifierName);

@@ -53,16 +53,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     ];
 
     /**
-     * @type {NodeTransformer[]}
+     * @type {WeakSet <BlockStatement>}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.ScopeIdentifiersTransformer
-    ];
-
-    /**
-     * @type {Set <BlockStatement>}
-     */
-    private readonly deadCodeInjectionRootAstHostNodeSet: Set <ESTree.BlockStatement> = new Set();
+    private readonly deadCodeInjectionRootAstHostNodeSet: WeakSet <ESTree.BlockStatement> = new WeakSet();
 
     /**
      * @type {ESTree.BlockStatement[]}
@@ -244,11 +237,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     }
                 };
 
-            case NodeTransformationStage.RenameIdentifiers:
-                if (!this.deadCodeInjectionRootAstHostNodeSet.size) {
-                    return null;
-                }
-
+            case NodeTransformationStage.StringArray:
                 return {
                     enter: (
                         node: ESTree.Node,
@@ -351,7 +340,13 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private isDeadCodeInjectionRootAstHostNode (node: ESTree.Node): node is ESTree.BlockStatement {
-        return NodeGuards.isBlockStatementNode(node) && this.deadCodeInjectionRootAstHostNodeSet.has(node);
+        const isDeadCodeInjectionRootAstHostNode = NodeGuards.isBlockStatementNode(node) && this.deadCodeInjectionRootAstHostNodeSet.has(node);
+
+        if (isDeadCodeInjectionRootAstHostNode) {
+            this.deadCodeInjectionRootAstHostNodeSet.delete(node);
+        }
+
+        return isDeadCodeInjectionRootAstHostNode;
     }
 
     /**

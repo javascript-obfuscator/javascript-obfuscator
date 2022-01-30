@@ -5,9 +5,11 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
@@ -17,6 +19,11 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @type {TControlFlowCustomNodeFactory}
      */
     protected readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
+
+    /**
+     * @type {IIdentifierNamesGenerator}
+     */
+    protected readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
      * @type {IOptions}
@@ -35,38 +42,39 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
+        this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
 
     /**
-     * @param {Map<string, Map<string, string[]>>} identifierDataByControlFlowStorageId
-     * @param {string} controlFlowStorageId
-     * @returns {Map<string, string[]>}
+     * Generates storage key with length of 5 characters to prevent collisions and to guarantee that
+     * these keys will be added to the string array storage
+     *
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {string}
      */
-    protected static getStorageKeysByIdForCurrentStorage (
-        identifierDataByControlFlowStorageId: Map<string, Map<string, string[]>>,
-        controlFlowStorageId: string
-    ): Map<string, string[]> {
-        let storageKeysById: Map<string, string[]>;
+    public generateStorageKey (controlFlowStorage: TControlFlowStorage): string {
+        const key: string = this.randomGenerator.getRandomString(5);
 
-        if (identifierDataByControlFlowStorageId.has(controlFlowStorageId)) {
-            storageKeysById = <Map<string, string[]>>identifierDataByControlFlowStorageId.get(controlFlowStorageId);
-        } else {
-            storageKeysById = new Map <string, string[]>();
+        if (controlFlowStorage.has(key)) {
+            return this.generateStorageKey(controlFlowStorage);
         }
 
-        return storageKeysById;
+        return key;
     }
 
     /**
@@ -83,28 +91,18 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         usingExistingIdentifierChance: number
     ): string {
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
-        const storageKeysById: Map<string, string[]> = AbstractControlFlowReplacer
-            .getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
-        const storageKeysForCurrentId: string[] | undefined = storageKeysById.get(replacerId);
+        const storageKeysById: Map<string, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
+            ?? new Map <string, string[]>();
+        const storageKeysForCurrentId: string[] | null = storageKeysById.get(replacerId) ?? null;
 
-        if (
-            this.randomGenerator.getMathRandom() < usingExistingIdentifierChance &&
-            storageKeysForCurrentId &&
-            storageKeysForCurrentId.length
-        ) {
+        const shouldPickFromStorageKeysById = this.randomGenerator.getMathRandom() < usingExistingIdentifierChance
+            && storageKeysForCurrentId?.length;
+
+        if (shouldPickFromStorageKeysById) {
             return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
         }
 
-        const generateStorageKey: (length: number) => string = (length: number) => {
-            const key: string = this.randomGenerator.getRandomString(length);
-
-            if (controlFlowStorage.getStorage().has(key)) {
-                return generateStorageKey(length);
-            }
-
-            return key;
-        };
-        const storageKey: string = generateStorageKey(5);
+        const storageKey: string = this.generateStorageKey(controlFlowStorage);
 
         storageKeysById.set(replacerId, [storageKey]);
         this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
@@ -116,8 +114,13 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     /**
      * @param {Node} node
      * @param {Node} parentNode
+     * @param {TNodeWithLexicalScope} controlFlowStorageLexicalScopeNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
+    public abstract replace (
+        node: ESTree.Node,
+        parentNode: ESTree.Node,
+        controlFlowStorage: TControlFlowStorage
+    ): ESTree.Node;
 }

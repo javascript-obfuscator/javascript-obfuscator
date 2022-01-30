@@ -69,7 +69,10 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
                 const options: IOptions = context.container
                     .get<IOptions>(ServiceIdentifiers.IOptions);
 
-                const storage: TControlFlowStorage = new constructor(randomGenerator, options);
+                const storage: TControlFlowStorage = new constructor(
+                    randomGenerator,
+                    options
+                );
 
                 storage.initialize();
 

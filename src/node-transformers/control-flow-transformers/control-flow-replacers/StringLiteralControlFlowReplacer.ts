@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
 import { TStatement } from '../../../types/node/TStatement';
 
@@ -25,27 +26,35 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     /**
      * @type {number}
      */
-    private static readonly usingExistingIdentifierChance: number = 1;
+    protected static readonly usingExistingIdentifierChance: number = 1;
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(controlFlowCustomNodeFactory, randomGenerator, options);
+        super(
+            controlFlowCustomNodeFactory,
+            identifierNamesGeneratorFactory,
+            randomGenerator,
+            options
+        );
     }
 
     /**
      * @param {Literal} literalNode
-     * @param {NodeGuards} parentNode
+     * @param {Node} parentNode
      * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {NodeGuards}
+     * @returns {Node}
      */
     public replace (
         literalNode: ESTree.Literal,

@@ -59,7 +59,6 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         const propertyNodes: ESTree.Property[] = [];
-
         const controlFlowStorageMap: Map<string, ICustomNode> = this.controlFlowStorage.getStorage();
 
         for (const [key, value] of controlFlowStorageMap) {

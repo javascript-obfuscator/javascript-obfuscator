@@ -17,7 +17,6 @@ import { initializable } from '../../../decorators/Initializable';
 import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
@@ -59,22 +58,25 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const propertyNodes: ESTree.Property[] = Array
-            .from<[string, ICustomNode]>(this.controlFlowStorage.getStorage())
-            .map(([key, value]: [string, ICustomNode]) => {
-                const node: ESTree.Node = value.getNode()[0];
+        const propertyNodes: ESTree.Property[] = [];
+        const controlFlowStorageMap: Map<string, ICustomNode> = this.controlFlowStorage.getStorage();
 
-                if (!NodeGuards.isExpressionStatementNode(node)) {
-                    throw new Error('Function node for control flow storage object should be passed inside the `ExpressionStatement` node!');
-                }
+        for (const [key, value] of controlFlowStorageMap) {
+            const node: ESTree.Node = value.getNode()[0];
 
-                return NodeFactory.propertyNode(
+            if (!NodeGuards.isExpressionStatementNode(node)) {
+                throw new Error('Function node for control flow storage object should be passed inside the `ExpressionStatement` node!');
+            }
+
+            propertyNodes.push(
+                NodeFactory.propertyNode(
                     NodeFactory.identifierNode(key),
                     node.expression
-                );
-            });
+                )
+            );
+        }
 
-        let structure: ESTree.Node = NodeFactory.variableDeclarationNode(
+        const structure: ESTree.Node = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
                     NodeFactory.identifierNode(this.controlFlowStorage.getStorageId()),
@@ -83,8 +85,6 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
             ],
             'const'
         );
-
-        structure = NodeUtils.parentizeAst(structure);
 
         return [structure];
     }

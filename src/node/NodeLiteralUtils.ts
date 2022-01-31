@@ -1,10 +1,19 @@
 import * as ESTree from 'estree';
 
+import { TNumberLiteralNode } from '../types/node/TNumberLiteralNode';
 import { TStringLiteralNode } from '../types/node/TStringLiteralNode';
 
 import { NodeGuards } from './NodeGuards';
 
 export class NodeLiteralUtils {
+    /**
+     * @param {Literal} literalNode
+     * @returns {literalNode is TNumberLiteralNode}
+     */
+    public static isNumberLiteralNode (literalNode: ESTree.Literal): literalNode is TNumberLiteralNode {
+        return typeof literalNode.value === 'number';
+    }
+
     /**
      * @param {Literal} literalNode
      * @returns {literalNode is TStringLiteralNode}

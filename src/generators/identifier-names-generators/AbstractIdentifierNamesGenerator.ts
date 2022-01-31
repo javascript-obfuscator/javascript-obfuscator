@@ -27,9 +27,9 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly preservedNamesSet: Set<string> = new Set();
 
     /**
-     * @type {Map<TNodeWithLexicalScope, Set<string>>}
+     * @type {WeakMap<TNodeWithLexicalScope, Set<string>>}
      */
-    protected readonly lexicalScopesPreservedNamesMap: Map<TNodeWithLexicalScope, Set<string>> = new Map();
+    protected readonly lexicalScopesPreservedNamesMap: WeakMap<TNodeWithLexicalScope, Set<string>> = new WeakMap();
 
     /**
      * @param {IRandomGenerator} randomGenerator

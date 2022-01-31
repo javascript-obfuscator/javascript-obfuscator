@@ -31,9 +31,9 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     private readonly identifierReplacer: IIdentifierReplacer;
 
     /**
-     * @type {Map<TNodeWithLexicalScope, boolean>}
+     * @type {WeakMap<TNodeWithLexicalScope, boolean>}
      */
-    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: Map<TNodeWithLexicalScope, boolean> = new Map();
+    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: WeakMap<TNodeWithLexicalScope, boolean> = new WeakMap();
 
     /**
      * @type {IScopeIdentifiersTraverser}
@@ -362,23 +362,15 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
                     const properties: (ESTree.Property | ESTree.RestElement)[] = node.properties;
 
                     for (const property of properties) {
-                        if (!NodeGuards.isPropertyNode(property)) {
+                        isProhibitedVariableDeclaration = NodeGuards.isPropertyNode(property)
+                            && !property.computed
+                            && property.shorthand
+                            && NodeGuards.isIdentifierNode(property.key)
+                            && identifierNode.name === property.key.name;
+
+                        if (!isProhibitedVariableDeclaration) {
                             continue;
                         }
-
-                        if (property.computed || !property.shorthand) {
-                            continue;
-                        }
-
-                        if (!NodeGuards.isIdentifierNode(property.key)) {
-                            continue;
-                        }
-
-                        if (identifierNode.name !== property.key.name) {
-                            continue;
-                        }
-
-                        isProhibitedVariableDeclaration = true;
 
                         return estraverse.VisitorOption.Break;
                     }

@@ -48,6 +48,7 @@ import './unit-tests/utils/CryptUtilsStringArray.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
 import './unit-tests/utils/LevelledTopologicalSorter.spec';
 import './unit-tests/utils/NumberUtils.spec';
+import './unit-tests/utils/ObfuscatedCodeFileUtils.spec'
 import './unit-tests/utils/RandomGenerator.spec';
 import './unit-tests/utils/StringUtils.spec';
 import './unit-tests/utils/Utils.spec';

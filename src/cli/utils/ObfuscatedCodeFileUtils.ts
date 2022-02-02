@@ -61,6 +61,12 @@ export class ObfuscatedCodeFileUtils {
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {
                 const parsedNormalizedFilePath: path.ParsedPath = path.parse(normalizedFilePath);
+
+                // Make ending with "/" consistent
+                if (!parsedNormalizedFilePath.dir.endsWith('/') && this.inputPath.endsWith('/')) {
+                    parsedNormalizedFilePath.dir += '/';
+                }
+
                 const baseOutputPath: string = path.join(
                     parsedNormalizedFilePath.dir.replace(this.inputPath, ''),
                     parsedNormalizedFilePath.base

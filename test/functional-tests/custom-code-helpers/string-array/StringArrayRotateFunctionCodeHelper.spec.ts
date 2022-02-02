@@ -10,7 +10,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade
 
 describe('StringArrayRotateFunctionCodeHelper', () => {
     describe('Base behaviour', () => {
-        const regExp: RegExp = /while *\(true\) *\{/;
+        const regExp: RegExp = /while *\(!!\[]\) *\{/;
 
         describe('`stringArray` option is set', () => {
             let obfuscatedCode: string;
@@ -84,8 +84,8 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
     });
 
     describe('Preserve string array name', () => {
-        const arrayRotateRegExp: RegExp = /f\['push']\(f\['shift']\(\)\);/;
-        const comparisonRegExp: RegExp = /if *\(g *=== *d\) *{/;
+        const arrayRotateRegExp: RegExp = /e\['push']\(e\['shift']\(\)\);/;
+        const comparisonRegExp: RegExp = /if *\(f *=== *d\) *{/;
 
         let obfuscatedCode: string;
 

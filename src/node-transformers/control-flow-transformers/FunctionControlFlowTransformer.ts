@@ -6,23 +6,31 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
-import { TControlFlowStorage } from '../../types/storages/TControlFlowStorage';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
+import {
+    TControlFlowStorageFactoryCreator
+} from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
+import { IControlFlowStorage } from '../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
-import { ControlFlowReplacer } from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
+import {
+    ControlFlowReplacer
+} from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
+import { ControlFlowStorage } from '../../enums/storages/ControlFlowStorage';
 import { NodeType } from '../../enums/node/NodeType';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
+import {
+    ControlFlowStorageNode
+} from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
@@ -52,9 +60,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
-     * @type {WeakMap<TNodeWithStatements, TControlFlowStorage>}
+     * @type {WeakMap<TNodeWithStatements, IControlFlowStorage>}
      */
-    protected readonly controlFlowData: WeakMap <TNodeWithStatements, TControlFlowStorage> = new WeakMap();
+    protected readonly controlFlowData: WeakMap <TNodeWithStatements, IControlFlowStorage> = new WeakMap();
 
     /**
      * @type {WeakMap<TNodeWithStatements, VariableDeclaration>}
@@ -69,7 +77,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {TControlFlowStorageFactory}
      */
-    protected readonly controlFlowStorageFactory: TControlFlowStorageFactory;
+    protected controlFlowStorageFactory: TControlFlowStorageFactory;
 
     /**
      * @type {TControlFlowCustomNodeFactory}
@@ -82,7 +90,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     protected readonly visitedFunctionNodes: WeakSet<ESTree.Function> = new WeakSet();
 
     /**
-     * @param {TControlFlowStorageFactory} controlFlowStorageFactory
+     * @param {TControlFlowStorageFactoryCreator} controlFlowStorageFactoryCreator
      * @param {TControlFlowReplacerFactory} controlFlowReplacerFactory
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
      * @param {IRandomGenerator} randomGenerator
@@ -90,7 +98,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
-            controlFlowStorageFactory: TControlFlowStorageFactory,
+            controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
             controlFlowReplacerFactory: TControlFlowReplacerFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -100,7 +108,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ) {
         super(randomGenerator, options);
 
-        this.controlFlowStorageFactory = controlFlowStorageFactory;
+        this.controlFlowStorageFactory = controlFlowStorageFactoryCreator(ControlFlowStorage.FunctionControlFlowStorage);
         this.controlFlowReplacerFactory = controlFlowReplacerFactory;
         this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
     }
@@ -145,7 +153,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const hostNode: TNodeWithStatements = this.getHostNode(functionNode.body);
-        const controlFlowStorage: TControlFlowStorage = this.getControlFlowStorage(hostNode);
+        const controlFlowStorage: IControlFlowStorage = this.getControlFlowStorage(hostNode);
 
         this.transformFunctionBody(functionNode, controlFlowStorage);
 
@@ -162,9 +170,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {BlockStatement} functionNode
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      */
-    protected transformFunctionBody (functionNode: ESTree.Function, controlFlowStorage: TControlFlowStorage): void {
+    protected transformFunctionBody (functionNode: ESTree.Function, controlFlowStorage: IControlFlowStorage): void {
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node =>
                 this.transformFunctionBodyNode(node, parentNode, functionNode, controlFlowStorage)
@@ -175,14 +183,14 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @param {Node | null} parentNode
      * @param {Function} functionNode
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {ESTraverse.VisitorOption | Node}
      */
     protected transformFunctionBodyNode (
         node: ESTree.Node,
         parentNode: ESTree.Node | null,
         functionNode: ESTree.Function,
-        controlFlowStorage: TControlFlowStorage
+        controlFlowStorage: IControlFlowStorage
     ): estraverse.VisitorOption | ESTree.Node {
         const shouldSkipTraverse = !parentNode
             || NodeMetadata.isIgnoredNode(node)
@@ -243,10 +251,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithStatements} hostNode
      * @returns {TControlFlowStorage}
      */
-    protected getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
-        const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
+    protected getControlFlowStorage (hostNode: TNodeWithStatements): IControlFlowStorage {
+        const controlFlowStorage: IControlFlowStorage = this.controlFlowStorageFactory();
 
-        const hostControlFlowStorage: TControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
+        const hostControlFlowStorage: IControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
 
         if (hostControlFlowStorage) {
             const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
@@ -265,10 +273,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {VariableDeclaration}
      */
-    protected getControlFlowStorageNode (controlFlowStorage: TControlFlowStorage): ESTree.VariableDeclaration {
+    protected getControlFlowStorageNode (controlFlowStorage: IControlFlowStorage): ESTree.VariableDeclaration {
         const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
 

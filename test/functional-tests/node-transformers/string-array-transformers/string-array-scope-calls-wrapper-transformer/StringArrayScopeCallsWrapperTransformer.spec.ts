@@ -82,11 +82,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #3: correct wrappers order', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'const c *= *b;.*' +
-                    'const d *= *b;.*' +
-                    'const foo *= *[c|d]\\(0x0\\);.*' +
-                    'const bar *= *[c|d]\\(0x1\\);.*' +
-                    'const baz *= *[c|d]\\(0x2\\);'
+                    'const f *= *b;.*' +
+                    'const g *= *b;.*' +
+                    'const foo *= *[f|g]\\(0x0\\);.*' +
+                    'const bar *= *[f|g]\\(0x1\\);.*' +
+                    'const baz *= *[f|g]\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -113,11 +113,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #4: `identifiersPrefix` option is set', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'const foo_c *= *foo_b;.*' +
                     'const foo_d *= *foo_b;.*' +
-                    'const foo *= *foo_[c|d]\\(0x0\\);.*' +
-                    'const bar *= *foo_[c|d]\\(0x1\\);.*' +
-                    'const baz *= *foo_[c|d]\\(0x2\\);'
+                    'const foo_e *= *foo_b;.*' +
+                    'const foo *= *foo_[d|e]\\(0x0\\);.*' +
+                    'const bar *= *foo_[d|e]\\(0x1\\);.*' +
+                    'const baz *= *foo_[d|e]\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -213,11 +213,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #3: correct wrappers order', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                        'const g *= *b;' +
                         'const h *= *b;' +
-                        'const i *= *[g|h]\\(0x3\\);' +
-                        'const j *= *[g|h]\\(0x4\\);' +
-                        'const k *= *[g|h]\\(0x5\\);' +
+                        'const i *= *b;' +
+                        'const c *= *[h|i]\\(0x3\\);' +
+                        'const d *= *[h|i]\\(0x4\\);' +
+                        'const e *= *[h|i]\\(0x5\\);' +
                     '}'
                 );
 
@@ -245,11 +245,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #4: correct wrapper for the function default parameter', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'const c *= *b;.*' +
-                    'const foo *= *c\\(0x0\\);.*' +
-                    'function test *\\(e *= *c\\(0x1\\)\\) *{' +
+                    'const e *= *b;.*' +
+                    'const foo *= *e\\(0x0\\);.*' +
+                    'function test *\\(c *= *e\\(0x1\\)\\) *{' +
                         'const f *= *b;' +
-                        'const g *= *f\\(0x2\\);' +
+                        'const d *= *f\\(0x2\\);' +
                     '}'
                 );
 
@@ -278,11 +278,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #5: `identifiersPrefix` option is set', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{' +
-                        'const a *= *foo_b;' +
-                        'const b *= *foo_b;' +
-                        'const c *= *[a|b]\\(0x3\\);' +
-                        'const d *= *[a|b]\\(0x4\\);' +
-                        'const g *= *[a|b]\\(0x5\\);' +
+                        'const f *= *foo_b;' +
+                        'const g *= *foo_b;' +
+                        'const a *= *[f|g]\\(0x3\\);' +
+                        'const b *= *[f|g]\\(0x4\\);' +
+                        'const c *= *[f|g]\\(0x5\\);' +
                     '}'
                 );
 
@@ -430,25 +430,25 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #1: correct chained calls', () => {
                 describe('Variant #1: `Mangled` identifier names generator', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(
-                        'const c *= *b;.*' +
-                        'const foo *= *c\\(0x0\\);.*' +
-                        'function test\\(g, *h\\) *{' +
-                            'const i *= *c;' +
-                            'const j *= *i\\(0x1\\);' +
-                            'const k *= *i\\(0x2\\);' +
-                            'function l\\(m, *n\\) *{' +
-                                'const o *= *i;' +
-                                'const p *= *o\\(0x3\\);' +
-                                'const q *= *o\\(0x4\\);' +
-                                'function r\\(s, *t *\\) *{' +
-                                    'const u *= *o;' +
-                                    'const v *= *u\\(0x3\\);' +
-                                    'const w *= *u\\(0x4\\);' +
-                                    'return v *\\+ *w;' +
+                        'const q *= *b;.*' +
+                        'const foo *= *q\\(0x0\\);.*' +
+                        'function test\\(c, *d\\) *{' +
+                            'const r *= *q;' +
+                            'const e *= *r\\(0x1\\);' +
+                            'const f *= *r\\(0x2\\);' +
+                            'function g\\(h, *i\\) *{' +
+                                'const s *= *r;' +
+                                'const j *= *s\\(0x3\\);' +
+                                'const k *= *s\\(0x4\\);' +
+                                'function l\\(m, *n *\\) *{' +
+                                    'const t *= *s;' +
+                                    'const o *= *t\\(0x3\\);' +
+                                    'const p *= *t\\(0x4\\);' +
+                                    'return o *\\+ *p;' +
                                 '}' +
-                                'return p *\\+ *q;' +
+                                'return j *\\+ *k;' +
                             '}' +
-                            'return j *\\+ *k *\\+ *l\\(\\);' +
+                            'return e *\\+ *f *\\+ *g\\(\\);' +
                         '}'
                     );
 

@@ -19,7 +19,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
     this.timeout(120000);
 
     describe('Code helper append', () => {
-        const regExp: RegExp = /while *\(true\) *\{/;
+        const regExp: RegExp = /while *\(!!\[]\) *\{/;
 
         describe('`stringArray` option is set', () => {
             let obfuscatedCode: string;

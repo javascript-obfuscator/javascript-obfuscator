@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ISetUtils } from '../../interfaces/utils/ISetUtils';
 
 import { numbersString } from '../../constants/NumbersString';
 import { alphabetString } from '../../constants/AlphabetString';
@@ -27,13 +28,15 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {ISetUtils} setUtils
      */
     public constructor (
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.ISetUtils) setUtils: ISetUtils
     ) {
-        super(randomGenerator, options);
+        super(randomGenerator, options, setUtils);
 
         this.arrayUtils = arrayUtils;
     }
@@ -60,13 +63,5 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
      */
     protected override getNameSequence (): string[] {
         return MangledShuffledIdentifierNamesGenerator.shuffledNameSequence;
-    }
-
-    /**
-     * @param {string} previousMangledName
-     * @returns {string}
-     */
-    protected override generateNewMangledName (previousMangledName: string): string {
-        return super.generateNewMangledName(previousMangledName);
     }
 }

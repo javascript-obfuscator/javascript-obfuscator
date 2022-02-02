@@ -4,10 +4,10 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
-import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
 
+import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
@@ -51,13 +51,13 @@ export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlow
     /**
      * @param {Literal} literalNode
      * @param {Node} parentNode
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     public override replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
-        controlFlowStorage: TControlFlowStorage
+        controlFlowStorage: IControlFlowStorage
     ): ESTree.Node {
         const isStringArrayCallLiteralNode = NodeMetadata.isStringArrayCallLiteralNode(literalNode)
             && (
@@ -88,10 +88,10 @@ export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlow
     /**
      * Generates storage key based on a current control flow storage identifier
      *
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {string}
      */
-    public override generateStorageKey (controlFlowStorage: TControlFlowStorage): string {
+    public override generateStorageKey (controlFlowStorage: IControlFlowStorage): string {
         const key: string = this.identifierNamesGenerator
             .generateForLabel(controlFlowStorage.getStorageId());
 

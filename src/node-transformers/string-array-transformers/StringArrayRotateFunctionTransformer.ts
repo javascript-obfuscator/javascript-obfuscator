@@ -8,12 +8,15 @@ import { TCustomCodeHelperFactory } from '../../types/container/custom-code-help
 import { TInitialData } from '../../types/TInitialData';
 import { TNumberNumericalExpressionData } from '../../types/analyzers/number-numerical-expression-analyzer/TNumberNumericalExpressionData';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringLiteralNode } from '../../types/node/TStringLiteralNode';
 
 import { ICustomCodeHelper } from '../../interfaces/custom-code-helpers/ICustomCodeHelper';
+import { INodeTransformersRunner } from '../../interfaces/node-transformers/INodeTransformersRunner';
 import { INumberNumericalExpressionAnalyzer } from '../../interfaces/analyzers/number-numerical-expression-analyzer/INumberNumericalExpressionAnalyzer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
+import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { CustomCodeHelper } from '../../enums/custom-code-helpers/CustomCodeHelper';
@@ -25,6 +28,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeUtils } from '../../node/NodeUtils';
 import { NumericalExpressionDataToNodeConverter } from '../../node/NumericalExpressionDataToNodeConverter';
 import { StringArrayRotateFunctionCodeHelper } from '../../custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper';
@@ -32,17 +36,21 @@ import { StringArrayRotateFunctionCodeHelper } from '../../custom-code-helpers/s
 @injectable()
 export class StringArrayRotateFunctionTransformer extends AbstractNodeTransformer {
     /**
+     * @type {NodeTransformer[]}
+     */
+    private static readonly stringArrayRotateFunctionTransformers: NodeTransformer[] = [
+        NodeTransformer.BooleanLiteralTransformer,
+        NodeTransformer.MemberExpressionTransformer,
+        NodeTransformer.NumberLiteralTransformer,
+        NodeTransformer.NumberToNumericalExpressionTransformer,
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.ScopeIdentifiersTransformer
+    ];
+
+    /**
      * @type {number}
      */
     private static readonly comparisonExpressionAdditionalPartsCount: number = 7;
-
-    /**
-     * @type {string[]}
-     */
-    private static readonly stringArrayShiftMethodNames: string[] = [
-        'push',
-        'shift'
-    ];
 
     /**
      * @type {INumberNumericalExpressionAnalyzer}
@@ -55,21 +63,35 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
     private readonly stringArrayStorage: IStringArrayStorage;
 
     /**
+     * @type {IStringArrayStorageAnalyzer}
+     */
+    private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
+
+    /**
      * @type {TCustomCodeHelperFactory}
      */
     private readonly customCodeHelperFactory: TCustomCodeHelperFactory;
 
     /**
+     * @type {INodeTransformersRunner}
+     */
+    private readonly transformersRunner: INodeTransformersRunner;
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {INodeTransformersRunner} transformersRunner
      * @param {IStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {TCustomCodeHelperFactory} customCodeHelperFactory
      * @param {INumberNumericalExpressionAnalyzer} numberNumericalExpressionAnalyzer
      */
     public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.INodeTransformersRunner) transformersRunner: INodeTransformersRunner,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
             numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer
@@ -77,6 +99,8 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         super(randomGenerator, options);
 
         this.stringArrayStorage = stringArrayStorage;
+        this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
+        this.transformersRunner = transformersRunner;
         this.customCodeHelperFactory = customCodeHelperFactory;
         this.numberNumericalExpressionAnalyzer = numberNumericalExpressionAnalyzer;
     }
@@ -143,25 +167,49 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      */
     public transformNode (programNode: ESTree.Program): ESTree.Node {
         const stringArrayRotateFunctionNode: TStatement = this.getStringArrayRotateFunctionNode();
+        const wrappedStringArrayRotateFunctionNode: ESTree.Program = NodeFactory.programNode([
+            stringArrayRotateFunctionNode
+        ]);
 
-        estraverse.traverse(stringArrayRotateFunctionNode, {
+        NodeUtils.parentizeAst(wrappedStringArrayRotateFunctionNode);
+
+        const transformationStages: NodeTransformationStage[] = [
+            NodeTransformationStage.Preparing,
+            NodeTransformationStage.Converting,
+            NodeTransformationStage.RenameIdentifiers,
+            NodeTransformationStage.Finalizing
+        ];
+
+        // custom transformation of string array rotate function node
+        for (const transformationStage of transformationStages) {
+            this.transformersRunner.transform(
+                wrappedStringArrayRotateFunctionNode,
+                StringArrayRotateFunctionTransformer.stringArrayRotateFunctionTransformers,
+                transformationStage
+            );
+        }
+
+        // mark all child nodes (except literals inside comparison expression)
+        // as ignored to prevent additional transformation of these nodes
+        estraverse.traverse(wrappedStringArrayRotateFunctionNode, {
             enter: (node: ESTree.Node): void => {
                 if (
                     !NodeGuards.isLiteralNode(node)
                     || !NodeLiteralUtils.isStringLiteralNode(node)
                 ) {
-                   return;
+                    return;
                 }
 
-                // set string array shift method names as ignored
-                // to prevent its extraction to string array
-                if (StringArrayRotateFunctionTransformer.stringArrayShiftMethodNames.includes(node.value)) {
+                // force add item data for string literal nodes of comparison expressions
+                // set all other nodes as ignored to prevent them from obfuscation
+                if (this.isComparisonExpressionStringLiteralNode(node)) {
+                    this.stringArrayStorageAnalyzer.addItemDataForLiteralNode(node);
+                } else {
                     NodeMetadata.set(node, {ignoredNode: true});
                 }
             }
         });
 
-        NodeUtils.parentizeAst(stringArrayRotateFunctionNode);
         NodeAppender.prepend(programNode, [stringArrayRotateFunctionNode]);
 
         return programNode;
@@ -218,6 +266,14 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         );
 
         return stringArrayRotateFunctionCodeHelper.getNode()[0];
+    }
+
+    /**
+     * @param {TStringLiteralNode} stringLiteralNode
+     * @returns {boolean}
+     */
+    private isComparisonExpressionStringLiteralNode (stringLiteralNode: TStringLiteralNode): boolean {
+        return /\d/.test(stringLiteralNode.value);
     }
 
     /**

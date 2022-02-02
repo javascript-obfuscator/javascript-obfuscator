@@ -84,12 +84,13 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}`
             : '';
-        const identifierName: string = this.generateNewDictionaryName();
-        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
-        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
-            return this.generateForGlobalScope();
-        }
+        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
+            const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
+
+            return this.isValidIdentifierName(identifierNameWithPrefix);
+        });
+        const identifierNameWithPrefix = `${prefix}${identifierName}`;
 
         this.preserveName(identifierNameWithPrefix);
 
@@ -105,11 +106,9 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
             lexicalScopeNode,
             ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
         ];
-        const identifierName: string = this.generateNewDictionaryName();
-
-        if (!this.isValidIdentifierNameInLexicalScopes(identifierName, lexicalScopes)) {
-            return this.generateForLexicalScope(lexicalScopeNode);
-        }
+        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) =>
+            this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
+        );
 
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
@@ -121,21 +120,14 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @returns {string}
      */
     public generateForLabel (label: string): string {
-        const identifierName: string = this.generateNewDictionaryName();
-
-        if (!this.isValidIdentifierNameForLabel(identifierName, label)) {
-            return this.generateForLabel(label);
-        }
-
-        this.preserveNameForLabel(identifierName, label);
-
-        return identifierName;
+        return this.generateNewDictionaryName();
     }
 
     /**
+     * @param {(newIdentifierName: string) => boolean} validationFunction
      * @returns {string}
      */
-    private generateNewDictionaryName (): string {
+    private generateNewDictionaryName (validationFunction?: (newIdentifierName: string) => boolean): string {
         if (!this.identifierNamesSet.size) {
             throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
         }
@@ -143,9 +135,12 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
 
         if (!iteratorResult.done) {
-            const identifierName: string =iteratorResult.value;
+            const identifierName: string = iteratorResult.value;
 
-            if (!this.isValidIdentifierName(identifierName)) {
+            const isValidIdentifierName = validationFunction?.(identifierName)
+                ?? this.isValidIdentifierName(identifierName);
+
+            if (!isValidIdentifierName) {
                 return this.generateNewDictionaryName();
             }
 

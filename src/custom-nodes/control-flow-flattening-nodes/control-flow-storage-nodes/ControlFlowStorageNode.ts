@@ -3,10 +3,10 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
+import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 import { ICustomCodeHelperFormatter } from '../../../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -21,10 +21,10 @@ import { NodeGuards } from '../../../node/NodeGuards';
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
     /**
-     * @type {TControlFlowStorage}
+     * @type {IControlFlowStorage}
      */
     @initializable()
-    private controlFlowStorage!: TControlFlowStorage;
+    private controlFlowStorage!: IControlFlowStorage;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -48,9 +48,9 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      */
-    public initialize (controlFlowStorage: TControlFlowStorage): void {
+    public initialize (controlFlowStorage: IControlFlowStorage): void {
         this.controlFlowStorage = controlFlowStorage;
     }
 

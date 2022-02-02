@@ -38,7 +38,7 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             stringArrayCallsTransformThreshold: 1,
             rotateStringArray: true,
             stringArrayWrappersType: StringArrayWrappersType.Function,
-            transformObjectKeys: true,
+            transformObjectKeys: true
         }
     ).getObfuscatedCode();
 

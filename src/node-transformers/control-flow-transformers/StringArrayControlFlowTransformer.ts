@@ -6,8 +6,9 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
-import { TControlFlowStorage } from '../../types/storages/TControlFlowStorage';
-import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
+import {
+    TControlFlowStorageFactoryCreator
+} from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -15,12 +16,14 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowReplacer } from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
+import { ControlFlowStorage } from '../../enums/storages/ControlFlowStorage';
 import { NodeType } from '../../enums/node/NodeType';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { FunctionControlFlowTransformer } from './FunctionControlFlowTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { IControlFlowStorage } from '../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 
 @injectable()
 export class StringArrayControlFlowTransformer extends FunctionControlFlowTransformer {
@@ -46,7 +49,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
     protected readonly controlFlowStorageNodes: WeakSet<ESTree.VariableDeclaration> = new WeakSet();
 
     /**
-     * @param {TControlFlowStorageFactory} controlFlowStorageFactory
+     * @param {TControlFlowStorageFactoryCreator} controlFlowStorageFactoryCreator
      * @param {TControlFlowReplacerFactory} controlFlowReplacerFactory
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
      * @param {IRandomGenerator} randomGenerator
@@ -54,7 +57,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
-            controlFlowStorageFactory: TControlFlowStorageFactory,
+            controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
             controlFlowReplacerFactory: TControlFlowReplacerFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -63,12 +66,14 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(
-            controlFlowStorageFactory,
+            controlFlowStorageFactoryCreator,
             controlFlowReplacerFactory,
             controlFlowCustomNodeFactory,
             randomGenerator,
             options
         );
+
+        this.controlFlowStorageFactory = controlFlowStorageFactoryCreator(ControlFlowStorage.StringControlFlowStorage);
     }
 
     /**
@@ -98,14 +103,14 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {Node} node
      * @param {Node | null} parentNode
      * @param {Function} functionNode
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {ESTraverse.VisitorOption | Node}
      */
     protected override transformFunctionBodyNode (
         node: ESTree.Node,
         parentNode: ESTree.Node | null,
         functionNode: ESTree.Function,
-        controlFlowStorage: TControlFlowStorage
+        controlFlowStorage: IControlFlowStorage
     ): estraverse.VisitorOption | ESTree.Node {
         const shouldBreakTraverse = NodeGuards.isVariableDeclarationNode(node)
             && this.controlFlowStorageNodes.has(node);

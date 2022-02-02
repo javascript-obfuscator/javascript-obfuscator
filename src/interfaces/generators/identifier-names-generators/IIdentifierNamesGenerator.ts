@@ -49,13 +49,6 @@ export interface IIdentifierNamesGenerator {
 
     /**
      * @param {string} identifierName
-     * @param {string} label
-     * @returns {boolean}
-     */
-    isValidIdentifierNameForLabel (identifierName: string, label: string): boolean;
-
-    /**
-     * @param {string} identifierName
      */
     preserveName (identifierName: string): void;
 
@@ -64,10 +57,4 @@ export interface IIdentifierNamesGenerator {
      * @param {TNodeWithLexicalScope} lexicalScope
      */
     preserveNameForLexicalScope (identifierName: string, lexicalScope: TNodeWithLexicalScope): void;
-
-    /**
-     * @param {string} identifierName
-     * @param {string} label
-     */
-    preserveNameForLabel (identifierName: string, label: string): void;
 }

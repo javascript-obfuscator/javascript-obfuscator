@@ -21,6 +21,7 @@ export enum ServiceIdentifiers {
     ICodeTransformer = 'ICodeTransformer',
     ICodeTransformerNamesGroupsBuilder = 'ICodeTransformerNamesGroupsBuilder',
     ICodeTransformersRunner = 'ICodeTransformersRunner',
+    IControlFlowStorage = 'IControlFlowStorage',
     ICryptUtils = 'ICryptUtils',
     ICryptUtilsStringArray = 'ICryptUtilsStringArray',
     ICustomCodeHelper = 'ICustomCodeHelper',
@@ -50,6 +51,7 @@ export enum ServiceIdentifiers {
     IRandomGenerator = 'IRandomGenerator',
     IRenamePropertiesReplacer = 'IRenamePropertiesReplacer',
     IScopeIdentifiersTraverser = 'IScopeIdentifiersTraverser',
+    ISetUtils = 'ISetUtils',
     ISourceCode = 'ISourceCode',
     IScopeAnalyzer = 'IScopeAnalyzer',
     IStringArrayIndexNode = 'IStringArrayIndexNode',
@@ -59,7 +61,6 @@ export enum ServiceIdentifiers {
     IThroughIdentifierReplacer = 'IThroughIdentifierReplacer',
     IVisitedLexicalScopeNodesStackStorage = 'IVisitedLexicalScopeNodesStackStorage',
     Newable__ICustomNode = 'Newable<ICustomNode>',
-    Newable__TControlFlowStorage = 'Newable<TControlFlowStorage>',
     TCustomNodeGroupStorage = 'TCustomNodeGroupStorage',
     TInputOptions = 'TInputOptions'
 }

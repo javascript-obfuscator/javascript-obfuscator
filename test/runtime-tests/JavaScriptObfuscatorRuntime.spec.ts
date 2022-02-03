@@ -25,7 +25,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         controlFlowFlatteningThreshold: 1,
         deadCodeInjection: true,
         deadCodeInjectionThreshold: 1,
-        debugProtection: false,
+        debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
         log: true,
@@ -260,17 +260,17 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 stringArray: false
             },
             {
-                debugProtection: false,
+                debugProtection: true,
                 selfDefending: false,
                 stringArray: false
             },
             {
-                debugProtection: false,
+                debugProtection: true,
                 selfDefending: true,
                 stringArray: false
             },
             {
-                debugProtection: false,
+                debugProtection: true,
                 selfDefending: true,
                 stringArray: true
             }

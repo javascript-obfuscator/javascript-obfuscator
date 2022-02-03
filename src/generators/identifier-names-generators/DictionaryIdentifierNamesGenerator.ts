@@ -128,29 +128,33 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @returns {string}
      */
     private generateNewDictionaryName (validationFunction?: (newIdentifierName: string) => boolean): string {
-        if (!this.identifierNamesSet.size) {
-            throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
-        }
-
-        const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
-
-        if (!iteratorResult.done) {
-            const identifierName: string = iteratorResult.value;
-
-            const isValidIdentifierName = validationFunction?.(identifierName)
-                ?? this.isValidIdentifierName(identifierName);
-
-            if (!isValidIdentifierName) {
-                return this.generateNewDictionaryName();
+        const generateNewDictionaryName = (): string => {
+            if (!this.identifierNamesSet.size) {
+                throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
             }
 
-            return iteratorResult.value;
-        }
+            const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
 
-        this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
-        this.identifiersIterator = this.identifierNamesSet.values();
+            if (!iteratorResult.done) {
+                const identifierName: string = iteratorResult.value;
 
-        return this.generateNewDictionaryName();
+                const isValidIdentifierName = validationFunction?.(identifierName)
+                    ?? this.isValidIdentifierName(identifierName);
+
+                if (!isValidIdentifierName) {
+                    return generateNewDictionaryName();
+                }
+
+                return iteratorResult.value;
+            }
+
+            this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
+            this.identifiersIterator = this.identifierNamesSet.values();
+
+            return generateNewDictionaryName();
+        };
+
+        return generateNewDictionaryName();
     }
 
     /**

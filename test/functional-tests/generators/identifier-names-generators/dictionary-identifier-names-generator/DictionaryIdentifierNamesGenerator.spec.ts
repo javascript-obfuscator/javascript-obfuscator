@@ -37,11 +37,12 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                            identifiersDictionary: ['a', 'b', 'c'],
+                            identifiersDictionary: ['a', 'b', 'c', 'd'],
                             identifiersPrefix: 'a',
                             transformObjectKeys: true,
                             stringArray: true,
-                            stringArrayThreshold: 1
+                            stringArrayThreshold: 1,
+                            seed: 1
                         }
                     ).getObfuscatedCode();
 
@@ -153,7 +154,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa'],
+                                identifiersDictionary: ['a', 'b', 'aa', 'ab'],
                                 identifiersPrefix: 'a',
                                 transformObjectKeys: true,
                                 stringArray: true,
@@ -198,7 +199,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa'],
+                                identifiersDictionary: ['a', 'b', 'aa', 'ab'],
                                 identifiersPrefix: 'a',
                                 renameGlobals: true,
                                 transformObjectKeys: true,

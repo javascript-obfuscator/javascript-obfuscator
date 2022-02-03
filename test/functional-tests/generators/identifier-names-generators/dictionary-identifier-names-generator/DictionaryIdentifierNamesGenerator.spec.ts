@@ -37,7 +37,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                            identifiersDictionary: ['a', 'b', 'c', 'd'],
+                            identifiersDictionary: ['a', 'b', 'c'],
                             identifiersPrefix: 'a',
                             transformObjectKeys: true,
                             stringArray: true,
@@ -154,7 +154,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa', 'ab'],
+                                identifiersDictionary: ['a', 'b', 'aa'],
                                 identifiersPrefix: 'a',
                                 transformObjectKeys: true,
                                 stringArray: true,
@@ -199,7 +199,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa', 'ab'],
+                                identifiersDictionary: ['a', 'b', 'aa'],
                                 identifiersPrefix: 'a',
                                 renameGlobals: true,
                                 transformObjectKeys: true,

@@ -54,10 +54,6 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
-    public clear (): void {
-        this.storage = [];
-    }
-
     /**
      * @param {number} key
      * @returns {V | undefined}

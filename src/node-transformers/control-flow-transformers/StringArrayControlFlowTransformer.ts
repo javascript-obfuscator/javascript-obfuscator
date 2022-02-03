@@ -81,6 +81,10 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @returns {IVisitor | null}
      */
     public override getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        if (!this.options.stringArrayCallsTransform) {
+            return null;
+        }
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.StringArray:
                 return {

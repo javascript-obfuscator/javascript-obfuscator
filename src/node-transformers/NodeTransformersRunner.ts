@@ -61,7 +61,6 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {T}
      */
-    // eslint-disable-next-line complexity
     public transform <T extends ESTree.Node = ESTree.Program> (
         astTree: T,
         nodeTransformerNames: NodeTransformer[],
@@ -79,7 +78,6 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
         for (const nodeTransformerNamesGroup of nodeTransformerNamesGroups) {
             const enterVisitors: IVisitor[] = [];
             const leaveVisitors: IVisitor[] = [];
-            const onTransformCompleteHandlers: INodeTransformer['onTransformComplete'][] = [];
 
             for (const nodeTransformerName of nodeTransformerNamesGroup) {
                 const nodeTransformer: INodeTransformer = normalizedNodeTransformers[nodeTransformerName];
@@ -96,10 +94,6 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
                 if (visitor.leave) {
                     leaveVisitors.push({ leave: visitor.leave });
                 }
-
-                if (nodeTransformer.onTransformComplete) {
-                    onTransformCompleteHandlers.push(nodeTransformer.onTransformComplete.bind(nodeTransformer));
-                }
             }
 
             if (!enterVisitors.length && !leaveVisitors.length) {
@@ -110,10 +104,6 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
                 enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter),
                 leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)
             });
-
-            for (const onTransformCompleteHandler of onTransformCompleteHandlers) {
-                onTransformCompleteHandler?.();
-            }
         }
 
         return astTree;

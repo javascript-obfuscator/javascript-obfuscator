@@ -32,6 +32,4 @@ export interface INodeTransformer extends ITransformer <NodeTransformer> {
      * @returns {Node | VisitorOption}
      */
     transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | estraverse.VisitorOption;
-
-    onTransformComplete ? (): void;
 }

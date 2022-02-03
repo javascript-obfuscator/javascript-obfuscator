@@ -22,7 +22,6 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             console.log(foo());
         `,
         {
-            seed: 1,
             identifierNamesGenerator: 'mangled',
             compact: false,
             controlFlowFlattening: true,

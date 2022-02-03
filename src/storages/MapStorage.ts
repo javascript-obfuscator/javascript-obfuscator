@@ -50,10 +50,6 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
-    public clear (): void {
-        this.storage.clear();
-    }
-
     /**
      * @param {K} key
      * @returns {V | undefined}

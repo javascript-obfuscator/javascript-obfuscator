@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TStatement } from '../../../types/node/TStatement';
 
 import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -14,17 +15,21 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
-import { NodeMetadata } from '../../../node/NodeMetadata';
-import { StringLiteralControlFlowReplacer } from './StringLiteralControlFlowReplacer';
-import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
+import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../../node/NodeLiteralUtils';
+import { NodeMetadata } from '../../../node/NodeMetadata';
+import {
+    StringLiteralControlFlowStorageCallNode
+} from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
+import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
 @injectable()
-export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlowReplacer {
+export class StringArrayCallControlFlowReplacer extends AbstractControlFlowReplacer {
     /**
      * @type {number}
      */
-    protected static override readonly usingExistingIdentifierChance: number = 0.5;
+    private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
@@ -100,5 +105,28 @@ export class StringArrayCallControlFlowReplacer extends StringLiteralControlFlow
         }
 
         return key;
+    }
+
+    /**
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @returns {NodeGuards}
+     */
+    protected getControlFlowStorageCallNode (
+        controlFlowStorageId: string,
+        storageKey: string
+    ): ESTree.Node {
+        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<StringLiteralControlFlowStorageCallNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
+
+        controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);
+
+        const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
+
+        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
+            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
+        }
+
+        return statementNode.expression;
     }
 }

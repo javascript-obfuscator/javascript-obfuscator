@@ -116,10 +116,10 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
         functionNode: ESTree.Function,
         controlFlowStorage: IControlFlowStorage
     ): estraverse.VisitorOption | ESTree.Node {
-        const shouldBreakTraverse = NodeGuards.isVariableDeclarationNode(node)
+        const isControlFlowStorageNode = NodeGuards.isVariableDeclarationNode(node)
             && this.controlFlowStorageNodes.has(node);
 
-        if (shouldBreakTraverse) {
+        if (isControlFlowStorageNode) {
             return estraverse.VisitorOption.Break;
         }
 

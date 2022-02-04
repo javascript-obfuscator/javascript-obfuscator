@@ -252,11 +252,13 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {TControlFlowStorage}
      */
     protected getControlFlowStorage (hostNode: TNodeWithStatements): IControlFlowStorage {
-        const controlFlowStorage: IControlFlowStorage = this.controlFlowStorageFactory();
+        let controlFlowStorage: IControlFlowStorage;
 
         const hostControlFlowStorage: IControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
 
-        if (hostControlFlowStorage) {
+        if (!hostControlFlowStorage) {
+            controlFlowStorage = this.controlFlowStorageFactory();
+        } else {
             const existingControlFlowStorageNode: ESTree.VariableDeclaration | null =
                 this.hostNodesWithControlFlowNode.get(hostNode) ?? null;
 
@@ -264,7 +266,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 NodeAppender.remove(hostNode, existingControlFlowStorageNode);
             }
 
-            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
+            controlFlowStorage = hostControlFlowStorage;
         }
 
         this.controlFlowData.set(hostNode, controlFlowStorage);

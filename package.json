@@ -113,7 +113,7 @@
     "test:mocha": "mocha --require ts-node/register --require source-map-support/register test/index.spec.ts --exit",
     "test:mocha-coverage": "NODE_OPTIONS=--max-old-space-size=4096 nyc --reporter text-summary --no-clean yarn run test:mocha",
     "test:mocha-coverage:report": "nyc report --reporter=lcov",
-    "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=230 mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
+    "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=240 mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",

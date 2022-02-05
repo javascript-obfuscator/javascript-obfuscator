@@ -1310,6 +1310,8 @@ describe('JavaScriptObfuscator', () => {
                         renameProperties: true,
                         stringArrayRotate: true,
                         stringArray: true,
+                        stringArrayCallsTransform: true,
+                        stringArrayCallsTransformThreshold: 1,
                         stringArrayEncoding: [
                             StringArrayEncoding.Base64,
                             StringArrayEncoding.Rc4

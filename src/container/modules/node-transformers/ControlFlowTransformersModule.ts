@@ -13,6 +13,8 @@ import { BlockStatementControlFlowTransformer } from '../../../node-transformers
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer';
+import { StringArrayCallControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/StringArrayCallControlFlowReplacer';
+import { StringArrayControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/StringArrayControlFlowTransformer';
 import { StringLiteralControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/StringLiteralControlFlowReplacer';
 
 export const controlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
@@ -24,6 +26,10 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)
         .whenTargetNamed(NodeTransformer.FunctionControlFlowTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(StringArrayControlFlowTransformer)
+        .whenTargetNamed(NodeTransformer.StringArrayControlFlowTransformer);
 
     // control flow replacers
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
@@ -37,6 +43,10 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(LogicalExpressionControlFlowReplacer)
         .whenTargetNamed(ControlFlowReplacer.LogicalExpressionControlFlowReplacer);
+
+    bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        .to(StringArrayCallControlFlowReplacer)
+        .whenTargetNamed(ControlFlowReplacer.StringArrayCallControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(StringLiteralControlFlowReplacer)

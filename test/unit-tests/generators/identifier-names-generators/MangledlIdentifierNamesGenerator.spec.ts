@@ -171,6 +171,46 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
     });
 
+    describe('generateForLabel', () => {
+        const label1: string = 'label1';
+        const label2: string = 'label2';
+
+        const mangledNames1: string[] = [];
+        const mangledNames2: string[] = [];
+
+        const expectedMangledNames1: string[] = ['a', 'b', 'c']
+        const expectedMangledNames2: string[] = ['a', 'b']
+
+        let identifierNamesGenerator: IIdentifierNamesGenerator;
+
+        before(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load('', '', {
+                identifiersPrefix: 'foo'
+            });
+            identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            );
+
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+
+            mangledNames2.push(identifierNamesGenerator.generateForLabel(label2));
+            mangledNames2.push(identifierNamesGenerator.generateForLabel(label2));
+        });
+
+        it('should return valid mangled names for label 1', () => {
+            assert.deepEqual(mangledNames1, expectedMangledNames1);
+        })
+
+        it('should return valid mangled names for label 2', () => {
+            assert.deepEqual(mangledNames2, expectedMangledNames2);
+        })
+    });
+
     describe('isIncrementedMangledName', function () {
         this.timeout(60000);
 

@@ -10,8 +10,12 @@ describe('CallExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
     describe('replace', () => {
+        const variableMatch: string = '_0x([a-f0-9]){4,6}';
+
         describe('Variant #1 - single call expression', () => {
-            const controlFlowStorageCallRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(${variableMatch}, *0x1, *0x2\\);`
+            );
 
             let obfuscatedCode: string;
 
@@ -40,8 +44,12 @@ describe('CallExpressionControlFlowReplacer', function () {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
 
-            const controlFlowStorageCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
-            const controlFlowStorageCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(_0x([a-f0-9]){4,6}, *0x2, *0x3\);/;
+            const controlFlowStorageCallRegExp1: RegExp = new RegExp(
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(${variableMatch}, *0x1, *0x2\\);`
+            );
+            const controlFlowStorageCallRegExp2: RegExp = new RegExp(
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(${variableMatch}, *0x2, *0x3\\);`
+            );
 
             let matchErrorsCount: number = 0,
                 usingExistingIdentifierChance: number;
@@ -96,7 +104,9 @@ describe('CallExpressionControlFlowReplacer', function () {
         });
 
         describe('Variant #3 - call expression callee is member expression node', () => {
-            const regExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['sum'\]\(0x1, *0x2\);/;
+            const regExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *${variableMatch}\\['sum'\\]\\(0x1, *0x2\\);`
+            );
 
             let obfuscatedCode: string;
 
@@ -119,10 +129,12 @@ describe('CallExpressionControlFlowReplacer', function () {
         });
 
         describe('Variant #4 - rest as start call argument', () => {
-            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
+            );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
-                    `return *_0x([a-f0-9]){4,6}\\(\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                    `return *${variableMatch}\\(\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);
 
@@ -151,10 +163,12 @@ describe('CallExpressionControlFlowReplacer', function () {
         });
 
         describe('Variant #5 - rest as middle call argument', () => {
-            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
+            );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
-                    `return *_0x([a-f0-9]){4,6}\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                    `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);
 
@@ -183,10 +197,12 @@ describe('CallExpressionControlFlowReplacer', function () {
         });
 
         describe('Variant #6 - rest as last call argument', () => {
-            const controlFlowStorageCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\['\w{5}']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}\\);`
+            );
             const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\) *\\{` +
-                   `return *_0x([a-f0-9]){4,6}\\(_0x([a-f0-9]){4,6}, *\.\.\._0x([a-f0-9]){4,6}\\);` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                   `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
                 `\\}` +
             ``);
 

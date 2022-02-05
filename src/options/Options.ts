@@ -329,6 +329,20 @@ export class Options implements IOptions {
     public readonly stringArray!: boolean;
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly stringArrayCallsTransform!: boolean;
+
+    /**
+     * @type {number}
+     */
+    @IsNumber()
+    @Min(0)
+    @Max(1)
+    public readonly stringArrayCallsTransformThreshold!: number;
+
+    /**
      * @type {TStringArrayEncoding[]}
      */
     @IsArray()

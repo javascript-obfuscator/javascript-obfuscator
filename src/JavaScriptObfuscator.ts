@@ -20,7 +20,7 @@ import { CodeTransformer } from './enums/code-transformers/CodeTransformer';
 import { CodeTransformationStage } from './enums/code-transformers/CodeTransformationStage';
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
-import { NodeTransformationStage     } from './enums/node-transformers/NodeTransformationStage';
+import { NodeTransformationStage } from './enums/node-transformers/NodeTransformationStage';
 import { SourceMapSourcesMode } from './enums/source-map/SourceMapSourcesMode';
 
 import { ecmaVersion } from './constants/EcmaVersion';
@@ -90,6 +90,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ScopeIdentifiersTransformer,
         NodeTransformer.ScopeThroughIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
+        NodeTransformer.StringArrayControlFlowTransformer,
         NodeTransformer.StringArrayRotateFunctionTransformer,
         NodeTransformer.StringArrayScopeCallsWrapperTransformer,
         NodeTransformer.StringArrayTransformer,
@@ -220,9 +221,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.DeadCodeInjection);
         }
 
-        if (this.options.controlFlowFlattening) {
-            astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
-        }
+        astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.ControlFlowFlattening);
 
         if (this.options.renameProperties) {
             astTree = this.runNodeTransformationStage(astTree, NodeTransformationStage.RenameProperties);

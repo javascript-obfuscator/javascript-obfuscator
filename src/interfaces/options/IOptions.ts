@@ -48,6 +48,8 @@ export interface IOptions {
     readonly splitStrings: boolean;
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
+    readonly stringArrayCallsTransform: boolean;
+    readonly stringArrayCallsTransformThreshold: number;
     readonly stringArrayEncoding: TStringArrayEncoding[];
     readonly stringArrayIndexesType: TStringArrayIndexesType[];
     readonly stringArrayIndexShift: boolean;

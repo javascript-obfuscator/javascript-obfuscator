@@ -1,6 +1,8 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import type * as ESTree from 'estree';
+
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
@@ -14,12 +16,12 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
-export class StringLiteralNode extends AbstractCustomNode {
+export class LiteralNode extends AbstractCustomNode {
     /**
-     * @type {string}
+     * @type {ESTree.Literal}
      */
     @initializable()
-    private literalValue!: string;
+    private literalNode!: ESTree.Literal;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -43,19 +45,17 @@ export class StringLiteralNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {string} literalValue
+     * @param {ESTree.Literal} literalNode
      */
-    public initialize (literalValue: string): void {
-        this.literalValue = literalValue;
+    public initialize (literalNode: ESTree.Literal): void {
+        this.literalNode = literalNode;
     }
 
     /**
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = NodeFactory.expressionStatementNode(
-            NodeFactory.literalNode(this.literalValue)
-        );
+        const structure: TStatement = NodeFactory.expressionStatementNode(this.literalNode);
 
         return [structure];
     }

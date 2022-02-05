@@ -51,6 +51,8 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     splitStrings: false,
     splitStringsChunkLength: 10,
     stringArray: true,
+    stringArrayCallsTransform: true,
+    stringArrayCallsTransformThreshold: 0.5,
     stringArrayEncoding: [
         StringArrayEncoding.None
     ],

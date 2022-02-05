@@ -209,7 +209,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #6: `disable` and `enable` conditional comments with control flow flattening', () => {
-            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){5,6} *= *_0x([a-f0-9]){5,6}\['[a-zA-Z0-9]{1,5}'];/;
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){5,6} *= *_0x([a-f0-9]){5,6}\['\w{5}'];/;
             const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *'bar';/;
 
             let obfuscatedCode: string;

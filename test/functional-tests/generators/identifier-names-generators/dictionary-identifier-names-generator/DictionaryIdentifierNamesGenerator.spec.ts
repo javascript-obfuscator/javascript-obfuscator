@@ -41,7 +41,8 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                             identifiersPrefix: 'a',
                             transformObjectKeys: true,
                             stringArray: true,
-                            stringArrayThreshold: 1
+                            stringArrayThreshold: 1,
+                            seed: 1
                         }
                     ).getObfuscatedCode();
 

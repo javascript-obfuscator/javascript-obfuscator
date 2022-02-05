@@ -13,6 +13,8 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
         options = {
             ...options,
             stringArray: false,
+            stringArrayCallsTransform: false,
+            stringArrayCallsTransformThreshold: 0,
             stringArrayEncoding: [
                 StringArrayEncoding.None
             ],

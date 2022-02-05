@@ -197,7 +197,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
                     !NodeGuards.isLiteralNode(node)
                     || !NodeLiteralUtils.isStringLiteralNode(node)
                 ) {
-                   return;
+                    return;
                 }
 
                 // force add item data for string literal nodes of comparison expressions

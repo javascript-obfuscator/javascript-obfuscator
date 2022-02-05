@@ -5,6 +5,7 @@ import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ISetUtils } from '../../interfaces/utils/ISetUtils';
 
 import { numbersString } from '../../constants/NumbersString';
 import { alphabetString } from '../../constants/AlphabetString';
@@ -15,6 +16,11 @@ import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 @injectable()
 export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
+    /**
+     * @type {number}
+     */
+    private static readonly maxRegenerationAttempts: number = 20;
+
     /**
      * @type {string}
      */
@@ -44,19 +50,33 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     ]);
 
     /**
+     * @type {WeakMap<string, string>}
+     */
+    private readonly lastMangledNameForLabelMap: Map <string, string> = new Map();
+
+    /**
      * @type {string}
      */
     private previousMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
 
     /**
+     * @type {ISetUtils}
+     */
+    private readonly setUtils: ISetUtils;
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {ISetUtils} setUtils
      */
     public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.ISetUtils) setUtils: ISetUtils,
     ) {
         super(randomGenerator, options);
+
+        this.setUtils = setUtils;
     }
 
     /**
@@ -83,15 +103,18 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}`
             : '';
-        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+
+        const identifierName: string = this.generateNewMangledName(
+            this.previousMangledName,
+            (newIdentifierName: string) => {
+                const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
+
+                return this.isValidIdentifierName(identifierNameWithPrefix);
+            }
+        );
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
         this.updatePreviousMangledName(identifierName);
-
-        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
-            return this.generateForGlobalScope(nameLength);
-        }
-
         this.preserveName(identifierNameWithPrefix);
 
         return identifierNameWithPrefix;
@@ -109,17 +132,31 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         ];
 
         const lastMangledNameForScope: string = this.getLastMangledNameForScopes(lexicalScopes);
-
-        let identifierName: string = lastMangledNameForScope;
-
-        do {
-            identifierName = this.generateNewMangledName(identifierName);
-        } while (!this.isValidIdentifierNameInLexicalScopes(identifierName, lexicalScopes));
+        const identifierName: string = this.generateNewMangledName(
+            lastMangledNameForScope,
+            (newIdentifierName: string) =>
+                this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
+        );
 
         MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(lexicalScopeNode, identifierName);
 
         this.updatePreviousMangledName(identifierName);
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
+
+        return identifierName;
+    }
+
+    /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForLabel (label: string, nameLength?: number): string {
+        const lastMangledNameForLabel: string = this.getLastMangledNameForLabel(label);
+
+        const identifierName: string = this.generateNewMangledName(lastMangledNameForLabel);
+
+        this.updatePreviousMangledNameForLabel(identifierName, label, lastMangledNameForLabel);
 
         return identifierName;
     }
@@ -189,11 +226,41 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * @param {string} name
+     * @param {string} label
+     * @param {string} lastMangledNameForLabel
+     */
+    protected updatePreviousMangledNameForLabel (name: string, label: string, lastMangledNameForLabel: string): void {
+        if (!this.isIncrementedMangledName(name, lastMangledNameForLabel)) {
+            return;
+        }
+
+        this.lastMangledNameForLabelMap.set(label, name);
+    }
+
+    /**
      * @param {string} previousMangledName
+     * @param {(newIdentifierName: string) => boolean} validationFunction
      * @returns {string}
      */
-    protected generateNewMangledName (previousMangledName: string): string {
-        const generateNewMangledName: (name: string) => string = (name: string): string => {
+    protected generateNewMangledName (
+        previousMangledName: string,
+        validationFunction?: (newIdentifierName: string) => boolean
+    ): string {
+        const generateNewMangledName = (name: string, regenerationAttempt: number = 0): string => {
+            /**
+             * Attempt to decrease amount of regeneration tries because of large preserved names set
+             * When we reached the limit, we're trying to generate next mangled name based on the latest
+             * preserved name
+             */
+            if (regenerationAttempt > MangledIdentifierNamesGenerator.maxRegenerationAttempts) {
+                const lastPreservedName = this.setUtils.getLastElement(this.preservedNamesSet);
+
+                if (lastPreservedName) {
+                    return this.generateNewMangledName(lastPreservedName);
+                }
+            }
+
             const nameSequence: string[] = this.getNameSequence();
             const nameSequenceLength: number = nameSequence.length;
             const nameLength: number = name.length;
@@ -226,13 +293,16 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             return `${firstLetterCharacter}${zeroSequence(nameLength)}`;
         };
 
-        let newMangledName: string = generateNewMangledName(previousMangledName);
+        let identifierName: string = previousMangledName;
+        let isValidIdentifierName: boolean;
 
-        if (!this.isValidIdentifierName(newMangledName)) {
-            newMangledName = this.generateNewMangledName(newMangledName);
-        }
+        do {
+            identifierName = generateNewMangledName(identifierName);
+            isValidIdentifierName = validationFunction?.(identifierName)
+                ?? this.isValidIdentifierName(identifierName);
+        } while (!isValidIdentifierName);
 
-        return newMangledName;
+        return identifierName;
     }
 
     /**
@@ -252,5 +322,15 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         }
 
         return MangledIdentifierNamesGenerator.initMangledNameCharacter;
+    }
+
+    /**
+     * @param {string} label
+     * @returns {string}
+     */
+    private getLastMangledNameForLabel (label: string): string {
+        const lastMangledName: string | null = this.lastMangledNameForLabelMap.get(label) ?? null;
+
+        return lastMangledName ?? MangledIdentifierNamesGenerator.initMangledNameCharacter;
     }
 }

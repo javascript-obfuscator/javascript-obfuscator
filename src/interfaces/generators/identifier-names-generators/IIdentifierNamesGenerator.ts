@@ -21,6 +21,12 @@ export interface IIdentifierNamesGenerator {
      */
     generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
+    /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    generateForLabel (label: string, nameLength?: number): string;
 
     /**
      * @param {number} nameLength

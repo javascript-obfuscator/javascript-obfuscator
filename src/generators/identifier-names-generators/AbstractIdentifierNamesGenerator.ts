@@ -135,6 +135,13 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     public abstract generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
     /**
+     * @param {string} label
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generateForLabel (label: string, nameLength?: number): string;
+
+    /**
      * @param {number} nameLength
      * @returns {string}
      */

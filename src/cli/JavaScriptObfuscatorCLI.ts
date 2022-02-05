@@ -363,8 +363,18 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--string-array <boolean>',
-                'Disables gathering of all literal strings into an array and replacing every literal string with an array call',
+                'Enables gathering of all literal strings into an array and replacing every literal string with an array call',
                 BooleanSanitizer
+            )
+            .option(
+                '--string-array-calls-transform <boolean>',
+                'Enables the transformation of calls to the string array',
+                BooleanSanitizer
+            )
+            .option(
+                '--string-array-calls-transform-threshold <number>',
+                'The probability that that calls to the string array will be transformed',
+                parseFloat
             )
             .option(
                 '--string-array-encoding <list> (comma separated, without whitespaces)',

@@ -1,3 +1,3 @@
-import { TControlFlowStorage } from '../../storages/TControlFlowStorage';
+import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 
-export type TControlFlowStorageFactory = () => TControlFlowStorage;
+export type TControlFlowStorageFactory = () => IControlFlowStorage;

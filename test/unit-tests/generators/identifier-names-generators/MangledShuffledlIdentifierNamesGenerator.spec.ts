@@ -114,6 +114,40 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
         });
     });
 
+    describe('generateForLabel', () => {
+        const label1: string = 'label1';
+        const label2: string = 'label2';
+
+        const mangledNames1: string[] = [];
+        const mangledNames2: string[] = [];
+
+        let identifierNamesGenerator: IIdentifierNamesGenerator;
+
+        before(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load('', '', {
+                identifiersPrefix: 'foo'
+            });
+            identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+            );
+
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+            mangledNames1.push(identifierNamesGenerator.generateForLabel(label1));
+
+            mangledNames2.push(identifierNamesGenerator.generateForLabel(label2));
+            mangledNames2.push(identifierNamesGenerator.generateForLabel(label2));
+            mangledNames2.push(identifierNamesGenerator.generateForLabel(label2));
+        });
+
+        it('should return the same mangled names set for different labels', () => {
+            assert.deepEqual(mangledNames1, mangledNames2);
+        })
+    });
+
     describe('isIncrementedMangledName', function () {
         this.timeout(60000);
 

@@ -1,23 +1,23 @@
 import * as ESTree from 'estree';
 
-import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { IControlFlowStorage } from '../../storages/control-flow-transformers/IControlFlowStorage';
 
 export interface IControlFlowReplacer {
     /**
      * @param {Node} node
      * @param {Node} parentNode
-     * @param {TControlFlowStorage} controlFlowStorage
+     * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
-        controlFlowStorage: TControlFlowStorage
+        controlFlowStorage: IControlFlowStorage
     ): ESTree.Node;
 
     /**
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {string}
      */
-    generateStorageKey (controlFlowStorage: TControlFlowStorage): string;
+    generateStorageKey (controlFlowStorage: IControlFlowStorage): string;
 }

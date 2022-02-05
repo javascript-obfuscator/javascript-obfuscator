@@ -10,8 +10,12 @@ describe('BinaryExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
     describe('replace', () => {
+        const variableMatch: string = '_0x([a-f0-9]){4,6}';
+
         describe('Variant #1 - single binary expression', () => {
-            const controlFlowStorageCallRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(0x1, *0x2\);/;
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(0x1, *0x2\\);`
+            );
 
             let obfuscatedCode: string;
 
@@ -40,8 +44,12 @@ describe('BinaryExpressionControlFlowReplacer', function () {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
 
-            const controlFlowStorageCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(0x1, *0x2\);/;
-            const controlFlowStorageCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(0x2, *0x3\);/;
+            const controlFlowStorageCallRegExp1: RegExp = new RegExp(
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(0x1, *0x2\\);`
+            );
+            const controlFlowStorageCallRegExp2: RegExp = new RegExp(
+                `var _0x(?:[a-f0-9]){4,6} *= *(${variableMatch}\\['\\w{5}'\\])\\(0x2, *0x3\\);`
+            );
 
             let matchErrorsCount: number = 0,
                 usingExistingIdentifierChance: number;

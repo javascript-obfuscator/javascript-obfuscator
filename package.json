@@ -111,7 +111,7 @@
     "test:devRuntimePerformance": "ts-node test/dev/dev-runtime-performance.ts",
     "test:full": "yarn run test:dev && yarn run test:mocha-coverage && yarn run test:mocha-memory-performance",
     "test:mocha": "mocha --require ts-node/register --require source-map-support/register test/index.spec.ts --exit",
-    "test:mocha-coverage": "nyc --reporter text-summary --no-clean yarn run test:mocha",
+    "test:mocha-coverage": "NODE_OPTIONS=--max-old-space-size=4096 nyc --reporter text-summary --no-clean yarn run test:mocha",
     "test:mocha-coverage:report": "nyc report --reporter=lcov",
     "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=230 mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
     "test": "yarn run test:full",

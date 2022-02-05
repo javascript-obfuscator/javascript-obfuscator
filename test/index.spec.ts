@@ -50,6 +50,7 @@ import './unit-tests/utils/LevelledTopologicalSorter.spec';
 import './unit-tests/utils/NumberUtils.spec';
 import './unit-tests/utils/ObfuscatedCodeFileUtils.spec'
 import './unit-tests/utils/RandomGenerator.spec';
+import './unit-tests/utils/SetUtils.spec';
 import './unit-tests/utils/StringUtils.spec';
 import './unit-tests/utils/Utils.spec';
 
@@ -90,6 +91,7 @@ import './functional-tests/node-transformers/control-flow-transformers/control-f
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/LogicalExpressionControlFlowReplacer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/string-litertal-control-flow-replacer/StringLiteralControlFlowReplacer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/function-control-flow-transformer/FunctionControlFlowTransformer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/string-array-control-flow-transformer/StringArrayControlFlowTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/boolean-literal-transformer/BooleanLiteralTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/class-field-transformer/ClassFieldTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/export-specifier-transformer/ExportSpecifierTransformer.spec';

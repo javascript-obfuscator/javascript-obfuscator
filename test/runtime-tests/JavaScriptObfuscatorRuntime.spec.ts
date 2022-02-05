@@ -38,6 +38,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
         splitStrings: true,
         splitStringsChunkLength: 3,
         stringArray: true,
+        stringArrayCallsTransform: true,
+        stringArrayCallsTransformThreshold: 1,
         stringArrayEncoding: [
             StringArrayEncoding.None,
             StringArrayEncoding.Base64,
@@ -57,7 +59,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         unicodeEscapeSequence: true
     };
 
-    this.timeout(200000);
+    this.timeout(600000);
 
     const options: Partial<TInputOptions>[] = [
         {

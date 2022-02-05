@@ -740,6 +740,8 @@ describe('OptionsNormalizer', () => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
                     stringArray: false,
+                    stringArrayCallsTransform: true,
+                    stringArrayCallsTransformThreshold: 1,
                     stringArrayEncoding: [StringArrayEncoding.Rc4],
                     stringArrayIndexShift: true,
                     stringArrayRotate: true,
@@ -752,6 +754,8 @@ describe('OptionsNormalizer', () => {
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
                     stringArray: false,
+                    stringArrayCallsTransform: false,
+                    stringArrayCallsTransformThreshold: 0,
                     stringArrayEncoding: [StringArrayEncoding.None],
                     stringArrayIndexShift: false,
                     stringArrayRotate: false,
@@ -759,6 +763,26 @@ describe('OptionsNormalizer', () => {
                     stringArrayWrappersChainedCalls: false,
                     stringArrayWrappersCount: 0,
                     stringArrayThreshold: 0
+                };
+            });
+
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
+        });
+
+        describe('stringArrayCallsTransformRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...getDefaultOptions(),
+                    stringArrayCallsTransform: false,
+                    stringArrayCallsTransformThreshold: 1
+                });
+
+                expectedOptionsPreset = {
+                    ...getDefaultOptions(),
+                    stringArrayCallsTransform: false,
+                    stringArrayCallsTransformThreshold: 0
                 };
             });
 

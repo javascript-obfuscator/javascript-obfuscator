@@ -84,12 +84,13 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}`
             : '';
-        const identifierName: string = this.generateNewDictionaryName();
-        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
-        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
-            return this.generateForGlobalScope();
-        }
+        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
+            const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
+
+            return this.isValidIdentifierName(identifierNameWithPrefix);
+        });
+        const identifierNameWithPrefix = `${prefix}${identifierName}`;
 
         this.preserveName(identifierNameWithPrefix);
 
@@ -105,11 +106,9 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
             lexicalScopeNode,
             ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
         ];
-        const identifierName: string = this.generateNewDictionaryName();
-
-        if (!this.isValidIdentifierNameInLexicalScopes(identifierName, lexicalScopes)) {
-            return this.generateForLexicalScope(lexicalScopeNode);
-        }
+        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) =>
+            this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
+        );
 
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
@@ -117,29 +116,45 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     }
 
     /**
+     * @param {string} label
      * @returns {string}
      */
-    private generateNewDictionaryName (): string {
-        if (!this.identifierNamesSet.size) {
-            throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
-        }
+    public generateForLabel (label: string): string {
+        return this.generateNewDictionaryName();
+    }
 
-        const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
-
-        if (!iteratorResult.done) {
-            const identifierName: string =iteratorResult.value;
-
-            if (!this.isValidIdentifierName(identifierName)) {
-                return this.generateNewDictionaryName();
+    /**
+     * @param {(newIdentifierName: string) => boolean} validationFunction
+     * @returns {string}
+     */
+    private generateNewDictionaryName (validationFunction?: (newIdentifierName: string) => boolean): string {
+        const generateNewDictionaryName = (): string => {
+            if (!this.identifierNamesSet.size) {
+                throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
             }
 
-            return iteratorResult.value;
-        }
+            const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
 
-        this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
-        this.identifiersIterator = this.identifierNamesSet.values();
+            if (!iteratorResult.done) {
+                const identifierName: string = iteratorResult.value;
 
-        return this.generateNewDictionaryName();
+                const isValidIdentifierName = validationFunction?.(identifierName)
+                    ?? this.isValidIdentifierName(identifierName);
+
+                if (!isValidIdentifierName) {
+                    return generateNewDictionaryName();
+                }
+
+                return iteratorResult.value;
+            }
+
+            this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
+            this.identifiersIterator = this.identifierNamesSet.values();
+
+            return generateNewDictionaryName();
+        };
+
+        return generateNewDictionaryName();
     }
 
     /**

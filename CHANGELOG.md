@@ -1,5 +1,9 @@
 Change Log
 
+v3.2.1
+---
+* Updated copyright
+
 v3.2.0
 ---
 * **New options**: `stringArrayCallsTransform` and `stringArrayCallsTransformThreshold`

@@ -1671,7 +1671,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_large)
 
-Copyright (C) 2016-2021 [Timofey Kachalov](http://github.com/sanex3339).
+Copyright (C) 2016-2022 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

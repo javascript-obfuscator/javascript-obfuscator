@@ -3,6 +3,7 @@ Change Log
 v3.2.0
 ---
 * **New options**: `stringArrayCallsTransform` and `stringArrayCallsTransformThreshold`
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1046
 
 v3.1.0
 ---

@@ -5,7 +5,7 @@ export enum ControlFlowCustomNode {
     CallExpressionFunctionNode = 'CallExpressionFunctionNode',
     ControlFlowStorageNode = 'ControlFlowStorageNode',
     ExpressionWithOperatorControlFlowStorageCallNode = 'ExpressionWithOperatorControlFlowStorageCallNode',
+    LiteralNode = 'LiteralNode',
     LogicalExpressionFunctionNode = 'LogicalExpressionFunctionNode',
-    StringLiteralControlFlowStorageCallNode = 'StringLiteralControlFlowStorageCallNode',
-    StringLiteralNode = 'StringLiteralNode'
+    StringLiteralControlFlowStorageCallNode = 'StringLiteralControlFlowStorageCallNode'
 }

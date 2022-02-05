@@ -22,7 +22,7 @@ import { NodeMetadata } from '../../../node/NodeMetadata';
 import {
     StringLiteralControlFlowStorageCallNode
 } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
-import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
+import { LiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/LiteralNode';
 
 @injectable()
 export class StringArrayCallControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -75,13 +75,13 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
         }
 
         const replacerId: string = String(literalNode.value);
-        const literalFunctionCustomNode: ICustomNode<TInitialData<StringLiteralNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralNode);
+        const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LiteralNode);
 
-        literalFunctionCustomNode.initialize(literalNode.value);
+        literalCustomNode.initialize(literalNode);
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
-            literalFunctionCustomNode,
+            literalCustomNode,
             controlFlowStorage,
             replacerId,
             StringArrayCallControlFlowReplacer.usingExistingIdentifierChance

@@ -18,7 +18,7 @@ import { SourceMapBaseUrlRule } from './normalizer-rules/SourceMapBaseUrlRule';
 import { SourceMapFileNameRule } from './normalizer-rules/SourceMapFileNameRule';
 import { SplitStringsChunkLengthRule } from './normalizer-rules/SplitStringsChunkLengthRule';
 import { StringArrayRule } from './normalizer-rules/StringArrayRule';
-import { StringArrayCallsTransformRule } from './normalizer-rules/StringArrayCallsTransform';
+import { StringArrayCallsTransformThresholdRule } from './normalizer-rules/StringArrayCallsTransformThresholdRule';
 import { StringArrayEncodingRule } from './normalizer-rules/StringArrayEncodingRule';
 import { StringArrayWrappersChainedCallsRule } from './normalizer-rules/StringArrayWappersChainedCalls';
 
@@ -41,7 +41,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         SourceMapFileNameRule,
         SplitStringsChunkLengthRule,
         StringArrayRule,
-        StringArrayCallsTransformRule,
+        StringArrayCallsTransformThresholdRule,
         StringArrayEncodingRule,
         StringArrayWrappersChainedCallsRule,
     ];

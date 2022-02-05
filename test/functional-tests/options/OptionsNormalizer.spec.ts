@@ -771,12 +771,12 @@ describe('OptionsNormalizer', () => {
             });
         });
 
-        describe('stringArrayCallsTransformRule', () => {
+        describe('stringArrayCallsTransformThresholdRule', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
-                    stringArrayCallsTransform: false,
-                    stringArrayCallsTransformThreshold: 1
+                    stringArrayCallsTransform: true,
+                    stringArrayCallsTransformThreshold: 0
                 });
 
                 expectedOptionsPreset = {

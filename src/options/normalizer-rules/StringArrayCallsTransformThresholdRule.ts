@@ -6,8 +6,8 @@ import { IOptions } from '../../interfaces/options/IOptions';
  * @param {IOptions} options
  * @returns {IOptions}
  */
-export const StringArrayCallsTransformRule: TOptionsNormalizerRule = (options: IOptions): IOptions => {
-    if (!options.stringArrayCallsTransform) {
+export const StringArrayCallsTransformThresholdRule: TOptionsNormalizerRule = (options: IOptions): IOptions => {
+    if (options.stringArrayCallsTransformThreshold === 0) {
         options = {
             ...options,
             stringArrayCallsTransform: false,

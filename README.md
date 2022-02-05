@@ -1565,7 +1565,7 @@ The performance will be at a relatively normal level
     simplify: true,
     splitStrings: false,
     stringArray: true,
-    stringArrayCallsTransform: true,
+    stringArrayCallsTransform: false,
     stringArrayCallsTransformThreshold: 0.5,
     stringArrayEncoding: [],
     stringArrayIndexShift: true,

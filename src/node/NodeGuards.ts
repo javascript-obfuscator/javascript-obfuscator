@@ -507,10 +507,8 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    // TODO: add type guard after @types/estree update
-    public static isStaticBlockNode (node: ESTree.Node): boolean {
-        // TODO: Update @types/estree
-        return (<any>node).type === NodeType.StaticBlock;
+    public static isStaticBlockNode (node: ESTree.Node): node is ESTree.StaticBlock {
+        return node.type === NodeType.StaticBlock;
     }
 
     /**

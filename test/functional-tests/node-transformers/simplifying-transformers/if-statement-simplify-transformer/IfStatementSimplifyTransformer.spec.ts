@@ -113,6 +113,33 @@ describe('IfStatementSimplifyTransformer', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });
+
+                describe('Variant #3: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *\\{ *' +
+                            'bar\\(\\), *baz\\(\\); *return bark\\(\\); *hawk\\(\\), *eagle\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-statements-after-return.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
             });
         });
 
@@ -229,6 +256,33 @@ describe('IfStatementSimplifyTransformer', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });
+
+                describe('Variant #3: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *\\{ *' +
+                            'bar\\(\\), *baz\\(\\); *return bark\\(\\); *cat\\(\\), *dog\\(\\); *' +
+                        '\\} *else *' +
+                            'hawk\\(\\), *pork\\(\\), *eagle\\(\\);'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-consequent-statements-after-return.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
             });
 
             describe('With alternate `ReturnStatement`', () => {
@@ -273,6 +327,34 @@ describe('IfStatementSimplifyTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-alternate-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #3: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *' +
+                            'bar\\(\\), *baz\\(\\), *bark\\(\\); *' +
+                        'else *\\{ *' +
+                            'hawk\\(\\), *eagle\\(\\); *return cow\\(\\); *cat\\(\\), *dog\\(\\);' +
+                        '\\}'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-alternate-statements-after-return.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -419,6 +501,35 @@ describe('IfStatementSimplifyTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #2: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'return bark\\(\\); *' +
+                            'hawk\\(\\), *eagle\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-statements-after-return.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -619,6 +730,38 @@ describe('IfStatementSimplifyTransformer', () => {
                         assert.match(obfuscatedCode, regExp);
                     });
                 });
+
+                describe('Variant #3: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'return hawk\\(\\); *' +
+                            'eagle\\(\\), *cat\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *pig\\(\\); *' +
+                            'lion\\(\\), *dog\\(\\);' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-statements-after-return.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
             });
 
             describe('With alternate `ReturnStatement`', () => {
@@ -667,6 +810,38 @@ describe('IfStatementSimplifyTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-return-multiple-statements.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                simplify: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should simplify if statement', () => {
+                        assert.match(obfuscatedCode, regExp);
+                    });
+                });
+
+                describe('Variant #3: statements after return', () => {
+                    const regExp: RegExp = new RegExp(
+                        'if *\\(!!\\[]\\) *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'bark\\(\\), *hawk\\(\\);' +
+                        '} *else *{ *' +
+                            'const *_0x([a-f0-9]){4,6} *= *pork\\(\\); *' +
+                            'return dog\\(\\); *' +
+                            'pig\\(\\), *lion\\(\\); *' +
+                        '}'
+                    );
+
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-statements-after-return.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,

@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -53,7 +53,7 @@
     "@types/eslint-scope": "3.7.3",
     "@types/eslint-visitor-keys": "1.0.0",
     "@types/estraverse": "5.1.1",
-    "@types/estree": "0.0.50",
+    "@types/estree": "0.0.51",
     "@types/js-beautify": "1.13.3",
     "@types/js-string-escape": "1.0.1",
     "@types/md5": "2.3.1",

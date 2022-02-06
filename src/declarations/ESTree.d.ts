@@ -54,8 +54,4 @@ declare module 'estree' {
         metadata?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
-
-    interface StaticBlock extends Omit<BlockStatement, 'type'> {
-        type: 'StaticBlock'
-    }
 }

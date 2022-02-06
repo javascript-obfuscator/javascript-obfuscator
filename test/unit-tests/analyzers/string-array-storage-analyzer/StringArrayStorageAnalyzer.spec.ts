@@ -388,38 +388,44 @@ describe('StringArrayStorageAnalyzer', () => {
         });
 
         describe('Analyzes of the AST tree with string array threshold', () => {
-            describe('Threshold value: 0', () => {
+            describe('Threshold value: 0', function () {
+                this.timeout(30000);
+                const samplesCount: number = 10000;
+
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
 
-                const expectedStringArrayStorageItemData1: undefined = undefined;
-                const expectedStringArrayStorageItemData2: undefined = undefined;
-
-                let stringArrayStorageItemData1: IStringArrayStorageItemData | undefined;
-                let stringArrayStorageItemData2: IStringArrayStorageItemData | undefined;
+                let isStringArrayStorageItemDataEmpty: boolean = false;
 
                 before(() => {
-                    stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
-                        stringArray: true,
-                        stringArrayThreshold: 0
-                    });
+                    for (let i = 0; i < samplesCount; i++) {
+                        stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                            stringArray: true,
+                            stringArrayThreshold: 0
+                        });
 
-                    const astTree: ESTree.Program = NodeFactory.programNode([
-                        NodeFactory.expressionStatementNode(literalNode1),
-                        NodeFactory.expressionStatementNode(literalNode2)
-                    ]);
+                        const astTree: ESTree.Program = NodeFactory.programNode([
+                            NodeFactory.expressionStatementNode(literalNode1),
+                            NodeFactory.expressionStatementNode(literalNode2)
+                        ]);
 
-                    stringArrayStorageAnalyzer.analyze(astTree);
-                    stringArrayStorageItemData1 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
-                    stringArrayStorageItemData2 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+                        stringArrayStorageAnalyzer.analyze(astTree);
+
+                        const stringArrayStorageItemData1: IStringArrayStorageItemData | undefined =
+                            stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
+                        const stringArrayStorageItemData2: IStringArrayStorageItemData | undefined =
+                            stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+
+                        isStringArrayStorageItemDataEmpty = !stringArrayStorageItemData1 && !stringArrayStorageItemData2;
+
+                        if (!isStringArrayStorageItemDataEmpty) {
+                            break;
+                        }
+                    }
                 });
 
-                it('Variant #1: should return correct string array storage item data for literal node #1', () => {
-                    assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
-                });
-
-                it('Variant #2: should return correct string array storage item data for literal node #2', () => {
-                    assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+                it('Variant #1: should return empty string array storage item data for literal nodes', () => {
+                    assert.equal(isStringArrayStorageItemDataEmpty, true);
                 });
             });
 

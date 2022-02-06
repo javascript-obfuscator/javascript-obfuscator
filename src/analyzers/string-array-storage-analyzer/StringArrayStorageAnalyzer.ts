@@ -138,6 +138,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
         }
 
         return literalNode.value.length >= StringArrayStorageAnalyzer.minimumLengthForStringArray
+            && !!this.options.stringArrayThreshold
             && this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold;
     }
 }

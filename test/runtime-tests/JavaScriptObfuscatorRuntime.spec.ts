@@ -236,7 +236,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                         evaluationResult = result;
                     })
                     .catch((error: Error) => {
-                        evaluationResult = `${error.message}. ${error.stack}. Options: ${JSON.stringify(obfuscatorOptions)} Code: ${obfuscationResult}`;
+                        evaluationResult = `${error.message}. ${error.stack}. Seed: ${obfuscatorOptions.seed}. Options: ${JSON.stringify(obfuscatorOptions)} Code: ${obfuscationResult}`;
                     });
             });
 

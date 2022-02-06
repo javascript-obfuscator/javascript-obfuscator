@@ -6,6 +6,7 @@ const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const packageJson = require('pjson');
 
 const WebpackUtils = require('./utils/WebpackUtils').WebpackUtils;
@@ -58,12 +59,12 @@ module.exports = {
             BUILD_TIMESTAMP: Date.now()
         }),
         new ForkTsCheckerWebpackPlugin({
-            eslint: {
-                files: 'src/**/*.ts'
-            },
             typescript: {
                 configFile: 'src/tsconfig.node.json'
             }
+        }),
+        new ESLintPlugin({
+            files: 'src/**/*.ts'
         }),
         new ForkTsCheckerNotifierWebpackPlugin({
             skipFirstNotification: true

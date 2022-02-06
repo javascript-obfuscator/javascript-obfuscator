@@ -8,15 +8,25 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
             function foo () {
-                var bar = 'bar';
-                
-                function baz () {
-                    var baz = 'baz';
+                function bar() {
+                    var string1 = 'string1';
+                    var string2 = 'string2';
+                    var string3 = 'string3';
+                    var string4 = 'string4';
+                    var string5 = 'string5';
+                    var string6 = 'string6';
                     
-                    return baz;
+                    function bark () {
+                        var string1 = 'string1';
+                        var string2 = 'string2';
+                        var string3 = 'string3';
+                        var string4 = 'string4';
+                        var string5 = 'string5';
+                        var string6 = 'string6';
+                    }
                 }
                 
-                return bar + baz();
+                bar()
             }
             
             console.log(foo());
@@ -24,9 +34,10 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
         {
             identifierNamesGenerator: 'mangled',
             compact: false,
-            controlFlowFlattening: true,
+            controlFlowFlattening: false,
             controlFlowFlatteningThreshold: 1,
             simplify: false,
+            stringArrayRotate: false,
             stringArray: true,
             stringArrayIndexesType: [
                 'hexadecimal-number',
@@ -37,7 +48,8 @@ import { StringArrayWrappersType } from '../../src/enums/node-transformers/strin
             stringArrayCallsTransformThreshold: 1,
             rotateStringArray: true,
             stringArrayWrappersType: StringArrayWrappersType.Function,
-            transformObjectKeys: true
+            transformObjectKeys: false,
+            seed: 1
         }
     ).getObfuscatedCode();
 

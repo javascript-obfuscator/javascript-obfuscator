@@ -11,6 +11,7 @@ import {
 } from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
+import { IControlFlowStorage } from '../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
@@ -23,7 +24,6 @@ import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { FunctionControlFlowTransformer } from './FunctionControlFlowTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
-import { IControlFlowStorage } from '../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
 
 @injectable()
 export class StringArrayControlFlowTransformer extends FunctionControlFlowTransformer {
@@ -120,10 +120,18 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
             && this.controlFlowStorageNodes.has(node);
 
         if (isControlFlowStorageNode) {
-            return estraverse.VisitorOption.Break;
+            return estraverse.VisitorOption.Skip;
         }
 
         return super.transformFunctionBodyNode(node, parentNode, functionNode, controlFlowStorage);
+    }
+
+    /**
+     * @param {TNodeWithStatements} hostNode
+     * @returns {TControlFlowStorage}
+     */
+    protected override getControlFlowStorage (hostNode: TNodeWithStatements): IControlFlowStorage {
+        return this.controlFlowStorageFactory();
     }
 
     /**

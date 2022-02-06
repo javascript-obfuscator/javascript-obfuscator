@@ -20,7 +20,9 @@ describe('StringArrayCodeHelperGroup', () => {
         `function *(\\w) *\\(\\w, *\\w\\) *{.*return \\w;}.*`
     );
 
-    describe('StringArrayCallsWrapper code helper names', () => {
+    describe('StringArrayCallsWrapper code helper names', function () {
+        this.timeout(10000);
+
         const stringArrayCallsWrapperNames: Set<string> = new Set();
         const samplesCount: number = 30;
         let obfuscatedCode: string;

@@ -1518,7 +1518,6 @@ The performance will be much slower than without obfuscation
     splitStrings: true,
     splitStringsChunkLength: 5,
     stringArray: true,
-    stringArray: true,
     stringArrayCallsTransform: true,
     stringArrayEncoding: ['rc4'],
     stringArrayIndexShift: true,

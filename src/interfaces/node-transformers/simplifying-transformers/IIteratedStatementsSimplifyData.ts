@@ -15,4 +15,9 @@ export interface IIteratedStatementsSimplifyData {
      * @type {boolean}
      */
     hasReturnStatement: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    hasStatementsAfterReturnStatement: boolean;
 }

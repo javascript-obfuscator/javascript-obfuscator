@@ -63,8 +63,18 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
         const {
             startIndex,
             unwrappedExpressions,
-            hasReturnStatement
+            hasReturnStatement,
+            hasStatementsAfterReturnStatement
         } = this.collectIteratedStatementsSimplifyData(statementNode);
+
+        if (hasStatementsAfterReturnStatement) {
+            return {
+                leadingStatements: statementNode.body,
+                trailingStatement: null,
+                hasReturnStatement: false,
+                hasSingleExpression: false
+            };
+        }
 
         const leadingStatements: ESTree.Statement[] = this.getLeadingStatements(statementNode, startIndex);
 
@@ -111,6 +121,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
         const unwrappedExpressions: ESTree.Expression[] = [];
 
         let hasReturnStatement: boolean = false;
+        let hasStatementsAfterReturnStatement: boolean = false;
         let startIndex: number | null = null;
 
         for (let i = statementNodeBodyLength - 1; i >= 0; i--) {
@@ -133,6 +144,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
             ) {
                 unwrappedExpressions.unshift(statementBodyStatementNode.argument);
                 hasReturnStatement = true;
+                hasStatementsAfterReturnStatement = i !== statementNodeBodyLength - 1;
                 startIndex = i;
                 continue;
             }
@@ -143,7 +155,8 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
         return {
             startIndex,
             unwrappedExpressions,
-            hasReturnStatement
+            hasReturnStatement,
+            hasStatementsAfterReturnStatement
         };
     }
 

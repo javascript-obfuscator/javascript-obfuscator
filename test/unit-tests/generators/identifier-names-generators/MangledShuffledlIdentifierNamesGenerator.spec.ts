@@ -186,4 +186,33 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             assert.isTrue(isSuccessComparison);
         });
     });
+
+    describe('isValidIdentifierName', () => {
+        describe('Variant #1: reserved dom property name', () => {
+            let identifierNamesGenerator: IIdentifierNamesGenerator,
+                isValidName1: boolean,
+                isValidName2: boolean,
+                isValidName3: boolean;
+
+            beforeEach(() => {
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load('', '', {} );
+                identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                    ServiceIdentifiers.IIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+                );
+
+                isValidName1 = identifierNamesGenerator.isValidIdentifierName('Set');
+                isValidName2 = identifierNamesGenerator.isValidIdentifierName('Array');
+                isValidName3 = identifierNamesGenerator.isValidIdentifierName('WeakSet');
+            });
+
+            it('should generate first identifier', () => {
+                assert.isFalse(isValidName1);
+                assert.isFalse(isValidName2);
+                assert.isTrue(isValidName3);
+            });
+        });
+    });
 });

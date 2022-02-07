@@ -191,6 +191,43 @@ describe('StringArrayControlFlowTransformer', function () {
                         assert.match(obfuscatedCode, regexp);
                     });
                 });
+
+                describe('Variant #5 - multiple `control flow storages` on the same block scope', () => {
+                    const regexp: RegExp = new RegExp(
+                        `var ${hexadecimalVariableMatch} *= *\\{` +
+                            `${hexadecimalVariableMatch} *: *0x0, *` +
+                            `${hexadecimalVariableMatch} *: *0x1 *` +
+                        `\\}; *` +
+                        `var ${hexadecimalVariableMatch} *= *\\{` +
+
+                            `${hexadecimalVariableMatch} *: *0x2, *` +
+                            `${hexadecimalVariableMatch} *: *0x3 *` +
+                        `\\};`
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/multiple-storages-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                stringArrayCallsTransform: true,
+                                stringArrayCallsTransformThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+
+                        console.log(obfuscatedCode);
+                    });
+
+                    it('should add `control flow storage` node with multiple items to the obfuscated code', () => {
+                        assert.match(obfuscatedCode, regexp);
+                    });
+                });
             });
 
             describe('Variant #2 - negative cases', function () {
@@ -320,7 +357,7 @@ describe('StringArrayControlFlowTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/multiple-storages.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/multiple-storages-2.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,

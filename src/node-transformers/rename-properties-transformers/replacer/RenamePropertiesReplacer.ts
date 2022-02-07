@@ -12,7 +12,7 @@ import { IPropertyIdentifierNamesCacheStorage } from '../../../interfaces/storag
 import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
 
 // eslint-disable-next-line import/no-internal-modules
-import ReservedDomProperties from './ReservedDomProperties.json';
+import ReservedDomProperties from '../../../constants/ReservedDomProperties.json';
 
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeFactory } from '../../../node/NodeFactory';

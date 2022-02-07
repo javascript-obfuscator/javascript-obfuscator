@@ -7,9 +7,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ISetUtils } from '../../interfaces/utils/ISetUtils';
 
-import { numbersString } from '../../constants/NumbersString';
 import { alphabetString } from '../../constants/AlphabetString';
 import { alphabetStringUppercase } from '../../constants/AlphabetStringUppercase';
+import { numbersString } from '../../constants/NumbersString';
+import { reservedIdentifierNames } from '../../constants/ReservedIdentifierNames';
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
@@ -40,14 +41,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
+     * + reserved DOM names like `Set`, `Map`, `Date`, etc
      *
      * @type {Set<string>}
      */
-    private static readonly reservedNamesSet: Set<string> = new Set([
-        'byte', 'case', 'char', 'do', 'else', 'enum', 'eval', 'for', 'goto',
-        'if', 'in', 'int', 'let', 'long', 'new', 'null', 'this', 'true', 'try',
-        'var', 'void', 'with'
-    ]);
+    private static readonly reservedNamesSet: Set<string> = new Set(reservedIdentifierNames);
 
     /**
      * @type {WeakMap<string, string>}

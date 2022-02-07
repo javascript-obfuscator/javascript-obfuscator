@@ -79,7 +79,8 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @returns {boolean}
      */
     public isValidIdentifierName (name: string): boolean {
-        return this.notReservedName(name) && !this.preservedNamesSet.has(name);
+        return !this.isReservedName(name)
+            && !this.preservedNamesSet.has(name);
     }
 
     /**
@@ -112,12 +113,12 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {string} name
      * @returns {boolean}
      */
-    private notReservedName (name: string): boolean {
+    private isReservedName (name: string): boolean {
         return this.options.reservedNames.length
-            ? !this.options.reservedNames.some((reservedName: string) =>
+            ? this.options.reservedNames.some((reservedName: string) =>
                 new RegExp(reservedName, 'g').exec(name) !== null
             )
-            : true;
+            : false;
 
     }
 

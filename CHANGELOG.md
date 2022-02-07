@@ -3,6 +3,7 @@ Change Log
 v3.2.3
 ---
 * Fixed missing transformation of string array calls in some cases
+* Fixed generation of reserved identifier names like `Map` or `Set` for `mangled` and `mangled-shuffled` identifier names generators
 
 v3.2.2
 ---

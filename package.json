@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -23,7 +23,6 @@
   "dependencies": {
     "@javascript-obfuscator/escodegen": "2.3.0",
     "@javascript-obfuscator/estraverse": "5.4.0",
-    "@nuxtjs/opencollective": "0.3.2",
     "acorn": "8.7.0",
     "assert": "2.0.0",
     "chalk": "4.1.2",
@@ -38,6 +37,7 @@
     "md5": "2.3.0",
     "mkdirp": "1.0.4",
     "multimatch": "5.0.0",
+    "opencollective-postinstall": "2.0.3",
     "process": "0.11.10",
     "reflect-metadata": "0.1.13",
     "source-map-support": "0.5.21",
@@ -118,7 +118,7 @@
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",
-    "postinstall": "opencollective",
+    "postinstall": "opencollective-postinstall",
     "precommit": "npm run build",
     "prepublishOnly": "npm run build && npm run build:typings",
     "prepare": "husky install"

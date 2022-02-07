@@ -1,5 +1,9 @@
 Change Log
 
+v3.2.4
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1052
+
 v3.2.3
 ---
 * Fixed missing transformation of string array calls in some cases

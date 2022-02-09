@@ -107,7 +107,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             || NodeGuards.isAwaitExpressionNode(targetNode)
             || NodeGuards.isYieldExpressionNode(targetNode)
             || NodeGuards.isSuperNode(targetNode)
-            || (NodeGuards.isForOfStatementNode(targetNode) && targetNode.await);
+            || (NodeGuards.isForOfStatementNode(targetNode) && targetNode.await)
+            || NodeGuards.isPrivateIdentifierNode(targetNode);
     }
 
     /**

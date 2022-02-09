@@ -451,6 +451,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isPrivateIdentifierNode (node: ESTree.Node): node is ESTree.PrivateIdentifier {
+        return node.type === NodeType.PrivateIdentifier;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isProgramNode (node: ESTree.Node): node is ESTree.Program {
         return node.type === NodeType.Program;
     }

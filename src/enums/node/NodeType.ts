@@ -40,6 +40,7 @@ export enum NodeType {
     NewExpression = 'NewExpression',
     ObjectExpression = 'ObjectExpression',
     ObjectPattern = 'ObjectPattern',
+    PrivateIdentifier = 'PrivateIdentifier',
     Program = 'Program',
     Property = 'Property',
     PropertyDefinition = 'PropertyDefinition',

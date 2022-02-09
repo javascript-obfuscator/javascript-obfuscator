@@ -489,6 +489,57 @@ describe('DeadCodeInjectionTransformer', () => {
                     assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
                 });
             });
+
+            describe('Variant #7 - private identifier in block statement', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const privateIdentifierRegExp: RegExp = new RegExp(
+                    `this\.#private *= *0x1;`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedPrivateIdentifierMatchesLength: number = 1;
+
+                let functionMatchesLength: number = 0,
+                    privateIdentifierMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/private-identifier.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const privateIdentifierMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(privateIdentifierRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (privateIdentifierMatches) {
+                        privateIdentifierMatchesLength = privateIdentifierMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(privateIdentifierMatchesLength, expectedPrivateIdentifierMatchesLength);
+                });
+            });
         });
 
         describe('Variant #5 - chance of `IfStatement` variant', () => {

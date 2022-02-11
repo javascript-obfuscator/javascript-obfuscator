@@ -93,10 +93,10 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
         const storageKeysById: Map<string, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
             ?? new Map <string, string[]>();
-        const storageKeysForCurrentId: string[] | null = storageKeysById.get(replacerId) ?? null;
+        const storageKeysForCurrentId: string[] = storageKeysById.get(replacerId) ?? [];
 
         const shouldPickFromStorageKeysById = this.randomGenerator.getMathRandom() < usingExistingIdentifierChance
-            && storageKeysForCurrentId?.length;
+            && storageKeysForCurrentId.length;
 
         if (shouldPickFromStorageKeysById) {
             return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
@@ -104,7 +104,8 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
         const storageKey: string = this.generateStorageKey(controlFlowStorage);
 
-        storageKeysById.set(replacerId, [storageKey]);
+        storageKeysForCurrentId.push(storageKey);
+        storageKeysById.set(replacerId, storageKeysForCurrentId);
         this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
         controlFlowStorage.set(storageKey, customNode);
 

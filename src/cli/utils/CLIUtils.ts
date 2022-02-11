@@ -10,7 +10,9 @@ export class CLIUtils {
      */
     public static readonly allowedConfigFileExtensions: string[] = [
         '.js',
-        '.json'
+        '.json',
+        '.mjs',
+        '.cjs'
     ];
 
     /**
@@ -24,7 +26,7 @@ export class CLIUtils {
         const isValidExtension: boolean = CLIUtils.allowedConfigFileExtensions.includes(configFileExtension);
 
         if (!isValidExtension) {
-            throw new ReferenceError('Given config path must be a valid `.js` or `.json` file path');
+            throw new ReferenceError('Given config path must be a valid `.js|.mjs|.cjs` or `.json` file path');
         }
 
         try {

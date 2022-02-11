@@ -69,7 +69,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
             return literalNode;
         }
 
-        const replacerId: string = String(literalNode.value);
+        const replacerId: string = literalNode.value;
         const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LiteralNode);
 

@@ -86,6 +86,24 @@ describe('NodeMetadata', () => {
         });
     });
 
+    describe('propertyKeyToRenameNode', () => {
+        const expectedValue: boolean = true;
+
+        let node: ESTree.Identifier,
+            value: boolean | undefined;
+
+        before(() => {
+            node = NodeFactory.identifierNode('foo');
+            node.metadata = {};
+            node.metadata.propertyKeyToRenameNode = true;
+            value = NodeMetadata.isPropertyKeyToRenameNode(node);
+        });
+
+        it('should return metadata value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
+
     describe('isStringArrayCallLiteralNode', () => {
         const expectedValue: boolean = true;
 

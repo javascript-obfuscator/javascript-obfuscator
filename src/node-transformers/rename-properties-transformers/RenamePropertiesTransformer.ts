@@ -14,7 +14,7 @@ import { RenamePropertiesMode } from '../../enums/node-transformers/rename-prope
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
-import { NodeUtils } from '../../node/NodeUtils';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 @injectable()
 export class RenamePropertiesTransformer extends AbstractNodeTransformer {
@@ -48,7 +48,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
             | ESTree.PropertyDefinition
             | ESTree.MemberExpression
             | ESTree.MethodDefinition
-    > (
+        > (
         propertyNode: TNode,
         propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier
     ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {
@@ -56,7 +56,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
             return false;
         }
 
-        return NodeGuards.isIdentifierNode(propertyKeyNode) || NodeGuards.isLiteralNode(propertyKeyNode);
+        return true;
     }
 
     /**
@@ -96,6 +96,15 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         node: ESTree.Node,
         parentNode: ESTree.Node
     ): void {
+        if ((NodeGuards.isPropertyNode(parentNode) && parentNode.key === node)
+            || NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node
+            || NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node
+            || NodeGuards.isPropertyDefinitionNode(parentNode) && parentNode.key === node) {
+            NodeMetadata.set(node, {propertyKeyToRenameNode: true});
+
+            return;
+        }
+
         if (this.options.renamePropertiesMode === RenamePropertiesMode.Safe) {
             this.analyzeAutoExcludedPropertyNames(node, parentNode);
         }
@@ -107,101 +116,40 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
-        let propertyNode: ESTree.Node | null = null;
-
-        if (NodeGuards.isPropertyNode(node)) {
-            propertyNode = this.transformPropertyNode(node);
-        } else if (NodeGuards.isPropertyDefinitionNode(node)) {
-            propertyNode = this.transformPropertyDefinitionNode(node);
-        } else if (NodeGuards.isMemberExpressionNode(node)) {
-            propertyNode = this.transformMemberExpressionNode(node);
-        } else if (NodeGuards.isMethodDefinitionNode(node)) {
-            propertyNode = this.transformMethodDefinitionNode(node);
+        if (!NodeGuards.isIdentifierNode(node) && !NodeGuards.isLiteralNode(node)) {
+            return node;
         }
 
-        if (propertyNode) {
-            NodeUtils.parentizeNode(propertyNode, parentNode);
+        if (!NodeMetadata.isPropertyKeyToRenameNode(node)) {
+            return node;
         }
 
-        return node;
-    }
+        const isPropertyNode = NodeGuards.isPropertyNode(parentNode);
+        const isPropertyLikeNode = isPropertyNode
+            || NodeGuards.isPropertyDefinitionNode(parentNode)
+            || NodeGuards.isMemberExpressionNode(parentNode)
+            || NodeGuards.isMethodDefinitionNode(parentNode);
 
-    /**
-     * @param {Property} propertyNode
-     * @returns {Property}
-     */
-    private transformPropertyNode (propertyNode: ESTree.Property): ESTree.Property {
-        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
-
-        if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
-            propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
-            propertyNode.shorthand = false;
+        if (isPropertyLikeNode && !RenamePropertiesTransformer.isValidPropertyNode(parentNode, node)) {
+            return node;
         }
 
-        return propertyNode;
-    }
-
-    /**
-     * @param {PropertyDefinition} propertyNode
-     * @returns {PropertyDefinition}
-     */
-    private transformPropertyDefinitionNode (propertyNode: ESTree.PropertyDefinition): ESTree.PropertyDefinition {
-        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
-
-        if (RenamePropertiesTransformer.isValidPropertyNode(propertyNode, propertyKeyNode)) {
-            propertyNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
+        if (isPropertyNode) {
+            parentNode.shorthand = false;
         }
 
-        return propertyNode;
-    }
-
-    /**
-     * @param {Property} memberExpressionNode
-     * @returns {Property}
-     */
-    private transformMemberExpressionNode (memberExpressionNode: ESTree.MemberExpression): ESTree.MemberExpression {
-        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = memberExpressionNode.property;
-
-        if (RenamePropertiesTransformer.isValidPropertyNode(memberExpressionNode, propertyKeyNode)) {
-            memberExpressionNode.property = this.renamePropertiesReplacer.replace(propertyKeyNode);
-        }
-
-        return memberExpressionNode;
-    }
-
-    /**
-     * @param {MethodDefinition} methodDefinitionNode
-     * @returns {MethodDefinition}
-     */
-    private transformMethodDefinitionNode (methodDefinitionNode: ESTree.MethodDefinition): ESTree.MethodDefinition {
-        const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = methodDefinitionNode.key;
-
-        if (RenamePropertiesTransformer.isValidPropertyNode(methodDefinitionNode, propertyKeyNode)) {
-            methodDefinitionNode.key = this.renamePropertiesReplacer.replace(propertyKeyNode);
-        }
-
-        return methodDefinitionNode;
+        return this.renamePropertiesReplacer.replace(node);
     }
 
     /**
      * @param {Node} node
      * @param {Node} parentNode
      */
-    // eslint-disable-next-line complexity
     private analyzeAutoExcludedPropertyNames (
         node: ESTree.Node,
         parentNode: ESTree.Node
     ): void {
         if (!NodeGuards.isLiteralNode(node) || !NodeLiteralUtils.isStringLiteralNode(node)) {
-            return;
-        }
-
-        if (
-            (NodeGuards.isPropertyNode(parentNode) && parentNode.key === node)
-            || NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node
-            || NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node
-            || NodeGuards.isPropertyDefinitionNode(parentNode) && parentNode.key === node
-        ) {
             return;
         }
 

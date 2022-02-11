@@ -1,5 +1,9 @@
 Change Log
 
+v3.2.6
+---
+* Improved integration between `renameProperties` and `controlFlowFlattening` options. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1053
+
 v3.2.5
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1056

@@ -31,7 +31,29 @@ describe('CLIUtils', () => {
                 });
             });
 
-            describe('Variant #2: json file with config', () => {
+            describe('Variant #2: cjs file with config', () => {
+                const configDirName: string = 'test/fixtures';
+                const configFileName: string = 'config.cjs';
+                const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+                const expectedResult: TInputOptions = {
+                    compact: true,
+                    exclude: ['**/foo.js'],
+                    selfDefending: false,
+                    sourceMap: true
+                };
+
+                let result: Object;
+
+                before(() => {
+                    result = CLIUtils.getUserConfig(configFilePath);
+                });
+
+                it('should return object with user configuration', () => {
+                    assert.deepEqual(result, expectedResult);
+                });
+            });
+
+            describe('Variant #3: json file with config', () => {
                 const configDirName: string = 'test/fixtures';
                 const configFileName: string = 'config.json';
                 const configFilePath: string = `../../../${configDirName}/${configFileName}`;

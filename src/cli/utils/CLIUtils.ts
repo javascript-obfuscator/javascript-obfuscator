@@ -11,7 +11,6 @@ export class CLIUtils {
     public static readonly allowedConfigFileExtensions: string[] = [
         '.js',
         '.json',
-        '.mjs',
         '.cjs'
     ];
 

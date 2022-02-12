@@ -66,7 +66,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
             return callExpressionNode;
         }
 
-        const replacerId: string = String(callExpressionNode.arguments.length);
+        const replacerId: number = callExpressionNode.arguments.length;
         const callExpressionFunctionCustomNode: ICustomNode<TInitialData<CallExpressionFunctionNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionFunctionNode);
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;

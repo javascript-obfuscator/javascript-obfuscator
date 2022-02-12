@@ -28,11 +28,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static readonly initMangledNameCharacter: string = '9';
 
     /**
-     * @type {WeakMap<TNodeWithLexicalScope, string>}
-     */
-    private static readonly lastMangledNameInScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
-
-    /**
      * @type {string[]}
      */
     private static readonly nameSequence: string[] = [
@@ -48,14 +43,19 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static readonly reservedNamesSet: Set<string> = new Set(reservedIdentifierNames);
 
     /**
+     * @type {string}
+     */
+    private lastMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
+
+    /**
+     * @type {WeakMap<TNodeWithLexicalScope, string>}
+     */
+    private readonly lastMangledNameForScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
+
+    /**
      * @type {WeakMap<string, string>}
      */
     private readonly lastMangledNameForLabelMap: Map <string, string> = new Map();
-
-    /**
-     * @type {string}
-     */
-    private previousMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
 
     /**
      * @type {ISetUtils}
@@ -85,7 +85,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {string}
      */
     public generateNext (nameLength?: number): string {
-        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+        const identifierName: string = this.generateNewMangledName(this.lastMangledName);
 
         this.updatePreviousMangledName(identifierName);
         this.preserveName(identifierName);
@@ -103,7 +103,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             : '';
 
         const identifierName: string = this.generateNewMangledName(
-            this.previousMangledName,
+            this.lastMangledName,
             (newIdentifierName: string) => {
                 const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
 
@@ -136,7 +136,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
         );
 
-        MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(lexicalScopeNode, identifierName);
+        this.lastMangledNameForScopeMap.set(lexicalScopeNode, identifierName);
 
         this.updatePreviousMangledName(identifierName);
         this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
@@ -216,11 +216,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} name
      */
     protected updatePreviousMangledName (name: string): void {
-        if (!this.isIncrementedMangledName(name, this.previousMangledName)) {
+        if (!this.isIncrementedMangledName(name, this.lastMangledName)) {
             return;
         }
 
-        this.previousMangledName = name;
+        this.lastMangledName = name;
     }
 
     /**
@@ -309,8 +309,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     private getLastMangledNameForScopes (lexicalScopeNodes: TNodeWithLexicalScope[]): string {
         for (const lexicalScope of lexicalScopeNodes) {
-            const lastMangledName: string | null = MangledIdentifierNamesGenerator.lastMangledNameInScopeMap
-                .get(lexicalScope) ?? null;
+            const lastMangledName: string | null = this.lastMangledNameForScopeMap.get(lexicalScope) ?? null;
 
             if (!lastMangledName) {
                 continue;

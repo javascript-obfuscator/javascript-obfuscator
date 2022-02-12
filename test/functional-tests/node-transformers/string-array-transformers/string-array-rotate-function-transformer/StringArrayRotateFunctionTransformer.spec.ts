@@ -132,13 +132,14 @@ describe('StringArrayRotateFunctionTransformer', function () {
         });
 
         describe('Code evaluation', function () {
-            this.timeout(100000);
+            const samplesCount: number = 50;
+            const evaluationTimeout: number = 5000;
 
-            const samplesCount: number = 100;
+            this.timeout(samplesCount * evaluationTimeout);
 
             let hasRuntimeErrors: boolean = false;
 
-            before(() => {
+            before(async() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/code-evaluation.js');
 
                 const obfuscateFunc = () => {
@@ -186,7 +187,10 @@ describe('StringArrayRotateFunctionTransformer', function () {
 
                 for (let i = 0; i < samplesCount; i++) {
                     try {
-                        const evaluationResult = eval(obfuscateFunc());
+                        const evaluationResult = await evaluateInWorker(
+                            obfuscateFunc(),
+                            evaluationTimeout
+                        );
 
                         if (evaluationResult !== 'fooooooo') {
                             hasRuntimeErrors = true;
@@ -205,7 +209,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
         });
 
         describe('Prevent early successful comparison', () => {
-            const evaluationTimeout:  number = 1000;
+            const evaluationTimeout: number = 1000;
             const samplesCount: number = 100;
 
             let numberNumericalExpressionAnalyzerAnalyzeStub: sinon.SinonStub;

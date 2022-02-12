@@ -36,9 +36,9 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {Map<string, Map<string, string[]>>}
+     * @type {Map<string, Map<string | number, string[]>>}
      */
-    protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
+    protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string | number, string[]>> = new Map();
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
@@ -80,23 +80,23 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     /**
      * @param {ICustomNode} customNode
      * @param {IControlFlowStorage} controlFlowStorage
-     * @param {string} replacerId
+     * @param {string | number} replacerId
      * @param {number} usingExistingIdentifierChance
      * @returns {string}
      */
     protected insertCustomNodeToControlFlowStorage (
         customNode: ICustomNode,
         controlFlowStorage: IControlFlowStorage,
-        replacerId: string,
+        replacerId: string | number,
         usingExistingIdentifierChance: number
     ): string {
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
-        const storageKeysById: Map<string, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
+        const storageKeysById: Map<string | number, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
             ?? new Map <string, string[]>();
-        const storageKeysForCurrentId: string[] | null = storageKeysById.get(replacerId) ?? null;
+        const storageKeysForCurrentId: string[] = storageKeysById.get(replacerId) ?? [];
 
         const shouldPickFromStorageKeysById = this.randomGenerator.getMathRandom() < usingExistingIdentifierChance
-            && storageKeysForCurrentId?.length;
+            && storageKeysForCurrentId.length;
 
         if (shouldPickFromStorageKeysById) {
             return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
@@ -104,7 +104,8 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
         const storageKey: string = this.generateStorageKey(controlFlowStorage);
 
-        storageKeysById.set(replacerId, [storageKey]);
+        storageKeysForCurrentId.push(storageKey);
+        storageKeysById.set(replacerId, storageKeysForCurrentId);
         this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
         controlFlowStorage.set(storageKey, customNode);
 

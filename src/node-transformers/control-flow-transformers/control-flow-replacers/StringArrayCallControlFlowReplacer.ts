@@ -74,7 +74,7 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
             return literalNode;
         }
 
-        const replacerId: string = String(literalNode.value);
+        const replacerId: string | number = literalNode.value;
         const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LiteralNode);
 

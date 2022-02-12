@@ -411,6 +411,70 @@ describe('RenamePropertiesTransformer', () => {
                         assert.match(obfuscatedCode, propertyRegExp);
                     });
                 });
+
+                describe('Variant #10: integration with `controlFlowFlattening` option', () => {
+                    const propertyRegExp: RegExp = new RegExp(
+                        'const b *= *{ *' +
+                            '\'\\w{5}\' *: *\'a\' *' +
+                        '}; *' +
+                        'const c *= *{' +
+                            '\'a\': *0x1' +
+                        '};' +
+                        'c\\[b\\[\'\\w{5}\']];'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening-integration.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameProperties: true,
+                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                controlFlowFlattening: true,
+                                controlFlowFlatteningThreshold: 1
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('Should correctly rename property when `controlFlowFlattening` option is enabled', () => {
+                        assert.match(obfuscatedCode, propertyRegExp);
+                    });
+                });
+
+                describe('Variant #11: integration with `transformObjectKeys` option', () => {
+                    const propertyRegExp: RegExp = new RegExp(
+                        'const b *= *{}; *' +
+                        'b\\[\'a\'] *= *0x1;' +
+                        'const foo *= *b;' +
+                        'foo\\[\'a\'];'
+                    );
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/transform-object-keys-integration.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameProperties: true,
+                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('Should correctly rename property when `transformObjectKeys` option is enabled', () => {
+                        assert.match(obfuscatedCode, propertyRegExp);
+                    });
+                });
             });
 
             describe('Variant #3: Ignored literal node type', () => {

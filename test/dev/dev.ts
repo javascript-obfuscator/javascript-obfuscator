@@ -1,55 +1,38 @@
 'use strict';
 
-import { StringArrayWrappersType } from '../../src/enums/node-transformers/string-array-transformers/StringArrayWrappersType';
-
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function foo () {
-                function bar() {
-                    var string1 = 'string1';
-                    var string2 = 'string2';
-                    var string3 = 'string3';
-                    var string4 = 'string4';
-                    var string5 = 'string5';
-                    var string6 = 'string6';
-                    
-                    function bark () {
-                        var string1 = 'string1';
-                        var string2 = 'string2';
-                        var string3 = 'string3';
-                        var string4 = 'string4';
-                        var string5 = 'string5';
-                        var string6 = 'string6';
-                    }
-                }
-                
-                bar()
+            var obj = {
+                foo: 1
             }
-            
-            console.log(foo());
         `,
         {
-            identifierNamesGenerator: 'mangled',
-            compact: false,
-            controlFlowFlattening: false,
-            controlFlowFlatteningThreshold: 1,
-            simplify: false,
-            stringArrayRotate: false,
-            stringArray: true,
-            stringArrayIndexesType: [
-                'hexadecimal-number',
-                'hexadecimal-numeric-string'
-            ],
-            stringArrayThreshold: 1,
-            stringArrayCallsTransform: true,
-            stringArrayCallsTransformThreshold: 1,
-            rotateStringArray: true,
-            stringArrayWrappersType: StringArrayWrappersType.Function,
-            transformObjectKeys: false,
-            seed: 1
+            "compact": false,
+            "controlFlowFlattening": true,
+            "controlFlowFlatteningThreshold": 1,
+            "disableConsoleOutput": false,
+            "identifierNamesGenerator": "mangled",
+            "log": true,
+            "numbersToExpressions": true,
+            "renameProperties": true,
+            "renamePropertiesMode": "safe",
+            "simplify": false,
+            "stringArray": true,
+            "stringArrayCallsTransform": true,
+            "stringArrayIndexShift": true,
+            "stringArrayRotate": false,
+            "stringArrayShuffle": false,
+            "stringArrayWrappersCount": 5,
+            "stringArrayWrappersChainedCalls": true,
+            "stringArrayWrappersParametersMaxCount": 5,
+            "stringArrayWrappersType": "function",
+            "stringArrayThreshold": 0,
+            "transformObjectKeys": true,
+            "unicodeEscapeSequence": false,
+            "ignoreRequireImports": false
         }
     ).getObfuscatedCode();
 

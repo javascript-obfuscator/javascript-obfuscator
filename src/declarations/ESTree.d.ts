@@ -3,7 +3,6 @@
 import * as acorn from 'acorn';
 import * as escodegen from '@javascript-obfuscator/escodegen';
 import * as eslintScope from 'eslint-scope';
-import { BlockStatement } from 'estree';
 
 declare module 'estree' {
     /**
@@ -14,8 +13,13 @@ declare module 'estree' {
         ignoredNode?: boolean;
     }
 
+    export interface IdentifierNodeMetadata extends BaseNodeMetadata {
+        propertyKeyToRenameNode?: boolean
+    }
+
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
         stringArrayCallLiteralNode?: boolean;
+        propertyKeyToRenameNode?: boolean
     }
 
     /**
@@ -38,6 +42,10 @@ declare module 'estree' {
 
     interface Program extends BaseNode {
         scope?: eslintScope.Scope | null;
+    }
+
+    interface Identifier extends BaseNode {
+        metadata?: IdentifierNodeMetadata;
     }
 
     interface BigIntLiteral extends BaseNode {

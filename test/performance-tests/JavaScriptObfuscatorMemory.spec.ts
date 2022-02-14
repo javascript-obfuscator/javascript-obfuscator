@@ -32,7 +32,7 @@ describe('JavaScriptObfuscator memory', function () {
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 0.4,
                         debugProtection: false,
-                        debugProtectionInterval: false,
+                        debugProtectionInterval: 0,
                         disableConsoleOutput: true,
                         identifierNamesGenerator: 'mangled',
                         log: false,

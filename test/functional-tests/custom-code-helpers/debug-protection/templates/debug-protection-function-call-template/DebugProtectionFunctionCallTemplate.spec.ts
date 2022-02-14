@@ -1,15 +1,15 @@
 import { assert } from 'chai';
 
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-import { ObfuscationTarget } from '../../../../../src/enums/ObfuscationTarget';
+import { IdentifierNamesGenerator } from '../../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscationTarget } from '../../../../../../src/enums/ObfuscationTarget';
 
-import { evaluateInWorker } from '../../../../helpers/evaluateInWorker';
+import { evaluateInWorker } from '../../../../../helpers/evaluateInWorker';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('DebugProtectionFunctionCallTemplate', function () {
     const evaluationTimeout: number = 1500;

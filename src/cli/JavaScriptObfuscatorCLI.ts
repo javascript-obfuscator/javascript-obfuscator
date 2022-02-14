@@ -223,9 +223,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--debug-protection-interval <boolean>',
-                'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)',
-                BooleanSanitizer
+                '--debug-protection-interval <number>',
+                'Sets interval in milliseconds for debug protection so it is working even after page was loaded (can cause DevTools enabled browser freeze)',
+                parseInt
             )
             .option(
                 '--disable-console-output <boolean>',

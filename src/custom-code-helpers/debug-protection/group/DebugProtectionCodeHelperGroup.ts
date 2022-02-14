@@ -124,7 +124,7 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
                     : nodeWithStatements.body.length;
                 const randomIndex: number = this.randomGenerator.getRandomInteger(0, programBodyLength);
 
-                customCodeHelper.initialize(debugProtectionFunctionName);
+                customCodeHelper.initialize(debugProtectionFunctionName, this.options.debugProtectionInterval);
 
                 NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), randomIndex);
             }

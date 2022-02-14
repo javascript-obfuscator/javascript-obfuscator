@@ -1442,7 +1442,7 @@ describe('JavaScriptObfuscator', () => {
                 deadCodeInjection: true,
                 deadCodeInjectionThreshold: 1,
                 debugProtection: true,
-                debugProtectionInterval: true,
+                debugProtectionInterval: 4000,
                 disableConsoleOutput: false,
                 stringArrayRotate: true,
                 selfDefending: true,

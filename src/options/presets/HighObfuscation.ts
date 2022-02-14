@@ -10,7 +10,7 @@ export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     controlFlowFlatteningThreshold: 1,
     deadCodeInjectionThreshold: 1,
     debugProtection: true,
-    debugProtectionInterval: true,
+    debugProtectionInterval: 4000,
     optionsPreset: OptionsPreset.HighObfuscation,
     splitStringsChunkLength: 5,
     stringArrayCallsTransformThreshold: 1,

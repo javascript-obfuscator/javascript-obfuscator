@@ -349,7 +349,7 @@ Following options are available for the JS Obfuscator:
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: false,
     domainLock: [],
     domainLockRedirectUrl: 'about:blank',
@@ -413,7 +413,7 @@ Following options are available for the JS Obfuscator:
     --dead-code-injection <boolean>
     --dead-code-injection-threshold <number>
     --debug-protection <boolean>
-    --debug-protection-interval <boolean>
+    --debug-protection-interval <number>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --domain-lock-redirect-url <string>
@@ -678,11 +678,11 @@ Type: `boolean` Default: `false`
 This option makes it almost impossible to use the `debugger` function of the Developer Tools (both on WebKit-based and Mozilla Firefox).
 
 ### `debugProtectionInterval`
-Type: `boolean` Default: `false`
+Type: `number` Default: `0`
 
 ##### :warning: Can freeze your browser! Use at own risk.
 
-If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
+If set, an interval in milliseconds is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled. Recommended value is between `2000` and `4000` milliseconds.
 
 ### `disableConsoleOutput`
 Type: `boolean` Default: `false`
@@ -1507,7 +1507,7 @@ The performance will be much slower than without obfuscation
     deadCodeInjection: true,
     deadCodeInjectionThreshold: 1,
     debugProtection: true,
-    debugProtectionInterval: true,
+    debugProtectionInterval: 4000,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
@@ -1545,7 +1545,7 @@ The performance will be slower than without obfuscation
     deadCodeInjection: true,
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
@@ -1582,7 +1582,7 @@ The performance will be at a relatively normal level
     controlFlowFlattening: false,
     deadCodeInjection: false,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
     log: false,
@@ -1614,7 +1614,7 @@ The performance will be at a relatively normal level
     controlFlowFlattening: false,
     deadCodeInjection: false,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: false,
     identifierNamesGenerator: 'hexadecimal',
     log: false,

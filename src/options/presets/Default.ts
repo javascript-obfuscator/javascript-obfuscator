@@ -18,7 +18,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: false,
     domainLock: [],
     domainLockRedirectUrl: 'about:blank',

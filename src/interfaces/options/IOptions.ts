@@ -18,7 +18,7 @@ export interface IOptions {
     readonly deadCodeInjection: boolean;
     readonly deadCodeInjectionThreshold: number;
     readonly debugProtection: boolean;
-    readonly debugProtectionInterval: boolean;
+    readonly debugProtectionInterval: number;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly domainLockRedirectUrl: string;

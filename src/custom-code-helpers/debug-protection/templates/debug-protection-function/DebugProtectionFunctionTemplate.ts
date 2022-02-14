@@ -5,7 +5,6 @@ export function DebugProtectionFunctionTemplate (): string {
     return `
         function {debugProtectionFunctionName} (ret) {
             function debuggerProtection (counter) {
-            
                 {debuggerTemplate}
                 
                 debuggerProtection(++counter);

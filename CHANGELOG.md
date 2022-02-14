@@ -1,5 +1,9 @@
 Change Log
 
+v4.0.0
+---
+* **Breaking change:** `debugProtectionInteraval` option now accepts value in milliseconds instead of `boolean` value. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1031
+
 v3.2.7
 ---
 * Fixed cases when dead code is added to the inner code of `eval` expressions. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1053

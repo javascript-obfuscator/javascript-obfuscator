@@ -16,7 +16,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0,
     debugProtection: false,
-    debugProtectionInterval: false,
+    debugProtectionInterval: 0,
     disableConsoleOutput: false,
     domainLock: [],
     domainLockRedirectUrl: 'about:blank',

@@ -64,7 +64,8 @@ import './functional-tests/code-transformers/preparing-transformers/hashbang-ope
 import './functional-tests/custom-code-helpers/common/templates/GlobalVariableNoEvalTemplate.spec';
 import './functional-tests/custom-code-helpers/console-output/ConsoleOutputDisableExpressionCodeHelper.spec';
 import './functional-tests/custom-code-helpers/console-output/templates/ConsoleOutputDisableTemplate.spec';
-import './functional-tests/custom-code-helpers/debug-protection/templates/DebugProtectionFunctionCallTemplate.spec';
+import './functional-tests/custom-code-helpers/debug-protection/templates/debug-protection-function-call-template/DebugProtectionFunctionCallTemplate.spec';
+import './functional-tests/custom-code-helpers/debug-protection/templates/debug-protection-function-interval-template/DebugProtectionFunctionIntervalTemplate.spec';
 import './functional-tests/custom-code-helpers/domain-lock/DomainLockCodeHelper.spec';
 import './functional-tests/custom-code-helpers/domain-lock/templates/DomainLockNodeTemplate.spec';
 import './functional-tests/custom-code-helpers/self-defending/SelfDefendingCodeHelper.spec';

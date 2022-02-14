@@ -112,10 +112,11 @@ export class Options implements IOptions {
     public readonly debugProtection!: boolean;
 
     /**
-     * @type {boolean}
+     * @type {number}
      */
-    @IsBoolean()
-    public readonly debugProtectionInterval!: boolean;
+    @IsNumber()
+    @Min(0)
+    public readonly debugProtectionInterval!: number;
 
     /**
      * @type {boolean}

@@ -9,9 +9,12 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+
 import { initializable } from '../../decorators/Initializable';
 
 import { DebugProtectionFunctionIntervalTemplate } from './templates/debug-protection-function-interval/DebugProtectionFunctionIntervalTemplate';
+import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -23,6 +26,12 @@ export class DebugProtectionFunctionIntervalCodeHelper extends AbstractCustomCod
      */
     @initializable()
     private debugProtectionFunctionName!: string;
+
+    /**
+     * @type {number}
+     */
+    @initializable()
+    private debugProtectionInterval!: number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -50,9 +59,11 @@ export class DebugProtectionFunctionIntervalCodeHelper extends AbstractCustomCod
 
     /**
      * @param {string} debugProtectionFunctionName
+     * @param {number} debugProtectionInterval
      */
-    public initialize (debugProtectionFunctionName: string): void {
+    public initialize (debugProtectionFunctionName: string, debugProtectionInterval: number): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
+        this.debugProtectionInterval = debugProtectionInterval;
     }
 
     /**
@@ -67,8 +78,14 @@ export class DebugProtectionFunctionIntervalCodeHelper extends AbstractCustomCod
      * @returns {string}
      */
     protected override getCodeHelperTemplate (): string {
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
+            ? this.getGlobalVariableTemplate()
+            : GlobalVariableNoEvalTemplate();
+
         return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionIntervalTemplate(), {
-            debugProtectionFunctionName: this.debugProtectionFunctionName
+            debugProtectionFunctionName: this.debugProtectionFunctionName,
+            debugProtectionInterval: this.debugProtectionInterval,
+            globalVariableTemplate
         });
     }
 }

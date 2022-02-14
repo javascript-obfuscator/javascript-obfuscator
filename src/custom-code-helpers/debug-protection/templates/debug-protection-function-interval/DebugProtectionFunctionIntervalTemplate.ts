@@ -3,8 +3,10 @@
  */
 export function DebugProtectionFunctionIntervalTemplate (): string {
     return `
-        setInterval(function () {
-            {debugProtectionFunctionName}();
-        }, 4000);
+        (function () {
+            {globalVariableTemplate}
+    
+            that.setInterval({debugProtectionFunctionName}, {debugProtectionInterval});
+        })();
     `;
 }

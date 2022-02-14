@@ -1090,5 +1090,34 @@ describe('DeadCodeInjectionTransformer', () => {
                 assert.equal(matchesLength, expectedMatchesLength);
             });
         });
+
+        describe('Variant #13 - correct integration with `EvalCallExpressionTransformer`', () => {
+            const evalWithDeadCodeRegExp: RegExp = new RegExp(
+                `eval\\(\'if *\\(${variableMatch}`,
+                'g'
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/eval-call-expression-transformer-integration.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                ).getObfuscatedCode();
+                console.log(obfuscatedCode);
+            });
+
+            it('match #1: shouldn\'t add dead code to the eval call expression', () => {
+                assert.notMatch(obfuscatedCode, evalWithDeadCodeRegExp);
+            });
+        });
     });
 });

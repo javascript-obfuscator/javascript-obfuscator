@@ -27,6 +27,14 @@ export class NodeMetadata {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isEvalHostNode (node: ESTree.Node): boolean {
+        return NodeMetadata.get<ESTree.FunctionExpressionNodeMetadata, 'evalHostNode'>(node, 'evalHostNode') === true;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isForceTransformNode (node: ESTree.Node): boolean {
         return NodeMetadata.get<ESTree.BaseNodeMetadata, 'forceTransformNode'>(node, 'forceTransformNode') === true;
     }

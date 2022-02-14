@@ -1,5 +1,9 @@
 Change Log
 
+v3.2.7
+---
+* Fixed cases when dead code is added to the inner code of `eval` expressions. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1053
+
 v3.2.6
 ---
 * Improved integration between `renameProperties` and `controlFlowFlattening` options. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1053

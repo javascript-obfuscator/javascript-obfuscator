@@ -13,6 +13,10 @@ declare module 'estree' {
         ignoredNode?: boolean;
     }
 
+    export interface FunctionExpressionNodeMetadata extends BaseNodeMetadata {
+        evalHostNode?: boolean;
+    }
+
     export interface IdentifierNodeMetadata extends BaseNodeMetadata {
         propertyKeyToRenameNode?: boolean
     }
@@ -38,6 +42,10 @@ declare module 'estree' {
         start: number;
         end: number;
         loc?: acorn.SourceLocation;
+    }
+
+    interface FunctionExpression extends BaseFunction, BaseExpression {
+        metadata?: FunctionExpressionNodeMetadata;
     }
 
     interface Program extends BaseNode {

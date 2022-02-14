@@ -13,6 +13,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringUtils } from '../../utils/StringUtils';
 
@@ -26,11 +27,6 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         NodeTransformer.ParentificationTransformer,
         NodeTransformer.VariablePreserveTransformer
     ];
-
-    /**
-     * @type {Set <FunctionExpression>}
-     */
-    private readonly evalRootAstHostNodeSet: Set <ESTree.FunctionExpression> = new Set();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -93,25 +89,16 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
             case NodeTransformationStage.Preparing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (
-                            parentNode
-                            && NodeGuards.isCallExpressionNode(node)
-                            && NodeGuards.isIdentifierNode(node.callee)
-                            && node.callee.name === 'eval'
-                        ) {
+                        if (parentNode) {
                             return this.transformNode(node, parentNode);
                         }
                     }
                 };
 
             case NodeTransformationStage.Finalizing:
-                if (!this.evalRootAstHostNodeSet.size) {
-                    return null;
-                }
-
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && this.isEvalRootAstHostNode(node)) {
+                        if (parentNode) {
                             return this.restoreNode(node, parentNode);
                         }
                     }
@@ -123,22 +110,31 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {CallExpression} callExpressionNode
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (callExpressionNode: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
-        const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement | undefined = callExpressionNode.arguments[0];
+    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+        const isEvalCallExpressionNode = parentNode
+            && NodeGuards.isCallExpressionNode(node)
+            && NodeGuards.isIdentifierNode(node.callee)
+            && node.callee.name === 'eval';
 
-        if (!callExpressionFirstArgument) {
-            return callExpressionNode;
+        if (!isEvalCallExpressionNode) {
+            return node;
+        }
+
+        const evalCallExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement | undefined = node.arguments[0];
+
+        if (!evalCallExpressionFirstArgument) {
+            return node;
         }
 
         const evalString: string | null = EvalCallExpressionTransformer
-            .extractEvalStringFromCallExpressionArgument(callExpressionFirstArgument);
+            .extractEvalStringFromCallExpressionArgument(evalCallExpressionFirstArgument);
 
         if (!evalString) {
-            return callExpressionNode;
+            return node;
         }
 
         let ast: ESTree.Statement[];
@@ -147,7 +143,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         try {
             ast = NodeUtils.convertCodeToStructure(evalString);
         } catch {
-            return callExpressionNode;
+            return node;
         }
 
         /**
@@ -157,24 +153,25 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         const evalRootAstHostNode: ESTree.FunctionExpression = NodeFactory
             .functionExpressionNode([], NodeFactory.blockStatementNode(ast));
 
+        NodeMetadata.set(evalRootAstHostNode, { evalHostNode: true });
+
         NodeUtils.parentizeAst(evalRootAstHostNode);
         NodeUtils.parentizeNode(evalRootAstHostNode, parentNode);
-
-        /**
-         * we should store that host node and then extract AST-tree on the `finalizing` stage
-         */
-        this.evalRootAstHostNodeSet.add(evalRootAstHostNode);
 
         return evalRootAstHostNode;
     }
 
     /**
-     * @param {FunctionExpression} evalRootAstHostNode
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public restoreNode (evalRootAstHostNode: ESTree.FunctionExpression, parentNode: ESTree.Node): ESTree.Node {
-        const targetAst: ESTree.Statement[] = evalRootAstHostNode.body.body;
+    public restoreNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+        if (!this.isEvalRootAstHostNode(node)) {
+            return node;
+        }
+
+        const targetAst: ESTree.Statement[] = node.body.body;
         const obfuscatedCode: string = NodeUtils.convertStructureToCode(targetAst);
 
         return NodeFactory.callExpressionNode(
@@ -190,6 +187,6 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private isEvalRootAstHostNode (node: ESTree.Node): node is ESTree.FunctionExpression {
-        return NodeGuards.isFunctionExpressionNode(node) && this.evalRootAstHostNodeSet.has(node);
+        return NodeMetadata.isEvalHostNode(node);
     }
 }

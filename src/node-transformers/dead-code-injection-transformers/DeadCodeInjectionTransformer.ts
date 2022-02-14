@@ -23,6 +23,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { BlockStatementDeadCodeInjectionNode } from '../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
@@ -184,9 +185,18 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {BlockStatement} blockStatementNode
+     * @param {Node} parentNode
      * @returns {boolean}
      */
-    private static isValidWrappedBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+    private static isValidWrappedBlockStatementNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): boolean {
+        /**
+         * Special case for ignoring all EvalHost nodes that are added by EvalCallExpressionTransformer
+         * So, all content of eval expressions should not be affected by dead code injection
+         */
+        if (NodeMetadata.isEvalHostNode(parentNode)) {
+            return false;
+        }
+
         if (!blockStatementNode.body.length) {
             return false;
         }
@@ -303,7 +313,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
         if (
             this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold
-            || !DeadCodeInjectionTransformer.isValidWrappedBlockStatementNode(blockStatementNode)
+            || !DeadCodeInjectionTransformer.isValidWrappedBlockStatementNode(blockStatementNode, parentNode)
         ) {
             return blockStatementNode;
         }

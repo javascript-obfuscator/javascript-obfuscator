@@ -50,6 +50,24 @@ describe('NodeMetadata', () => {
         });
     });
 
+    describe('isEvalHostNode', () => {
+        const expectedValue: boolean = true;
+
+        let node: ESTree.FunctionExpression,
+            value: boolean | undefined;
+
+        before(() => {
+            node = NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode([]));
+            node.metadata = {};
+            node.metadata.evalHostNode = true;
+            value = NodeMetadata.isEvalHostNode(node);
+        });
+
+        it('should return metadata value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
+
     describe('isForceTransformNode', () => {
         const expectedValue: boolean = true;
 

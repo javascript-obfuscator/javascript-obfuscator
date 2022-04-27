@@ -355,7 +355,7 @@ Following options are available for the JS Obfuscator:
     identifierNamesGenerator: 'hexadecimal',
     identifiersDictionary: [],
     identifiersPrefix: '',
-    ignoreRequireImports: false,
+    ignoreImports: false,
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
@@ -836,7 +836,7 @@ Sets prefix for all global identifiers.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
 
-### `ignoreRequireImports`
+### `ignoreImports`
 Type: `boolean` Default: `false`
 
 Prevents obfuscation of `require` imports. Could be helpful in some cases when for some reason runtime environment requires these imports with static strings only.

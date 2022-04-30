@@ -2,31 +2,16 @@ import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import md5 from 'md5';
-import { Chance } from 'chance';
 
 import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { ISourceCode } from '../interfaces/source-code/ISourceCode';
+import { ActualRandomGenerator } from './ActualRandomGenerator';
 
-import { initializable } from '../decorators/Initializable';
-
-import { alphabetString } from '../constants/AlphabetString';
-import { alphabetStringUppercase } from '../constants/AlphabetStringUppercase';
 
 @injectable()
 export class RandomGenerator implements IRandomGenerator, IInitializable {
-    /**
-     * @type {string}
-     */
-    public static readonly randomGeneratorPool: string = `${alphabetString}${alphabetStringUppercase}`;
-
-    /**
-     * @type {Chance.Chance}
-     */
-    @initializable()
-    private randomGenerator!: Chance.Chance;
-
     /**
      * @type {IOptions}
      */
@@ -36,6 +21,8 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @type {ISourceCode}
      */
     private readonly sourceCode: ISourceCode;
+
+    private readonly randomGenerator: ActualRandomGenerator;
 
     /**
      * @param {ISourceCode} sourceCode
@@ -47,11 +34,11 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     ) {
         this.sourceCode = sourceCode;
         this.options = options;
+        this.randomGenerator = new R();
     }
 
     @postConstruct()
     public initialize (): void {
-        this.randomGenerator = new Chance(this.getRawSeed());
     }
 
     /**
@@ -61,10 +48,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
         return this.getRandomInteger(0, 99999) / 100000;
     }
 
-    /**
-     * @returns {Chance.Chance}
-     */
-    public getRandomGenerator (): Chance.Chance {
+    public getRandomGenerator (): ActualRandomGenerator {
         return this.randomGenerator;
     }
 
@@ -74,10 +58,10 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @returns {number}
      */
     public getRandomInteger (min: number, max: number): number {
-        return this.getRandomGenerator().integer({
-            min: min,
-            max: max
-        });
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
     /**
@@ -97,16 +81,15 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
             valuesToPickArray.push(value);
         }
 
-        return this.randomGenerator.pickone(valuesToPickArray);
+        return valuesToPickArray[Math.floor(Math.random() * valuesToPickArray.length)];
     }
 
     /**
      * @param {number} length
-     * @param {string} pool
      * @returns {string}
      */
-    public getRandomString (length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
-        return this.getRandomGenerator().string({ length, pool });
+    public getRandomString (length: number): string {
+        return this.getRandomGenerator().string({ length });
     }
 
     /**

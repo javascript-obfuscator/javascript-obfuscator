@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type * as Chance from 'chance';
-
 export interface IRandomGenerator {
     /**
      * @returns {number}
@@ -9,9 +5,9 @@ export interface IRandomGenerator {
     getMathRandom (): number;
 
     /**
-     * @returns {Chance.Chance}
+     * @returns {R}
      */
-    getRandomGenerator (): Chance.Chance;
+    getRandomGenerator (): any;
 
     /**
      * @param min

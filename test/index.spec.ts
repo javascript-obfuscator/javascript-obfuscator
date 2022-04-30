@@ -32,7 +32,6 @@ import './unit-tests/node/node-statement-utils/NodeStatementUtils.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node/numerical-expression-data-to-node-converter/NumericalExpressionDataToNodeConverter.spec';
 import './unit-tests/options/Options.spec';
-import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-code/ObfuscationResult.spec';
 import './unit-tests/source-code/SourceCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';
@@ -136,10 +135,6 @@ import './functional-tests/node-transformers/string-array-transformers/string-ar
 import './functional-tests/node-transformers/string-array-transformers/string-array-scope-calls-wrapper-transformer/StringArrayScopeCallsWrapperTransformer.spec';
 import './functional-tests/node-transformers/string-array-transformers/string-array-transformer/StringArrayTransformer.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
-import './functional-tests/options/domain-lock-destination/Validation.spec';
-import './functional-tests/options/domain-lock/Validation.spec';
-import './functional-tests/options/identifier-names-cache/Validation.spec';
-import './functional-tests/options/input-file-name/Validation.spec';
 import './functional-tests/storages/string-array-transformers/string-array-storage/StringArrayStorage.spec';
 
 /**

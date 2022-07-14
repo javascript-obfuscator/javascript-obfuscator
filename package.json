@@ -119,7 +119,7 @@
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",
-    "postinstall 1": "opencollective-postinstall",
+    "postinstall": "opencollective-postinstall",
     "precommit": "npm run build",
     "prepublishOnly": "npm run build && npm run build:typings",
     "prepare": "husky install"

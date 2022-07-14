@@ -1,1 +1,12 @@
 
+.awcache
+.github
+.idea
+.nyc_output
+/coverage/
+/examples/
+/images/
+/webpack/
+/src/
+/test/
+/test*.js

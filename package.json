@@ -122,7 +122,7 @@
     "postinstall 1": "opencollective-postinstall",
     "precommit": "npm run build",
     "prepublishOnly": "npm run build && npm run build:typings",
-    "prepare 1": "husky install"
+    "prepare": "husky install"
   },
   "author": {
     "name": "Timofey Kachalov"

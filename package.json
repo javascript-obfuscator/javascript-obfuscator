@@ -87,7 +87,7 @@
     "rimraf": "3.0.2",
     "sinon": "13.0.1",
     "source-map-resolve": "0.6.0",
-    "terser": "5.10.0",
+    "terser": "5.14.2",
     "threads": "1.7.0",
     "ts-loader": "9.2.6",
     "ts-node": "10.4.0",

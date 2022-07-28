@@ -13,7 +13,7 @@ const unicode = {
     'IPA Extensions': [0x0250, 0x02AD, 0x02AF], //	592-687	
     'Spacing Modifier Letters': [0x02B0, 0x02C1, 0x02FF], //	688-767	
     // 'Combining Diacritical Marks': [0x0300, 0x0362, 0x036F], //	768-879	
-    'Greek': [/* 0x0370 */0x0386, 0x03F3, 0x03FF], //	880-1023	
+    'Greek': [/* 0x0370 */0x0388, 0x03F3, 0x03FF], //	880-1023	
     // 'Cyrillic': [0x0400, 0x04F9, 0x04FF], //	1024-1279	
     'Armenian': [0x0530, 0x0556, 0x058F], //	1328-1423	
     'Hebrew': [/* 0x0590 */0x05D0, 0x05F2, 0x05FF], //	1424-1535	

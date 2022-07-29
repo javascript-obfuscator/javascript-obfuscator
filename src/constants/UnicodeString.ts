@@ -13,9 +13,9 @@ const unicode = {
     'IPA Extensions': [0x0250, 0x02AD, 0x02AF], //	592-687	
     'Spacing Modifier Letters': [0x02B0, 0x02C1, 0x02FF], //	688-767	
     // 'Combining Diacritical Marks': [0x0300, 0x0362, 0x036F], //	768-879	
-    'Greek': [/* 0x0370 */0x0388, 0x03F3, 0x03FF], //	880-1023	
+    // 'Greek': [/* 0x0370 */0x038E, 0x03F3, 0x03FF], //	880-1023	
     // 'Cyrillic': [0x0400, 0x04F9, 0x04FF], //	1024-1279	
-    'Armenian': [0x0530, 0x0556, 0x058F], //	1328-1423	
+    'Armenian': [/* 0x0530 */0x0531, 0x0556, 0x058F], //	1328-1423	
     'Hebrew': [/* 0x0590 */0x05D0, 0x05F2, 0x05FF], //	1424-1535	
     'Arabic': [0x0600, 0x06FE, 0x06FF], //	1536-1791	
     'Syriac': [0x0700, 0x074A, 0x074F], //	1792-1871	
@@ -111,7 +111,7 @@ const str = {
     'IPA Extensions': mapRange(unicode['IPA Extensions']),
     'Spacing Modifier Letters': mapRange(unicode['Spacing Modifier Letters']),
     // 'Combining Diacritical Marks': mapRange(unicode['Combining Diacritical Marks']),
-    'Greek': mapRange(unicode['Greek']), //not working
+    // 'Greek': mapRange(unicode['Greek']), //not working
     //'Cyrillic': mapRange(unicode['Cyrillic']), //not working
     'Armenian': mapRange(unicode['Armenian']),
     // 'Hebrew': mapRange(unicode['Hebrew']), //reversed,not working

@@ -3,6 +3,8 @@
   Description: A powerful obfuscator for JavaScript and Node.js.
   Author: Timofey Kachalov
   -->
+  
+# The project is on hold. Don't expect updates in the near future.
 
 # JavaScript obfuscator
 

@@ -1,105 +1,105 @@
-import * as escodegen from '@javascript-obfuscator/escodegen';
-import * as estraverse from '@javascript-obfuscator/estraverse';
-import * as ESTree from 'estree';
+import * as escodegen from '@javascript-obfuscator/escodegen'
+import * as estraverse from '@javascript-obfuscator/estraverse'
+import * as ESTree from 'estree'
 
-import { ecmaVersion } from '../constants/EcmaVersion';
+import { ecmaVersion } from '../constants/EcmaVersion'
 
-import { ASTParserFacade } from '../ASTParserFacade';
-import { NodeGuards } from './NodeGuards';
-import { NodeMetadata } from './NodeMetadata';
+import { ASTParserFacade } from '../ASTParserFacade'
+import { NodeGuards } from './NodeGuards'
+import { NodeMetadata } from './NodeMetadata'
 
 export class NodeUtils {
     /**
      * @param {ESTree.Literal} literalNode
      * @returns {ESTree.Literal}
      */
-    public static addXVerbatimPropertyTo (literalNode: ESTree.Literal): ESTree.Literal {
+    public static addXVerbatimPropertyTo(literalNode: ESTree.Literal): ESTree.Literal {
         literalNode['x-verbatim-property'] = {
             content: literalNode.raw,
             precedence: escodegen.Precedence.Primary
-        };
+        }
 
-        return literalNode;
+        return literalNode
     }
 
     /**
      * @param {T} astTree
      * @returns {T}
      */
-    public static clone <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        return NodeUtils.parentizeAst(NodeUtils.cloneRecursive(astTree));
+    public static clone<T extends ESTree.Node = ESTree.Node>(astTree: T): T {
+        return NodeUtils.parentizeAst(NodeUtils.cloneRecursive(astTree))
     }
 
     /**
      * @param {string} code
      * @returns {ESTree.Statement[]}
      */
-    public static convertCodeToStructure (code: string): ESTree.Statement[] {
+    public static convertCodeToStructure(code: string): ESTree.Statement[] {
         const structure: ESTree.Program = ASTParserFacade.parse(
             code,
             {
                 ecmaVersion,
                 sourceType: 'script'
             }
-        );
+        )
 
         estraverse.replace(structure, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {
-                NodeUtils.parentizeNode(node, parentNode);
+                NodeUtils.parentizeNode(node, parentNode)
 
                 if (NodeGuards.isLiteralNode(node)) {
-                    NodeUtils.addXVerbatimPropertyTo(node);
+                    NodeUtils.addXVerbatimPropertyTo(node)
                 }
 
-                NodeMetadata.set(node, { ignoredNode: false });
+                NodeMetadata.set(node, { ignoredNode: false })
 
-                return node;
+                return node
             }
-        });
+        })
 
-        return <ESTree.Statement[]>structure.body;
+        return <ESTree.Statement[]>structure.body
     }
 
     /**
      * @param {NodeGuards[]} structure
      * @returns {string}
      */
-    public static convertStructureToCode (structure: ESTree.Node[]): string {
+    public static convertStructureToCode(structure: ESTree.Node[]): string {
         return structure.reduce((code: string, node: ESTree.Node) => {
             return code + escodegen.generate(node, {
                 sourceMapWithCode: true
-            }).code;
-        }, '');
+            }).code
+        }, '')
     }
 
     /**
      * @param {UnaryExpression} unaryExpressionNode
      * @returns {NodeGuards}
      */
-    public static getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
+    public static getUnaryExpressionArgumentNode(unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
         if (NodeGuards.isUnaryExpressionNode(unaryExpressionNode.argument)) {
-            return NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode.argument);
+            return NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode.argument)
         }
 
-        return unaryExpressionNode.argument;
+        return unaryExpressionNode.argument
     }
 
     /**
      * @param {T} astTree
      * @returns {T}
      */
-    public static parentizeAst <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        const parentNode: ESTree.Node | null = astTree.parentNode ?? null;
+    public static parentizeAst<T extends ESTree.Node = ESTree.Node>(astTree: T): T {
+        const parentNode: ESTree.Node | null = astTree.parentNode ?? null
 
         estraverse.replace(astTree, {
             enter: NodeUtils.parentizeNode
-        });
+        })
 
         if (parentNode) {
-            astTree.parentNode = parentNode;
+            astTree.parentNode = parentNode
         }
 
-        return astTree;
+        return astTree
     }
 
     /**
@@ -107,47 +107,47 @@ export class NodeUtils {
      * @param {Node} parentNode
      * @returns {T}
      */
-    public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node | null): T {
-        node.parentNode = parentNode ?? node;
+    public static parentizeNode<T extends ESTree.Node = ESTree.Node>(node: T, parentNode: ESTree.Node | null): T {
+        node.parentNode = parentNode ?? node
 
-        return node;
+        return node
     }
 
     /**
      * @param {T} node
      * @returns {T}
      */
-    private static cloneRecursive <T> (node: T): T {
+    private static cloneRecursive<T>(node: T): T {
         if (node === null) {
-            return node;
+            return node
         }
 
-        const copy: Partial<T> = {};
-        const nodeKeys: (keyof T)[] = <(keyof T)[]>Object.keys(node);
+        const copy: Partial<T> = {}
+        const nodeKeys: (keyof T)[] = <(keyof T)[]>Object.keys(node as any)
 
         nodeKeys
             .forEach((property: keyof T) => {
                 if (property === 'parentNode') {
-                    return;
+                    return
                 }
 
-                const value: T[keyof T] | T[keyof T][] | null = node[property] ?? null;
+                const value: T[keyof T] | T[keyof T][] | null = (node as any)[property] ?? null
 
-                let clonedValue: T[keyof T] | T[keyof T][] | null;
+                let clonedValue: T[keyof T] | T[keyof T][] | null
 
                 if (value === null || value instanceof RegExp) {
-                    clonedValue = value;
+                    clonedValue = value
                 } else if (value instanceof Array) {
-                    clonedValue = value.map(NodeUtils.cloneRecursive);
+                    clonedValue = value.map(NodeUtils.cloneRecursive)
                 } else if (typeof value === 'object') {
-                    clonedValue = NodeUtils.cloneRecursive(value);
+                    clonedValue = NodeUtils.cloneRecursive(value)
                 } else {
-                    clonedValue = value;
+                    clonedValue = value
                 }
 
-                copy[property] = <T[keyof T]>clonedValue;
-            });
+                copy[property] = <T[keyof T]>clonedValue
+            })
 
-        return <T>copy;
+        return <T>copy
     }
 }

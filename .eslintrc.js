@@ -14,7 +14,7 @@ module.exports = {
         "import",
         "jsdoc",
         "prefer-arrow",
-        "unicorn"
+        // "unicorn"
     ],
     "rules": {
         "@typescript-eslint/adjacent-overload-signatures": "error",
@@ -321,32 +321,32 @@ module.exports = {
             "error",
             "never"
         ],
-        "unicorn/catch-error-name": [
-            "error",
-            {
-                "name": "error"
-            }
-        ],
-        "unicorn/no-nested-ternary": "error",
-        "unicorn/no-unreadable-array-destructuring": "error",
-        "unicorn/numeric-separators-style": [
-            "error",
-            {
-                number: {
-                    minimumDigits: 7,
-                    groupLength: 3
-                }
-            }
-        ],
-        "unicorn/prefer-array-find": "error",
-        "unicorn/prefer-includes": "error",
-        "unicorn/prefer-optional-catch-binding": "error",
-        "unicorn/prefer-starts-ends-with": "error",
-        "unicorn/prefer-set-has": "error",
-        "unicorn/prefer-string-slice": "error",
-        "unicorn/prefer-string-trim-start-end": "error",
+        // "unicorn/catch-error-name": [
+        //     "error",
+        //     {
+        //         "name": "error"
+        //     }
+        // ],
+        // "unicorn/no-nested-ternary": "error",
+        // "unicorn/no-unreadable-array-destructuring": "error",
+        // "unicorn/numeric-separators-style": [
+        //     "error",
+        //     {
+        //         number: {
+        //             minimumDigits: 7,
+        //             groupLength: 3
+        //         }
+        //     }
+        // ],
+        // "unicorn/prefer-array-find": "error",
+        // "unicorn/prefer-includes": "error",
+        // "unicorn/prefer-optional-catch-binding": "error",
+        // "unicorn/prefer-starts-ends-with": "error",
+        // "unicorn/prefer-set-has": "error",
+        // "unicorn/prefer-string-slice": "error",
+        // "unicorn/prefer-string-trim-start-end": "error",
         "use-isnan": "error",
         "valid-typeof": "error",
         "yoda": "error"
     }
-};
+}

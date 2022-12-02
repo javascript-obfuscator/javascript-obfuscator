@@ -149,7 +149,40 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         });
     });
 
-    describe('Variant #5: obfuscated code with removed debug protection code', () => {
+    describe('Variant #5: correctly obfuscated code with target `ServiceWorker', () => {
+        const expectedEvaluationResult: number = 1;
+
+        let obfuscatedCode: string,
+            evaluationResult: number = 0;
+
+        beforeEach(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    debugProtection: true,
+                    target: ObfuscationTarget.ServiceWorker
+                }
+            ).getObfuscatedCode();
+
+            return evaluateInWorker(obfuscatedCode, evaluationTimeout)
+                .then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    evaluationResult = parseInt(result, 10);
+                });
+        });
+
+        it('should correctly evaluate code with enabled debug protection', () => {
+            assert.equal(evaluationResult, expectedEvaluationResult);
+        });
+    });
+
+    describe('Variant #6: obfuscated code with removed debug protection code', () => {
         const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
@@ -182,7 +215,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         });
     });
 
-    describe('Variant #6: single call of debug protection code', () => {
+    describe('Variant #7: single call of debug protection code', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,

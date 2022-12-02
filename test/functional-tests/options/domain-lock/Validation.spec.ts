@@ -50,22 +50,40 @@ describe('`domainLock` validation', () => {
 
         describe('Variant #2: negative validation', () => {
             const expectedError: string = 'This option allowed only for obfuscation targets';
-
             let testFunc: () => string;
 
-            beforeEach(() => {
-                testFunc = () => JavaScriptObfuscator.obfuscate(
-                    '',
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['www.example.com'],
-                        target: ObfuscationTarget.Node
-                    }
-                ).getObfuscatedCode();
+            describe('Variant #1: obfuscation target: `node`', () => {
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            domainLock: ['www.example.com'],
+                            target: ObfuscationTarget.Node
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not pass validation when obfuscation target is `node` and value is not default', () => {
+                    assert.throws(testFunc, expectedError);
+                });
             });
 
-            it('should not pass validation when obfuscation target is `node` and value is not default', () => {
-                assert.throws(testFunc, expectedError);
+            describe('Variant #1: obfuscation target: `service-worker`', () => {
+                beforeEach(() => {
+                    testFunc = () => JavaScriptObfuscator.obfuscate(
+                        '',
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            domainLock: ['www.example.com'],
+                            target: ObfuscationTarget.ServiceWorker
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should not pass validation when obfuscation target is `service-worker` and value is not default', () => {
+                    assert.throws(testFunc, expectedError);
+                });
             });
         });
     });

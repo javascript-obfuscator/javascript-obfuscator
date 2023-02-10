@@ -82,7 +82,7 @@ describe('`domainLockRedirectUrl` validation', () => {
 
         describe('Variant #2: negative validation', () => {
             describe('Variant #1: some non-url string', () => {
-                const expectedError: string = 'must be an URL address';
+                const expectedError: string = 'must be a URL address';
                 let testFunc: () => string;
 
                 beforeEach(() => {

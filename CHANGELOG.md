@@ -1,5 +1,9 @@
 Change Log
 
+v4.0.1
+---
+* Update `class-validator` dependency https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1146
+
 v4.0.0
 ---
 * **Breaking change:** `debugProtectionInterval` option now accepts value in milliseconds instead of `boolean` value. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1031

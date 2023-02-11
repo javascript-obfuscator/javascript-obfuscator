@@ -417,7 +417,7 @@ Following options are available for the JS Obfuscator:
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
-    --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
+    --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled, mangled-unicode]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --ignore-imports <boolean>

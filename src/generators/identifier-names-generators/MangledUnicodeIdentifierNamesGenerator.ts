@@ -1,27 +1,30 @@
 /* eslint-disable */
 
+//copy whole of MangledIdentifierNamesGenerator 
+//extend and overriding nameSequence not working
+
 import { inject, injectable } from 'inversify'
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers'
-
-import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope'
 
 import { IOptions } from '../../interfaces/options/IOptions'
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator'
 import { ISetUtils } from '../../interfaces/utils/ISetUtils'
 
-import { alphabetString } from '../../constants/AlphabetString'
-import { alphabetStringUppercase } from '../../constants/AlphabetStringUppercase'
-import { numbersString } from '../../constants/NumbersString'
+// import { MangledIdentifierNamesGenerator } from './MangledIdentifierNamesGenerator'
+import { unicodeString } from '../../constants/UnicodeString'
+
 import { reservedIdentifierNames } from '../../constants/ReservedIdentifierNames'
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator'
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils'
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope'
+import { numbersString } from '../../constants/NumbersString'
 
 @injectable()
-export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
+export class MangledUnicodeIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**
-     * @type {number}
-     */
+    * @type {number}
+    */
     private static readonly maxRegenerationAttempts: number = 20;
 
     /**
@@ -32,9 +35,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {string[]}
      */
-    protected static readonly nameSequence: string[] = [
-        ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
-    ];
+    protected static readonly nameSequence: string[] = unicodeString
+
+    //     [
+    //     ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
+    // ];
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
@@ -47,7 +52,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {string}
      */
-    private lastMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
+    private lastMangledName: string = MangledUnicodeIdentifierNamesGenerator.initMangledNameCharacter;
 
     /**
      * @type {WeakMap<TNodeWithLexicalScope, string>}
@@ -63,6 +68,12 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @type {ISetUtils}
      */
     private readonly setUtils: ISetUtils
+
+
+    /**
+     * @type {string[]}
+     */
+    // protected static override readonly nameSequence = unicodeString.join('').split('');
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -204,14 +215,14 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     public override isValidIdentifierName(mangledName: string): boolean {
         return super.isValidIdentifierName(mangledName)
-            && !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName)
+            && !MangledUnicodeIdentifierNamesGenerator.reservedNamesSet.has(mangledName)
     }
 
     /**
      * @returns {string[]}
      */
     protected getNameSequence(): string[] {
-        return MangledIdentifierNamesGenerator.nameSequence
+        return MangledUnicodeIdentifierNamesGenerator.nameSequence
     }
 
     /**
@@ -253,7 +264,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
              * When we reached the limit, we're trying to generate next mangled name based on the latest
              * preserved name
              */
-            if (regenerationAttempt > MangledIdentifierNamesGenerator.maxRegenerationAttempts) {
+            if (regenerationAttempt > MangledUnicodeIdentifierNamesGenerator.maxRegenerationAttempts) {
                 const lastPreservedName = this.setUtils.getLastElement(this.preservedNamesSet)
 
                 if (lastPreservedName) {
@@ -320,7 +331,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             return lastMangledName
         }
 
-        return MangledIdentifierNamesGenerator.initMangledNameCharacter
+        return MangledUnicodeIdentifierNamesGenerator.initMangledNameCharacter
     }
 
     /**
@@ -330,6 +341,6 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private getLastMangledNameForLabel(label: string): string {
         const lastMangledName: string | null = this.lastMangledNameForLabelMap.get(label) ?? null
 
-        return lastMangledName ?? MangledIdentifierNamesGenerator.initMangledNameCharacter
+        return lastMangledName ?? MangledUnicodeIdentifierNamesGenerator.initMangledNameCharacter
     }
 }

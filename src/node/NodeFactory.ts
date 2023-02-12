@@ -410,6 +410,7 @@ export class NodeFactory {
             type: NodeType.Literal,
             value,
             raw,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'x-verbatim-property': {
                 content: raw,
                 precedence: escodegen.Precedence.Primary

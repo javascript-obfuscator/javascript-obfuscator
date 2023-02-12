@@ -80,7 +80,7 @@ export abstract class AbstractTransformerNamesGroupsBuilder <
             const transformer: TTransformer = normalizedTransformers[transformerName];
 
             const runAfterRelations: TTransformerName[] | undefined = transformer.runAfter;
-            const areRunAfterRelationsEmpty = !runAfterRelations || !runAfterRelations.length;
+            const areRunAfterRelationsEmpty = !runAfterRelations?.length;
 
             if (areRunAfterRelationsEmpty) {
                 relationEdges.push([transformerName, null]);

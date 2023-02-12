@@ -70,7 +70,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     public transformNode (rootNode: ESTree.Program): ESTree.Node {
         rootNode = this.filterCommentsOnPrimaryTraverse(rootNode);
 
-        if (!rootNode.comments || !rootNode.comments.length) {
+        if (!rootNode.comments?.length) {
             return rootNode;
         }
 

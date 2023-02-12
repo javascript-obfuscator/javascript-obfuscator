@@ -91,7 +91,7 @@ export class ASTParserFacade {
         errorMessage: string,
         position: ESTree.Position | null
     ): never {
-        const isMissingLocationData = !position || !position.line || !position.column;
+        const isMissingLocationData = !position?.line || !position.column;
 
         if (isMissingLocationData) {
             throw new Error(errorMessage);

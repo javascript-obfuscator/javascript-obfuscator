@@ -117,7 +117,7 @@ export class NodeUtils {
      * @param {T} node
      * @returns {T}
      */
-    private static cloneRecursive <T> (node: T): T {
+    private static cloneRecursive <T> (node: NonNullable<T>): T {
         if (node === null) {
             return node;
         }

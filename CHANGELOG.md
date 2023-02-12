@@ -1,5 +1,10 @@
 Change Log
 
+v4.0.2
+---
+* Add support for `node@18`
+* Update dependencies
+
 v4.0.1
 ---
 * Update `class-validator` dependency https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1146

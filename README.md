@@ -43,7 +43,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 
 #### You can support this project by donating:
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
-* (Bitcoin) bc1q203p8nyrstwm7vwzjg3h9l9t6y9ka0umw0rx96
+* (Bitcoin) 1MNXkE3mzoicYPQv29cxvXnsz1vxxsuBRy
 
 Huge thanks to all supporters!
 

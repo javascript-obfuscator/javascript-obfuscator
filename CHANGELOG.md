@@ -1,5 +1,9 @@
 Change Log
 
+v4.1.0
+---
+* Add target `service-worker`
+
 v4.0.2
 ---
 * Add support for `node@18`

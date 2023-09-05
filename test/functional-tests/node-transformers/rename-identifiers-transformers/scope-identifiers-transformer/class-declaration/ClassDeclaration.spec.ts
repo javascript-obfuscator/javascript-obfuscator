@@ -227,6 +227,87 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         });
                     });
                 });
+
+                describe('Variant #3: target `service-worker', () => {
+                    describe('Variant #1: correct class name references in global scope', () => {
+                        const classNameIdentifierRegExp: RegExp = /class A *\{/;
+                        const outerClassNameReferenceRegExp: RegExp = /console\['log']\(A\);/;
+                        const innerClassNameReferenceRegExp: RegExp = /return A;/;
+
+                        let obfuscatedCode: string;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    target: ObfuscationTarget.ServiceWorker
+                                }
+                            ).getObfuscatedCode();
+                        });
+
+                        it('match #1: shouldn\'t transform class name', () => {
+                            assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                        });
+
+                        it('match #2: shouldn\'t transform class name reference outside of class', () => {
+                            assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
+                        });
+
+                        it('match #3: shouldn\'t transform class name reference inside class', () => {
+                            assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+                    });
+
+                    describe('Variant #2: correct class name references in function scope', () => {
+                        const classNameIdentifierRegExp: RegExp = /class (_0x[a-f0-9]{4,6}) *\{/;
+                        const outerClassNameReferenceRegExp: RegExp = /console\['log']\((_0x[a-f0-9]{4,6})\);/;
+                        const innerClassNameReferenceRegExp: RegExp = /return (_0x[a-f0-9]{4,6});/;
+
+                        let obfuscatedCode: string;
+                        let classNameIdentifier: string;
+                        let outerClassNameReferenceIdentifierName: string;
+                        let innerClassNameReferenceIdentifierName: string;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    target: ObfuscationTarget.ServiceWorker
+                                }
+                            ).getObfuscatedCode();
+
+                            classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #1: should transform class name', () => {
+                            assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                        });
+
+                        it('match #2: should transform class name reference outside of class', () => {
+                            assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
+                        });
+
+                        it('match #3: should transform class name reference inside class', () => {
+                            assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #4: should generate same identifier names for class name and outer class name reference', () => {
+                            assert.equal(classNameIdentifier, outerClassNameReferenceIdentifierName);
+                        });
+
+                        it('match #5: should generate same identifier names for class name and inner class name reference', () => {
+                            assert.equal(classNameIdentifier, innerClassNameReferenceIdentifierName);
+                        });
+                    });
+                });
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
@@ -450,6 +531,104 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                                     ...NO_ADDITIONAL_NODES_PRESET,
                                     renameGlobals: true,
                                     target: ObfuscationTarget.Node
+                                }
+                            ).getObfuscatedCode();
+
+                            classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #1: should transform class name', () => {
+                            assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                        });
+
+                        it('match #2: should transform class name reference outside of class', () => {
+                            assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
+                        });
+
+                        it('match #3: should transform class name reference inside class', () => {
+                            assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #4: should generate same identifier names for class name and outer class name reference', () => {
+                            assert.equal(classNameIdentifier, outerClassNameReferenceIdentifierName);
+                        });
+
+                        it('match #5: should generate same identifier names for class name and inner class name reference', () => {
+                            assert.equal(classNameIdentifier, innerClassNameReferenceIdentifierName);
+                        });
+                    });
+                });
+
+                describe('Variant #4: target: `service-worker', () => {
+                    describe('Variant #1: correct class name references in global scope', () => {
+                        const classNameIdentifierRegExp: RegExp = /class (_0x[a-f0-9]{4,6}) *\{/;
+                        const outerClassNameReferenceRegExp: RegExp = /console\['log']\((_0x[a-f0-9]{4,6})\);/;
+                        const innerClassNameReferenceRegExp: RegExp = /return (_0x[a-f0-9]{4,6});/;
+
+                        let obfuscatedCode: string;
+                        let classNameIdentifier: string;
+                        let outerClassNameReferenceIdentifierName: string;
+                        let innerClassNameReferenceIdentifierName: string;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    renameGlobals: true,
+                                    target: ObfuscationTarget.ServiceWorker
+                                }
+                            ).getObfuscatedCode();
+
+                            classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #1: should transform class name', () => {
+                            assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                        });
+
+                        it('match #2: should transform class name reference outside of class', () => {
+                            assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
+                        });
+
+                        it('match #3: should transform class name reference inside class', () => {
+                            assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
+                        });
+
+                        it('match #4: should generate same identifier names for class name and outer class name reference', () => {
+                            assert.equal(classNameIdentifier, outerClassNameReferenceIdentifierName);
+                        });
+
+                        it('match #5: should generate same identifier names for class name and inner class name reference', () => {
+                            assert.equal(classNameIdentifier, innerClassNameReferenceIdentifierName);
+                        });
+                    });
+
+                    describe('Variant #2: correct class name references in function scope', () => {
+                        const classNameIdentifierRegExp: RegExp = /class (_0x[a-f0-9]{4,6}) *\{/;
+                        const outerClassNameReferenceRegExp: RegExp = /console\['log']\((_0x[a-f0-9]{4,6})\);/;
+                        const innerClassNameReferenceRegExp: RegExp = /return (_0x[a-f0-9]{4,6});/;
+
+                        let obfuscatedCode: string;
+                        let classNameIdentifier: string;
+                        let outerClassNameReferenceIdentifierName: string;
+                        let innerClassNameReferenceIdentifierName: string;
+
+                        before(() => {
+                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                                code,
+                                {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    renameGlobals: true,
+                                    target: ObfuscationTarget.ServiceWorker
                                 }
                             ).getObfuscatedCode();
 

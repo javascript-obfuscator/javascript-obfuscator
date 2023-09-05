@@ -9,10 +9,8 @@ import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helper
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { ConsoleOutputDisableTemplate } from './templates/ConsoleOutputDisableTemplate';
-import { GlobalVariableNoEvalTemplate } from '../common/templates/GlobalVariableNoEvalTemplate';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -78,14 +76,10 @@ export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected override getCodeHelperTemplate (): string {
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? this.getGlobalVariableTemplate()
-            : GlobalVariableNoEvalTemplate();
-
         return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             consoleLogDisableFunctionName: this.consoleOutputDisableFunctionName,
-            globalVariableTemplate
+            globalVariableTemplate: this.getGlobalVariableTemplate(),
         });
     }
 }

@@ -415,7 +415,7 @@ export class Options implements IOptions {
     /**
      * @type {ObfuscationTarget}
      */
-    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node])
+    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node, ObfuscationTarget.ServiceWorker])
     public readonly target!: TTypeFromEnum<typeof ObfuscationTarget>;
 
     /**

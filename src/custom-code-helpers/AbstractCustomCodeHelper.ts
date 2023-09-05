@@ -13,6 +13,9 @@ import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
 import { GlobalVariableTemplate1 } from './common/templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from './common/templates/GlobalVariableTemplate2';
+import { ObfuscationTarget } from '../enums/ObfuscationTarget';
+import { GlobalVariableNoEvalTemplate } from './common/templates/GlobalVariableNoEvalTemplate';
+import { GlobalVariableServiceWorkerTemplate } from './common/templates/GlobalVariableServiceWorkerTemplate';
 
 @injectable()
 export abstract class AbstractCustomCodeHelper <
@@ -97,9 +100,16 @@ export abstract class AbstractCustomCodeHelper <
      * @returns {string}
      */
     protected getGlobalVariableTemplate (): string {
-        return this.randomGenerator
-            .getRandomGenerator()
-            .pickone(AbstractCustomCodeHelper.globalVariableTemplateFunctions);
+        switch (this.options.target) {
+            case ObfuscationTarget.BrowserNoEval:
+                return GlobalVariableNoEvalTemplate();
+            case ObfuscationTarget.ServiceWorker:
+                return GlobalVariableServiceWorkerTemplate();
+            default:
+                return this.randomGenerator
+                    .getRandomGenerator()
+                    .pickone(AbstractCustomCodeHelper.globalVariableTemplateFunctions);
+        }
     }
 
     /**

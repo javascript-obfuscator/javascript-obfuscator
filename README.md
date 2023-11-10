@@ -4,6 +4,45 @@
   Author: Timofey Kachalov
   -->
 
+This version of javascript obfuscator runs differently from the original. New syntax is:
+
+`./javascript-obfuscator "base64 encoded jscript" --options`
+
+The output is sent to stdout instead of a file.
+
+
+Requirements: npm
+
+to compile:
+```
+npm install -g n
+n 18.18.2
+hash -r
+npm install -g npm@latest
+npm install -g pkg yarn
+npm install
+npm run build && npm run build:typings
+pkg .
+```
+
+After running pkg, javascript-obfuscator-linux, javascript-obfuscator-macos, and javascript-obfuscator-windows.exe should be in the root project directory.
+
+To test the executable run one of the following:
+```
+javascript-obfuscator-linux "V1NjcmlwdC5FY2hvKCd0ZXN0Jyk7" --compact true
+javascript-obfuscator-macos "V1NjcmlwdC5FY2hvKCd0ZXN0Jyk7" --compact true
+javascript-obfuscator-windows.exe "V1NjcmlwdC5FY2hvKCd0ZXN0Jyk7" --compact true
+```
+
+
+Please check out the [original project](https://github.com/javascript-obfuscator/javascript-obfuscator)
+
+
+
+
+The original project is located here: https://github.com/javascript-obfuscator/javascript-obfuscator
+
+
 #### You can support this project by donating:
 * (Github) https://github.com/sponsors/sanex3339
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
@@ -57,345 +96,18 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
 
-## Installation
-
-#### Using Yarn or NPM
-
-Install the package with Yarn or NPM and add it to your `dependencies` or `devDependencies`:
-
-```sh
-$ yarn add --dev javascript-obfuscator
-```
-or
-```sh
-$ npm install --save-dev javascript-obfuscator
-```
-
-#### In a Browser
-
-From CDN:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
-```
-
-From `node_modules`:
-
-```html
-<script src="./node_modules/javascript-obfuscator/dist/index.browser.js"></script>
-```
 
 ## Usage
 
-```javascript
-var JavaScriptObfuscator = require('javascript-obfuscator');
 
-var obfuscationResult = JavaScriptObfuscator.obfuscate(
-    `
-        (function(){
-            var variable1 = '5' - 3;
-            var variable2 = '5' + 3;
-            var variable3 = '5' + - '2';
-            var variable4 = ['10','10','10','10','10'].map(parseInt);
-            var variable5 = 'foo ' + 1 + 1;
-            console.log(variable1);
-            console.log(variable2);
-            console.log(variable3);
-            console.log(variable4);
-            console.log(variable5);
-        })();
-    `,
-    {
-        compact: false,
-        controlFlowFlattening: true,
-        controlFlowFlatteningThreshold: 1,
-        numbersToExpressions: true,
-        simplify: true,
-        stringArrayShuffle: true,
-        splitStrings: true,
-        stringArrayThreshold: 1
-    }
-);
-
-console.log(obfuscationResult.getObfuscatedCode());
-/*
-var _0x9947 = [
-    'map',
-    'log',
-    'foo\x20',
-    'bvmqO',
-    '133039ViRMWR',
-    'xPfLC',
-    'ytpdx',
-    '1243717qSZCyh',
-    '2|7|4|6|9|',
-    '1ErtbCr',
-    '1608314VKvthn',
-    '1ZRaFKN',
-    'XBoAA',
-    '423266kQOYHV',
-    '3|0|5|8|1',
-    '235064xPNdKe',
-    '13RUDZfG',
-    '157gNPQGm',
-    '1639212MvnHZL',
-    'rDjOa',
-    'iBHph',
-    '9926iRHoRl',
-    'split'
-];
-function _0x33e4(_0x1809b5, _0x37ef6e) {
-    return _0x33e4 = function (_0x338a69, _0x39ad79) {
-        _0x338a69 = _0x338a69 - (0x1939 + -0xf * 0x1f3 + 0x1 * 0x469);
-        var _0x2b223a = _0x9947[_0x338a69];
-        return _0x2b223a;
-    }, _0x33e4(_0x1809b5, _0x37ef6e);
-}
-(function (_0x431d87, _0x156c7f) {
-    var _0x10cf6e = _0x33e4;
-    while (!![]) {
-        try {
-            var _0x330ad1 = -parseInt(_0x10cf6e(0x6c)) * -parseInt(_0x10cf6e(0x6d)) + -parseInt(_0x10cf6e(0x74)) * -parseInt(_0x10cf6e(0x78)) + parseInt(_0x10cf6e(0x6a)) + -parseInt(_0x10cf6e(0x70)) + parseInt(_0x10cf6e(0x6e)) * -parseInt(_0x10cf6e(0x75)) + parseInt(_0x10cf6e(0x72)) + -parseInt(_0x10cf6e(0x67)) * parseInt(_0x10cf6e(0x73));
-            if (_0x330ad1 === _0x156c7f)
-                break;
-            else
-                _0x431d87['push'](_0x431d87['shift']());
-        } catch (_0x9f878) {
-            _0x431d87['push'](_0x431d87['shift']());
-        }
-    }
-}(_0x9947, -0xb6270 + 0x4dfd2 * 0x2 + 0x75460 * 0x2), function () {
-    var _0x1f346d = _0x33e4, _0x860db8 = {
-            'ytpdx': _0x1f346d(0x6b) + _0x1f346d(0x71),
-            'bvmqO': function (_0x560787, _0x519b9e) {
-                return _0x560787 - _0x519b9e;
-            },
-            'rDjOa': function (_0x4501fe, _0x2b07a3) {
-                return _0x4501fe + _0x2b07a3;
-            },
-            'xPfLC': function (_0x5f3c9b, _0x434936) {
-                return _0x5f3c9b + _0x434936;
-            },
-            'XBoAA': function (_0x535b8a, _0x42eef4) {
-                return _0x535b8a + _0x42eef4;
-            },
-            'iBHph': _0x1f346d(0x65)
-        }, _0x346c55 = _0x860db8[_0x1f346d(0x69)][_0x1f346d(0x79)]('|'), _0x3bf817 = 0x4bb * 0x1 + 0x801 + -0xcbc;
-    while (!![]) {
-        switch (_0x346c55[_0x3bf817++]) {
-        case '0':
-            console[_0x1f346d(0x7b)](_0x4c96d8);
-            continue;
-        case '1':
-            console[_0x1f346d(0x7b)](_0x101028);
-            continue;
-        case '2':
-            var _0x65977d = _0x860db8[_0x1f346d(0x66)]('5', -0x586 + -0x2195 + -0x6 * -0x685);
-            continue;
-        case '3':
-            console[_0x1f346d(0x7b)](_0x65977d);
-            continue;
-        case '4':
-            var _0x56d39b = _0x860db8[_0x1f346d(0x76)]('5', -'2');
-            continue;
-        case '5':
-            console[_0x1f346d(0x7b)](_0x56d39b);
-            continue;
-        case '6':
-            var _0x544285 = [
-                '10',
-                '10',
-                '10',
-                '10',
-                '10'
-            ][_0x1f346d(0x7a)](parseInt);
-            continue;
-        case '7':
-            var _0x4c96d8 = _0x860db8[_0x1f346d(0x68)]('5', 0x622 * -0x6 + 0x4a * 0x3 + 0x1 * 0x23f1);
-            continue;
-        case '8':
-            console[_0x1f346d(0x7b)](_0x544285);
-            continue;
-        case '9':
-            var _0x101028 = _0x860db8[_0x1f346d(0x6f)](_0x860db8[_0x1f346d(0x6f)](_0x860db8[_0x1f346d(0x77)], 0x6fb * 0x5 + 0x1ebf * 0x1 + -0x41a5), 0x209 * 0xa + 0x1314 + -0x276d);
-            continue;
-        }
-        break;
-    }
-}());
-*/
-```
-
-### `obfuscate(sourceCode, options)`
-
-Returns `ObfuscationResult` object which contains two public methods:
-
-* `getObfuscatedCode()` - returns `string` with obfuscated code;
-* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`;
-* `getIdentifierNamesCache()` - returns object with identifier names cache if `identifierNamesCache` option is enabled, `null` overwise.
-
-Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
-
-Method takes two parameters, `sourceCode` and `options` – the source code and the options respectively:
-
-* `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;
-* `options` (`Object`, default: `null`) – an object with options.
-
-For available options, see [options](#options).
-
-### `obfuscateMultiple(sourceCodesObject, options)`
-
-Accepts `sourceCodesObject` that is a map which keys are identifiers of source codes and values are source codes:
-```
-{
-    foo: 'var foo = 1;',
-    bar: 'var bar = 2;'
-}
-```
-
-Returns a map object which keys are identifiers of source codes and values are `ObfuscationResult` objects.
-
-### `getOptionsByPreset(optionsPreset)`
-
-Returns an options object for the passed options preset name.
-
-## CLI usage
-
-See [CLI options](#cli-options).
-
-#### Obfuscate single file
-
-Usage:
+CLI Usage:
 ```sh
-javascript-obfuscator input_file_name.js [options]
-javascript-obfuscator input_file_name.js --output output_file_name.js [options]
-javascript-obfuscator input_file_name.js --output output_folder_name [options]
-javascript-obfuscator input_folder_name --output output_folder_name [options]
+javascript-obfuscator "base64 encoded jscript" [options]
 ```
-
-Obfuscation of single input file with `.js` extension.
-
-If the destination path is not specified with the `--output` option, the obfuscated file will be saved into the input file directory, with `INPUT_FILE_NAME-obfuscated.js` name.
 
 Some examples:
 ```sh
-javascript-obfuscator samples/sample.js --compact true --self-defending false
-// creates a new file samples/sample-obfuscated.js
-
-javascript-obfuscator samples/sample.js --output output/output.js --compact true --self-defending false
-// creates a new file output/output.js
-```
-
-#### Obfuscate directory recursively
-
-Usage:
-```sh
-javascript-obfuscator ./dist [options]
-// creates a new obfuscated files under `./dist` directory near the input files with `obfuscated` postfix
-
-javascript-obfuscator ./dist --output ./dist/obfuscated [options]
-// creates a folder structure with obfuscated files under `./dist/obfuscated` path
-```
-
-Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
-
-Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
-
-## Conditional comments
-You can disable and enable obfuscation for specific parts of the code by adding following comments: 
-* disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
-* enable: `// javascript-obfuscator:enable` or `/* javascript-obfuscator:enable */`.
-
-Example:
-```javascript
-// input
-var foo = 1;
-// javascript-obfuscator:disable
-var bar = 2;
-
-// output
-var _0xabc123 = 0x1;
-var bar = 2;
-```
-Conditional comments affect only direct transformations of AST-tree nodes. All child transformations still will be applied to the AST-tree nodes. 
-
-For example:
-* Obfuscation of the variable's name at its declaration is called direct transformation;
-* Obfuscation of the variable's name beyond its declaration is called child transformation.
-
-## Kind of variables
-
-Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
-
-## Conflicts of identifier names between different files
-
-During obfuscation of the different files, the same names can be generated for the global identifiers between these files.
-To prevent this set the unique prefix for all global identifiers for each obfuscated file with [`identifiersPrefix`](#identifiersprefix) option. 
-
-When using CLI this prefix will be added automatically.
-
-## JavaScript Obfuscator Options
-
-Following options are available for the JS Obfuscator:
-
-#### options:
-
-```javascript
-{
-    compact: true,
-    controlFlowFlattening: false,
-    controlFlowFlatteningThreshold: 0.75,
-    deadCodeInjection: false,
-    deadCodeInjectionThreshold: 0.4,
-    debugProtection: false,
-    debugProtectionInterval: 0,
-    disableConsoleOutput: false,
-    domainLock: [],
-    domainLockRedirectUrl: 'about:blank',
-    forceTransformStrings: [],
-    identifierNamesCache: null,
-    identifierNamesGenerator: 'hexadecimal',
-    identifiersDictionary: [],
-    identifiersPrefix: '',
-    ignoreImports: false,
-    inputFileName: '',
-    log: false,
-    numbersToExpressions: false,
-    optionsPreset: 'default',
-    renameGlobals: false,
-    renameProperties: false,
-    renamePropertiesMode: 'safe',
-    reservedNames: [],
-    reservedStrings: [],
-    seed: 0,
-    selfDefending: false,
-    simplify: true,
-    sourceMap: false,
-    sourceMapBaseUrl: '',
-    sourceMapFileName: '',
-    sourceMapMode: 'separate',
-    sourceMapSourcesMode: 'sources-content',
-    splitStrings: false,
-    splitStringsChunkLength: 10,
-    stringArray: true,
-    stringArrayCallsTransform: true,
-    stringArrayCallsTransformThreshold: 0.5,
-    stringArrayEncoding: [],
-    stringArrayIndexesType: [
-        'hexadecimal-number'
-    ],
-    stringArrayIndexShift: true,
-    stringArrayRotate: true,
-    stringArrayShuffle: true,
-    stringArrayWrappersCount: 1,
-    stringArrayWrappersChainedCalls: true,
-    stringArrayWrappersParametersMaxCount: 2,
-    stringArrayWrappersType: 'variable',
-    stringArrayThreshold: 0.75,
-    target: 'browser',
-    transformObjectKeys: false,
-    unicodeEscapeSequence: false
-}
+javascript-obfuscator "V1NjcmlwdC5FY2hvKCd0ZXN0Jyk7" --compact true --self-defending false
 ```
 
 #### CLI options:
@@ -745,68 +457,6 @@ Currently the two types of the identifiers are supported:
 - Property identifiers, only when `renameProperties` option is enabled:
     * All property identifiers will be written to the cache;
     * All matched property identifiers will be replaced by the values from the cache.
-
-#### Node.js API
-If a `null` value is passed, completely disables the cache.
-
-If an empty object (`{}`) is passed, enables the writing identifier names to the cache-object (`TIdentifierNamesCache` type). This cache-object will be accessed through the `getIdentifierNamesCache` method call of `ObfuscationResult` object.
-
-The resulting cache-object can be next used as `identifierNamesGenerator` option value for using these names during obfuscation of all matched identifier names of next sources.
-
-Example:
-```ts
-const source1ObfuscationResult = JavaScriptObfuscator.obfuscate(
-    `
-        function foo(arg) {
-           console.log(arg)
-        }
-        
-        function bar() {
-            var bark = 2;
-        }
-    `,
-    {
-        compact: false,
-        identifierNamesCache: {},
-        renameGlobals: true
-    }
-)
-
-console.log(source1ObfuscationResult.getIdentifierNamesCache());
-/*
-    { 
-        globalIdentifiers: {
-            foo: '_0x5de86d',
-            bar: '_0x2a943b'
-        }
-    }
-*/
-
-
-
-const source2ObfuscationResult = JavaScriptObfuscator.obfuscate(
-    `
-        // Expecting that these global functions are defined in another obfuscated file
-        foo(1);
-        bar();
-        
-        // Expecting that this global function is defined in third-party package
-        baz();
-    `,
-    {
-        compact: false,
-        identifierNamesCache: source1ObfuscationResult.getIdentifierNamesCache(),
-        renameGlobals: true
-    }
-)
-
-console.log(source2ObfuscationResult.getObfuscatedCode());
-/*
-    _0x5de86d(0x1);
-    _0x2a943b();
-    baz();
- */
-```
 
 #### CLI
 CLI has a different option `--identifier-names-cache-path` that allows defining a path to the existing `.json` file that will be used to read and write identifier names cache.
@@ -1645,14 +1295,6 @@ The performance will be at a relatively normal level
 ### What javascript versions are supported?
 
 `es3`, `es5`, `es2015`, `es2016`, `es2017`, `es2018`, `es2019` and partially `es2020`
-
-### I want to use feature that described in `README.md` but it's not working!
-
-The README on the master branch might not match that of the latest stable release.
-
-### Why CLI command not working?
-
-Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
 
 ### Online version?
 

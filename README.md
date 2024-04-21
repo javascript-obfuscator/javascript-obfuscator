@@ -1188,7 +1188,7 @@ Each `stringArray` value will be encoded by the randomly picked encoding from th
 Available values:
 * `'none'` (`boolean`): doesn't encode `stringArray` value
 * `'base64'` (`string`): encodes `stringArray` value using `base64`
-* `'rc4'` (`string`): encodes `stringArray` value using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It's recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option when using `rc4` encoding to prevent very large size of obfuscated code.
+* `'rc4'` (`string`): encodes `stringArray` value using `rc4`. **About 30-50% slower than `base64`, but harder to get initial values.** It's recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option when using `rc4` encoding to prevent very large size of obfuscated code.
 
 For example with the following option values some `stringArray` value won't be encoded, and some values will be encoded with `base64` and `rc4` encoding:
 

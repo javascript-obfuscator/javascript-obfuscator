@@ -74,6 +74,14 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
                     );
 
                     break;
+                    
+                case IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator:
+                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                        ServiceIdentifiers.IIdentifierNamesGenerator,
+                        IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator
+                    );
+
+                    break;
 
                 case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
                 default:

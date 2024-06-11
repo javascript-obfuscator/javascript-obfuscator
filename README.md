@@ -419,7 +419,7 @@ Following options are available for the JS Obfuscator:
     --exclude '<list>' (comma separated)
     --force-transform-strings '<list>' (comma separated)
     --identifier-names-cache-path <string>
-    --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled]
+    --identifier-names-generator <string> [dictionary, hexadecimal, mangled, mangled-shuffled, mangled-unicode]
     --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --ignore-imports <boolean>
@@ -824,6 +824,7 @@ Available values:
 * `dictionary`: identifier names from [`identifiersDictionary`](#identifiersdictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
+* `mangled-unicode`: short identifier names like `甲`, `乙`, `丙`
 * `mangled-shuffled`: same as `mangled` but with shuffled alphabet
 
 ### `identifiersDictionary`

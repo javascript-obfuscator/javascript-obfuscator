@@ -167,7 +167,8 @@ export class Options implements IOptions {
         IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-        IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+        IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
+        IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator
     ])
     public readonly identifierNamesGenerator!: TTypeFromEnum<typeof IdentifierNamesGenerator>;
 

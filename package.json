@@ -72,7 +72,7 @@
     "cross-env": "7.0.3",
     "eslint": "8.34.0",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-jsdoc": "40.0.0",
+    "eslint-plugin-jsdoc": "^48.0.0",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-unicorn": "45.0.2",

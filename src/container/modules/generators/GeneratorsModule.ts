@@ -10,6 +10,7 @@ import { DictionaryIdentifierNamesGenerator } from '../../../generators/identifi
 import { HexadecimalIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator';
 import { MangledIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledIdentifierNamesGenerator';
 import { MangledShuffledIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledShuffledIdentifierNamesGenerator';
+import { MangledUnicodeIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledUnicodeIdentifierNamesGenerator';
 
 export const generatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // identifier name generators
@@ -32,6 +33,11 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         .to(MangledShuffledIdentifierNamesGenerator)
         .inSingletonScope()
         .whenTargetNamed(IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator);
+
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
+        .to(MangledUnicodeIdentifierNamesGenerator)
+        .inSingletonScope()
+        .whenTargetNamed(IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator);
 
     // identifier name generator factory
     function identifierNameGeneratorFactory (): (context: interfaces.Context) => (options: IOptions) => IIdentifierNamesGenerator {
@@ -65,6 +71,14 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
                     identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
                         ServiceIdentifiers.IIdentifierNamesGenerator,
                         IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+                    );
+
+                    break;
+                    
+                case IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator:
+                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                        ServiceIdentifiers.IIdentifierNamesGenerator,
+                        IdentifierNamesGenerator.MangledUnicodeIdentifierNamesGenerator
                     );
 
                     break;

@@ -1674,6 +1674,10 @@ See: [`Kind of variables`](#kind-of-variables)
 
 Try `renamePropertiesMode: 'safe'` option, if it still doesn't work, just disable this option.
 
+## GitHub Sponsors
+
+<a href="https://github.com/microsoft" target="_blank"><img src="https://avatars.githubusercontent.com/u/6154722?s=200&v=4"></a>
+
 ## Backers
 
 Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/javascript-obfuscator#backer)]
@@ -1710,7 +1714,7 @@ Support us with a monthly donation and help us continue our activities. [[Become
 <a href="https://opencollective.com/javascript-obfuscator/backer/29/website" target="_blank"><img src="https://opencollective.com/javascript-obfuscator/backer/29/avatar.svg"></a>
 
 
-## Sponsors
+## Open Collective Sponsors
 
 Become a sponsor and get your logo on our README on Github with a link to your site.
 
@@ -1729,7 +1733,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_large)
 
-Copyright (C) 2016-2022 [Timofey Kachalov](http://github.com/sanex3339).
+Copyright (C) 2016-2024 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

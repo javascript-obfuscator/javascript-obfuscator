@@ -1,5 +1,11 @@
 Change Log
 
+v4.1.1
+---
+* Update supported Node.js versions up to `node@22`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1100
+* Update `class-validator` version. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1247
+* Fixed CI
+
 v4.1.0
 ---
 * Add target `service-worker`

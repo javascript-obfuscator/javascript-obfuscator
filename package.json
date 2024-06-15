@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -27,7 +27,7 @@
     "assert": "2.0.0",
     "chalk": "4.1.2",
     "chance": "1.1.9",
-    "class-validator": "0.14.0",
+    "class-validator": "0.14.1",
     "commander": "10.0.0",
     "eslint-scope": "7.1.1",
     "eslint-visitor-keys": "3.3.0",

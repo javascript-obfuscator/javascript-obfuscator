@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": "^12.22.0 || ^14.0.0 || ^16.0.0 || ^17.0.0 || >=18.0.0"
+    "node": ">=12.22.0"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",
@@ -72,7 +72,7 @@
     "cross-env": "7.0.3",
     "eslint": "8.34.0",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-jsdoc": "40.0.0",
+    "eslint-plugin-jsdoc": "48.2.12",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-unicorn": "45.0.2",
@@ -81,7 +81,7 @@
     "fork-ts-checker-webpack-plugin": "7.3.0",
     "husky": "8.0.3",
     "js-beautify": "1.14.7",
-    "mocha": "10.2.0",
+    "mocha": "10.4.0",
     "nyc": "15.1.0",
     "pjson": "1.0.9",
     "rimraf": "4.1.2",
@@ -111,10 +111,10 @@
     "test:devCompilePerformance": "ts-node test/dev/dev-compile-performance.ts",
     "test:devRuntimePerformance": "ts-node test/dev/dev-runtime-performance.ts",
     "test:full": "yarn run test:dev && yarn run test:mocha-coverage && yarn run test:mocha-memory-performance",
-    "test:mocha": "mocha --require source-map-support/register test/index.spec.ts --exit",
+    "test:mocha": "mocha --require ts-node/register --require source-map-support/register test/index.spec.ts --exit",
     "test:mocha-coverage": "cross-env NODE_OPTIONS=--max-old-space-size=4096 nyc --reporter text-summary --no-clean yarn run test:mocha",
     "test:mocha-coverage:report": "nyc report --reporter=lcov",
-    "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=280 mocha test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
+    "test:mocha-memory-performance": "cross-env NODE_OPTIONS=--max-old-space-size=280 mocha --require ts-node/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts",
     "test": "yarn run test:full",
     "eslint": "eslint src/**/*.ts",
     "git:addFiles": "git add .",

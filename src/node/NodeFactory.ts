@@ -271,21 +271,21 @@ export class NodeFactory {
     }
 
     /**
-     * @param {boolean} await
+     * @param {boolean} asAwait
      * @param {VariableDeclaration | Pattern} left
      * @param {Expression} right
      * @param {Statement} body
      * @returns {ForOfStatement}
      */
     public static forOfStatementNode (
-        await: boolean,
+        asAwait: boolean,
         left: ESTree.VariableDeclaration | ESTree.Pattern,
         right: ESTree.Expression,
         body: ESTree.Statement
     ): ESTree.ForOfStatement {
         return {
             type: NodeType.ForOfStatement,
-            await,
+            await: asAwait,
             left,
             right,
             body,

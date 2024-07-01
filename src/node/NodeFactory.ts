@@ -255,6 +255,7 @@ export class NodeFactory {
      * @param {Expression} right
      * @param {Statement} body
      * @returns {ForInStatement}
+     * test 3
      */
     public static forInStatementNode (
         left: ESTree.VariableDeclaration | ESTree.Pattern,

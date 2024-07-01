@@ -34,6 +34,7 @@ export declare function obfuscateMultiple <TSourceCodesObject extends TDictionar
 /**
  * @param {TOptionsPreset} optionsPreset
  * @returns {TInputOptions}
+ * test 2
  */
 export declare function getOptionsByPreset (optionsPreset: TOptionsPreset): TInputOptions;
 

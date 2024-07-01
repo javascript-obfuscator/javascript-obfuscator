@@ -24,6 +24,7 @@ export declare function obfuscate (sourceCode: string, inputOptions?: Obfuscator
  * @param {TSourceCodesObject} sourceCodesObject
  * @param {TInputOptions} inputOptions
  * @returns {TObfuscationResultsObject<TSourceCodesObject>}
+ * test
  */
 export declare function obfuscateMultiple <TSourceCodesObject extends TDictionary<string>> (
     sourceCodesObject: TSourceCodesObject,

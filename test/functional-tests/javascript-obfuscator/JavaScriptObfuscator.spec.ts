@@ -95,6 +95,41 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
+            describe('class function not obfuscated if option "reservedNames', () => {
+                let obfuscations: string[];
+
+                beforeEach(() => {
+                    obfuscations = []
+                    const code: string = readFileAsString(__dirname + '/fixtures/class-with-function.js');
+                    for (let i = 0; i < 100; i++) {
+                        const obfuscatedCode:string = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                controlFlowFlattening: true,
+                                deadCodeInjection: true,
+                                reservedNames: ['bar']
+                            }
+                        ).getObfuscatedCode();
+
+                        obfuscations.push(obfuscatedCode)
+                    }
+                });
+
+                it('class should always have "bar" function not obfuscated', () => {
+                    let obfuscated: number = 0;
+                    let notObfuscated: number = 0;
+                    for (const codeAsString of obfuscations) {
+                        if (codeAsString.includes("['bar']")) { notObfuscated++; }
+                        else { obfuscated++; }
+
+                    }
+
+                    console.log({obfuscated, notObfuscated})
+                    assert.equal(obfuscated, 0)
+                    assert.equal(notObfuscated, obfuscations.length)
+                });
+            });
+
             describe('invalid source code type', () => {
                 let obfuscatedCode: string;
 

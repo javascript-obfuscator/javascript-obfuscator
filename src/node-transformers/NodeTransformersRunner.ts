@@ -23,6 +23,8 @@ import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 import { NodeGuards } from '../node/NodeGuards';
 import { NodeMetadata } from '../node/NodeMetadata';
 
+import ProgressBar from 'progress';
+
 @injectable()
 export class NodeTransformersRunner implements INodeTransformersRunner {
     /**
@@ -74,8 +76,9 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             this.buildNormalizedNodeTransformers(nodeTransformerNames, nodeTransformationStage);
         const nodeTransformerNamesGroups: NodeTransformer[][] =
             this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
+        const nodeTransformerEntries = nodeTransformerNamesGroups.entries();
 
-        for (const nodeTransformerNamesGroup of nodeTransformerNamesGroups) {
+        for (const [i, nodeTransformerNamesGroup] of nodeTransformerEntries) {
             const enterVisitors: IVisitor[] = [];
             const leaveVisitors: IVisitor[] = [];
 
@@ -100,10 +103,39 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
                 continue;
             }
 
+            let totalNodes = 0;
+            estraverse.traverse(astTree, {enter: () => totalNodes+= enterVisitors.length + 1});
+            const nodeBar = new ProgressBar(
+                `Node Progress ${i + 1}/${nodeTransformerNamesGroups.length} [:bar] :percent :etas`,
+                {
+                    total: totalNodes,
+                    width: 40
+                }
+            );
+
             estraverse.replace(astTree, {
-                enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter),
-                leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)
+                enter: (node, parentNode) => {
+                    if (nodeBar.curr >= totalNodes) {
+                        totalNodes++;
+                        nodeBar.total = totalNodes;
+                    }
+                    nodeBar.tick();
+
+                    return  this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter, () => {
+                        if (nodeBar.curr >= totalNodes) {
+                            totalNodes++;
+                            nodeBar.total = totalNodes;
+                        }
+                        nodeBar.tick();
+                    })(node, parentNode);
+                },
+                leave: (node, parentNode) => {
+                    return this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)(node, parentNode);
+                }
             });
+
+            // Ensure that the progress bar is at 100% after the last node
+            nodeBar.update(1);
         }
 
         return astTree;
@@ -141,7 +173,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {TVisitorDirection} direction
      * @returns {TVisitorFunction}
      */
-    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
+    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection, visitorCallback?: () => void): TVisitorFunction {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {
@@ -154,6 +186,8 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             }
 
             for (let i: number = 0; i < visitorsLength; i++) {
+                visitorCallback?.();
+
                 const visitorFunction: TVisitorFunction | undefined = visitors[i][direction];
 
                 if (!visitorFunction) {

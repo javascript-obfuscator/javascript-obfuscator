@@ -104,38 +104,36 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             }
 
             let totalNodes = 0;
-            estraverse.traverse(astTree, {enter: () => totalNodes+= enterVisitors.length + 1});
+            estraverse.traverse(astTree, {enter: () => totalNodes++});
             const nodeBar = new ProgressBar(
-                `Node Progress ${i + 1}/${nodeTransformerNamesGroups.length} [:bar] :percent :etas`,
+                `Node Progress ${i + 1}/${nodeTransformerNamesGroups.length} [:bar] :current/:total (:percent) :etas`,
                 {
                     total: totalNodes,
-                    width: 40
+                    width: 40,
+                    clear: true
                 }
             );
 
             estraverse.replace(astTree, {
                 enter: (node, parentNode) => {
+                    // Ensure that the progress bar is not at 100% after the last node
                     if (nodeBar.curr >= totalNodes) {
                         totalNodes++;
                         nodeBar.total = totalNodes;
-                    }
-                    nodeBar.tick();
-
-                    return  this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter, () => {
-                        if (nodeBar.curr >= totalNodes) {
-                            totalNodes++;
-                            nodeBar.total = totalNodes;
-                        }
+                        nodeBar.complete = false;
+                        nodeBar.update(nodeBar.curr / nodeBar.total);
+                    } else {
                         nodeBar.tick();
-                    })(node, parentNode);
+                    }
+                    
+                    return  this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter)(node, parentNode);
                 },
-                leave: (node, parentNode) => {
-                    return this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)(node, parentNode);
-                }
+                leave: (node, parentNode) => this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)(node, parentNode)
             });
 
             // Ensure that the progress bar is at 100% after the last node
             nodeBar.update(1);
+            nodeBar.terminate();
         }
 
         return astTree;
@@ -173,7 +171,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {TVisitorDirection} direction
      * @returns {TVisitorFunction}
      */
-    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection, visitorCallback?: () => void): TVisitorFunction {
+    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {
@@ -186,8 +184,6 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             }
 
             for (let i: number = 0; i < visitorsLength; i++) {
-                visitorCallback?.();
-
                 const visitorFunction: TVisitorFunction | undefined = visitors[i][direction];
 
                 if (!visitorFunction) {

@@ -446,7 +446,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--dangerously_overwrite <boolean>',
+                '--dangerously-overwrite <boolean>',
                 'Enables overwriting the original files with obfuscated content',
                 BooleanSanitizer
             )
@@ -468,7 +468,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     private processSourceCodeData (sourceCodeData: IFileData[]): void {
         sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
-            const outputCodePath: string = this.inputCLIOptions.dangerously_overwrite
+            const outputCodePath: string = this.inputCLIOptions.dangerously-overwrite
                 ? filePath
                 : this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
 

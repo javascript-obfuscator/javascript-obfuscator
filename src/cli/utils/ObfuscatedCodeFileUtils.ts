@@ -36,7 +36,7 @@ export class ObfuscatedCodeFileUtils {
      * @returns {string}
      */
     public getOutputCodePath (filePath: string): string {
-        if (this.options.dangerously_overwrite) {
+        if (this.options.dangerously-overwrite) {
             return this.getOutputCodePathForOverwrite(filePath);
         }
 

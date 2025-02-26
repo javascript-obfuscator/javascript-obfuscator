@@ -305,7 +305,7 @@ Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfu
 
 Usage:
 ```sh
-javascript-obfuscator ./dist --dangerously_overwrite true [options]
+javascript-obfuscator ./dist --dangerously-overwrite true [options]
 // obfuscates all `.js` files under `./dist` directory and overwrites the original files with obfuscated content
 ```
 
@@ -407,7 +407,7 @@ Following options are available for the JS Obfuscator:
     target: 'browser',
     transformObjectKeys: false,
     unicodeEscapeSequence: false,
-    dangerously_overwrite: false
+    dangerously-overwrite: false
 }
 ```
 
@@ -470,7 +470,7 @@ Following options are available for the JS Obfuscator:
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
-    --dangerously_overwrite <boolean>
+    --dangerously-overwrite <boolean>
 ```
 
 <!-- ##options-start## -->

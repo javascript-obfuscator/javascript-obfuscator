@@ -528,7 +528,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
             });
 
-            describe('Variant #5: obfuscation of directory with `--dangerously_overwrite` option', () => {
+            describe('Variant #5: obfuscation of directory with `--dangerously-overwrite` option', () => {
                 const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
                 const outputFileName1: string = 'foo.js';
                 const outputFileName2: string = 'bar.js';
@@ -555,7 +555,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         'node',
                         'javascript-obfuscator',
                         directoryPath,
-                        '--dangerously_overwrite',
+                        '--dangerously-overwrite',
                         'true',
                         '--rename-globals',
                         'true'

@@ -36,6 +36,10 @@ export class ObfuscatedCodeFileUtils {
      * @returns {string}
      */
     public getOutputCodePath (filePath: string): string {
+        if (this.options.dangerously_overwrite) {
+            return this.getOutputCodePathForOverwrite(filePath);
+        }
+
         const normalizedFilePath: string = path.normalize(filePath);
         const normalizedRawOutputPath: string | null = this.options.output
             ? path.normalize(this.options.output)
@@ -83,6 +87,14 @@ export class ObfuscatedCodeFileUtils {
                 return normalizedRawOutputPath;
             }
         }
+    }
+
+    /**
+     * @param {string} filePath
+     * @returns {string}
+     */
+    private getOutputCodePathForOverwrite (filePath: string): string {
+        return path.normalize(filePath);
     }
 
     /**

@@ -301,6 +301,18 @@ Obfuscation of all `.js` files under input directory. If this directory contains
 
 Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
 
+#### Obfuscate directory recursively and overwrite original files
+
+Usage:
+```sh
+javascript-obfuscator ./dist --dangerously_overwrite true [options]
+// obfuscates all `.js` files under `./dist` directory and overwrites the original files with obfuscated content
+```
+
+Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
+
+Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
+
 ## Conditional comments
 You can disable and enable obfuscation for specific parts of the code by adding following comments: 
 * disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
@@ -394,7 +406,8 @@ Following options are available for the JS Obfuscator:
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
-    unicodeEscapeSequence: false
+    unicodeEscapeSequence: false,
+    dangerously_overwrite: false
 }
 ```
 
@@ -457,6 +470,7 @@ Following options are available for the JS Obfuscator:
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
+    --dangerously_overwrite <boolean>
 ```
 
 <!-- ##options-start## -->

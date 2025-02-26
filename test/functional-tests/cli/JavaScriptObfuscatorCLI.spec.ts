@@ -527,6 +527,73 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     });
                 });
             });
+
+            describe('Variant #5: obfuscation of directory with `--dangerously_overwrite` option', () => {
+                const directoryPath: string = path.join(fixturesDirName, 'directory-obfuscation');
+                const outputFileName1: string = 'foo.js';
+                const outputFileName2: string = 'bar.js';
+                const outputFileName3: string = 'baz.js';
+                const readFileEncoding = 'utf8';
+                const regExp1: RegExp = /^var a1_0x(\w){4,6} *= *0x1;$/;
+                const regExp2: RegExp = /^var a0_0x(\w){4,6} *= *0x2;$/;
+
+                let outputFixturesFilePath1: string,
+                    outputFixturesFilePath2: string,
+                    outputFixturesFilePath3: string,
+                    isFileExist1: boolean,
+                    isFileExist2: boolean,
+                    isFileExist3: boolean,
+                    fileContent1: string,
+                    fileContent2: string;
+
+                before(() => {
+                    outputFixturesFilePath1 = path.join(directoryPath, outputFileName1);
+                    outputFixturesFilePath2 = path.join(directoryPath, outputFileName2);
+                    outputFixturesFilePath3 = path.join(directoryPath, outputFileName3);
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        directoryPath,
+                        '--dangerously_overwrite',
+                        'true',
+                        '--rename-globals',
+                        'true'
+                    ]);
+
+                    isFileExist1 = fs.existsSync(outputFixturesFilePath1);
+                    isFileExist2 = fs.existsSync(outputFixturesFilePath2);
+                    isFileExist3 = fs.existsSync(outputFixturesFilePath3);
+
+                    fileContent1 = fs.readFileSync(outputFixturesFilePath1, readFileEncoding);
+                    fileContent2 = fs.readFileSync(outputFixturesFilePath2, readFileEncoding);
+                });
+
+                it(`should overwrite file \`${outputFileName1}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
+                    assert.equal(isFileExist1, true);
+                });
+
+                it(`should overwrite file \`${outputFileName2}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
+                    assert.equal(isFileExist2, true);
+                });
+
+                it(`shouldn't create file \`${outputFileName3}\` in \`${fixturesDirName}\` directory`, () => {
+                    assert.equal(isFileExist3, false);
+                });
+
+                it(`match #1: should overwrite file with obfuscated code with prefixed identifier`, () => {
+                    assert.match(fileContent1, regExp1);
+                });
+
+                it(`match #2: should overwrite file with obfuscated code with prefixed identifier`, () => {
+                    assert.match(fileContent2, regExp2);
+                });
+
+                after(() => {
+                    rimraf.sync(outputFixturesFilePath1);
+                    rimraf.sync(outputFixturesFilePath2);
+                });
+            });
         });
 
         describe('`--sourceMap` option is set', () => {

@@ -295,11 +295,6 @@ javascript-obfuscator ./dist [options]
 
 javascript-obfuscator ./dist --output ./dist/obfuscated [options]
 // creates a folder structure with obfuscated files under `./dist/obfuscated` path
-```
-
-Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
-
-Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
 
 #### Obfuscate directory recursively and overwrite original files
 
@@ -406,8 +401,7 @@ Following options are available for the JS Obfuscator:
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
-    unicodeEscapeSequence: false,
-    dangerously-overwrite: false
+    unicodeEscapeSequence: false
 }
 ```
 

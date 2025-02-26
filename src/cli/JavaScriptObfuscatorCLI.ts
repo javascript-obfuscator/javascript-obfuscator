@@ -468,7 +468,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     private processSourceCodeData (sourceCodeData: IFileData[]): void {
         sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
-            const outputCodePath: string = this.inputCLIOptions.dangerously-overwrite
+            const outputCodePath: string = this.inputCLIOptions.dangerouslyOverwrite
                 ? filePath
                 : this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
 

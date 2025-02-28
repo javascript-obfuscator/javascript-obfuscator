@@ -590,8 +590,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 after(() => {
-                    rimraf.sync(outputFixturesFilePath1);
-                    rimraf.sync(outputFixturesFilePath2);
+                    // instead recreate foo and bar files exactly as they were instead of deleting them
+                    fs.writeFileSync(outputFixturesFilePath1, 'var foo = 1;');
+                    fs.writeFileSync(outputFixturesFilePath2, 'var bar = 2;');
                 });
             });
         });

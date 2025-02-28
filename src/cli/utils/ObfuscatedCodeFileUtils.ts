@@ -90,14 +90,6 @@ export class ObfuscatedCodeFileUtils {
     }
 
     /**
-     * @param {string} filePath
-     * @returns {string}
-     */
-    private getOutputCodePathForOverwrite (filePath: string): string {
-        return path.normalize(filePath);
-    }
-
-    /**
      * @param {string} outputCodePath
      * @param {string} sourceMapFileName
      * @returns {string}
@@ -158,4 +150,12 @@ export class ObfuscatedCodeFileUtils {
             encoding: JavaScriptObfuscatorCLI.encoding
         });
     }
+    /**
+     * @param {string} filePath
+     * @returns {string}
+     */
+    private getOutputCodePathForOverwrite (filePath: string): string {
+        return path.normalize(filePath);
+    }
+
 }

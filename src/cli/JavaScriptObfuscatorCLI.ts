@@ -262,6 +262,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option('--log <boolean>', 'Enables logging of the information to the console', BooleanSanitizer)
             .option('--numbers-to-expressions <boolean>', 'Enables numbers conversion to expressions', BooleanSanitizer)
             .option(
+                '--numbers-to-hexadecimal <boolean>', 'Enables conversion of integer numbers to hexadecimal format',
+                BooleanSanitizer
+            )
+            .option(
                 '--options-preset <string>',
                 'Allows to set options preset. ' +
                     `Values: ${CLIUtils.stringifyOptionAvailableValues(OptionsPreset)}. ` +

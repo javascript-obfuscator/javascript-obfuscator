@@ -52,4 +52,52 @@ describe('NumberLiteralTransformer', () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
+
+    describe('numbersToHexadecimal option', () => {
+        describe('when numbersToHexadecimal is true (default)', () => {
+            const regExp: RegExp = /^setInterval\(sendHeartbeat, 0x3e8 \* 0x3c \* 0x1\);$/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = 'setInterval(sendHeartbeat, 1000 * 60 * 1);';
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToHexadecimal: true,
+                        compact: false
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should convert numbers to hexadecimal', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('when numbersToHexadecimal is false', () => {
+            const regExp: RegExp = /^setInterval\(sendHeartbeat, 1000 \* 60 \* 1\);$/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = 'setInterval(sendHeartbeat, 1000 * 60 * 1);';
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToHexadecimal: false,
+                        compact: false
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should keep numbers in decimal format', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+    });
 });

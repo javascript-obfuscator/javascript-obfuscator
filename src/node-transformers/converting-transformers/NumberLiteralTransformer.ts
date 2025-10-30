@@ -88,7 +88,7 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
         if (this.numberLiteralCache.has(literalValue)) {
             rawValue = <string>this.numberLiteralCache.get(literalValue);
         } else {
-            if (NumberUtils.isCeil(literalValue)) {
+            if (this.options.numbersToHexadecimal && NumberUtils.isCeil(literalValue)) {
                 rawValue = NumberUtils.toHex(literalValue);
             } else {
                 rawValue = String(literalValue);

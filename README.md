@@ -361,6 +361,7 @@ Following options are available for the JS Obfuscator:
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    numbersToHexadecimal: true,
     optionsPreset: 'default',
     renameGlobals: false,
     renameProperties: false,
@@ -425,6 +426,7 @@ Following options are available for the JS Obfuscator:
     --ignore-imports <boolean>
     --log <boolean>
     --numbers-to-expressions <boolean>
+    --numbers-to-hexadecimal <boolean>
     --options-preset <string> [default, low-obfuscation, medium-obfuscation, high-obfuscation]
     --rename-globals <boolean>
     --rename-properties <boolean>
@@ -866,6 +868,26 @@ const foo = 1234;
 
 // output
 const foo=-0xd93+-0x10b4+0x41*0x67+0x84e*0x3+-0xff8;
+```
+
+### `numbersToHexadecimal`
+Type: `boolean` Default: `true`
+
+Enables conversion of integer numbers to hexadecimal format.
+
+When `true`, integer numbers like `1000` will be converted to `0x3e8`.
+When `false`, numbers remain in their original decimal format.
+
+Example: 
+```ts
+// input
+setInterval(sendHeartbeat, 1000 * 60 * 1);
+
+// output with numbersToHexadecimal: true
+setInterval(sendHeartbeat, 0x3e8 * 0x3c * 0x1);
+
+// output with numbersToHexadecimal: false  
+setInterval(sendHeartbeat, 1000 * 60 * 1);
 ```
 
 ### `optionsPreset`

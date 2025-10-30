@@ -17,25 +17,25 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest,
-            node-version: 18.x
-          - os: ubuntu-latest,
             node-version: 20.x
           - os: ubuntu-latest,
-            node-version: 21.x
-          - os: ubuntu-latest,
             node-version: 22.x
+          - os: ubuntu-latest,
+            node-version: 24.x
           - os: windows-latest,
             node-version: 20.x
           - os: windows-latest,
             node-version: 22.x
+          - os: windows-latest,
+            node-version: 24.x
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: styfle/cancel-workflow-action@0.6.0
+      - uses: actions/checkout@v4
+      - uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ github.token }}
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - uses: actions/cache@v4

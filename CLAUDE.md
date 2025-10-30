@@ -9,7 +9,7 @@
 - **License**: BSD-2-Clause
 - **Repository**: https://github.com/javascript-obfuscator/javascript-obfuscator
 - **Homepage**: https://obfuscator.io/
-- **Node Requirement**: >=12.22.0
+- **Node Requirement**: >=18.0.0
 
 ## Key Features
 

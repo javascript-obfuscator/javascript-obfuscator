@@ -1,5 +1,6 @@
 import { injectable, } from 'inversify';
 
+import * as acorn from 'acorn';
 import * as eslintScope from 'eslint-scope';
 import * as estraverse from '@javascript-obfuscator/estraverse';
 import { KEYS, VisitorKeys } from 'eslint-visitor-keys';

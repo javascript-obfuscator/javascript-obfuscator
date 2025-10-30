@@ -404,7 +404,7 @@ export class NodeFactory {
      * @returns {Literal}
      */
     public static literalNode (value: boolean | number | string, raw?: string): ESTree.Literal {
-        raw = raw !== undefined ? raw : `'${value}'`;
+        raw = raw ?? `'${value}'`;
 
         return {
             type: NodeType.Literal,

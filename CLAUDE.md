@@ -491,28 +491,719 @@ npm run eslint
 
 ### Running Tests
 
+#### Quick Start
+
 ```bash
-# All tests
+# Install dependencies first
+npm install
+# or
+yarn install
+
+# Run all tests (includes dev test, coverage, and memory performance)
 npm test
-
-# Unit tests only
-npm run test:mocha
-
-# With coverage
-npm run test:mocha-coverage
-
-# Memory performance
-npm run test:mocha-memory-performance
-
-# Development test
-npm run test:dev
+# or
+yarn test
 ```
 
-### Test Configuration
+#### Individual Test Commands
 
-- **Mocha**: `.mocharc.json`
-- **NYC (Istanbul)**: `.nycrc.json`
-- **TypeScript**: Uses ts-node for direct TS execution
+```bash
+# Run full test suite (test:dev + test:mocha-coverage + test:mocha-memory-performance). This is slow.
+npm run test:full
+yarn run test:full
+
+# Run Mocha tests only (no coverage)
+npm run test:mocha
+yarn run test:mocha
+
+# Run tests with coverage report
+npm run test:mocha-coverage
+yarn run test:mocha-coverage
+
+# Generate detailed coverage report (after running test:mocha-coverage)
+npm run test:mocha-coverage:report
+yarn run test:mocha-coverage:report
+
+# Run memory performance tests (tests memory constraints)
+npm run test:mocha-memory-performance
+yarn run test:mocha-memory-performance
+
+# Run development test (custom dev test file)
+npm run test:dev
+yarn run test:dev
+
+# Run compile performance test
+npm run test:devCompilePerformance
+yarn run test:devCompilePerformance
+
+# Run runtime performance test
+npm run test:devRuntimePerformance
+yarn run test:devRuntimePerformance
+```
+
+#### Test Details
+
+**test:full**
+- Runs the complete test suite
+- Includes: development tests, coverage tests, and memory performance tests
+- This is what runs when you execute `npm test`
+
+**test:mocha**
+- Runs all Mocha tests from `test/index.spec.ts`
+- Uses ts-node for TypeScript execution
+- No code coverage reporting
+
+**test:mocha-coverage**
+- Runs Mocha tests with NYC (Istanbul) code coverage
+- Allocates up to 4GB memory (`--max-old-space-size=4096`)
+- Generates coverage reports (text-summary by default)
+- Use `test:mocha-coverage:report` to generate detailed lcov report
+
+**test:mocha-memory-performance**
+- Tests obfuscator memory usage under constraints
+- Allocates only 280MB memory to test memory efficiency
+- Located at: `test/performance-tests/JavaScriptObfuscatorMemory.spec.ts`
+
+**test:dev**
+- Custom development test script
+- Located at: `test/dev/dev.ts`
+- Useful for quick testing during development
+
+### Test Configuration Files
+
+- **`.mocharc.json`**: Mocha test runner configuration
+- **`.nycrc.json`**: NYC (Istanbul) coverage tool configuration
+- **TypeScript**: Uses ts-node for direct TS execution without compilation
+
+### Running Specific Test Files
+
+You can run individual test files or groups of tests for faster iteration during development.
+
+#### Basic Command Format
+
+```bash
+npx mocha --require ts-node/register --require source-map-support/register <path-to-test-file>
+```
+
+#### Common Examples
+
+```bash
+# Run a specific test file by exact path
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts
+
+# Run CLI tests
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/cli/JavaScriptObfuscatorCLI.spec.ts
+
+# Run a specific analyzer test
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec.ts
+
+# Run scope analyzer tests
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/analyzers/scope-analyzer/ScopeAnalyzer.spec.ts
+
+# Run string array tests
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/custom-code-helpers/string-array/StringArrayCodeHelper.spec.ts
+
+# Run self-defending code tests
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/custom-code-helpers/self-defending/SelfDefendingCodeHelper.spec.ts
+```
+
+#### Pattern Matching
+
+Use glob patterns to run multiple related test files:
+
+```bash
+# Run all options-related tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/options/**/*.spec.ts"
+
+# Run all analyzer tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/analyzers/**/*.spec.ts"
+
+# Run all string array related tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/**/*StringArray*.spec.ts"
+
+# Run all control flow tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/**/*ControlFlow*.spec.ts"
+
+# Run all node transformer tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/node-transformers/**/*.spec.ts"
+
+# Run all unit tests only
+npx mocha --require ts-node/register --require source-map-support/register "test/unit-tests/**/*.spec.ts"
+
+# Run all functional tests only
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/**/*.spec.ts"
+```
+
+#### Running Tests by Category
+
+The test suite is organized into these main categories:
+
+**Functional Tests** (`test/functional-tests/`):
+```bash
+# Options tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/options/**/*.spec.ts"
+
+# Analyzers tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/analyzers/**/*.spec.ts"
+
+# Node transformers tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/node-transformers/**/*.spec.ts"
+
+# Code transformers tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/code-transformers/**/*.spec.ts"
+
+# Custom code helpers tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/custom-code-helpers/**/*.spec.ts"
+
+# Storage tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/storages/**/*.spec.ts"
+
+# CLI tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/cli/**/*.spec.ts"
+
+# Generator tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/generators/**/*.spec.ts"
+
+# Main obfuscator tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/javascript-obfuscator/**/*.spec.ts"
+
+# Issue regression tests
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/issues/**/*.spec.ts"
+```
+
+**Unit Tests** (`test/unit-tests/`):
+```bash
+# All unit tests
+npx mocha --require ts-node/register --require source-map-support/register "test/unit-tests/**/*.spec.ts"
+
+# Options unit tests
+npx mocha --require ts-node/register --require source-map-support/register "test/unit-tests/options/**/*.spec.ts"
+
+# Utils unit tests
+npx mocha --require ts-node/register --require source-map-support/register "test/unit-tests/utils/**/*.spec.ts"
+
+# Node utilities unit tests
+npx mocha --require ts-node/register --require source-map-support/register "test/unit-tests/node/**/*.spec.ts"
+```
+
+**Performance Tests** (`test/performance-tests/`):
+```bash
+# Memory performance tests
+npx mocha --require ts-node/register --require source-map-support/register test/performance-tests/JavaScriptObfuscatorMemory.spec.ts
+```
+
+#### Using Mocha Options with Individual Tests
+
+```bash
+# Run with grep to filter by test description
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts --grep "compact"
+
+# Run and show slow tests
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts --reporter spec
+
+# Run with timeout override (default is 10000ms)
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts --timeout 20000
+
+# Run with bail (stop on first failure)
+npx mocha --require ts-node/register --require source-map-support/register "test/functional-tests/**/*.spec.ts" --bail
+
+# Run and watch for changes
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts --watch
+
+# Run with specific reporter
+npx mocha --require ts-node/register --require source-map-support/register test/functional-tests/options/Options.spec.ts --reporter json
+```
+
+#### Creating Test Aliases (Optional)
+
+For convenience, you can add these aliases to your `package.json` scripts:
+
+```json
+{
+  "scripts": {
+    "test:options": "mocha --require ts-node/register --require source-map-support/register 'test/functional-tests/options/**/*.spec.ts'",
+    "test:analyzers": "mocha --require ts-node/register --require source-map-support/register 'test/functional-tests/analyzers/**/*.spec.ts'",
+    "test:transformers": "mocha --require ts-node/register --require source-map-support/register 'test/functional-tests/node-transformers/**/*.spec.ts'",
+    "test:unit": "mocha --require ts-node/register --require source-map-support/register 'test/unit-tests/**/*.spec.ts'",
+    "test:functional": "mocha --require ts-node/register --require source-map-support/register 'test/functional-tests/**/*.spec.ts'"
+  }
+}
+```
+
+Then run with:
+```bash
+npm run test:options
+npm run test:analyzers
+npm run test:transformers
+```
+
+#### Tips for Running Individual Tests
+
+1. **Use quotes around glob patterns** to prevent shell expansion:
+   ```bash
+   # Good
+   npx mocha "test/**/*.spec.ts"
+
+   # Bad (shell will expand the pattern)
+   npx mocha test/**/*.spec.ts
+   ```
+
+2. **Use --grep to run specific test cases** within a file:
+   ```bash
+   npx mocha --require ts-node/register test/functional-tests/options/Options.spec.ts --grep "should enable compact"
+   ```
+
+3. **Use --bail to stop on first failure** when debugging:
+   ```bash
+   npx mocha --require ts-node/register "test/**/*.spec.ts" --bail
+   ```
+
+4. **Check the exit code** to verify test success in scripts:
+   ```bash
+   npx mocha --require ts-node/register test/functional-tests/options/Options.spec.ts && echo "Tests passed!"
+   ```
+
+5. **Combine with watch mode** for TDD workflow:
+   ```bash
+   npx mocha --require ts-node/register test/functional-tests/options/Options.spec.ts --watch --reporter min
+   ```
+
+## Linting
+
+### Running ESLint
+
+#### Quick Start
+
+```bash
+# Lint all TypeScript files in src/
+npm run eslint
+yarn run eslint
+```
+
+This runs: `eslint src/**/*.ts`
+
+#### Linting Individual Files
+
+You can lint specific files or directories for faster feedback during development.
+
+**Basic Command Format:**
+```bash
+npx eslint <path-to-file-or-directory>
+```
+
+**Common Examples:**
+
+```bash
+# Lint a specific file
+npx eslint src/JavaScriptObfuscator.ts
+
+# Lint the main facade file
+npx eslint src/JavaScriptObfuscatorFacade.ts
+
+# Lint a specific transformer
+npx eslint src/node-transformers/converting-transformers/StringArrayTransformer.ts
+
+# Lint a specific analyzer
+npx eslint src/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.ts
+
+# Lint options file
+npx eslint src/options/Options.ts
+
+# Lint a custom code helper
+npx eslint src/custom-code-helpers/string-array/StringArrayCodeHelper.ts
+
+# Lint container files
+npx eslint src/container/InversifyContainerFacade.ts
+```
+
+#### Linting Multiple Files or Directories
+
+```bash
+# Lint entire src directory
+npx eslint src/
+
+# Lint all files in a specific subdirectory
+npx eslint src/node-transformers/
+
+# Lint all analyzers
+npx eslint src/analyzers/
+
+# Lint all transformers
+npx eslint src/node-transformers/**/*.ts
+
+# Lint all options-related files
+npx eslint src/options/
+
+# Lint all custom code helpers
+npx eslint src/custom-code-helpers/
+
+# Lint all utils
+npx eslint src/utils/
+
+# Lint CLI files
+npx eslint src/cli/
+
+# Lint container modules
+npx eslint src/container/
+
+# Lint storage files
+npx eslint src/storages/
+```
+
+#### Using Glob Patterns
+
+```bash
+# Lint all TypeScript files in src (same as npm run eslint)
+npx eslint "src/**/*.ts"
+
+# Lint all transformer files
+npx eslint "src/**/*Transformer.ts"
+
+# Lint all analyzer files
+npx eslint "src/**/*Analyzer.ts"
+
+# Lint all storage files
+npx eslint "src/**/*Storage.ts"
+
+# Lint all helper files
+npx eslint "src/**/*Helper.ts"
+
+# Lint all files containing "String" in the name
+npx eslint "src/**/*String*.ts"
+
+# Lint all files in node-transformers subdirectories
+npx eslint "src/node-transformers/**/*.ts"
+```
+
+#### Auto-fixing Issues
+
+ESLint can automatically fix many issues:
+
+```bash
+# Auto-fix all files in src/
+npx eslint src/**/*.ts --fix
+
+# Auto-fix a specific file
+npx eslint src/JavaScriptObfuscator.ts --fix
+
+# Auto-fix specific directory
+npx eslint src/node-transformers/ --fix
+
+# Auto-fix with glob pattern
+npx eslint "src/analyzers/**/*.ts" --fix
+
+# Auto-fix only safe fixes (no potentially breaking changes)
+npx eslint src/JavaScriptObfuscator.ts --fix --fix-type suggestion,layout
+```
+
+#### Checking Specific Rules
+
+```bash
+# Show only errors (no warnings)
+npx eslint src/JavaScriptObfuscator.ts --quiet
+
+# Check specific rule only
+npx eslint src/JavaScriptObfuscator.ts --rule 'no-console: error'
+
+# Disable specific rules for a file check
+npx eslint src/JavaScriptObfuscator.ts --rule 'no-console: off'
+
+# Output format options
+npx eslint src/JavaScriptObfuscator.ts --format stylish  # Default
+npx eslint src/JavaScriptObfuscator.ts --format json     # JSON output
+npx eslint src/JavaScriptObfuscator.ts --format compact  # Compact output
+npx eslint src/JavaScriptObfuscator.ts --format unix     # Unix style
+```
+
+#### Getting Detailed Information
+
+```bash
+# Show more details about errors
+npx eslint src/JavaScriptObfuscator.ts --format stylish
+
+# List all files that would be linted (dry-run)
+npx eslint src/ --debug 2>&1 | grep "Processing"
+
+# Show timing information for rules
+npx eslint src/JavaScriptObfuscator.ts --debug
+
+# Get statistics about linting
+npx eslint src/ --format json | jq '.[] | {file: .filePath, errors: .errorCount, warnings: .warningCount}'
+```
+
+#### Linting by Component
+
+Organized by project structure:
+
+**Core Files:**
+```bash
+npx eslint src/JavaScriptObfuscator.ts
+npx eslint src/JavaScriptObfuscatorFacade.ts
+npx eslint src/ASTParserFacade.ts
+```
+
+**Node Transformers:**
+```bash
+# All node transformers
+npx eslint src/node-transformers/
+
+# Converting transformers
+npx eslint src/node-transformers/converting-transformers/
+
+# Control flow transformers
+npx eslint src/node-transformers/control-flow-transformers/
+
+# String array transformers
+npx eslint src/node-transformers/string-array-transformers/
+
+# Rename transformers
+npx eslint src/node-transformers/rename-identifiers-transformers/
+npx eslint src/node-transformers/rename-properties-transformers/
+```
+
+**Analyzers:**
+```bash
+# All analyzers
+npx eslint src/analyzers/
+
+# Specific analyzers
+npx eslint src/analyzers/calls-graph-analyzer/
+npx eslint src/analyzers/scope-analyzer/
+npx eslint src/analyzers/string-array-storage-analyzer/
+```
+
+**Options System:**
+```bash
+# All options files
+npx eslint src/options/
+
+# Core options
+npx eslint src/options/Options.ts
+npx eslint src/options/OptionsNormalizer.ts
+
+# Validators
+npx eslint src/options/validators/
+
+# Presets
+npx eslint src/options/presets/
+```
+
+**Custom Code Helpers:**
+```bash
+# All helpers
+npx eslint src/custom-code-helpers/
+
+# String array helpers
+npx eslint src/custom-code-helpers/string-array/
+
+# Debug protection helpers
+npx eslint src/custom-code-helpers/debug-protection/
+
+# Self-defending helpers
+npx eslint src/custom-code-helpers/self-defending/
+```
+
+**Utilities:**
+```bash
+# All utils
+npx eslint src/utils/
+
+# Specific utils
+npx eslint src/utils/RandomGenerator.ts
+npx eslint src/utils/ArrayUtils.ts
+npx eslint src/utils/CryptUtils.ts
+```
+
+#### Integrating with Git
+
+```bash
+# Lint only staged files (useful for pre-commit)
+git diff --cached --name-only --diff-filter=ACM | grep '\.ts$' | xargs npx eslint
+
+# Lint files changed in current branch
+git diff --name-only master | grep '\.ts$' | xargs npx eslint
+
+# Lint files changed in last commit
+git diff HEAD~1 --name-only | grep '\.ts$' | xargs npx eslint
+```
+
+#### Creating Lint Aliases (Optional)
+
+Add these to your `package.json` scripts for convenience:
+
+```json
+{
+  "scripts": {
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "lint:transformers": "eslint src/node-transformers/**/*.ts",
+    "lint:analyzers": "eslint src/analyzers/**/*.ts",
+    "lint:options": "eslint src/options/**/*.ts",
+    "lint:utils": "eslint src/utils/**/*.ts",
+    "lint:quiet": "eslint src/**/*.ts --quiet",
+    "lint:staged": "git diff --cached --name-only --diff-filter=ACM | grep '\\.ts$' | xargs eslint"
+  }
+}
+```
+
+Then run with:
+```bash
+npm run lint:transformers
+npm run lint:analyzers
+npm run lint:fix
+```
+
+### ESLint Configuration
+
+**Location**: `.eslintrc.js`
+
+The project uses:
+- **@typescript-eslint**: TypeScript-specific linting rules
+- **eslint-plugin-import**: Import/export validation
+- **eslint-plugin-jsdoc**: JSDoc comment validation
+- **eslint-plugin-no-null**: Prevents null usage (prefer undefined)
+- **eslint-plugin-prefer-arrow**: Enforces arrow functions
+- **eslint-plugin-unicorn**: Additional code quality rules
+
+**Ignored files**: `.eslintignore`
+
+#### Viewing Current ESLint Config
+
+```bash
+# Print effective configuration for a file
+npx eslint --print-config src/JavaScriptObfuscator.ts
+
+# List all rules being applied
+npx eslint --print-config src/JavaScriptObfuscator.ts | grep rules -A 1000
+```
+
+### Code Quality Checks
+
+```bash
+# Run full build (includes webpack, eslint, and tests)
+npm run build
+yarn run build
+
+# The build script runs:
+# 1. webpack:prod (production build)
+# 2. eslint (linting)
+# 3. test (full test suite)
+```
+
+### Tips for Effective Linting
+
+1. **Lint before committing**: Always run linting before creating commits
+   ```bash
+   npx eslint src/ && git commit -m "Your message"
+   ```
+
+2. **Use --fix cautiously**: Review changes before committing auto-fixes
+   ```bash
+   npx eslint src/MyFile.ts --fix
+   git diff  # Review changes
+   ```
+
+3. **Focus on errors first**: Use `--quiet` to see only errors
+   ```bash
+   npx eslint src/ --quiet
+   ```
+
+4. **Lint specific files during development**: Don't lint everything when working on one file
+   ```bash
+   npx eslint src/node-transformers/MyNewTransformer.ts
+   ```
+
+5. **Check exit code**: Useful in scripts and CI/CD
+   ```bash
+   npx eslint src/ || echo "Linting failed!"
+   ```
+
+## Development Workflow
+
+### Setting Up Development Environment
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/javascript-obfuscator/javascript-obfuscator.git
+cd javascript-obfuscator
+
+# 2. Install dependencies
+npm install
+# or
+yarn install
+
+# 3. Install Husky hooks (for pre-commit checks)
+npm run prepare
+# or
+yarn run prepare
+```
+
+### Development Commands
+
+```bash
+# Start development mode with watch (auto-recompile on changes)
+npm start
+# or
+npm run watch
+# or
+yarn run watch
+
+# Build for production
+npm run webpack:prod
+yarn run webpack:prod
+
+# Build TypeScript type definitions
+npm run build:typings
+yarn run build:typings
+
+# Full build (webpack + eslint + tests)
+npm run build
+yarn run build
+```
+
+### Pre-commit Hooks
+
+The project uses **Husky** for git hooks:
+
+- **pre-commit**: Automatically runs `npm run build` before each commit
+  - Ensures code compiles
+  - Ensures linting passes
+  - Ensures all tests pass
+
+**Configuration**: `.husky/` directory
+
+### Development Tips
+
+1. **Use watch mode during development**:
+   ```bash
+   npm run watch
+   ```
+   This rebuilds automatically when you save files.
+
+2. **Run specific tests during development**:
+   ```bash
+   npm run test:dev
+   ```
+   Faster than full test suite.
+
+3. **Check linting before committing**:
+   ```bash
+   npm run eslint
+   ```
+   Fix issues before the pre-commit hook runs.
+
+4. **Test memory usage**:
+   ```bash
+   npm run test:mocha-memory-performance
+   ```
+   Ensure your changes don't cause memory issues.
+
+5. **Generate coverage reports**:
+   ```bash
+   npm run test:mocha-coverage
+   npm run test:mocha-coverage:report
+   ```
+   Check test coverage in the generated `coverage/` directory.
 
 ## Performance Considerations
 

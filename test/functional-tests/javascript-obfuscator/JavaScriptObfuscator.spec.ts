@@ -1049,6 +1049,28 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1132
+        describe('CallExpression ClassExpression crash fix', () => {
+            const regExp: RegExp = /try *\{!class *\{} *\(\);} *catch *\{}/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/call-expression-class-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should not throw', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+      });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

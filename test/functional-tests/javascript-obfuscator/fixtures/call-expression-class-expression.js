@@ -1,0 +1,1 @@
+try { ! class { } ( ) ; } catch { }

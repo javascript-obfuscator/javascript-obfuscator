@@ -229,5 +229,39 @@ describe('CallExpressionControlFlowReplacer', function () {
                 assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
             });
         });
-    });
+
+        describe('Variant #7 - keep optional chaining operator', () => {
+            const controlFlowStorageCallRegExp: RegExp = new RegExp(
+              `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *0x1, *0x2\\);`
+            );
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `return *${variableMatch}\\?\\.\\(${variableMatch}, *${variableMatch}\\);` +
+                `\\}` +
+              ``);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/optional-chaining-call.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should replace call expression node with call to control flow storage node', () => {
+              assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
+            });
+
+            it('should wrap call expression into chain expression', () => {
+              assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
+            });
+        });
+      });
 });

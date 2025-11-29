@@ -91,6 +91,14 @@ export class NodeGuards {
         return node.type === NodeType.CallExpression;
     }
 
+  /**
+   * @param {Node} node
+   * @returns {boolean}
+   */
+  public static isChainExpressionNode (node: ESTree.Node): node is ESTree.ChainExpression {
+    return node.type === NodeType.ChainExpression;
+  }
+
     /**
      * @param {Node} node
      * @returns {boolean}

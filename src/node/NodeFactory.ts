@@ -119,6 +119,20 @@ export class NodeFactory {
     }
 
     /**
+     * @param {ChainElement} expression
+     * @return {ChainExpression}
+     */
+    public static chainExpressionNode (
+        expression: ESTree.ChainElement,
+    ): ESTree.ChainExpression {
+        return {
+            type: NodeType.ChainExpression,
+            expression,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {ESTree.Expression} test
      * @param {ESTree.Expression} consequent
      * @param {ESTree.Expression} alternate

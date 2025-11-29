@@ -26,6 +26,13 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
     private expressionArguments!: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
+     * @type {boolean}
+     * @private
+     */
+    @initializable()
+    private isChainExpressionParent!: boolean;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
@@ -48,9 +55,11 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
 
     /**
      * @param {(Expression | SpreadElement)[]} expressionArguments
+     * @param {boolean} isChainExpressionParent
      */
-    public initialize (expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]): void {
+    public initialize (expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[], isChainExpressionParent: boolean): void {
         this.expressionArguments = expressionArguments;
+        this.isChainExpressionParent = isChainExpressionParent;
     }
 
     /**
@@ -82,6 +91,12 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
             }
         }
 
+        const callExpression = NodeFactory.callExpressionNode(
+          calleeIdentifier,
+          callArguments,
+          this.isChainExpressionParent
+        );
+        
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.functionExpressionNode(
                 [
@@ -90,10 +105,9 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
                 ],
                 NodeFactory.blockStatementNode([
                     NodeFactory.returnStatementNode(
-                        NodeFactory.callExpressionNode(
-                            calleeIdentifier,
-                            callArguments
-                        )
+                        this.isChainExpressionParent
+                          ? NodeFactory.chainExpressionNode(<ESTree.ChainElement>callExpression)
+                          : callExpression
                     )
                 ])
             )

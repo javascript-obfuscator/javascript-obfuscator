@@ -6,6 +6,7 @@ v4.1.2
 * Revert `Improved stringArray calls wrapper templates` commit. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1330
 * Update `class-validator` version. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1324
 * Update other dependencies
+* CLI: support `.mjs` and `.cjs` extensions. Kudos to https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1301 
 
 v4.1.1
 ---

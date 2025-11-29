@@ -40,7 +40,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      * @type {string[]}
      */
     public static readonly availableInputExtensions: string[] = [
-        '.js'
+        '.js',
+        '.mjs',
+        '.cjs'
     ];
 
     /**

@@ -1,5 +1,11 @@
 Change Log
 
+v4.1.2
+---
+* Fix `transformObjectKeys` performance in some edge-cases
+* Update `class-validator` version. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1324
+* Update other dependencies
+
 v4.1.1
 ---
 * Update supported Node.js versions up to `node@22`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/pull/1100

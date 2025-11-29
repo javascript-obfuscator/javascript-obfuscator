@@ -128,7 +128,11 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
 
         this.filterExtractedObjectExpressionProperties(objectExpressionNode, removablePropertyIds);
         NodeAppender.insertAfter(hostNodeWithStatements, expressionStatements, hostStatement);
-        NodeUtils.parentizeAst(hostNodeWithStatements);
+        // Only parentize the newly inserted statements, not the entire scope
+        expressionStatements.forEach((statement) => {
+            NodeUtils.parentizeAst(statement);
+            NodeUtils.parentizeNode(statement, hostNodeWithStatements);
+        });
 
         return {
             nodeToReplace: objectExpressionNode,

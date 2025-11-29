@@ -102,7 +102,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         objectExpressionNode: ESTree.ObjectExpression,
         objectExpressionHostNode: ESTree.Node,
     ): boolean {
-        const identifierNamesSet: string[] = [];
+        const identifierNamesSet: Set<string> = new Set();
 
         let isReferencedIdentifierName: boolean = false;
         let isCurrentNode: boolean = false;
@@ -119,17 +119,19 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                 }
 
                 if (!isCurrentNode) {
-                    identifierNamesSet.push(ObjectExpressionKeysTransformer.getReferencedIdentifierName(node));
+                    identifierNamesSet.add(ObjectExpressionKeysTransformer.getReferencedIdentifierName(node));
 
                     return;
                 }
 
-                const hasReferencedIdentifierName: boolean = identifierNamesSet.includes(
+                const hasReferencedIdentifierName: boolean = identifierNamesSet.has(
                     ObjectExpressionKeysTransformer.getReferencedIdentifierName(node)
                 );
 
                 if (hasReferencedIdentifierName) {
                     isReferencedIdentifierName = true;
+
+                    return estraverse.VisitorOption.Break;
                 }
             },
             leave: (node: ESTree.Node): void | estraverse.VisitorOption => {

@@ -1,6 +1,6 @@
 Change Log
 
-v4.1.2
+v4.2.0
 ---
 * Fix `transformObjectKeys` performance in some edge-cases
 * Fix `controlFlowFlattening` + optional chaining compatibility. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1325

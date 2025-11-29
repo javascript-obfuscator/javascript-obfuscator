@@ -97,10 +97,9 @@ describe('StringArrayCallsWrapperCodeHelper', () => {
     describe('Preserve string array name', () => {
         const callsWrapperRegExp: RegExp = new RegExp(`` +
             `function *b *\\(c, *d\\) *{ *` +
-                `var e *= *a\\(\\); *` +
-                `b *= *function *\\(f, *g\\) *{` +
-                    `f *= *f *- *0x0; *` +
-                    `var h *= *e\\[f]; *` +
+            `c *= *c *- *0x0; *` +
+            `var e *= *a *\\(\\);` +
+            `var f *= *e\\[c]; *` +
         ``);
 
         let obfuscatedCode: string;

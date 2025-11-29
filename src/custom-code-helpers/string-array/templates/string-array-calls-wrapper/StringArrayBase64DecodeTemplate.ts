@@ -11,26 +11,27 @@ export function StringArrayBase64DecodeTemplate (
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const base64Identifier: string = randomGenerator.getRandomString(identifierLength);
+    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
 
     return `
         if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
             {stringArrayCallsWrapperName}.${base64Identifier} = {atobFunctionName};
 
-            {stringArrayCacheName} = arguments;
+            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
             
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
         const firstValue = stringArray[0];
         const cacheKey = index + firstValue;
-        const cachedValue = {stringArrayCacheName}[cacheKey];
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey];
         
         if (!cachedValue) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.${base64Identifier}(value);
-            {stringArrayCacheName}[cacheKey] = value;
+            {stringArrayCallsWrapperName}.${dataIdentifier}[cacheKey] = value;
         } else {
             value = cachedValue;
         }

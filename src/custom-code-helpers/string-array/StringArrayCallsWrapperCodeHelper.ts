@@ -114,7 +114,6 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
             this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeCodeHelperTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayCacheName: this.stringArrayCacheName,
                 stringArrayFunctionName: this.stringArrayFunctionName,
                 indexShiftAmount: this.indexShiftAmount
             }),

@@ -39,7 +39,7 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
                 rc4Polyfill,
                 selfDefendingCode,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayCacheName: this.stringArrayCacheName
+                stringArrayFunctionName: this.stringArrayFunctionName
             }
         );
     }

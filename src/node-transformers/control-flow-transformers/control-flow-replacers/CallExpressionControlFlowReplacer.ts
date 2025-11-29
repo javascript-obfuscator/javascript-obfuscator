@@ -66,12 +66,14 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
             return callExpressionNode;
         }
 
+        const isChainExpressionParent = NodeGuards.isChainExpressionNode(parentNode);
+
         const replacerId: number = callExpressionNode.arguments.length;
         const callExpressionFunctionCustomNode: ICustomNode<TInitialData<CallExpressionFunctionNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionFunctionNode);
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
-        callExpressionFunctionCustomNode.initialize(expressionArguments);
+        callExpressionFunctionCustomNode.initialize(expressionArguments, isChainExpressionParent);
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             callExpressionFunctionCustomNode,
@@ -84,7 +86,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
             controlFlowStorage.getStorageId(),
             storageKey,
             callee,
-            expressionArguments
+            expressionArguments,
         );
     }
 

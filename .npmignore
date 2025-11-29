@@ -10,3 +10,5 @@
 /src/
 /test/
 /test*.js
+index.ts
+index.cli.ts

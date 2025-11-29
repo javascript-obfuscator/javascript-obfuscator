@@ -4,6 +4,7 @@ v4.1.2
 ---
 * Fix `transformObjectKeys` performance in some edge-cases
 * Fix `controlFlowFlattening` + optional chaining compatibility. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1325
+* Don't obfuscate import.meta.*. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1267
 * Revert `Improved stringArray calls wrapper templates` commit. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1330
 * Don't publish root index.ts files to NPM. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1252
 * Update `class-validator` version. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1324

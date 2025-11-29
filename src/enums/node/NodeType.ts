@@ -36,6 +36,7 @@ export enum NodeType {
     Literal = 'Literal',
     LogicalExpression = 'LogicalExpression',
     MemberExpression = 'MemberExpression',
+    MetaProperty = 'MetaProperty',
     MethodDefinition = 'MethodDefinition',
     NewExpression = 'NewExpression',
     ObjectExpression = 'ObjectExpression',

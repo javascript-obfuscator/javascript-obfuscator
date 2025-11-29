@@ -3,5 +3,6 @@ export enum ObfuscatingGuard {
     ConditionalCommentObfuscatingGuard = 'ConditionalCommentObfuscatingGuard',
     ForceTransformStringObfuscatingGuard = 'ForceTransformStringObfuscatingGuard',
     IgnoredImportObfuscatingGuard = 'IgnoredImportObfuscatingGuard',
+    ImportMetaObfuscationGuard = 'ImportMetaObfuscationGuard',
     ReservedStringObfuscatingGuard = 'ReservedStringObfuscatingGuard'
 }

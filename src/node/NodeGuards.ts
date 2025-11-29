@@ -339,6 +339,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isMetaPropertyNode (node: ESTree.Node): node is ESTree.MetaProperty {
+        return node.type === NodeType.MetaProperty;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
         return node.type === NodeType.MethodDefinition;
     }

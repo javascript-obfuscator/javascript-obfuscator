@@ -12,6 +12,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 @injectable()
 export class MemberExpressionTransformer extends AbstractNodeTransformer {
@@ -63,6 +64,10 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
+        if (NodeMetadata.isIgnoredNode(memberExpressionNode.object) || NodeMetadata.isIgnoredNode(memberExpressionNode.property)) {
+            return memberExpressionNode;
+        }
+
         if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;

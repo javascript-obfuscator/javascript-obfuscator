@@ -806,7 +806,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('import.meta support', () => {
-            const regExp: RegExp = /console\['log']\(import\.meta\['url']\);/;
+            const regExp: RegExp = /console\['log']\(import\.meta\.url\);/;
 
             let obfuscatedCode: string;
 

@@ -14,6 +14,9 @@ import { CustomCodeHelpersTransformer } from '../../../node-transformers/prepari
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
 import { ForceTransformStringObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ForceTransformStringObfuscatingGuard';
 import { IgnoredImportObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/IgnoredImportObfuscatingGuard';
+import {
+  ImportMetaObfuscationGuard
+} from '../../../node-transformers/preparing-transformers/obfuscating-guards/ImportMetaObfuscationGuard';
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
@@ -66,6 +69,11 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .to(IgnoredImportObfuscatingGuard)
         .inSingletonScope()
         .whenTargetNamed(ObfuscatingGuard.IgnoredImportObfuscatingGuard);
+
+    bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
+        .to(ImportMetaObfuscationGuard)
+        .inSingletonScope()
+        .whenTargetNamed(ObfuscatingGuard.ImportMetaObfuscationGuard);
 
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
         .to(ReservedStringObfuscatingGuard)

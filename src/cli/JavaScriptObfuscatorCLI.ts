@@ -447,6 +447,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Allows to enable/disable string conversion to unicode escape sequence',
                 BooleanSanitizer
             )
+            .option(
+                '--dangerously-overwrite <boolean>',
+                'Enables overwriting the original files with obfuscated content',
+                BooleanSanitizer
+            )
             .parse(this.rawArguments);
     }
 
@@ -465,7 +470,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     private processSourceCodeData (sourceCodeData: IFileData[]): void {
         sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
-            const outputCodePath: string = this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
+            const outputCodePath: string = this.inputCLIOptions.dangerouslyOverwrite
+                ? filePath
+                : this.obfuscatedCodeFileUtils.getOutputCodePath(filePath);
 
             try {
                 Logger.log(

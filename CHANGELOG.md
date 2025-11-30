@@ -2,6 +2,7 @@ Change Log
 
 v4.2.0
 ---
+* Dropped support of Node versions 17 and below
 * Fix `transformObjectKeys` performance in some edge-cases
 * Fix `controlFlowFlattening` + optional chaining compatibility. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1325
 * Don't obfuscate import.meta.*. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1267

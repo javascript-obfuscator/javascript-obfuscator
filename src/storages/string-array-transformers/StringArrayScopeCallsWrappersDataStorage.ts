@@ -11,15 +11,15 @@ import { IStringArrayScopeCallsWrappersDataStorage } from '../../interfaces/stor
 import { WeakMapStorage } from '../WeakMapStorage';
 
 @injectable()
-export class StringArrayScopeCallsWrappersDataStorage extends WeakMapStorage <
-    TNodeWithLexicalScopeStatements,
-    TStringArrayScopeCallsWrappersDataByEncoding
-> implements IStringArrayScopeCallsWrappersDataStorage {
+export class StringArrayScopeCallsWrappersDataStorage
+    extends WeakMapStorage<TNodeWithLexicalScopeStatements, TStringArrayScopeCallsWrappersDataByEncoding>
+    implements IStringArrayScopeCallsWrappersDataStorage
+{
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

@@ -21,7 +21,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -32,14 +32,14 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateNext (nameLength?: number): string {
+    public generateNext(nameLength?: number): string {
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
         const prefixLength: number = Utils.hexadecimalPrefix.length;
-        const baseNameLength: number = (nameLength ?? HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength)
-            + prefixLength;
+        const baseNameLength: number =
+            (nameLength ?? HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength) + prefixLength;
         const baseIdentifierName: string = hexadecimalNumber.slice(0, baseNameLength);
         const identifierName: string = `_${baseIdentifierName}`;
 
@@ -56,7 +56,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForGlobalScope (nameLength?: number): string {
+    public generateForGlobalScope(nameLength?: number): string {
         const identifierName: string = this.generateNext(nameLength);
 
         return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
@@ -67,7 +67,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+    public generateForLexicalScope(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
         return this.generateNext(nameLength);
     }
 
@@ -76,7 +76,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForLabel (label: string, nameLength?: number): string {
+    public generateForLabel(label: string, nameLength?: number): string {
         return this.generateNext(nameLength);
     }
 }

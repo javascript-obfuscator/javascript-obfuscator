@@ -19,8 +19,7 @@ describe('StringArrayStorage', () => {
             const stringArrayVariantRegExp: RegExp = /var.*= *\[(?:'.*?', *)?'test'(?:, *'.*?')?];.*/;
             const literalNodeVariantRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x.\);/g;
 
-            let stringArrayVariantProbability: number,
-                literalNodeVariantProbability: number;
+            let stringArrayVariantProbability: number, literalNodeVariantProbability: number;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/one-string.js');
@@ -28,25 +27,22 @@ describe('StringArrayStorage', () => {
                 let stringArrayVariantMatchesLength: number = 0;
                 let literalNodeVariantMatchesLength: number = 0;
 
-               for (let i = 0; i < samples; i++) {
-                   const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                       code,
-                       {
-                           ...NO_ADDITIONAL_NODES_PRESET,
-                           stringArrayRotate: true,
-                           stringArray: true,
-                           stringArrayThreshold: 1
-                       }
-                   ).getObfuscatedCode();
+                for (let i = 0; i < samples; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArrayRotate: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
-                   if (obfuscatedCode.match(stringArrayVariantRegExp)) {
-                       stringArrayVariantMatchesLength++;
-                   }
+                    if (obfuscatedCode.match(stringArrayVariantRegExp)) {
+                        stringArrayVariantMatchesLength++;
+                    }
 
-                   if (obfuscatedCode.match(literalNodeVariantRegExp)) {
-                       literalNodeVariantMatchesLength++;
-                   }
-               }
+                    if (obfuscatedCode.match(literalNodeVariantRegExp)) {
+                        literalNodeVariantMatchesLength++;
+                    }
+                }
 
                 stringArrayVariantProbability = stringArrayVariantMatchesLength / samples;
                 literalNodeVariantProbability = literalNodeVariantMatchesLength / samples;
@@ -76,13 +72,13 @@ describe('StringArrayStorage', () => {
 
             const stringArrayVariantRegExps: RegExp[] = [
                 /var.*= *\['foo', *'bar', *'baz'(?:, *'.*?')+];.*/,
-                /var.*= *\[(?:'.*?', *)+'foo', *'bar', *'baz'];.*/,
+                /var.*= *\[(?:'.*?', *)+'foo', *'bar', *'baz'];.*/
             ];
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x.\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x.\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x.\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x.\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x.\\);`
                 )
             ];
 
@@ -96,15 +92,12 @@ describe('StringArrayStorage', () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/three-strings.js');
 
                 for (let i = 0; i < samples; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArrayRotate: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArrayRotate: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     for (let variantIndex = 0; variantIndex < stringArrayVariantsCount; variantIndex++) {
                         if (obfuscatedCode.match(stringArrayVariantRegExps[variantIndex])) {
@@ -118,11 +111,13 @@ describe('StringArrayStorage', () => {
                 }
 
                 for (let variantIndex = 0; variantIndex < stringArrayVariantsCount; variantIndex++) {
-                    stringArrayVariantProbabilities[variantIndex] = stringArrayVariantMatchesLength[variantIndex] / samples;
+                    stringArrayVariantProbabilities[variantIndex] =
+                        stringArrayVariantMatchesLength[variantIndex] / samples;
                 }
 
                 for (let variantIndex = 0; variantIndex < literalNodeVariantsCount; variantIndex++) {
-                    literalNodeVariantProbabilities[variantIndex] = literalNodeVariantMatchesLength[variantIndex] / samples;
+                    literalNodeVariantProbabilities[variantIndex] =
+                        literalNodeVariantMatchesLength[variantIndex] / samples;
                 }
             });
 
@@ -131,7 +126,11 @@ describe('StringArrayStorage', () => {
                     const variantNumber: number = variantIndex + 1;
 
                     it(`Variant #${variantNumber}: should create string array variant`, () => {
-                        assert.closeTo(stringArrayVariantProbabilities[variantIndex], expectedStringArrayVariantProbability, delta);
+                        assert.closeTo(
+                            stringArrayVariantProbabilities[variantIndex],
+                            expectedStringArrayVariantProbability,
+                            delta
+                        );
                     });
                 }
             });
@@ -141,7 +140,11 @@ describe('StringArrayStorage', () => {
                     const variantNumber: number = variantIndex + 1;
 
                     it(`Variant #${variantNumber}: should replace literal node with call to string array variant`, () => {
-                        assert.closeTo(literalNodeVariantProbabilities[variantIndex], expectedLiteralNodeVariantProbability, delta);
+                        assert.closeTo(
+                            literalNodeVariantProbabilities[variantIndex],
+                            expectedLiteralNodeVariantProbability,
+                            delta
+                        );
                     });
                 }
             });
@@ -159,8 +162,7 @@ describe('StringArrayStorage', () => {
             const stringArrayVariantRegExp1: RegExp = getStringArrayRegExp(['test']);
             const literalNodeVariant1RegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
 
-            let stringArrayVariant1Probability: number,
-                literalNodeVariant1Probability: number;
+            let stringArrayVariant1Probability: number, literalNodeVariant1Probability: number;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/one-string.js');
@@ -169,15 +171,12 @@ describe('StringArrayStorage', () => {
                 let literalNodeVariant1MatchesLength: number = 0;
 
                 for (let i = 0; i < samples; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArrayShuffle: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArrayShuffle: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     if (obfuscatedCode.match(stringArrayVariantRegExp1)) {
                         stringArrayVariant1MatchesLength++;
@@ -224,33 +223,33 @@ describe('StringArrayStorage', () => {
             const literalNodeVariantRegExps: RegExp[] = [
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x2\\);`
                 ),
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 ),
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x0\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x1\\);`
                 ),
                 new RegExp(
                     `var foo *= *_0x([a-f0-9]){4}\\(0x2\\);.*` +
-                    `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
-                    `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
+                        `var bar *= *_0x([a-f0-9]){4}\\(0x1\\);.*` +
+                        `var baz *= *_0x([a-f0-9]){4}\\(0x0\\);`
                 )
             ];
 
@@ -264,15 +263,12 @@ describe('StringArrayStorage', () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/three-strings.js');
 
                 for (let i = 0; i < samples; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArrayShuffle: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArrayShuffle: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     for (let variantIndex = 0; variantIndex < variantsCount; variantIndex++) {
                         if (obfuscatedCode.match(stringArrayVariantRegExps[variantIndex])) {
@@ -286,10 +282,11 @@ describe('StringArrayStorage', () => {
                 }
 
                 for (let variantIndex = 0; variantIndex < variantsCount; variantIndex++) {
-                    stringArrayVariantProbabilities[variantIndex] = stringArrayVariantMatchesLength[variantIndex] / samples;
-                    literalNodeVariantProbabilities[variantIndex] = literalNodeVariantMatchesLength[variantIndex] / samples;
+                    stringArrayVariantProbabilities[variantIndex] =
+                        stringArrayVariantMatchesLength[variantIndex] / samples;
+                    literalNodeVariantProbabilities[variantIndex] =
+                        literalNodeVariantMatchesLength[variantIndex] / samples;
                 }
-
             });
 
             for (let variantIndex = 0; variantIndex < variantsCount; variantIndex++) {

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -51,10 +51,10 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stringArrayStorage = stringArrayStorage;
         this.randomGenerator = randomGenerator;
@@ -64,7 +64,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     /**
      * @param {Program} astTree
      */
-    public analyze (astTree: ESTree.Program): void {
+    public analyze(astTree: ESTree.Program): void {
         if (!this.options.stringArray) {
             return;
         }
@@ -92,7 +92,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {Literal} literalNode
      * @param {Node} parentNode
      */
-    public analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
+    public analyzeLiteralNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
         if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return;
         }
@@ -111,18 +111,15 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     /**
      * @param {TStringLiteralNode} literalNode
      */
-    public addItemDataForLiteralNode (literalNode: TStringLiteralNode): void {
-        this.stringArrayStorageData.set(
-            literalNode,
-            this.stringArrayStorage.getOrThrow(literalNode.value)
-        );
+    public addItemDataForLiteralNode(literalNode: TStringLiteralNode): void {
+        this.stringArrayStorageData.set(literalNode, this.stringArrayStorage.getOrThrow(literalNode.value));
     }
 
     /**
      * @param {Literal} literalNode
      * @returns {IStringArrayStorageItemData | undefined}
      */
-    public getItemDataForLiteralNode (literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined {
+    public getItemDataForLiteralNode(literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined {
         return this.stringArrayStorageData.get(literalNode);
     }
 
@@ -130,15 +127,17 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {TStringLiteralNode} literalNode
      * @returns {boolean}
      */
-    private shouldAddValueToStringArray (literalNode: TStringLiteralNode): boolean {
+    private shouldAddValueToStringArray(literalNode: TStringLiteralNode): boolean {
         const isForceTransformNode: boolean = NodeMetadata.isForceTransformNode(literalNode);
 
         if (isForceTransformNode) {
             return true;
         }
 
-        return literalNode.value.length >= StringArrayStorageAnalyzer.minimumLengthForStringArray
-            && !!this.options.stringArrayThreshold
-            && this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold;
+        return (
+            literalNode.value.length >= StringArrayStorageAnalyzer.minimumLengthForStringArray &&
+            !!this.options.stringArrayThreshold &&
+            this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold
+        );
     }
 }

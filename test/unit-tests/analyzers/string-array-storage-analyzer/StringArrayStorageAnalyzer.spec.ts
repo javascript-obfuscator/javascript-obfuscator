@@ -194,10 +194,7 @@ describe('StringArrayStorageAnalyzer', () => {
                         NodeFactory.variableDeclaratorNode(
                             NodeFactory.identifierNode('bar'),
                             NodeFactory.objectExpressionNode([
-                                NodeFactory.propertyNode(
-                                    literalNode2,
-                                    NodeFactory.literalNode(1)
-                                )
+                                NodeFactory.propertyNode(literalNode2, NodeFactory.literalNode(1))
                             ])
                         )
                     ])
@@ -220,7 +217,7 @@ describe('StringArrayStorageAnalyzer', () => {
         describe('Analyzes of the AST tree with ignored string literal nodes', () => {
             const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
             const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
-            NodeMetadata.set(literalNode2, {ignoredNode: true});
+            NodeMetadata.set(literalNode2, { ignoredNode: true });
 
             const expectedStringArrayStorageItemData1: IStringArrayStorageItemData = {
                 encodedValue: 'foo',
@@ -263,7 +260,7 @@ describe('StringArrayStorageAnalyzer', () => {
             describe('Variant #1: Force obfuscate string when threshold is `0`', () => {
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
-                NodeMetadata.set(literalNode2, {forceTransformNode: true});
+                NodeMetadata.set(literalNode2, { forceTransformNode: true });
 
                 const expectedStringArrayStorageItemData1: undefined = undefined;
                 const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {
@@ -305,7 +302,7 @@ describe('StringArrayStorageAnalyzer', () => {
             describe('Variant #2: Force obfuscate string when string value shorter than allowed length', () => {
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('a');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('b');
-                NodeMetadata.set(literalNode2, {forceTransformNode: true});
+                NodeMetadata.set(literalNode2, { forceTransformNode: true });
 
                 const expectedStringArrayStorageItemData1: undefined = undefined;
                 const expectedStringArrayStorageItemData2: IStringArrayStorageItemData = {
@@ -416,7 +413,8 @@ describe('StringArrayStorageAnalyzer', () => {
                         const stringArrayStorageItemData2: IStringArrayStorageItemData | undefined =
                             stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
 
-                        isStringArrayStorageItemDataEmpty = !stringArrayStorageItemData1 && !stringArrayStorageItemData2;
+                        isStringArrayStorageItemDataEmpty =
+                            !stringArrayStorageItemData1 && !stringArrayStorageItemData2;
 
                         if (!isStringArrayStorageItemDataEmpty) {
                             break;

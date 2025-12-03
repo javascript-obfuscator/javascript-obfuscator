@@ -22,14 +22,11 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace logical expression node with call to control flow storage node', () => {
@@ -65,14 +62,11 @@ describe('LogicalExpressionControlFlowReplacer', function () {
                     equalsValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            controlFlowFlattening: true,
-                            controlFlowFlatteningThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }).getObfuscatedCode();
 
                     firstMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     secondMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp2);
@@ -113,14 +107,11 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-3.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace logical unary expression with call to control flow storage node', () => {
@@ -138,17 +129,14 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prohibited-nodes.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: .1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 0.1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t replace prohibited expression nodes', () => {
+            it("shouldn't replace prohibited expression nodes", () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });

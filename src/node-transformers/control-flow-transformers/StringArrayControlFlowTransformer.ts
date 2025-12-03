@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -6,9 +6,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
-import {
-    TControlFlowStorageFactoryCreator
-} from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
+import { TControlFlowStorageFactoryCreator } from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { IControlFlowStorage } from '../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
@@ -39,7 +37,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
     /**
      * @type {Map <string, ControlFlowReplacer>}
      */
-    protected override readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
+    protected override readonly controlFlowReplacersMap: Map<string, ControlFlowReplacer> = new Map([
         [NodeType.Literal, ControlFlowReplacer.StringArrayCallControlFlowReplacer]
     ]);
 
@@ -55,13 +53,13 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
-            controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
+        controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
-            controlFlowReplacerFactory: TControlFlowReplacerFactory,
+        controlFlowReplacerFactory: TControlFlowReplacerFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -80,7 +78,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public override getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public override getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.stringArrayCallsTransform) {
             return null;
         }
@@ -110,14 +108,14 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {ESTraverse.VisitorOption | Node}
      */
-    protected override transformFunctionBodyNode (
+    protected override transformFunctionBodyNode(
         node: ESTree.Node,
         parentNode: ESTree.Node | null,
         functionNode: ESTree.Function,
         controlFlowStorage: IControlFlowStorage
     ): estraverse.VisitorOption | ESTree.Node {
-        const isControlFlowStorageNode = NodeGuards.isVariableDeclarationNode(node)
-            && this.controlFlowStorageNodes.has(node);
+        const isControlFlowStorageNode =
+            NodeGuards.isVariableDeclarationNode(node) && this.controlFlowStorageNodes.has(node);
 
         if (isControlFlowStorageNode) {
             return estraverse.VisitorOption.Skip;
@@ -130,7 +128,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {TNodeWithStatements} hostNode
      * @returns {TControlFlowStorage}
      */
-    protected override getControlFlowStorage (hostNode: TNodeWithStatements): IControlFlowStorage {
+    protected override getControlFlowStorage(hostNode: TNodeWithStatements): IControlFlowStorage {
         return this.controlFlowStorageFactory();
     }
 
@@ -138,7 +136,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
      * @param {TNodeWithStatements} hostNode
      * @param {VariableDeclaration} controlFlowStorageNode
      */
-    protected override appendControlFlowStorageNode (
+    protected override appendControlFlowStorageNode(
         hostNode: TNodeWithStatements,
         controlFlowStorageNode: ESTree.VariableDeclaration
     ): void {
@@ -150,7 +148,7 @@ export class StringArrayControlFlowTransformer extends FunctionControlFlowTransf
     /**
      * @returns {boolean}
      */
-    protected override isAllowedTransformationByThreshold (): boolean {
+    protected override isAllowedTransformationByThreshold(): boolean {
         return this.randomGenerator.getMathRandom() <= this.options.stringArrayCallsTransformThreshold;
     }
 }

@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function DebugProtectionFunctionCallTemplate (): string {
+export function DebugProtectionFunctionCallTemplate(): string {
     return `
         (function () {
             {callControllerFunctionName}(

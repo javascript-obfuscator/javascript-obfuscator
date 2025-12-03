@@ -6,55 +6,55 @@ export interface IIdentifierNamesGenerator {
      * @param {number} nameLength
      * @returns {string}
      */
-    generate (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
+    generate(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
     /**
      * @param {number} nameLength
      * @returns {string}
      */
-    generateForGlobalScope (nameLength?: number): string;
+    generateForGlobalScope(nameLength?: number): string;
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nameLength
      * @returns {string}
      */
-    generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
+    generateForLexicalScope(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
     /**
      * @param {string} label
      * @param {number} nameLength
      * @returns {string}
      */
-    generateForLabel (label: string, nameLength?: number): string;
+    generateForLabel(label: string, nameLength?: number): string;
 
     /**
      * @param {number} nameLength
      * @returns {string}
      */
-    generateNext (nameLength?: number): string;
+    generateNext(nameLength?: number): string;
 
     /**
      * @param {string} identifierName
      * @returns {boolean}
      */
-    isValidIdentifierName (identifierName: string): boolean;
+    isValidIdentifierName(identifierName: string): boolean;
 
     /**
      * @param {string} identifierName
      * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
      * @returns {boolean}
      */
-    isValidIdentifierNameInLexicalScopes (identifierName: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean;
+    isValidIdentifierNameInLexicalScopes(identifierName: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean;
 
     /**
      * @param {string} identifierName
      */
-    preserveName (identifierName: string): void;
+    preserveName(identifierName: string): void;
 
     /**
      * @param {string} identifierName
      * @param {TNodeWithLexicalScope} lexicalScope
      */
-    preserveNameForLexicalScope (identifierName: string, lexicalScope: TNodeWithLexicalScope): void;
+    preserveNameForLexicalScope(identifierName: string, lexicalScope: TNodeWithLexicalScope): void;
 }

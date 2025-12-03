@@ -6,7 +6,7 @@ import { StringArrayEncoding } from '../../src/enums/node-transformers/string-ar
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 
-const heapValueToMB = (value: number) => Math.round(value / 1024 / 1024 * 100) / 100;
+const heapValueToMB = (value: number) => Math.round((value / 1024 / 1024) * 100) / 100;
 
 describe('JavaScriptObfuscator memory', function () {
     const iterationsCount: number = 500;
@@ -23,32 +23,29 @@ describe('JavaScriptObfuscator memory', function () {
             let prevHeapUsed: number | null = null;
 
             for (let i: number = 0; i < iterationsCount; i++) {
-                JavaScriptObfuscator.obfuscate(
-                    sourceCode,
-                    {
-                        compact: true,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 0.75,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 0.4,
-                        debugProtection: false,
-                        debugProtectionInterval: 0,
-                        disableConsoleOutput: true,
-                        identifierNamesGenerator: 'mangled',
-                        log: false,
-                        renameGlobals: false,
-                        stringArrayRotate: true,
-                        selfDefending: true,
-                        stringArrayShuffle: true,
-                        splitStrings: true,
-                        splitStringsChunkLength: 2,
-                        stringArray: true,
-                        stringArrayEncoding: [StringArrayEncoding.Base64],
-                        stringArrayThreshold: 0.75,
-                        transformObjectKeys: true,
-                        unicodeEscapeSequence: false
-                    }
-                );
+                JavaScriptObfuscator.obfuscate(sourceCode, {
+                    compact: true,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 0.75,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 0.4,
+                    debugProtection: false,
+                    debugProtectionInterval: 0,
+                    disableConsoleOutput: true,
+                    identifierNamesGenerator: 'mangled',
+                    log: false,
+                    renameGlobals: false,
+                    stringArrayRotate: true,
+                    selfDefending: true,
+                    stringArrayShuffle: true,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2,
+                    stringArray: true,
+                    stringArrayEncoding: [StringArrayEncoding.Base64],
+                    stringArrayThreshold: 0.75,
+                    transformObjectKeys: true,
+                    unicodeEscapeSequence: false
+                });
 
                 const heap = process.memoryUsage();
                 const heapUsed: number = heapValueToMB(heap.heapUsed);

@@ -30,9 +30,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {string[]}
      */
-    private static readonly nameSequence: string[] = [
-        ...`${numbersString}${alphabetString}${alphabetStringUppercase}`
-    ];
+    private static readonly nameSequence: string[] = [...`${numbersString}${alphabetString}${alphabetStringUppercase}`];
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
@@ -50,12 +48,12 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {WeakMap<TNodeWithLexicalScope, string>}
      */
-    private readonly lastMangledNameForScopeMap: WeakMap <TNodeWithLexicalScope, string> = new WeakMap();
+    private readonly lastMangledNameForScopeMap: WeakMap<TNodeWithLexicalScope, string> = new WeakMap();
 
     /**
      * @type {WeakMap<string, string>}
      */
-    private readonly lastMangledNameForLabelMap: Map <string, string> = new Map();
+    private readonly lastMangledNameForLabelMap: Map<string, string> = new Map();
 
     /**
      * @type {ISetUtils}
@@ -67,10 +65,10 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {IOptions} options
      * @param {ISetUtils} setUtils
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.ISetUtils) setUtils: ISetUtils,
+        @inject(ServiceIdentifiers.ISetUtils) setUtils: ISetUtils
     ) {
         super(randomGenerator, options);
 
@@ -84,7 +82,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateNext (nameLength?: number): string {
+    public generateNext(nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.lastMangledName);
 
         this.updatePreviousMangledName(identifierName);
@@ -97,10 +95,8 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForGlobalScope (nameLength?: number): string {
-        const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}`
-            : '';
+    public generateForGlobalScope(nameLength?: number): string {
+        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
 
         const identifierName: string = this.generateNewMangledName(
             this.lastMangledName,
@@ -123,7 +119,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+    public generateForLexicalScope(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
         const lexicalScopes: TNodeWithLexicalScope[] = [
             lexicalScopeNode,
             ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
@@ -132,8 +128,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const lastMangledNameForScope: string = this.getLastMangledNameForScopes(lexicalScopes);
         const identifierName: string = this.generateNewMangledName(
             lastMangledNameForScope,
-            (newIdentifierName: string) =>
-                this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
+            (newIdentifierName: string) => this.isValidIdentifierNameInLexicalScopes(newIdentifierName, lexicalScopes)
         );
 
         this.lastMangledNameForScopeMap.set(lexicalScopeNode, identifierName);
@@ -149,7 +144,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {number} nameLength
      * @returns {string}
      */
-    public generateForLabel (label: string, nameLength?: number): string {
+    public generateForLabel(label: string, nameLength?: number): string {
         const lastMangledNameForLabel: string = this.getLastMangledNameForLabel(label);
 
         const identifierName: string = this.generateNewMangledName(lastMangledNameForLabel);
@@ -165,7 +160,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {boolean}
      */
     // eslint-disable-next-line complexity
-    public isIncrementedMangledName (nextName: string, prevName: string): boolean {
+    public isIncrementedMangledName(nextName: string, prevName: string): boolean {
         if (nextName === prevName) {
             return false;
         }
@@ -200,22 +195,24 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} mangledName
      * @returns {boolean}
      */
-    public override isValidIdentifierName (mangledName: string): boolean {
-        return super.isValidIdentifierName(mangledName)
-            && !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName);
+    public override isValidIdentifierName(mangledName: string): boolean {
+        return (
+            super.isValidIdentifierName(mangledName) &&
+            !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName)
+        );
     }
 
     /**
      * @returns {string[]}
      */
-    protected getNameSequence (): string[] {
+    protected getNameSequence(): string[] {
         return MangledIdentifierNamesGenerator.nameSequence;
     }
 
     /**
      * @param {string} name
      */
-    protected updatePreviousMangledName (name: string): void {
+    protected updatePreviousMangledName(name: string): void {
         if (!this.isIncrementedMangledName(name, this.lastMangledName)) {
             return;
         }
@@ -228,7 +225,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} label
      * @param {string} lastMangledNameForLabel
      */
-    protected updatePreviousMangledNameForLabel (name: string, label: string, lastMangledNameForLabel: string): void {
+    protected updatePreviousMangledNameForLabel(name: string, label: string, lastMangledNameForLabel: string): void {
         if (!this.isIncrementedMangledName(name, lastMangledNameForLabel)) {
             return;
         }
@@ -241,7 +238,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {(newIdentifierName: string) => boolean} validationFunction
      * @returns {string}
      */
-    protected generateNewMangledName (
+    protected generateNewMangledName(
         previousMangledName: string,
         validationFunction?: (newIdentifierName: string) => boolean
     ): string {
@@ -296,8 +293,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         do {
             identifierName = generateNewMangledName(identifierName);
-            isValidIdentifierName = validationFunction?.(identifierName)
-                ?? this.isValidIdentifierName(identifierName);
+            isValidIdentifierName = validationFunction?.(identifierName) ?? this.isValidIdentifierName(identifierName);
         } while (!isValidIdentifierName);
 
         return identifierName;
@@ -307,7 +303,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
      * @returns {string}
      */
-    private getLastMangledNameForScopes (lexicalScopeNodes: TNodeWithLexicalScope[]): string {
+    private getLastMangledNameForScopes(lexicalScopeNodes: TNodeWithLexicalScope[]): string {
         for (const lexicalScope of lexicalScopeNodes) {
             const lastMangledName: string | null = this.lastMangledNameForScopeMap.get(lexicalScope) ?? null;
 
@@ -325,7 +321,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {string} label
      * @returns {string}
      */
-    private getLastMangledNameForLabel (label: string): string {
+    private getLastMangledNameForLabel(label: string): string {
         const lastMangledName: string | null = this.lastMangledNameForLabelMap.get(label) ?? null;
 
         return lastMangledName ?? MangledIdentifierNamesGenerator.initMangledNameCharacter;

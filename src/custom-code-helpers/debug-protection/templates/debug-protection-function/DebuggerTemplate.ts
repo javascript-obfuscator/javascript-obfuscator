@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function DebuggerTemplate (): string {
+export function DebuggerTemplate(): string {
     return `
         if (typeof counter === 'string') {
             return (function (arg) {}.constructor('while (true) {}').apply('counter'));

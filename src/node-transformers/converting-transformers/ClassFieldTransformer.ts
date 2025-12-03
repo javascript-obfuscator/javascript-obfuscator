@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -39,7 +39,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -50,17 +50,14 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
-                            parentNode
-                            && (
-                                NodeGuards.isMethodDefinitionNode(node)
-                                || NodeGuards.isPropertyDefinitionNode(node)
-                            )
+                            parentNode &&
+                            (NodeGuards.isMethodDefinitionNode(node) || NodeGuards.isPropertyDefinitionNode(node))
                         ) {
                             return this.transformNode(node, parentNode);
                         }
@@ -77,7 +74,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (
+    public transformNode(
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         parentNode: ESTree.Node
     ): ESTree.Node {
@@ -97,14 +94,11 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
      * @param {Identifier} keyNode
      * @returns {MethodDefinition | PropertyDefinition}
      */
-    private replaceIdentifierKey (
+    private replaceIdentifierKey(
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Identifier
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
-        if (
-            !ClassFieldTransformer.ignoredNames.includes(keyNode.name)
-            && !classFieldNode.computed
-        ) {
+        if (!ClassFieldTransformer.ignoredNames.includes(keyNode.name) && !classFieldNode.computed) {
             classFieldNode.computed = true;
             classFieldNode.key = NodeFactory.literalNode(keyNode.name);
         }
@@ -117,14 +111,14 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
      * @param {Literal} keyNode
      * @returns {MethodDefinition | PropertyDefinition}
      */
-    private replaceLiteralKey (
+    private replaceLiteralKey(
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Literal
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
-            typeof keyNode.value === 'string'
-            && !ClassFieldTransformer.ignoredNames.includes(keyNode.value)
-            && !classFieldNode.computed
+            typeof keyNode.value === 'string' &&
+            !ClassFieldTransformer.ignoredNames.includes(keyNode.value) &&
+            !classFieldNode.computed
         ) {
             classFieldNode.computed = true;
         }

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -35,7 +35,10 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      */
     private static readonly stringArrayIndexNodesMap: Map<TStringArrayIndexesType, StringArrayIndexNode> = new Map([
         [StringArrayIndexesType.HexadecimalNumber, StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode],
-        [StringArrayIndexesType.HexadecimalNumericString, StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode]
+        [
+            StringArrayIndexesType.HexadecimalNumericString,
+            StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode
+        ]
     ]);
 
     /**
@@ -62,23 +65,18 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
+        stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
 
         this.stringArrayIndexNodeFactory = stringArrayIndexNodeFactory;
         this.stringArrayStorage = stringArrayStorage;
@@ -89,33 +87,31 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      * @param {number} index
      * @returns {Expression}
      */
-    protected getStringArrayIndexNode (index: number): ESTree.Expression {
+    protected getStringArrayIndexNode(index: number): ESTree.Expression {
         const isPositive: boolean = index >= 0;
         const normalizedIndex: number = Math.abs(index);
 
         const stringArrayCallsIndexType: TStringArrayIndexesType = this.randomGenerator
             .getRandomGenerator()
             .pickone(this.options.stringArrayIndexesType);
-        const stringArrayIndexNodeName: StringArrayIndexNode | null = AbstractStringArrayCallNode.stringArrayIndexNodesMap.get(stringArrayCallsIndexType) ?? null;
+        const stringArrayIndexNodeName: StringArrayIndexNode | null =
+            AbstractStringArrayCallNode.stringArrayIndexNodesMap.get(stringArrayCallsIndexType) ?? null;
 
         if (!stringArrayIndexNodeName) {
             throw new Error('Invalid string array index node name');
         }
 
-        const stringArrayCallIndexNode: ESTree.Expression = this.stringArrayIndexNodeFactory(stringArrayIndexNodeName)
-            .getNode(normalizedIndex);
+        const stringArrayCallIndexNode: ESTree.Expression =
+            this.stringArrayIndexNodeFactory(stringArrayIndexNodeName).getNode(normalizedIndex);
 
         NodeMetadata.set(stringArrayCallIndexNode, { stringArrayCallLiteralNode: true });
 
         const hexadecimalNode: ESTree.Expression = isPositive
             ? stringArrayCallIndexNode
-            : NodeFactory.unaryExpressionNode(
-                '-',
-                stringArrayCallIndexNode
-            );
+            : NodeFactory.unaryExpressionNode('-', stringArrayCallIndexNode);
 
         NodeUtils.parentizeAst(hexadecimalNode);
-        
+
         return hexadecimalNode;
     }
 
@@ -123,7 +119,7 @@ export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
      * @param {string} decodeKey
      * @returns {Literal}
      */
-    protected getRc4KeyLiteralNode (decodeKey: string): ESTree.Literal {
+    protected getRc4KeyLiteralNode(decodeKey: string): ESTree.Literal {
         const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(decodeKey);
 
         NodeMetadata.set(rc4KeyLiteralNode, { stringArrayCallLiteralNode: true });

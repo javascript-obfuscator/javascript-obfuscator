@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -45,7 +45,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -59,7 +59,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.RenameIdentifiers:
                 return {
@@ -80,8 +80,9 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
-        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(labeledStatementNode);
+    public transformNode(labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined =
+            NodeLexicalScopeUtils.getLexicalScope(labeledStatementNode);
 
         if (!lexicalScopeNode) {
             return labeledStatementNode;
@@ -97,7 +98,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {LabeledStatement} labeledStatementNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private storeLabeledStatementName (
+    private storeLabeledStatementName(
         labeledStatementNode: ESTree.LabeledStatement,
         lexicalScopeNode: TNodeWithLexicalScope
     ): void {
@@ -108,15 +109,14 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {LabeledStatement} labeledStatementNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private replaceLabeledStatementName (
+    private replaceLabeledStatementName(
         labeledStatementNode: ESTree.LabeledStatement,
         lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
-                    const newIdentifier: ESTree.Identifier = this.identifierReplacer
-                        .replace(node, lexicalScopeNode);
+                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node, lexicalScopeNode);
 
                     node.name = newIdentifier.name;
                 }

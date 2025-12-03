@@ -131,10 +131,7 @@ describe('Utils', () => {
             let identifiersPrefix: string;
 
             before(() => {
-                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources(
-                    'foo',
-                    1
-                );
+                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources('foo', 1);
             });
 
             it('should return correct identifiers prefix', () => {
@@ -148,10 +145,7 @@ describe('Utils', () => {
             let identifiersPrefix: string;
 
             before(() => {
-                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources(
-                    undefined,
-                    1
-                );
+                identifiersPrefix = Utils.getIdentifiersPrefixForMultipleSources(undefined, 1);
             });
 
             it('should return correct identifiers prefix', () => {

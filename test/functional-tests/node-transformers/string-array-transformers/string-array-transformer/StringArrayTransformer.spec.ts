@@ -26,14 +26,11 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('match #1: should replace literal node value with value from string array', () => {
@@ -53,15 +50,12 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
-        it('shouldn\'t replace literal node value with value from string array', () => {
+        it("shouldn't replace literal node value with value from string array", () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
@@ -75,17 +69,12 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexesType: [
-                            StringArrayIndexesType.HexadecimalNumber
-                        ]
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumber]
+                }).getObfuscatedCode();
             });
 
             it('match #1: should transform string array index with the passed index type', () => {
@@ -101,17 +90,12 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexesType: [
-                            StringArrayIndexesType.HexadecimalNumericString
-                        ]
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumericString]
+                }).getObfuscatedCode();
             });
 
             it('match #1: should transform string array index with the passed index type', () => {
@@ -137,18 +121,15 @@ describe('StringArrayTransformer', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayIndexesType: [
-                                StringArrayIndexesType.HexadecimalNumber,
-                                StringArrayIndexesType.HexadecimalNumericString
-                            ]
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayIndexesType: [
+                            StringArrayIndexesType.HexadecimalNumber,
+                            StringArrayIndexesType.HexadecimalNumericString
+                        ]
+                    }).getObfuscatedCode();
 
                     if (obfuscatedCode.match(hexadecimalNumberIndexTypeRegExp)) {
                         hexadecimalNumberIndexTypeMatchesCount += 1;
@@ -159,7 +140,8 @@ describe('StringArrayTransformer', function () {
                     }
 
                     hexadecimalNumberIndexTypeMatchesChance = hexadecimalNumberIndexTypeMatchesCount / samplesCount;
-                    hexadecimalNumericStringIndexTypeMatchesChance = hexadecimalNumericStringIndexTypeMatchesCount / samplesCount;
+                    hexadecimalNumericStringIndexTypeMatchesChance =
+                        hexadecimalNumericStringIndexTypeMatchesCount / samplesCount;
                 }
             });
 
@@ -168,16 +150,24 @@ describe('StringArrayTransformer', function () {
             });
 
             it('should transform string array indexes with a `hexadecimal-numeric-string` type', () => {
-                assert.closeTo(hexadecimalNumericStringIndexTypeMatchesChance, expectedMatchesChance, expectedMatchesDelta);
+                assert.closeTo(
+                    hexadecimalNumericStringIndexTypeMatchesChance,
+                    expectedMatchesChance,
+                    expectedMatchesDelta
+                );
             });
         });
     });
 
     describe('Variant #4: `stringArrayIndexShift` option is enabled', () => {
-        const stringArrayIndexShiftRegExp: RegExp = /_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6} *- *(0x[a-z0-9]{1,3});/;
-        const stringArrayCallRegExp1: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x1;/;
-        const stringArrayCallRegExp2: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x2;/;
-        const stringArrayCallRegExp3: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x3;/;
+        const stringArrayIndexShiftRegExp: RegExp =
+            /_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6} *- *(0x[a-z0-9]{1,3});/;
+        const stringArrayCallRegExp1: RegExp =
+            /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x1;/;
+        const stringArrayCallRegExp2: RegExp =
+            /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x2;/;
+        const stringArrayCallRegExp3: RegExp =
+            /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4}\((0x[a-z0-9]{1,3})\) *\+ *0x3;/;
 
         const expectedEvaluationResult: string = 'foo1bar2baz3';
 
@@ -194,17 +184,17 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexShift: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexShift: true
+                }).getObfuscatedCode();
 
-                stringArrayIndexShiftIndexValue = parseInt(getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp), 16);
+                stringArrayIndexShiftIndexValue = parseInt(
+                    getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp),
+                    16
+                );
                 stringArrayCallIndexValue1 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp1), 16);
                 stringArrayCallIndexValue2 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp2), 16);
                 stringArrayCallIndexValue3 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp3), 16);
@@ -237,18 +227,18 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexShift: true,
-                        stringArrayRotate: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexShift: true,
+                    stringArrayRotate: true
+                }).getObfuscatedCode();
 
-                stringArrayIndexShiftIndexValue = parseInt(getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp), 16);
+                stringArrayIndexShiftIndexValue = parseInt(
+                    getRegExpMatch(obfuscatedCode, stringArrayIndexShiftRegExp),
+                    16
+                );
                 stringArrayCallIndexValue1 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp1), 16);
                 stringArrayCallIndexValue2 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp2), 16);
                 stringArrayCallIndexValue3 = parseInt(getRegExpMatch(obfuscatedCode, stringArrayCallRegExp3), 16);
@@ -269,16 +259,13 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexShift: true,
-                        stringArrayShuffle: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexShift: true,
+                    stringArrayShuffle: true
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
@@ -296,17 +283,14 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayIndexShift: true,
-                        stringArrayWrappersCount: 1,
-                        stringArrayWrappersType: StringArrayWrappersType.Function
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayIndexShift: true,
+                    stringArrayWrappersCount: 1,
+                    stringArrayWrappersType: StringArrayWrappersType.Function
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
@@ -324,23 +308,18 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-index-shift.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArrayShuffle: true,
-                        stringArray: true,
-                        stringArrayEncoding: [
-                            StringArrayEncoding.Rc4
-                        ],
-                        stringArrayIndexShift: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 2,
-                        stringArrayWrappersChainedCalls: true,
-                        stringArrayWrappersType: 'function'
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArrayShuffle: true,
+                    stringArray: true,
+                    stringArrayEncoding: [StringArrayEncoding.Rc4],
+                    stringArrayIndexShift: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 2,
+                    stringArrayWrappersChainedCalls: true,
+                    stringArrayWrappersType: 'function'
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
@@ -364,14 +343,11 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/same-literal-values.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('match #1: should create only one item in string array for same literal node values', () => {
@@ -391,17 +367,14 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/short-literal-value.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
-        it('shouldn\'t replace short literal node value with value from string array', () => {
+        it("shouldn't replace short literal node value with value from string array", () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
@@ -411,7 +384,7 @@ describe('StringArrayTransformer', function () {
             'function _0x([a-f0-9]){4} *\\(\\) *{' +
                 `var _0x([a-f0-9]){4,6} *= *\\[\'${swapLettersCase('dGVzdA')}\'];.*` +
                 'return _0x([a-f0-9]){4}\\(\\); *' +
-            '}'
+                '}'
         );
         const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
@@ -420,15 +393,12 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayEncoding: [StringArrayEncoding.Base64],
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayEncoding: [StringArrayEncoding.Base64],
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('match #1: should replace literal node value with value from string array encoded using base64', () => {
@@ -449,15 +419,12 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayEncoding: [StringArrayEncoding.Rc4],
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayEncoding: [StringArrayEncoding.Rc4],
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace literal node value with value from string array encoded using rc4', () => {
@@ -477,16 +444,13 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/same-literal-values.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        seed: 1, // set seed to prevent rare case when all encoded values are the same
-                        stringArray: true,
-                        stringArrayEncoding: [StringArrayEncoding.Rc4],
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    seed: 1, // set seed to prevent rare case when all encoded values are the same
+                    stringArray: true,
+                    stringArrayEncoding: [StringArrayEncoding.Rc4],
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
 
                 encodedLiteralValue1 = getRegExpMatch(obfuscatedCode, variableRegExp1);
                 encodedLiteralValue2 = getRegExpMatch(obfuscatedCode, variableRegExp2);
@@ -526,18 +490,12 @@ describe('StringArrayTransformer', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64],
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     if (obfuscatedCode.match(noneEncodingRegExp)) {
                         noneEncodingMatchesCount = noneEncodingMatchesCount + 1;
@@ -582,18 +540,12 @@ describe('StringArrayTransformer', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Rc4
-                            ],
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     if (obfuscatedCode.match(noneEncodingRegExp)) {
                         noneEncodingMatchesCount = noneEncodingMatchesCount + 1;
@@ -638,18 +590,12 @@ describe('StringArrayTransformer', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.Base64,
-                                StringArrayEncoding.Rc4
-                            ],
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.Base64, StringArrayEncoding.Rc4],
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     if (obfuscatedCode.match(base64EncodingRegExp)) {
                         base64EncodingMatchesCount = base64EncodingMatchesCount + 1;
@@ -682,27 +628,19 @@ describe('StringArrayTransformer', function () {
         const regExp1: RegExp = /var test *= *_0x([a-f0-9]){4}\(0x0\);/g;
         const regExp2: RegExp = /var test *= *'test';/g;
 
-        let stringArrayProbability: number,
-            noStringArrayProbability: number;
+        let stringArrayProbability: number, noStringArrayProbability: number;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                `${code}\n`.repeat(samples),
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: stringArrayThreshold
-                }
-            ).getObfuscatedCode();
+            const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${code}\n`.repeat(samples), {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: stringArrayThreshold
+            }).getObfuscatedCode();
 
-            const stringArrayMatchesLength: number = obfuscatedCode
-                .match(regExp1)!
-                .length;
-            const noStringArrayMatchesLength: number = obfuscatedCode
-                .match(regExp2)!
-                .length;
+            const stringArrayMatchesLength: number = obfuscatedCode.match(regExp1)!.length;
+            const noStringArrayMatchesLength: number = obfuscatedCode.match(regExp2)!.length;
 
             stringArrayProbability = stringArrayMatchesLength / samples;
             noStringArrayProbability = noStringArrayMatchesLength / samples;
@@ -712,7 +650,7 @@ describe('StringArrayTransformer', function () {
             assert.closeTo(stringArrayProbability, stringArrayThreshold, delta);
         });
 
-        it('Variant #2: shouldn\'t replace literal node value with value from string array with `(1 - stringArrayThreshold)` chance', () => {
+        it("Variant #2: shouldn't replace literal node value with value from string array with `(1 - stringArrayThreshold)` chance", () => {
             assert.closeTo(noStringArrayProbability, stringArrayThreshold, delta);
         });
     });
@@ -725,15 +663,12 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-name.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1,
+                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            }).getObfuscatedCode();
         });
 
         it('match #1: should keep identifier with string array calls wrapper name untouched after obfuscation', () => {
@@ -752,15 +687,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            reservedStrings: ['foo']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        reservedStrings: ['foo']
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should ignore reserved strings', () => {
@@ -781,15 +713,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            reservedStrings: ['foo', 'bar']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        reservedStrings: ['foo', 'bar']
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should ignore reserved strings', () => {
@@ -812,15 +741,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            reservedStrings: ['ar$']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        reservedStrings: ['ar$']
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should transform non-reserved strings', () => {
@@ -841,15 +767,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            reservedStrings: ['^fo', '.ar']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        reservedStrings: ['^fo', '.ar']
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should ignore reserved strings', () => {
@@ -874,15 +797,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['bar'],
-                            stringArray: true,
-                            stringArrayThreshold: 0
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['bar'],
+                        stringArray: true,
+                        stringArrayThreshold: 0
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should not transform string', () => {
@@ -903,15 +823,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['foo', 'bar'],
-                            stringArray: true,
-                            stringArrayThreshold: 0
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['foo', 'bar'],
+                        stringArray: true,
+                        stringArrayThreshold: 0
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should transform force transform string', () => {
@@ -934,15 +851,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['ar$'],
-                            stringArray: true,
-                            stringArrayThreshold: 0
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['ar$'],
+                        stringArray: true,
+                        stringArrayThreshold: 0
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should not transform string', () => {
@@ -963,15 +877,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['^fo', '.ar'],
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['^fo', '.ar'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should transform force transform string', () => {
@@ -994,15 +905,12 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['foo', 'bar'],
-                            stringArray: false,
-                            stringArrayThreshold: 0
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['foo', 'bar'],
+                        stringArray: false,
+                        stringArrayThreshold: 0
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should not transform string', () => {
@@ -1025,16 +933,13 @@ describe('StringArrayTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['bar'],
-                            reservedStrings: ['foo', 'bar'],
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['bar'],
+                        reservedStrings: ['foo', 'bar'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should not transform string', () => {
@@ -1056,17 +961,16 @@ describe('StringArrayTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option-conditional-comments.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/force-transform-strings-option-conditional-comments.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            forceTransformStrings: ['bar'],
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        forceTransformStrings: ['bar'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('match #1: should not transform string', () => {
@@ -1086,7 +990,7 @@ describe('StringArrayTransformer', function () {
 
     describe('Variant #16: object expression key literal', () => {
         describe('Variant #1: base key literal', () => {
-            const stringArrayRegExp: RegExp = getStringArrayRegExp(['bar'])
+            const stringArrayRegExp: RegExp = getStringArrayRegExp(['bar']);
             const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\(0x0\)};/;
 
             let obfuscatedCode: string;
@@ -1094,14 +998,11 @@ describe('StringArrayTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/object-expression-key-literal.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('match #1: should not add object expression key literal to the string array', () => {
@@ -1114,22 +1015,22 @@ describe('StringArrayTransformer', function () {
         });
 
         describe('Variant #2: computed key literal', () => {
-            const stringArrayRegExp: RegExp = getStringArrayRegExp(['foo', 'bar'])
-            const objectExpressionRegExp: RegExp = /var test *= *{\[_0x([a-f0-9]){4}\(0x0\)] *: *_0x([a-f0-9]){4}\(0x1\)};/;
+            const stringArrayRegExp: RegExp = getStringArrayRegExp(['foo', 'bar']);
+            const objectExpressionRegExp: RegExp =
+                /var test *= *{\[_0x([a-f0-9]){4}\(0x0\)] *: *_0x([a-f0-9]){4}\(0x1\)};/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/object-expression-computed-key-literal.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/object-expression-computed-key-literal.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('match #1: should add object expression computed key literal to the string array', () => {
@@ -1150,14 +1051,11 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/import-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('Should not add `ImportDeclaration` source literal to the string array', () => {
@@ -1173,14 +1071,11 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/export-all-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('Should not add `ExportAllDeclaration` source literal to the string array', () => {
@@ -1196,14 +1091,11 @@ describe('StringArrayTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/export-named-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('Should not add `ExportNamedDeclaration` source literal to the string array', () => {

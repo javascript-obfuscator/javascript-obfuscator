@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function Rc4Template (): string {
+export function Rc4Template(): string {
     return `
         const {rc4FunctionName} = function (str, key) {
             let s = [], j = 0, x, output = '';

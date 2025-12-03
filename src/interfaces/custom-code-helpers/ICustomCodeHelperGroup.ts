@@ -9,7 +9,7 @@ export interface ICustomCodeHelperGroup extends IInitializable, TCustomCodeHelpe
     /**
      * @type {Map <CustomCodeHelper, ICustomCodeHelper>}
      */
-    getCustomCodeHelpers (): Map <CustomCodeHelper, ICustomCodeHelper>;
+    getCustomCodeHelpers(): Map<CustomCodeHelper, ICustomCodeHelper>;
 
-    initialize (): void;
+    initialize(): void;
 }

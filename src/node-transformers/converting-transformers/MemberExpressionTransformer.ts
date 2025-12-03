@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -20,7 +20,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -31,7 +31,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -63,8 +63,11 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeMetadata.isIgnoredNode(memberExpressionNode.object) || NodeMetadata.isIgnoredNode(memberExpressionNode.property)) {
+    public transformNode(memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
+        if (
+            NodeMetadata.isIgnoredNode(memberExpressionNode.object) ||
+            NodeMetadata.isIgnoredNode(memberExpressionNode.property)
+        ) {
             return memberExpressionNode;
         }
 

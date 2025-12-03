@@ -17,7 +17,7 @@ export class StringArrayHexadecimalNumericStringIndexNode extends AbstractString
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -28,7 +28,7 @@ export class StringArrayHexadecimalNumericStringIndexNode extends AbstractString
      * @param {number} index
      * @returns {Expression}
      */
-    public getNode (index: number): ESTree.Expression {
+    public getNode(index: number): ESTree.Expression {
         const hexadecimalIndex: string = NumberUtils.toHex(index);
 
         return NodeFactory.literalNode(hexadecimalIndex);

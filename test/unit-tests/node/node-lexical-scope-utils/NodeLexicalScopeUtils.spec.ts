@@ -33,9 +33,7 @@ describe('NodeLexicalScopeUtils', () => {
                 ifStatementBlockStatementNode2
             );
 
-            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([
-                ifStatementNode2
-            ]);
+            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([ifStatementNode2]);
 
             ifStatementNode1 = NodeFactory.ifStatementNode(
                 NodeFactory.literalNode(true),
@@ -47,11 +45,13 @@ describe('NodeLexicalScopeUtils', () => {
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = NodeFactory.functionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeFactory.functionDeclarationNode(
+                'test',
+                [],
+                functionDeclarationBlockStatementNode
+            );
 
-            programNode = NodeFactory.programNode([
-                functionDeclarationNode
-            ]);
+            programNode = NodeFactory.programNode([functionDeclarationNode]);
 
             programNode.parentNode = programNode;
             functionDeclarationNode.parentNode = programNode;
@@ -73,7 +73,10 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `functionDeclaration blockStatement` node child node', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScope(functionDeclarationBlockStatementNode), functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScope(functionDeclarationBlockStatementNode),
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `expressionStatement` node #1 child node', () => {
@@ -85,11 +88,17 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #1 child node', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScope(ifStatementBlockStatementNode1), functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScope(ifStatementBlockStatementNode1),
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #2 child node', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScope(ifStatementBlockStatementNode2), functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScope(ifStatementBlockStatementNode2),
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `expressionStatement` node #3 child node', () => {
@@ -128,9 +137,7 @@ describe('NodeLexicalScopeUtils', () => {
                 ifStatementBlockStatementNode2
             );
 
-            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([
-                ifStatementNode2
-            ]);
+            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([ifStatementNode2]);
 
             ifStatementNode1 = NodeFactory.ifStatementNode(
                 NodeFactory.literalNode(true),
@@ -142,11 +149,13 @@ describe('NodeLexicalScopeUtils', () => {
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = NodeFactory.functionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeFactory.functionDeclarationNode(
+                'test',
+                [],
+                functionDeclarationBlockStatementNode
+            );
 
-            programNode = NodeFactory.programNode([
-                functionDeclarationNode
-            ]);
+            programNode = NodeFactory.programNode([functionDeclarationNode]);
 
             programNode.parentNode = programNode;
             functionDeclarationNode.parentNode = programNode;
@@ -164,7 +173,10 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `functionDeclaration` node child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(functionDeclarationNode)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(functionDeclarationNode)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `functionDeclaration` node child node #2', () => {
@@ -172,11 +184,17 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `functionDeclaration blockStatement` node child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(functionDeclarationBlockStatementNode)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(functionDeclarationBlockStatementNode)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `expressionStatement` node #1 child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(expressionStatementNode1)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(expressionStatementNode1)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `expressionStatement` node #1 child node #2', () => {
@@ -192,7 +210,10 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #1 child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(ifStatementBlockStatementNode1)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(ifStatementBlockStatementNode1)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #1 child node #2', () => {
@@ -200,7 +221,10 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #2 child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(ifStatementBlockStatementNode2)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(ifStatementBlockStatementNode2)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `ifStatement blockStatement` node #1 child node #2', () => {
@@ -208,7 +232,10 @@ describe('NodeLexicalScopeUtils', () => {
         });
 
         it('should return lexical scope node for `expressionStatement` node #3 child node #1', () => {
-            assert.deepEqual(NodeLexicalScopeUtils.getLexicalScopes(expressionStatementNode3)[0], functionDeclarationNode);
+            assert.deepEqual(
+                NodeLexicalScopeUtils.getLexicalScopes(expressionStatementNode3)[0],
+                functionDeclarationNode
+            );
         });
 
         it('should return lexical scope node for `expressionStatement` node #3 child node #2', () => {

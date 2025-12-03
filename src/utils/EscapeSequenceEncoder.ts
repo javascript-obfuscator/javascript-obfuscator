@@ -22,14 +22,14 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
     /**
      * @type {Map<string, string>}
      */
-    private readonly stringsCache: Map <string, string> = new Map();
+    private readonly stringsCache: Map<string, string> = new Map();
 
     /**
      * @param {string} string
      * @param {boolean} encodeAllSymbols
      * @returns {string}
      */
-    public encode (string: string, encodeAllSymbols: boolean): string {
+    public encode(string: string, encodeAllSymbols: boolean): string {
         const cacheKey: string = `${string}-${String(encodeAllSymbols)}`;
 
         if (this.stringsCache.has(cacheKey)) {
@@ -43,8 +43,8 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
         let template: string;
 
         const result: string = string.replace(replaceRegExp, (character: string): string => {
-            const shouldEncodeCharacter: boolean = encodeAllSymbols
-                || EscapeSequenceEncoder.forceEscapeCharactersRegExp.test(character);
+            const shouldEncodeCharacter: boolean =
+                encodeAllSymbols || EscapeSequenceEncoder.forceEscapeCharactersRegExp.test(character);
 
             if (!shouldEncodeCharacter) {
                 return character;

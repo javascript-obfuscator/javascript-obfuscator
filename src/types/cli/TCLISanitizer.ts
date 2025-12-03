@@ -1,1 +1,1 @@
-export type TCLISanitizer <T> = (value: string) => T;
+export type TCLISanitizer<T> = (value: string) => T;

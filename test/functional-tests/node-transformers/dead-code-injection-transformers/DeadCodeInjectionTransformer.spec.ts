@@ -19,11 +19,11 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #1 - 5 simple block statements', () => {
             const regExp: RegExp = new RegExp(
-                `if *\\(${variableMatch}\\(${hexMatch}\\) *[=|!]== *${variableMatch}\\(${hexMatch}\\)\\) *\\{`+
+                `if *\\(${variableMatch}\\(${hexMatch}\\) *[=|!]== *${variableMatch}\\(${hexMatch}\\)\\) *\\{` +
                     `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\} *else *\\{`+
+                    `\\} *else *\\{` +
                     `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\}`,
+                    `\\}`,
                 'g'
             );
             const expectedMatchesLength: number = 5;
@@ -33,16 +33,13 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
                 if (matches) {
@@ -59,7 +56,7 @@ describe('DeadCodeInjectionTransformer', () => {
             const regexp: RegExp = new RegExp(
                 `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\};`,
+                    `\\};`,
                 'g'
             );
             const expectedMatchesLength: number = 4;
@@ -69,16 +66,13 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-statements-min-count.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regexp);
 
                 if (matches) {
@@ -86,7 +80,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 }
             });
 
-            it('shouldn\'t add dead code', () => {
+            it("shouldn't add dead code", () => {
                 assert.equal(matchesLength, expectedMatchesLength);
             });
         });
@@ -95,7 +89,7 @@ describe('DeadCodeInjectionTransformer', () => {
             const regexp: RegExp = new RegExp(
                 `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\};`,
+                    `\\};`,
                 'g'
             );
             const expectedMatchesLength: number = 5;
@@ -105,16 +99,13 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 0,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 0,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regexp);
 
                 if (matches) {
@@ -122,7 +113,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 }
             });
 
-            it('shouldn\'t add dead code', () => {
+            it("shouldn't add dead code", () => {
                 assert.equal(matchesLength, expectedMatchesLength);
             });
         });
@@ -132,7 +123,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
                 const functionDeclarationRegExp: RegExp = new RegExp(
@@ -146,20 +137,21 @@ describe('DeadCodeInjectionTransformer', () => {
                     functionDeclarationMatchesLength: number = 0;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/function-declaration-inside-block-statement.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/function-declaration-inside-block-statement.js'
+                    );
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionDeclarationRegExp);
+                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(functionDeclarationRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -170,11 +162,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(functionDeclarationMatchesLength, expectedFunctionDeclarationMatchesLength);
                 });
             });
@@ -184,13 +176,13 @@ describe('DeadCodeInjectionTransformer', () => {
                     const functionRegExp: RegExp = new RegExp(
                         `var ${variableMatch} *= *function *\\(\\) *\\{` +
                             `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                        `\\};`,
+                            `\\};`,
                         'g'
                     );
                     const loopRegExp: RegExp = new RegExp(
                         `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
-                        `(?:continue|break);` +
-                        `\\}`,
+                            `(?:continue|break);` +
+                            `\\}`,
                         'g'
                     );
                     const expectedFunctionMatchesLength: number = 4;
@@ -202,17 +194,16 @@ describe('DeadCodeInjectionTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-1.js');
 
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                deadCodeInjection: true,
-                                deadCodeInjectionThreshold: 1,
-                                stringArray: true,
-                                stringArrayThreshold: 1
-                            }
-                        ).getObfuscatedCode();
-                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }).getObfuscatedCode();
+                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                            obfuscatedCode.match(functionRegExp)
+                        );
                         const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
 
                         if (functionMatches) {
@@ -224,11 +215,11 @@ describe('DeadCodeInjectionTransformer', () => {
                         }
                     });
 
-                    it('match #1: shouldn\'t add dead code', () => {
+                    it("match #1: shouldn't add dead code", () => {
                         assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                     });
 
-                    it('match #2: shouldn\'t add dead code', () => {
+                    it("match #2: shouldn't add dead code", () => {
                         assert.equal(loopMatchesLength, expectedLoopMatchesLength);
                     });
                 });
@@ -237,7 +228,7 @@ describe('DeadCodeInjectionTransformer', () => {
                     const functionRegExp: RegExp = new RegExp(
                         `var ${variableMatch} *= *function *\\(\\) *\\{` +
                             `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                        `\\};`,
+                            `\\};`,
                         'g'
                     );
                     const loopRegExp: RegExp = new RegExp(
@@ -254,17 +245,16 @@ describe('DeadCodeInjectionTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-2.js');
 
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                deadCodeInjection: true,
-                                deadCodeInjectionThreshold: 1,
-                                stringArray: true,
-                                stringArrayThreshold: 1
-                            }
-                        ).getObfuscatedCode();
-                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }).getObfuscatedCode();
+                        const functionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                            obfuscatedCode.match(functionRegExp)
+                        );
                         const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
 
                         if (functionMatches) {
@@ -276,11 +266,11 @@ describe('DeadCodeInjectionTransformer', () => {
                         }
                     });
 
-                    it('match #1: shouldn\'t add dead code', () => {
+                    it("match #1: shouldn't add dead code", () => {
                         assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                     });
 
-                    it('match #2: shouldn\'t add dead code', () => {
+                    it("match #2: shouldn't add dead code", () => {
                         assert.equal(loopMatchesLength, expectedLoopMatchesLength);
                     });
                 });
@@ -290,13 +280,10 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
-                const awaitExpressionRegExp: RegExp = new RegExp(
-                    `await *${variableMatch}\\(\\)`,
-                    'g'
-                );
+                const awaitExpressionRegExp: RegExp = new RegExp(`await *${variableMatch}\\(\\)`, 'g');
                 const expectedFunctionMatchesLength: number = 4;
                 const expectedAwaitExpressionMatchesLength: number = 1;
 
@@ -306,18 +293,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/await-expression.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
+                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(awaitExpressionRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -328,11 +314,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
                 });
             });
@@ -341,13 +327,10 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
-                const yieldExpressionRegExp: RegExp = new RegExp(
-                    `yield *${variableMatch}\\(\\)`,
-                    'g'
-                );
+                const yieldExpressionRegExp: RegExp = new RegExp(`yield *${variableMatch}\\(\\)`, 'g');
                 const expectedFunctionMatchesLength: number = 4;
                 const expectedAwaitExpressionMatchesLength: number = 1;
 
@@ -357,18 +340,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/yield-expression.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const yieldExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(yieldExpressionRegExp);
+                    const yieldExpressionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(yieldExpressionRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -379,11 +361,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(yieldExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
                 });
             });
@@ -392,13 +374,10 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
-                const superExpressionRegExp: RegExp = new RegExp(
-                    `super *\\(\\);`,
-                    'g'
-                );
+                const superExpressionRegExp: RegExp = new RegExp(`super *\\(\\);`, 'g');
                 const expectedFunctionMatchesLength: number = 4;
                 const expectedSuperExpressionMatchesLength: number = 1;
 
@@ -408,18 +387,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/super-expression.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(superExpressionRegExp);
+                    const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(superExpressionRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -430,11 +408,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(superExpressionMatchesLength, expectedSuperExpressionMatchesLength);
                 });
             });
@@ -443,7 +421,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
                 const awaitExpressionRegExp: RegExp = new RegExp(
@@ -459,18 +437,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/for-await-expression.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
+                    const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(awaitExpressionRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -481,11 +458,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
                 });
             });
@@ -494,13 +471,10 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionRegExp: RegExp = new RegExp(
                     `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                    `\\};`,
+                        `\\};`,
                     'g'
                 );
-                const privateIdentifierRegExp: RegExp = new RegExp(
-                    `this\.#private *= *0x1;`,
-                    'g'
-                );
+                const privateIdentifierRegExp: RegExp = new RegExp(`this\.#private *= *0x1;`, 'g');
                 const expectedFunctionMatchesLength: number = 4;
                 const expectedPrivateIdentifierMatchesLength: number = 1;
 
@@ -510,18 +484,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/private-identifier.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                    const privateIdentifierMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(privateIdentifierRegExp);
+                    const privateIdentifierMatches: RegExpMatchArray = <RegExpMatchArray>(
+                        obfuscatedCode.match(privateIdentifierRegExp)
+                    );
 
                     if (functionMatches) {
                         functionMatchesLength = functionMatches.length;
@@ -532,11 +505,11 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('match #1: shouldn\'t add dead code', () => {
+                it("match #1: shouldn't add dead code", () => {
                     assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
                 });
 
-                it('match #2: shouldn\'t add dead code', () => {
+                it("match #2: shouldn't add dead code", () => {
                     assert.equal(privateIdentifierMatchesLength, expectedPrivateIdentifierMatchesLength);
                 });
             });
@@ -550,34 +523,38 @@ describe('DeadCodeInjectionTransformer', () => {
             const ifMatch: string = `if *\\(!!\\[\\]\\) *\\{`;
             const functionMatch: string = `var ${variableMatch} *= *function *\\(\\) *\\{`;
 
-            const match1: string = `` +
+            const match1: string =
+                `` +
                 `if *\\(${stringArrayCallMatch} *=== *${stringArrayCallMatch}\\) *\\{` +
-                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
+                `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
+                `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
-            ``;
-            const match2: string = `` +
+                ``;
+            const match2: string =
+                `` +
                 `if *\\(${stringArrayCallMatch} *!== *${stringArrayCallMatch}\\) *\\{` +
-                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
+                `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
+                `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
-            ``;
-            const match3: string = `` +
+                ``;
+            const match3: string =
+                `` +
                 `if *\\(${stringArrayCallMatch} *=== *${stringArrayCallMatch}\\) *\\{` +
-                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
+                `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
+                `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
-            ``;
-            const match4: string = `` +
+                ``;
+            const match4: string =
+                `` +
                 `if *\\(${stringArrayCallMatch} *!== *${stringArrayCallMatch}\\) *\\{` +
-                    `${variableMatch}\\(${stringArrayCallMatch}\\);` +
+                `${variableMatch}\\(${stringArrayCallMatch}\\);` +
                 `\\} *else *\\{` +
-                    `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
+                `console\\[${stringArrayCallMatch}]\\(${stringArrayCallMatch}\\);` +
                 `\\}` +
-            ``;
+                ``;
 
             let distribution1: number = 0,
                 distribution2: number = 0,
@@ -598,17 +575,13 @@ describe('DeadCodeInjectionTransformer', () => {
                 let count4: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     if (regExp1.test(obfuscatedCode)) {
                         count1++;
@@ -648,7 +621,7 @@ describe('DeadCodeInjectionTransformer', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(!!\\[\\]\\) *{` +
                     `console\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\}`
+                    `\\}`
             );
 
             let obfuscatedCode: string;
@@ -656,19 +629,16 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-scope-is-program-node.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t add dead code in block statements with `ProgramNode` block scope', () => {
+            it("shouldn't add dead code in block statements with `ProgramNode` block scope", () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
@@ -679,17 +649,16 @@ describe('DeadCodeInjectionTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/obfuscation-of-dead-code-block-statements.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/obfuscation-of-dead-code-block-statements.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        debugProtection: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1,
+                    debugProtection: true
+                }).getObfuscatedCode();
             });
 
             it('should correctly obfuscate dead-code block statements and prevent any exposing of internal variable names', () => {
@@ -757,18 +726,17 @@ describe('DeadCodeInjectionTransformer', () => {
              * This should never happen.
              */
             describe('Variant #1', () => {
-                const functionParameterMatch: string = `` +
-                    `\\(function\\((\\w)\\){` +
-                ``;
-                const deadCodeMatch: string = `` +
+                const functionParameterMatch: string = `` + `\\(function\\((\\w)\\){` + ``;
+                const deadCodeMatch: string =
+                    `` +
                     `function \\w *\\(\\w\\) *{` +
-                        `if *\\(.{0,30}\\) *{` +
-                            `var (\\w).*?;` +
-                        `} *else *{` +
-                            `return *(\\w).*?;` +
-                        `}` +
+                    `if *\\(.{0,30}\\) *{` +
+                    `var (\\w).*?;` +
+                    `} *else *{` +
+                    `return *(\\w).*?;` +
                     `}` +
-                ``;
+                    `}` +
+                    ``;
                 const functionParameterRegExp: RegExp = new RegExp(functionParameterMatch);
                 const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
 
@@ -778,23 +746,20 @@ describe('DeadCodeInjectionTransformer', () => {
                     variableDeclarationIdentifierName: string | null,
                     obfuscatedCode: string;
 
-
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/unique-names-for-dead-code-identifiers.js'
+                    );
 
                     for (let i: number = 0; i < 100; i++) {
                         while (true) {
                             try {
-
-                                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        deadCodeInjection: true,
-                                        deadCodeInjectionThreshold: 1,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                                    }
-                                ).getObfuscatedCode();
+                                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    deadCodeInjection: true,
+                                    deadCodeInjectionThreshold: 1,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                                }).getObfuscatedCode();
                                 functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
                                 variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
                                 returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
@@ -821,18 +786,17 @@ describe('DeadCodeInjectionTransformer', () => {
             });
 
             describe('Variant #2', () => {
-                const functionParameterMatch: string = `` +
-                    `\\(function\\((\\w)\\){` +
-                ``;
-                const deadCodeMatch: string = `` +
+                const functionParameterMatch: string = `` + `\\(function\\((\\w)\\){` + ``;
+                const deadCodeMatch: string =
+                    `` +
                     `function \\w *\\(\\w\\) *{` +
-                        `if *\\(.{0,30}\\) *{` +
-                            `return *(\\w).{0,40};` +
-                        `} *else *{` +
-                            `var (\\w).*?;` +
-                        `}` +
+                    `if *\\(.{0,30}\\) *{` +
+                    `return *(\\w).{0,40};` +
+                    `} *else *{` +
+                    `var (\\w).*?;` +
                     `}` +
-                ``;
+                    `}` +
+                    ``;
                 const functionParameterRegExp: RegExp = new RegExp(functionParameterMatch);
                 const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
 
@@ -842,23 +806,20 @@ describe('DeadCodeInjectionTransformer', () => {
                     variableDeclarationIdentifierName: string | null,
                     obfuscatedCode: string;
 
-
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/unique-names-for-dead-code-identifiers.js'
+                    );
 
                     for (let i: number = 0; i < 100; i++) {
                         while (true) {
                             try {
-
-                                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        deadCodeInjection: true,
-                                        deadCodeInjectionThreshold: 1,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                                    }
-                                ).getObfuscatedCode();
+                                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    deadCodeInjection: true,
+                                    deadCodeInjectionThreshold: 1,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                                }).getObfuscatedCode();
                                 functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
                                 returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
                                 variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
@@ -888,8 +849,7 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #9 - block statements with empty body', () => {
             const regExp: RegExp = new RegExp(
-                `function *${variableMatch} *\\(\\) *{ *} *` +
-                `${variableMatch} *\\(\\); *`,
+                `function *${variableMatch} *\\(\\) *{ *} *` + `${variableMatch} *\\(\\); *`,
                 'g'
             );
             const expectedMatchesLength: number = 5;
@@ -899,16 +859,13 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-statement-empty-body.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1
+                }).getObfuscatedCode();
 
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
@@ -917,7 +874,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 }
             });
 
-            it('shouldn\'t add dead code conditions to the block empty block statements', () => {
+            it("shouldn't add dead code conditions to the block empty block statements", () => {
                 assert.isAtLeast(matchesLength, expectedMatchesLength);
             });
         });
@@ -926,8 +883,8 @@ describe('DeadCodeInjectionTransformer', () => {
             describe('Variant #1: collecting of block statements', () => {
                 const regExp: RegExp = new RegExp(
                     `${variableMatch} *\\(\\); *` +
-                    `var ${variableMatch} *= *0x2; *` +
-                    `function *${variableMatch} *\\(\\) *{ *} *`,
+                        `var ${variableMatch} *= *0x2; *` +
+                        `function *${variableMatch} *\\(\\) *{ *} *`,
                     'g'
                 );
                 const expectedMatchesLength: number = 5;
@@ -935,18 +892,17 @@ describe('DeadCodeInjectionTransformer', () => {
                 let matchesLength: number = 0;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/block-statement-with-scope-hoisting-1.js'
+                    );
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }).getObfuscatedCode();
 
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
@@ -955,7 +911,7 @@ describe('DeadCodeInjectionTransformer', () => {
                     }
                 });
 
-                it('shouldn\'t collect block statements with scope-hoisting', () => {
+                it("shouldn't collect block statements with scope-hoisting", () => {
                     assert.equal(matchesLength, expectedMatchesLength);
                 });
             });
@@ -968,28 +924,27 @@ describe('DeadCodeInjectionTransformer', () => {
                         `var ${variableMatch} *= *0x2; *` +
                         `function *${variableMatch} *\\(\\) *{ *} *` +
                         `var ${variableMatch} *= *0x3; *` +
-                    `}`,
+                        `}`,
                     'g'
                 );
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-2.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/block-statement-with-scope-hoisting-2.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
-                it('shouldn\'t wrap block statements in dead code conditions', () => {
+                it("shouldn't wrap block statements in dead code conditions", () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -998,13 +953,11 @@ describe('DeadCodeInjectionTransformer', () => {
         describe('Variant #11 - prevailing kind of variables of inserted code', () => {
             describe('Variant #1: base', () => {
                 const variableDeclarationsRegExp: RegExp = new RegExp(
-                    `const ${variableMatch} *= *\\[\\]; *` +
-                    `var ${variableMatch} *= *\\[\\]; *`,
+                    `const ${variableMatch} *= *\\[\\]; *` + `var ${variableMatch} *= *\\[\\]; *`,
                     'g'
                 );
                 const invalidVariableDeclarationsRegExp: RegExp = new RegExp(
-                    `var ${variableMatch} *= *\\[\\]; *` +
-                    `var ${variableMatch} *= *\\[\\]; *`,
+                    `var ${variableMatch} *= *\\[\\]; *` + `var ${variableMatch} *= *\\[\\]; *`,
                     'g'
                 );
 
@@ -1022,29 +975,26 @@ describe('DeadCodeInjectionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
-                it('Match #1: shouldn\'t replace kinds of variables of inserted original code', () => {
+                it("Match #1: shouldn't replace kinds of variables of inserted original code", () => {
                     assert.match(obfuscatedCode, variableDeclarationsRegExp);
                 });
 
-                it('Match #2: shouldn\'t replace kinds of variables of inserted original code', () => {
+                it("Match #2: shouldn't replace kinds of variables of inserted original code", () => {
                     assert.notMatch(obfuscatedCode, invalidVariableDeclarationsRegExp);
                 });
 
-                it('Match #3: shouldn\'t replace kinds of variables of inserted original code', () => {
+                it("Match #3: shouldn't replace kinds of variables of inserted original code", () => {
                     assert.match(obfuscatedCode, forLoopRegExp);
                 });
 
-                it('Match #4: shouldn\'t replace kinds of variables of inserted original code', () => {
+                it("Match #4: shouldn't replace kinds of variables of inserted original code", () => {
                     assert.notMatch(obfuscatedCode, invalidForLoopRegExp);
                 });
             });
@@ -1053,11 +1003,11 @@ describe('DeadCodeInjectionTransformer', () => {
         describe('Variant #12 - correct integration with `stringArrayWrappersChainedCalls` option', () => {
             const regExp: RegExp = new RegExp(
                 `var ${variableMatch} *= *${variableMatch}; *` +
-                `if *\\(${variableMatch}\\(${hexMatch}\\) *[=|!]== *${variableMatch}\\(${hexMatch}\\)\\) *\\{`+
+                    `if *\\(${variableMatch}\\(${hexMatch}\\) *[=|!]== *${variableMatch}\\(${hexMatch}\\)\\) *\\{` +
                     `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\} *else *\\{`+
+                    `\\} *else *\\{` +
                     `(?:console|${variableMatch})\\[${variableMatch}\\(${hexMatch}\\)\\]\\(${variableMatch}\\(${hexMatch}\\)\\);` +
-                `\\}`,
+                    `\\}`,
                 'g'
             );
             const expectedMatchesLength: number = 5;
@@ -1067,18 +1017,15 @@ describe('DeadCodeInjectionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1,
-                        stringArrayWrappersChainedCalls: true
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1,
+                    stringArrayWrappersChainedCalls: true
+                }).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
                 if (matches) {
@@ -1092,30 +1039,26 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('Variant #13 - correct integration with `EvalCallExpressionTransformer`', () => {
-            const evalWithDeadCodeRegExp: RegExp = new RegExp(
-                `eval\\(\'if *\\(${variableMatch}`,
-                'g'
-            );
+            const evalWithDeadCodeRegExp: RegExp = new RegExp(`eval\\(\'if *\\(${variableMatch}`, 'g');
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/eval-call-expression-transformer-integration.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/eval-call-expression-transformer-integration.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
                 console.log(obfuscatedCode);
             });
 
-            it('match #1: shouldn\'t add dead code to the eval call expression', () => {
+            it("match #1: shouldn't add dead code to the eval call expression", () => {
                 assert.notMatch(obfuscatedCode, evalWithDeadCodeRegExp);
             });
         });

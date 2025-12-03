@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -19,9 +19,7 @@ import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../../node/NodeMetadata';
-import {
-    StringLiteralControlFlowStorageCallNode
-} from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
+import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { LiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/LiteralNode';
 
 @injectable()
@@ -37,20 +35,15 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            controlFlowCustomNodeFactory,
-            identifierNamesGeneratorFactory,
-            randomGenerator,
-            options
-        );
+        super(controlFlowCustomNodeFactory, identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -59,24 +52,23 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public override replace (
+    public override replace(
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
         controlFlowStorage: IControlFlowStorage
     ): ESTree.Node {
-        const isStringArrayCallLiteralNode = NodeMetadata.isStringArrayCallLiteralNode(literalNode)
-            && (
-                NodeLiteralUtils.isNumberLiteralNode(literalNode)
-                || NodeLiteralUtils.isStringLiteralNode(literalNode)
-            );
+        const isStringArrayCallLiteralNode =
+            NodeMetadata.isStringArrayCallLiteralNode(literalNode) &&
+            (NodeLiteralUtils.isNumberLiteralNode(literalNode) || NodeLiteralUtils.isStringLiteralNode(literalNode));
 
         if (!isStringArrayCallLiteralNode) {
             return literalNode;
         }
 
         const replacerId: string | number = literalNode.value;
-        const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LiteralNode);
+        const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.LiteralNode
+        );
 
         literalCustomNode.initialize(literalNode);
 
@@ -96,9 +88,8 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {string}
      */
-    public override generateStorageKey (controlFlowStorage: IControlFlowStorage): string {
-        const key: string = this.identifierNamesGenerator
-            .generateForLabel(controlFlowStorage.getStorageId());
+    public override generateStorageKey(controlFlowStorage: IControlFlowStorage): string {
+        const key: string = this.identifierNamesGenerator.generateForLabel(controlFlowStorage.getStorageId());
 
         if (controlFlowStorage.has(key)) {
             return this.generateStorageKey(controlFlowStorage);
@@ -112,10 +103,7 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
      * @param {string} storageKey
      * @returns {NodeGuards}
      */
-    protected getControlFlowStorageCallNode (
-        controlFlowStorageId: string,
-        storageKey: string
-    ): ESTree.Node {
+    protected getControlFlowStorageCallNode(controlFlowStorageId: string, storageKey: string): ESTree.Node {
         const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<StringLiteralControlFlowStorageCallNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
@@ -124,7 +112,9 @@ export class StringArrayCallControlFlowReplacer extends AbstractControlFlowRepla
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
+            throw new Error(
+                '`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node'
+            );
         }
 
         return statementNode.expression;

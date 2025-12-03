@@ -27,7 +27,7 @@ export class CustomCodeHelperObfuscator implements ICustomCodeHelperObfuscator {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -40,18 +40,15 @@ export class CustomCodeHelperObfuscator implements ICustomCodeHelperObfuscator {
      * @param {TInputOptions} additionalOptions
      * @returns {string}
      */
-    public obfuscateTemplate (template: string, additionalOptions: TInputOptions = {}): string {
-        return JavaScriptObfuscator.obfuscate(
-            template,
-            {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: this.options.identifierNamesGenerator,
-                identifiersDictionary: this.options.identifiersDictionary,
-                numbersToExpressions: this.options.numbersToExpressions,
-                simplify: this.options.simplify,
-                seed: this.randomGenerator.getRawSeed(),
-                ...additionalOptions
-            }
-        ).getObfuscatedCode();
+    public obfuscateTemplate(template: string, additionalOptions: TInputOptions = {}): string {
+        return JavaScriptObfuscator.obfuscate(template, {
+            ...NO_ADDITIONAL_NODES_PRESET,
+            identifierNamesGenerator: this.options.identifierNamesGenerator,
+            identifiersDictionary: this.options.identifiersDictionary,
+            numbersToExpressions: this.options.numbersToExpressions,
+            simplify: this.options.simplify,
+            seed: this.randomGenerator.getRawSeed(),
+            ...additionalOptions
+        }).getObfuscatedCode();
     }
 }

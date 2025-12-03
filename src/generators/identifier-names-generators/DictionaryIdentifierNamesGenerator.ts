@@ -20,7 +20,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @type {Set<string>}
      */
     private identifierNamesSet: Set<string>;
-    
+
     /**
      * @type {IterableIterator<string>}
      */
@@ -31,10 +31,10 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {IOptions} options
      * @param {IArrayUtils} arrayUtils
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils
     ) {
         super(randomGenerator, options);
 
@@ -47,7 +47,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {string} identifierName
      * @returns {string | null}
      */
-    private static incrementIdentifierName (identifierName: string): string | null {
+    private static incrementIdentifierName(identifierName: string): string | null {
         let newIdentifierName: string = '';
         let isSuccess: boolean = false;
 
@@ -69,7 +69,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         return null;
     }
 
-    public generateNext (): string {
+    public generateNext(): string {
         const identifierName: string = this.generateNewDictionaryName();
 
         this.preserveName(identifierName);
@@ -80,10 +80,8 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     /**
      * @returns {string}
      */
-    public generateForGlobalScope (): string {
-        const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}`
-            : '';
+    public generateForGlobalScope(): string {
+        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
 
         const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
             const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
@@ -101,7 +99,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {string}
      */
-    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope): string {
+    public generateForLexicalScope(lexicalScopeNode: TNodeWithLexicalScope): string {
         const lexicalScopes: TNodeWithLexicalScope[] = [
             lexicalScopeNode,
             ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
@@ -119,7 +117,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {string} label
      * @returns {string}
      */
-    public generateForLabel (label: string): string {
+    public generateForLabel(label: string): string {
         return this.generateNewDictionaryName();
     }
 
@@ -127,7 +125,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {(newIdentifierName: string) => boolean} validationFunction
      * @returns {string}
      */
-    private generateNewDictionaryName (validationFunction?: (newIdentifierName: string) => boolean): string {
+    private generateNewDictionaryName(validationFunction?: (newIdentifierName: string) => boolean): string {
         const generateNewDictionaryName = (): string => {
             if (!this.identifierNamesSet.size) {
                 throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
@@ -138,8 +136,8 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
             if (!iteratorResult.done) {
                 const identifierName: string = iteratorResult.value;
 
-                const isValidIdentifierName = validationFunction?.(identifierName)
-                    ?? this.isValidIdentifierName(identifierName);
+                const isValidIdentifierName =
+                    validationFunction?.(identifierName) ?? this.isValidIdentifierName(identifierName);
 
                 if (!isValidIdentifierName) {
                     return generateNewDictionaryName();
@@ -161,7 +159,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {string[]} identifierNames
      * @returns {string[]}
      */
-    private getInitialIdentifierNames (identifierNames: string[]): string[] {
+    private getInitialIdentifierNames(identifierNames: string[]): string[] {
         const formattedIdentifierNames: string[] = identifierNames
             .filter(Boolean)
             .map((identifierName: string) => identifierName.toLowerCase());
@@ -173,12 +171,12 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {string[]} identifierNames
      * @returns {string[]}
      */
-    private getIncrementedIdentifierNames (identifierNames: string[]): string[] {
+    private getIncrementedIdentifierNames(identifierNames: string[]): string[] {
         const formattedIdentifierNames: string[] = [];
 
         for (const identifierName of identifierNames) {
-            const newIdentifierName: string | null = DictionaryIdentifierNamesGenerator
-                .incrementIdentifierName(identifierName);
+            const newIdentifierName: string | null =
+                DictionaryIdentifierNamesGenerator.incrementIdentifierName(identifierName);
 
             if (newIdentifierName) {
                 formattedIdentifierNames.push(newIdentifierName);

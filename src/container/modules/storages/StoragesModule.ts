@@ -2,9 +2,7 @@ import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { TControlFlowStorageFactory } from '../../../types/container/node-transformers/TControlFlowStorageFactory';
-import {
-    TControlFlowStorageFactoryCreator
-} from '../../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
+import { TControlFlowStorageFactoryCreator } from '../../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
 import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
@@ -23,9 +21,7 @@ import { GlobalIdentifierNamesCacheStorage } from '../../../storages/identifier-
 import { LiteralNodesCacheStorage } from '../../../storages/string-array-transformers/LiteralNodesCacheStorage';
 import { PropertyIdentifierNamesCacheStorage } from '../../../storages/identifier-names-cache/PropertyIdentifierNamesCacheStorage';
 import { StringArrayScopeCallsWrappersDataStorage } from '../../../storages/string-array-transformers/StringArrayScopeCallsWrappersDataStorage';
-import {
-    StringControlFlowStorage
-} from '../../../storages/control-flow-transformers/StringControlFlowStorage';
+import { StringControlFlowStorage } from '../../../storages/control-flow-transformers/StringControlFlowStorage';
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
 import { VisitedLexicalScopeNodesStackStorage } from '../../../storages/string-array-transformers/VisitedLexicalScopeNodesStackStorage';
 
@@ -51,9 +47,7 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
         .to(PropertyIdentifierNamesCacheStorage)
         .inSingletonScope();
 
-    bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)
-        .to(StringArrayStorage)
-        .inSingletonScope();
+    bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage).to(StringArrayStorage).inSingletonScope();
 
     bind<IStringArrayScopeCallsWrappersDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrappersDataStorage)
         .to(StringArrayScopeCallsWrappersDataStorage)
@@ -68,12 +62,13 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
         .inSingletonScope();
 
     // controlFlowStorage factory
-    bind<IControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage)
-        .toFactory((context: interfaces.Context): TControlFlowStorageFactoryCreator =>
-            (controlFlowStorageName: ControlFlowStorage): TControlFlowStorageFactory => (): IControlFlowStorage =>
+    bind<IControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage).toFactory(
+        (context: interfaces.Context): TControlFlowStorageFactoryCreator =>
+            (controlFlowStorageName: ControlFlowStorage): TControlFlowStorageFactory =>
+            (): IControlFlowStorage =>
                 context.container.getNamed<IControlFlowStorage>(
-                ServiceIdentifiers.IControlFlowStorage,
-                controlFlowStorageName
+                    ServiceIdentifiers.IControlFlowStorage,
+                    controlFlowStorageName
                 )
-            );
+    );
 });

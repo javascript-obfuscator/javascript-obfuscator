@@ -33,7 +33,11 @@ describe('RandomGenerator', () => {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const randomInteger = randomGenerator.getRandomIntegerExcluding(minValue, maxValue, valuesToExclude);
+                    const randomInteger = randomGenerator.getRandomIntegerExcluding(
+                        minValue,
+                        maxValue,
+                        valuesToExclude
+                    );
 
                     if (!expectedRandomIntegerValues.includes(randomInteger)) {
                         isRandomIntegerInAllowedValuesRange = false;
@@ -55,7 +59,7 @@ describe('RandomGenerator', () => {
 
             const delta: number = 0.15;
 
-            const expectedValueChance: number = 0.2
+            const expectedValueChance: number = 0.2;
 
             let minValuesCount: number = 0;
             let maxValuesCount: number = 0;
@@ -65,7 +69,11 @@ describe('RandomGenerator', () => {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const randomInteger: number = randomGenerator.getRandomIntegerExcluding(minValue, maxValue, valuesToExclude);
+                    const randomInteger: number = randomGenerator.getRandomIntegerExcluding(
+                        minValue,
+                        maxValue,
+                        valuesToExclude
+                    );
 
                     if (randomInteger === minValue) {
                         minValuesCount += 1;

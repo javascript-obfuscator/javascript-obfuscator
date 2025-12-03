@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -21,7 +21,7 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -32,7 +32,7 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
                 return {
@@ -51,7 +51,7 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
+    public transformNode(node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
         return NodeUtils.parentizeNode(node, parentNode);
     }
 }

@@ -5,9 +5,7 @@ import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator'
  * @returns {string}
  * @constructor
  */
-export function StringArrayBase64DecodeTemplate (
-    randomGenerator: IRandomGenerator
-): string {
+export function StringArrayBase64DecodeTemplate(randomGenerator: IRandomGenerator): string {
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const base64Identifier: string = randomGenerator.getRandomString(identifierLength);

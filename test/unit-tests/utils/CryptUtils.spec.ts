@@ -21,33 +21,31 @@ describe('CryptUtils', () => {
     });
 
     describe('btoa', () => {
-       describe('Variant #1: basic', () => {
-           const expectedEncodedString: string = 'c3RyaW5n';
-           const expectedDecodedString: string = 'string';
+        describe('Variant #1: basic', () => {
+            const expectedEncodedString: string = 'c3RyaW5n';
+            const expectedDecodedString: string = 'string';
 
-           let encodedString: string,
-               decodedString: string;
+            let encodedString: string, decodedString: string;
 
-           before(() => {
-               encodedString = cryptUtils.btoa('string');
-               decodedString = atob(encodedString);
-           });
+            before(() => {
+                encodedString = cryptUtils.btoa('string');
+                decodedString = atob(encodedString);
+            });
 
-           it('should create a base-64 encoded string from a given string', () => {
-               assert.equal(encodedString, expectedEncodedString);
-           });
+            it('should create a base-64 encoded string from a given string', () => {
+                assert.equal(encodedString, expectedEncodedString);
+            });
 
-           it('should create encoded string that can be successfully decoded', () => {
-               assert.equal(decodedString, expectedDecodedString);
-           });
-       });
+            it('should create encoded string that can be successfully decoded', () => {
+                assert.equal(decodedString, expectedDecodedString);
+            });
+        });
 
         describe('Variant #2: padding characters', () => {
             const expectedEncodedString: string = 'c3RyaQ==';
             const expectedDecodedString: string = 'stri';
 
-            let encodedString: string,
-                decodedString: string;
+            let encodedString: string, decodedString: string;
 
             before(() => {
                 encodedString = cryptUtils.btoa('stri');
@@ -67,8 +65,7 @@ describe('CryptUtils', () => {
             const expectedEncodedString: string = '0YLQtdGB0YI=';
             const expectedDecodedString: string = 'тест';
 
-            let encodedString: string,
-                decodedString: string;
+            let encodedString: string, decodedString: string;
 
             before(() => {
                 encodedString = cryptUtils.btoa('тест');
@@ -89,16 +86,14 @@ describe('CryptUtils', () => {
         const originalString: string = 'example.com';
         const hiddenStringLength: number = 30;
 
-        let hiddenString: string,
-            diffString: string;
+        let hiddenString: string, diffString: string;
 
         before(() => {
             [hiddenString, diffString] = cryptUtils.hideString(originalString, hiddenStringLength);
         });
 
         describe('hidden string length check', () => {
-            let originalStringActualLength: number,
-                hiddenStringActualLength: number;
+            let originalStringActualLength: number, hiddenStringActualLength: number;
 
             before(() => {
                 originalStringActualLength = originalString.length;
@@ -129,8 +124,7 @@ describe('CryptUtils', () => {
         const string: string = 'test';
         const key: string = 'key';
 
-        let encodedString: string,
-            decodedString: string;
+        let encodedString: string, decodedString: string;
 
         before(() => {
             encodedString = cryptUtils.rc4(string, key);

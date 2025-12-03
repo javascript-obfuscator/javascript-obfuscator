@@ -7,20 +7,20 @@ export class StdoutWriteMock {
     /**
      * @type any
      */
-    private stdoutWriteMock: any = (() => {});
+    private stdoutWriteMock: any = () => {};
 
     /**
      * @param stdoutWrite
      */
-    constructor (stdoutWrite: any) {
+    constructor(stdoutWrite: any) {
         this.stdoutWrite = stdoutWrite;
     }
 
-    public mute (): void {
+    public mute(): void {
         process.stdout.write = this.stdoutWriteMock;
     }
 
-    public restore (): void {
+    public restore(): void {
         process.stdout.write = this.stdoutWrite;
     }
 }

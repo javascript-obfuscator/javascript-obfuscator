@@ -11,12 +11,14 @@ import { NodeTransformerNamesGroupsBuilder } from '../../../node-transformers/No
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // node transformers factory
-    bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer)
-        .toFactory<INodeTransformer, [NodeTransformer]>(InversifyContainerFacade
-            .getCacheFactory<NodeTransformer, INodeTransformer>(ServiceIdentifiers.INodeTransformer));
+    bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer).toFactory<INodeTransformer, [NodeTransformer]>(
+        InversifyContainerFacade.getCacheFactory<NodeTransformer, INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+    );
 
     // node transformer names groups builder
-    bind<ITransformerNamesGroupsBuilder<NodeTransformer, INodeTransformer>>(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)
+    bind<ITransformerNamesGroupsBuilder<NodeTransformer, INodeTransformer>>(
+        ServiceIdentifiers.INodeTransformerNamesGroupsBuilder
+    )
         .to(NodeTransformerNamesGroupsBuilder)
         .inSingletonScope();
 });

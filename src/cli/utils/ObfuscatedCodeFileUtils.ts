@@ -23,10 +23,7 @@ export class ObfuscatedCodeFileUtils {
      * @param {string} inputPath
      * @param {TInputCLIOptions} options
      */
-    public constructor (
-        inputPath: string,
-        options: TInputCLIOptions
-    ) {
+    public constructor(inputPath: string, options: TInputCLIOptions) {
         this.inputPath = path.normalize(inputPath);
         this.options = options;
     }
@@ -35,11 +32,9 @@ export class ObfuscatedCodeFileUtils {
      * @param {string} filePath
      * @returns {string}
      */
-    public getOutputCodePath (filePath: string): string {
+    public getOutputCodePath(filePath: string): string {
         const normalizedFilePath: string = path.normalize(filePath);
-        const normalizedRawOutputPath: string | null = this.options.output
-            ? path.normalize(this.options.output)
-            : null;
+        const normalizedRawOutputPath: string | null = this.options.output ? path.normalize(this.options.output) : null;
 
         if (!normalizedRawOutputPath) {
             return normalizedFilePath
@@ -54,9 +49,8 @@ export class ObfuscatedCodeFileUtils {
         const outputPathExtName: string = path.extname(normalizedRawOutputPath);
 
         const isDirectoryRawInputPath: boolean = rawInputPathStats.isDirectory();
-        const isDirectoryRawOutputPath: boolean = !JavaScriptObfuscatorCLI
-            .availableInputExtensions
-            .includes(outputPathExtName);
+        const isDirectoryRawOutputPath: boolean =
+            !JavaScriptObfuscatorCLI.availableInputExtensions.includes(outputPathExtName);
 
         if (isDirectoryRawInputPath) {
             if (isDirectoryRawOutputPath) {
@@ -90,7 +84,7 @@ export class ObfuscatedCodeFileUtils {
      * @param {string} sourceMapFileName
      * @returns {string}
      */
-    public getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
+    public getOutputSourceMapPath(outputCodePath: string, sourceMapFileName: string = ''): string {
         if (!outputCodePath) {
             throw new Error('Output code path is empty');
         }
@@ -110,9 +104,7 @@ export class ObfuscatedCodeFileUtils {
                 // File path with directory, like: `foo/bar.js`, or without, like: `bar.js`
                 const isFilePathWithDirectory: boolean = indexOfLastSeparator > 0;
 
-                sourceMapPath = isFilePathWithDirectory
-                    ? normalizedOutputCodePath.slice(0, indexOfLastSeparator)
-                    : '';
+                sourceMapPath = isFilePathWithDirectory ? normalizedOutputCodePath.slice(0, indexOfLastSeparator) : '';
             } else {
                 sourceMapPath = normalizedOutputCodePath;
             }
@@ -125,7 +117,10 @@ export class ObfuscatedCodeFileUtils {
 
         if (!/\.js\.map$/.test(normalizedOutputCodePath)) {
             parsedOutputCodePath = path.parse(normalizedOutputCodePath);
-            const outputCodePathWithoutExtension: string = path.join(parsedOutputCodePath.dir, parsedOutputCodePath.name);
+            const outputCodePathWithoutExtension: string = path.join(
+                parsedOutputCodePath.dir,
+                parsedOutputCodePath.name
+            );
 
             normalizedOutputCodePath = `${outputCodePathWithoutExtension}.js.map`;
         } else if (/\.js$/.test(normalizedOutputCodePath)) {
@@ -139,7 +134,7 @@ export class ObfuscatedCodeFileUtils {
      * @param {string} outputPath
      * @param {string} data
      */
-    public writeFile (outputPath: string, data: string): void {
+    public writeFile(outputPath: string, data: string): void {
         mkdirp.sync(path.dirname(outputPath));
 
         fs.writeFileSync(outputPath, data, {

@@ -15,17 +15,16 @@ export class StringControlFlowStorage extends FunctionControlFlowStorage {
      * @param {IOptions} options
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      */
-    public constructor (
-
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory
     ) {
         super(randomGenerator, options, identifierNamesGeneratorFactory);
     }
 
-    public override initialize (): void {
+    public override initialize(): void {
         super.initialize();
 
         this.storageId = this.identifierNamesGenerator.generateForGlobalScope();

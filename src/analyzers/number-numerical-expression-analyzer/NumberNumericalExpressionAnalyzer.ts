@@ -37,9 +37,7 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator) {
         this.randomGenerator = randomGenerator;
     }
 
@@ -48,10 +46,7 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
      * @param {number} additionalPartsCount
      * @returns {TNumberNumericalExpressionData}
      */
-    public analyze (
-        number: number,
-        additionalPartsCount: number
-    ): TNumberNumericalExpressionData {
+    public analyze(number: number, additionalPartsCount: number): TNumberNumericalExpressionData {
         if (isNaN(number)) {
             throw new Error('Given value is NaN');
         }
@@ -70,7 +65,7 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
      * @param {number} additionalPartsCount
      * @returns {number[]}
      */
-    private generateAdditionParts (number: number, additionalPartsCount: number): number[] {
+    private generateAdditionParts(number: number, additionalPartsCount: number): number[] {
         const additionParts = [];
 
         const upperNumberLimit: number = Math.min(Math.abs(number * 2), Number.MAX_SAFE_INTEGER);
@@ -115,7 +110,7 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
      * @param {number} number
      * @returns {number | number[]}
      */
-    private mixWithMultiplyParts (number: number): number | number[] {
+    private mixWithMultiplyParts(number: number): number | number[] {
         const shouldMixWithMultiplyParts: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
         if (!shouldMixWithMultiplyParts || number === 0) {
@@ -125,8 +120,8 @@ export class NumberNumericalExpressionAnalyzer implements INumberNumericalExpres
         let factors: number[] | null = this.numberFactorsMap.get(number) ?? null;
 
         if (!factors) {
-           factors = NumberUtils.getFactors(number);
-           this.numberFactorsMap.set(number, factors);
+            factors = NumberUtils.getFactors(number);
+            this.numberFactorsMap.set(number, factors);
         }
 
         if (!factors.length) {

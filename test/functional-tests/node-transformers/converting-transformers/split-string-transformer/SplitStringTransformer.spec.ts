@@ -10,21 +10,18 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('SplitStringTransformer', () => {
     let obfuscatedCode: string;
-    
+
     describe('Variant #1: simple string literal', () => {
         it('should transform string literal to binary expression', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
+            assert.match(obfuscatedCode, /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
         });
     });
 
@@ -32,16 +29,13 @@ describe('SplitStringTransformer', () => {
         it('should keep original string literal', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: false,
-                    splitStringsChunkLength: 10
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: false,
+                splitStringsChunkLength: 10
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'abcdefg';$/);
+            assert.match(obfuscatedCode, /^var test *= *'abcdefg';$/);
         });
     });
 
@@ -49,16 +43,13 @@ describe('SplitStringTransformer', () => {
         it('should keep original string literal', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 10
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 10
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'abcdefg';$/);
+            assert.match(obfuscatedCode, /^var test *= *'abcdefg';$/);
         });
     });
 
@@ -66,14 +57,12 @@ describe('SplitStringTransformer', () => {
         it('should throw an validation error ', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            const testFunc = () => JavaScriptObfuscator.obfuscate(
-                code,
-                {
+            const testFunc = () =>
+                JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     splitStrings: true,
                     splitStringsChunkLength: 0
-                }
-            );
+                });
 
             assert.throws(testFunc, /validation failed/i);
         });
@@ -83,16 +72,13 @@ describe('SplitStringTransformer', () => {
         it('should transform string literals to binary expressions', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/strings-concatenation.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *\( *'ef' *\+ *'g' *\);$/);
+            assert.match(obfuscatedCode, /^var test *= *'ab' *\+ *'cd' *\+ *\( *'ef' *\+ *'g' *\);$/);
         });
     });
 
@@ -100,17 +86,17 @@ describe('SplitStringTransformer', () => {
         it('should convert strings to unicode escape sequence view', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2,
-                    unicodeEscapeSequence: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2,
+                unicodeEscapeSequence: true
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'\\x61\\x62' *\+ *'\\x63\\x64' *\+ *'\\x65\\x66' *\+ *'\\x67';$/);
+            assert.match(
+                obfuscatedCode,
+                /^var test *= *'\\x61\\x62' *\+ *'\\x63\\x64' *\+ *'\\x65\\x66' *\+ *'\\x67';$/
+            );
         });
     });
 
@@ -118,16 +104,13 @@ describe('SplitStringTransformer', () => {
         it('should apply string splitting on template literal strings', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/template-literal-string.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
+            assert.match(obfuscatedCode, /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
         });
     });
 
@@ -135,16 +118,13 @@ describe('SplitStringTransformer', () => {
         it('should keep original key string literal and transform value string literal', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-string-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *{'abcdefg' *: *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g'};$/);
+            assert.match(obfuscatedCode, /^var test *= *{'abcdefg' *: *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g'};$/);
         });
     });
 
@@ -152,16 +132,13 @@ describe('SplitStringTransformer', () => {
         it('should transform string literal to binary expression', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-computed-key-string-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *{\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *: *0x1};$/);
+            assert.match(obfuscatedCode, /^var test *= *{\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *: *0x1};$/);
         });
     });
 
@@ -172,16 +149,13 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }).getObfuscatedCode();
 
-                assert.match(obfuscatedCode,  regExp);
+                assert.match(obfuscatedCode, regExp);
             });
 
             it('should correctly evaluate splitted string with emoji', () => {
@@ -189,14 +163,11 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }).getObfuscatedCode();
 
                 const resultString: string = eval(obfuscatedCode);
 
@@ -210,16 +181,13 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-2.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }).getObfuscatedCode();
 
-                assert.match(obfuscatedCode,  regExp);
+                assert.match(obfuscatedCode, regExp);
             });
 
             it('should correctly evaluate splitted string with emoji', () => {
@@ -227,14 +195,11 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-2.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 1
+                }).getObfuscatedCode();
 
                 const resultString: string = eval(obfuscatedCode);
 
@@ -248,16 +213,13 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 3
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 3
+                }).getObfuscatedCode();
 
-                assert.match(obfuscatedCode,  regExp);
+                assert.match(obfuscatedCode, regExp);
             });
 
             it('should correctly evaluate splitted string with emoji', () => {
@@ -265,14 +227,11 @@ describe('SplitStringTransformer', () => {
 
                 const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        splitStrings: true,
-                        splitStringsChunkLength: 3
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 3
+                }).getObfuscatedCode();
 
                 const resultString: string = eval(obfuscatedCode);
 
@@ -290,19 +249,14 @@ describe('SplitStringTransformer', () => {
 
                         const code: string = readFileAsString(__dirname + '/fixtures/string-with-emoji-1.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                splitStrings: true,
-                                splitStringsChunkLength: 3,
-                                stringArray: true,
-                                stringArrayThreshold: 1,
-                                stringArrayEncoding: [
-                                    StringArrayEncoding.Base64
-                                ]
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            splitStrings: true,
+                            splitStringsChunkLength: 3,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayEncoding: [StringArrayEncoding.Base64]
+                        }).getObfuscatedCode();
 
                         const resultString: string = eval(obfuscatedCode);
 
@@ -315,27 +269,23 @@ describe('SplitStringTransformer', () => {
 
     describe('Variant #12: Integration with `transformObjectKeys` option', () => {
         it('should correctly transform string when `transformObjectKeys` option is enabled', () => {
-            const regExp: RegExp = new RegExp(`` +
-                `var _0x[a-f0-9]{4,6} *= *{};` +
-                `*_0x[a-f0-9]{4,6}\\['ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g'] *= *'ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g';` +
-                `var test *= *_0x[a-f0-9]{4,6};` +
-            ``);
+            const regExp: RegExp = new RegExp(
+                `` +
+                    `var _0x[a-f0-9]{4,6} *= *{};` +
+                    `*_0x[a-f0-9]{4,6}\\['ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g'] *= *'ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g';` +
+                    `var test *= *_0x[a-f0-9]{4,6};` +
+                    ``
+            );
             const code: string = readFileAsString(__dirname + '/fixtures/object-string-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2,
-                    transformObjectKeys: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2,
+                transformObjectKeys: true
+            }).getObfuscatedCode();
 
-            assert.match(
-                obfuscatedCode,
-                regExp
-            );
+            assert.match(obfuscatedCode, regExp);
         });
     });
 
@@ -343,15 +293,12 @@ describe('SplitStringTransformer', () => {
         it('should correctly ignore strings from `reservedStrings` option', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/ignore-reserved-strings.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 3,
-                    reservedStrings: ['bar']
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 3,
+                reservedStrings: ['bar']
+            }).getObfuscatedCode();
 
             assert.match(
                 obfuscatedCode,
@@ -364,19 +311,14 @@ describe('SplitStringTransformer', () => {
         it('Should does not throw `Maximum call stack size exceeded` error on a large string', () => {
             const code: string = `var foo = '${'a'.repeat(10000)}';`;
 
-            const testFunc = () => JavaScriptObfuscator.obfuscate(
-                code,
-                {
+            const testFunc = () =>
+                JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     splitStrings: true,
                     splitStringsChunkLength: 2
-                }
-            );
+                });
 
-            assert.doesNotThrow(
-                testFunc,
-                Error
-            );
+            assert.doesNotThrow(testFunc, Error);
         });
     });
 
@@ -388,14 +330,11 @@ describe('SplitStringTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/import-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
         });
 
         it('Should not split `ImportDeclaration` source literal', () => {
@@ -411,14 +350,11 @@ describe('SplitStringTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/export-all-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
         });
 
         it('Should not split `ExportAllDeclaration` source literal', () => {
@@ -434,14 +370,11 @@ describe('SplitStringTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/export-named-declaration-source.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    splitStrings: true,
-                    splitStringsChunkLength: 2
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                splitStrings: true,
+                splitStringsChunkLength: 2
+            }).getObfuscatedCode();
         });
 
         it('Should not split `ExportNamedDeclaration` source literal', () => {

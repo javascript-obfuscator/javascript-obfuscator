@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -22,9 +22,7 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
     /**
      * @type {NodeTransformer[]}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.CustomCodeHelpersTransformer
-    ];
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.CustomCodeHelpersTransformer];
 
     /**
      * @type {IEscapeSequenceEncoder}
@@ -36,7 +34,7 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
      * @param {IOptions} options
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
@@ -50,7 +48,7 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Finalizing:
                 return {
@@ -71,7 +69,7 @@ export class EscapeSequenceTransformer extends AbstractNodeTransformer {
      * @param {Node | null} parentNode
      * @returns {Literal}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node | null): ESTree.Literal {
+    public transformNode(literalNode: ESTree.Literal, parentNode: ESTree.Node | null): ESTree.Literal {
         if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return literalNode;
         }

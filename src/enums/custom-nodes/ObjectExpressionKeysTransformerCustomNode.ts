@@ -1,4 +1,3 @@
 export enum ObjectExpressionKeysTransformerCustomNode {
-    ObjectExpressionVariableDeclarationHostNode =
-        'ObjectExpressionVariableDeclarationHostNode'
+    ObjectExpressionVariableDeclarationHostNode = 'ObjectExpressionVariableDeclarationHostNode'
 }

@@ -14,13 +14,10 @@ describe('DictionaryIdentifierNamesGenerator', () => {
     describe('generateWithPrefix', () => {
         describe('Variant #1: should not generate same name for string array as existing name in code', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
-                    ['_aa', '_ab'],
-                    {
-                        name: '\\w*',
-                        kind: 'const'
-                    }
-                );
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['_aa', '_ab'], {
+                    name: '\\w*',
+                    kind: 'const'
+                });
                 const variableDeclarationIdentifierNameRegExp1: RegExp = /const (\w*) *= *\w*\(0x0\);/;
                 const variableDeclarationIdentifierNameRegExp2: RegExp = /const (\w*) *= *\w*\(0x1\);/;
 
@@ -30,21 +27,20 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-1.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                            identifiersDictionary: ['a', 'b', 'c'],
-                            identifiersPrefix: 'a',
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            seed: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                        identifiersDictionary: ['a', 'b', 'c'],
+                        identifiersPrefix: 'a',
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        seed: 1
+                    }).getObfuscatedCode();
 
                     stringArrayName = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
                     variableDeclarationIdentifierName1 = getRegExpMatch(
@@ -71,13 +67,10 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
-                    ['_aa', '_ab'],
-                    {
-                        name: '\\w*',
-                        kind: 'const'
-                    }
-                );
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['_aa', '_ab'], {
+                    name: '\\w*',
+                    kind: 'const'
+                });
                 const variableDeclarationIdentifierNameRegExp1: RegExp = /const (\w*) *= *\w*\(0x0\);/;
                 const variableDeclarationIdentifierNameRegExp2: RegExp = /const (\w*) *= *\w*\(0x1\);/;
 
@@ -87,21 +80,20 @@ describe('DictionaryIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-1.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                            identifiersDictionary: ['a', 'b', 'c', 'd'],
-                            identifiersPrefix: 'a',
-                            renameGlobals: true,
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                        identifiersDictionary: ['a', 'b', 'c', 'd'],
+                        identifiersPrefix: 'a',
+                        renameGlobals: true,
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     stringArrayName = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
                     variableDeclarationIdentifierName1 = getRegExpMatch(
@@ -134,36 +126,35 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             const samplesCount: number = 30;
 
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
-                    ['first', 'abc'],
-                    {
-                        name: '\\w*',
-                        kind: 'const'
-                    }
-                );
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['first', 'abc'], {
+                    name: '\\w*',
+                    kind: 'const'
+                });
                 const variableDeclarationIdentifierNameRegExp: RegExp = /const (\w*) *= *\w*\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-2.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-2.js'
+                    );
 
                     for (let i = 0; i < samplesCount; i++) {
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa'],
-                                identifiersPrefix: 'a',
-                                transformObjectKeys: true,
-                                stringArray: true,
-                                stringArrayThreshold: 1
-                            }
-                        ).getObfuscatedCode();
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                            identifiersDictionary: ['a', 'b', 'aa'],
+                            identifiersPrefix: 'a',
+                            transformObjectKeys: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }).getObfuscatedCode();
 
                         const stringArrayStorageName: string = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
-                        const variableDeclarationIdentifierName: string = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierNameRegExp);
+                        const variableDeclarationIdentifierName: string = getRegExpMatch(
+                            obfuscatedCode,
+                            variableDeclarationIdentifierNameRegExp
+                        );
 
                         if (stringArrayStorageName === variableDeclarationIdentifierName) {
                             isIdentifiersAreConflicted = true;
@@ -179,37 +170,36 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(
-                    ['first', 'abc'],
-                    {
-                        name: '\\w*',
-                        kind: 'const'
-                    }
-                );
+                const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['first', 'abc'], {
+                    name: '\\w*',
+                    kind: 'const'
+                });
                 const variableDeclarationIdentifierNameRegExp: RegExp = /const (\w*) *= *\w*\(0x0\);/;
 
                 let isIdentifiersAreConflicted: boolean = false;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-2.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-2.js'
+                    );
 
                     for (let i = 0; i < samplesCount; i++) {
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                                identifiersDictionary: ['a', 'b', 'aa'],
-                                identifiersPrefix: 'a',
-                                renameGlobals: true,
-                                transformObjectKeys: true,
-                                stringArray: true,
-                                stringArrayThreshold: 1
-                            }
-                        ).getObfuscatedCode();
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                            identifiersDictionary: ['a', 'b', 'aa'],
+                            identifiersPrefix: 'a',
+                            renameGlobals: true,
+                            transformObjectKeys: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }).getObfuscatedCode();
 
                         const stringArrayStorageName: string = getRegExpMatch(obfuscatedCode, stringArrayStorageRegExp);
-                        const variableDeclarationIdentifierName: string = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierNameRegExp);
+                        const variableDeclarationIdentifierName: string = getRegExpMatch(
+                            obfuscatedCode,
+                            variableDeclarationIdentifierNameRegExp
+                        );
 
                         if (stringArrayStorageName === variableDeclarationIdentifierName) {
                             isIdentifiersAreConflicted = true;

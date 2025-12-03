@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -32,20 +32,15 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            controlFlowCustomNodeFactory,
-            identifierNamesGeneratorFactory,
-            randomGenerator,
-            options
-        );
+        super(controlFlowCustomNodeFactory, identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -54,7 +49,7 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public replace (
+    public replace(
         logicalExpressionNode: ESTree.LogicalExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: IControlFlowStorage
@@ -89,7 +84,10 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
      * @param {Expression} rightExpression
      * @returns {boolean}
      */
-    private checkForProhibitedExpressions (leftExpression: ESTree.Expression, rightExpression: ESTree.Expression): boolean {
+    private checkForProhibitedExpressions(
+        leftExpression: ESTree.Expression,
+        rightExpression: ESTree.Expression
+    ): boolean {
         return [leftExpression, rightExpression].some((expressionNode: ESTree.Node | ESTree.Expression): boolean => {
             let nodeForCheck: ESTree.Node | ESTree.Expression;
 
@@ -99,10 +97,12 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
                 nodeForCheck = NodeUtils.getUnaryExpressionArgumentNode(expressionNode);
             }
 
-            return !NodeGuards.isLiteralNode(nodeForCheck) &&
+            return (
+                !NodeGuards.isLiteralNode(nodeForCheck) &&
                 !NodeGuards.isIdentifierNode(nodeForCheck) &&
                 !NodeGuards.isObjectExpressionNode(nodeForCheck) &&
-                !NodeGuards.isExpressionStatementNode(nodeForCheck);
+                !NodeGuards.isExpressionStatementNode(nodeForCheck)
+            );
         });
     }
 }

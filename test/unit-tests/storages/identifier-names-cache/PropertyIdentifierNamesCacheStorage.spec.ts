@@ -27,7 +27,7 @@ const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IPr
         inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator),
         {
             ...DEFAULT_PRESET,
-            ...options as IOptions
+            ...(options as IOptions)
         }
     );
 

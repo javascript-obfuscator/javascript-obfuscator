@@ -22,14 +22,11 @@ describe('BinaryExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace binary expression node with call to control flow storage node', () => {
@@ -65,14 +62,11 @@ describe('BinaryExpressionControlFlowReplacer', function () {
                     equalsValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            controlFlowFlattening: true,
-                            controlFlowFlatteningThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }).getObfuscatedCode();
 
                     firstMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     secondMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp2);

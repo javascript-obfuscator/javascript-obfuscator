@@ -6,20 +6,20 @@ export interface IVisitedLexicalScopeNodesStackStorage extends IArrayStorage<TNo
     /**
      * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    getLastElement (): TNodeWithLexicalScopeStatements | undefined;
+    getLastElement(): TNodeWithLexicalScopeStatements | undefined;
 
     /**
      * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    getPenultimateElement (): TNodeWithLexicalScopeStatements | undefined;
+    getPenultimateElement(): TNodeWithLexicalScopeStatements | undefined;
 
     /**
      * @returns {TNodeWithLexicalScopeStatements | undefined}
      */
-    pop (): TNodeWithLexicalScopeStatements | undefined;
+    pop(): TNodeWithLexicalScopeStatements | undefined;
 
     /**
      * @param {TNodeWithLexicalScopeStatements} lexicalScopeBodyNode
      */
-    push (lexicalScopeBodyNode: TNodeWithLexicalScopeStatements): void;
+    push(lexicalScopeBodyNode: TNodeWithLexicalScopeStatements): void;
 }

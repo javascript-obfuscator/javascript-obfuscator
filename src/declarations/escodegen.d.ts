@@ -20,5 +20,5 @@ declare module '@javascript-obfuscator/escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate (ast: ESTree.Node, options?: escodegen.GenerateOptions): IGeneratorOutput;
+    export function generate(ast: ESTree.Node, options?: escodegen.GenerateOptions): IGeneratorOutput;
 }

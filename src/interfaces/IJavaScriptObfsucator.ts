@@ -5,5 +5,5 @@ export interface IJavaScriptObfuscator {
      * @param sourceCode
      * @returns IObfuscationResult
      */
-    obfuscate (sourceCode: string): IObfuscationResult;
+    obfuscate(sourceCode: string): IObfuscationResult;
 }

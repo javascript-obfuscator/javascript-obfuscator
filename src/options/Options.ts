@@ -132,10 +132,7 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
+    @IsAllowedForObfuscationTargets([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval])
     public readonly domainLock!: string[];
 
     /**
@@ -182,8 +179,9 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
-    @ValidateIf((options: IOptions) =>
-        options.identifierNamesGenerator === IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+    @ValidateIf(
+        (options: IOptions) =>
+            options.identifierNamesGenerator === IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
     )
     @ArrayNotEmpty()
     public readonly identifiersDictionary!: string[];
@@ -415,7 +413,12 @@ export class Options implements IOptions {
     /**
      * @type {ObfuscationTarget}
      */
-    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node, ObfuscationTarget.ServiceWorker])
+    @IsIn([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+        ObfuscationTarget.Node,
+        ObfuscationTarget.ServiceWorker
+    ])
     public readonly target!: TTypeFromEnum<typeof ObfuscationTarget>;
 
     /**
@@ -439,7 +442,7 @@ export class Options implements IOptions {
      * @param {TInputOptions} inputOptions
      * @param {IOptionsNormalizer} optionsNormalizer
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.TInputOptions) inputOptions: TInputOptions,
         @inject(ServiceIdentifiers.IOptionsNormalizer) optionsNormalizer: IOptionsNormalizer
     ) {
@@ -462,7 +465,7 @@ export class Options implements IOptions {
      * @param {TOptionsPreset} optionsPreset
      * @returns {TInputOptions}
      */
-    public static getOptionsByPreset (optionsPreset: TOptionsPreset): TInputOptions {
+    public static getOptionsByPreset(optionsPreset: TOptionsPreset): TInputOptions {
         const options: TInputOptions | null = Options.optionPresetsMap.get(optionsPreset) ?? null;
 
         if (!options) {

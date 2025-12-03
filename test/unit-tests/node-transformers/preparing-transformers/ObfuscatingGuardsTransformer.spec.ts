@@ -20,23 +20,19 @@ describe('ObfuscatingGuardsTransformer', () => {
         const forceTransformString: string = 'important string';
         const ignoredAndForceTransformString: string = 'important ignored string';
 
-        let inversifyContainerFacade: IInversifyContainerFacade,
-            obfuscatingGuardsTransformer: INodeTransformer;
+        let inversifyContainerFacade: IInversifyContainerFacade, obfuscatingGuardsTransformer: INodeTransformer;
 
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
             inversifyContainerFacade.load('', '', {
-                forceTransformStrings: [
-                    forceTransformString,
-                    ignoredAndForceTransformString
-                ],
-                reservedStrings: [
-                    ignoredAndForceTransformString
-                ]
+                forceTransformStrings: [forceTransformString, ignoredAndForceTransformString],
+                reservedStrings: [ignoredAndForceTransformString]
             });
 
-            obfuscatingGuardsTransformer = inversifyContainerFacade
-                .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ObfuscatingGuardsTransformer);
+            obfuscatingGuardsTransformer = inversifyContainerFacade.getNamed(
+                ServiceIdentifiers.INodeTransformer,
+                NodeTransformer.ObfuscatingGuardsTransformer
+            );
         });
 
         describe('Variant #1: transform node', () => {
@@ -82,8 +78,9 @@ describe('ObfuscatingGuardsTransformer', () => {
                     ignoredNode: true
                 });
 
-                result = <ESTree.ExpressionStatement>obfuscatingGuardsTransformer
-                    .transformNode(expressionStatement, expressionStatement);
+                result = <ESTree.ExpressionStatement>(
+                    obfuscatingGuardsTransformer.transformNode(expressionStatement, expressionStatement)
+                );
             });
 
             it('should add `ignoredNode` property with `true` value to given node', () => {
@@ -92,7 +89,7 @@ describe('ObfuscatingGuardsTransformer', () => {
         });
 
         describe('Variant #3: force transform node', () => {
-            const literalNode: ESTree.Literal =  NodeFactory.literalNode(forceTransformString);
+            const literalNode: ESTree.Literal = NodeFactory.literalNode(forceTransformString);
 
             const expectedResult: ESTree.Literal = NodeUtils.clone(literalNode);
 
@@ -107,8 +104,7 @@ describe('ObfuscatingGuardsTransformer', () => {
                     ignoredNode: false
                 });
 
-                result = <ESTree.Literal>obfuscatingGuardsTransformer
-                    .transformNode(literalNode, literalNode);
+                result = <ESTree.Literal>obfuscatingGuardsTransformer.transformNode(literalNode, literalNode);
             });
 
             it('should add `forceTransformNode` property with `true` value to given node', () => {
@@ -132,8 +128,7 @@ describe('ObfuscatingGuardsTransformer', () => {
                     ignoredNode: false
                 });
 
-                result = <ESTree.Literal>obfuscatingGuardsTransformer
-                    .transformNode(literalNode, literalNode);
+                result = <ESTree.Literal>obfuscatingGuardsTransformer.transformNode(literalNode, literalNode);
             });
 
             it('should add correct metadata to given node', () => {

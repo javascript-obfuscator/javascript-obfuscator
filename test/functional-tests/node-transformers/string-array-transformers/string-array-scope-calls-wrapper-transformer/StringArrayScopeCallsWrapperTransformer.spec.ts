@@ -21,11 +21,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #1: option value is lower then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2}' +
-                    '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
+                        '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2}' +
+                        '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                        'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
+                        'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
+                        'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -33,15 +33,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -52,11 +49,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #2: option value is bigger then count `literal` nodes in the scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){3}' +
-                    '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
+                        '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){3}' +
+                        '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                        'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
+                        'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
+                        'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -64,15 +61,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 5
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 5
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -83,10 +77,10 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #3: correct wrappers order', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'const f *= *b;.*' +
-                    'const g *= *b;.*' +
-                    'const foo *= *[f|g]\\(0x0\\);.*' +
-                    'const bar *= *[f|g]\\(0x1\\);.*' +
-                    'const baz *= *[f|g]\\(0x2\\);'
+                        'const g *= *b;.*' +
+                        'const foo *= *[f|g]\\(0x0\\);.*' +
+                        'const bar *= *[f|g]\\(0x1\\);.*' +
+                        'const baz *= *[f|g]\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -94,16 +88,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -114,10 +105,10 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #4: `identifiersPrefix` option is set', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'const foo_d *= *foo_b;.*' +
-                    'const foo_e *= *foo_b;.*' +
-                    'const foo *= *foo_[d|e]\\(0x0\\);.*' +
-                    'const bar *= *foo_[d|e]\\(0x1\\);.*' +
-                    'const baz *= *foo_[d|e]\\(0x2\\);'
+                        'const foo_e *= *foo_b;.*' +
+                        'const foo *= *foo_[d|e]\\(0x0\\);.*' +
+                        'const bar *= *foo_[d|e]\\(0x1\\);.*' +
+                        'const baz *= *foo_[d|e]\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -125,17 +116,14 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'foo_',
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'foo_',
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -153,7 +141,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -161,15 +149,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -186,7 +171,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -194,15 +179,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 5
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 5
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -218,7 +200,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const c *= *[h|i]\\(0x3\\);' +
                         'const d *= *[h|i]\\(0x4\\);' +
                         'const e *= *[h|i]\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -226,16 +208,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -246,28 +225,27 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #4: correct wrapper for the function default parameter', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
                     'const e *= *b;.*' +
-                    'const foo *= *e\\(0x0\\);.*' +
-                    'function test *\\(c *= *e\\(0x1\\)\\) *{' +
+                        'const foo *= *e\\(0x0\\);.*' +
+                        'function test *\\(c *= *e\\(0x1\\)\\) *{' +
                         'const f *= *b;' +
                         'const d *= *f\\(0x2\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/wrapper-for-the-function-default-parameter.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/wrapper-for-the-function-default-parameter.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -283,7 +261,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const a *= *[f|g]\\(0x3\\);' +
                         'const b *= *[f|g]\\(0x4\\);' +
                         'const c *= *[f|g]\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -291,17 +269,14 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'foo_',
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 2
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'foo_',
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 2
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers', () => {
@@ -313,10 +288,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
         describe('Variant #3: prohibited scopes', () => {
             describe('Variant #1: if statement scope', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'var c *= *b;.*' +
-                    'if *\\(!!\\[]\\) *{' +
-                        'var foo *= *c\\(0x0\\);' +
-                    '}'
+                    'var c *= *b;.*' + 'if *\\(!!\\[]\\) *{' + 'var foo *= *c\\(0x0\\);' + '}'
                 );
 
                 let obfuscatedCode: string;
@@ -324,16 +296,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/prohibited-scope-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should not add scope calls wrappers to a prohibited scope', () => {
@@ -343,8 +312,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
             describe('Variant #2: arrow function scope without statements', () => {
                 const stringArrayCallRegExp: RegExp = new RegExp(
-                    'var c *= *b;.*' +
-                    '\\[]\\[c\\(0x0\\)]\\(\\(\\) *=> *c\\(0x1\\)\\);'
+                    'var c *= *b;.*' + '\\[]\\[c\\(0x0\\)]\\(\\(\\) *=> *c\\(0x1\\)\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -352,16 +320,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/prohibited-scope-2.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1,
-                            stringArrayWrappersCount: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        stringArrayWrappersCount: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should not add scope calls wrappers to a prohibited scope', () => {
@@ -373,11 +338,11 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
         describe('Variant #4: prevailing kind of variables', () => {
             const stringArrayCallRegExp: RegExp = new RegExp(
                 '(?<!var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                '(var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2}' +
-                '(?!var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                'var foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
-                'var bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
-                'var baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
+                    '(var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2}' +
+                    '(?!var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                    'var foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
+                    'var bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
+                    'var baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
             );
 
             let obfuscatedCode: string;
@@ -385,15 +350,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-var.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 2
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 2
+                }).getObfuscatedCode();
             });
 
             it('should add scope calls wrappers with a correct variables kind', () => {
@@ -408,15 +370,12 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-eval.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 5
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 5
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
@@ -431,25 +390,25 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 describe('Variant #1: `Mangled` identifier names generator', () => {
                     const stringArrayCallRegExp: RegExp = new RegExp(
                         'const q *= *b;.*' +
-                        'const foo *= *q\\(0x0\\);.*' +
-                        'function test\\(c, *d\\) *{' +
+                            'const foo *= *q\\(0x0\\);.*' +
+                            'function test\\(c, *d\\) *{' +
                             'const r *= *q;' +
                             'const e *= *r\\(0x1\\);' +
                             'const f *= *r\\(0x2\\);' +
                             'function g\\(h, *i\\) *{' +
-                                'const s *= *r;' +
-                                'const j *= *s\\(0x3\\);' +
-                                'const k *= *s\\(0x4\\);' +
-                                'function l\\(m, *n *\\) *{' +
-                                    'const t *= *s;' +
-                                    'const o *= *t\\(0x3\\);' +
-                                    'const p *= *t\\(0x4\\);' +
-                                    'return o *\\+ *p;' +
-                                '}' +
-                                'return j *\\+ *k;' +
+                            'const s *= *r;' +
+                            'const j *= *s\\(0x3\\);' +
+                            'const k *= *s\\(0x4\\);' +
+                            'function l\\(m, *n *\\) *{' +
+                            'const t *= *s;' +
+                            'const o *= *t\\(0x3\\);' +
+                            'const p *= *t\\(0x4\\);' +
+                            'return o *\\+ *p;' +
+                            '}' +
+                            'return j *\\+ *k;' +
                             '}' +
                             'return e *\\+ *f *\\+ *g\\(\\);' +
-                        '}'
+                            '}'
                     );
 
                     let obfuscatedCode: string;
@@ -457,17 +416,14 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                stringArray: true,
-                                stringArrayThreshold: 1,
-                                stringArrayWrappersChainedCalls: true,
-                                stringArrayWrappersCount: 1
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersChainedCalls: true,
+                            stringArrayWrappersCount: 1
+                        }).getObfuscatedCode();
                     });
 
                     it('should add correct scope calls wrappers', () => {
@@ -487,21 +443,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator:
+                                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -526,21 +477,15 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -567,21 +512,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator:
+                                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -606,21 +546,15 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -647,26 +581,24 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 describe('Variant #1: `hexadecimal-number` indexes type', () => {
                     const getStringArrayCallsWrapperMatch = (stringArrayCallsWrapperName: string) =>
                         `function *${stringArrayCallsWrapperName} *\\(c, *d\\) *{` +
-                            `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
+                        `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
                         '}';
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
                         getStringArrayCallsWrapperMatch('f')
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'function test *\\( *\\) *{.*' +
-                            `${getStringArrayCallsWrapperMatch('g')}.*?` +
-                        '}'
+                        'function test *\\( *\\) *{.*' + `${getStringArrayCallsWrapperMatch('g')}.*?` + '}'
                     );
                     const stringArrayCallsWrapperCallsRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
-                        `const bar *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
-                        `const baz *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
-                        'function test *\\( *\\) *{.*' +
+                            `const bar *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
+                            `const baz *= *f\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
+                            'function test *\\( *\\) *{.*' +
                             `const c *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
                             `const d *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
                             `const e *= *g\\(-? *${hexadecimalIndexMatch}\\, *-? *${hexadecimalIndexMatch}\\);.*` +
-                        '}'
+                            '}'
                     );
 
                     let obfuscatedCode: string;
@@ -674,21 +606,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
-                        const getObfuscatedCode: () => string = () => JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
+                        const getObfuscatedCode: () => string = () =>
+                            JavaScriptObfuscator.obfuscate(code, {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
-                                stringArrayIndexesType: [
-                                    StringArrayIndexesType.HexadecimalNumber
-                                ],
+                                stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumber],
                                 stringArrayThreshold: 1,
                                 stringArrayWrappersChainedCalls: false,
                                 stringArrayWrappersCount: 1,
                                 stringArrayWrappersType: StringArrayWrappersType.Function
-                            }
-                        ).getObfuscatedCode();
+                            }).getObfuscatedCode();
 
                         obfuscatedCode = getObfuscatedCode();
                         areSuccessEvaluations = checkCodeEvaluation(
@@ -717,26 +645,24 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 describe('Variant #2: `hexadecimal-numeric-string` indexes type', () => {
                     const getStringArrayCallsWrapperMatch = (stringArrayCallsWrapperName: string) =>
                         `function *${stringArrayCallsWrapperName} *\\(c, *d\\) *{` +
-                            `return b\\([cd] *-(?: -)?'${hexadecimalIndexMatch}', *[cd]\\);` +
+                        `return b\\([cd] *-(?: -)?'${hexadecimalIndexMatch}', *[cd]\\);` +
                         '}';
 
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
                         getStringArrayCallsWrapperMatch('f')
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
-                        'function test *\\( *\\) *{.*' +
-                            `${getStringArrayCallsWrapperMatch('g')}.*?` +
-                        '}'
+                        'function test *\\( *\\) *{.*' + `${getStringArrayCallsWrapperMatch('g')}.*?` + '}'
                     );
                     const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
-                        `const bar *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
-                        `const baz *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
-                        'function test *\\( *\\) *{.*' +
+                            `const bar *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
+                            `const baz *= *f\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
+                            'function test *\\( *\\) *{.*' +
                             `const c *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
                             `const d *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
                             `const e *= *g\\(-? *'${hexadecimalIndexMatch}', *-? *'${hexadecimalIndexMatch}'\\);.*` +
-                        '}'
+                            '}'
                     );
 
                     let obfuscatedCode: string;
@@ -744,21 +670,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
-                        const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
+                        const getObfuscatedCode = () =>
+                            JavaScriptObfuscator.obfuscate(code, {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
-                                stringArrayIndexesType: [
-                                    StringArrayIndexesType.HexadecimalNumericString
-                                ],
+                                stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumericString],
                                 stringArrayThreshold: 1,
                                 stringArrayWrappersChainedCalls: false,
                                 stringArrayWrappersCount: 1,
                                 stringArrayWrappersType: StringArrayWrappersType.Function
-                            }
-                        ).getObfuscatedCode();
+                            }).getObfuscatedCode();
 
                         obfuscatedCode = getObfuscatedCode();
                         areSuccessEvaluations = checkCodeEvaluation(
@@ -789,28 +711,28 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
                     'function *f *\\(c, *d\\) *{' +
                         `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
-                    '}.*'
+                        '}.*'
                 );
                 const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
                     'function test *\\( *\\) *{.*' +
                         'function *g *\\(c, *d\\) *{' +
-                            `return f\\(` +
-                                // order of arguments depends on the parent wrapper parameters order
-                                `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?` +
-                            `\\);` +
+                        `return f\\(` +
+                        // order of arguments depends on the parent wrapper parameters order
+                        `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                        `[cd](?: *-(?: -)?${hexadecimalIndexMatch})?` +
+                        `\\);` +
                         '}.*' +
-                    '}'
+                        '}'
                 );
                 const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                     `const foo *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    `const bar *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    `const baz *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    'function test *\\( *\\) *{.*' +
+                        `const bar *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        `const baz *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
+                        'function test *\\( *\\) *{.*' +
                         `const c *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const d *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const e *= *g\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -818,9 +740,8 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
-                    const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
+                    const getObfuscatedCode = () =>
+                        JavaScriptObfuscator.obfuscate(code, {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                             stringArray: true,
@@ -828,8 +749,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             stringArrayWrappersChainedCalls: true,
                             stringArrayWrappersCount: 1,
                             stringArrayWrappersType: StringArrayWrappersType.Function
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
 
                     obfuscatedCode = getObfuscatedCode();
                     areSuccessEvaluations = checkCodeEvaluation(
@@ -859,27 +779,28 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 const stringArrayScopeCallsWrapperRegExp: RegExp = new RegExp(
                     'function test *\\( *\\) *{.*' +
                         'function *f*\\(c, *d\\) *{' +
-                            `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
+                        `return b\\([cd] *-(?: -)?${hexadecimalIndexMatch}, *[cd]\\);` +
                         '}.*' +
-                    '}'
+                        '}'
                 );
                 const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                     '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'function test *\\( *\\) *{.*' +
+                        'function test *\\( *\\) *{.*' +
                         `const c *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const d *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
                         `const e *= *f\\(-? *${hexadecimalIndexMatch}, *-? *${hexadecimalIndexMatch}\\);.*` +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
                 let areSuccessEvaluations: boolean;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const-no-root-wrappers.js');
-                    const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/wrappers-count-const-no-root-wrappers.js'
+                    );
+                    const getObfuscatedCode = () =>
+                        JavaScriptObfuscator.obfuscate(code, {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                             stringArray: true,
@@ -887,8 +808,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             stringArrayWrappersChainedCalls: true,
                             stringArrayWrappersCount: 1,
                             stringArrayWrappersType: StringArrayWrappersType.Function
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
 
                     obfuscatedCode = getObfuscatedCode();
                     areSuccessEvaluations = checkCodeEvaluation(
@@ -921,21 +841,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5,
-                                        stringArrayWrappersType: StringArrayWrappersType.Function
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator:
+                                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5,
+                                    stringArrayWrappersType: StringArrayWrappersType.Function
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -960,21 +876,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-1.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5,
-                                        stringArrayWrappersType: StringArrayWrappersType.Function
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5,
+                                    stringArrayWrappersType: StringArrayWrappersType.Function
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -1001,22 +912,17 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5,
-                                        stringArrayWrappersType: StringArrayWrappersType.Function
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator:
+                                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5,
+                                    stringArrayWrappersType: StringArrayWrappersType.Function
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -1041,22 +947,16 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                             const code: string = readFileAsString(__dirname + '/fixtures/chained-calls-2.js');
 
                             for (let i = 0; i < samplesCount; i++) {
-                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                                    code,
-                                    {
-                                        ...NO_ADDITIONAL_NODES_PRESET,
-                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                        stringArray: true,
-                                        stringArrayThreshold: 1,
-                                        stringArrayEncoding: [
-                                            StringArrayEncoding.None,
-                                            StringArrayEncoding.Rc4
-                                        ],
-                                        stringArrayWrappersChainedCalls: true,
-                                        stringArrayWrappersCount: 5,
-                                        stringArrayWrappersType: StringArrayWrappersType.Function
-                                    }
-                                ).getObfuscatedCode();
+                                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                                    ...NO_ADDITIONAL_NODES_PRESET,
+                                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                                    stringArray: true,
+                                    stringArrayThreshold: 1,
+                                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                                    stringArrayWrappersChainedCalls: true,
+                                    stringArrayWrappersCount: 5,
+                                    stringArrayWrappersType: StringArrayWrappersType.Function
+                                }).getObfuscatedCode();
 
                                 const evaluationResult: string = eval(obfuscatedCode);
 
@@ -1083,32 +983,32 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
                         'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
-                        '}.*'
+                            '}.*'
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
                         'function test *\\( *\\) *{.*' +
                             'function *g *\\(c, *d, *e, *h, *i\\) *{' +
-                                `return f\\(` +
-                                    // order of arguments depends on the parent wrapper parameters order
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
-                                `\\);` +
+                            `return f\\(` +
+                            // order of arguments depends on the parent wrapper parameters order
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
+                            `\\);` +
                             '}.*' +
-                        '}'
+                            '}'
                     );
 
                     const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        'function test *\\( *\\) *{.*' +
+                            `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            'function test *\\( *\\) *{.*' +
                             `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                             `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                             `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        '}'
+                            '}'
                     );
 
                     let obfuscatedCode: string;
@@ -1116,9 +1016,8 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
-                        const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
+                        const getObfuscatedCode = () =>
+                            JavaScriptObfuscator.obfuscate(code, {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
@@ -1127,8 +1026,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                                 stringArrayWrappersCount: 1,
                                 stringArrayWrappersParametersMaxCount: 5,
                                 stringArrayWrappersType: StringArrayWrappersType.Function
-                            }
-                        ).getObfuscatedCode();
+                            }).getObfuscatedCode();
 
                         obfuscatedCode = getObfuscatedCode();
                         areSuccessEvaluations = checkCodeEvaluation(
@@ -1162,32 +1060,32 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                     const stringArrayScopeCallsWrapperRegExp1: RegExp = new RegExp(
                         'function *f *\\(c, *d, *e, *h, *i\\) *{' +
                             `return b\\([cdehi] *-(?: -)?${hexadecimalIndexMatch}, *[cdehi]\\);` +
-                        '}.*'
+                            '}.*'
                     );
                     const stringArrayScopeCallsWrapperRegExp2: RegExp = new RegExp(
                         'function test *\\( *\\) *{.*' +
                             'function *g *\\(c, *d, *e, *h, *i\\) *{' +
-                                `return f\\(` +
-                                    // order of arguments depends on the parent wrapper parameters order
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
-                                    `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
-                                `\\);` +
+                            `return f\\(` +
+                            // order of arguments depends on the parent wrapper parameters order
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?, *` +
+                            `[cdehi](?: *-(?: -)?${hexadecimalIndexMatch})?` +
+                            `\\);` +
                             '}.*' +
-                        '}'
+                            '}'
                     );
 
                     const stringArrayCallsWrapperCallRegExp: RegExp = new RegExp(
                         `const foo *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        'function test *\\( *\\) *{.*' +
+                            `const bar *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            `const baz *= *f\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
+                            'function test *\\( *\\) *{.*' +
                             `const c *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                             `const d *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
                             `const e *= *g\\(${stringArrayWrapperArgumentsRegExpString}\\);.*` +
-                        '}'
+                            '}'
                     );
 
                     let obfuscatedCode: string;
@@ -1195,22 +1093,18 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
-                        const getObfuscatedCode = () => JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
+                        const getObfuscatedCode = () =>
+                            JavaScriptObfuscator.obfuscate(code, {
                                 ...NO_ADDITIONAL_NODES_PRESET,
                                 identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
                                 stringArray: true,
-                                stringArrayEncoding: [
-                                    StringArrayEncoding.Rc4
-                                ],
+                                stringArrayEncoding: [StringArrayEncoding.Rc4],
                                 stringArrayThreshold: 1,
                                 stringArrayWrappersChainedCalls: true,
                                 stringArrayWrappersCount: 1,
                                 stringArrayWrappersParametersMaxCount: 5,
                                 stringArrayWrappersType: StringArrayWrappersType.Function
-                            }
-                        ).getObfuscatedCode();
+                            }).getObfuscatedCode();
 
                         obfuscatedCode = getObfuscatedCode();
                         areSuccessEvaluations = checkCodeEvaluation(
@@ -1240,7 +1134,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #6: different indexes for calls wrappers', () => {
                 const getStringArrayScopeCallsWrapperMatch = (stringArrayScopeCallsWrapperName: string) =>
                     `function *${stringArrayScopeCallsWrapperName} *\\(e, *f\\) *{` +
-                        `return b\\([ef] *-(?: -)?(${hexadecimalIndexMatch}), *[ef]\\);` +
+                    `return b\\([ef] *-(?: -)?(${hexadecimalIndexMatch}), *[ef]\\);` +
                     '}.*';
 
                 const stringArrayScopeCallsWrapperIndexRegExp1: RegExp = new RegExp(
@@ -1255,22 +1149,21 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 let differentIndexesMatchesDelta: number = 3;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/function-calls-wrappers-different-indexes.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/function-calls-wrappers-different-indexes.js'
+                    );
 
                     for (let i = 0; i < differentIndexesMatchesSamplesCount; i++) {
-                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                stringArray: true,
-                                stringArrayThreshold: 1,
-                                stringArrayWrappersChainedCalls: true,
-                                stringArrayWrappersCount: 2,
-                                stringArrayWrappersParametersMaxCount: 2,
-                                stringArrayWrappersType: StringArrayWrappersType.Function
-                            }
-                        ).getObfuscatedCode();
+                        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            stringArrayWrappersChainedCalls: true,
+                            stringArrayWrappersCount: 2,
+                            stringArrayWrappersParametersMaxCount: 2,
+                            stringArrayWrappersType: StringArrayWrappersType.Function
+                        }).getObfuscatedCode();
 
                         const indexMatch1 = getRegExpMatch(obfuscatedCode, stringArrayScopeCallsWrapperIndexRegExp1);
                         const indexMatch2 = getRegExpMatch(obfuscatedCode, stringArrayScopeCallsWrapperIndexRegExp2);
@@ -1297,13 +1190,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #1: `1` scope calls wrapper for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
                     '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    // second one may be added or not depends on:
-                    // if all literal values encoded with a single encoding or not
-                    '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){1,2}' +
-                    '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);.*'
+                        // second one may be added or not depends on:
+                        // if all literal values encoded with a single encoding or not
+                        '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){1,2}' +
+                        '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                        'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
+                        'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
+                        'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);.*'
                 );
 
                 let obfuscatedCode: string;
@@ -1311,19 +1204,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayWrappersCount: 1,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64],
+                        stringArrayWrappersCount: 1,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
@@ -1334,13 +1221,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             describe('Variant #2: `2` scope calls wrappers for each encoding type', () => {
                 const stringArrayWrappersRegExp: RegExp = new RegExp(
                     '(?<!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    // third one may be added or not depends on:
-                    // if all literal values encoded with a single encoding or not
-                    '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2,3}' +
-                    '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
-                    'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
-                    'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
-                    'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
+                        // third one may be added or not depends on:
+                        // if all literal values encoded with a single encoding or not
+                        '(const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};(function .*)?){2,3}' +
+                        '(?!const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4};.*)' +
+                        'const foo *= *_0x([a-f0-9]){4,6}\\(0x0\\);.*' +
+                        'const bar *= *_0x([a-f0-9]){4,6}\\(0x1\\);.*' +
+                        'const baz *= *_0x([a-f0-9]){4,6}\\(0x2\\);'
                 );
 
                 let obfuscatedCode: string;
@@ -1348,19 +1235,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayWrappersCount: 2,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64],
+                        stringArrayWrappersCount: 2,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
@@ -1380,7 +1261,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -1388,19 +1269,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayWrappersCount: 1,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64],
+                        stringArrayWrappersCount: 1,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
@@ -1419,7 +1294,7 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x3\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x4\\);' +
                         'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x5\\);' +
-                    '}'
+                        '}'
                 );
 
                 let obfuscatedCode: string;
@@ -1427,19 +1302,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-const.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64
-                            ],
-                            stringArrayWrappersCount: 2,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64],
+                        stringArrayWrappersCount: 2,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add scope calls wrappers for both `none` and `base64` string array wrappers', () => {
@@ -1457,19 +1326,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-eval.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayEncoding: [
-                            StringArrayEncoding.None,
-                            StringArrayEncoding.Rc4
-                        ],
-                        stringArrayWrappersCount: 5
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Rc4],
+                    stringArrayWrappersCount: 5
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });
@@ -1488,19 +1351,13 @@ describe('StringArrayScopeCallsWrapperTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count-eval.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayEncoding: [
-                            StringArrayEncoding.Base64,
-                            StringArrayEncoding.Rc4
-                        ],
-                        stringArrayWrappersCount: 5
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayEncoding: [StringArrayEncoding.Base64, StringArrayEncoding.Rc4],
+                    stringArrayWrappersCount: 5
+                }).getObfuscatedCode();
 
                 evaluationResult = eval(obfuscatedCode);
             });

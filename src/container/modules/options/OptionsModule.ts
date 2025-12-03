@@ -8,11 +8,7 @@ import { Options } from '../../../options/Options';
 import { OptionsNormalizer } from '../../../options/OptionsNormalizer';
 
 export const optionsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    bind<IOptions>(ServiceIdentifiers.IOptions)
-        .to(Options)
-        .inSingletonScope();
+    bind<IOptions>(ServiceIdentifiers.IOptions).to(Options).inSingletonScope();
 
-    bind<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer)
-        .to(OptionsNormalizer)
-        .inSingletonScope();
+    bind<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer).to(OptionsNormalizer).inSingletonScope();
 });

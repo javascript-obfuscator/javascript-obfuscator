@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -37,9 +37,9 @@ export class DebugProtectionFunctionCallCodeHelper extends AbstractCustomCodeHel
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -58,7 +58,7 @@ export class DebugProtectionFunctionCallCodeHelper extends AbstractCustomCodeHel
      * @param {string} debugProtectionFunctionName
      * @param {string} callsControllerFunctionName
      */
-    public initialize (debugProtectionFunctionName: string, callsControllerFunctionName: string): void {
+    public initialize(debugProtectionFunctionName: string, callsControllerFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
         this.callsControllerFunctionName = callsControllerFunctionName;
     }
@@ -67,14 +67,14 @@ export class DebugProtectionFunctionCallCodeHelper extends AbstractCustomCodeHel
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionCallTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName,
             callControllerFunctionName: this.callsControllerFunctionName

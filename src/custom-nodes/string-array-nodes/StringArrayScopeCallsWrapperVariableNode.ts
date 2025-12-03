@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -32,7 +32,6 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
     @initializable()
     private stringArrayScopeCallsWrapperData!: IStringArrayScopeCallsWrapperData;
 
-
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {TStringArrayIndexNodeFactory} stringArrayIndexNodeFactory
@@ -42,16 +41,16 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
+        stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(
             identifierNamesGeneratorFactory,
@@ -68,7 +67,7 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
      * @param {IStringArrayScopeCallsWrapperData} stringArrayScopeCallsWrapperData
      * @param {IStringArrayScopeCallsWrapperData} stringArrayCallsWrapperData
      */
-    public initialize (
+    public initialize(
         stringArrayScopeCallsWrapperData: IStringArrayScopeCallsWrapperData,
         stringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData
     ): void {
@@ -79,7 +78,7 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
@@ -87,7 +86,7 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
                     NodeFactory.identifierNode(this.stringArrayCallsWrapperData.name)
                 )
             ],
-            'const',
+            'const'
         );
 
         NodeUtils.parentizeAst(structure);

@@ -11,9 +11,9 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
 @injectable()
-export abstract class AbstractCustomNode <
-    TInitialData extends unknown[] = unknown[]
-> implements ICustomNode <TInitialData> {
+export abstract class AbstractCustomNode<TInitialData extends unknown[] = unknown[]>
+    implements ICustomNode<TInitialData>
+{
     /**
      * @type {TStatement[] | null}
      */
@@ -45,9 +45,9 @@ export abstract class AbstractCustomNode <
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -61,11 +61,9 @@ export abstract class AbstractCustomNode <
     /**
      * @returns {TStatement[]}
      */
-    public getNode (): TStatement[] {
+    public getNode(): TStatement[] {
         if (!this.cachedNode) {
-            this.cachedNode = this.customCodeHelperFormatter.formatStructure(
-                this.getNodeStructure()
-            );
+            this.cachedNode = this.customCodeHelperFormatter.formatStructure(this.getNodeStructure());
         }
 
         return this.cachedNode;
@@ -74,10 +72,10 @@ export abstract class AbstractCustomNode <
     /**
      * @param {TInitialData} args
      */
-    public abstract initialize (...args: TInitialData): void;
+    public abstract initialize(...args: TInitialData): void;
 
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (): TStatement[];
+    protected abstract getNodeStructure(): TStatement[];
 }

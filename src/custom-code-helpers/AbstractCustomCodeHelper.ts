@@ -18,9 +18,9 @@ import { GlobalVariableNoEvalTemplate } from './common/templates/GlobalVariableN
 import { GlobalVariableServiceWorkerTemplate } from './common/templates/GlobalVariableServiceWorkerTemplate';
 
 @injectable()
-export abstract class AbstractCustomCodeHelper <
-    TInitialData extends unknown[] = unknown[]
-> implements ICustomCodeHelper <TInitialData> {
+export abstract class AbstractCustomCodeHelper<TInitialData extends unknown[] = unknown[]>
+    implements ICustomCodeHelper<TInitialData>
+{
     /**
      * @type {string[]}
      */
@@ -66,9 +66,9 @@ export abstract class AbstractCustomCodeHelper <
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -84,13 +84,11 @@ export abstract class AbstractCustomCodeHelper <
     /**
      * @returns {TStatement[]}
      */
-    public getNode (): TStatement[] {
+    public getNode(): TStatement[] {
         if (!this.cachedNode) {
             const codeHelperTemplate: string = this.getCodeHelperTemplate();
 
-            this.cachedNode = this.customCodeHelperFormatter.formatStructure(
-                this.getNodeStructure(codeHelperTemplate)
-            );
+            this.cachedNode = this.customCodeHelperFormatter.formatStructure(this.getNodeStructure(codeHelperTemplate));
         }
 
         return this.cachedNode;
@@ -99,7 +97,7 @@ export abstract class AbstractCustomCodeHelper <
     /**
      * @returns {string}
      */
-    protected getGlobalVariableTemplate (): string {
+    protected getGlobalVariableTemplate(): string {
         switch (this.options.target) {
             case ObfuscationTarget.BrowserNoEval:
                 return GlobalVariableNoEvalTemplate();
@@ -115,17 +113,17 @@ export abstract class AbstractCustomCodeHelper <
     /**
      * @returns {string}
      */
-    protected getCodeHelperTemplate (): string {
+    protected getCodeHelperTemplate(): string {
         return '';
     }
 
     /**
      * @param {TInitialData} args
      */
-    public abstract initialize (...args: TInitialData): void;
+    public abstract initialize(...args: TInitialData): void;
 
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (codeHelperTemplate: string): TStatement[];
+    protected abstract getNodeStructure(codeHelperTemplate: string): TStatement[];
 }

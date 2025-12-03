@@ -14,18 +14,15 @@ describe('StringArrayTemplate', () => {
     describe('Prevailing kind of variables', () => {
         describe('`var` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], {kind: 'var'});
+                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], { kind: 'var' });
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -41,18 +38,15 @@ describe('StringArrayTemplate', () => {
 
         describe('`const` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], {kind: 'const'});
+                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], { kind: 'const' });
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -68,18 +62,15 @@ describe('StringArrayTemplate', () => {
 
         describe('`let` kind', () => {
             let obfuscatedCode: string,
-                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], {kind: 'const'});
+                stringArrayRegExp: RegExp = getStringArrayRegExp(['foo'], { kind: 'const' });
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });

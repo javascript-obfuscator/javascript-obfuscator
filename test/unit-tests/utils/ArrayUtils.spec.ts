@@ -71,13 +71,7 @@ describe('ArrayUtils', () => {
 
         describe('range length more than 0', () => {
             const rangeLength: number = 5;
-            const expectedArray: string[] = [
-                'foo0',
-                'foo1',
-                'foo2',
-                'foo3',
-                'foo4',
-            ];
+            const expectedArray: string[] = ['foo0', 'foo1', 'foo2', 'foo3', 'foo4'];
 
             let array: string[];
 
@@ -278,8 +272,7 @@ describe('ArrayUtils', () => {
     });
 
     describe('rotate', () => {
-        let array: number[],
-            rotatedArray: number[];
+        let array: number[], rotatedArray: number[];
 
         beforeEach(() => {
             array = [1, 2, 3, 4, 5, 6];
@@ -306,7 +299,7 @@ describe('ArrayUtils', () => {
                 rotatedArray = arrayUtils.rotate(array, rotateValue);
             });
 
-            it('shouldn\'t rotate array', () => {
+            it("shouldn't rotate array", () => {
                 assert.deepEqual(rotatedArray, expectedArray);
             });
         });

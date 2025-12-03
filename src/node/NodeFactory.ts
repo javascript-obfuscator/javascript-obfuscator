@@ -11,7 +11,7 @@ export class NodeFactory {
      * @param {TStatement[]} body
      * @returns {Program}
      */
-    public static programNode (body: TStatement[] = []): ESTree.Program {
+    public static programNode(body: TStatement[] = []): ESTree.Program {
         return {
             type: NodeType.Program,
             body,
@@ -24,7 +24,7 @@ export class NodeFactory {
      * @param {(Expression | SpreadElement)[]} elements
      * @returns {ArrayExpression}
      */
-    public static arrayExpressionNode (
+    public static arrayExpressionNode(
         elements: (ESTree.Expression | ESTree.SpreadElement)[] = []
     ): ESTree.ArrayExpression {
         return {
@@ -40,7 +40,7 @@ export class NodeFactory {
      * @param {Expression} right
      * @returns {AssignmentExpression}
      */
-    public static assignmentExpressionNode (
+    public static assignmentExpressionNode(
         operator: ESTree.AssignmentOperator,
         left: ESTree.Pattern | ESTree.MemberExpression,
         right: ESTree.Expression
@@ -60,7 +60,7 @@ export class NodeFactory {
      * @param {Expression} right
      * @returns {BinaryExpression}
      */
-    public static binaryExpressionNode (
+    public static binaryExpressionNode(
         operator: ESTree.BinaryOperator,
         left: ESTree.Expression,
         right: ESTree.Expression
@@ -78,7 +78,7 @@ export class NodeFactory {
      * @param {Statement[]} body
      * @returns {BlockStatement}
      */
-    public static blockStatementNode (body: ESTree.Statement[] = []): ESTree.BlockStatement {
+    public static blockStatementNode(body: ESTree.Statement[] = []): ESTree.BlockStatement {
         return {
             type: NodeType.BlockStatement,
             body,
@@ -90,7 +90,7 @@ export class NodeFactory {
      * @param {Identifier} label
      * @returns {BreakStatement}
      */
-    public static breakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
+    public static breakStatement(label?: ESTree.Identifier): ESTree.BreakStatement {
         return {
             type: NodeType.BreakStatement,
             label,
@@ -104,10 +104,10 @@ export class NodeFactory {
      * @param {boolean} optional
      * @returns {CallExpression}
      */
-    public static callExpressionNode (
+    public static callExpressionNode(
         callee: ESTree.Expression,
         args: (ESTree.Expression | ESTree.SpreadElement)[] = [],
-        optional: boolean = false,
+        optional: boolean = false
     ): ESTree.CallExpression {
         return {
             type: NodeType.CallExpression,
@@ -122,9 +122,7 @@ export class NodeFactory {
      * @param {ChainElement} expression
      * @return {ChainExpression}
      */
-    public static chainExpressionNode (
-        expression: ESTree.ChainElement,
-    ): ESTree.ChainExpression {
+    public static chainExpressionNode(expression: ESTree.ChainElement): ESTree.ChainExpression {
         return {
             type: NodeType.ChainExpression,
             expression,
@@ -138,7 +136,7 @@ export class NodeFactory {
      * @param {ESTree.Expression} alternate
      * @returns {ESTree.ConditionalExpression}
      */
-    public static conditionalExpressionNode (
+    public static conditionalExpressionNode(
         test: ESTree.Expression,
         consequent: ESTree.Expression,
         alternate: ESTree.Expression
@@ -156,7 +154,7 @@ export class NodeFactory {
      * @param {Identifier} label
      * @returns {ContinueStatement}
      */
-    public static continueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
+    public static continueStatement(label?: ESTree.Identifier): ESTree.ContinueStatement {
         return {
             type: NodeType.ContinueStatement,
             label,
@@ -169,10 +167,7 @@ export class NodeFactory {
      * @param {string} directive
      * @returns {Directive}
      */
-    public static directiveNode (
-        expression: ESTree.Literal,
-        directive: string
-    ): ESTree.Directive {
+    public static directiveNode(expression: ESTree.Literal, directive: string): ESTree.Directive {
         return {
             type: NodeType.ExpressionStatement,
             expression,
@@ -186,7 +181,7 @@ export class NodeFactory {
      * @param {Expression} test
      * @returns {DoWhileStatement}
      */
-    public static doWhileStatementNode (body: ESTree.Statement, test: ESTree.Expression): ESTree.DoWhileStatement {
+    public static doWhileStatementNode(body: ESTree.Statement, test: ESTree.Expression): ESTree.DoWhileStatement {
         return {
             type: NodeType.DoWhileStatement,
             body,
@@ -200,7 +195,7 @@ export class NodeFactory {
      * @param {Identifier | null} exported
      * @returns {ExportAllDeclaration}
      */
-    public static exportAllDeclarationNode (
+    public static exportAllDeclarationNode(
         source: ESTree.Literal,
         exported: ESTree.Identifier | null
     ): ESTree.ExportAllDeclaration {
@@ -217,7 +212,7 @@ export class NodeFactory {
      * @param {Literal} source
      * @returns {ExportNamedDeclaration}
      */
-    public static exportNamedDeclarationNode (
+    public static exportNamedDeclarationNode(
         specifiers: ESTree.ExportSpecifier[],
         source: ESTree.Literal
     ): ESTree.ExportNamedDeclaration {
@@ -233,7 +228,7 @@ export class NodeFactory {
      * @param {Expression} expression
      * @returns {ExpressionStatement}
      */
-    public static expressionStatementNode (expression: ESTree.Expression): ESTree.ExpressionStatement {
+    public static expressionStatementNode(expression: ESTree.Expression): ESTree.ExpressionStatement {
         return {
             type: NodeType.ExpressionStatement,
             expression,
@@ -248,7 +243,7 @@ export class NodeFactory {
      * @param {Statement} body
      * @returns {ForStatement}
      */
-    public static forStatementNode (
+    public static forStatementNode(
         init: ESTree.VariableDeclaration | ESTree.Expression | null,
         test: ESTree.Expression | null,
         update: ESTree.Expression | null,
@@ -270,7 +265,7 @@ export class NodeFactory {
      * @param {Statement} body
      * @returns {ForInStatement}
      */
-    public static forInStatementNode (
+    public static forInStatementNode(
         left: ESTree.VariableDeclaration | ESTree.Pattern,
         right: ESTree.Expression,
         body: ESTree.Statement
@@ -291,7 +286,7 @@ export class NodeFactory {
      * @param {Statement} body
      * @returns {ForOfStatement}
      */
-    public static forOfStatementNode (
+    public static forOfStatementNode(
         asAwait: boolean,
         left: ESTree.VariableDeclaration | ESTree.Pattern,
         right: ESTree.Expression,
@@ -313,7 +308,7 @@ export class NodeFactory {
      * @param {BlockStatement} body
      * @returns {FunctionDeclaration}
      */
-    public static functionDeclarationNode (
+    public static functionDeclarationNode(
         functionName: string,
         params: ESTree.Identifier[],
         body: ESTree.BlockStatement
@@ -333,7 +328,7 @@ export class NodeFactory {
      * @param {BlockStatement} body
      * @returns {FunctionExpression}
      */
-    public static functionExpressionNode (
+    public static functionExpressionNode(
         params: ESTree.Pattern[],
         body: ESTree.BlockStatement
     ): ESTree.FunctionExpression {
@@ -352,7 +347,7 @@ export class NodeFactory {
      * @param {ESTree.Statement | null} alternate
      * @returns {ESTree.IfStatement}
      */
-    public static ifStatementNode (
+    public static ifStatementNode(
         test: ESTree.Expression,
         consequent: ESTree.Statement,
         alternate?: ESTree.Statement | null
@@ -361,7 +356,7 @@ export class NodeFactory {
             type: NodeType.IfStatement,
             test,
             consequent,
-            ...alternate && { alternate },
+            ...(alternate && { alternate }),
             metadata: { ignoredNode: false }
         };
     }
@@ -370,7 +365,7 @@ export class NodeFactory {
      * @param {string} name
      * @returns {Identifier}
      */
-    public static identifierNode (name: string): ESTree.Identifier {
+    public static identifierNode(name: string): ESTree.Identifier {
         return {
             type: NodeType.Identifier,
             name,
@@ -383,7 +378,7 @@ export class NodeFactory {
      * @param {Literal} source
      * @returns {ImportDeclaration}
      */
-    public static importDeclarationNode (
+    public static importDeclarationNode(
         specifiers: (ESTree.ImportSpecifier | ESTree.ImportDefaultSpecifier | ESTree.ImportNamespaceSpecifier)[],
         source: ESTree.Literal
     ): ESTree.ImportDeclaration {
@@ -400,10 +395,7 @@ export class NodeFactory {
      * @param {Statement} body
      * @returns {LabeledStatement}
      */
-    public static labeledStatementNode (
-        label: ESTree.Identifier,
-        body: ESTree.Statement
-    ): ESTree.LabeledStatement {
+    public static labeledStatementNode(label: ESTree.Identifier, body: ESTree.Statement): ESTree.LabeledStatement {
         return {
             type: NodeType.LabeledStatement,
             label,
@@ -417,7 +409,7 @@ export class NodeFactory {
      * @param {string} raw
      * @returns {Literal}
      */
-    public static literalNode (value: boolean | number | string, raw?: string): ESTree.Literal {
+    public static literalNode(value: boolean | number | string, raw?: string): ESTree.Literal {
         raw = raw ?? `'${value}'`;
 
         return {
@@ -439,10 +431,10 @@ export class NodeFactory {
      * @param {Expression} right
      * @returns {LogicalExpression}
      */
-    public static logicalExpressionNode (
+    public static logicalExpressionNode(
         operator: ESTree.LogicalOperator,
         left: ESTree.Expression,
-        right: ESTree.Expression,
+        right: ESTree.Expression
     ): ESTree.LogicalExpression {
         return {
             type: NodeType.LogicalExpression,
@@ -460,11 +452,11 @@ export class NodeFactory {
      * @param {boolean} optional
      * @returns {MemberExpression}
      */
-    public static memberExpressionNode (
+    public static memberExpressionNode(
         object: ESTree.Expression | ESTree.Super,
         property: ESTree.Expression,
         computed: boolean = false,
-        optional: boolean = false,
+        optional: boolean = false
     ): ESTree.MemberExpression {
         return {
             type: NodeType.MemberExpression,
@@ -480,7 +472,9 @@ export class NodeFactory {
      * @param {(ESTree.Property | ESTree.SpreadElement)[]} properties
      * @returns {ESTree.ObjectExpression}
      */
-    public static objectExpressionNode (properties: (ESTree.Property | ESTree.SpreadElement)[]): ESTree.ObjectExpression {
+    public static objectExpressionNode(
+        properties: (ESTree.Property | ESTree.SpreadElement)[]
+    ): ESTree.ObjectExpression {
         return {
             type: NodeType.ObjectExpression,
             properties,
@@ -494,7 +488,7 @@ export class NodeFactory {
      * @param {boolean} computed
      * @returns {Property}
      */
-    public static propertyNode (
+    public static propertyNode(
         key: ESTree.Expression,
         value: ESTree.Expression | ESTree.Pattern,
         computed: boolean = false
@@ -515,7 +509,7 @@ export class NodeFactory {
      * @param {Pattern} argument
      * @returns {SpreadElement}
      */
-    public static restElementNode (argument: ESTree.Pattern): ESTree.RestElement {
+    public static restElementNode(argument: ESTree.Pattern): ESTree.RestElement {
         return {
             type: NodeType.RestElement,
             argument,
@@ -527,7 +521,7 @@ export class NodeFactory {
      * @param {Expression} argument
      * @returns {ReturnStatement}
      */
-    public static returnStatementNode (argument: ESTree.Expression): ESTree.ReturnStatement {
+    public static returnStatementNode(argument: ESTree.Expression): ESTree.ReturnStatement {
         return {
             type: NodeType.ReturnStatement,
             argument,
@@ -539,7 +533,7 @@ export class NodeFactory {
      * @param {ESTree.Expression[]} expressions
      * @returns {ESTree.SequenceExpression}
      */
-    public static sequenceExpressionNode (expressions: ESTree.Expression[]): ESTree.SequenceExpression {
+    public static sequenceExpressionNode(expressions: ESTree.Expression[]): ESTree.SequenceExpression {
         return {
             type: NodeType.SequenceExpression,
             expressions,
@@ -551,7 +545,7 @@ export class NodeFactory {
      * @param {Expression} argument
      * @returns {SpreadElement}
      */
-    public static spreadElementNode (argument: ESTree.Expression): ESTree.SpreadElement {
+    public static spreadElementNode(argument: ESTree.Expression): ESTree.SpreadElement {
         return {
             type: NodeType.SpreadElement,
             argument,
@@ -563,7 +557,7 @@ export class NodeFactory {
      * @param {Statement[]} body
      * @returns {StaticBlock}
      */
-    public static staticBlockNode (body: ESTree.Statement[] = []): ESTree.StaticBlock {
+    public static staticBlockNode(body: ESTree.Statement[] = []): ESTree.StaticBlock {
         return {
             type: NodeType.StaticBlock,
             body,
@@ -576,7 +570,7 @@ export class NodeFactory {
      * @param {SwitchCase[]} cases
      * @returns {SwitchStatement}
      */
-    public static switchStatementNode (
+    public static switchStatementNode(
         discriminant: ESTree.Expression,
         cases: ESTree.SwitchCase[]
     ): ESTree.SwitchStatement {
@@ -593,7 +587,7 @@ export class NodeFactory {
      * @param {Statement[]} consequent
      * @returns {SwitchCase}
      */
-    public static switchCaseNode (test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
+    public static switchCaseNode(test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
         return {
             type: NodeType.SwitchCase,
             test,
@@ -608,7 +602,7 @@ export class NodeFactory {
      * @param {true} prefix
      * @returns {UnaryExpression}
      */
-    public static unaryExpressionNode (
+    public static unaryExpressionNode(
         operator: ESTree.UnaryOperator,
         argument: ESTree.Expression,
         prefix: true = true
@@ -627,7 +621,10 @@ export class NodeFactory {
      * @param {Expression} argumentExpr
      * @returns {UpdateExpression}
      */
-    public static updateExpressionNode (operator: ESTree.UpdateOperator, argumentExpr: ESTree.Expression): ESTree.UpdateExpression {
+    public static updateExpressionNode(
+        operator: ESTree.UpdateOperator,
+        argumentExpr: ESTree.Expression
+    ): ESTree.UpdateExpression {
         return {
             type: NodeType.UpdateExpression,
             operator,
@@ -642,7 +639,7 @@ export class NodeFactory {
      * @param {string} kind
      * @returns {VariableDeclaration}
      */
-    public static variableDeclarationNode (
+    public static variableDeclarationNode(
         declarations: ESTree.VariableDeclarator[] = [],
         kind: 'var' | 'let' | 'const' = 'var'
     ): ESTree.VariableDeclaration {
@@ -659,7 +656,10 @@ export class NodeFactory {
      * @param {Expression | null} init
      * @returns {VariableDeclarator}
      */
-    public static variableDeclaratorNode (id: ESTree.Identifier, init: ESTree.Expression | null): ESTree.VariableDeclarator {
+    public static variableDeclaratorNode(
+        id: ESTree.Identifier,
+        init: ESTree.Expression | null
+    ): ESTree.VariableDeclarator {
         return {
             type: NodeType.VariableDeclarator,
             id,
@@ -673,7 +673,7 @@ export class NodeFactory {
      * @param {Statement} body
      * @returns {WhileStatement}
      */
-    public static whileStatementNode (test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
+    public static whileStatementNode(test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
         return {
             type: NodeType.WhileStatement,
             test,

@@ -22,12 +22,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/identifier-reference.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             functionIdentifierName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp);
             variableReferenceIdentifierName = getRegExpMatch(obfuscatedCode, evalExpressionRegExp);
@@ -53,12 +50,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/call-expression-identifier-reference.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             functionIdentifierName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp);
             variableReferenceIdentifierName = getRegExpMatch(obfuscatedCode, evalExpressionRegExp);
@@ -81,12 +75,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/multiple-statements-eval.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should obfuscate eval string', () => {
@@ -97,24 +88,20 @@ describe('EvalCallExpressionTransformer', () => {
     describe('Variant #4: string array calls wrapper call', () => {
         describe('Variant #1: hexadecimal number indexes type', () => {
             const stringArrayRegExp: RegExp = getStringArrayRegExp(['log', 'bar']);
-            const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(0\)]\(_0x([a-f0-9]){4,6}\(1\)\);'\);/;
+            const stringArrayCallsWrapperRegExp: RegExp =
+                /eval *\('console\[_0x([a-f0-9]){4,6}\(0\)]\(_0x([a-f0-9]){4,6}\(1\)\);'\);/;
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayIndexesType: [
-                            StringArrayIndexesType.HexadecimalNumber
-                        ],
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumber],
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('match #1: should add strings from eval expression to the string array', () => {
@@ -128,24 +115,20 @@ describe('EvalCallExpressionTransformer', () => {
 
         describe('Variant #1: hexadecimal numeric string indexes type', () => {
             const stringArrayRegExp: RegExp = getStringArrayRegExp(['log', 'bar']);
-            const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
+            const stringArrayCallsWrapperRegExp: RegExp =
+                /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayIndexesType: [
-                            StringArrayIndexesType.HexadecimalNumericString
-                        ],
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumericString],
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('match #1: should add strings from eval expression to the string array', () => {
@@ -169,12 +152,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/eval-expression-as-argument.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             functionIdentifierName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp);
             variableReferenceIdentifierName = getRegExpMatch(obfuscatedCode, evalExpressionRegExp);
@@ -190,15 +170,17 @@ describe('EvalCallExpressionTransformer', () => {
     });
 
     describe('Variant #6: nested eval expressions', () => {
-        const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6}), *(_0x(?:[a-f0-9]){4,6})\)/;
-        const evalExpressionMatch: string = `` +
+        const functionIdentifierRegExp: RegExp =
+            /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6}), *(_0x(?:[a-f0-9]){4,6})\)/;
+        const evalExpressionMatch: string =
+            `` +
             `eval *\\('` +
-                `var (_0x(?:[a-f0-9]){4,6}) *= *(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
-                `eval\\(\\\\'` +
-                    `(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
-                `\\\\'\\);` +
+            `var (_0x(?:[a-f0-9]){4,6}) *= *(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
+            `eval\\(\\\\'` +
+            `(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
+            `\\\\'\\);` +
             `'\\);` +
-        ``;
+            ``;
         const evalExpressionRegExp: RegExp = new RegExp(evalExpressionMatch);
         const expectedEvaluationResult: number = 4;
 
@@ -215,12 +197,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/nested-eval-expressions.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             functionIdentifierAName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp, 0);
             functionIdentifierBName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp, 1);
@@ -267,17 +246,14 @@ describe('EvalCallExpressionTransformer', () => {
     describe('Variant #7: wrong eval string', () => {
         const evalExpressionRegExp: RegExp = /eval *\('~'\);/;
 
-        let obfuscatedCode: string
+        let obfuscatedCode: string;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/wrong-eval-string.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should skip obfuscation of eval string', () => {
@@ -296,12 +272,9 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/eval-expression-template-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             functionIdentifierName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp);
             variableReferenceIdentifierName = getRegExpMatch(obfuscatedCode, evalExpressionRegExp);
@@ -318,13 +291,14 @@ describe('EvalCallExpressionTransformer', () => {
 
     describe('Variant #9: integration with control flow flattening', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
-        const controlFlowStorageNodeMatch: string = `` +
+        const controlFlowStorageNodeMatch: string =
+            `` +
             `var ${variableMatch} *= *\\{` +
-                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
-                    `return *${variableMatch} *\\+ *${variableMatch};` +
-                `\\}` +
+            `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+            `return *${variableMatch} *\\+ *${variableMatch};` +
+            `\\}` +
             `\\};` +
-        ``;
+            ``;
         const controlFlowStorageNodeRegExp: RegExp = new RegExp(controlFlowStorageNodeMatch);
         const evalExpressionRegExp: RegExp = new RegExp(
             `eval *\\('${variableMatch}\\[\\\\'\\w{5}\\\\']\\(${variableMatch}, *${variableMatch}\\);'\\);`
@@ -335,14 +309,11 @@ describe('EvalCallExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening-integration.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    controlFlowFlattening: true,
-                    controlFlowFlatteningThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                controlFlowFlattening: true,
+                controlFlowFlatteningThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('should add control flow storage node', () => {

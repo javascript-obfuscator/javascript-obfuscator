@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -43,11 +43,11 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
+        stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
@@ -69,9 +69,9 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
      * @param {IStringArrayScopeCallsWrapperData} stringArrayScopeCallsWrapperData
      * @param {IStringArrayScopeCallsWrapperData} upperStringArrayCallsWrapperData
      */
-    public initialize (
+    public initialize(
         stringArrayScopeCallsWrapperData: IStringArrayScopeCallsWrapperData,
-        upperStringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData,
+        upperStringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData
     ): void {
         this.stringArrayScopeCallsWrapperData = stringArrayScopeCallsWrapperData;
         this.upperStringArrayCallsWrapperData = upperStringArrayCallsWrapperData;
@@ -80,17 +80,20 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         // identifiers of function expression parameters
         // as a temporary names use random strings
-        const stringArrayCallIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
-        const decodeKeyIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
+        const stringArrayCallIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
+            this.randomGenerator.getRandomString(6)
+        );
+        const decodeKeyIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(
+            this.randomGenerator.getRandomString(6)
+        );
 
         const stringArrayCallNode: ESTree.Expression = this.getUpperStringArrayCallNode(
             stringArrayCallIdentifierNode,
             this.getStringArrayIndexNode(
-                this.stringArrayScopeCallsWrapperData.index
-                - this.upperStringArrayCallsWrapperData.index
+                this.stringArrayScopeCallsWrapperData.index - this.upperStringArrayCallsWrapperData.index
             )
         );
 
@@ -98,10 +101,10 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         // filling all parameters with a fake parameters first
         const parameters: ESTree.Identifier[] = this.arrayUtils.fillWithRange(
             !this.stringArrayScopeCallsWrapperData.parameterIndexesData
-                // root string array calls wrapper
-                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
-                // scope string array calls wrapper
-                : this.options.stringArrayWrappersParametersMaxCount,
+                ? // root string array calls wrapper
+                  AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
+                : // scope string array calls wrapper
+                  this.options.stringArrayWrappersParametersMaxCount,
             () => this.getFakeParameterNode()
         );
         parameters.splice(
@@ -119,14 +122,12 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         // filling all call expression arguments with a fake string array calls
         const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
             !this.upperStringArrayCallsWrapperData.parameterIndexesData
-                // root string array calls wrapper
-                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
-                // scope string array calls wrapper
-                : this.options.stringArrayWrappersParametersMaxCount,
-            (index: number) => this.getUpperStringArrayCallNode(
-                parameters[index],
-                this.getFakeUpperStringArrayIndexNode()
-            )
+                ? // root string array calls wrapper
+                  AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
+                : // scope string array calls wrapper
+                  this.options.stringArrayWrappersParametersMaxCount,
+            (index: number) =>
+                this.getUpperStringArrayCallNode(parameters[index], this.getFakeUpperStringArrayIndexNode())
         );
 
         callExpressionArgs.splice(
@@ -141,7 +142,7 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
         );
 
         // stage 3: function declaration node
-        const functionDeclarationNode: ESTree.FunctionDeclaration =  NodeFactory.functionDeclarationNode(
+        const functionDeclarationNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
             this.stringArrayScopeCallsWrapperData.name,
             parameters,
             NodeFactory.blockStatementNode([
@@ -172,28 +173,24 @@ export class StringArrayScopeCallsWrapperFunctionNode extends AbstractStringArra
      * @param {Expression} indexShiftNode
      * @returns {Expression}
      */
-    private getUpperStringArrayCallNode (
+    private getUpperStringArrayCallNode(
         indexParameterIdentifierNode: ESTree.Identifier,
         indexShiftNode: ESTree.Expression
     ): ESTree.Expression {
-        return NodeFactory.binaryExpressionNode(
-            '-',
-            indexParameterIdentifierNode,
-            indexShiftNode
-        );
+        return NodeFactory.binaryExpressionNode('-', indexParameterIdentifierNode, indexShiftNode);
     }
 
     /**
      * @returns {Identifier}
      */
-    private getFakeParameterNode (): ESTree.Identifier {
+    private getFakeParameterNode(): ESTree.Identifier {
         return NodeFactory.identifierNode(this.randomGenerator.getRandomString(6));
     }
 
     /**
      * @returns {Expression}
      */
-    private getFakeUpperStringArrayIndexNode (): ESTree.Expression {
+    private getFakeUpperStringArrayIndexNode(): ESTree.Expression {
         return this.getStringArrayIndexNode(this.randomGenerator.getRandomInteger(0, 500));
     }
 }

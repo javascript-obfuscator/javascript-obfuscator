@@ -7,12 +7,12 @@ describe('StringUtils', function () {
 
     describe('escapeJsString', () => {
         describe('Variant #1: single quotes', () => {
-            const expectedEscapedJsString: string = 'const foo = \\\'Hello World!\\\'';
+            const expectedEscapedJsString: string = "const foo = \\'Hello World!\\'";
 
             let escapedJsString: string;
 
             before(() => {
-                escapedJsString = StringUtils.escapeJsString('const foo = \'Hello World!\'');
+                escapedJsString = StringUtils.escapeJsString("const foo = 'Hello World!'");
             });
 
             it('should escape js string', () => {

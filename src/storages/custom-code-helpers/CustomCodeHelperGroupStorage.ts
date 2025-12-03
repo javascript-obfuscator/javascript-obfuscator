@@ -12,7 +12,7 @@ import { CustomCodeHelperGroup } from '../../enums/custom-code-helpers/CustomCod
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class CustomCodeHelperGroupStorage extends MapStorage <string, ICustomCodeHelperGroup> {
+export class CustomCodeHelperGroupStorage extends MapStorage<string, ICustomCodeHelperGroup> {
     /**
      * @type {CustomCodeHelperGroup[]}
      */
@@ -34,8 +34,9 @@ export class CustomCodeHelperGroupStorage extends MapStorage <string, ICustomCod
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomCodeHelperGroup) customCodeHelperGroupFactory: TCustomCodeHelperGroupFactory,
+    public constructor(
+        @inject(ServiceIdentifiers.Factory__ICustomCodeHelperGroup)
+        customCodeHelperGroupFactory: TCustomCodeHelperGroupFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -45,13 +46,16 @@ export class CustomCodeHelperGroupStorage extends MapStorage <string, ICustomCod
     }
 
     @postConstruct()
-    public override initialize (): void {
+    public override initialize(): void {
         super.initialize();
 
-        CustomCodeHelperGroupStorage.customCodeHelperGroupsList.forEach((customCodeHelperGroupName: CustomCodeHelperGroup) => {
-            const customCodeHelperGroup: ICustomCodeHelperGroup = this.customCodeHelperGroupFactory(customCodeHelperGroupName);
+        CustomCodeHelperGroupStorage.customCodeHelperGroupsList.forEach(
+            (customCodeHelperGroupName: CustomCodeHelperGroup) => {
+                const customCodeHelperGroup: ICustomCodeHelperGroup =
+                    this.customCodeHelperGroupFactory(customCodeHelperGroupName);
 
-            this.storage.set(customCodeHelperGroupName, customCodeHelperGroup);
-        });
+                this.storage.set(customCodeHelperGroupName, customCodeHelperGroup);
+            }
+        );
     }
 }

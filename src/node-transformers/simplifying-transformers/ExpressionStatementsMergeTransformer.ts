@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -32,7 +32,7 @@ export class ExpressionStatementsMergeTransformer extends AbstractNodeTransforme
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -43,7 +43,7 @@ export class ExpressionStatementsMergeTransformer extends AbstractNodeTransforme
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Simplifying:
                 return {
@@ -67,7 +67,7 @@ export class ExpressionStatementsMergeTransformer extends AbstractNodeTransforme
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.ExpressionStatement | estraverse.VisitorOption}
      */
-    public transformNode (
+    public transformNode(
         expressionStatementNode: ESTree.ExpressionStatement,
         parentNode: ESTree.Node
     ): ESTree.ExpressionStatement | estraverse.VisitorOption {
@@ -75,7 +75,8 @@ export class ExpressionStatementsMergeTransformer extends AbstractNodeTransforme
             return expressionStatementNode;
         }
 
-        const prevStatement: TStatement | null = NodeStatementUtils.getPreviousSiblingStatement(expressionStatementNode);
+        const prevStatement: TStatement | null =
+            NodeStatementUtils.getPreviousSiblingStatement(expressionStatementNode);
 
         if (!prevStatement || !NodeGuards.isExpressionStatementNode(prevStatement)) {
             return expressionStatementNode;

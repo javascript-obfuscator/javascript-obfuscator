@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function DebuggerTemplateNoEval (): string {
+export function DebuggerTemplateNoEval(): string {
     return `
         if (typeof counter === 'string') {
             const func = function () {

@@ -14,20 +14,14 @@ describe('IdentifierReplacer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/local-reserved-names.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        reservedNames: ['[abc|ghi]']
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    reservedNames: ['[abc|ghi]']
+                }).getObfuscatedCode();
             });
 
             it('Should keep reserved names without transformations when `reservedNames` option is enabled', () => {
-                assert.match(
-                    obfuscatedCode,
-                    /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/
-                );
+                assert.match(obfuscatedCode, /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/);
             });
         });
 
@@ -37,21 +31,15 @@ describe('IdentifierReplacer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/global-reserved-names.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true,
-                        reservedNames: ['[abc|ghi]']
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true,
+                    reservedNames: ['[abc|ghi]']
+                }).getObfuscatedCode();
             });
 
             it('Should keep reserved names without transformations when `reservedNames` option is enabled', () => {
-                assert.match(
-                    obfuscatedCode,
-                    /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/
-                );
+                assert.match(obfuscatedCode, /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/);
             });
         });
     });

@@ -14,7 +14,7 @@ export class Utils {
      * @param {string} buildTimestamp
      * @returns {string}
      */
-    public static buildVersionMessage (version?: string, buildTimestamp?: string): string {
+    public static buildVersionMessage(version?: string, buildTimestamp?: string): string {
         const isUnknownVersion = !version || !buildTimestamp;
 
         if (isUnknownVersion) {
@@ -30,7 +30,7 @@ export class Utils {
      * @param {string} url
      * @returns {string}
      */
-    public static extractDomainFrom (url: string): string {
+    public static extractDomainFrom(url: string): string {
         let domain: string;
 
         if (url.includes('://') || url.indexOf('//') === 0) {
@@ -49,7 +49,7 @@ export class Utils {
      * @param {number} sourceCodeIndex
      * @returns {string}
      */
-    public static getIdentifiersPrefixForMultipleSources (
+    public static getIdentifiersPrefixForMultipleSources(
         identifiersPrefix: string | undefined,
         sourceCodeIndex: number
     ): string {
@@ -64,10 +64,9 @@ export class Utils {
      * @param {TObject} enumLikeObject
      * @returns {Readonly<TObject>}
      */
-    public static makeEnum<
-        TObject extends {[index: string]: TValue},
-        TValue extends string
-    > (enumLikeObject: TObject): Readonly<TObject> {
-        return Object.freeze({...enumLikeObject});
+    public static makeEnum<TObject extends { [index: string]: TValue }, TValue extends string>(
+        enumLikeObject: TObject
+    ): Readonly<TObject> {
+        return Object.freeze({ ...enumLikeObject });
     }
 }

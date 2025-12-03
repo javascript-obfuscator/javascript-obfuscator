@@ -12,7 +12,7 @@ export class NodeAppender {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} statements
      */
-    public static append (nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
+    public static append(nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
         statements = NodeAppender.parentizeScopeStatementsBeforeAppend(nodeWithStatements, statements);
 
         const updatedStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements).concat(statements);
@@ -42,7 +42,7 @@ export class NodeAppender {
      * @param {TStatement[]} bodyStatements
      * @param {number} index
      */
-    public static appendToOptimalBlockScope (
+    public static appendToOptimalBlockScope(
         callsGraphData: ICallsGraphData[],
         nodeWithStatements: TNodeWithStatements,
         bodyStatements: TStatement[],
@@ -63,7 +63,7 @@ export class NodeAppender {
      * @param {number} deep
      * @returns {BlockStatement}
      */
-    public static getOptimalBlockScope (
+    public static getOptimalBlockScope(
         callsGraphData: ICallsGraphData[],
         index: number,
         deep: number = Infinity
@@ -85,7 +85,7 @@ export class NodeAppender {
      * @param {TNodeWithStatements} nodeWithStatements
      * @returns {TStatement[]}
      */
-    public static getScopeStatements (nodeWithStatements: TNodeWithStatements): TStatement[] {
+    public static getScopeStatements(nodeWithStatements: TNodeWithStatements): TStatement[] {
         if (NodeGuards.isSwitchCaseNode(nodeWithStatements)) {
             return nodeWithStatements.consequent;
         }
@@ -98,14 +98,12 @@ export class NodeAppender {
      * @param {TStatement[]} statements
      * @param {Node} target
      */
-    public static insertBefore (
+    public static insertBefore(
         nodeWithStatements: TNodeWithStatements,
         statements: TStatement[],
         target: ESTree.Statement
     ): void {
-        const indexInScopeStatement: number = NodeAppender
-            .getScopeStatements(nodeWithStatements)
-            .indexOf(target);
+        const indexInScopeStatement: number = NodeAppender.getScopeStatements(nodeWithStatements).indexOf(target);
 
         NodeAppender.insertAtIndex(nodeWithStatements, statements, indexInScopeStatement);
     }
@@ -115,14 +113,12 @@ export class NodeAppender {
      * @param {TStatement[]} statements
      * @param {Node} target
      */
-    public static insertAfter (
+    public static insertAfter(
         nodeWithStatements: TNodeWithStatements,
         statements: TStatement[],
         target: ESTree.Statement
     ): void {
-        const indexInScopeStatement: number = NodeAppender
-            .getScopeStatements(nodeWithStatements)
-            .indexOf(target);
+        const indexInScopeStatement: number = NodeAppender.getScopeStatements(nodeWithStatements).indexOf(target);
 
         NodeAppender.insertAtIndex(nodeWithStatements, statements, indexInScopeStatement + 1);
     }
@@ -132,7 +128,7 @@ export class NodeAppender {
      * @param {TStatement[]} statements
      * @param {number} index
      */
-    public static insertAtIndex (
+    public static insertAtIndex(
         nodeWithStatements: TNodeWithStatements,
         statements: TStatement[],
         index: number
@@ -150,7 +146,7 @@ export class NodeAppender {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} statements
      */
-    public static prepend (nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
+    public static prepend(nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
         statements = NodeAppender.parentizeScopeStatementsBeforeAppend(nodeWithStatements, statements);
 
         const updatedStatements: TStatement[] = statements.concat(NodeAppender.getScopeStatements(nodeWithStatements));
@@ -162,7 +158,7 @@ export class NodeAppender {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {Statement} statement
      */
-    public static remove (nodeWithStatements: TNodeWithStatements, statement: ESTree.Statement): void {
+    public static remove(nodeWithStatements: TNodeWithStatements, statement: ESTree.Statement): void {
         const scopeStatements: TStatement[] = NodeAppender.getScopeStatements(nodeWithStatements);
         const indexInScopeStatement: number = scopeStatements.indexOf(statement);
 
@@ -181,7 +177,7 @@ export class NodeAppender {
      * @param {TStatement[]} statements
      * @returns {TStatement[]}
      */
-    private static parentizeScopeStatementsBeforeAppend (
+    private static parentizeScopeStatementsBeforeAppend(
         nodeWithStatements: TNodeWithStatements,
         statements: TStatement[]
     ): TStatement[] {
@@ -196,7 +192,7 @@ export class NodeAppender {
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} statements
      */
-    private static setScopeStatements (nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
+    private static setScopeStatements(nodeWithStatements: TNodeWithStatements, statements: TStatement[]): void {
         if (NodeGuards.isSwitchCaseNode(nodeWithStatements)) {
             nodeWithStatements.consequent = <ESTree.Statement[]>statements;
 

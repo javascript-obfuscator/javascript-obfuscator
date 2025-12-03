@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -57,9 +57,9 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @param {IOptions} options
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -82,7 +82,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @param {string} stringArrayCallsWrapperName
      * @param {number} indexShiftAmount
      */
-    public initialize (
+    public initialize(
         stringArrayFunctionName: string,
         stringArrayCallsWrapperName: string,
         indexShiftAmount: number
@@ -98,14 +98,14 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         const decodeCodeHelperTemplate: string = this.getDecodeStringArrayTemplate();
 
         const preservedNames: string[] = [`^${this.stringArrayFunctionName}$`];
@@ -126,23 +126,20 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @returns {string}
      */
-    protected getDecodeStringArrayTemplate (): string {
+    protected getDecodeStringArrayTemplate(): string {
         return '';
     }
 
     /**
      * @returns {string}
      */
-    protected getSelfDefendingTemplate (): string {
+    protected getSelfDefendingTemplate(): string {
         if (!this.options.selfDefending) {
             return '';
         }
 
         return this.customCodeHelperFormatter.formatTemplate(
-            SelfDefendingTemplate(
-                this.randomGenerator,
-                this.escapeSequenceEncoder
-            ),
+            SelfDefendingTemplate(this.randomGenerator, this.escapeSequenceEncoder),
             {
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
             }

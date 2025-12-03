@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -25,9 +25,9 @@ export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
      * @param {IGlobalIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
+        identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesCacheStorage = identifierNamesCacheStorage;
@@ -38,11 +38,12 @@ export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
      * @param {Identifier} identifierNode
      * @returns {Identifier}
      */
-    public replace (identifierNode: ESTree.Identifier): ESTree.Identifier {
+    public replace(identifierNode: ESTree.Identifier): ESTree.Identifier {
         const identifierName: string = identifierNode.name;
-        const newIdentifierName: string = this.options.identifierNamesCache && !this.isReservedName(identifierName)
-            ? this.identifierNamesCacheStorage.get(identifierName) ?? identifierName
-            : identifierName;
+        const newIdentifierName: string =
+            this.options.identifierNamesCache && !this.isReservedName(identifierName)
+                ? (this.identifierNamesCacheStorage.get(identifierName) ?? identifierName)
+                : identifierName;
 
         return NodeFactory.identifierNode(newIdentifierName);
     }
@@ -51,14 +52,13 @@ export class ThroughIdentifierReplacer implements IThroughIdentifierReplacer {
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedName (name: string): boolean {
+    private isReservedName(name: string): boolean {
         if (!this.options.reservedNames.length) {
             return false;
         }
 
-        return this.options.reservedNames
-            .some((reservedName: string) => {
-                return new RegExp(reservedName, 'g').exec(name) !== null;
-            });
+        return this.options.reservedNames.some((reservedName: string) => {
+            return new RegExp(reservedName, 'g').exec(name) !== null;
+        });
     }
 }

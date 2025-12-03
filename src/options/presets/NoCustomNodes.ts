@@ -49,12 +49,8 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     stringArray: false,
     stringArrayCallsTransform: false,
     stringArrayCallsTransformThreshold: 0,
-    stringArrayEncoding: [
-        StringArrayEncoding.None
-    ],
-    stringArrayIndexesType: [
-        StringArrayIndexesType.HexadecimalNumber
-    ],
+    stringArrayEncoding: [StringArrayEncoding.None],
+    stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumber],
     stringArrayIndexShift: false,
     stringArrayWrappersChainedCalls: false,
     stringArrayWrappersCount: 0,

@@ -42,14 +42,11 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {TNodeTransformerFactory} nodeTransformerFactory
      * @param {ITransformerNamesGroupsBuilder} nodeTransformerNamesGroupsBuilder
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__INodeTransformer)
-            nodeTransformerFactory: TNodeTransformerFactory,
+        nodeTransformerFactory: TNodeTransformerFactory,
         @inject(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)
-            nodeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<
-                NodeTransformer,
-                INodeTransformer
-            >,
+        nodeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<NodeTransformer, INodeTransformer>
     ) {
         this.nodeTransformerFactory = nodeTransformerFactory;
         this.nodeTransformerNamesGroupsBuilder = nodeTransformerNamesGroupsBuilder;
@@ -61,7 +58,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {T}
      */
-    public transform <T extends ESTree.Node = ESTree.Program> (
+    public transform<T extends ESTree.Node = ESTree.Program>(
         astTree: T,
         nodeTransformerNames: NodeTransformer[],
         nodeTransformationStage: NodeTransformationStage
@@ -70,8 +67,10 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             return astTree;
         }
 
-        const normalizedNodeTransformers: TDictionary<INodeTransformer> =
-            this.buildNormalizedNodeTransformers(nodeTransformerNames, nodeTransformationStage);
+        const normalizedNodeTransformers: TDictionary<INodeTransformer> = this.buildNormalizedNodeTransformers(
+            nodeTransformerNames,
+            nodeTransformationStage
+        );
         const nodeTransformerNamesGroups: NodeTransformer[][] =
             this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
 
@@ -114,26 +113,25 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {TDictionary<INodeTransformer>}
      */
-    private buildNormalizedNodeTransformers (
+    private buildNormalizedNodeTransformers(
         nodeTransformerNames: NodeTransformer[],
         nodeTransformationStage: NodeTransformationStage
     ): TDictionary<INodeTransformer> {
-        return nodeTransformerNames
-            .reduce<TDictionary<INodeTransformer>>(
-                (acc: TDictionary<INodeTransformer>, nodeTransformerName: NodeTransformer) => {
-                    const nodeTransformer: INodeTransformer = this.nodeTransformerFactory(nodeTransformerName);
+        return nodeTransformerNames.reduce<TDictionary<INodeTransformer>>(
+            (acc: TDictionary<INodeTransformer>, nodeTransformerName: NodeTransformer) => {
+                const nodeTransformer: INodeTransformer = this.nodeTransformerFactory(nodeTransformerName);
 
-                    if (!nodeTransformer.getVisitor(nodeTransformationStage)) {
-                        return acc;
-                    }
+                if (!nodeTransformer.getVisitor(nodeTransformationStage)) {
+                    return acc;
+                }
 
-                    return <TDictionary<INodeTransformer>>{
-                        ...acc,
-                        [nodeTransformerName]: nodeTransformer
-                    };
-                },
-                {}
-            );
+                return <TDictionary<INodeTransformer>>{
+                    ...acc,
+                    [nodeTransformerName]: nodeTransformer
+                };
+            },
+            {}
+        );
     }
 
     /**
@@ -141,7 +139,7 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
      * @param {TVisitorDirection} direction
      * @returns {TVisitorFunction}
      */
-    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
+    private mergeVisitorsForDirection(visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {

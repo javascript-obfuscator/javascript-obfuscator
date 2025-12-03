@@ -8,17 +8,13 @@ export class CLIUtils {
     /**
      * @type {string[]}
      */
-    public static readonly allowedConfigFileExtensions: string[] = [
-        '.js',
-        '.json',
-        '.cjs'
-    ];
+    public static readonly allowedConfigFileExtensions: string[] = ['.js', '.json', '.cjs'];
 
     /**
      * @param {string} configPath
      * @returns {TDictionary}
      */
-    public static getUserConfig (configPath: string): TDictionary {
+    public static getUserConfig(configPath: string): TDictionary {
         let config: TDictionary;
 
         const configFileExtension: string = path.extname(configPath);
@@ -45,7 +41,7 @@ export class CLIUtils {
      * @param {TDictionary} optionEnum
      * @returns {string}
      */
-    public static stringifyOptionAvailableValues (optionEnum: TDictionary): string {
+    public static stringifyOptionAvailableValues(optionEnum: TDictionary): string {
         return Object.values(optionEnum).join(`${StringSeparator.Comma} `);
     }
 }

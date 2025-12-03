@@ -46,7 +46,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     private readonly container: interfaces.Container;
 
-    public constructor () {
+    public constructor() {
         this.container = new Container();
     }
 
@@ -54,10 +54,10 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getFactory <T extends string, U> (
+    public static getFactory<T extends string, U>(
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): (bindingName: T) => U => {
+        return (context: interfaces.Context): ((bindingName: T) => U) => {
             return (bindingName: T): U => {
                 return context.container.getNamed<U>(serviceIdentifier, bindingName);
             };
@@ -68,11 +68,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getCacheFactory <T extends string, U> (
+    public static getCacheFactory<T extends string, U>(
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): (bindingName: T) => U => {
-            const cache: Map <T, U> = new Map();
+        return (context: interfaces.Context): ((bindingName: T) => U) => {
+            const cache: Map<T, U> = new Map();
 
             return (bindingName: T): U => {
                 if (cache.has(bindingName)) {
@@ -93,33 +93,34 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>} dependencies
      * @returns {(context: interfaces.Context) => (bindingName: T) => U}
      */
-    public static getConstructorFactory <T extends string, U> (
+    public static getConstructorFactory<T extends string, U>(
         serviceIdentifier: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
         ...dependencies: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): (bindingName: T) => U => {
+        return (context: interfaces.Context): ((bindingName: T) => U) => {
             const cache: Map<T, TConstructor<Record<string, any>[], U>> = new Map();
             const cachedDependencies: Record<string, any>[] = [];
 
             return (bindingName: T): U => {
-                dependencies.forEach((
-                    dependency: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
-                    index: number
-                ) => {
-                    if (!cachedDependencies[index]) {
-                        cachedDependencies[index] = context.container.get(dependency);
+                dependencies.forEach(
+                    (
+                        dependency: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
+                        index: number
+                    ) => {
+                        if (!cachedDependencies[index]) {
+                            cachedDependencies[index] = context.container.get(dependency);
+                        }
                     }
-                });
+                );
 
                 if (cache.has(bindingName)) {
                     return new (<TConstructor<Record<string, any>[], U>>cache.get(bindingName))(...cachedDependencies);
                 }
 
-                const constructor = context.container
-                    .getNamed<TConstructor<Record<string, any>[], U>>(
-                        serviceIdentifier,
-                        bindingName
-                    );
+                const constructor = context.container.getNamed<TConstructor<Record<string, any>[], U>>(
+                    serviceIdentifier,
+                    bindingName
+                );
 
                 cache.set(bindingName, constructor);
 
@@ -132,7 +133,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
      * @returns {T}
      */
-    public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
+    public get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
     }
 
@@ -141,7 +142,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {string | number | symbol} named
      * @returns {T}
      */
-    public getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
+    public getNamed<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
         return this.container.getNamed<T>(serviceIdentifier, named);
     }
 
@@ -150,7 +151,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {string} sourceMap
      * @param {TInputOptions} options
      */
-    public load (sourceCode: string, sourceMap: string, options: TInputOptions): void {
+    public load(sourceCode: string, sourceMap: string, options: TInputOptions): void {
         this.container
             .bind<ISourceCode>(ServiceIdentifiers.ISourceCode)
             .toDynamicValue(() => new SourceCode(sourceCode, sourceMap))
@@ -161,10 +162,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .toDynamicValue(() => options)
             .inSingletonScope();
 
-        this.container
-            .bind<ILogger>(ServiceIdentifiers.ILogger)
-            .to(Logger)
-            .inSingletonScope();
+        this.container.bind<ILogger>(ServiceIdentifiers.ILogger).to(Logger).inSingletonScope();
 
         this.container
             .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
@@ -181,16 +179,15 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .to(NodeTransformersRunner)
             .inSingletonScope();
 
-        this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
-            .to(ObfuscationResult);
+        this.container.bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult).to(ObfuscationResult);
 
         this.container
             .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
             .toFactory<IObfuscationResult, [string, string]>((context: interfaces.Context) => {
                 return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscationResult => {
-                    const obfuscationResult: IObfuscationResult = context.container
-                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+                    const obfuscationResult: IObfuscationResult = context.container.get<IObfuscationResult>(
+                        ServiceIdentifiers.IObfuscationResult
+                    );
 
                     obfuscationResult.initialize(obfuscatedCodeAsString, sourceMapAsString);
 
@@ -221,7 +218,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(utilsModule);
     }
 
-    public unload (): void {
+    public unload(): void {
         this.container.unbindAll();
     }
 }

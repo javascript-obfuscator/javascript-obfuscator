@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -28,25 +28,23 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
     /**
      * @type {NodeTransformer[]}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.CustomCodeHelpersTransformer
-    ];
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.CustomCodeHelpersTransformer];
 
     /**
      * @type {WeakMap<TNodeWithLexicalScope, Directive>}
      */
-    private readonly lexicalScopeDirectives: WeakMap<
+    private readonly lexicalScopeDirectives: WeakMap<TNodeWithLexicalScope, ESTree.Directive> = new WeakMap<
         TNodeWithLexicalScope,
         ESTree.Directive
-    > = new WeakMap<TNodeWithLexicalScope, ESTree.Directive>();
+    >();
 
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
     }
@@ -55,7 +53,7 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
                 return {
@@ -91,7 +89,7 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {TNodeWithLexicalScopeStatements}
      */
-    public analyzeNode (
+    public analyzeNode(
         nodeWithLexicalScopeStatements: TNodeWithLexicalScopeStatements,
         parentNode: ESTree.Node
     ): TNodeWithLexicalScopeStatements {
@@ -113,7 +111,7 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
      * @param {Node | null} parentNode
      * @returns {TNodeWithLexicalScope}
      */
-    public transformNode (
+    public transformNode(
         nodeWithLexicalScopeStatements: TNodeWithLexicalScopeStatements,
         parentNode: ESTree.Node
     ): TNodeWithLexicalScopeStatements {

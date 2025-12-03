@@ -14,19 +14,16 @@ describe('LabeledStatementTransformer', () => {
         const breakStatementRegExp: RegExp = /break *(_0x([a-f0-9]){4,6});/;
 
         let obfuscatedCode: string,
-            firstMatch: string|undefined,
-            secondMatch: string|undefined,
-            thirdMatch: string|undefined;
+            firstMatch: string | undefined,
+            secondMatch: string | undefined,
+            thirdMatch: string | undefined;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
 
             firstMatch = getRegExpMatch(obfuscatedCode, labeledStatementRegExp);
             secondMatch = getRegExpMatch(obfuscatedCode, continueStatementRegExp);

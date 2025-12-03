@@ -22,23 +22,17 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
  * @param {TInputOptions} options
  * @returns {IObfuscationResult}
  */
-function getObfuscationResult (
-    rawObfuscatedCode: string,
-    options: TInputOptions
-): IObfuscationResult {
+function getObfuscationResult(rawObfuscatedCode: string, options: TInputOptions): IObfuscationResult {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-    inversifyContainerFacade.load(
-        '',
-        '',
-        {
-            ...DEFAULT_PRESET,
-            ...options
-        }
-    );
+    inversifyContainerFacade.load('', '', {
+        ...DEFAULT_PRESET,
+        ...options
+    });
 
-    const obfuscationResult: IObfuscationResult = inversifyContainerFacade
-        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+    const obfuscationResult: IObfuscationResult = inversifyContainerFacade.get<IObfuscationResult>(
+        ServiceIdentifiers.IObfuscationResult
+    );
 
     obfuscationResult.initialize(rawObfuscatedCode, '');
 
@@ -52,7 +46,7 @@ function getObfuscationResult (
  * @param sourceMapFileName
  * @param sourceMapMode
  */
-function getSourceMapObfuscationResult (
+function getSourceMapObfuscationResult(
     rawObfuscatedCode: string,
     sourceMap: string,
     sourceMapBaseUrl: string,
@@ -61,20 +55,17 @@ function getSourceMapObfuscationResult (
 ): IObfuscationResult {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-    inversifyContainerFacade.load(
-        '',
-        '',
-        {
-            ...DEFAULT_PRESET,
-            sourceMap: true,
-            sourceMapBaseUrl,
-            sourceMapFileName,
-            sourceMapMode
-        }
-    );
+    inversifyContainerFacade.load('', '', {
+        ...DEFAULT_PRESET,
+        sourceMap: true,
+        sourceMapBaseUrl,
+        sourceMapFileName,
+        sourceMapMode
+    });
 
-    const obfuscationResult: IObfuscationResult = inversifyContainerFacade
-        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+    const obfuscationResult: IObfuscationResult = inversifyContainerFacade.get<IObfuscationResult>(
+        ServiceIdentifiers.IObfuscationResult
+    );
 
     obfuscationResult.initialize(rawObfuscatedCode, sourceMap);
 
@@ -106,7 +97,7 @@ describe('ObfuscatedCode', () => {
     describe('getObfuscatedCode', () => {
         let obfuscatedCode: string;
 
-        describe('source map doest\'t exist', () => {
+        describe("source map doest't exist", () => {
             before(() => {
                 obfuscatedCode = getSourceMapObfuscationResult(
                     expectedObfuscatedCode,
@@ -184,12 +175,9 @@ describe('ObfuscatedCode', () => {
         let options: IOptions;
 
         before(() => {
-            options = getObfuscationResult(
-                expectedObfuscatedCode,
-                {
-                    seed
-                }
-            ).getOptions();
+            options = getObfuscationResult(expectedObfuscatedCode, {
+                seed
+            }).getOptions();
         });
 
         it('should return options object', () => {

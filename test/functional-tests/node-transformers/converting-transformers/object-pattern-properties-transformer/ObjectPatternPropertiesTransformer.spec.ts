@@ -14,8 +14,8 @@ describe('ObjectPatternPropertiesTransformer', () => {
                     'foo: *_0x([a-f0-9]){4,6}, *' +
                     'bar: *_0x([a-f0-9]){4,6}, *' +
                     '..._0x([a-f0-9]){4,6}' +
-                '} *= *{}; *' +
-                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);'
+                    '} *= *{}; *' +
+                    "console\\['log']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);"
             );
 
             let obfuscatedCode: string;
@@ -23,13 +23,10 @@ describe('ObjectPatternPropertiesTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/function-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: false
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: false
+                }).getObfuscatedCode();
             });
 
             it('should transform object properties', () => {
@@ -43,8 +40,8 @@ describe('ObjectPatternPropertiesTransformer', () => {
                     'foo: *_0x([a-f0-9]){4,6}, *' +
                     'bar: *_0x([a-f0-9]){4,6}, *' +
                     '..._0x([a-f0-9]){4,6}' +
-                '} *= *{}; *' +
-                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);'
+                    '} *= *{}; *' +
+                    "console\\['log']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);"
             );
 
             let obfuscatedCode: string;
@@ -52,13 +49,10 @@ describe('ObjectPatternPropertiesTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/function-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('should transform object properties', () => {
@@ -71,10 +65,10 @@ describe('ObjectPatternPropertiesTransformer', () => {
                 'const { *' +
                     'foo: *_0x([a-f0-9]){4,6}, *' +
                     'bar: *_0x([a-f0-9]){4,6} *' +
-                '} *= *{}; *' +
-                'const _0x([a-f0-9]){4,6} *= *{};' +
-                '_0x([a-f0-9]){4,6}\\[\'prop\'] *= *0x1;' +
-                'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6};'
+                    '} *= *{}; *' +
+                    'const _0x([a-f0-9]){4,6} *= *{};' +
+                    "_0x([a-f0-9]){4,6}\\['prop'] *= *0x1;" +
+                    'const _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6};'
             );
 
             let obfuscatedCode: string;
@@ -82,14 +76,11 @@ describe('ObjectPatternPropertiesTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/function-scope-wrong-parentize.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: false,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: false,
+                    transformObjectKeys: true
+                }).getObfuscatedCode();
             });
 
             it('should transform object properties', () => {
@@ -105,8 +96,8 @@ describe('ObjectPatternPropertiesTransformer', () => {
                     'foo, *' +
                     'bar, *' +
                     '...rest' +
-                '} *= *{}; *' +
-                'console\\[\'log\']\\(foo, *bar, *rest\\);'
+                    '} *= *{}; *' +
+                    "console\\['log']\\(foo, *bar, *rest\\);"
             );
 
             let obfuscatedCode: string;
@@ -114,13 +105,10 @@ describe('ObjectPatternPropertiesTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/global-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: false
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: false
+                }).getObfuscatedCode();
             });
 
             it('should transform object properties', () => {
@@ -134,8 +122,8 @@ describe('ObjectPatternPropertiesTransformer', () => {
                     'foo: *_0x([a-f0-9]){4,6}, *' +
                     'bar: *_0x([a-f0-9]){4,6}, *' +
                     '..._0x([a-f0-9]){4,6}' +
-                '} *= *{}; *' +
-                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);'
+                    '} *= *{}; *' +
+                    "console\\['log']\\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\\);"
             );
 
             let obfuscatedCode: string;
@@ -143,13 +131,10 @@ describe('ObjectPatternPropertiesTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/global-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('should transform object properties', () => {

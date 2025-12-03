@@ -23,10 +23,7 @@ export class SourceCodeFileUtils {
      * @param {string} inputPath
      * @param {TInputCLIOptions} options
      */
-    public constructor (
-        inputPath: string,
-        options: TInputCLIOptions
-    ) {
+    public constructor(inputPath: string, options: TInputCLIOptions) {
         this.inputPath = inputPath;
         this.options = options;
     }
@@ -36,15 +33,15 @@ export class SourceCodeFileUtils {
      * @param {string[]} excludePatterns
      * @returns {boolean}
      */
-    private static isExcludedPath (filePath: string, excludePatterns: string[] = []): boolean {
+    private static isExcludedPath(filePath: string, excludePatterns: string[] = []): boolean {
         if (!excludePatterns.length) {
             return false;
         }
 
         const fileName: string = path.basename(filePath);
         const isExcludedFilePathByGlobPattern: boolean = !!multimatch([filePath], excludePatterns).length;
-        const isExcludedFilePathByInclusion: boolean = excludePatterns.some((excludePattern: string) =>
-            filePath.includes(excludePattern) || fileName.includes(excludePattern)
+        const isExcludedFilePathByInclusion: boolean = excludePatterns.some(
+            (excludePattern: string) => filePath.includes(excludePattern) || fileName.includes(excludePattern)
         );
 
         return isExcludedFilePathByInclusion || isExcludedFilePathByGlobPattern;
@@ -54,7 +51,7 @@ export class SourceCodeFileUtils {
      * @param {string} filePath
      * @returns {boolean}
      */
-    private static isDirectoryPath (filePath: string): boolean {
+    private static isDirectoryPath(filePath: string): boolean {
         try {
             return fs.statSync(filePath).isDirectory();
         } catch {
@@ -66,7 +63,7 @@ export class SourceCodeFileUtils {
      * @param {string} filePath
      * @returns {boolean}
      */
-    private static isFilePath (filePath: string): boolean {
+    private static isFilePath(filePath: string): boolean {
         try {
             return fs.statSync(filePath).isFile();
         } catch {
@@ -79,7 +76,7 @@ export class SourceCodeFileUtils {
      * @param {string[]} excludePatterns
      * @returns {boolean}
      */
-    private static isValidDirectory (directoryPath: string, excludePatterns: string[] = []): boolean {
+    private static isValidDirectory(directoryPath: string, excludePatterns: string[] = []): boolean {
         return !SourceCodeFileUtils.isExcludedPath(directoryPath, excludePatterns);
     }
 
@@ -88,17 +85,19 @@ export class SourceCodeFileUtils {
      * @param {string[]} excludePatterns
      * @returns {boolean}
      */
-    private static isValidFile (filePath: string, excludePatterns: string[] = []): boolean {
-        return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
-            && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
-            && !SourceCodeFileUtils.isExcludedPath(filePath, excludePatterns);
+    private static isValidFile(filePath: string, excludePatterns: string[] = []): boolean {
+        return (
+            JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath)) &&
+            !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix) &&
+            !SourceCodeFileUtils.isExcludedPath(filePath, excludePatterns)
+        );
     }
 
     /**
      * @param {string} filePath
      * @returns {string}
      */
-    private static readFile (filePath: string): IFileData {
+    private static readFile(filePath: string): IFileData {
         return {
             filePath: path.normalize(filePath),
             content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding)
@@ -108,23 +107,22 @@ export class SourceCodeFileUtils {
     /**
      * @returns {IFileData[]}
      */
-    public readSourceCode (): IFileData[] {
+    public readSourceCode(): IFileData[] {
         if (
-            SourceCodeFileUtils.isFilePath(this.inputPath)
-            && SourceCodeFileUtils.isValidFile(this.inputPath, this.options.exclude)
+            SourceCodeFileUtils.isFilePath(this.inputPath) &&
+            SourceCodeFileUtils.isValidFile(this.inputPath, this.options.exclude)
         ) {
             return [SourceCodeFileUtils.readFile(this.inputPath)];
         }
 
         if (
-            SourceCodeFileUtils.isDirectoryPath(this.inputPath)
-            && SourceCodeFileUtils.isValidDirectory(this.inputPath, this.options.exclude)
+            SourceCodeFileUtils.isDirectoryPath(this.inputPath) &&
+            SourceCodeFileUtils.isValidDirectory(this.inputPath, this.options.exclude)
         ) {
             return this.readDirectoryRecursive(this.inputPath);
         }
 
-        const availableFilePaths: string = JavaScriptObfuscatorCLI
-            .availableInputExtensions
+        const availableFilePaths: string = JavaScriptObfuscatorCLI.availableInputExtensions
             .map((extension: string) => `\`${extension}\``)
             .join(', ');
 
@@ -136,31 +134,30 @@ export class SourceCodeFileUtils {
      * @param {IFileData[]} filesData
      * @returns {IFileData[]}
      */
-    private readDirectoryRecursive (directoryPath: string, filesData: IFileData[] = []): IFileData[] {
-        fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
-            .forEach((fileName: string) => {
-                const filePath: string = path.join(directoryPath, fileName);
+    private readDirectoryRecursive(directoryPath: string, filesData: IFileData[] = []): IFileData[] {
+        fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding).forEach((fileName: string) => {
+            const filePath: string = path.join(directoryPath, fileName);
 
-                if (
-                    SourceCodeFileUtils.isDirectoryPath(filePath)
-                    && SourceCodeFileUtils.isValidDirectory(filePath, this.options.exclude)
-                ) {
-                    filesData.push(...this.readDirectoryRecursive(filePath));
+            if (
+                SourceCodeFileUtils.isDirectoryPath(filePath) &&
+                SourceCodeFileUtils.isValidDirectory(filePath, this.options.exclude)
+            ) {
+                filesData.push(...this.readDirectoryRecursive(filePath));
 
-                    return;
-                }
+                return;
+            }
 
-                if (
-                    SourceCodeFileUtils.isFilePath(filePath)
-                    && SourceCodeFileUtils.isValidFile(filePath, this.options.exclude)
-                ) {
-                    const fileData: IFileData = SourceCodeFileUtils.readFile(filePath);
+            if (
+                SourceCodeFileUtils.isFilePath(filePath) &&
+                SourceCodeFileUtils.isValidFile(filePath, this.options.exclude)
+            ) {
+                const fileData: IFileData = SourceCodeFileUtils.readFile(filePath);
 
-                    filesData.push(fileData);
+                filesData.push(fileData);
 
-                    return;
-                }
-            });
+                return;
+            }
+        });
 
         return filesData;
     }

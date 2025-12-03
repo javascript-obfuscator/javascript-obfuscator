@@ -16,14 +16,14 @@ export class NodeGuards {
         NodeType.ArrowFunctionExpression,
         NodeType.FunctionDeclaration,
         NodeType.FunctionExpression,
-        NodeType.MethodDefinition,
+        NodeType.MethodDefinition
     ];
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isArrayPatternNode (node: ESTree.Node): node is ESTree.ArrayPattern {
+    public static isArrayPatternNode(node: ESTree.Node): node is ESTree.ArrayPattern {
         return node.type === NodeType.ArrayPattern;
     }
 
@@ -31,7 +31,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isArrowFunctionExpressionNode (node: ESTree.Node): node is ESTree.ArrowFunctionExpression {
+    public static isArrowFunctionExpressionNode(node: ESTree.Node): node is ESTree.ArrowFunctionExpression {
         return node.type === NodeType.ArrowFunctionExpression;
     }
 
@@ -39,7 +39,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isAssignmentExpressionNode (node: ESTree.Node): node is ESTree.AssignmentExpression {
+    public static isAssignmentExpressionNode(node: ESTree.Node): node is ESTree.AssignmentExpression {
         return node.type === NodeType.AssignmentExpression;
     }
 
@@ -47,7 +47,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
+    public static isAssignmentPatternNode(node: ESTree.Node): node is ESTree.AssignmentPattern {
         return node.type === NodeType.AssignmentPattern;
     }
 
@@ -55,7 +55,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isAwaitExpressionNode (node: ESTree.Node): node is ESTree.AwaitExpression {
+    public static isAwaitExpressionNode(node: ESTree.Node): node is ESTree.AwaitExpression {
         return node.type === NodeType.AwaitExpression;
     }
 
@@ -63,7 +63,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isBigIntLiteralNode (node: ESTree.Node): node is ESTree.BigIntLiteral {
+    public static isBigIntLiteralNode(node: ESTree.Node): node is ESTree.BigIntLiteral {
         return NodeGuards.isLiteralNode(node) && !!(<ESTree.BigIntLiteral>node).bigint;
     }
 
@@ -71,7 +71,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
+    public static isBlockStatementNode(node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }
 
@@ -79,7 +79,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isBreakStatementNode (node: ESTree.Node): node is ESTree.BreakStatement {
+    public static isBreakStatementNode(node: ESTree.Node): node is ESTree.BreakStatement {
         return node.type === NodeType.BreakStatement;
     }
 
@@ -87,25 +87,23 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isCallExpressionNode (node: ESTree.Node): node is ESTree.CallExpression {
+    public static isCallExpressionNode(node: ESTree.Node): node is ESTree.CallExpression {
         return node.type === NodeType.CallExpression;
     }
-
-  /**
-   * @param {Node} node
-   * @returns {boolean}
-   */
-  public static isChainExpressionNode (node: ESTree.Node): node is ESTree.ChainExpression {
-    return node.type === NodeType.ChainExpression;
-  }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isClassBodyNode (
-        node: ESTree.Node
-    ): node is ESTree.ClassBody {
+    public static isChainExpressionNode(node: ESTree.Node): node is ESTree.ChainExpression {
+        return node.type === NodeType.ChainExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isClassBodyNode(node: ESTree.Node): node is ESTree.ClassBody {
         return node.type === NodeType.ClassBody;
     }
 
@@ -113,7 +111,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isClassDeclarationNode (
+    public static isClassDeclarationNode(
         node: ESTree.Node
     ): node is ESTree.ClassDeclaration & { id: ESTree.Identifier } {
         return node.type === NodeType.ClassDeclaration && node.id !== null;
@@ -123,7 +121,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isConditionalExpressionNode (node: ESTree.Node): node is ESTree.ConditionalExpression {
+    public static isConditionalExpressionNode(node: ESTree.Node): node is ESTree.ConditionalExpression {
         return node.type === NodeType.ConditionalExpression;
     }
 
@@ -131,7 +129,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
+    public static isContinueStatementNode(node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }
 
@@ -139,16 +137,15 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isDirectiveNode (node: ESTree.Node): node is ESTree.Directive {
-        return node.type === NodeType.ExpressionStatement
-            && 'directive' in node;
+    public static isDirectiveNode(node: ESTree.Node): node is ESTree.Directive {
+        return node.type === NodeType.ExpressionStatement && 'directive' in node;
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isDoWhileStatementNode (node: ESTree.Node): node is ESTree.DoWhileStatement {
+    public static isDoWhileStatementNode(node: ESTree.Node): node is ESTree.DoWhileStatement {
         return node.type === NodeType.DoWhileStatement;
     }
 
@@ -156,7 +153,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isExportAllDeclarationNode (node: ESTree.Node): node is ESTree.ExportAllDeclaration {
+    public static isExportAllDeclarationNode(node: ESTree.Node): node is ESTree.ExportAllDeclaration {
         return node.type === NodeType.ExportAllDeclaration;
     }
 
@@ -164,7 +161,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isExportNamedDeclarationNode (node: ESTree.Node): node is ESTree.ExportNamedDeclaration {
+    public static isExportNamedDeclarationNode(node: ESTree.Node): node is ESTree.ExportNamedDeclaration {
         return node.type === NodeType.ExportNamedDeclaration;
     }
 
@@ -172,7 +169,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isExportSpecifierNode (node: ESTree.Node): node is ESTree.ExportSpecifier {
+    public static isExportSpecifierNode(node: ESTree.Node): node is ESTree.ExportSpecifier {
         return node.type === NodeType.ExportSpecifier;
     }
 
@@ -180,16 +177,15 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
-        return node.type === NodeType.ExpressionStatement
-            && !('directive' in node);
+    public static isExpressionStatementNode(node: ESTree.Node): node is ESTree.ExpressionStatement {
+        return node.type === NodeType.ExpressionStatement && !('directive' in node);
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isForStatementNode (node: ESTree.Node): node is ESTree.ForStatement {
+    public static isForStatementNode(node: ESTree.Node): node is ESTree.ForStatement {
         return node.type === NodeType.ForStatement;
     }
 
@@ -197,7 +193,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isForInStatementNode (node: ESTree.Node): node is ESTree.ForInStatement {
+    public static isForInStatementNode(node: ESTree.Node): node is ESTree.ForInStatement {
         return node.type === NodeType.ForInStatement;
     }
 
@@ -205,7 +201,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isForOfStatementNode (node: ESTree.Node): node is ESTree.ForOfStatement {
+    public static isForOfStatementNode(node: ESTree.Node): node is ESTree.ForOfStatement {
         return node.type === NodeType.ForOfStatement;
     }
 
@@ -213,17 +209,19 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isFunctionNode (node: ESTree.Node): node is ESTree.Function {
-        return NodeGuards.isFunctionDeclarationNode(node) ||
+    public static isFunctionNode(node: ESTree.Node): node is ESTree.Function {
+        return (
+            NodeGuards.isFunctionDeclarationNode(node) ||
             NodeGuards.isFunctionExpressionNode(node) ||
-            NodeGuards.isArrowFunctionExpressionNode(node);
+            NodeGuards.isArrowFunctionExpressionNode(node)
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isFunctionDeclarationNode (
+    public static isFunctionDeclarationNode(
         node: ESTree.Node
     ): node is ESTree.FunctionDeclaration & { id: ESTree.Identifier } {
         return node.type === NodeType.FunctionDeclaration && node.id !== null;
@@ -233,7 +231,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isFunctionExpressionNode (node: ESTree.Node): node is ESTree.FunctionExpression {
+    public static isFunctionExpressionNode(node: ESTree.Node): node is ESTree.FunctionExpression {
         return node.type === NodeType.FunctionExpression;
     }
 
@@ -241,7 +239,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isIdentifierNode (node: ESTree.Node): node is ESTree.Identifier {
+    public static isIdentifierNode(node: ESTree.Node): node is ESTree.Identifier {
         return node.type === NodeType.Identifier;
     }
 
@@ -249,7 +247,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
+    public static isIfStatementNode(node: ESTree.Node): node is ESTree.IfStatement {
         return node.type === NodeType.IfStatement;
     }
 
@@ -257,20 +255,22 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isIfStatementNodeWithSingleStatementBody (node: ESTree.Node): node is ESTree.IfStatement {
+    public static isIfStatementNodeWithSingleStatementBody(node: ESTree.Node): node is ESTree.IfStatement {
         if (!NodeGuards.isIfStatementNode(node)) {
-           return false;
+            return false;
         }
 
-        return !NodeGuards.isBlockStatementNode(node.consequent)
-            || (!!node.alternate && !NodeGuards.isBlockStatementNode(node.alternate));
+        return (
+            !NodeGuards.isBlockStatementNode(node.consequent) ||
+            (!!node.alternate && !NodeGuards.isBlockStatementNode(node.alternate))
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isImportDeclarationNode (node: ESTree.Node): node is ESTree.ImportDeclaration {
+    public static isImportDeclarationNode(node: ESTree.Node): node is ESTree.ImportDeclaration {
         return node.type === NodeType.ImportDeclaration;
     }
 
@@ -278,7 +278,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isImportExpressionNode (node: ESTree.Node): node is ESTree.ImportExpression {
+    public static isImportExpressionNode(node: ESTree.Node): node is ESTree.ImportExpression {
         return node.type === NodeType.ImportExpression;
     }
 
@@ -286,7 +286,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isImportSpecifierNode (node: ESTree.Node): node is ESTree.ImportSpecifier {
+    public static isImportSpecifierNode(node: ESTree.Node): node is ESTree.ImportSpecifier {
         return node.type === NodeType.ImportSpecifier;
     }
 
@@ -295,10 +295,13 @@ export class NodeGuards {
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isLabelIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        const parentNodeIsLabeledStatementNode: boolean = NodeGuards.isLabeledStatementNode(parentNode) && parentNode.label === node;
-        const parentNodeIsContinueStatementNode: boolean = NodeGuards.isContinueStatementNode(parentNode) && parentNode.label === node;
-        const parentNodeIsBreakStatementNode: boolean = NodeGuards.isBreakStatementNode(parentNode) && parentNode.label === node;
+    public static isLabelIdentifierNode(node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        const parentNodeIsLabeledStatementNode: boolean =
+            NodeGuards.isLabeledStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsContinueStatementNode: boolean =
+            NodeGuards.isContinueStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsBreakStatementNode: boolean =
+            NodeGuards.isBreakStatementNode(parentNode) && parentNode.label === node;
 
         return parentNodeIsLabeledStatementNode || parentNodeIsContinueStatementNode || parentNodeIsBreakStatementNode;
     }
@@ -307,7 +310,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isLabeledStatementNode (node: ESTree.Node): node is ESTree.LabeledStatement {
+    public static isLabeledStatementNode(node: ESTree.Node): node is ESTree.LabeledStatement {
         return node.type === NodeType.LabeledStatement;
     }
 
@@ -315,7 +318,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isLiteralNode (node: ESTree.Node): node is ESTree.Literal {
+    public static isLiteralNode(node: ESTree.Node): node is ESTree.Literal {
         return node.type === NodeType.Literal;
     }
 
@@ -323,7 +326,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isLogicalExpressionNode (node: ESTree.Node): node is ESTree.LogicalExpression {
+    public static isLogicalExpressionNode(node: ESTree.Node): node is ESTree.LogicalExpression {
         return node.type === NodeType.LogicalExpression;
     }
 
@@ -331,7 +334,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isMemberExpressionNode (node: ESTree.Node): node is ESTree.MemberExpression {
+    public static isMemberExpressionNode(node: ESTree.Node): node is ESTree.MemberExpression {
         return node.type === NodeType.MemberExpression;
     }
 
@@ -339,7 +342,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isMetaPropertyNode (node: ESTree.Node): node is ESTree.MetaProperty {
+    public static isMetaPropertyNode(node: ESTree.Node): node is ESTree.MetaProperty {
         return node.type === NodeType.MetaProperty;
     }
 
@@ -347,7 +350,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
+    public static isMethodDefinitionNode(node: ESTree.Node): node is ESTree.MethodDefinition {
         return node.type === NodeType.MethodDefinition;
     }
 
@@ -355,7 +358,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNewExpressionNode (node: ESTree.Node): node is ESTree.NewExpression {
+    public static isNewExpressionNode(node: ESTree.Node): node is ESTree.NewExpression {
         return node.type === NodeType.NewExpression;
     }
 
@@ -364,7 +367,7 @@ export class NodeGuards {
      * @returns {boolean}
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    public static isNode (object: Object & { type?: string }): object is ESTree.Node {
+    public static isNode(object: Object & { type?: string }): object is ESTree.Node {
         return object && !object.type !== undefined;
     }
 
@@ -372,7 +375,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeWithLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
+    public static isNodeWithLexicalScope(node: ESTree.Node): node is TNodeWithLexicalScope {
         return NodeGuards.isProgramNode(node) || NodeGuards.isFunctionNode(node);
     }
 
@@ -380,10 +383,12 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeWithBlockLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
-        return NodeGuards.isNodeWithLexicalScope(node)
-            || NodeGuards.isBlockStatementNode(node)
-            || NodeGuards.isStaticBlockNode(node);
+    public static isNodeWithBlockLexicalScope(node: ESTree.Node): node is TNodeWithLexicalScope {
+        return (
+            NodeGuards.isNodeWithLexicalScope(node) ||
+            NodeGuards.isBlockStatementNode(node) ||
+            NodeGuards.isStaticBlockNode(node)
+        );
     }
 
     /**
@@ -397,7 +402,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeWithSingleStatementBody (node: ESTree.Node): node is TNodeWithSingleStatementBody {
+    public static isNodeWithSingleStatementBody(node: ESTree.Node): node is TNodeWithSingleStatementBody {
         // Different approach for `IfStatement` node because this node hasn't `body` property
         if (NodeGuards.isIfStatementNode(node)) {
             return NodeGuards.isIfStatementNodeWithSingleStatementBody(node);
@@ -405,14 +410,15 @@ export class NodeGuards {
 
         // All other nodes with `Statement` node as `body` property
         return (
-            NodeGuards.isForStatementNode(node)
-            || NodeGuards.isForOfStatementNode(node)
-            || NodeGuards.isForInStatementNode(node)
-            || NodeGuards.isWhileStatementNode(node)
-            || NodeGuards.isDoWhileStatementNode(node)
-            || NodeGuards.isWithStatementNode(node)
-            || NodeGuards.isLabeledStatementNode(node)
-        ) && !NodeGuards.isBlockStatementNode(node.body);
+            (NodeGuards.isForStatementNode(node) ||
+                NodeGuards.isForOfStatementNode(node) ||
+                NodeGuards.isForInStatementNode(node) ||
+                NodeGuards.isWhileStatementNode(node) ||
+                NodeGuards.isDoWhileStatementNode(node) ||
+                NodeGuards.isWithStatementNode(node) ||
+                NodeGuards.isLabeledStatementNode(node)) &&
+            !NodeGuards.isBlockStatementNode(node.body)
+        );
     }
 
     /**
@@ -420,30 +426,34 @@ export class NodeGuards {
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isNodeWithLexicalScopeStatements (
+    public static isNodeWithLexicalScopeStatements(
         node: ESTree.Node,
         parentNode: ESTree.Node
     ): node is TNodeWithLexicalScopeStatements {
-        return NodeGuards.isProgramNode(node)
-            || (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithLexicalStatements.includes(parentNode.type));
+        return (
+            NodeGuards.isProgramNode(node) ||
+            (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithLexicalStatements.includes(parentNode.type))
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeWithStatements (node: ESTree.Node): node is TNodeWithStatements {
-        return NodeGuards.isProgramNode(node)
-            || NodeGuards.isBlockStatementNode(node)
-            || NodeGuards.isStaticBlockNode(node)
-            || NodeGuards.isSwitchCaseNode(node);
+    public static isNodeWithStatements(node: ESTree.Node): node is TNodeWithStatements {
+        return (
+            NodeGuards.isProgramNode(node) ||
+            NodeGuards.isBlockStatementNode(node) ||
+            NodeGuards.isStaticBlockNode(node) ||
+            NodeGuards.isSwitchCaseNode(node)
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeWithComments (node: ESTree.Node): node is ESTree.Node {
+    public static isNodeWithComments(node: ESTree.Node): node is ESTree.Node {
         return Boolean(node.leadingComments) || Boolean(node.trailingComments);
     }
 
@@ -451,7 +461,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
+    public static isObjectPatternNode(node: ESTree.Node): node is ESTree.ObjectPattern {
         return node.type === NodeType.ObjectPattern;
     }
 
@@ -459,7 +469,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isObjectExpressionNode (node: ESTree.Node): node is ESTree.ObjectExpression {
+    public static isObjectExpressionNode(node: ESTree.Node): node is ESTree.ObjectExpression {
         return node.type === NodeType.ObjectExpression;
     }
 
@@ -467,7 +477,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isPrivateIdentifierNode (node: ESTree.Node): node is ESTree.PrivateIdentifier {
+    public static isPrivateIdentifierNode(node: ESTree.Node): node is ESTree.PrivateIdentifier {
         return node.type === NodeType.PrivateIdentifier;
     }
 
@@ -475,7 +485,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isProgramNode (node: ESTree.Node): node is ESTree.Program {
+    public static isProgramNode(node: ESTree.Node): node is ESTree.Program {
         return node.type === NodeType.Program;
     }
 
@@ -483,7 +493,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isPropertyNode (node: ESTree.Node): node is ESTree.Property {
+    public static isPropertyNode(node: ESTree.Node): node is ESTree.Property {
         return node.type === NodeType.Property;
     }
 
@@ -491,7 +501,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isPropertyDefinitionNode (node: ESTree.Node): node is ESTree.PropertyDefinition {
+    public static isPropertyDefinitionNode(node: ESTree.Node): node is ESTree.PropertyDefinition {
         return node.type === NodeType.PropertyDefinition;
     }
 
@@ -499,7 +509,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isRestElementNode (node: ESTree.Node): node is ESTree.RestElement {
+    public static isRestElementNode(node: ESTree.Node): node is ESTree.RestElement {
         return node.type === NodeType.RestElement;
     }
 
@@ -507,7 +517,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isReturnStatementNode (node: ESTree.Node): node is ESTree.ReturnStatement {
+    public static isReturnStatementNode(node: ESTree.Node): node is ESTree.ReturnStatement {
         return node.type === NodeType.ReturnStatement;
     }
 
@@ -515,7 +525,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isSequenceExpressionNode (node: ESTree.Node): node is ESTree.SequenceExpression {
+    public static isSequenceExpressionNode(node: ESTree.Node): node is ESTree.SequenceExpression {
         return node.type === NodeType.SequenceExpression;
     }
 
@@ -523,7 +533,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isSpreadElementNode (node: ESTree.Node): node is ESTree.SpreadElement {
+    public static isSpreadElementNode(node: ESTree.Node): node is ESTree.SpreadElement {
         return node.type === NodeType.SpreadElement;
     }
 
@@ -531,7 +541,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isStaticBlockNode (node: ESTree.Node): node is ESTree.StaticBlock {
+    public static isStaticBlockNode(node: ESTree.Node): node is ESTree.StaticBlock {
         return node.type === NodeType.StaticBlock;
     }
 
@@ -539,7 +549,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isSuperNode (node: ESTree.Node): node is ESTree.Super {
+    public static isSuperNode(node: ESTree.Node): node is ESTree.Super {
         return node.type === NodeType.Super;
     }
 
@@ -547,7 +557,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isSwitchCaseNode (node: ESTree.Node): node is ESTree.SwitchCase {
+    public static isSwitchCaseNode(node: ESTree.Node): node is ESTree.SwitchCase {
         return node.type === NodeType.SwitchCase;
     }
 
@@ -555,7 +565,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isTaggedTemplateExpressionNode (node: ESTree.Node): node is ESTree.TaggedTemplateExpression {
+    public static isTaggedTemplateExpressionNode(node: ESTree.Node): node is ESTree.TaggedTemplateExpression {
         return node.type === NodeType.TaggedTemplateExpression;
     }
 
@@ -563,7 +573,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
+    public static isTemplateLiteralNode(node: ESTree.Node): node is ESTree.TemplateLiteral {
         return node.type === NodeType.TemplateLiteral;
     }
 
@@ -571,7 +581,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isThisExpressionNode (node: ESTree.Node): node is ESTree.ThisExpression {
+    public static isThisExpressionNode(node: ESTree.Node): node is ESTree.ThisExpression {
         return node.type === NodeType.ThisExpression;
     }
 
@@ -579,7 +589,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isUnaryExpressionNode (node: ESTree.Node): node is ESTree.UnaryExpression {
+    public static isUnaryExpressionNode(node: ESTree.Node): node is ESTree.UnaryExpression {
         return node.type === NodeType.UnaryExpression;
     }
 
@@ -587,7 +597,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
+    public static isVariableDeclarationNode(node: ESTree.Node): node is ESTree.VariableDeclaration {
         return node.type === NodeType.VariableDeclaration;
     }
 
@@ -595,7 +605,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
+    public static isVariableDeclaratorNode(node: ESTree.Node): node is ESTree.VariableDeclarator {
         return node.type === NodeType.VariableDeclarator;
     }
 
@@ -603,7 +613,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isWithStatementNode (node: ESTree.Node): node is ESTree.WithStatement {
+    public static isWithStatementNode(node: ESTree.Node): node is ESTree.WithStatement {
         return node.type === NodeType.WithStatement;
     }
 
@@ -611,7 +621,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isWhileStatementNode (node: ESTree.Node): node is ESTree.WhileStatement {
+    public static isWhileStatementNode(node: ESTree.Node): node is ESTree.WhileStatement {
         return node.type === NodeType.WhileStatement;
     }
 
@@ -619,7 +629,7 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isYieldExpressionNode (node: ESTree.Node): node is ESTree.YieldExpression {
+    public static isYieldExpressionNode(node: ESTree.Node): node is ESTree.YieldExpression {
         return node.type === NodeType.YieldExpression;
     }
 }

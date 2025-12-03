@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import type * as ESTree from 'estree';
@@ -48,19 +48,14 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
@@ -69,7 +64,7 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
      * @param {Expression} callee
      * @param {(Expression | SpreadElement)[]} expressionArguments
      */
-    public initialize (
+    public initialize(
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
         callee: ESTree.Expression,
@@ -84,17 +79,14 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.callExpressionNode(
                 NodeFactory.memberExpressionNode(
                     NodeFactory.identifierNode(this.controlFlowStorageName),
                     NodeFactory.identifierNode(this.controlFlowStorageKey)
                 ),
-                [
-                    this.callee,
-                    ...this.expressionArguments
-                ]
+                [this.callee, ...this.expressionArguments]
             )
         );
 

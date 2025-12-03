@@ -21,9 +21,7 @@ import { StringArrayStorageAnalyzer } from '../../../analyzers/string-array-stor
 
 export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // calls graph analyzer
-    bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer)
-        .to(CallsGraphAnalyzer)
-        .inSingletonScope();
+    bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer).to(CallsGraphAnalyzer).inSingletonScope();
 
     // number numerical expression analyzer
     bind<INumberNumericalExpressionAnalyzer>(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
@@ -36,9 +34,7 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
         .inSingletonScope();
 
     // scope analyzer
-    bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer)
-        .to(ScopeAnalyzer)
-        .inSingletonScope();
+    bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer).to(ScopeAnalyzer).inSingletonScope();
 
     // string array storage analyzer
     bind<IStringArrayStorageAnalyzer>(ServiceIdentifiers.IStringArrayStorageAnalyzer)
@@ -59,9 +55,12 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
         .whenTargetNamed(CalleeDataExtractor.ObjectExpressionCalleeDataExtractor);
 
     // callee data extractor factory
-    bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
-        .toFactory<ICalleeDataExtractor, [CalleeDataExtractor]>(InversifyContainerFacade
-            .getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(
-                ServiceIdentifiers.ICalleeDataExtractor
-            ));
+    bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor).toFactory<
+        ICalleeDataExtractor,
+        [CalleeDataExtractor]
+    >(
+        InversifyContainerFacade.getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(
+            ServiceIdentifiers.ICalleeDataExtractor
+        )
+    );
 });

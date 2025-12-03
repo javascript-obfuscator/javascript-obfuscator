@@ -18,8 +18,9 @@ describe('PrevailingKindOfVariablesAnalyzer', () => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        prevailingKindOfVariablesAnalyzer = inversifyContainerFacade
-            .get<IPrevailingKindOfVariablesAnalyzer>(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer);
+        prevailingKindOfVariablesAnalyzer = inversifyContainerFacade.get<IPrevailingKindOfVariablesAnalyzer>(
+            ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
+        );
     });
 
     describe('analyze', () => {
@@ -31,30 +32,15 @@ describe('PrevailingKindOfVariablesAnalyzer', () => {
             before(() => {
                 const astTree: ESTree.Program = NodeFactory.programNode([
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('foo'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), null)],
                         'var'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('bar'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('bar'), null)],
                         'const'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('baz'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('baz'), null)],
                         'var'
                     )
                 ]);
@@ -74,30 +60,15 @@ describe('PrevailingKindOfVariablesAnalyzer', () => {
             before(() => {
                 const astTree: ESTree.Program = NodeFactory.programNode([
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('foo'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), null)],
                         'let'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('bar'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('bar'), null)],
                         'var'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('baz'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('baz'), null)],
                         'let'
                     )
                 ]);
@@ -117,30 +88,15 @@ describe('PrevailingKindOfVariablesAnalyzer', () => {
             before(() => {
                 const astTree: ESTree.Program = NodeFactory.programNode([
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('foo'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), null)],
                         'let'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('bar'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('bar'), null)],
                         'const'
                     ),
                     NodeFactory.variableDeclarationNode(
-                        [
-                            NodeFactory.variableDeclaratorNode(
-                                NodeFactory.identifierNode('baz'),
-                                null
-                            )
-                        ],
+                        [NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('baz'), null)],
                         'const'
                     )
                 ]);

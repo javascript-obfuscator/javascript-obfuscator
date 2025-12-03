@@ -41,10 +41,7 @@ const getStringArrayStorageItemData = (
     value: string,
     decodeKeys: string[]
 ): IStringArrayStorageItemData | undefined => {
-    (<any>stringArrayStorage).rc4Keys = [
-        'foo',
-        ...decodeKeys
-    ];
+    (<any>stringArrayStorage).rc4Keys = ['foo', ...decodeKeys];
 
     return stringArrayStorage.get(value);
 };
@@ -61,8 +58,10 @@ describe('StringArrayStorage', () => {
             });
 
             for (let i = 0; i < samplesCount; i++) {
-                const {encodedValue: firstEncodedValue} = getStringArrayStorageItemData(stringArrayStorage, '_15', ['CRDL']) || {};
-                const {encodedValue: secondEncodedValue} = getStringArrayStorageItemData(stringArrayStorage, '_12', ['q9mB']) || {};
+                const { encodedValue: firstEncodedValue } =
+                    getStringArrayStorageItemData(stringArrayStorage, '_15', ['CRDL']) || {};
+                const { encodedValue: secondEncodedValue } =
+                    getStringArrayStorageItemData(stringArrayStorage, '_12', ['q9mB']) || {};
 
                 if (firstEncodedValue === secondEncodedValue) {
                     isCollisionHappened = true;
@@ -83,25 +82,18 @@ describe('StringArrayStorage', () => {
 
         before(() => {
             const stringArrayStorage: IStringArrayStorage = getStorageInstance({
-                stringArrayEncoding: [
-                    StringArrayEncoding.Base64,
-                    StringArrayEncoding.Rc4
-                ]
+                stringArrayEncoding: [StringArrayEncoding.Base64, StringArrayEncoding.Rc4]
             });
 
             for (let i = 0; i < samplesCount; i++) {
-                const {
-                    encodedValue: firstEncodedValue,
-                    encoding: firstEncodedValueEncoding
-                } = getStringArrayStorageItemData(stringArrayStorage, 'zxL', ['&Jfx', '[lR4']) || {};
-                const {
-                    encodedValue: secondEncodedValue,
-                    encoding: secondEncodedValueEncoding
-                } = getStringArrayStorageItemData(stringArrayStorage, 'omC', ['&Jfx', '[lR4']) || {};
+                const { encodedValue: firstEncodedValue, encoding: firstEncodedValueEncoding } =
+                    getStringArrayStorageItemData(stringArrayStorage, 'zxL', ['&Jfx', '[lR4']) || {};
+                const { encodedValue: secondEncodedValue, encoding: secondEncodedValueEncoding } =
+                    getStringArrayStorageItemData(stringArrayStorage, 'omC', ['&Jfx', '[lR4']) || {};
 
                 if (
-                    firstEncodedValue === secondEncodedValue
-                    && firstEncodedValueEncoding === secondEncodedValueEncoding
+                    firstEncodedValue === secondEncodedValue &&
+                    firstEncodedValueEncoding === secondEncodedValueEncoding
                 ) {
                     isCollisionHappened = true;
                     break;

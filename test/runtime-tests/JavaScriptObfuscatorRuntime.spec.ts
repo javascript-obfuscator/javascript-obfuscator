@@ -40,11 +40,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         stringArray: true,
         stringArrayCallsTransform: true,
         stringArrayCallsTransformThreshold: 1,
-        stringArrayEncoding: [
-            StringArrayEncoding.None,
-            StringArrayEncoding.Base64,
-            StringArrayEncoding.Rc4
-        ],
+        stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64, StringArrayEncoding.Rc4],
         stringArrayIndexesType: [
             StringArrayIndexesType.HexadecimalNumber,
             StringArrayIndexesType.HexadecimalNumericString
@@ -168,7 +164,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 let evaluationResult: string;
 
                 try {
-                    evaluationResult = eval(obfuscatedCode)
+                    evaluationResult = eval(obfuscatedCode);
                 } catch (e) {
                     throw new Error(`Evaluation error: ${e.message}. Code: ${obfuscatedCode}`);
                 }
@@ -194,10 +190,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     }
                 ).getObfuscatedCode();
 
-                assert.equal(
-                    eval(obfuscatedCode),
-                    '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
-                );
+                assert.equal(eval(obfuscatedCode), '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08');
             });
         });
 
@@ -209,14 +202,11 @@ describe('JavaScriptObfuscator runtime eval', function () {
             beforeEach(() => {
                 const code: string = readFileAsString(process.cwd() + '/dist/index.js');
 
-                const obfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...baseOptions,
-                        ...options,
-                        renameProperties: false
-                    }
-                );
+                const obfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...baseOptions,
+                    ...options,
+                    renameProperties: false
+                });
                 const obfuscatorOptions = obfuscationResult.getOptions();
                 const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
@@ -241,10 +231,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
             });
 
             it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
-                assert.equal(
-                    evaluationResult,
-                    'var foo=0x1;'
-                );
+                assert.equal(evaluationResult, 'var foo=0x1;');
             });
         });
 
@@ -281,15 +268,12 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/webpack-bootstrap.js');
 
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...baseOptions,
-                            ...options,
-                            ...webpackBootstrapOptions,
-                            reservedNames: ['^foo$']
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...baseOptions,
+                        ...options,
+                        ...webpackBootstrapOptions,
+                        reservedNames: ['^foo$']
+                    }).getObfuscatedCode();
 
                     try {
                         evaluationResult = eval(`

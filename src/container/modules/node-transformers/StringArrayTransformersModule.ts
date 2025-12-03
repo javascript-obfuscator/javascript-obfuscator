@@ -9,17 +9,19 @@ import { StringArrayRotateFunctionTransformer } from '../../../node-transformers
 import { StringArrayScopeCallsWrapperTransformer } from '../../../node-transformers/string-array-transformers/StringArrayScopeCallsWrapperTransformer';
 import { StringArrayTransformer } from '../../../node-transformers/string-array-transformers/StringArrayTransformer';
 
-export const stringArrayTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // strings transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(StringArrayRotateFunctionTransformer)
-        .whenTargetNamed(NodeTransformer.StringArrayRotateFunctionTransformer);
+export const stringArrayTransformersModule: interfaces.ContainerModule = new ContainerModule(
+    (bind: interfaces.Bind) => {
+        // strings transformers
+        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+            .to(StringArrayRotateFunctionTransformer)
+            .whenTargetNamed(NodeTransformer.StringArrayRotateFunctionTransformer);
 
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(StringArrayScopeCallsWrapperTransformer)
-        .whenTargetNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);
+        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+            .to(StringArrayScopeCallsWrapperTransformer)
+            .whenTargetNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);
 
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(StringArrayTransformer)
-        .whenTargetNamed(NodeTransformer.StringArrayTransformer);
-});
+        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+            .to(StringArrayTransformer)
+            .whenTargetNamed(NodeTransformer.StringArrayTransformer);
+    }
+);

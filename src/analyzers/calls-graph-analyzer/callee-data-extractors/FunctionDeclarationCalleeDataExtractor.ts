@@ -16,7 +16,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
      * @param {Identifier} callee
      * @returns {ICalleeData}
      */
-    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData | null {
+    public extract(blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData | null {
         if (!NodeGuards.isIdentifierNode(callee)) {
             return null;
         }
@@ -41,7 +41,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
      * @param {string} name
      * @returns {BlockStatement}
      */
-    private getCalleeBlockStatement (targetNode: ESTree.Node, name: string): ESTree.BlockStatement | null {
+    private getCalleeBlockStatement(targetNode: ESTree.Node, name: string): ESTree.BlockStatement | null {
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         estraverse.traverse(targetNode, {

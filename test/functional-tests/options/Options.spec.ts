@@ -24,19 +24,17 @@ use(chaiExclude);
 /**
  * @param {TInputOptions} inputOptions
  */
-function getOptions (inputOptions: TInputOptions): IOptions {
+function getOptions(inputOptions: TInputOptions): IOptions {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
     inversifyContainerFacade.load('', '', inputOptions);
 
-    return inversifyContainerFacade
-        .get<IOptions>(ServiceIdentifiers.IOptions);
+    return inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
 }
 
 describe('Options', () => {
     describe('Options preset', () => {
-        let options: IOptions,
-            expectedOptions: TInputOptions;
+        let options: IOptions, expectedOptions: TInputOptions;
 
         describe('Preset selection', () => {
             describe('Default preset', () => {

@@ -21,9 +21,7 @@ export class IgnoredImportObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @param {IOptions} options
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IOptions) options: IOptions) {
         this.options = options;
     }
 
@@ -31,7 +29,7 @@ export class IgnoredImportObfuscatingGuard implements IObfuscatingGuard {
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isDynamicImport (node: ESTree.Node): boolean {
+    private static isDynamicImport(node: ESTree.Node): boolean {
         return NodeGuards.isImportExpressionNode(node);
     }
 
@@ -39,20 +37,23 @@ export class IgnoredImportObfuscatingGuard implements IObfuscatingGuard {
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isRequireImport (node: ESTree.Node): boolean {
-        return NodeGuards.isCallExpressionNode(node)
-            && NodeGuards.isIdentifierNode(node.callee)
-            && node.callee.name === 'require';
+    private static isRequireImport(node: ESTree.Node): boolean {
+        return (
+            NodeGuards.isCallExpressionNode(node) &&
+            NodeGuards.isIdentifierNode(node.callee) &&
+            node.callee.name === 'require'
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): ObfuscatingGuardResult {
+    public check(node: ESTree.Node): ObfuscatingGuardResult {
         if (this.options.ignoreImports) {
-            const isIgnoredImport = IgnoredImportObfuscatingGuard.isDynamicImport(node)
-                || IgnoredImportObfuscatingGuard.isRequireImport(node);
+            const isIgnoredImport =
+                IgnoredImportObfuscatingGuard.isDynamicImport(node) ||
+                IgnoredImportObfuscatingGuard.isRequireImport(node);
 
             if (isIgnoredImport) {
                 return ObfuscatingGuardResult.Ignore;

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -31,7 +31,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -44,7 +44,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {ESTree.Statement | null | undefined} statementNode
      * @returns {IStatementSimplifyData | null}
      */
-    protected getStatementSimplifyData (
+    protected getStatementSimplifyData(
         statementNode: ESTree.Statement | null | undefined
     ): IStatementSimplifyData | null {
         if (!statementNode) {
@@ -60,12 +60,8 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
             };
         }
 
-        const {
-            startIndex,
-            unwrappedExpressions,
-            hasReturnStatement,
-            hasStatementsAfterReturnStatement
-        } = this.collectIteratedStatementsSimplifyData(statementNode);
+        const { startIndex, unwrappedExpressions, hasReturnStatement, hasStatementsAfterReturnStatement } =
+            this.collectIteratedStatementsSimplifyData(statementNode);
 
         if (hasStatementsAfterReturnStatement) {
             return {
@@ -114,7 +110,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {ESTree.Statement | null | undefined} statementNode
      * @returns {IIteratedStatementsSimplifyData}
      */
-    protected collectIteratedStatementsSimplifyData (
+    protected collectIteratedStatementsSimplifyData(
         statementNode: ESTree.BlockStatement
     ): IIteratedStatementsSimplifyData {
         const statementNodeBodyLength: number = statementNode.body.length;
@@ -138,10 +134,7 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
                 continue;
             }
 
-            if (
-                NodeGuards.isReturnStatementNode(statementBodyStatementNode)
-                && statementBodyStatementNode.argument
-            ) {
+            if (NodeGuards.isReturnStatementNode(statementBodyStatementNode) && statementBodyStatementNode.argument) {
                 unwrappedExpressions.unshift(statementBodyStatementNode.argument);
                 hasReturnStatement = true;
                 hasStatementsAfterReturnStatement = i !== statementNodeBodyLength - 1;
@@ -167,24 +160,27 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {number | null} startIndex
      * @returns {ESTree.Statement[]}
      */
-    protected getLeadingStatements (statementNode: ESTree.BlockStatement, startIndex: number | null): ESTree.Statement[] {
+    protected getLeadingStatements(
+        statementNode: ESTree.BlockStatement,
+        startIndex: number | null
+    ): ESTree.Statement[] {
         // variant #1: no valid statements inside `BlockStatement` are found
         if (startIndex === null) {
             return statementNode.body;
         }
 
         return startIndex === 0
-            // variant #2: all statements inside `BlockStatement` branch are valid
-            ? []
-            // variant #3: only last N statements inside `BlockStatement` branch are valid
-            : statementNode.body.slice(0, startIndex);
+            ? // variant #2: all statements inside `BlockStatement` branch are valid
+              []
+            : // variant #3: only last N statements inside `BlockStatement` branch are valid
+              statementNode.body.slice(0, startIndex);
     }
 
     /**
      * @param {IStatementSimplifyData} statementSimplifyData
      * @returns {ESTree.Statement}
      */
-    protected getPartialStatement (statementSimplifyData: IStatementSimplifyData): ESTree.Statement {
+    protected getPartialStatement(statementSimplifyData: IStatementSimplifyData): ESTree.Statement {
         // variant #1: all statements inside `BlockStatement` branch are valid
         if (!statementSimplifyData.leadingStatements.length && statementSimplifyData.trailingStatement) {
             return statementSimplifyData.trailingStatement.statement;
@@ -192,8 +188,8 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
 
         // variant #2: only last N statements inside `BlockStatement` branch are valid
         return NodeFactory.blockStatementNode([
-            ...statementSimplifyData.leadingStatements.length ? statementSimplifyData.leadingStatements : [],
-            ...statementSimplifyData.trailingStatement ? [statementSimplifyData.trailingStatement.statement] : []
+            ...(statementSimplifyData.leadingStatements.length ? statementSimplifyData.leadingStatements : []),
+            ...(statementSimplifyData.trailingStatement ? [statementSimplifyData.trailingStatement.statement] : [])
         ]);
     }
 
@@ -202,8 +198,5 @@ export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeT
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Node}
      */
-    public abstract override transformNode (
-        statementNode: ESTree.Statement,
-        parentNode: ESTree.Node
-    ): ESTree.Node;
+    public abstract override transformNode(statementNode: ESTree.Statement, parentNode: ESTree.Node): ESTree.Node;
 }

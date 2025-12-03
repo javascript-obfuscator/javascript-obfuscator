@@ -16,19 +16,16 @@ describe('ScopeThroughIdentifiersTransformer ClassDeclaration identifiers', () =
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/class-call-with-declaration.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    renameGlobals: true,
-                    identifierNamesCache: {
-                        globalIdentifiers: {
-                            'Foo': 'Foo_from_cache'
-                        },
-                        propertyIdentifiers: {}
-                    }
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                renameGlobals: true,
+                identifierNamesCache: {
+                    globalIdentifiers: {
+                        Foo: 'Foo_from_cache'
+                    },
+                    propertyIdentifiers: {}
                 }
-            ).getObfuscatedCode();
+            }).getObfuscatedCode();
         });
 
         it('should skip transformation of class name', () => {
@@ -49,19 +46,16 @@ describe('ScopeThroughIdentifiersTransformer ClassDeclaration identifiers', () =
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/class-call-without-declaration.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true,
-                        identifierNamesCache: {
-                            globalIdentifiers: {
-                                'Foo': 'Foo_from_cache'
-                            },
-                            propertyIdentifiers: {}
-                        }
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true,
+                    identifierNamesCache: {
+                        globalIdentifiers: {
+                            Foo: 'Foo_from_cache'
+                        },
+                        propertyIdentifiers: {}
                     }
-                ).getObfuscatedCode();
+                }).getObfuscatedCode();
             });
 
             it('should transform class name', () => {
@@ -77,17 +71,14 @@ describe('ScopeThroughIdentifiersTransformer ClassDeclaration identifiers', () =
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/class-call-without-declaration.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true,
-                        identifierNamesCache: {
-                            globalIdentifiers: {},
-                            propertyIdentifiers: {}
-                        }
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true,
+                    identifierNamesCache: {
+                        globalIdentifiers: {},
+                        propertyIdentifiers: {}
                     }
-                ).getObfuscatedCode();
+                }).getObfuscatedCode();
             });
 
             it('should not transform class name', () => {

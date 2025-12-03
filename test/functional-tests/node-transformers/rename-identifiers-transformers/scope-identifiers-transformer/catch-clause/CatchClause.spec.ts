@@ -16,18 +16,14 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 
-        let firstMatch: string | undefined,
-            secondMatch: string | undefined;
+        let firstMatch: string | undefined, secondMatch: string | undefined;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
             firstMatch = getRegExpMatch(obfuscatedCode, paramNameRegExp);
             secondMatch = getRegExpMatch(obfuscatedCode, bodyParamNameRegExp);
         });
@@ -54,19 +50,16 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
-        it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {
+        it("match #1: shouldn't transform function parameter object pattern identifier", () => {
             assert.match(obfuscatedCode, functionParameterMatch);
         });
 
-        it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
+        it("match #2: shouldn't transform function parameter object pattern identifier", () => {
             assert.match(obfuscatedCode, functionBodyMatch);
         });
     });
@@ -78,12 +71,9 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/optional-catch-binding.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('match #1: should transform catch clause node', () => {
@@ -102,15 +92,12 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/global-variable-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
-            it('match #1: shouldn\'t transform variable identifier if `renameGlobals` option is disabled', () => {
+            it("match #1: shouldn't transform variable identifier if `renameGlobals` option is disabled", () => {
                 assert.match(obfuscatedCode, globalVariableRegExp);
             });
         });
@@ -121,13 +108,10 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/global-variable-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('match #1: should transform variable identifier if `renameGlobals` option is enabled', () => {

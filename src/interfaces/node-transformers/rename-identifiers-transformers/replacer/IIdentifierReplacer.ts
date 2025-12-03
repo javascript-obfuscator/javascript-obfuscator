@@ -7,13 +7,13 @@ export interface IIdentifierReplacer {
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeGlobalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
+    storeGlobalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeLocalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
+    storeLocalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
      * @param {Node} node
@@ -21,20 +21,16 @@ export interface IIdentifierReplacer {
      * @param {number} nodeIdentifier
      * @returns {ESTree.Identifier}
      */
-    replace (
-        node: ESTree.Node,
-        lexicalScopeNode?: TNodeWithLexicalScope,
-        nodeIdentifier?: number
-    ): ESTree.Identifier;
+    replace(node: ESTree.Node, lexicalScopeNode?: TNodeWithLexicalScope, nodeIdentifier?: number): ESTree.Identifier;
 
     /**
      * @param {Identifier} identifierNode
      */
-    preserveName (identifierNode: ESTree.Identifier): void;
+    preserveName(identifierNode: ESTree.Identifier): void;
 
     /**
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    preserveNameForLexicalScope (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
+    preserveNameForLexicalScope(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 }

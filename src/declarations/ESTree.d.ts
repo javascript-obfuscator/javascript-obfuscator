@@ -18,12 +18,12 @@ declare module 'estree' {
     }
 
     export interface IdentifierNodeMetadata extends BaseNodeMetadata {
-        propertyKeyToRenameNode?: boolean
+        propertyKeyToRenameNode?: boolean;
     }
 
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
         stringArrayCallLiteralNode?: boolean;
-        propertyKeyToRenameNode?: boolean
+        propertyKeyToRenameNode?: boolean;
     }
 
     /**
@@ -57,17 +57,17 @@ declare module 'estree' {
     }
 
     interface BigIntLiteral extends BaseNode {
-        metadata?: LiteralNodeMetadata;
+        'metadata'?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 
     interface RegExpLiteral extends BaseNode {
-        metadata?: LiteralNodeMetadata;
+        'metadata'?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 
     interface SimpleLiteral extends BaseNode {
-        metadata?: LiteralNodeMetadata;
+        'metadata'?: LiteralNodeMetadata;
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 }

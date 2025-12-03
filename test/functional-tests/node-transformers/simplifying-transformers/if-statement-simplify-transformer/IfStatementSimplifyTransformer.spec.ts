@@ -11,23 +11,19 @@ describe('IfStatementSimplifyTransformer', () => {
         describe('Consequent only', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
-                    const regExp: RegExp = new RegExp(
-                        '!!\\[] *&& *bar\\(\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('!!\\[] *&& *bar\\(\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-no-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-only-no-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -36,23 +32,19 @@ describe('IfStatementSimplifyTransformer', () => {
                 });
 
                 describe('Variant #2: multiple statements', () => {
-                    const regExp: RegExp = new RegExp(
-                        '!!\\[] *&& *\\(bar\\(\\) *, *baz\\(\\) *, *bark\\(\\)\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('!!\\[] *&& *\\(bar\\(\\) *, *baz\\(\\) *, *bark\\(\\)\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-no-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-only-no-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -63,24 +55,19 @@ describe('IfStatementSimplifyTransformer', () => {
 
             describe('With `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
-                    const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *' +
-                            'return *bar\\(\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('if *\\(!!\\[]\\) *' + 'return *bar\\(\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-only-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -90,23 +77,20 @@ describe('IfStatementSimplifyTransformer', () => {
 
                 describe('Variant #2: multiple statements', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *' +
-                            'return *bar\\(\\) *, *baz\\(\\) *, *bark\\(\\);'
+                        'if *\\(!!\\[]\\) *' + 'return *bar\\(\\) *, *baz\\(\\) *, *bark\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-only-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -118,22 +102,20 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *\\{ *' +
                             'bar\\(\\), *baz\\(\\); *return bark\\(\\); *hawk\\(\\), *eagle\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-only-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-only-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -146,25 +128,19 @@ describe('IfStatementSimplifyTransformer', () => {
         describe('Consequent and alternate', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
-                    const regExp: RegExp = new RegExp(
-                        '!!\\[] *' +
-                            '\\? *bar\\(\\) *' +
-                            ': *baz\\(\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('!!\\[] *' + '\\? *bar\\(\\) *' + ': *baz\\(\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-no-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-no-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -179,19 +155,17 @@ describe('IfStatementSimplifyTransformer', () => {
                             ': *\\(hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\)\\);'
                     );
 
-
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-no-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-no-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -203,25 +177,20 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('With consequent `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *' +
-                            'return *bar\\(\\); *' +
-                        'else *' +
-                            'baz\\(\\);'
+                        'if *\\(!!\\[]\\) *' + 'return *bar\\(\\); *' + 'else *' + 'baz\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-consequent-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-consequent-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -233,23 +202,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'return *bar\\(\\) *, *baz\\(\\) *, *bark\\(\\); *' +
-                        'else *' +
+                            'else *' +
                             'hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-consequent-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/full-consequent-and-alternate-consequent-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -261,22 +229,21 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *\\{ *' +
                             'bar\\(\\), *baz\\(\\); *return bark\\(\\); *cat\\(\\), *dog\\(\\); *' +
-                        '\\} *else *' +
+                            '\\} *else *' +
                             'hawk\\(\\), *pork\\(\\), *eagle\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-consequent-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-consequent-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -288,25 +255,20 @@ describe('IfStatementSimplifyTransformer', () => {
             describe('With alternate `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
                     const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *' +
-                            'bar\\(\\); *' +
-                        'else *' +
-                            'return *baz\\(\\);'
+                        'if *\\(!!\\[]\\) *' + 'bar\\(\\); *' + 'else *' + 'return *baz\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-alternate-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-alternate-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -318,23 +280,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'bar\\(\\) *, *baz\\(\\) *, *bark\\(\\); *' +
-                        'else *' +
+                            'else *' +
                             'return *hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-alternate-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/full-consequent-and-alternate-alternate-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -346,23 +307,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'bar\\(\\), *baz\\(\\), *bark\\(\\); *' +
-                        'else *\\{ *' +
+                            'else *\\{ *' +
                             'hawk\\(\\), *eagle\\(\\); *return cow\\(\\); *cat\\(\\), *dog\\(\\);' +
-                        '\\}'
+                            '\\}'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-alternate-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-alternate-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -373,25 +333,19 @@ describe('IfStatementSimplifyTransformer', () => {
 
             describe('With consequent and alternate `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
-                    const regExp: RegExp = new RegExp(
-                        'return *!!\\[] *' +
-                            '\\? *bar\\(\\) *' +
-                            ': *baz\\(\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('return *!!\\[] *' + '\\? *bar\\(\\) *' + ': *baz\\(\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -406,19 +360,17 @@ describe('IfStatementSimplifyTransformer', () => {
                             ': *\\(hawk\\(\\) *, *pork\\(\\) *, *eagle\\(\\)\\);'
                     );
 
-
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/full-consequent-and-alternate-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/full-consequent-and-alternate-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -433,24 +385,19 @@ describe('IfStatementSimplifyTransformer', () => {
         describe('Consequent only', () => {
             describe('No `ReturnStatement`', () => {
                 describe('Variant #1: single statement', () => {
-                    const regExp: RegExp = new RegExp(
-                        'if *\\(!!\\[]\\) *' +
-                            'var _0x([a-f0-9]){4,6} *= *baz\\(\\);'
-                    );
-
+                    const regExp: RegExp = new RegExp('if *\\(!!\\[]\\) *' + 'var _0x([a-f0-9]){4,6} *= *baz\\(\\);');
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-no-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-only-no-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -463,22 +410,20 @@ describe('IfStatementSimplifyTransformer', () => {
                         'if *\\(!!\\[]\\) *{ *' +
                             'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'bark\\(\\), *hawk\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-no-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-only-no-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -493,22 +438,20 @@ describe('IfStatementSimplifyTransformer', () => {
                         'if *\\(!!\\[]\\) *{ *' +
                             'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'return bark\\(\\), *hawk\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-only-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -522,22 +465,20 @@ describe('IfStatementSimplifyTransformer', () => {
                             'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'return bark\\(\\); *' +
                             'hawk\\(\\), *eagle\\(\\); *' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-only-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-only-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -553,23 +494,21 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        'else *' +
+                            'else *' +
                             'var *_0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-and-alternate-no-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -581,27 +520,25 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *pork\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *cow\\(\\); *' +
                             'lion\\(\\), *pig\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-and-alternate-no-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -613,25 +550,23 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        'else *{ *' +
+                            'else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *dog\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-1.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-1.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -643,25 +578,23 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'eagle\\(\\), *pork\\(\\);' +
-                        '} *else *' +
+                            '} *else *' +
                             'var *_0x([a-f0-9]){4,6} *= *cow\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-2.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-and-alternate-no-return-mixed-statements-2.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -675,23 +608,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'return *bar\\(\\); *' +
-                        'else *' +
+                            'else *' +
                             'var *_0x([a-f0-9]){4,6} *= *bark\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-consequent-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -703,27 +635,26 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *hawk\\(\\); *' +
                             'return *eagle\\(\\), *cat\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *pig\\(\\); *' +
                             'lion\\(\\), *dog\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-consequent-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -737,25 +668,24 @@ describe('IfStatementSimplifyTransformer', () => {
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'return hawk\\(\\); *' +
                             'eagle\\(\\), *cat\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *pig\\(\\); *' +
                             'lion\\(\\), *dog\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-consequent-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-consequent-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -769,23 +699,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *' +
                             'var *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        'else *' +
+                            'else *' +
                             'return *bark\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-return-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-alternate-return-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -798,26 +727,25 @@ describe('IfStatementSimplifyTransformer', () => {
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'bark\\(\\), *hawk\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *pork\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *dog\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *dog\\(\\); *' +
                             'return *pig\\(\\), *lion\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-alternate-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -830,26 +758,25 @@ describe('IfStatementSimplifyTransformer', () => {
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             'bark\\(\\), *hawk\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *pork\\(\\); *' +
                             'return dog\\(\\); *' +
                             'pig\\(\\), *lion\\(\\); *' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-alternate-statements-after-return.js');
+                        const code: string = readFileAsString(
+                            __dirname +
+                                '/fixtures/partial-consequent-and-alternate-alternate-statements-after-return.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -863,28 +790,26 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *baz\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *eagle\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *eagle\\(\\); *' +
                             'return *hawk\\(\\), *lion\\(\\);' +
-                        '} *else *{ *' +
+                            '} *else *{ *' +
                             'const *_0x([a-f0-9]){4,6} *= *dog\\(\\), *' +
-                                '_0x([a-f0-9]){4,6} *= *hamster\\(\\); *' +
+                            '_0x([a-f0-9]){4,6} *= *hamster\\(\\); *' +
                             'return *parrot\\(\\), *bull\\(\\);' +
-                        '}'
+                            '}'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/partial-consequent-and-alternate-return-multiple-statements.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/partial-consequent-and-alternate-return-multiple-statements.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should simplify if statement', () => {
@@ -901,23 +826,21 @@ describe('IfStatementSimplifyTransformer', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *' +
                         'var _0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
-                            '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
-                            '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{};'
+                        '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{}, *' +
+                        '_0x([a-f0-9]){4,6} *= *function *\\(\\) *{};'
                 );
-
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarations-merge-transformer-integration-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-declarations-merge-transformer-integration-1.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            simplify: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        simplify: true
+                    }).getObfuscatedCode();
                 });
 
                 it('should simplify if statement', () => {
@@ -928,28 +851,26 @@ describe('IfStatementSimplifyTransformer', () => {
 
         describe('Prohibited single statement', () => {
             describe('Variant #1: `IfStatement` as prohibited single statement', () => {
-                describe('Variant #1: `IfStatement` with `var` variable inside`' , () => {
+                describe('Variant #1: `IfStatement` with `var` variable inside`', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'if *\\(!\\[]\\) *' +
-                                'var _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
-                        '} *else *' +
+                            'var _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/if-statement-as-prohibited-single-statement-1.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/if-statement-as-prohibited-single-statement-1.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -957,29 +878,27 @@ describe('IfStatementSimplifyTransformer', () => {
                     });
                 });
 
-                describe('Variant #2: `IfStatement` with `const` variable inside`' , () => {
+                describe('Variant #2: `IfStatement` with `const` variable inside`', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'if *\\(!\\[]\\) *{ *' +
-                                'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
+                            'const _0x([a-f0-9]){4,6} *= *baz\\(\\); *' +
                             '} *' +
-                        '} *else *' +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
-
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/if-statement-as-prohibited-single-statement-2.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/if-statement-as-prohibited-single-statement-2.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -993,27 +912,26 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'for *\\( *' +
-                                'let _0x([a-f0-9]){4,6} *= *0x0; *' +
-                                '_0x([a-f0-9]){4,6} *< *0x1; *' +
-                                '_0x([a-f0-9]){4,6}\\+\\+ *' +
+                            'let _0x([a-f0-9]){4,6} *= *0x0; *' +
+                            '_0x([a-f0-9]){4,6} *< *0x1; *' +
+                            '_0x([a-f0-9]){4,6}\\+\\+ *' +
                             '\\) *' +
-                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
-                        '} *else *' +
+                            "console\\['log']\\(_0x([a-f0-9]){4,6}\\); *" +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-for-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1025,23 +943,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'for *\\(const _0x([a-f0-9]){4,6} of *\\[\\]\\) *' +
-                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
-                        '} *else *' +
+                            "console\\['log']\\(_0x([a-f0-9]){4,6}\\); *" +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-of-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-for-of-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1053,23 +970,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'for *\\(const _0x([a-f0-9]){4,6} in *\\{\\}\\) *' +
-                                'console\\[\'log\']\\(_0x([a-f0-9]){4,6}\\); *' +
-                        '} *else *' +
+                            "console\\['log']\\(_0x([a-f0-9]){4,6}\\); *" +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-for-in-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-for-in-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1081,23 +997,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'while *\\(!!\\[]\\) *' +
-                                'console\\[\'log\']\\(0x1\\); *' +
-                        '} *else *' +
+                            "console\\['log']\\(0x1\\); *" +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-while-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-while-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1109,24 +1024,23 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             'do *' +
-                                'console\\[\'log\']\\(0x1\\); *' +
+                            "console\\['log']\\(0x1\\); *" +
                             'while *\\(!!\\[]\\); *' +
-                        '} *else *' +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-do-while-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-do-while-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1138,23 +1052,22 @@ describe('IfStatementSimplifyTransformer', () => {
                     const regExp: RegExp = new RegExp(
                         'if *\\(!!\\[]\\) *{ *' +
                             '_0x([a-f0-9]){4,6}: *' +
-                                'console\\[\'log\']\\(0x1\\); *' +
-                        '} *else *' +
+                            "console\\['log']\\(0x1\\); *" +
+                            '} *else *' +
                             'var _0x([a-f0-9]){4,6} *= *hawk\\(\\);'
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/single-line-labeled-statement-as-prohibited-single-statement.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/single-line-labeled-statement-as-prohibited-single-statement.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                simplify: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            simplify: true
+                        }).getObfuscatedCode();
                     });
 
                     it('should not simplify if statement', () => {
@@ -1167,24 +1080,22 @@ describe('IfStatementSimplifyTransformer', () => {
                 const regExp: RegExp = new RegExp(
                     'if *\\(!!\\[]\\) *{ *' +
                         'function _0x([a-f0-9]){4,6} *\\(\\) *{} *' +
-                    '} *else *{ *' +
+                        '} *else *{ *' +
                         'function _0x([a-f0-9]){4,6} *\\(\\) *{} *' +
-                    '}'
+                        '}'
                 );
-
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/function-declaration-as-prohibited-single-statement.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/function-declaration-as-prohibited-single-statement.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            simplify: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        simplify: true
+                    }).getObfuscatedCode();
                 });
 
                 it('should not simplify if statement', () => {
@@ -1193,25 +1104,19 @@ describe('IfStatementSimplifyTransformer', () => {
             });
 
             describe('Variant #4: `let` `VariableDeclaration` as prohibited single statement', () => {
-                const regExp: RegExp = new RegExp(
-                    'if *\\(!!\\[]\\) *{ *' +
-                        'let foo *= *0x1; *' +
-                    '}'
-                );
-
+                const regExp: RegExp = new RegExp('if *\\(!!\\[]\\) *{ *' + 'let foo *= *0x1; *' + '}');
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/let-variable-declaration-as-prohibited-single-statement.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/let-variable-declaration-as-prohibited-single-statement.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            simplify: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        simplify: true
+                    }).getObfuscatedCode();
                 });
 
                 it('should not simplify if statement', () => {
@@ -1220,25 +1125,19 @@ describe('IfStatementSimplifyTransformer', () => {
             });
 
             describe('Variant #5: `const` `VariableDeclaration` as prohibited single statement', () => {
-                const regExp: RegExp = new RegExp(
-                    'if *\\(!!\\[]\\) *{ *' +
-                        'const foo *= *0x1; *' +
-                    '}'
-                );
-
+                const regExp: RegExp = new RegExp('if *\\(!!\\[]\\) *{ *' + 'const foo *= *0x1; *' + '}');
 
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/const-variable-declaration-as-prohibited-single-statement.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/const-variable-declaration-as-prohibited-single-statement.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            simplify: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        simplify: true
+                    }).getObfuscatedCode();
                 });
 
                 it('should not simplify if statement', () => {

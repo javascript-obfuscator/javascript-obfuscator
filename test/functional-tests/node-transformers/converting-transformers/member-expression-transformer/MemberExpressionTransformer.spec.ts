@@ -17,16 +17,13 @@ describe('MemberExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('should replace member expression dot notation call with literal value', () => {
-                assert.match(obfuscatedCode,  regExp);
+                assert.match(obfuscatedCode, regExp);
             });
         });
 
@@ -39,14 +36,11 @@ describe('MemberExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should add member expression identifier to string array', () => {
@@ -69,14 +63,11 @@ describe('MemberExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should add member expression square brackets literal to string array', () => {
@@ -96,12 +87,9 @@ describe('MemberExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-with-identifier-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('should ignore square brackets call with identifier value', () => {

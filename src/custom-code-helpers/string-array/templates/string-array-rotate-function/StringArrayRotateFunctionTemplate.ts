@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function StringArrayRotateFunctionTemplate (): string {
+export function StringArrayRotateFunctionTemplate(): string {
     return `
         (function (stringArrayFunction, comparisonValue) {
             const stringArray = stringArrayFunction();

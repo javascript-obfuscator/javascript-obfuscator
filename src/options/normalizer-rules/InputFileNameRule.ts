@@ -12,11 +12,9 @@ export const InputFileNameRule: TOptionsNormalizerRule = (options: IOptions): IO
     let { inputFileName } = options;
 
     if (inputFileName) {
-        inputFileName = inputFileName
-            .replace(/^\/+/, '')
-            .split(StringSeparator.Dot)
-            .slice(0, -1)
-            .join(StringSeparator.Dot) || inputFileName;
+        inputFileName =
+            inputFileName.replace(/^\/+/, '').split(StringSeparator.Dot).slice(0, -1).join(StringSeparator.Dot) ||
+            inputFileName;
 
         options = {
             ...options,

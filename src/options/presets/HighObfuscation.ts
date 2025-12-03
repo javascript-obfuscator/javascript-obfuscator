@@ -14,9 +14,7 @@ export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     optionsPreset: OptionsPreset.HighObfuscation,
     splitStringsChunkLength: 5,
     stringArrayCallsTransformThreshold: 1,
-    stringArrayEncoding: [
-        StringArrayEncoding.Rc4
-    ],
+    stringArrayEncoding: [StringArrayEncoding.Rc4],
     stringArrayWrappersCount: 5,
     stringArrayWrappersParametersMaxCount: 5,
     stringArrayThreshold: 1

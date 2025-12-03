@@ -9,12 +9,11 @@ import { IInversifyContainerFacade } from '../../../src/interfaces/container/IIn
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator';
 
-
 import { ArrayStorage } from '../../../src/storages/ArrayStorage';
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
-class ConcreteStorage <V> extends ArrayStorage <V> {
-    constructor () {
+class ConcreteStorage<V> extends ArrayStorage<V> {
+    constructor() {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
@@ -29,8 +28,8 @@ class ConcreteStorage <V> extends ArrayStorage <V> {
 /**
  * @returns {IArrayStorage<V>}
  */
-const getStorageInstance = <V> (): IArrayStorage <V> => {
-    const storage: IArrayStorage <V> = new ConcreteStorage <V> ();
+const getStorageInstance = <V>(): IArrayStorage<V> => {
+    const storage: IArrayStorage<V> = new ConcreteStorage<V>();
 
     storage.initialize();
 
@@ -41,7 +40,7 @@ describe('ArrayStorage', () => {
     const storageKey: number = 0;
     const storageValue: string = 'foo';
 
-    let storage: IArrayStorage <any>;
+    let storage: IArrayStorage<any>;
 
     describe('initialize', () => {
         const expectedError: ErrorConstructor = Error;
@@ -53,7 +52,7 @@ describe('ArrayStorage', () => {
             testFunc = () => storage.set(storageKey, storageValue);
         });
 
-        it('should throws an error when storage isn\'t initialized', () => {
+        it("should throws an error when storage isn't initialized", () => {
             assert.throws(testFunc, expectedError);
         });
     });
@@ -109,7 +108,7 @@ describe('ArrayStorage', () => {
             });
         });
 
-        describe('Variant #2: value isn\'t exist', () => {
+        describe("Variant #2: value isn't exist", () => {
             const expectedValue: undefined = undefined;
 
             let value: string;
@@ -144,7 +143,7 @@ describe('ArrayStorage', () => {
             });
         });
 
-        describe('Variant #2: value isn\'t exist', () => {
+        describe("Variant #2: value isn't exist", () => {
             const expectedError: ErrorConstructor = Error;
 
             let testFunc: () => void;
@@ -221,7 +220,7 @@ describe('ArrayStorage', () => {
                 storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
-                key = storage.getKeyOf({...object});
+                key = storage.getKeyOf({ ...object });
             });
 
             it('should return `null` if objects in `set` and `get` are two different objects', () => {
@@ -247,10 +246,7 @@ describe('ArrayStorage', () => {
 
     describe('delete', () => {
         describe('Variant #1: value exist', () => {
-            const expectedUpdatedStorage: string[] = [
-                'foo',
-                'baz'
-            ];
+            const expectedUpdatedStorage: string[] = ['foo', 'baz'];
             const expectedUpdatedStorageLength: number = 2;
             const expectedDeletedValue: string = 'bar';
 
@@ -282,12 +278,8 @@ describe('ArrayStorage', () => {
             });
         });
 
-        describe('Variant #2: value isn\'t exist', () => {
-            const expectedUpdatedStorage: string[] = [
-                'foo',
-                'bar',
-                'baz'
-            ];
+        describe("Variant #2: value isn't exist", () => {
+            const expectedUpdatedStorage: string[] = ['foo', 'bar', 'baz'];
             const expectedUpdatedStorageLength: number = 3;
             const expectedDeletedValue: undefined = undefined;
 
@@ -333,7 +325,7 @@ describe('ArrayStorage', () => {
                 storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
-                const secondStorage: IArrayStorage <string> = getStorageInstance<string>();
+                const secondStorage: IArrayStorage<string> = getStorageInstance<string>();
                 secondStorage.set(secondStorageKey, secondStorageValue);
 
                 storage.mergeWith(secondStorage, false);
@@ -360,7 +352,7 @@ describe('ArrayStorage', () => {
                 storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
-                const secondStorage: IArrayStorage <string> = getStorageInstance<string>();
+                const secondStorage: IArrayStorage<string> = getStorageInstance<string>();
                 expectedStorageId = secondStorage.getStorageId();
                 secondStorage.set(secondStorageKey, secondStorageValue);
 

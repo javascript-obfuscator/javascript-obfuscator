@@ -11,8 +11,7 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyTo', () => {
-        let literalNode: ESTree.Literal,
-            expectedLiteralNode: ESTree.Literal;
+        let literalNode: ESTree.Literal, expectedLiteralNode: ESTree.Literal;
 
         before(() => {
             literalNode = NodeFactory.literalNode('value');
@@ -30,13 +29,16 @@ describe('NodeUtils', () => {
 
     describe('clone', () => {
         describe('Variant #1: simple AST-tree', () => {
-            let programNode: ESTree.Program,
-                expectedProgramNode: ESTree.Program;
+            let programNode: ESTree.Program, expectedProgramNode: ESTree.Program;
 
             before(() => {
                 // actual AST tree
-                const expressionStatementNode1: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
-                const expressionStatementNode2: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+                const expressionStatementNode1: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('identifier')
+                );
+                const expressionStatementNode2: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('identifier')
+                );
 
                 const ifStatementBlockStatementNode1: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     expressionStatementNode1,
@@ -49,8 +51,12 @@ describe('NodeUtils', () => {
                 );
 
                 // expected AST tree
-                const expressionStatementNode3: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
-                const expressionStatementNode4: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+                const expressionStatementNode3: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('identifier')
+                );
+                const expressionStatementNode4: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('identifier')
+                );
 
                 const ifStatementBlockStatementNode2: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     expressionStatementNode3,
@@ -62,16 +68,8 @@ describe('NodeUtils', () => {
                     ifStatementBlockStatementNode2
                 );
 
-                programNode = NodeUtils.clone(
-                    NodeFactory.programNode([
-                        ifStatementNode1
-                    ])
-                );
-                expectedProgramNode = NodeUtils.parentizeAst(
-                    NodeFactory.programNode([
-                        ifStatementNode2
-                    ])
-                );
+                programNode = NodeUtils.clone(NodeFactory.programNode([ifStatementNode1]));
+                expectedProgramNode = NodeUtils.parentizeAst(NodeFactory.programNode([ifStatementNode2]));
             });
 
             it('should clone given AST-tree', () => {
@@ -80,8 +78,7 @@ describe('NodeUtils', () => {
         });
 
         describe('Variant #2: array expression with `null` element', () => {
-            let programNode: ESTree.Program,
-                expectedProgramNode: ESTree.Program;
+            let programNode: ESTree.Program, expectedProgramNode: ESTree.Program;
 
             before(() => {
                 // actual AST tree
@@ -91,9 +88,8 @@ describe('NodeUtils', () => {
                     <any>null,
                     NodeFactory.literalNode(4)
                 ]);
-                const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
-                    arrayExpressionNode
-                );
+                const expressionStatementNode: ESTree.ExpressionStatement =
+                    NodeFactory.expressionStatementNode(arrayExpressionNode);
 
                 // expected AST tree
                 const expectedArrayExpressionNode: ESTree.ArrayExpression = NodeFactory.arrayExpressionNode([
@@ -102,19 +98,12 @@ describe('NodeUtils', () => {
                     <any>null,
                     NodeFactory.literalNode(4)
                 ]);
-                const expectedExpressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
-                    expectedArrayExpressionNode
-                );
+                const expectedExpressionStatementNode: ESTree.ExpressionStatement =
+                    NodeFactory.expressionStatementNode(expectedArrayExpressionNode);
 
-                programNode = NodeUtils.clone(
-                    NodeFactory.programNode([
-                        expressionStatementNode
-                    ])
-                );
+                programNode = NodeUtils.clone(NodeFactory.programNode([expressionStatementNode]));
                 expectedProgramNode = NodeUtils.parentizeAst(
-                    NodeFactory.programNode([
-                        expectedExpressionStatementNode
-                    ])
+                    NodeFactory.programNode([expectedExpressionStatementNode])
                 );
             });
 
@@ -125,8 +114,7 @@ describe('NodeUtils', () => {
     });
 
     describe('convertCodeToStructure', () => {
-        let structure: TStatement[],
-            expectedStructure: TStatement[];
+        let structure: TStatement[], expectedStructure: TStatement[];
 
         before(() => {
             const code: string = `
@@ -135,10 +123,13 @@ describe('NodeUtils', () => {
 
             const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('abc');
             const literalNode: ESTree.Literal = NodeFactory.literalNode('cde');
-            const variableDeclaratorNode: ESTree.VariableDeclarator = NodeFactory
-                .variableDeclaratorNode(identifierNode, literalNode);
-            const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory
-                .variableDeclarationNode([variableDeclaratorNode]);
+            const variableDeclaratorNode: ESTree.VariableDeclarator = NodeFactory.variableDeclaratorNode(
+                identifierNode,
+                literalNode
+            );
+            const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
+                variableDeclaratorNode
+            ]);
             const programNode: ESTree.Program = NodeFactory.programNode([variableDeclarationNode]);
 
             programNode.parentNode = programNode;
@@ -147,9 +138,7 @@ describe('NodeUtils', () => {
             identifierNode.parentNode = variableDeclaratorNode;
             literalNode.parentNode = variableDeclaratorNode;
 
-            structure = removeRangesFromStructure(
-                NodeUtils.convertCodeToStructure(code)
-            );
+            structure = removeRangesFromStructure(NodeUtils.convertCodeToStructure(code));
             expectedStructure = [variableDeclarationNode];
         });
 
@@ -159,8 +148,7 @@ describe('NodeUtils', () => {
     });
 
     describe('convertStructureToCode', () => {
-        let structure: ESTree.Node[],
-            expectedCode: string;
+        let structure: ESTree.Node[], expectedCode: string;
 
         before(() => {
             structure = [
@@ -173,7 +161,7 @@ describe('NodeUtils', () => {
                     ])
                 ])
             ];
-            expectedCode = 'var abc = \'cde\';';
+            expectedCode = "var abc = 'cde';";
         });
 
         it('should convert `ESTree.Node[]` structure to source code', () => {
@@ -182,17 +170,18 @@ describe('NodeUtils', () => {
     });
 
     describe('getUnaryExpressionArgumentNode', () => {
-        let expectedNode: ESTree.Literal,
-            unaryExpressionArgumentNode: ESTree.Node;
+        let expectedNode: ESTree.Literal, unaryExpressionArgumentNode: ESTree.Node;
 
         before(() => {
             const literalNode: ESTree.Literal = NodeFactory.literalNode('test');
             const unaryExpressionNode2: ESTree.UnaryExpression = NodeFactory.unaryExpressionNode('!', literalNode);
-            const unaryExpressionNode1: ESTree.UnaryExpression = NodeFactory.unaryExpressionNode('!', unaryExpressionNode2);
-            const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(unaryExpressionNode1);
-            const programNode: ESTree.Program = NodeFactory.programNode([
-                expressionStatementNode
-            ]);
+            const unaryExpressionNode1: ESTree.UnaryExpression = NodeFactory.unaryExpressionNode(
+                '!',
+                unaryExpressionNode2
+            );
+            const expressionStatementNode: ESTree.ExpressionStatement =
+                NodeFactory.expressionStatementNode(unaryExpressionNode1);
+            const programNode: ESTree.Program = NodeFactory.programNode([expressionStatementNode]);
 
             programNode.parentNode = programNode;
             expressionStatementNode.parentNode = programNode;
@@ -225,17 +214,12 @@ describe('NodeUtils', () => {
                 expressionStatementNode2
             ]);
 
-            ifStatementNode = NodeFactory.ifStatementNode(
-                NodeFactory.literalNode(true),
-                ifStatementBlockStatementNode
-            );
+            ifStatementNode = NodeFactory.ifStatementNode(NodeFactory.literalNode(true), ifStatementBlockStatementNode);
         });
 
         describe('Variant #1: parentize AST-tree with `ProgramNode` as root node', () => {
             beforeEach(() => {
-                programNode = NodeFactory.programNode([
-                    ifStatementNode
-                ]);
+                programNode = NodeFactory.programNode([ifStatementNode]);
 
                 programNode = NodeUtils.parentizeAst(programNode);
             });
@@ -285,9 +269,7 @@ describe('NodeUtils', () => {
 
         describe('Variant #3: parentize AST-tree and keep root node parent node', () => {
             beforeEach(() => {
-                programNode = NodeFactory.programNode([
-                    ifStatementNode
-                ]);
+                programNode = NodeFactory.programNode([ifStatementNode]);
 
                 ifStatementNode.parentNode = programNode;
                 ifStatementNode = NodeUtils.parentizeAst(ifStatementNode);

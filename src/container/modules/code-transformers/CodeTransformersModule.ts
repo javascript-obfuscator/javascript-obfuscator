@@ -12,12 +12,14 @@ import { HashbangOperatorTransformer } from '../../../code-transformers/preparin
 
 export const codeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // code transformers factory
-    bind<ICodeTransformer>(ServiceIdentifiers.Factory__ICodeTransformer)
-        .toFactory<ICodeTransformer, [CodeTransformer]>(InversifyContainerFacade
-            .getCacheFactory<CodeTransformer, ICodeTransformer>(ServiceIdentifiers.ICodeTransformer));
+    bind<ICodeTransformer>(ServiceIdentifiers.Factory__ICodeTransformer).toFactory<ICodeTransformer, [CodeTransformer]>(
+        InversifyContainerFacade.getCacheFactory<CodeTransformer, ICodeTransformer>(ServiceIdentifiers.ICodeTransformer)
+    );
 
     // code transformer names groups builder
-    bind<ITransformerNamesGroupsBuilder<CodeTransformer, ICodeTransformer>>(ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder)
+    bind<ITransformerNamesGroupsBuilder<CodeTransformer, ICodeTransformer>>(
+        ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder
+    )
         .to(CodeTransformerNamesGroupsBuilder)
         .inSingletonScope();
 

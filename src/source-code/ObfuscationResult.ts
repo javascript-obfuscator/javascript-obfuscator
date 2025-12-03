@@ -52,12 +52,12 @@ export class ObfuscationResult implements IObfuscationResult {
      * @param {IPropertyIdentifierNamesCacheStorage} propertyIdentifierNamesCacheStorage
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
-            globalIdentifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
+        globalIdentifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
-            propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
+        propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.cryptUtils = cryptUtils;
@@ -70,7 +70,7 @@ export class ObfuscationResult implements IObfuscationResult {
      * @param {string} obfuscatedCode
      * @param {string} sourceMap
      */
-    public initialize (obfuscatedCode: string, sourceMap: string): void {
+    public initialize(obfuscatedCode: string, sourceMap: string): void {
         this.obfuscatedCode = obfuscatedCode;
         this.sourceMap = sourceMap;
     }
@@ -78,7 +78,7 @@ export class ObfuscationResult implements IObfuscationResult {
     /**
      * @returns {string}
      */
-    public getIdentifierNamesCache (): TIdentifierNamesCache {
+    public getIdentifierNamesCache(): TIdentifierNamesCache {
         if (!this.options.identifierNamesCache) {
             return null;
         }
@@ -92,35 +92,35 @@ export class ObfuscationResult implements IObfuscationResult {
     /**
      * @returns {string}
      */
-    public getObfuscatedCode (): string {
+    public getObfuscatedCode(): string {
         return this.correctObfuscatedCode();
     }
 
     /**
      * @returns {IOptions}
      */
-    public getOptions (): IOptions {
+    public getOptions(): IOptions {
         return this.options;
     }
 
     /**
      * @returns {string}
      */
-    public getSourceMap (): string {
+    public getSourceMap(): string {
         return this.sourceMap;
     }
 
     /**
      * @returns {string}
      */
-    public toString (): string {
+    public toString(): string {
         return this.obfuscatedCode;
     }
 
     /**
      * @returns {string}
      */
-    private correctObfuscatedCode (): string {
+    private correctObfuscatedCode(): string {
         if (!this.sourceMap) {
             return this.obfuscatedCode;
         }

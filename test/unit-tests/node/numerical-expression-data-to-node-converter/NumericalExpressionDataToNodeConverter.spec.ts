@@ -12,9 +12,7 @@ import { NumericalExpressionDataToNodeConverter } from '../../../../src/node/Num
 describe('NumericalExpressionDataToNodeConverter', () => {
     describe('convertIntegerNumberData', () => {
         describe('Variant #1: base', () => {
-            const numberNumericalExpressionData: TNumberNumericalExpressionData = [
-                1, [-2, 3], 4
-            ];
+            const numberNumericalExpressionData: TNumberNumericalExpressionData = [1, [-2, 3], 4];
 
             const expectedExpressionNode: ESTree.Expression = NodeFactory.binaryExpressionNode(
                 '+',
@@ -23,12 +21,9 @@ describe('NumericalExpressionDataToNodeConverter', () => {
                     NodeFactory.literalNode(1),
                     NodeFactory.binaryExpressionNode(
                         '*',
-                        NodeFactory.unaryExpressionNode(
-                            '-',
-                            NodeFactory.literalNode(2),
-                        ),
+                        NodeFactory.unaryExpressionNode('-', NodeFactory.literalNode(2)),
                         NodeFactory.literalNode(3)
-                    ),
+                    )
                 ),
                 NodeFactory.literalNode(4)
             );
@@ -43,10 +38,7 @@ describe('NumericalExpressionDataToNodeConverter', () => {
 
                         return isPositiveNumber
                             ? numberLiteralNode
-                            : NodeFactory.unaryExpressionNode(
-                                '-',
-                                numberLiteralNode
-                            );
+                            : NodeFactory.unaryExpressionNode('-', numberLiteralNode);
                     }
                 );
             });
@@ -59,9 +51,7 @@ describe('NumericalExpressionDataToNodeConverter', () => {
 
     describe('convertFloatNumberData', () => {
         describe('Variant #1: base', () => {
-            const integerNumberNumericalExpressionData: TNumberNumericalExpressionData = [
-                1, [-2, 3], 4
-            ];
+            const integerNumberNumericalExpressionData: TNumberNumericalExpressionData = [1, [-2, 3], 4];
             const decimalPart: number = 0.000000001;
 
             const expectedExpressionNode: ESTree.Expression = NodeFactory.binaryExpressionNode(
@@ -73,12 +63,9 @@ describe('NumericalExpressionDataToNodeConverter', () => {
                         NodeFactory.literalNode(1),
                         NodeFactory.binaryExpressionNode(
                             '*',
-                            NodeFactory.unaryExpressionNode(
-                                '-',
-                                NodeFactory.literalNode(2),
-                            ),
+                            NodeFactory.unaryExpressionNode('-', NodeFactory.literalNode(2)),
                             NodeFactory.literalNode(3)
-                        ),
+                        )
                     ),
                     NodeFactory.literalNode(4)
                 ),
@@ -96,10 +83,7 @@ describe('NumericalExpressionDataToNodeConverter', () => {
 
                         return isPositiveNumber
                             ? numberLiteralNode
-                            : NodeFactory.unaryExpressionNode(
-                                '-',
-                                numberLiteralNode
-                            );
+                            : NodeFactory.unaryExpressionNode('-', numberLiteralNode);
                     }
                 );
             });

@@ -1,1 +1,1 @@
-export type TScopeIdentifiersTraverserCallback <TData> = (data: TData) => void;
+export type TScopeIdentifiersTraverserCallback<TData> = (data: TData) => void;

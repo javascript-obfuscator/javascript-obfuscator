@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -32,32 +32,27 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {IControlFlowStorage} controlFlowStorage
      */
-    public initialize (controlFlowStorage: IControlFlowStorage): void {
+    public initialize(controlFlowStorage: IControlFlowStorage): void {
         this.controlFlowStorage = controlFlowStorage;
     }
 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const propertyNodes: ESTree.Property[] = [];
         const controlFlowStorageMap: Map<string, ICustomNode> = this.controlFlowStorage.getStorage();
 
@@ -65,15 +60,12 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
             const node: ESTree.Node = value.getNode()[0];
 
             if (!NodeGuards.isExpressionStatementNode(node)) {
-                throw new Error('Function node for control flow storage object should be passed inside the `ExpressionStatement` node!');
+                throw new Error(
+                    'Function node for control flow storage object should be passed inside the `ExpressionStatement` node!'
+                );
             }
 
-            propertyNodes.push(
-                NodeFactory.propertyNode(
-                    NodeFactory.identifierNode(key),
-                    node.expression
-                )
-            );
+            propertyNodes.push(NodeFactory.propertyNode(NodeFactory.identifierNode(key), node.expression));
         }
 
         const structure: ESTree.Node = NodeFactory.variableDeclarationNode(

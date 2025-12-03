@@ -4,5 +4,5 @@ export interface IEscapeSequenceEncoder {
      * @param {boolean} encodeAllSymbols
      * @returns {string}
      */
-    encode (string: string, encodeAllSymbols: boolean): string;
+    encode(string: string, encodeAllSymbols: boolean): string;
 }

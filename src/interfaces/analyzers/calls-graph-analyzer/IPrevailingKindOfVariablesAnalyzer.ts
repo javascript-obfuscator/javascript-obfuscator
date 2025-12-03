@@ -6,10 +6,10 @@ export interface IPrevailingKindOfVariablesAnalyzer extends IAnalyzer<[ESTree.Pr
     /**
      * @param {Program} astTree
      */
-    analyze (astTree: ESTree.Program): void;
+    analyze(astTree: ESTree.Program): void;
 
     /**
      * @returns {ESTree.VariableDeclaration['kind']}
      */
-    getPrevailingKind (): ESTree.VariableDeclaration['kind'];
+    getPrevailingKind(): ESTree.VariableDeclaration['kind'];
 }

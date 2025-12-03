@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -19,7 +19,7 @@ export class ExportSpecifierTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -30,7 +30,7 @@ export class ExportSpecifierTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -57,7 +57,7 @@ export class ExportSpecifierTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (exportSpecifierNode: ESTree.ExportSpecifier, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(exportSpecifierNode: ESTree.ExportSpecifier, parentNode: ESTree.Node): ESTree.Node {
         if (exportSpecifierNode.local.name === exportSpecifierNode.exported.name) {
             exportSpecifierNode.exported = NodeUtils.clone(exportSpecifierNode.local);
         }

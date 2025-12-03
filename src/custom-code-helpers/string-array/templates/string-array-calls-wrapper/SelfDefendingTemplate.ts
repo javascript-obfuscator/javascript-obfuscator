@@ -7,7 +7,7 @@ import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator'
  * @returns {string}
  * @constructor
  */
-export function SelfDefendingTemplate (
+export function SelfDefendingTemplate(
     randomGenerator: IRandomGenerator,
     escapeSequenceEncoder: IEscapeSequenceEncoder
 ): string {
@@ -21,18 +21,14 @@ export function SelfDefendingTemplate (
     const runStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const getStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const stateResultIdentifier: string = randomGenerator.getRandomString(identifierLength);
-    
+
     return `
         const StatesClass = function (${rc4BytesIdentifier}) {
             this.${rc4BytesIdentifier} = ${rc4BytesIdentifier};
             this.${statesIdentifier} = [1, 0, 0];
             this.${newStateIdentifier} = function(){return 'newState';};
-            this.${firstStateIdentifier} = '${
-                escapeSequenceEncoder.encode('\\w+ *\\(\\) *{\\w+ *', true)
-            }';
-            this.${secondStateIdentifier} = '${
-                escapeSequenceEncoder.encode('[\'|"].+[\'|"];? *}', true)
-            }';
+            this.${firstStateIdentifier} = '${escapeSequenceEncoder.encode('\\w+ *\\(\\) *{\\w+ *', true)}';
+            this.${secondStateIdentifier} = '${escapeSequenceEncoder.encode('[\'|"].+[\'|"];? *}', true)}';
         };
         
         StatesClass.prototype.${checkStateIdentifier} = function () {

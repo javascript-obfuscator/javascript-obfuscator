@@ -1,21 +1,18 @@
-export interface ILevelledTopologicalSorter <TValue extends string = string> {
+export interface ILevelledTopologicalSorter<TValue extends string = string> {
     /**
      * @param {TValue} precedent
      * @param {TValue | null} consequent
      * @returns {this}
      */
-    add (
-        precedent: TValue,
-        consequent?: TValue | null
-    ): this;
+    add(precedent: TValue, consequent?: TValue | null): this;
 
     /**
      * @returns {TValue[]}
      */
-    sort (): TValue[];
+    sort(): TValue[];
 
     /**
      * @returns {TValue[][]}
      */
-    sortByGroups (): TValue[][];
+    sortByGroups(): TValue[][];
 }

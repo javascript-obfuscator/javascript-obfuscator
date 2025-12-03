@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function StringArrayTemplate (): string {
+export function StringArrayTemplate(): string {
     return `
         function {stringArrayFunctionName} () {
             const {stringArrayName} = [{stringArrayStorageItems}];

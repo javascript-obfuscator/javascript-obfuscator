@@ -2,65 +2,65 @@ import { TDictionary } from '../../types/TDictionary';
 
 import { IInitializable } from '../IInitializable';
 
-export interface IMapStorage <K, V> extends IInitializable {
+export interface IMapStorage<K, V> extends IInitializable {
     /**
      * @param {K} key
      * @returns {V | undefined}
      */
-    get (key: K): V | undefined;
+    get(key: K): V | undefined;
 
     /**
      * @param {K} key
      * @returns {V}
      */
-    getOrThrow (key: K): V;
+    getOrThrow(key: K): V;
 
     /**
      * @param {V} value
      * @returns {K | null}
      */
-    getKeyOf (value: V): K | null;
+    getKeyOf(value: V): K | null;
 
     /**
      * @returns number
      */
-    getLength (): number;
+    getLength(): number;
 
     /**
      * @returns {Map<K, V>}
      */
-    getStorage (): Map <K, V>;
+    getStorage(): Map<K, V>;
 
     /**
      * @returns {TDictionary<V>}
      */
-    getStorageAsDictionary (): TDictionary<V>;
+    getStorageAsDictionary(): TDictionary<V>;
 
     /**
      * @returns string
      */
-    getStorageId (): string;
+    getStorageId(): string;
 
     /**
      * @param {K} key
      * @returns {boolean}
      */
-    has (key: K): boolean;
+    has(key: K): boolean;
 
     /**
      * @param storage
      * @param mergeId
      */
-    mergeWith (storage: this, mergeId: boolean): void;
+    mergeWith(storage: this, mergeId: boolean): void;
 
     /**
      * @param {K} key
      * @param {V} value
      */
-    set (key: K, value: V): void;
+    set(key: K, value: V): void;
 
     /**
      * @returns string
      */
-    toString (): string;
+    toString(): string;
 }

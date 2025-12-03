@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function DebugProtectionFunctionIntervalTemplate (): string {
+export function DebugProtectionFunctionIntervalTemplate(): string {
     return `
         (function () {
             {globalVariableTemplate}

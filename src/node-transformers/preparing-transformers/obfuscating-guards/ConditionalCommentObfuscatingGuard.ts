@@ -29,16 +29,18 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
      * @param {Comment} comment
      * @returns {boolean}
      */
-    public static isConditionalComment (comment: ESTree.Comment): boolean {
-        return ConditionalCommentObfuscatingGuard.obfuscationEnableCommentRegExp.test(comment.value) ||
-            ConditionalCommentObfuscatingGuard.obfuscationDisableCommentRegExp.test(comment.value);
+    public static isConditionalComment(comment: ESTree.Comment): boolean {
+        return (
+            ConditionalCommentObfuscatingGuard.obfuscationEnableCommentRegExp.test(comment.value) ||
+            ConditionalCommentObfuscatingGuard.obfuscationDisableCommentRegExp.test(comment.value)
+        );
     }
 
     /**
      * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): ObfuscatingGuardResult {
+    public check(node: ESTree.Node): ObfuscatingGuardResult {
         if (NodeGuards.isNodeWithComments(node)) {
             const leadingComments: ESTree.Comment[] | undefined = node.leadingComments;
 
@@ -47,16 +49,14 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
             }
         }
 
-        return this.obfuscationAllowed
-            ? ObfuscatingGuardResult.Transform
-            : ObfuscatingGuardResult.Ignore;
+        return this.obfuscationAllowed ? ObfuscatingGuardResult.Transform : ObfuscatingGuardResult.Ignore;
     }
 
     /**
      * @param {Comment[]} comments
      * @returns {boolean}
      */
-    private checkComments (comments: ESTree.Comment[]): boolean {
+    private checkComments(comments: ESTree.Comment[]): boolean {
         const commentsLength: number = comments.length;
 
         let obfuscationAllowed: boolean = this.obfuscationAllowed;

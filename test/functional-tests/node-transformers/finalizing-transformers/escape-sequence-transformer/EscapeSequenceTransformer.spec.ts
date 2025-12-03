@@ -19,17 +19,15 @@ describe('EscapeSequenceTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/error-when-non-latin.js');
 
-            testFunc = () => JavaScriptObfuscator.obfuscate(
-                code,
-                {
+            testFunc = () =>
+                JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
-                }
-            );
+                });
         });
 
-        it('should\'t throw an error', () => {
+        it("should't throw an error", () => {
             assert.doesNotThrow(testFunc);
         });
     });
@@ -42,14 +40,10 @@ describe('EscapeSequenceTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: true
-
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: true
+            }).getObfuscatedCode();
         });
 
         it('should replace literal node value with unicode escape sequence', () => {
@@ -66,18 +60,13 @@ describe('EscapeSequenceTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayIndexesType: [
-                        StringArrayIndexesType.HexadecimalNumericString
-                    ],
-                    stringArrayThreshold: 1,
-                    unicodeEscapeSequence: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumericString],
+                stringArrayThreshold: 1,
+                unicodeEscapeSequence: true
+            }).getObfuscatedCode();
         });
 
         it('match #1: should replace literal node value with unicode escape sequence from string array', () => {
@@ -99,14 +88,11 @@ describe('EscapeSequenceTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        reservedStrings: ['foo'],
-                        unicodeEscapeSequence: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    reservedStrings: ['foo'],
+                    unicodeEscapeSequence: true
+                }).getObfuscatedCode();
             });
 
             it('match #1: should ignore reserved strings', () => {
@@ -126,13 +112,10 @@ describe('EscapeSequenceTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-2.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        reservedStrings: ['a']
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    reservedStrings: ['a']
+                }).getObfuscatedCode();
             });
 
             it('match #1: should ignore reserved strings', () => {
@@ -150,14 +133,11 @@ describe('EscapeSequenceTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/force-transform-strings-option.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    forceTransformStrings: ['bar'],
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                forceTransformStrings: ['bar'],
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
         });
 
         it('match #1: should not encode force transform string with unicode escape sequence', () => {
@@ -172,15 +152,15 @@ describe('EscapeSequenceTransformer', function () {
     describe('Variant #6: `stringArrayWrappersCount` option enabled', () => {
         const stringArrayCallRegExp: RegExp = new RegExp(
             'const f *= *b;.*' +
-            'const foo *= *f\\(\'\\\\x30\\\\x78\\\\x30\'\\);.*' +
-            'const bar *= *f\\(\'\\\\x30\\\\x78\\\\x31\'\\);.*' +
-            'const baz *= *f\\(\'\\\\x30\\\\x78\\\\x32\'\\);.*' +
-            'function test\\( *\\) *{' +
+                "const foo *= *f\\('\\\\x30\\\\x78\\\\x30'\\);.*" +
+                "const bar *= *f\\('\\\\x30\\\\x78\\\\x31'\\);.*" +
+                "const baz *= *f\\('\\\\x30\\\\x78\\\\x32'\\);.*" +
+                'function test\\( *\\) *{' +
                 'const g *= *f;' +
-                'const c *= *g\\(\'\\\\x30\\\\x78\\\\x33\'\\);' +
-                'const d *= *g\\(\'\\\\x30\\\\x78\\\\x34\'\\);' +
-                'const e *= *g\\(\'\\\\x30\\\\x78\\\\x35\'\\);' +
-            '}'
+                "const c *= *g\\('\\\\x30\\\\x78\\\\x33'\\);" +
+                "const d *= *g\\('\\\\x30\\\\x78\\\\x34'\\);" +
+                "const e *= *g\\('\\\\x30\\\\x78\\\\x35'\\);" +
+                '}'
         );
 
         let obfuscatedCode: string;
@@ -188,21 +168,16 @@ describe('EscapeSequenceTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/wrappers-count.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                    stringArray: true,
-                    stringArrayIndexesType: [
-                        StringArrayIndexesType.HexadecimalNumericString
-                    ],
-                    stringArrayThreshold: 1,
-                    stringArrayWrappersChainedCalls: true,
-                    stringArrayWrappersCount: 1,
-                    unicodeEscapeSequence: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                stringArray: true,
+                stringArrayIndexesType: [StringArrayIndexesType.HexadecimalNumericString],
+                stringArrayThreshold: 1,
+                stringArrayWrappersChainedCalls: true,
+                stringArrayWrappersCount: 1,
+                unicodeEscapeSequence: true
+            }).getObfuscatedCode();
         });
 
         it('should encode calls to the string array wrappers', () => {

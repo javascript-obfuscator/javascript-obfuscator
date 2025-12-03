@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -19,7 +19,7 @@ export class HashbangOperatorTransformer extends AbstractCodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -33,7 +33,7 @@ export class HashbangOperatorTransformer extends AbstractCodeTransformer {
      * @param {CodeTransformationStage} codeTransformationStage
      * @returns {string}
      */
-    public transformCode (code: string, codeTransformationStage: CodeTransformationStage): string {
+    public transformCode(code: string, codeTransformationStage: CodeTransformationStage): string {
         switch (codeTransformationStage) {
             case CodeTransformationStage.PreparingTransformers:
                 return this.removeAndSaveHashbangOperatorLine(code);
@@ -50,7 +50,7 @@ export class HashbangOperatorTransformer extends AbstractCodeTransformer {
      * @param {string} code
      * @returns {string}
      */
-    private removeAndSaveHashbangOperatorLine (code: string): string {
+    private removeAndSaveHashbangOperatorLine(code: string): string {
         return code
             .replace(/^#!.*$(\r?\n)*/m, (substring: string) => {
                 if (substring) {
@@ -66,7 +66,7 @@ export class HashbangOperatorTransformer extends AbstractCodeTransformer {
      * @param {string} code
      * @returns {string}
      */
-    private appendSavedHashbangOperatorLine (code: string): string {
+    private appendSavedHashbangOperatorLine(code: string): string {
         return `${this.hashbangOperatorLine ?? ''}${code}`;
     }
 }

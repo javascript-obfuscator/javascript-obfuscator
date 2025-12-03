@@ -19,19 +19,13 @@ import { SetUtils } from '../../../utils/SetUtils';
 
 export const utilsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // array utils
-    bind<IArrayUtils>(ServiceIdentifiers.IArrayUtils)
-        .to(ArrayUtils)
-        .inSingletonScope();
+    bind<IArrayUtils>(ServiceIdentifiers.IArrayUtils).to(ArrayUtils).inSingletonScope();
 
     // random generator
-    bind<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator)
-        .to(RandomGenerator)
-        .inSingletonScope();
+    bind<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator).to(RandomGenerator).inSingletonScope();
 
     // crypt utils
-    bind<ICryptUtils>(ServiceIdentifiers.ICryptUtils)
-        .to(CryptUtils)
-        .inSingletonScope();
+    bind<ICryptUtils>(ServiceIdentifiers.ICryptUtils).to(CryptUtils).inSingletonScope();
 
     // crypt utils for string array
     bind<ICryptUtilsStringArray>(ServiceIdentifiers.ICryptUtilsStringArray)
@@ -44,11 +38,8 @@ export const utilsModule: interfaces.ContainerModule = new ContainerModule((bind
         .inSingletonScope();
 
     // levelled topological sorter
-    bind<ILevelledTopologicalSorter>(ServiceIdentifiers.ILevelledTopologicalSorter)
-        .to(LevelledTopologicalSorter);
+    bind<ILevelledTopologicalSorter>(ServiceIdentifiers.ILevelledTopologicalSorter).to(LevelledTopologicalSorter);
 
     // set utils
-    bind<ISetUtils>(ServiceIdentifiers.ISetUtils)
-        .to(SetUtils)
-        .inSingletonScope();
+    bind<ISetUtils>(ServiceIdentifiers.ISetUtils).to(SetUtils).inSingletonScope();
 });

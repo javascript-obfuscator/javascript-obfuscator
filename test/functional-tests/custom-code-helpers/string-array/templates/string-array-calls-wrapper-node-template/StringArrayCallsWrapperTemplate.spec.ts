@@ -34,17 +34,16 @@ describe('StringArrayCallsWrapperTemplate', () => {
     const atobFunctionName: string = 'atob';
     const rc4FunctionName: string = 'rc4';
 
-    let cryptUtilsSwappedAlphabet: ICryptUtilsStringArray,
-        randomGenerator: IRandomGenerator;
+    let cryptUtilsSwappedAlphabet: ICryptUtilsStringArray, randomGenerator: IRandomGenerator;
 
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        cryptUtilsSwappedAlphabet = inversifyContainerFacade
-            .get<ICryptUtilsStringArray>(ServiceIdentifiers.ICryptUtilsStringArray);
-        randomGenerator = inversifyContainerFacade
-            .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
+        cryptUtilsSwappedAlphabet = inversifyContainerFacade.get<ICryptUtilsStringArray>(
+            ServiceIdentifiers.ICryptUtilsStringArray
+        );
+        randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });
 
     describe('Variant #1: `base64` encoding', () => {
@@ -69,16 +68,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                     const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                         atobFunctionName
                     });
-                    const atobDecodeTemplate: string = format(
-                        StringArrayBase64DecodeTemplate(randomGenerator),
-                        {
-                            atobPolyfill,
-                            atobFunctionName,
-                            selfDefendingCode: '',
-                            stringArrayCacheName,
-                            stringArrayCallsWrapperName
-                        }
-                    );
+                    const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                        atobPolyfill,
+                        atobFunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName
+                    });
                     const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                         decodeCodeHelperTemplate: atobDecodeTemplate,
                         indexShiftAmount,
@@ -119,16 +115,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                     const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                         atobFunctionName
                     });
-                    const atobDecodeTemplate: string = format(
-                        StringArrayBase64DecodeTemplate(randomGenerator),
-                        {
-                            atobPolyfill,
-                            atobFunctionName,
-                            selfDefendingCode: '',
-                            stringArrayCacheName,
-                            stringArrayCallsWrapperName
-                        }
-                    );
+                    const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                        atobPolyfill,
+                        atobFunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName
+                    });
                     const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                         decodeCodeHelperTemplate: atobDecodeTemplate,
                         indexShiftAmount,
@@ -167,16 +160,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                     const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                         atobFunctionName
                     });
-                    const atobDecodeTemplate: string = format(
-                        StringArrayBase64DecodeTemplate(randomGenerator),
-                        {
-                            atobPolyfill,
-                            atobFunctionName,
-                            selfDefendingCode: '',
-                            stringArrayCacheName,
-                            stringArrayCallsWrapperName
-                        }
-                    );
+                    const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                        atobPolyfill,
+                        atobFunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName
+                    });
                     const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                         decodeCodeHelperTemplate: atobDecodeTemplate,
                         indexShiftAmount,
@@ -216,7 +206,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
                     let decodedValue: string;
 
-                    before(async() => {
+                    before(async () => {
                         const stringArrayTemplate = format(StringArrayTemplate(), {
                             stringArrayName,
                             stringArrayFunctionName,
@@ -225,16 +215,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                             atobFunctionName
                         });
-                        const atobDecodeTemplate: string = format(
-                            StringArrayBase64DecodeTemplate(randomGenerator),
-                            {
-                                atobPolyfill,
-                                atobFunctionName,
-                                selfDefendingCode: '',
-                                stringArrayCacheName,
-                                stringArrayCallsWrapperName
-                            }
-                        );
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
                         const stringArrayCallsWrapperTemplate: string = await minimizeCode(
                             format(StringArrayCallsWrapperTemplate(), {
                                 decodeCodeHelperTemplate: atobDecodeTemplate,
@@ -268,7 +255,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
                     let decodedValue: string;
 
-                    before(async() => {
+                    before(async () => {
                         const stringArrayTemplate = format(StringArrayTemplate(), {
                             stringArrayName,
                             stringArrayFunctionName,
@@ -277,16 +264,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                             atobFunctionName
                         });
-                        const atobDecodeTemplate: string = format(
-                            StringArrayBase64DecodeTemplate(randomGenerator),
-                            {
-                                atobPolyfill,
-                                atobFunctionName,
-                                selfDefendingCode: '',
-                                stringArrayCacheName,
-                                stringArrayCallsWrapperName
-                            }
-                        );
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
                         const stringArrayCallsWrapperTemplate: string = await minimizeCode(
                             format(StringArrayCallsWrapperTemplate(), {
                                 decodeCodeHelperTemplate: atobDecodeTemplate,
@@ -331,16 +315,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                             atobFunctionName
                         });
-                        const atobDecodeTemplate: string = format(
-                            StringArrayBase64DecodeTemplate(randomGenerator),
-                            {
-                                atobPolyfill,
-                                atobFunctionName,
-                                selfDefendingCode: '',
-                                stringArrayCacheName,
-                                stringArrayCallsWrapperName
-                            }
-                        );
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
                         const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                             decodeCodeHelperTemplate: atobDecodeTemplate,
                             indexShiftAmount,
@@ -381,16 +362,13 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
                             atobFunctionName
                         });
-                        const atobDecodeTemplate: string = format(
-                            StringArrayBase64DecodeTemplate(randomGenerator),
-                            {
-                                atobPolyfill,
-                                atobFunctionName,
-                                selfDefendingCode: '',
-                                stringArrayCacheName,
-                                stringArrayCallsWrapperName
-                            }
-                        );
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
                         const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                             decodeCodeHelperTemplate: atobDecodeTemplate,
                             indexShiftAmount,
@@ -443,17 +421,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         atobFunctionName,
                         rc4FunctionName
                     });
-                    const rc4decodeCodeHelperTemplate: string = format(
-                        StringArrayRC4DecodeTemplate(randomGenerator),
-                        {
-                            atobPolyfill,
-                            rc4Polyfill,
-                            rc4FunctionName,
-                            selfDefendingCode: '',
-                            stringArrayCacheName,
-                            stringArrayCallsWrapperName
-                        }
-                    );
+                    const rc4decodeCodeHelperTemplate: string = format(StringArrayRC4DecodeTemplate(randomGenerator), {
+                        atobPolyfill,
+                        rc4Polyfill,
+                        rc4FunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName
+                    });
                     const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                         decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
                         indexShiftAmount,
@@ -499,17 +474,14 @@ describe('StringArrayCallsWrapperTemplate', () => {
                         atobFunctionName,
                         rc4FunctionName
                     });
-                    const rc4decodeCodeHelperTemplate: string = format(
-                        StringArrayRC4DecodeTemplate(randomGenerator),
-                        {
-                            atobPolyfill,
-                            rc4Polyfill,
-                            rc4FunctionName,
-                            selfDefendingCode: '',
-                            stringArrayCacheName,
-                            stringArrayCallsWrapperName
-                        }
-                    );
+                    const rc4decodeCodeHelperTemplate: string = format(StringArrayRC4DecodeTemplate(randomGenerator), {
+                        atobPolyfill,
+                        rc4Polyfill,
+                        rc4FunctionName,
+                        selfDefendingCode: '',
+                        stringArrayCacheName,
+                        stringArrayCallsWrapperName
+                    });
                     const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                         decodeCodeHelperTemplate: rc4decodeCodeHelperTemplate,
                         indexShiftAmount,
@@ -547,7 +519,7 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
                     let decodedValue: string;
 
-                    before(async() => {
+                    before(async () => {
                         const stringArrayTemplate = format(StringArrayTemplate(), {
                             stringArrayName,
                             stringArrayFunctionName,
@@ -661,18 +633,16 @@ describe('StringArrayCallsWrapperTemplate', () => {
     describe('Prevailing kind of variables', () => {
         describe('`var` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperVariableRegExp: RegExp = /var (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
+                stringArrayCallsWrapperVariableRegExp: RegExp =
+                    /var (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -688,18 +658,16 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         describe('`const` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperVariableRegExp: RegExp = /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
+                stringArrayCallsWrapperVariableRegExp: RegExp =
+                    /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -715,18 +683,16 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
         describe('`let` kind', () => {
             let obfuscatedCode: string,
-                stringArrayCallsWrapperVariableRegExp: RegExp = /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
+                stringArrayCallsWrapperVariableRegExp: RegExp =
+                    /let (_0x(\w){4,6}) *= *(_0x(\w){4,6})\[(_0x(\w){4,6})];/;
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });

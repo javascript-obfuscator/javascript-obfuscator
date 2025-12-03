@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -47,9 +47,9 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
      * @param {IOptions} options
      * @param {ICryptUtils} cryptUtils
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -71,7 +71,7 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} callsControllerFunctionName
      * @param {string} domainLockFunctionName
      */
-    public initialize (callsControllerFunctionName: string, domainLockFunctionName: string): void {
+    public initialize(callsControllerFunctionName: string, domainLockFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.domainLockFunctionName = domainLockFunctionName;
     }
@@ -80,14 +80,14 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         const domainsString: string = this.options.domainLock.join(';');
         const domainsLockRedirectUrl: string = this.options.domainLockRedirectUrl;
         const [hiddenDomainsString, domainsStringDiff]: string[] = this.cryptUtils.hideString(
@@ -98,9 +98,10 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
             domainsLockRedirectUrl,
             domainsLockRedirectUrl.length * 3
         );
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? this.getGlobalVariableTemplate()
-            : GlobalVariableNoEvalTemplate();
+        const globalVariableTemplate: string =
+            this.options.target !== ObfuscationTarget.BrowserNoEval
+                ? this.getGlobalVariableTemplate()
+                : GlobalVariableNoEvalTemplate();
 
         return this.customCodeHelperFormatter.formatTemplate(DomainLockTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,

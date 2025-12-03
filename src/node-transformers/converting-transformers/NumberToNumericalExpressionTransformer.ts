@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -38,9 +38,9 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
-            numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer,
+        numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -53,7 +53,7 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.numbersToExpressions) {
             return null;
         }
@@ -78,7 +78,7 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (typeof literalNode.value !== 'number') {
             return literalNode;
         }
@@ -89,8 +89,8 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
 
         const baseNumber: number = literalNode.value;
         const [integerPart, decimalPart] = NumberUtils.extractIntegerAndDecimalParts(baseNumber);
-        const integerNumberNumericalExpressionData: TNumberNumericalExpressionData = this.numberNumericalExpressionAnalyzer
-            .analyze(
+        const integerNumberNumericalExpressionData: TNumberNumericalExpressionData =
+            this.numberNumericalExpressionAnalyzer.analyze(
                 integerPart,
                 NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
             );
@@ -114,14 +114,9 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
      * @param {boolean} isPositiveNumber
      * @returns {Expression}
      */
-    private getNumberNumericalExpressionLiteralNode (number: number, isPositiveNumber: boolean): ESTree.Expression {
+    private getNumberNumericalExpressionLiteralNode(number: number, isPositiveNumber: boolean): ESTree.Expression {
         const numberLiteralNode: ESTree.Literal = NodeFactory.literalNode(number);
 
-        return isPositiveNumber
-            ? numberLiteralNode
-            : NodeFactory.unaryExpressionNode(
-                '-',
-                numberLiteralNode
-            );
+        return isPositiveNumber ? numberLiteralNode : NodeFactory.unaryExpressionNode('-', numberLiteralNode);
     }
 }

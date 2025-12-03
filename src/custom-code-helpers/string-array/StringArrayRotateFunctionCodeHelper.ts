@@ -1,5 +1,5 @@
 import type { Expression } from 'estree';
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -44,9 +44,9 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -66,7 +66,7 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      * @param {number} comparisonValue
      * @param {Expression} comparisonExpressionNode
      */
-    public initialize (
+    public initialize(
         stringArrayFunctionName: string,
         comparisonValue: number,
         comparisonExpressionNode: Expression
@@ -80,23 +80,20 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         const comparisonExpressionCode: string = NodeUtils.convertStructureToCode([this.comparisonExpressionNode]);
 
-        return this.customCodeHelperFormatter.formatTemplate(
-            StringArrayRotateFunctionTemplate(),
-            {
-                comparisonExpressionCode,
-                comparisonValue: this.comparisonValue,
-                stringArrayFunctionName: this.stringArrayFunctionName
-            }
-        );
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayRotateFunctionTemplate(), {
+            comparisonExpressionCode,
+            comparisonValue: this.comparisonValue,
+            stringArrayFunctionName: this.stringArrayFunctionName
+        });
     }
 }

@@ -5,5 +5,5 @@ export const StringArrayWrappersType: Readonly<{
     Function: 'function';
 }> = Utils.makeEnum({
     Variable: 'variable',
-    Function: 'function',
+    Function: 'function'
 });

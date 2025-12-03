@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as eslintScope from 'eslint-scope';
@@ -39,7 +39,7 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {IOptions} options
      * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
@@ -55,7 +55,7 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.RenameIdentifiers:
                 return {
@@ -76,15 +76,12 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
             programNode,
             parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
-                const {
-                    reference,
-                    variableLexicalScopeNode
-                } = data;
+                const { reference, variableLexicalScopeNode } = data;
 
                 this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
             }
@@ -97,9 +94,9 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private transformScopeThroughIdentifiers (
+    private transformScopeThroughIdentifiers(
         reference: eslintScope.Reference,
-        lexicalScopeNode: TNodeWithLexicalScope,
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         if (reference.resolved) {
             return;
@@ -115,10 +112,7 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private storeIdentifierName (
-        identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope
-    ): void {
+    private storeIdentifierName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
         this.identifierReplacer.storeLocalName(identifierNode, lexicalScopeNode);
     }
 
@@ -127,13 +121,12 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Variable} reference
      */
-    private replaceIdentifierName (
+    private replaceIdentifierName(
         identifierNode: ESTree.Identifier,
         lexicalScopeNode: TNodeWithLexicalScope,
         reference: eslintScope.Reference
     ): void {
-        const newIdentifier: ESTree.Identifier = this.identifierReplacer
-            .replace(identifierNode, lexicalScopeNode);
+        const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(identifierNode, lexicalScopeNode);
 
         // rename of identifier
         reference.identifier.name = newIdentifier.name;

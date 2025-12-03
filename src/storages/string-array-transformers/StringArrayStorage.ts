@@ -18,7 +18,10 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData> implements IStringArrayStorage {
+export class StringArrayStorage
+    extends MapStorage<`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData>
+    implements IStringArrayStorage
+{
     /**
      * @type {number}
      */
@@ -106,9 +109,9 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
      * @param {IOptions} options
      * @param {ICryptUtilsStringArray} cryptUtilsStringArray
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
@@ -120,68 +123,69 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
         this.arrayUtils = arrayUtils;
         this.cryptUtilsStringArray = cryptUtilsStringArray;
 
-        this.rc4Keys = this.randomGenerator.getRandomGenerator()
-            .n(
-                () => this.randomGenerator.getRandomGenerator().string({
+        this.rc4Keys = this.randomGenerator.getRandomGenerator().n(
+            () =>
+                this.randomGenerator.getRandomGenerator().string({
                     length: StringArrayStorage.rc4KeyLength
                 }),
-                StringArrayStorage.rc4KeysCount
-            );
+            StringArrayStorage.rc4KeysCount
+        );
     }
 
     @postConstruct()
-    public override initialize (): void {
+    public override initialize(): void {
         super.initialize();
 
         this.indexShiftAmount = this.options.stringArrayIndexShift
             ? this.randomGenerator.getRandomInteger(
-                StringArrayStorage.minimumIndexShiftAmount,
-                StringArrayStorage.maximumIndexShiftAmount
-            )
+                  StringArrayStorage.minimumIndexShiftAmount,
+                  StringArrayStorage.maximumIndexShiftAmount
+              )
             : 0;
         this.rotationAmount = this.options.stringArrayRotate
             ? this.randomGenerator.getRandomInteger(
-                StringArrayStorage.minimumRotationAmount,
-                StringArrayStorage.maximumRotationAmount
-            )
+                  StringArrayStorage.minimumRotationAmount,
+                  StringArrayStorage.maximumRotationAmount
+              )
             : 0;
     }
 
     /**
      * @param {string} value
      */
-    public override get (value: string): IStringArrayStorageItemData {
+    public override get(value: string): IStringArrayStorageItemData {
         return this.getOrSetIfDoesNotExist(value);
     }
 
     /**
      * @returns {number}
      */
-    public getIndexShiftAmount (): number {
+    public getIndexShiftAmount(): number {
         return this.indexShiftAmount;
     }
 
     /**
      * @returns {number}
      */
-    public getRotationAmount (): number {
+    public getRotationAmount(): number {
         return this.rotationAmount;
     }
 
     /**
      * @returns {string}
      */
-    public getStorageName (): string {
+    public getStorageName(): string {
         return this.getStorageId();
     }
 
     /**
      * @returns {string}
      */
-    public override getStorageId (): string {
+    public override getStorageId(): string {
         if (!this.stringArrayStorageName) {
-            this.stringArrayStorageName = this.identifierNamesGenerator
-                .generateForGlobalScope(StringArrayStorage.stringArrayFunctionNameLength);
+            this.stringArrayStorageName = this.identifierNamesGenerator.generateForGlobalScope(
+                StringArrayStorage.stringArrayFunctionNameLength
+            );
         }
 
         return this.stringArrayStorageName;
@@ -191,56 +195,48 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
      * @param {TStringArrayEncoding | null} stringArrayEncoding
      * @returns {IStringArrayCallsWrapperNames}
      */
-    public getStorageCallsWrapperName (stringArrayEncoding: TStringArrayEncoding | null): string {
-        const storageCallsWrapperName: string | null = this.stringArrayStorageCallsWrapperNamesMap
-            .get(stringArrayEncoding) ?? null;
+    public getStorageCallsWrapperName(stringArrayEncoding: TStringArrayEncoding | null): string {
+        const storageCallsWrapperName: string | null =
+            this.stringArrayStorageCallsWrapperNamesMap.get(stringArrayEncoding) ?? null;
 
         if (storageCallsWrapperName) {
             return storageCallsWrapperName;
         }
 
-        const newStorageCallsWrapperName: string = this.identifierNamesGenerator
-            .generateForGlobalScope(StringArrayStorage.stringArrayFunctionNameLength);
-
-        this.stringArrayStorageCallsWrapperNamesMap.set(
-            stringArrayEncoding,
-            newStorageCallsWrapperName
+        const newStorageCallsWrapperName: string = this.identifierNamesGenerator.generateForGlobalScope(
+            StringArrayStorage.stringArrayFunctionNameLength
         );
+
+        this.stringArrayStorageCallsWrapperNamesMap.set(stringArrayEncoding, newStorageCallsWrapperName);
 
         return newStorageCallsWrapperName;
     }
 
-    public rotateStorage (): void {
+    public rotateStorage(): void {
         if (!this.getLength()) {
             return;
         }
 
-        this.storage = new Map(
-            this.arrayUtils.rotate(
-                Array.from(this.storage.entries()),
-                this.rotationAmount
-            )
-        );
+        this.storage = new Map(this.arrayUtils.rotate(Array.from(this.storage.entries()), this.rotationAmount));
     }
 
-    public shuffleStorage (): void {
+    public shuffleStorage(): void {
         this.storage = new Map(
             this.arrayUtils
                 .shuffle(Array.from(this.storage.entries()))
                 .map<[`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]>(
-                    (
-                        [value, stringArrayStorageItemData],
-                        index: number
-                    ) => {
+                    ([value, stringArrayStorageItemData], index: number) => {
                         stringArrayStorageItemData.index = index;
 
                         return [value, stringArrayStorageItemData];
                     }
                 )
-                .sort((
-                    [, stringArrayStorageItemDataA]: [string, IStringArrayStorageItemData],
-                    [, stringArrayStorageItemDataB]: [string, IStringArrayStorageItemData]
-                ) => stringArrayStorageItemDataA.index - stringArrayStorageItemDataB.index)
+                .sort(
+                    (
+                        [, stringArrayStorageItemDataA]: [string, IStringArrayStorageItemData],
+                        [, stringArrayStorageItemDataB]: [string, IStringArrayStorageItemData]
+                    ) => stringArrayStorageItemDataA.index - stringArrayStorageItemDataB.index
+                )
         );
     }
 
@@ -248,7 +244,7 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
      * @param {string} value
      * @returns {IStringArrayStorageItemData}
      */
-    private getOrSetIfDoesNotExist (value: string): IStringArrayStorageItemData {
+    private getOrSetIfDoesNotExist(value: string): IStringArrayStorageItemData {
         const { encodedValue, encoding, decodeKey }: IEncodedValue = this.getEncodedValue(value);
 
         const cacheKey: `${string}-${TStringArrayEncoding}` = `${encodedValue}-${encoding}`;
@@ -275,11 +271,9 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
      * @param {string} value
      * @returns {IEncodedValue}
      */
-    private getEncodedValue (value: string): IEncodedValue {
+    private getEncodedValue(value: string): IEncodedValue {
         const encoding: TStringArrayEncoding | null = this.options.stringArrayEncoding.length
-            ? this.randomGenerator
-                .getRandomGenerator()
-                .pickone(this.options.stringArrayEncoding)
+            ? this.randomGenerator.getRandomGenerator().pickone(this.options.stringArrayEncoding)
             : null;
 
         if (!encoding) {
@@ -303,12 +297,15 @@ export class StringArrayStorage extends MapStorage <`${string}-${TStringArrayEnc
              */
             case StringArrayEncoding.Rc4: {
                 const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                const encodedValue: string = this.cryptUtilsStringArray.btoa(this.cryptUtilsStringArray.rc4(value, decodeKey));
+                const encodedValue: string = this.cryptUtilsStringArray.btoa(
+                    this.cryptUtilsStringArray.rc4(value, decodeKey)
+                );
 
                 const encodedValueSources: string[] = this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? [];
                 let encodedValueSourcesLength: number = encodedValueSources.length;
 
-                const shouldAddValueToSourcesCache: boolean = !encodedValueSourcesLength || !encodedValueSources.includes(value);
+                const shouldAddValueToSourcesCache: boolean =
+                    !encodedValueSourcesLength || !encodedValueSources.includes(value);
 
                 if (shouldAddValueToSourcesCache) {
                     encodedValueSources.push(value);

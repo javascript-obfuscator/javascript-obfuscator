@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -22,7 +22,7 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -33,7 +33,7 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -60,14 +60,15 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (propertyNode: ESTree.Property, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(propertyNode: ESTree.Property, parentNode: ESTree.Node): ESTree.Node {
         if (!NodeGuards.isObjectPatternNode(parentNode) || !propertyNode.shorthand) {
             return propertyNode;
         }
 
         if (!this.options.renameGlobals) {
             const lexicalScope: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(propertyNode);
-            const shouldNotTransformGlobalPropertyNode: boolean = !!lexicalScope && NodeGuards.isProgramNode(lexicalScope);
+            const shouldNotTransformGlobalPropertyNode: boolean =
+                !!lexicalScope && NodeGuards.isProgramNode(lexicalScope);
 
             if (shouldNotTransformGlobalPropertyNode) {
                 return propertyNode;

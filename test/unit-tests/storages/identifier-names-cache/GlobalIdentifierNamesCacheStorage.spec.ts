@@ -23,11 +23,11 @@ const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IGl
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
     inversifyContainerFacade.load('', '', {});
 
-    const storage: IGlobalIdentifierNamesCacheStorage = new GlobalIdentifierNamesCacheStorage (
+    const storage: IGlobalIdentifierNamesCacheStorage = new GlobalIdentifierNamesCacheStorage(
         inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator),
         {
             ...DEFAULT_PRESET,
-            ...options as IOptions
+            ...(options as IOptions)
         }
     );
 

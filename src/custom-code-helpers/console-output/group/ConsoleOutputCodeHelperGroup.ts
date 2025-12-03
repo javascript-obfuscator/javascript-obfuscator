@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -29,7 +29,7 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
-    protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+    protected customCodeHelpers!: Map<CustomCodeHelper, ICustomCodeHelper>;
 
     /**
      * @type {TCustomCodeHelperFactory}
@@ -42,10 +42,10 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -58,7 +58,7 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnPreparingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnPreparingStage(nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.options.disableConsoleOutput) {
             return;
         }
@@ -72,8 +72,8 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
             ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
             : nodeWithStatements;
 
-        const consoleOutputDisableLexicalScopeNode: TNodeWithLexicalScope | null = NodeLexicalScopeUtils
-            .getLexicalScope(consoleOutputDisableHostNode) ?? null;
+        const consoleOutputDisableLexicalScopeNode: TNodeWithLexicalScope | null =
+            NodeLexicalScopeUtils.getLexicalScope(consoleOutputDisableHostNode) ?? null;
 
         const consoleOutputDisableFunctionName: string = consoleOutputDisableLexicalScopeNode
             ? this.identifierNamesGenerator.generate(consoleOutputDisableLexicalScopeNode)
@@ -103,15 +103,16 @@ export class ConsoleOutputCodeHelperGroup extends AbstractCustomCodeHelperGroup 
         );
     }
 
-    public initialize (): void {
-        this.customCodeHelpers = new Map <CustomCodeHelper, ICustomCodeHelper>();
+    public initialize(): void {
+        this.customCodeHelpers = new Map<CustomCodeHelper, ICustomCodeHelper>();
 
         if (!this.options.disableConsoleOutput) {
             return;
         }
 
-        const consoleOutputDisableExpressionCodeHelper: ICustomCodeHelper<TInitialData<ConsoleOutputDisableCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.ConsoleOutputDisable);
+        const consoleOutputDisableExpressionCodeHelper: ICustomCodeHelper<
+            TInitialData<ConsoleOutputDisableCodeHelper>
+        > = this.customCodeHelperFactory(CustomCodeHelper.ConsoleOutputDisable);
         const callsControllerFunctionCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.CallsControllerFunction);
 

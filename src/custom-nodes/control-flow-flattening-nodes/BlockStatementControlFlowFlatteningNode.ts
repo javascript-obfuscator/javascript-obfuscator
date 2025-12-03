@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -45,19 +45,14 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
@@ -65,7 +60,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
      * @param {number[]} shuffledKeys
      * @param {number[]} originalKeysIndexesInShuffledArray
      */
-    public initialize (
+    public initialize(
         blockStatementBody: ESTree.Statement[],
         shuffledKeys: number[],
         originalKeysIndexesInShuffledArray: number[]
@@ -78,7 +73,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const controllerIdentifierName: string = this.randomGenerator.getRandomString(6);
         const indexIdentifierName: string = this.randomGenerator.getRandomString(6);
 
@@ -94,9 +89,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                                 ),
                                 NodeFactory.identifierNode('split')
                             ),
-                            [
-                                NodeFactory.literalNode(StringSeparator.VerticalLine)
-                            ]
+                            [NodeFactory.literalNode(StringSeparator.VerticalLine)]
                         )
                     )
                 ],
@@ -117,10 +110,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                     NodeFactory.switchStatementNode(
                         NodeFactory.memberExpressionNode(
                             NodeFactory.identifierNode(controllerIdentifierName),
-                            NodeFactory.updateExpressionNode(
-                                '++',
-                                NodeFactory.identifierNode(indexIdentifierName)
-                            ),
+                            NodeFactory.updateExpressionNode('++', NodeFactory.identifierNode(indexIdentifierName)),
                             true
                         ),
                         this.shuffledKeys.map((key: number, index: number) => {
@@ -135,10 +125,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                                 consequent.push(NodeFactory.continueStatement());
                             }
 
-                            return NodeFactory.switchCaseNode(
-                                NodeFactory.literalNode(String(index)),
-                                consequent
-                            );
+                            return NodeFactory.switchCaseNode(NodeFactory.literalNode(String(index)), consequent);
                         })
                     ),
                     NodeFactory.breakStatement()

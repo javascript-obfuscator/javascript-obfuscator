@@ -7,14 +7,11 @@ export interface ICustomCodeHelperFormatter {
      * @param {TMapping} mapping
      * @returns {string}
      */
-    formatTemplate <TMapping extends TDictionary> (
-        template: string,
-        mapping: TMapping
-    ): string;
+    formatTemplate<TMapping extends TDictionary>(template: string, mapping: TMapping): string;
 
     /**
      * @param {TStatement[]} structure
      * @returns {TStatement[]}
      */
-    formatStructure (structure: TStatement[]): TStatement[];
+    formatStructure(structure: TStatement[]): TStatement[];
 }

@@ -8,7 +8,7 @@ import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { initializable } from '../decorators/Initializable';
 
 @injectable()
-export abstract class ArrayStorage <V> implements IArrayStorage <V> {
+export abstract class ArrayStorage<V> implements IArrayStorage<V> {
     /**
      * @type {V[]}
      */
@@ -40,7 +40,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -49,7 +49,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
     }
 
     @postConstruct()
-    public initialize (): void {
+    public initialize(): void {
         this.storage = [];
         this.storageId = this.randomGenerator.getRandomString(6);
     }
@@ -58,7 +58,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {number} key
      * @returns {V | undefined}
      */
-    public delete (key: number): V | undefined {
+    public delete(key: number): V | undefined {
         const deletedElement: V | undefined = this.storage.splice(key, 1)[0] ?? undefined;
 
         if (deletedElement) {
@@ -72,7 +72,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {number} key
      * @returns {V | undefined}
      */
-    public get (key: number): V | undefined {
+    public get(key: number): V | undefined {
         return this.storage[key];
     }
 
@@ -80,7 +80,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {number} key
      * @returns {V}
      */
-    public getOrThrow (key: number): V {
+    public getOrThrow(key: number): V {
         const value: V | undefined = this.get(key);
 
         if (!value) {
@@ -94,7 +94,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {V} value
      * @returns {number}
      */
-    public getKeyOf (value: V): number | null {
+    public getKeyOf(value: V): number | null {
         const key: number = this.storage.indexOf(value);
 
         return key >= 0 ? key : null;
@@ -103,21 +103,21 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
     /**
      * @returns {number}
      */
-    public getLength (): number {
+    public getLength(): number {
         return this.storageLength;
     }
 
     /**
      * @returns {V[]}
      */
-    public getStorage (): V[] {
+    public getStorage(): V[] {
         return this.storage;
     }
 
     /**
      * @returns {string}
      */
-    public getStorageId (): string {
+    public getStorageId(): string {
         return this.storageId;
     }
 
@@ -125,7 +125,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {this} storage
      * @param {boolean} mergeId
      */
-    public mergeWith (storage: this, mergeId: boolean = false): void {
+    public mergeWith(storage: this, mergeId: boolean = false): void {
         this.storage = [...this.storage, ...storage.getStorage()];
 
         if (mergeId) {
@@ -137,7 +137,7 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
      * @param {number} key
      * @param {V} value
      */
-    public set (key: number, value: V): void {
+    public set(key: number, value: V): void {
         if (key === this.storageLength) {
             this.storage.push(value);
         } else {

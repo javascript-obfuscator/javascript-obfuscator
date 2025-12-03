@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import type { Expression } from 'estree';
@@ -46,19 +46,14 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
@@ -67,11 +62,11 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
      * @param {Expression} leftValue
      * @param {Expression} rightValue
      */
-    public initialize (
+    public initialize(
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
         leftValue: Expression,
-        rightValue: Expression,
+        rightValue: Expression
     ): void {
         this.controlFlowStorageName = controlFlowStorageName;
         this.controlFlowStorageKey = controlFlowStorageKey;
@@ -82,17 +77,14 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.callExpressionNode(
                 NodeFactory.memberExpressionNode(
                     NodeFactory.identifierNode(this.controlFlowStorageName),
                     NodeFactory.identifierNode(this.controlFlowStorageKey)
                 ),
-                [
-                    this.leftValue,
-                    this.rightValue
-                ]
+                [this.leftValue, this.rightValue]
             )
         );
 

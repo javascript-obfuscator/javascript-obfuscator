@@ -26,13 +26,14 @@ class JavaScriptObfuscatorFacade {
      * @param {TInputOptions} inputOptions
      * @returns {IObfuscationResult}
      */
-    public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
+    public static obfuscate(sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load(sourceCode, '', inputOptions);
 
-        const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
-            .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
+        const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade.get<IJavaScriptObfuscator>(
+            ServiceIdentifiers.IJavaScriptObfuscator
+        );
         const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
 
         inversifyContainerFacade.unload();
@@ -45,7 +46,7 @@ class JavaScriptObfuscatorFacade {
      * @param {TInputOptions} inputOptions
      * @returns {TObfuscationResultsObject<TSourceCodesObject>}
      */
-    public static obfuscateMultiple <TSourceCodesObject extends TDictionary<string>> (
+    public static obfuscateMultiple<TSourceCodesObject extends TDictionary<string>>(
         sourceCodesObject: TSourceCodesObject,
         inputOptions: TInputOptions = {}
     ): TObfuscationResultsObject<TSourceCodesObject> {
@@ -53,39 +54,37 @@ class JavaScriptObfuscatorFacade {
             throw new Error('Source codes object should be a plain object');
         }
 
-        return Object
-            .keys(sourceCodesObject)
-            .reduce(
-                (
-                    acc: TObfuscationResultsObject<TSourceCodesObject>,
-                    sourceCodeIdentifier: keyof TSourceCodesObject,
-                    index: number
-                ) => {
-                    const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
-                        inputOptions.identifiersPrefix,
-                        index
-                    );
+        return Object.keys(sourceCodesObject).reduce(
+            (
+                acc: TObfuscationResultsObject<TSourceCodesObject>,
+                sourceCodeIdentifier: keyof TSourceCodesObject,
+                index: number
+            ) => {
+                const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
+                    inputOptions.identifiersPrefix,
+                    index
+                );
 
-                    const sourceCode: string = sourceCodesObject[sourceCodeIdentifier];
-                    const sourceCodeOptions: TInputOptions = {
-                        ...inputOptions,
-                        identifiersPrefix
-                    };
+                const sourceCode: string = sourceCodesObject[sourceCodeIdentifier];
+                const sourceCodeOptions: TInputOptions = {
+                    ...inputOptions,
+                    identifiersPrefix
+                };
 
-                    return {
-                        ...acc,
-                        [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, sourceCodeOptions)
-                    };
-                },
-                <TObfuscationResultsObject<TSourceCodesObject>>{}
-            );
+                return {
+                    ...acc,
+                    [sourceCodeIdentifier]: JavaScriptObfuscatorFacade.obfuscate(sourceCode, sourceCodeOptions)
+                };
+            },
+            <TObfuscationResultsObject<TSourceCodesObject>>{}
+        );
     }
 
     /**
      * @param {TOptionsPreset} optionsPreset
      * @returns {TInputOptions}
      */
-    public static getOptionsByPreset (optionsPreset: TOptionsPreset): TInputOptions {
+    public static getOptionsByPreset(optionsPreset: TOptionsPreset): TInputOptions {
         return Options.getOptionsByPreset(optionsPreset);
     }
 }

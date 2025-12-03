@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -8,7 +8,6 @@ import { ICustomCodeHelperFormatter } from '../../interfaces/custom-code-helpers
 import { ICustomCodeHelperObfuscator } from '../../interfaces/custom-code-helpers/ICustomCodeHelperObfuscator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-
 
 import { ConsoleOutputDisableTemplate } from './templates/ConsoleOutputDisableTemplate';
 
@@ -38,9 +37,9 @@ export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -59,7 +58,7 @@ export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} callsControllerFunctionName
      * @param {StaticRange} consoleOutputDisableFunctionName
      */
-    public initialize (callsControllerFunctionName: string, consoleOutputDisableFunctionName: string): void {
+    public initialize(callsControllerFunctionName: string, consoleOutputDisableFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.consoleOutputDisableFunctionName = consoleOutputDisableFunctionName;
     }
@@ -68,18 +67,18 @@ export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             consoleLogDisableFunctionName: this.consoleOutputDisableFunctionName,
-            globalVariableTemplate: this.getGlobalVariableTemplate(),
+            globalVariableTemplate: this.getGlobalVariableTemplate()
         });
     }
 }

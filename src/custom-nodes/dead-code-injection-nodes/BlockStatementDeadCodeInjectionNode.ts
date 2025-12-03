@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import type { BinaryOperator, BlockStatement } from 'estree';
@@ -32,29 +32,21 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {BlockStatement} blockStatementNode
      * @param {BlockStatement} deadCodeInjectionRootAstHostNode
      */
-    public initialize (
-        blockStatementNode: BlockStatement,
-        deadCodeInjectionRootAstHostNode: BlockStatement
-    ): void {
+    public initialize(blockStatementNode: BlockStatement, deadCodeInjectionRootAstHostNode: BlockStatement): void {
         this.blockStatementNode = blockStatementNode;
         this.deadCodeInjectionRootAstHostNode = deadCodeInjectionRootAstHostNode;
     }
@@ -64,14 +56,14 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
      *
      * @returns {TStatement[]}
      */
-    public override getNode (): TStatement[] {
+    public override getNode(): TStatement[] {
         return this.getNodeStructure();
     }
 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const random1: boolean = this.randomGenerator.getMathRandom() > 0.5;
         const random2: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
@@ -79,9 +71,10 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
         const leftString: string = this.randomGenerator.getRandomString(5);
         const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(5);
 
-        const [consequent, alternate]: [BlockStatement, BlockStatement] = random1 === random2
-            ? [this.blockStatementNode, this.deadCodeInjectionRootAstHostNode]
-            : [this.deadCodeInjectionRootAstHostNode, this.blockStatementNode];
+        const [consequent, alternate]: [BlockStatement, BlockStatement] =
+            random1 === random2
+                ? [this.blockStatementNode, this.deadCodeInjectionRootAstHostNode]
+                : [this.deadCodeInjectionRootAstHostNode, this.blockStatementNode];
 
         const structure: BlockStatement = NodeFactory.blockStatementNode([
             NodeFactory.ifStatementNode(

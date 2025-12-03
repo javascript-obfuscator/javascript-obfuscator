@@ -4,7 +4,5 @@ import { TStringArrayScopeCallsWrappersDataByEncoding } from '../../../types/nod
 import { IWeakMapStorage } from '../IWeakMapStorage';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IStringArrayScopeCallsWrappersDataStorage extends IWeakMapStorage<
-    TNodeWithLexicalScopeStatements,
-    TStringArrayScopeCallsWrappersDataByEncoding
-> {}
+export interface IStringArrayScopeCallsWrappersDataStorage
+    extends IWeakMapStorage<TNodeWithLexicalScopeStatements, TStringArrayScopeCallsWrappersDataByEncoding> {}

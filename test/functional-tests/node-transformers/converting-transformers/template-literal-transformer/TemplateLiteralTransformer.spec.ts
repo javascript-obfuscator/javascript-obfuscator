@@ -8,20 +8,17 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('TemplateLiteralTransformer', () => {
     let obfuscatedCode: string;
-    
+
     describe('Variant #1: simple template literal', () => {
         it('should transform es6 template literal to es5', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'abc\\x20' *\+ *foo;$/);
+            assert.match(obfuscatedCode, /^var test *= *'abc\\x20' *\+ *foo;$/);
         });
     });
 
@@ -29,71 +26,64 @@ describe('TemplateLiteralTransformer', () => {
         it('Variant #1: should transform es6 multiline template literal to es5', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'foo\\x0abar';$/);
+            assert.match(obfuscatedCode, /^var test *= *'foo\\x0abar';$/);
         });
 
         it('Variant #2: should transform es6 multiline template literal inside return statement', () => {
-            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-return-statement-1.js');
+            const code: string = readFileAsString(
+                __dirname + '/fixtures/multiline-template-literal-return-statement-1.js'
+            );
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /{ *return *'foo\\x0abar'; *}$/);
+            assert.match(obfuscatedCode, /{ *return *'foo\\x0abar'; *}$/);
         });
 
         it('Variant #3: should transform es6 multiline template literal inside return statement', () => {
-            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-return-statement-2.js');
+            const code: string = readFileAsString(
+                __dirname + '/fixtures/multiline-template-literal-return-statement-2.js'
+            );
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /case *!!\[] *: *return *'foo\\x0abar'; *} *}$/);
+            assert.match(obfuscatedCode, /case *!!\[] *: *return *'foo\\x0abar'; *} *}$/);
         });
 
         it('Variant #4: should transform es6 multiline template literal inside binary expression inside return statement', () => {
-            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-1.js');
+            const code: string = readFileAsString(
+                __dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-1.js'
+            );
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /{ *return *'foo\\x0abar' *\+ *0x1; *}$/);
+            assert.match(obfuscatedCode, /{ *return *'foo\\x0abar' *\+ *0x1; *}$/);
         });
 
         it('Variant #5: should transform es6 multiline template literal inside binary expression inside return statement', () => {
-            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-2.js');
+            const code: string = readFileAsString(
+                __dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-2.js'
+            );
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /case *!!\[] *: *return *'foo\\x0abar' *\+ *0x1; *} *}$/);
+            assert.match(obfuscatedCode, /case *!!\[] *: *return *'foo\\x0abar' *\+ *0x1; *} *}$/);
         });
     });
 
@@ -101,15 +91,12 @@ describe('TemplateLiteralTransformer', () => {
         it('should transform es6 template literal to es5 and add empty literal node before expression node', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/expression-only.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'' *\+ *foo;$/);
+            assert.match(obfuscatedCode, /^var test *= *'' *\+ *foo;$/);
         });
     });
 
@@ -117,15 +104,12 @@ describe('TemplateLiteralTransformer', () => {
         it('should transform es6 template literal to es5', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/literal-inside-expression.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var test *= *'abc';$/);
+            assert.match(obfuscatedCode, /^var test *= *'abc';$/);
         });
     });
 
@@ -133,37 +117,25 @@ describe('TemplateLiteralTransformer', () => {
         it('should transform es6 template literal to es5', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/multiple-expressions.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(
-                obfuscatedCode,
-                /^var test *= *0x1 *\+ *0x1 *\+ *'\\x20abc\\x20' *\+ *\(0x1 *\+ *0x1\);$/
-            );
+            assert.match(obfuscatedCode, /^var test *= *0x1 *\+ *0x1 *\+ *'\\x20abc\\x20' *\+ *\(0x1 *\+ *0x1\);$/);
         });
     });
 
     describe('Variant #6: tagged template literal', () => {
-        it('shouldn\'t transform es6 tagged template literal to es5', () => {
+        it("shouldn't transform es6 tagged template literal to es5", () => {
             const code: string = readFileAsString(__dirname + '/fixtures/tagged-template-literal.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(
-                obfuscatedCode,
-                /tag`foo *\${0x1 *\+ *0x1} *bar`;/
-            );
+            assert.match(obfuscatedCode, /tag`foo *\${0x1 *\+ *0x1} *bar`;/);
         });
     });
 
@@ -171,24 +143,22 @@ describe('TemplateLiteralTransformer', () => {
         it('should parentize transformed template literal node', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/template-literal-parentize.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    unicodeEscapeSequence: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                unicodeEscapeSequence: false
+            }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^\[]\['map']\(\(\) *=> *'foo'\);$/);
+            assert.match(obfuscatedCode, /^\[]\['map']\(\(\) *=> *'foo'\);$/);
         });
     });
 
     describe('Variant #8: parentize node', () => {
-        const match: string = `` +
+        const match: string =
+            `` +
             `var _0x[a-f0-9]{4,6} *= *{};` +
             `_0x[a-f0-9]{4,6}\\['foo'] *= *'bar';` +
             `var foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
-        ``;
+            ``;
         const regExp: RegExp = new RegExp(match);
 
         let obfuscatedCode: string;
@@ -196,17 +166,14 @@ describe('TemplateLiteralTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/parentize-node.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    transformObjectKeys: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                transformObjectKeys: true
+            }).getObfuscatedCode();
         });
 
         it('should correctly obfuscate code without maximum call stack error', () => {
-            assert.match(obfuscatedCode,  regExp);
+            assert.match(obfuscatedCode, regExp);
         });
     });
 });

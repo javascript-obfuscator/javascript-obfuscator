@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import type { BinaryOperator } from 'estree';
@@ -27,38 +27,30 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {BinaryOperator} operator
      */
-    public initialize (operator: BinaryOperator): void {
+    public initialize(operator: BinaryOperator): void {
         this.operator = operator;
     }
 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.functionExpressionNode(
-                [
-                    NodeFactory.identifierNode('x'),
-                    NodeFactory.identifierNode('y')
-                ],
+                [NodeFactory.identifierNode('x'), NodeFactory.identifierNode('y')],
                 NodeFactory.blockStatementNode([
                     NodeFactory.returnStatementNode(
                         NodeFactory.binaryExpressionNode(

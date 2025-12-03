@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -40,9 +40,9 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -57,24 +57,26 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isProhibitedStatementNode (node: ESTree.Node): boolean {
-        const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(node)
-            || NodeGuards.isContinueStatementNode(node);
-        const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(node)
-            && (node.kind === 'const' || node.kind === 'let');
+    private static isProhibitedStatementNode(node: ESTree.Node): boolean {
+        const isBreakOrContinueStatement: boolean =
+            NodeGuards.isBreakStatementNode(node) || NodeGuards.isContinueStatementNode(node);
+        const isVariableDeclarationWithLetOrConstKind: boolean =
+            NodeGuards.isVariableDeclarationNode(node) && (node.kind === 'const' || node.kind === 'let');
         const isClassDeclaration: boolean = NodeGuards.isClassDeclarationNode(node);
 
-        return NodeGuards.isFunctionDeclarationNode(node)
-            || isBreakOrContinueStatement
-            || isVariableDeclarationWithLetOrConstKind
-            || isClassDeclaration;
+        return (
+            NodeGuards.isFunctionDeclarationNode(node) ||
+            isBreakOrContinueStatement ||
+            isVariableDeclarationWithLetOrConstKind ||
+            isClassDeclaration
+        );
     }
 
     /**
      * @param {BlockStatement} blockStatementNode
      * @returns {boolean}
      */
-    private static canTransformBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+    private static canTransformBlockStatementNode(blockStatementNode: ESTree.BlockStatement): boolean {
         let canTransform: boolean = true;
 
         estraverse.traverse(blockStatementNode, {
@@ -100,7 +102,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.controlFlowFlattening) {
             return null;
         }
@@ -125,7 +127,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
             this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
             !BlockStatementControlFlowTransformer.canTransformBlockStatementNode(blockStatementNode)
@@ -136,9 +138,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
         const originalKeys: number[] = this.arrayUtils.createWithRange(blockStatementBody.length);
         const shuffledKeys: number[] = this.arrayUtils.shuffle(originalKeys);
-        const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
-        const blockStatementControlFlowFlatteningCustomNode: ICustomNode<TInitialData<BlockStatementControlFlowFlatteningNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode);
+        const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) =>
+            shuffledKeys.indexOf(key)
+        );
+        const blockStatementControlFlowFlatteningCustomNode: ICustomNode<
+            TInitialData<BlockStatementControlFlowFlatteningNode>
+        > = this.controlFlowCustomNodeFactory(ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode);
 
         blockStatementControlFlowFlatteningCustomNode.initialize(
             blockStatementBody,

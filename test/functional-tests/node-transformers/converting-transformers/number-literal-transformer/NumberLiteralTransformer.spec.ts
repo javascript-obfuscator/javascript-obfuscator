@@ -15,14 +15,11 @@ describe('NumberLiteralTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/number-value.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('should transform literal node', () => {
@@ -38,14 +35,11 @@ describe('NumberLiteralTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/bigint-value.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('should transform literal node', () => {

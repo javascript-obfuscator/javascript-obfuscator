@@ -21,9 +21,7 @@ describe('Logger', () => {
         const loggingMessage: string = '[javascript-obfuscator] foo';
         const expectedConsoleLogCallResult: boolean = true;
 
-        let consoleLogSpy: sinon.SinonSpy<any, void>,
-            consoleLogCallResult: boolean,
-            loggingMessageResult: string;
+        let consoleLogSpy: sinon.SinonSpy<any, void>, consoleLogCallResult: boolean, loggingMessageResult: string;
 
         before(() => {
             consoleLogSpy = sinon.spy(console, 'log');
@@ -106,7 +104,7 @@ describe('Logger', () => {
                 consoleLogCallResult = consoleLogSpy.called;
             });
 
-            it('shouldn\'t call `console.log`', () => {
+            it("shouldn't call `console.log`", () => {
                 assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
             });
 
@@ -177,7 +175,7 @@ describe('Logger', () => {
                 consoleLogCallResult = consoleLogSpy.called;
             });
 
-            it('shouldn\'t call `console.log`', () => {
+            it("shouldn't call `console.log`", () => {
                 assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
             });
 
@@ -248,7 +246,7 @@ describe('Logger', () => {
                 consoleLogCallResult = consoleLogSpy.called;
             });
 
-            it('shouldn\'t call `console.log`', () => {
+            it("shouldn't call `console.log`", () => {
                 assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
             });
 

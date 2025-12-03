@@ -40,7 +40,7 @@ const validateDictionary = (value: unknown | TIdentifierNamesCacheDictionary): b
  * @param {ValidationOptions} validationOptions
  * @returns {(options: IOptions, propertyName: keyof IOptions) => void}
  */
-export function IsIdentifierNamesCache (
+export function IsIdentifierNamesCache(
     validationOptions?: ValidationOptions
 ): (options: IOptions, propertyName: keyof IOptions) => void {
     return (optionsObject: IOptions, propertyName: keyof IOptions): void => {
@@ -56,7 +56,7 @@ export function IsIdentifierNamesCache (
                  * @param {ValidationArguments} validationArguments
                  * @returns {boolean}
                  */
-                validate (value: unknown, validationArguments: ValidationArguments): boolean {
+                validate(value: unknown, validationArguments: ValidationArguments): boolean {
                     const defaultValue: IOptions[keyof IOptions] | undefined = DEFAULT_PRESET[propertyName];
                     const isDefaultValue: boolean = equal(value, defaultValue);
 
@@ -78,7 +78,7 @@ export function IsIdentifierNamesCache (
                 /**
                  * @returns {string}
                  */
-                defaultMessage (): string {
+                defaultMessage(): string {
                     return 'Passed value must be an identifier names cache object or `null` value';
                 }
             }

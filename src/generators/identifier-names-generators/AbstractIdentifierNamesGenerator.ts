@@ -35,7 +35,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -48,7 +48,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {number} nameLength
      * @returns {string}
      */
-    public generate (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+    public generate(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
         return NodeGuards.isProgramNode(lexicalScopeNode)
             ? this.generateForGlobalScope()
             : this.generateForLexicalScope(lexicalScopeNode);
@@ -57,7 +57,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     /**
      * @param {string} name
      */
-    public preserveName (name: string): void {
+    public preserveName(name: string): void {
         this.preservedNamesSet.add(name);
     }
 
@@ -65,7 +65,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {string} name
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public preserveNameForLexicalScope (name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
+    public preserveNameForLexicalScope(name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
         const preservedNamesForLexicalScopeSet: Set<string> =
             this.lexicalScopesPreservedNamesMap.get(lexicalScopeNode) ?? new Set();
 
@@ -78,9 +78,8 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {string} name
      * @returns {boolean}
      */
-    public isValidIdentifierName (name: string): boolean {
-        return !this.isReservedName(name)
-            && !this.preservedNamesSet.has(name);
+    public isValidIdentifierName(name: string): boolean {
+        return !this.isReservedName(name) && !this.preservedNamesSet.has(name);
     }
 
     /**
@@ -88,7 +87,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
      * @returns {boolean}
      */
-    public isValidIdentifierNameInLexicalScopes (name: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean {
+    public isValidIdentifierNameInLexicalScopes(name: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean {
         if (!this.isValidIdentifierName(name)) {
             return false;
         }
@@ -113,38 +112,37 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedName (name: string): boolean {
+    private isReservedName(name: string): boolean {
         return this.options.reservedNames.length
-            ? this.options.reservedNames.some((reservedName: string) =>
-                new RegExp(reservedName, 'g').exec(name) !== null
-            )
+            ? this.options.reservedNames.some(
+                  (reservedName: string) => new RegExp(reservedName, 'g').exec(name) !== null
+              )
             : false;
-
     }
 
     /**
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateForGlobalScope (nameLength?: number): string;
+    public abstract generateForGlobalScope(nameLength?: number): string;
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
+    public abstract generateForLexicalScope(lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
 
     /**
      * @param {string} label
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateForLabel (label: string, nameLength?: number): string;
+    public abstract generateForLabel(label: string, nameLength?: number): string;
 
     /**
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateNext (nameLength?: number): string;
+    public abstract generateNext(nameLength?: number): string;
 }

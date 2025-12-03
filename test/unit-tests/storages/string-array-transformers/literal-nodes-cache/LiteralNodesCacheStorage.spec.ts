@@ -28,7 +28,9 @@ const getStorageInstance = (options: TInputOptions = {}): ILiteralNodesCacheStor
         ...options
     });
 
-    const storage: ILiteralNodesCacheStorage = inversifyContainerFacade.get(ServiceIdentifiers.ILiteralNodesCacheStorage);
+    const storage: ILiteralNodesCacheStorage = inversifyContainerFacade.get(
+        ServiceIdentifiers.ILiteralNodesCacheStorage
+    );
 
     storage.initialize();
 
@@ -39,21 +41,18 @@ describe('LiteralNodesCacheStorage', () => {
     describe('buildKey', () => {
         const expectedCacheKey: string = 'foo-true';
 
-       let cacheKey: string;
+        let cacheKey: string;
 
         before(() => {
             const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance();
 
-            cacheKey = literalNodesCacheStorage.buildKey(
-                'foo',
-                {
-                    index: 1,
-                    value: '_0x123abc',
-                    encoding: StringArrayEncoding.Rc4,
-                    encodedValue: 'encoded_value',
-                    decodeKey: 'key'
-                }
-            );
+            cacheKey = literalNodesCacheStorage.buildKey('foo', {
+                index: 1,
+                value: '_0x123abc',
+                encoding: StringArrayEncoding.Rc4,
+                encodedValue: 'encoded_value',
+                decodeKey: 'key'
+            });
         });
 
         it('should build a key for the storage', () => {
@@ -62,7 +61,7 @@ describe('LiteralNodesCacheStorage', () => {
     });
 
     describe('shouldUseCachedValue', () => {
-        const literalNode: ESTree.Literal =  NodeFactory.literalNode('foo');
+        const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
         const key: string = 'key';
 
         describe('Encoding is not `rc4` and `stringArrayWrappersCount` option is disabled', () => {
@@ -77,16 +76,13 @@ describe('LiteralNodesCacheStorage', () => {
 
                 literalNodesCacheStorage.set(key, literalNode);
 
-                result = literalNodesCacheStorage.shouldUseCachedValue(
-                    key,
-                    {
-                        index: 1,
-                        value: '_0x123abc',
-                        encoding: StringArrayEncoding.Base64,
-                        encodedValue: 'encoded_value',
-                        decodeKey: 'key'
-                    },
-                );
+                result = literalNodesCacheStorage.shouldUseCachedValue(key, {
+                    index: 1,
+                    value: '_0x123abc',
+                    encoding: StringArrayEncoding.Base64,
+                    encodedValue: 'encoded_value',
+                    decodeKey: 'key'
+                });
             });
 
             it('should check if can use cached value', () => {
@@ -95,7 +91,7 @@ describe('LiteralNodesCacheStorage', () => {
         });
 
         describe('Encoding is `rc4` and `stringArrayWrappersCount` option is disabled', () => {
-            const expectedResult: boolean = false
+            const expectedResult: boolean = false;
 
             let result: boolean;
 
@@ -106,16 +102,13 @@ describe('LiteralNodesCacheStorage', () => {
 
                 literalNodesCacheStorage.set(key, literalNode);
 
-                result = literalNodesCacheStorage.shouldUseCachedValue(
-                    key,
-                    {
-                        index: 1,
-                        value: '_0x123abc',
-                        encoding: StringArrayEncoding.Rc4,
-                        encodedValue: 'encoded_value',
-                        decodeKey: 'key'
-                    },
-                );
+                result = literalNodesCacheStorage.shouldUseCachedValue(key, {
+                    index: 1,
+                    value: '_0x123abc',
+                    encoding: StringArrayEncoding.Rc4,
+                    encodedValue: 'encoded_value',
+                    decodeKey: 'key'
+                });
             });
 
             it('should check if can use cached value', () => {
@@ -137,16 +130,13 @@ describe('LiteralNodesCacheStorage', () => {
 
                 literalNodesCacheStorage.set(key, literalNode);
 
-                result = literalNodesCacheStorage.shouldUseCachedValue(
-                    key,
-                    {
-                        index: 1,
-                        value: '_0x123abc',
-                        encoding: StringArrayEncoding.Base64,
-                        encodedValue: 'encoded_value',
-                        decodeKey: 'key'
-                    },
-                );
+                result = literalNodesCacheStorage.shouldUseCachedValue(key, {
+                    index: 1,
+                    value: '_0x123abc',
+                    encoding: StringArrayEncoding.Base64,
+                    encodedValue: 'encoded_value',
+                    decodeKey: 'key'
+                });
             });
 
             it('should check if can use cached value', () => {

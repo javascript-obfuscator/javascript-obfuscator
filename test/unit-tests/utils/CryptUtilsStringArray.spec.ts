@@ -18,8 +18,9 @@ describe('CryptUtilsStringArray', () => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        cryptUtilsStringArray = inversifyContainerFacade
-            .get<ICryptUtilsStringArray>(ServiceIdentifiers.ICryptUtilsStringArray);
+        cryptUtilsStringArray = inversifyContainerFacade.get<ICryptUtilsStringArray>(
+            ServiceIdentifiers.ICryptUtilsStringArray
+        );
     });
 
     describe('btoa', () => {
@@ -56,8 +57,7 @@ describe('CryptUtilsStringArray', () => {
         const string: string = 'test';
         const key: string = 'key';
 
-        let encodedString: string,
-            decodedString: string;
+        let encodedString: string, decodedString: string;
 
         before(() => {
             encodedString = cryptUtilsStringArray.rc4(string, key);

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -37,9 +37,9 @@ export class SelfDefendingCodeHelper extends AbstractCustomCodeHelper {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -58,7 +58,7 @@ export class SelfDefendingCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} callsControllerFunctionName
      * @param {string} selfDefendingFunctionName
      */
-    public initialize (callsControllerFunctionName: string, selfDefendingFunctionName: string): void {
+    public initialize(callsControllerFunctionName: string, selfDefendingFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.selfDefendingFunctionName = selfDefendingFunctionName;
     }
@@ -67,14 +67,14 @@ export class SelfDefendingCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate(), {
             callControllerFunctionName: this.callsControllerFunctionName,
             selfDefendingFunctionName: this.selfDefendingFunctionName

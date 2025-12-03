@@ -22,14 +22,11 @@ describe('CallExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
@@ -65,14 +62,11 @@ describe('CallExpressionControlFlowReplacer', function () {
                     equalsValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            controlFlowFlattening: true,
-                            controlFlowFlatteningThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }).getObfuscatedCode();
 
                     firstMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     secondMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp2);
@@ -104,26 +98,21 @@ describe('CallExpressionControlFlowReplacer', function () {
         });
 
         describe('Variant #3 - call expression callee is member expression node', () => {
-            const regExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['sum'\\]\\(0x1, *0x2\\);`
-            );
+            const regExp: RegExp = new RegExp(`var ${variableMatch} *= *${variableMatch}\\['sum'\\]\\(0x1, *0x2\\);`);
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-3.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t replace call expression node with call to control flow storage node', () => {
+            it("shouldn't replace call expression node with call to control flow storage node", () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
@@ -132,25 +121,24 @@ describe('CallExpressionControlFlowReplacer', function () {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
                 `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
             );
-            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(
+                `` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
                     `return *${variableMatch}\\(\.\.\.${variableMatch}\\);` +
-                `\\}` +
-            ``);
+                    `\\}` +
+                    ``
+            );
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/rest-as-start-call-argument.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
@@ -166,25 +154,24 @@ describe('CallExpressionControlFlowReplacer', function () {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
                 `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}, *${variableMatch}\\);`
             );
-            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(
+                `` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
                     `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
-                `\\}` +
-            ``);
+                    `\\}` +
+                    ``
+            );
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/rest-as-middle-call-argument.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
@@ -200,25 +187,24 @@ describe('CallExpressionControlFlowReplacer', function () {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
                 `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *${variableMatch}, *\\.\\.\\.${variableMatch}\\);`
             );
-            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
-                   `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
-                `\\}` +
-            ``);
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(
+                `` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *\.\.\.${variableMatch}\\) *\\{` +
+                    `return *${variableMatch}\\(${variableMatch}, *\.\.\.${variableMatch}\\);` +
+                    `\\}` +
+                    ``
+            );
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/rest-as-last-call-argument.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
@@ -232,36 +218,35 @@ describe('CallExpressionControlFlowReplacer', function () {
 
         describe('Variant #7 - keep optional chaining operator', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-              `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *0x1, *0x2\\);`
+                `${variableMatch}\\['\\w{5}']\\(${variableMatch}, *0x1, *0x2\\);`
             );
-            const controlFlowStorageNodeRegExp: RegExp = new RegExp(`` +
-                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *${variableMatch}\\) *\\{` +
+            const controlFlowStorageNodeRegExp: RegExp = new RegExp(
+                `` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}, *${variableMatch}\\) *\\{` +
                     `return *${variableMatch}\\?\\.\\(${variableMatch}, *${variableMatch}\\);` +
-                `\\}` +
-              ``);
+                    `\\}` +
+                    ``
+            );
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/optional-chaining-call.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
-              assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
+                assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
             });
 
             it('should wrap call expression into chain expression', () => {
-              assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
+                assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
             });
         });
-      });
+    });
 });

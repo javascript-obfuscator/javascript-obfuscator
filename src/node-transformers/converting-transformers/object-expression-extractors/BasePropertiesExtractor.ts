@@ -19,15 +19,12 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Property} propertyNode
      * @returns {string | null}
      */
-    private static getPropertyNodeKeyName (propertyNode: ESTree.Property): string | null {
+    private static getPropertyNodeKeyName(propertyNode: ESTree.Property): string | null {
         const propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier = propertyNode.key;
 
         if (
-            NodeGuards.isLiteralNode(propertyKeyNode)
-            && (
-                typeof propertyKeyNode.value === 'string'
-                || typeof propertyKeyNode.value === 'number'
-            )
+            NodeGuards.isLiteralNode(propertyKeyNode) &&
+            (typeof propertyKeyNode.value === 'string' || typeof propertyKeyNode.value === 'number')
         ) {
             return propertyKeyNode.value.toString();
         }
@@ -43,7 +40,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Property} node
      * @returns {boolean}
      */
-    private static isProhibitedPropertyNode (node: ESTree.Property): boolean {
+    private static isProhibitedPropertyNode(node: ESTree.Property): boolean {
         return node.kind !== 'init';
     }
 
@@ -51,21 +48,22 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Node} node
      * @returns {propertyValueNode is Pattern}
      */
-    private static isProhibitedPattern (node: ESTree.Node): node is ESTree.Pattern {
-        return !node
-            || NodeGuards.isObjectPatternNode(node)
-            || NodeGuards.isArrayPatternNode(node)
-            || NodeGuards.isAssignmentPatternNode(node)
-            || NodeGuards.isRestElementNode(node);
+    private static isProhibitedPattern(node: ESTree.Node): node is ESTree.Pattern {
+        return (
+            !node ||
+            NodeGuards.isObjectPatternNode(node) ||
+            NodeGuards.isArrayPatternNode(node) ||
+            NodeGuards.isAssignmentPatternNode(node) ||
+            NodeGuards.isRestElementNode(node)
+        );
     }
 
     /**
      * @param {Property} property
      * @returns {boolean}
      */
-    private static shouldCreateLiteralNode (property: ESTree.Property): boolean {
-        return !property.computed
-            || (property.computed && !!property.key && NodeGuards.isLiteralNode(property.key));
+    private static shouldCreateLiteralNode(property: ESTree.Property): boolean {
+        return !property.computed || (property.computed && !!property.key && NodeGuards.isLiteralNode(property.key));
     }
 
     /**
@@ -84,17 +82,13 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Statement} hostStatement
      * @returns {IObjectExpressionExtractorResult}
      */
-    public extract (
+    public extract(
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): IObjectExpressionExtractorResult {
         const hostNode: ESTree.Node | undefined = objectExpressionNode.parentNode;
 
-        if (
-            hostNode
-            && NodeGuards.isVariableDeclaratorNode(hostNode)
-            && NodeGuards.isIdentifierNode(hostNode.id)
-        ) {
+        if (hostNode && NodeGuards.isVariableDeclaratorNode(hostNode) && NodeGuards.isIdentifierNode(hostNode.id)) {
             return this.transformObjectExpressionNode(objectExpressionNode, hostStatement, hostNode.id);
         }
 
@@ -111,18 +105,14 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Expression} memberExpressionHostNode
      * @returns {IObjectExpressionExtractorResult}
      */
-    private transformObjectExpressionNode (
+    private transformObjectExpressionNode(
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement,
         memberExpressionHostNode: ESTree.Expression
     ): IObjectExpressionExtractorResult {
         const properties: (ESTree.Property | ESTree.SpreadElement)[] = objectExpressionNode.properties;
-        const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
-            .extractPropertiesToExpressionStatements(
-                properties,
-                hostStatement,
-                memberExpressionHostNode
-            );
+        const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] =
+            this.extractPropertiesToExpressionStatements(properties, hostStatement, memberExpressionHostNode);
 
         const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
 
@@ -147,7 +137,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {Expression} memberExpressionHostNode
      * @returns {[ExpressionStatement[], number[]]}
      */
-    private extractPropertiesToExpressionStatements (
+    private extractPropertiesToExpressionStatements(
         properties: (ESTree.Property | ESTree.SpreadElement)[],
         hostStatement: ESTree.Statement,
         memberExpressionHostNode: ESTree.Expression
@@ -158,7 +148,7 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
 
         // have to iterate in the reversed order to fast check spread elements and break iteration on them
         for (let i: number = propertiesLength - 1; i >= 0; i--) {
-            const property: (ESTree.Property | ESTree.SpreadElement) = properties[i];
+            const property: ESTree.Property | ESTree.SpreadElement = properties[i];
 
             // spread element
             if (NodeGuards.isSpreadElementNode(property)) {
@@ -192,8 +182,11 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
             const memberExpressionProperty: ESTree.Expression = shouldCreateLiteralNode
                 ? NodeFactory.literalNode(propertyKeyName)
                 : NodeFactory.identifierNode(propertyKeyName);
-            const memberExpressionNode: ESTree.MemberExpression = NodeFactory
-                .memberExpressionNode(memberExpressionHostNode, memberExpressionProperty, true);
+            const memberExpressionNode: ESTree.MemberExpression = NodeFactory.memberExpressionNode(
+                memberExpressionHostNode,
+                memberExpressionProperty,
+                true
+            );
             const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
                 NodeFactory.assignmentExpressionNode('=', memberExpressionNode, propertyValue)
             );
@@ -219,13 +212,12 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
      * @param {ObjectExpression} objectExpressionNode
      * @param {number[]} removablePropertyIds
      */
-    private filterExtractedObjectExpressionProperties (
+    private filterExtractedObjectExpressionProperties(
         objectExpressionNode: ESTree.ObjectExpression,
         removablePropertyIds: number[]
     ): void {
-        objectExpressionNode.properties = objectExpressionNode.properties
-            .filter((property: ESTree.Property | ESTree.SpreadElement, index: number) =>
-                !removablePropertyIds.includes(index)
-            );
+        objectExpressionNode.properties = objectExpressionNode.properties.filter(
+            (property: ESTree.Property | ESTree.SpreadElement, index: number) => !removablePropertyIds.includes(index)
+        );
     }
 }

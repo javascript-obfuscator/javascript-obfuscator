@@ -8,7 +8,6 @@ import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { ILevelledTopologicalSorter } from '../../../src/interfaces/utils/ILevelledTopologicalSorter';
 
-
 describe('EscapeSequenceEncoder', () => {
     describe('encode', () => {
         let levelledTopologicalSorter: ILevelledTopologicalSorter;
@@ -17,8 +16,9 @@ describe('EscapeSequenceEncoder', () => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', '', {});
-            levelledTopologicalSorter = inversifyContainerFacade
-                .get<ILevelledTopologicalSorter>(ServiceIdentifiers.ILevelledTopologicalSorter);
+            levelledTopologicalSorter = inversifyContainerFacade.get<ILevelledTopologicalSorter>(
+                ServiceIdentifiers.ILevelledTopologicalSorter
+            );
         });
 
         describe('Base sort', () => {
@@ -33,14 +33,7 @@ describe('EscapeSequenceEncoder', () => {
             });
 
             describe('Variant #1: Base linear sort', () => {
-                const expectedSortedItems: string[] = [
-                    'F',
-                    'A',
-                    'C',
-                    'B',
-                    'D',
-                    'E',
-                ];
+                const expectedSortedItems: string[] = ['F', 'A', 'C', 'B', 'D', 'E'];
 
                 let sortedItems: string[];
 
@@ -54,11 +47,7 @@ describe('EscapeSequenceEncoder', () => {
             });
 
             describe('Variant #2: Base sort with grouping', () => {
-                const expectedSortedItems: string[][] = [
-                    ['C', 'D', 'F'],
-                    ['A', 'E'],
-                    ['B']
-                ];
+                const expectedSortedItems: string[][] = [['C', 'D', 'F'], ['A', 'E'], ['B']];
 
                 let sortedItems: string[][];
 
@@ -83,14 +72,7 @@ describe('EscapeSequenceEncoder', () => {
             });
 
             describe('Variant #1: Should sort items without relations', () => {
-                const expectedSortedItems: string[] = [
-                    'A',
-                    'B',
-                    'C',
-                    'D',
-                    'E',
-                    'F'
-                ];
+                const expectedSortedItems: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 
                 let sortedItems: string[];
 
@@ -104,9 +86,7 @@ describe('EscapeSequenceEncoder', () => {
             });
 
             describe('Variant #2: Should sort items without relations with grouping', () => {
-                const expectedSortedItems: string[][] = [
-                    ['A', 'B', 'C', 'D', 'E', 'F']
-                ];
+                const expectedSortedItems: string[][] = [['A', 'B', 'C', 'D', 'E', 'F']];
 
                 let sortedItems: string[][];
 

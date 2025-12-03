@@ -8,18 +8,16 @@ import { SourceMapSourcesMode } from '../../../../src/enums/source-map/SourceMap
 describe('`inputFileName` validation', () => {
     describe('IsInputFileName', () => {
         describe('Variant #1: positive validation', () => {
-            describe('Variant #1: empty string when `sourceMapSourcesMode: \'sources-content\'', () => {
+            describe("Variant #1: empty string when `sourceMapSourcesMode: 'sources-content'", () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             inputFileName: '',
                             sourceMapSourcesMode: SourceMapSourcesMode.SourcesContent
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -27,18 +25,16 @@ describe('`inputFileName` validation', () => {
                 });
             });
 
-            describe('Variant #2: string with input file name when `sourceMapSourcesMode: \'sources\'', () => {
+            describe("Variant #2: string with input file name when `sourceMapSourcesMode: 'sources'", () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             inputFileName: 'some-file.js',
                             sourceMapSourcesMode: SourceMapSourcesMode.Sources
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -48,19 +44,17 @@ describe('`inputFileName` validation', () => {
         });
 
         describe('Variant #2: negative validation', () => {
-            describe('Variant #1: empty string when `sourceMapSourcesMode: \'sources\'', () => {
+            describe("Variant #1: empty string when `sourceMapSourcesMode: 'sources'", () => {
                 const expectedError: string = 'should not be empty';
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             inputFileName: '',
                             sourceMapSourcesMode: SourceMapSourcesMode.Sources
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {

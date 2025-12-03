@@ -20,15 +20,15 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
  * @param optionsPreset
  * @returns {IOptions}
  */
-function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
+function getNormalizedOptions(optionsPreset: TInputOptions): TInputOptions {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
     inversifyContainerFacade.load('', '', optionsPreset);
 
-    const options: IOptions = inversifyContainerFacade
-        .get<IOptions>(ServiceIdentifiers.IOptions);
-    const optionsNormalizer: IOptionsNormalizer = inversifyContainerFacade
-        .get<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer);
+    const options: IOptions = inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
+    const optionsNormalizer: IOptionsNormalizer = inversifyContainerFacade.get<IOptionsNormalizer>(
+        ServiceIdentifiers.IOptionsNormalizer
+    );
 
     return <TInputOptions>optionsNormalizer.normalize(options);
 }
@@ -42,8 +42,7 @@ function getDefaultOptions(): TInputOptions {
 
 describe('OptionsNormalizer', () => {
     describe('normalize', () => {
-        let optionsPreset: TInputOptions,
-            expectedOptionsPreset: TInputOptions;
+        let optionsPreset: TInputOptions, expectedOptionsPreset: TInputOptions;
 
         describe('controlFlowFlatteningThresholdRule', () => {
             before(() => {
@@ -164,17 +163,13 @@ describe('OptionsNormalizer', () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
                         ...getDefaultOptions(),
-                        domainLock: [
-                            'localhost'
-                        ],
+                        domainLock: ['localhost'],
                         domainLockRedirectUrl: 'https://example.com'
                     });
 
                     expectedOptionsPreset = {
                         ...getDefaultOptions(),
-                        domainLock: [
-                            'localhost'
-                        ],
+                        domainLock: ['localhost'],
                         domainLockRedirectUrl: 'https://example.com'
                     };
                 });
@@ -209,18 +204,12 @@ describe('OptionsNormalizer', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
-                    domainLock: [
-                        '//localhost:9000',
-                        'https://google.ru/abc?cde=fgh'
-                    ]
+                    domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh']
                 });
 
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
-                    domainLock: [
-                        'localhost',
-                        'google.ru'
-                    ]
+                    domainLock: ['localhost', 'google.ru']
                 };
             });
 
@@ -230,7 +219,7 @@ describe('OptionsNormalizer', () => {
         });
 
         describe('inputFileNameRule', () => {
-            describe('Variant #1: extension isn\'t set', () => {
+            describe("Variant #1: extension isn't set", () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
                         ...getDefaultOptions(),
@@ -536,7 +525,7 @@ describe('OptionsNormalizer', () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
                         ...getDefaultOptions(),
-                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapBaseUrl: 'http://localhost:9000'
                     });
 
                     expectedOptionsPreset = {
@@ -800,9 +789,7 @@ describe('OptionsNormalizer', () => {
 
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
-                    stringArrayEncoding: [
-                        StringArrayEncoding.None
-                    ]
+                    stringArrayEncoding: [StringArrayEncoding.None]
                 };
             });
 

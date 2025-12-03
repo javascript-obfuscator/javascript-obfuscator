@@ -33,7 +33,7 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -45,12 +45,12 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public abstract getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null;
+    public abstract getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null;
 
     /**
      * @param {Node} node
      * @param {Node} parentNode
      * @returns {Node | VisitorOption}
      */
-    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
+    public abstract transformNode(node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
 }

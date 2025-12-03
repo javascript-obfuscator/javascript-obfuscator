@@ -19,12 +19,9 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('match #1: should remove `disable` conditional comment from the code', () => {
@@ -56,12 +53,9 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/disable-and-enable-comments-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('match #1: should remove `disable` conditional comment from the code', () => {
@@ -94,13 +88,10 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/disable-and-enable-comments-2.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('match #1: should ignore variable declaration after `disable` conditional comment', () => {
@@ -121,12 +112,9 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/disable-from-beginning.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('match #1: should ignore variable declaration after `disable` conditional comment', () => {
@@ -139,7 +127,8 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #5: `disable` and `enable` conditional comments with dead code injection', () => {
-            const obfuscatedFunctionExpressionRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
+            const obfuscatedFunctionExpressionRegExp: RegExp =
+                /var _0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
             const expectedObfuscatedFunctionExpressionLength: number = 3;
 
             const ignoredFunctionExpression1RegExp: RegExp = /var bar *= *function *\(a, *b, *c\) *{/;
@@ -158,21 +147,17 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/dead-code-injection.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 1
+                }).getObfuscatedCode();
 
                 const obfuscatedFunctionExpressionMatches: RegExpMatchArray | null = obfuscatedCode.match(
                     obfuscatedFunctionExpressionRegExp
                 );
-                const obfuscatedFunctionCallMatches: RegExpMatchArray | null = obfuscatedCode.match(
-                    obfuscatedFunctionCallRegExp
-                );
+                const obfuscatedFunctionCallMatches: RegExpMatchArray | null =
+                    obfuscatedCode.match(obfuscatedFunctionCallRegExp);
 
                 obfuscatedFunctionExpressionMatchesLength = obfuscatedFunctionExpressionMatches
                     ? obfuscatedFunctionExpressionMatches.length
@@ -209,7 +194,8 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #6: `disable` and `enable` conditional comments with control flow flattening', () => {
-            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'];/;
+            const obfuscatedVariableDeclarationRegExp: RegExp =
+                /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'];/;
             const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *'bar';/;
 
             let obfuscatedCode: string;
@@ -217,14 +203,11 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('match #1: should obfuscate variable declaration before `disable` conditional comment', () => {

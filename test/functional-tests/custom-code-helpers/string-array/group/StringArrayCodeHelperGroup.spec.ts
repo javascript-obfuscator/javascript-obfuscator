@@ -13,12 +13,10 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('StringArrayCodeHelperGroup', () => {
     const regExp: RegExp = new RegExp(
         'function *\\w *\\(\\w, *\\w\\) *{.*return \\w;}.*' +
-        'function *\\w *\\(\\w, *\\w\\) *{.*return \\w;}.*' +
-        'function *\\w *\\(\\w, *\\w\\) *{.*return \\w;}'
+            'function *\\w *\\(\\w, *\\w\\) *{.*return \\w;}.*' +
+            'function *\\w *\\(\\w, *\\w\\) *{.*return \\w;}'
     );
-    const stringArrayCallsWrapperRegExp: RegExp = new RegExp(
-        `function *(\\w) *\\(\\w, *\\w\\) *{.*return \\w;}.*`
-    );
+    const stringArrayCallsWrapperRegExp: RegExp = new RegExp(`function *(\\w) *\\(\\w, *\\w\\) *{.*return \\w;}.*`);
 
     describe('StringArrayCallsWrapper code helper names', function () {
         this.timeout(10000);
@@ -33,20 +31,13 @@ describe('StringArrayCodeHelperGroup', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
             for (let i = 0; i < samplesCount; i++) {
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayEncoding: [
-                            StringArrayEncoding.None,
-                            StringArrayEncoding.Base64,
-                            StringArrayEncoding.Rc4
-                        ]
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayEncoding: [StringArrayEncoding.None, StringArrayEncoding.Base64, StringArrayEncoding.Rc4]
+                }).getObfuscatedCode();
 
                 const callsWrapperName: string = getRegExpMatch(obfuscatedCode, stringArrayCallsWrapperRegExp);
 

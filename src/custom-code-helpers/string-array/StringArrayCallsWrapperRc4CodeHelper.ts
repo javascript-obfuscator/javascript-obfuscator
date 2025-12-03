@@ -1,4 +1,4 @@
-import { injectable, } from 'inversify';
+import { injectable } from 'inversify';
 
 import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
 import { Rc4Template } from './templates/string-array-calls-wrapper/Rc4Template';
@@ -11,7 +11,7 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
     /**
      * @returns {string}
      */
-    protected override getDecodeStringArrayTemplate (): string {
+    protected override getDecodeStringArrayTemplate(): string {
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
         const rc4FunctionName: string = this.randomGenerator.getRandomString(6);
 
@@ -21,26 +21,20 @@ export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrappe
                 atobFunctionName
             }
         );
-        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(
-            Rc4Template(),
-            {
-                atobFunctionName,
-                rc4FunctionName
-            }
-        );
+        const rc4Polyfill: string = this.customCodeHelperFormatter.formatTemplate(Rc4Template(), {
+            atobFunctionName,
+            rc4FunctionName
+        });
 
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
 
-        return this.customCodeHelperFormatter.formatTemplate(
-            StringArrayRC4DecodeTemplate(this.randomGenerator),
-            {
-                atobPolyfill,
-                rc4FunctionName,
-                rc4Polyfill,
-                selfDefendingCode,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayFunctionName: this.stringArrayFunctionName
-            }
-        );
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayRC4DecodeTemplate(this.randomGenerator), {
+            atobPolyfill,
+            rc4FunctionName,
+            rc4Polyfill,
+            selfDefendingCode,
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+            stringArrayFunctionName: this.stringArrayFunctionName
+        });
     }
 }

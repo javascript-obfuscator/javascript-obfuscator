@@ -3,44 +3,44 @@ export interface IArrayUtils {
      * @param length
      * @return {number[]}
      */
-    createWithRange (length: number): number[];
+    createWithRange(length: number): number[];
 
     /**
      * @param {number} length
      * @param {(index: number) => TValue} valueFunction
      * @returns {TValue[]}
      */
-    fillWithRange <TValue> (length: number, valueFunction: (index: number) => TValue): TValue[];
+    fillWithRange<TValue>(length: number, valueFunction: (index: number) => TValue): TValue[];
 
     /**
      * @param {T[]} array
      * @returns {T | null}
      */
-    findMostOccurringElement <T extends string | number> (array: T[]): T | null;
+    findMostOccurringElement<T extends string | number>(array: T[]): T | null;
 
     /**
      * @param {T[]} array
      * @returns {T | undefined}
      */
-    getLastElement <T> (array: T[]): T | undefined;
+    getLastElement<T>(array: T[]): T | undefined;
 
     /**
      * @param {T[]} array
      * @param {number} index
      * @returns {T | undefined}
      */
-    getLastElementByIndex <T> (array: T[], index: number): T | undefined;
+    getLastElementByIndex<T>(array: T[], index: number): T | undefined;
 
     /**
      * @param array
      * @param times
      * @returns {T[]}
      */
-    rotate <T> (array: T[], times: number): T[];
+    rotate<T>(array: T[], times: number): T[];
 
     /**
      * @param array
      * @return {T[]}
      */
-    shuffle <T> (array: T[]): T[];
+    shuffle<T>(array: T[]): T[];
 }

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -24,18 +24,17 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
     /**
      * @type {ESTree.VariableDeclaration['kind']}
      */
-    private prevailingKindOfVariables: ESTree.VariableDeclaration['kind'] = PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
+    private prevailingKindOfVariables: ESTree.VariableDeclaration['kind'] =
+        PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
 
-    public constructor (
-        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils) {
         this.arrayUtils = arrayUtils;
     }
 
     /**
      * @param {Program} astTree
      */
-    public analyze (astTree: ESTree.Program): void {
+    public analyze(astTree: ESTree.Program): void {
         const variableKinds: ESTree.VariableDeclaration['kind'][] = [];
 
         estraverse.traverse(astTree, {
@@ -48,14 +47,15 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
             }
         });
 
-        this.prevailingKindOfVariables = this.arrayUtils.findMostOccurringElement(variableKinds)
-            ?? PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
+        this.prevailingKindOfVariables =
+            this.arrayUtils.findMostOccurringElement(variableKinds) ??
+            PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
     }
 
     /**
      * @returns {VariableDeclaration["kind"]}
      */
-    public getPrevailingKind (): ESTree.VariableDeclaration['kind'] {
+    public getPrevailingKind(): ESTree.VariableDeclaration['kind'] {
         return this.prevailingKindOfVariables;
     }
 }

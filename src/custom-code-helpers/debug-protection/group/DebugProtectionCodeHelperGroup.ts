@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -32,7 +32,7 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
-    protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+    protected customCodeHelpers!: Map<CustomCodeHelper, ICustomCodeHelper>;
 
     /**
      * @type {TCustomCodeHelperFactory}
@@ -45,10 +45,10 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -61,7 +61,7 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnPreparingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnPreparingStage(nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.options.debugProtection) {
             return;
         }
@@ -75,8 +75,8 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
             ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
             : nodeWithStatements;
 
-        const debugProtectionFunctionCallScopeNode: TNodeWithLexicalScope | null = NodeLexicalScopeUtils
-            .getLexicalScope(debugProtectionFunctionCallHostNode) ?? null;
+        const debugProtectionFunctionCallScopeNode: TNodeWithLexicalScope | null =
+            NodeLexicalScopeUtils.getLexicalScope(debugProtectionFunctionCallHostNode) ?? null;
 
         const debugProtectionFunctionName: string = debugProtectionFunctionCallScopeNode
             ? this.identifierNamesGenerator.generate(debugProtectionFunctionCallScopeNode)
@@ -108,7 +108,7 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
         // debugProtectionFunction helper nodes append
         this.appendCustomNodeIfExist(
             CustomCodeHelper.DebugProtectionFunction,
-                (customCodeHelper: ICustomCodeHelper<TInitialData<DebugProtectionFunctionCodeHelper>>) => {
+            (customCodeHelper: ICustomCodeHelper<TInitialData<DebugProtectionFunctionCodeHelper>>) => {
                 customCodeHelper.initialize(debugProtectionFunctionName);
 
                 NodeAppender.append(nodeWithStatements, customCodeHelper.getNode());
@@ -131,8 +131,8 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
         );
     }
 
-    public initialize (): void {
-        this.customCodeHelpers = new Map <CustomCodeHelper, ICustomCodeHelper>();
+    public initialize(): void {
+        this.customCodeHelpers = new Map<CustomCodeHelper, ICustomCodeHelper>();
 
         if (!this.options.debugProtection) {
             return;
@@ -140,10 +140,12 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
 
         const debugProtectionFunctionCodeHelper: ICustomCodeHelper<TInitialData<DebugProtectionFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.DebugProtectionFunction);
-        const debugProtectionFunctionCallCodeHelper: ICustomCodeHelper<TInitialData<DebugProtectionFunctionCallCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.DebugProtectionFunctionCall);
-        const debugProtectionFunctionIntervalCodeHelper: ICustomCodeHelper<TInitialData<DebugProtectionFunctionIntervalCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.DebugProtectionFunctionInterval);
+        const debugProtectionFunctionCallCodeHelper: ICustomCodeHelper<
+            TInitialData<DebugProtectionFunctionCallCodeHelper>
+        > = this.customCodeHelperFactory(CustomCodeHelper.DebugProtectionFunctionCall);
+        const debugProtectionFunctionIntervalCodeHelper: ICustomCodeHelper<
+            TInitialData<DebugProtectionFunctionIntervalCodeHelper>
+        > = this.customCodeHelperFactory(CustomCodeHelper.DebugProtectionFunctionInterval);
         const callsControllerFunctionCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.CallsControllerFunction);
 
@@ -151,7 +153,10 @@ export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGrou
         this.customCodeHelpers.set(CustomCodeHelper.DebugProtectionFunctionCall, debugProtectionFunctionCallCodeHelper);
 
         if (this.options.debugProtectionInterval) {
-            this.customCodeHelpers.set(CustomCodeHelper.DebugProtectionFunctionInterval, debugProtectionFunctionIntervalCodeHelper);
+            this.customCodeHelpers.set(
+                CustomCodeHelper.DebugProtectionFunctionInterval,
+                debugProtectionFunctionIntervalCodeHelper
+            );
         }
 
         this.customCodeHelpers.set(CustomCodeHelper.CallsControllerFunction, callsControllerFunctionCodeHelper);

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -38,26 +38,24 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {(Expression | SpreadElement)[]} expressionArguments
      * @param {boolean} isChainExpressionParent
      */
-    public initialize (expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[], isChainExpressionParent: boolean): void {
+    public initialize(
+        expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[],
+        isChainExpressionParent: boolean
+    ): void {
         this.expressionArguments = expressionArguments;
         this.isChainExpressionParent = isChainExpressionParent;
     }
@@ -65,7 +63,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const calleeIdentifier: ESTree.Identifier = NodeFactory.identifierNode('callee');
         const params: (ESTree.Identifier | ESTree.RestElement)[] = [];
         const callArguments: (ESTree.Identifier | ESTree.SpreadElement)[] = [];
@@ -92,22 +90,19 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
         }
 
         const callExpression = NodeFactory.callExpressionNode(
-          calleeIdentifier,
-          callArguments,
-          this.isChainExpressionParent
+            calleeIdentifier,
+            callArguments,
+            this.isChainExpressionParent
         );
-        
+
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.functionExpressionNode(
-                [
-                    calleeIdentifier,
-                    ...params
-                ],
+                [calleeIdentifier, ...params],
                 NodeFactory.blockStatementNode([
                     NodeFactory.returnStatementNode(
                         this.isChainExpressionParent
-                          ? NodeFactory.chainExpressionNode(<ESTree.ChainElement>callExpression)
-                          : callExpression
+                            ? NodeFactory.chainExpressionNode(<ESTree.ChainElement>callExpression)
+                            : callExpression
                     )
                 ])
             )

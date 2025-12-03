@@ -14,8 +14,7 @@ import { MangledShuffledIdentifierNamesGenerator } from '../../../../src/generat
 
 describe('MangledShuffledIdentifierNamesGenerator', () => {
     describe('generateNext', () => {
-        let identifierNamesGenerator: IIdentifierNamesGenerator,
-            mangledIdentifierName: string;
+        let identifierNamesGenerator: IIdentifierNamesGenerator, mangledIdentifierName: string;
 
         beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -86,8 +85,7 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
     });
 
     describe('generateForGlobalScope', () => {
-        let identifierNamesGenerator: IIdentifierNamesGenerator,
-            mangledIdentifierName: string;
+        let identifierNamesGenerator: IIdentifierNamesGenerator, mangledIdentifierName: string;
 
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -145,7 +143,7 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
 
         it('should return the same mangled names set for different labels', () => {
             assert.deepEqual(mangledNames1, mangledNames2);
-        })
+        });
     });
 
     describe('isIncrementedMangledName', function () {
@@ -155,10 +153,11 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        const identifierNamesGenerator: IIdentifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
-            ServiceIdentifiers.IIdentifierNamesGenerator,
-            IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
-        );
+        const identifierNamesGenerator: IIdentifierNamesGenerator =
+            inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+            );
 
         let isSuccessComparison: boolean = true;
         let mangledName: string = '';
@@ -169,10 +168,13 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             let resultReversed: boolean;
 
             mangledName = identifierNamesGenerator.generateNext();
-            resultNormal = (<MangledShuffledIdentifierNamesGenerator>identifierNamesGenerator)
-                .isIncrementedMangledName(mangledName, prevMangledName);
-            resultReversed = (<MangledShuffledIdentifierNamesGenerator>identifierNamesGenerator)
-                .isIncrementedMangledName(prevMangledName, mangledName);
+            resultNormal = (<MangledShuffledIdentifierNamesGenerator>identifierNamesGenerator).isIncrementedMangledName(
+                mangledName,
+                prevMangledName
+            );
+            resultReversed = (<MangledShuffledIdentifierNamesGenerator>(
+                identifierNamesGenerator
+            )).isIncrementedMangledName(prevMangledName, mangledName);
 
             if (!resultNormal || resultReversed) {
                 isSuccessComparison = false;
@@ -197,7 +199,7 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', '', {} );
+                inversifyContainerFacade.load('', '', {});
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator

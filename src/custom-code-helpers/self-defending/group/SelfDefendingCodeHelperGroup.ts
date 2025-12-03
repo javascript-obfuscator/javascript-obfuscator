@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -29,7 +29,7 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
     @initializable()
-    protected customCodeHelpers!: Map <CustomCodeHelper, ICustomCodeHelper>;
+    protected customCodeHelpers!: Map<CustomCodeHelper, ICustomCodeHelper>;
 
     /**
      * @type {TCustomCodeHelperFactory}
@@ -42,10 +42,10 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -58,7 +58,7 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendOnPreparingStage (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+    public appendOnPreparingStage(nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.options.selfDefending) {
             return;
         }
@@ -72,8 +72,8 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
             ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
             : nodeWithStatements;
 
-        const selfDefendingFunctionLexicalScopeNode: TNodeWithLexicalScope | null = NodeLexicalScopeUtils
-            .getLexicalScope(selfDefendingFunctionHostNode) ?? null;
+        const selfDefendingFunctionLexicalScopeNode: TNodeWithLexicalScope | null =
+            NodeLexicalScopeUtils.getLexicalScope(selfDefendingFunctionHostNode) ?? null;
 
         const selfDefendingFunctionName: string = selfDefendingFunctionLexicalScopeNode
             ? this.identifierNamesGenerator.generate(selfDefendingFunctionLexicalScopeNode)
@@ -103,8 +103,8 @@ export class SelfDefendingCodeHelperGroup extends AbstractCustomCodeHelperGroup 
         );
     }
 
-    public initialize (): void {
-        this.customCodeHelpers = new Map <CustomCodeHelper, ICustomCodeHelper>();
+    public initialize(): void {
+        this.customCodeHelpers = new Map<CustomCodeHelper, ICustomCodeHelper>();
 
         if (!this.options.selfDefending) {
             return;

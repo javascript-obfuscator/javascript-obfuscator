@@ -10,7 +10,7 @@ export class NodeStatementUtils {
      * @param {Node} node
      * @returns {TNodeWithStatements}
      */
-    public static getParentNodeWithStatements (node: ESTree.Node): TNodeWithStatements {
+    public static getParentNodeWithStatements(node: ESTree.Node): TNodeWithStatements {
         return NodeStatementUtils.getParentNodesWithStatementsRecursive(node, 1)[0];
     }
 
@@ -18,7 +18,7 @@ export class NodeStatementUtils {
      * @param {Node} node
      * @returns {TNodeWithStatements[]}
      */
-    public static getParentNodesWithStatements (node: ESTree.Node): TNodeWithStatements[] {
+    public static getParentNodesWithStatements(node: ESTree.Node): TNodeWithStatements[] {
         return NodeStatementUtils.getParentNodesWithStatementsRecursive(node);
     }
 
@@ -26,7 +26,7 @@ export class NodeStatementUtils {
      * @param {Statement} statement
      * @returns {TStatement | null}
      */
-    public static getNextSiblingStatement (statement: ESTree.Statement): TStatement | null {
+    public static getNextSiblingStatement(statement: ESTree.Statement): TStatement | null {
         return NodeStatementUtils.getSiblingStatementByOffset(statement, 1);
     }
 
@@ -34,7 +34,7 @@ export class NodeStatementUtils {
      * @param {Statement} statement
      * @returns {TStatement | null}
      */
-    public static getPreviousSiblingStatement (statement: ESTree.Statement): TStatement | null {
+    public static getPreviousSiblingStatement(statement: ESTree.Statement): TStatement | null {
         return NodeStatementUtils.getSiblingStatementByOffset(statement, -1);
     }
 
@@ -42,7 +42,7 @@ export class NodeStatementUtils {
      * @param {Node} node
      * @returns {Statement}
      */
-    public static getRootStatementOfNode (node: ESTree.Node): ESTree.Statement {
+    public static getRootStatementOfNode(node: ESTree.Node): ESTree.Statement {
         if (NodeGuards.isProgramNode(node)) {
             throw new Error('Unable to find root statement for `Program` node');
         }
@@ -64,7 +64,7 @@ export class NodeStatementUtils {
      * @param {NodeGuards} node
      * @returns {TNodeWithStatements}
      */
-    public static getScopeOfNode (node: ESTree.Node): TNodeWithStatements {
+    public static getScopeOfNode(node: ESTree.Node): TNodeWithStatements {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
@@ -85,7 +85,7 @@ export class NodeStatementUtils {
      * @param {number} depth
      * @returns {TNodeWithStatements[]}
      */
-    private static getParentNodesWithStatementsRecursive (
+    private static getParentNodesWithStatementsRecursive(
         node: ESTree.Node,
         maxSize: number = Infinity,
         nodesWithStatements: TNodeWithStatements[] = [],
@@ -112,7 +112,12 @@ export class NodeStatementUtils {
         }
 
         if (node !== parentNode) {
-            return NodeStatementUtils.getParentNodesWithStatementsRecursive(parentNode, maxSize, nodesWithStatements, ++depth);
+            return NodeStatementUtils.getParentNodesWithStatementsRecursive(
+                parentNode,
+                maxSize,
+                nodesWithStatements,
+                ++depth
+            );
         }
 
         return nodesWithStatements;
@@ -123,11 +128,9 @@ export class NodeStatementUtils {
      * @param {number} offset
      * @returns {TStatement | null}
      */
-    private static getSiblingStatementByOffset (statement: ESTree.Statement, offset: number): TStatement | null {
+    private static getSiblingStatementByOffset(statement: ESTree.Statement, offset: number): TStatement | null {
         const scopeNode: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(statement);
-        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
-            ? scopeNode.body
-            : scopeNode.consequent;
+        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode) ? scopeNode.body : scopeNode.consequent;
         const indexInScope: number = scopeBody.indexOf(statement);
 
         return scopeBody[indexInScope + offset] || null;

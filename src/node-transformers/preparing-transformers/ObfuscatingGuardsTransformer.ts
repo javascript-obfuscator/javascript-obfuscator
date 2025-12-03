@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -54,7 +54,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__INodeGuard) obfuscatingGuardFactory: TObfuscatingGuardFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -68,7 +68,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
                 return {
@@ -87,9 +87,10 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
-        const obfuscatingGuardResults: ObfuscatingGuardResult[] = this.obfuscatingGuards
-            .map((obfuscatingGuard: IObfuscatingGuard) => obfuscatingGuard.check(node));
+    public transformNode(node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
+        const obfuscatingGuardResults: ObfuscatingGuardResult[] = this.obfuscatingGuards.map(
+            (obfuscatingGuard: IObfuscatingGuard) => obfuscatingGuard.check(node)
+        );
 
         this.setNodeMetadata(node, obfuscatingGuardResults);
 
@@ -100,18 +101,18 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @param {ObfuscatingGuardResult[]} obfuscatingGuardResults
      */
-    private setNodeMetadata (node: ESTree.Node, obfuscatingGuardResults: ObfuscatingGuardResult[]): void {
-        const isTransformNode: boolean = obfuscatingGuardResults
-            .every((obfuscatingGuardResult: ObfuscatingGuardResult) => obfuscatingGuardResult === ObfuscatingGuardResult.Transform);
+    private setNodeMetadata(node: ESTree.Node, obfuscatingGuardResults: ObfuscatingGuardResult[]): void {
+        const isTransformNode: boolean = obfuscatingGuardResults.every(
+            (obfuscatingGuardResult: ObfuscatingGuardResult) =>
+                obfuscatingGuardResult === ObfuscatingGuardResult.Transform
+        );
 
         let isForceTransformNode: boolean = false;
         let isIgnoredNode: boolean = false;
 
         if (!isTransformNode) {
-            isForceTransformNode = obfuscatingGuardResults
-                .includes(ObfuscatingGuardResult.ForceTransform);
-            isIgnoredNode = !isForceTransformNode && obfuscatingGuardResults
-                .includes(ObfuscatingGuardResult.Ignore);
+            isForceTransformNode = obfuscatingGuardResults.includes(ObfuscatingGuardResult.ForceTransform);
+            isIgnoredNode = !isForceTransformNode && obfuscatingGuardResults.includes(ObfuscatingGuardResult.Ignore);
         }
 
         NodeMetadata.set(node, {

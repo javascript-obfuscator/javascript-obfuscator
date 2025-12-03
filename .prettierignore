@@ -1,0 +1,34 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+*.browser.js
+
+# Coverage
+coverage
+.nyc_output
+
+# Type definitions
+typings
+
+# Webpack bundles
+webpack
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.DS_Store
+
+# Test fixtures and expected output
+test/**/*.expected.js
+test/**/*.fixture.js
+
+# Templates (custom code helpers - these are code templates, not regular code)
+src/custom-code-helpers/**/templates/*.ts

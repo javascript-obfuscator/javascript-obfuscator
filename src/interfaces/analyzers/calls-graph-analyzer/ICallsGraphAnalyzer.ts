@@ -8,5 +8,5 @@ export interface ICallsGraphAnalyzer extends IAnalyzer<[ESTree.Program], ICallsG
      * @param {Program} astTree
      * @returns {ICallsGraphData[]}
      */
-    analyze (astTree: ESTree.Program): ICallsGraphData[];
+    analyze(astTree: ESTree.Program): ICallsGraphData[];
 }

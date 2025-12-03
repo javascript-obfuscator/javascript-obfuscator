@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import type * as ESTree from 'estree';
@@ -29,32 +29,27 @@ export class LiteralNode extends AbstractCustomNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {ESTree.Literal} literalNode
      */
-    public initialize (literalNode: ESTree.Literal): void {
+    public initialize(literalNode: ESTree.Literal): void {
         this.literalNode = literalNode;
     }
 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const structure: TStatement = NodeFactory.expressionStatementNode(this.literalNode);
 
         return [structure];

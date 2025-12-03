@@ -2,5 +2,6 @@ import { IObjectExpressionExtractor } from '../../../interfaces/node-transformer
 
 import { ObjectExpressionExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
-export type TObjectExpressionExtractorFactory =
-    (objectExpressionExtractorName: ObjectExpressionExtractor) => IObjectExpressionExtractor;
+export type TObjectExpressionExtractorFactory = (
+    objectExpressionExtractorName: ObjectExpressionExtractor
+) => IObjectExpressionExtractor;

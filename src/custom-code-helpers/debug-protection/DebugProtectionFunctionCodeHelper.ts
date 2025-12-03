@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -35,9 +35,9 @@ export class DebugProtectionFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -55,7 +55,7 @@ export class DebugProtectionFunctionCodeHelper extends AbstractCustomCodeHelper 
     /**
      * @param {string} debugProtectionFunctionName
      */
-    public initialize (debugProtectionFunctionName: string): void {
+    public initialize(debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
     }
 
@@ -63,17 +63,16 @@ export class DebugProtectionFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
-        const debuggerTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
-            ? DebuggerTemplate()
-            : DebuggerTemplateNoEval();
+    protected override getCodeHelperTemplate(): string {
+        const debuggerTemplate: string =
+            this.options.target !== ObfuscationTarget.BrowserNoEval ? DebuggerTemplate() : DebuggerTemplateNoEval();
 
         return this.customCodeHelperFormatter.formatTemplate(DebugProtectionFunctionTemplate(), {
             debuggerTemplate,

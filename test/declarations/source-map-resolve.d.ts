@@ -14,6 +14,6 @@ declare module 'source-map-resolve' {
         map: ExistingRawSourceMap,
         mapUrl: string,
         read: (path: string, callback: (error: Error | null, data: Buffer | string) => void) => void,
-        callback: (error: Error | null, result: ResolvedSources) => void,
+        callback: (error: Error | null, result: ResolvedSources) => void
     ): void;
 }

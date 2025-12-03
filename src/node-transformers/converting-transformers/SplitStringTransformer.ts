@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -40,7 +40,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -53,21 +53,13 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {number} chunkSize
      * @returns {string[]}
      */
-    private static chunkString (
-        string: string,
-        stringLength: number,
-        chunkSize: number
-    ): string[] {
+    private static chunkString(string: string, stringLength: number, chunkSize: number): string[] {
         const chunksCount: number = Math.ceil(stringLength / chunkSize);
         const chunks: string[] = [];
 
         let nextChunkStartIndex: number = 0;
 
-        for (
-            let chunkIndex: number = 0;
-            chunkIndex < chunksCount;
-            ++chunkIndex, nextChunkStartIndex += chunkSize
-        ) {
+        for (let chunkIndex: number = 0; chunkIndex < chunksCount; ++chunkIndex, nextChunkStartIndex += chunkSize) {
             // eslint-disable-next-line unicorn/prefer-string-slice
             chunks[chunkIndex] = stringz.substr(string, nextChunkStartIndex, chunkSize);
         }
@@ -79,7 +71,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.splitStrings) {
             return null;
         }
@@ -107,7 +99,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)) {
             return literalNode;
         }
@@ -123,10 +115,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             // eslint-disable-next-line @typescript-eslint/no-shadow
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (NodeGuards.isLiteralNode(node)) {
-                    return this.transformLiteralNodeByChunkLength(
-                        node,
-                        this.options.splitStringsChunkLength
-                    );
+                    return this.transformLiteralNodeByChunkLength(node, this.options.splitStringsChunkLength);
                 }
             }
         });
@@ -142,10 +131,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {number} chunkLength
      * @returns {Node}
      */
-    private transformLiteralNodeByChunkLength (
-        literalNode: ESTree.Literal,
-        chunkLength: number
-    ): ESTree.Node {
+    private transformLiteralNodeByChunkLength(literalNode: ESTree.Literal, chunkLength: number): ESTree.Node {
         if (!NodeLiteralUtils.isStringLiteralNode(literalNode)) {
             return literalNode;
         }
@@ -156,11 +142,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        const stringChunks: string[] = SplitStringTransformer.chunkString(
-            literalNode.value,
-            valueLength,
-            chunkLength
-        );
+        const stringChunks: string[] = SplitStringTransformer.chunkString(literalNode.value, valueLength, chunkLength);
 
         return this.transformStringChunksToBinaryExpressionNode(stringChunks);
     }
@@ -169,7 +151,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {string[]} chunks
      * @returns {BinaryExpression}
      */
-    private transformStringChunksToBinaryExpressionNode (chunks: string[]): ESTree.BinaryExpression {
+    private transformStringChunksToBinaryExpressionNode(chunks: string[]): ESTree.BinaryExpression {
         const firstChunk: string | undefined = chunks.shift();
         const secondChunk: string | undefined = chunks.shift();
 
@@ -187,11 +169,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             (binaryExpressionNode: ESTree.BinaryExpression, chunk: string) => {
                 const chunkLiteralNode: ESTree.Literal = NodeFactory.literalNode(chunk);
 
-                return NodeFactory.binaryExpressionNode(
-                    '+',
-                    binaryExpressionNode,
-                    chunkLiteralNode
-                );
+                return NodeFactory.binaryExpressionNode('+', binaryExpressionNode, chunkLiteralNode);
             },
             initialBinaryExpressionNode
         );

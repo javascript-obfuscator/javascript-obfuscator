@@ -34,54 +34,59 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         .whenTargetNamed(IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator);
 
     // identifier name generator factory
-    function identifierNameGeneratorFactory (): (context: interfaces.Context) => (options: IOptions) => IIdentifierNamesGenerator {
+    function identifierNameGeneratorFactory(): (
+        context: interfaces.Context
+    ) => (options: IOptions) => IIdentifierNamesGenerator {
         let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
 
-        return (context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => (options: IOptions): IIdentifierNamesGenerator => {
-            if (cachedIdentifierNamesGenerator) {
-                return cachedIdentifierNamesGenerator;
-            }
+        return (context: interfaces.Context): ((options: IOptions) => IIdentifierNamesGenerator) =>
+            (options: IOptions): IIdentifierNamesGenerator => {
+                if (cachedIdentifierNamesGenerator) {
+                    return cachedIdentifierNamesGenerator;
+                }
 
-            let identifierNamesGenerator: IIdentifierNamesGenerator;
+                let identifierNamesGenerator: IIdentifierNamesGenerator;
 
-            switch (options.identifierNamesGenerator) {
-                case IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator:
-                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                        ServiceIdentifiers.IIdentifierNamesGenerator,
-                        IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
-                    );
+                switch (options.identifierNamesGenerator) {
+                    case IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+                        );
 
-                    break;
+                        break;
 
-                case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
-                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                        ServiceIdentifiers.IIdentifierNamesGenerator,
-                        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                    );
+                    case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        );
 
-                    break;
+                        break;
 
-                case IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator:
-                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                        ServiceIdentifiers.IIdentifierNamesGenerator,
-                        IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
-                    );
+                    case IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+                        );
 
-                    break;
+                        break;
 
-                case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
-                default:
-                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                        ServiceIdentifiers.IIdentifierNamesGenerator,
-                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                    );
-            }
+                    case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
+                    default:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                        );
+                }
 
-            cachedIdentifierNamesGenerator = identifierNamesGenerator;
+                cachedIdentifierNamesGenerator = identifierNamesGenerator;
 
-            return identifierNamesGenerator;
-        };
+                return identifierNamesGenerator;
+            };
     }
-    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-        .toFactory<IIdentifierNamesGenerator, [IOptions]>(identifierNameGeneratorFactory());
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator).toFactory<
+        IIdentifierNamesGenerator,
+        [IOptions]
+    >(identifierNameGeneratorFactory());
 });

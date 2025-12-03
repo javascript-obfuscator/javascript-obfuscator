@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -19,16 +19,13 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
-    private static readonly preservedWords: string[] = [
-        '@license',
-        '@preserve'
-    ];
+    private static readonly preservedWords: string[] = ['@license', '@preserve'];
 
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -39,7 +36,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Initializing:
                 return {
@@ -67,7 +64,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * Moves comments to their nodes
      */
-    public transformNode (rootNode: ESTree.Program): ESTree.Node {
+    public transformNode(rootNode: ESTree.Program): ESTree.Node {
         rootNode = this.filterCommentsOnPrimaryTraverse(rootNode);
 
         if (!rootNode.comments?.length) {
@@ -94,13 +91,14 @@ export class CommentsTransformer extends AbstractNodeTransformer {
                     return;
                 }
 
-                const commentIdx: number = comments.findIndex((comment: ESTree.Comment) =>
-                    comment.range && node.range && comment.range[0] < node.range[0]
+                const commentIdx: number = comments.findIndex(
+                    (comment: ESTree.Comment) => comment.range && node.range && comment.range[0] < node.range[0]
                 );
 
                 if (commentIdx >= 0) {
-                    (isFirstNode ? rootNode : node).leadingComments =
-                        comments.splice(commentIdx, comments.length - commentIdx).reverse();
+                    (isFirstNode ? rootNode : node).leadingComments = comments
+                        .splice(commentIdx, comments.length - commentIdx)
+                        .reverse();
                 }
 
                 isFirstNode = false;
@@ -121,10 +119,8 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Program} rootNode
      * @returns {ESTree.Program}
      */
-    private filterCommentsOnPrimaryTraverse (rootNode: ESTree.Program): ESTree.Program {
-        rootNode.comments = rootNode.comments?.filter((comment: ESTree.Comment) =>
-            this.filterComment(comment, true)
-        );
+    private filterCommentsOnPrimaryTraverse(rootNode: ESTree.Program): ESTree.Program {
+        rootNode.comments = rootNode.comments?.filter((comment: ESTree.Comment) => this.filterComment(comment, true));
 
         return rootNode;
     }
@@ -135,7 +131,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Program} rootNode
      * @returns {ESTree.Program}
      */
-    private filterCommentsOnFinalizingTraverse (rootNode: ESTree.Program): ESTree.Program {
+    private filterCommentsOnFinalizingTraverse(rootNode: ESTree.Program): ESTree.Program {
         estraverse.replace(rootNode, {
             enter: (node: ESTree.Node): ESTree.Node => {
                 if (node.leadingComments) {
@@ -162,12 +158,13 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @param {boolean} keepConditionalComment
      * @returns {boolean}
      */
-    private filterComment (comment: ESTree.Comment, keepConditionalComment: boolean): boolean {
+    private filterComment(comment: ESTree.Comment, keepConditionalComment: boolean): boolean {
         if (keepConditionalComment && ConditionalCommentObfuscatingGuard.isConditionalComment(comment)) {
             return true;
         }
 
-        return CommentsTransformer.preservedWords
-            .some((preservedWord: string) => comment.value.includes(preservedWord));
+        return CommentsTransformer.preservedWords.some((preservedWord: string) =>
+            comment.value.includes(preservedWord)
+        );
     }
 }

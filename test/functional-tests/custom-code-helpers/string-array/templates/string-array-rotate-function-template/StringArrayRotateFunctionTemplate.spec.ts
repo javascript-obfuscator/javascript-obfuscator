@@ -19,15 +19,12 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayRotate: true
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayRotate: true
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -49,15 +46,12 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayRotate: true
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayRotate: true
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -79,15 +73,12 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayRotate: true
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayRotate: true
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -107,15 +98,12 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayRotate: true
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayRotate: true
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -135,15 +123,12 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayRotate: true
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayRotate: true
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });

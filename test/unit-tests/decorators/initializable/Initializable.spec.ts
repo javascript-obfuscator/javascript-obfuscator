@@ -12,7 +12,7 @@ describe('@initializable', () => {
                 @initializable()
                 public property!: string;
 
-                public initialize (property: string): void {
+                public initialize(property: string): void {
                     this.property = property;
                 }
             }
@@ -24,7 +24,7 @@ describe('@initializable', () => {
             foo.property;
         };
 
-        it('shouldn\'t throws an errors if property was initialized', () => {
+        it("shouldn't throws an errors if property was initialized", () => {
             assert.doesNotThrow(testFunc, Error);
         });
     });
@@ -36,11 +36,11 @@ describe('@initializable', () => {
                     @initializable()
                     public property!: string;
 
-                    public initialize (property: string): void {
+                    public initialize(property: string): void {
                         this.property = property;
                     }
 
-                    public bar (): void {}
+                    public bar(): void {}
                 }
 
                 const foo: Foo = new Foo();
@@ -49,7 +49,7 @@ describe('@initializable', () => {
                 foo.bar();
             };
 
-            it('shouldn\'t throw an error if `initialize` method was called first', () => {
+            it("shouldn't throw an error if `initialize` method was called first", () => {
                 assert.doesNotThrow(testFunc, /Class should be initialized/);
             });
         });
@@ -60,11 +60,11 @@ describe('@initializable', () => {
                     @initializable()
                     public property!: string;
 
-                    public initialize (property: string): void {
+                    public initialize(property: string): void {
                         this.innerInitialize(property);
                     }
 
-                    public innerInitialize (property: string): void {
+                    public innerInitialize(property: string): void {
                         this.property = property;
                     }
                 }
@@ -74,7 +74,7 @@ describe('@initializable', () => {
                 foo.initialize('baz');
             };
 
-            it('shouldn\'t throw an error if other method was called inside `initialize` method', () => {
+            it("shouldn't throw an error if other method was called inside `initialize` method", () => {
                 assert.doesNotThrow(testFunc, /Class should be initialized/);
             });
         });
@@ -85,12 +85,11 @@ describe('@initializable', () => {
                     @initializable()
                     public property!: string;
 
-                    public initialize (property: string): void {
+                    public initialize(property: string): void {
                         this.innerInitialize(property);
                     }
 
-                    public innerInitialize (property: string): void {
-                    }
+                    public innerInitialize(property: string): void {}
                 }
 
                 const foo: Foo = new Foo();
@@ -103,17 +102,17 @@ describe('@initializable', () => {
             });
         });
 
-        describe('Variant #4: `initialize` method wasn\'t called first', () => {
+        describe("Variant #4: `initialize` method wasn't called first", () => {
             const testFunc: () => void = () => {
                 class Foo {
                     @initializable()
                     public property!: string;
 
-                    public initialize (property: string): void {
+                    public initialize(property: string): void {
                         this.property = property;
                     }
 
-                    public bar (): void {}
+                    public bar(): void {}
                 }
 
                 const foo: Foo = new Foo();
@@ -122,22 +121,22 @@ describe('@initializable', () => {
                 foo.initialize('baz');
             };
 
-            it('should throws an error if `initialize` method wasn\'t called first', () => {
+            it("should throws an error if `initialize` method wasn't called first", () => {
                 assert.throws(testFunc, /Class should be initialized/);
             });
         });
 
-        describe('Variant #5: `initialize` method wasn\'t called', () => {
+        describe("Variant #5: `initialize` method wasn't called", () => {
             const testFunc: () => void = () => {
                 class Foo {
                     @initializable()
                     public property!: string;
 
-                    public initialize (property: string): void {
+                    public initialize(property: string): void {
                         this.property = property;
                     }
 
-                    public bar (): void {}
+                    public bar(): void {}
                 }
 
                 const foo: Foo = new Foo();
@@ -145,20 +144,19 @@ describe('@initializable', () => {
                 foo.bar();
             };
 
-            it('should throws an error if `initialize` method wasn\'t called first', () => {
+            it("should throws an error if `initialize` method wasn't called first", () => {
                 assert.throws(testFunc, /Class should be initialized/);
             });
         });
     });
 
-    describe('Variant #3: property didn\'t initialized', () => {
+    describe("Variant #3: property didn't initialized", () => {
         const testFunc: () => void = () => {
             class Foo implements IInitializable {
                 @initializable()
                 public property!: string;
 
-                public initialize (property: string): void {
-                }
+                public initialize(property: string): void {}
             }
 
             const foo: Foo = new Foo();
@@ -168,7 +166,7 @@ describe('@initializable', () => {
             foo.property;
         };
 
-        it('should throws an error if property didn\'t initialized', () => {
+        it("should throws an error if property didn't initialized", () => {
             assert.throws(testFunc, /Property `property` is not initialized/);
         });
     });

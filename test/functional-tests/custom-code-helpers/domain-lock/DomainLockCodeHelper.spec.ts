@@ -18,13 +18,10 @@ describe('DomainLockCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['.example.com']
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['.example.com']
+                }).getObfuscatedCode();
             });
 
             it('should correctly append code helper into the obfuscated code', () => {
@@ -39,15 +36,12 @@ describe('DomainLockCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['.example.com'],
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        identifiersPrefix: 'foo'
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['.example.com'],
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    identifiersPrefix: 'foo'
+                }).getObfuscatedCode();
             });
 
             it('should add prefix to the helper identifiers inside global scope', () => {
@@ -62,15 +56,12 @@ describe('DomainLockCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/append-inside-function-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['.example.com'],
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        identifiersPrefix: 'foo'
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['.example.com'],
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    identifiersPrefix: 'foo'
+                }).getObfuscatedCode();
             });
 
             it('should not add prefix to the helper identifiers inside global scope', () => {
@@ -79,7 +70,7 @@ describe('DomainLockCodeHelper', () => {
         });
     });
 
-    describe('`domainLock` option isn\'t set', () => {
+    describe("`domainLock` option isn't set", () => {
         const regExp: RegExp = /var _0x([a-f0-9]){4,6} *= *new RegExp/;
 
         let obfuscatedCode: string;
@@ -87,16 +78,13 @@ describe('DomainLockCodeHelper', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    domainLock: []
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                domainLock: []
+            }).getObfuscatedCode();
         });
 
-        it('shouldn\'t append code helper into the obfuscated code', () => {
+        it("shouldn't append code helper into the obfuscated code", () => {
             assert.notMatch(obfuscatedCode, regExp);
         });
     });

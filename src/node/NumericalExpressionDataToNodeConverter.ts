@@ -15,14 +15,14 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
      * @returns {Expression}
      */
-    public static convertIntegerNumberData (
+    public static convertIntegerNumberData(
         numberNumericalExpressionData: TNumberNumericalExpressionData,
         literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter
     ): ESTree.Expression {
-       return NumericalExpressionDataToNodeConverter.convertNumericalExpressionDataToNode(
-           numberNumericalExpressionData,
-           literalNodeGetter
-       );
+        return NumericalExpressionDataToNodeConverter.convertNumericalExpressionDataToNode(
+            numberNumericalExpressionData,
+            literalNodeGetter
+        );
     }
 
     /**
@@ -31,13 +31,13 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
      * @returns {Expression}
      */
-    public static convertFloatNumberData (
+    public static convertFloatNumberData(
         integerNumberNumericalExpressionData: TNumberNumericalExpressionData,
         decimalPart: number,
         literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter
     ): ESTree.Expression {
-        const integerNumberNumericalExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter
-            .convertNumericalExpressionDataToNode(
+        const integerNumberNumericalExpressionNode: ESTree.Expression =
+            NumericalExpressionDataToNodeConverter.convertNumericalExpressionDataToNode(
                 integerNumberNumericalExpressionData,
                 literalNodeGetter
             );
@@ -55,24 +55,28 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {BinaryOperator} operator
      * @returns {Expression}
      */
-    private static convertNumericalExpressionDataToNode (
+    private static convertNumericalExpressionDataToNode(
         numberNumericalExpressionData: TNumberNumericalExpressionData,
         literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter,
         operator: ESTree.BinaryOperator = '+'
     ): ESTree.Expression {
         const numberNumericalExpressionDataLength: number = numberNumericalExpressionData.length;
 
-        const leftParts: TNumberNumericalExpressionData = numberNumericalExpressionDataLength > 1
-            ? numberNumericalExpressionData.slice(0, numberNumericalExpressionDataLength - 1)
-            : [numberNumericalExpressionData[0]];
-        const rightParts: TNumberNumericalExpressionData = numberNumericalExpressionDataLength > 1
-            ? numberNumericalExpressionData.slice(-1)
-            : [];
+        const leftParts: TNumberNumericalExpressionData =
+            numberNumericalExpressionDataLength > 1
+                ? numberNumericalExpressionData.slice(0, numberNumericalExpressionDataLength - 1)
+                : [numberNumericalExpressionData[0]];
+        const rightParts: TNumberNumericalExpressionData =
+            numberNumericalExpressionDataLength > 1 ? numberNumericalExpressionData.slice(-1) : [];
 
         // trailing iterations
         if (rightParts.length) {
-            return NumericalExpressionDataToNodeConverter
-                .convertPartsToBinaryExpression(operator, leftParts, rightParts, literalNodeGetter);
+            return NumericalExpressionDataToNodeConverter.convertPartsToBinaryExpression(
+                operator,
+                leftParts,
+                rightParts,
+                literalNodeGetter
+            );
         }
 
         const firstLeftPartOrNumber: number | number[] | null = leftParts[0] ?? null;
@@ -80,14 +84,14 @@ export class NumericalExpressionDataToNodeConverter {
         // last iteration when only single left part is left
         return Array.isArray(firstLeftPartOrNumber)
             ? NumericalExpressionDataToNodeConverter.convertNumericalExpressionDataToNode(
-                firstLeftPartOrNumber,
-                literalNodeGetter,
-                '*'
-            )
+                  firstLeftPartOrNumber,
+                  literalNodeGetter,
+                  '*'
+              )
             : NumericalExpressionDataToNodeConverter.convertPartOrNumberToLiteralNode(
-                firstLeftPartOrNumber,
-                literalNodeGetter
-            );
+                  firstLeftPartOrNumber,
+                  literalNodeGetter
+              );
     }
 
     /**
@@ -97,7 +101,7 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
      * @returns {BinaryExpression}
      */
-    private static convertPartsToBinaryExpression (
+    private static convertPartsToBinaryExpression(
         operator: ESTree.BinaryOperator,
         leftParts: TNumberNumericalExpressionData,
         rightParts: TNumberNumericalExpressionData,
@@ -127,10 +131,7 @@ export class NumericalExpressionDataToNodeConverter {
                     leftParts,
                     literalNodeGetter
                 ),
-                this.convertPartOrNumberToLiteralNode(
-                    rightPartOrNumber,
-                    literalNodeGetter
-                )
+                this.convertPartOrNumberToLiteralNode(rightPartOrNumber, literalNodeGetter)
             );
         }
     }
@@ -140,13 +141,11 @@ export class NumericalExpressionDataToNodeConverter {
      * @param {TNumericalExpressionDataToNodeConverterLiteralNodeGetter} literalNodeGetter
      * @returns {Expression}
      */
-    private static convertPartOrNumberToLiteralNode (
+    private static convertPartOrNumberToLiteralNode(
         partOrNumber: number | number[],
         literalNodeGetter: TNumericalExpressionDataToNodeConverterLiteralNodeGetter
     ): ESTree.Expression {
-        const number: number = Array.isArray(partOrNumber)
-            ? partOrNumber[0]
-            : partOrNumber;
+        const number: number = Array.isArray(partOrNumber) ? partOrNumber[0] : partOrNumber;
         const isPositiveNumber: boolean = NumberUtils.isPositive(number);
         const absoluteNumber: number = Math.abs(number);
 

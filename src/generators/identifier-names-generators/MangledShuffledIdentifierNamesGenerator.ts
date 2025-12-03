@@ -30,7 +30,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
      * @param {IOptions} options
      * @param {ISetUtils} setUtils
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
@@ -42,7 +42,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
     }
 
     @postConstruct()
-    public initialize (): void {
+    public initialize(): void {
         this.initializeNameSequence([
             ...`${numbersString}`,
             ...this.arrayUtils.shuffle([...`${alphabetString}${alphabetStringUppercase}`])
@@ -52,7 +52,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
     /**
      * @param {string[]} nameSequence
      */
-    protected initializeNameSequence (nameSequence: string[]): void {
+    protected initializeNameSequence(nameSequence: string[]): void {
         if (!this.getNameSequence()) {
             MangledShuffledIdentifierNamesGenerator.shuffledNameSequence = nameSequence;
         }
@@ -61,7 +61,7 @@ export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNa
     /**
      * @returns {string[]}
      */
-    protected override getNameSequence (): string[] {
+    protected override getNameSequence(): string[] {
         return MangledShuffledIdentifierNamesGenerator.shuffledNameSequence;
     }
 }

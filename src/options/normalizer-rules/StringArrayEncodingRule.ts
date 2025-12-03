@@ -12,11 +12,9 @@ export const StringArrayEncodingRule: TOptionsNormalizerRule = (options: IOption
     if (!options.stringArrayEncoding.length) {
         options = {
             ...options,
-            stringArrayEncoding: [
-                StringArrayEncoding.None
-            ]
+            stringArrayEncoding: [StringArrayEncoding.None]
         };
     }
-    
+
     return options;
 };

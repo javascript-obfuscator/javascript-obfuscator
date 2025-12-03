@@ -7,7 +7,7 @@ import { TStatement } from '../../src/types/node/TStatement';
  * @param {TStatement[]} structure
  * @returns {TStatement[]}
  */
-export function removeRangesFromStructure (structure: TStatement[]): TStatement[] {
+export function removeRangesFromStructure(structure: TStatement[]): TStatement[] {
     for (const statement of structure) {
         estraverse.replace(statement, {
             enter: (node: ESTree.Node): ESTree.Node => {

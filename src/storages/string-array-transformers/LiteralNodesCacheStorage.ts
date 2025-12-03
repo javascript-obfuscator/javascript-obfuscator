@@ -13,12 +13,12 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class LiteralNodesCacheStorage extends MapStorage <string, ESTree.Node> implements ILiteralNodesCacheStorage {
+export class LiteralNodesCacheStorage extends MapStorage<string, ESTree.Node> implements ILiteralNodesCacheStorage {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -30,10 +30,7 @@ export class LiteralNodesCacheStorage extends MapStorage <string, ESTree.Node> i
      * @param {IStringArrayStorageItemData | undefined} stringArrayStorageItemData
      * @returns {string}
      */
-    public buildKey (
-        literalValue: string,
-        stringArrayStorageItemData: IStringArrayStorageItemData | undefined,
-    ): string {
+    public buildKey(literalValue: string, stringArrayStorageItemData: IStringArrayStorageItemData | undefined): string {
         return `${literalValue}-${Boolean(stringArrayStorageItemData)}`;
     }
 
@@ -42,14 +39,16 @@ export class LiteralNodesCacheStorage extends MapStorage <string, ESTree.Node> i
      * @param {IStringArrayStorageItemData | undefined} stringArrayStorageItemData
      * @returns {boolean}
      */
-    public shouldUseCachedValue (
+    public shouldUseCachedValue(
         key: string,
         stringArrayStorageItemData: IStringArrayStorageItemData | undefined
     ): boolean {
         // for each function scope different nodes will be created, so cache have no sense
-        return !this.options.stringArrayWrappersCount
+        return (
+            !this.options.stringArrayWrappersCount &&
             // different nodes will be created with different rc4 keys, so cache have no sense
-            && stringArrayStorageItemData?.encoding !== StringArrayEncoding.Rc4
-            && this.storage.has(key);
+            stringArrayStorageItemData?.encoding !== StringArrayEncoding.Rc4 &&
+            this.storage.has(key)
+        );
     }
 }

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -20,7 +20,7 @@ export class BooleanLiteralTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -31,7 +31,7 @@ export class BooleanLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -60,7 +60,7 @@ export class BooleanLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (typeof literalNode.value !== 'boolean') {
             return literalNode;
         }
@@ -79,20 +79,14 @@ export class BooleanLiteralTransformer extends AbstractNodeTransformer {
     /**
      * @return {ESTree.UnaryExpression}
      */
-    private getTrueUnaryExpressionNode (): ESTree.UnaryExpression {
-        return NodeFactory.unaryExpressionNode(
-            '!',
-            this.getFalseUnaryExpressionNode()
-        );
+    private getTrueUnaryExpressionNode(): ESTree.UnaryExpression {
+        return NodeFactory.unaryExpressionNode('!', this.getFalseUnaryExpressionNode());
     }
 
     /**
      * @return {ESTree.UnaryExpression}
      */
-    private getFalseUnaryExpressionNode (): ESTree.UnaryExpression {
-        return NodeFactory.unaryExpressionNode(
-            '!',
-            NodeFactory.arrayExpressionNode()
-        );
+    private getFalseUnaryExpressionNode(): ESTree.UnaryExpression {
+        return NodeFactory.unaryExpressionNode('!', NodeFactory.arrayExpressionNode());
     }
 }

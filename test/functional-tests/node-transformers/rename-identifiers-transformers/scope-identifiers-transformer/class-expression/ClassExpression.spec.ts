@@ -13,19 +13,14 @@ describe('ScopeIdentifiersTransformer ClassExpression identifiers', () => {
             const classNameIdentifierRegExp: RegExp = /var (_0x[a-f0-9]{4,6}) *= *class *\{/;
             const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
-            let obfuscatedCode: string,
-                classNameIdentifier: string,
-                classCallIdentifier: string;
+            let obfuscatedCode: string, classNameIdentifier: string, classCallIdentifier: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/base.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
                 classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
                 classCallIdentifier = getRegExpMatch(obfuscatedCode, classCallIdentifierRegExp);
             });
@@ -44,19 +39,16 @@ describe('ScopeIdentifiersTransformer ClassExpression identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
-            it('match #1: shouldn\'t transform class name', () => {
+            it("match #1: shouldn't transform class name", () => {
                 assert.match(obfuscatedCode, classNameIdentifierRegExp);
             });
 
-            it('match #2: shouldn\'t transform class name', () => {
+            it("match #2: shouldn't transform class name", () => {
                 assert.match(obfuscatedCode, classCallIdentifierRegExp);
             });
         });

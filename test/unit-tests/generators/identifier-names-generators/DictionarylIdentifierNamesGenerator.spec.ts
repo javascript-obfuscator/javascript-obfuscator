@@ -12,8 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('DictionaryIdentifierNamesGenerator', () => {
-    let identifierNamesGenerator: IIdentifierNamesGenerator,
-        dictionaryIdentifierName: string;
+    let identifierNamesGenerator: IIdentifierNamesGenerator, dictionaryIdentifierName: string;
 
     describe('generateNext', () => {
         describe('Base behaviour', () => {

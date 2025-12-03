@@ -24,9 +24,7 @@ export class CryptUtils implements ICryptUtils {
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator) {
         this.randomGenerator = randomGenerator;
     }
 
@@ -34,7 +32,7 @@ export class CryptUtils implements ICryptUtils {
      * @param {string} string
      * @returns {string}
      */
-    public btoa (string: string): string {
+    public btoa(string: string): string {
         const chars: string = this.base64Alphabet;
 
         let output: string = '';
@@ -45,16 +43,18 @@ export class CryptUtils implements ICryptUtils {
 
         for (
             let block: number | undefined, charCode: number, idx: number = 0, map: string = chars;
-            string.charAt(idx | 0) || (map = '=', idx % 1);
-            output += map.charAt(63 & block >> 8 - idx % 1 * 8)
+            string.charAt(idx | 0) || ((map = '='), idx % 1);
+            output += map.charAt(63 & (block >> (8 - (idx % 1) * 8)))
         ) {
-            charCode = string.charCodeAt(idx += 3/4);
+            charCode = string.charCodeAt((idx += 3 / 4));
 
-            if (charCode > 0xFF) {
-                throw new Error('\'btoa\' failed: The string to be encoded contains characters outside of the Latin1 range.');
+            if (charCode > 0xff) {
+                throw new Error(
+                    '\'btoa\' failed: The string to be encoded contains characters outside of the Latin1 range.'
+                );
             }
 
-            block = <number>block << 8 | charCode;
+            block = ((<number>block) << 8) | charCode;
         }
 
         return output;
@@ -67,9 +67,8 @@ export class CryptUtils implements ICryptUtils {
      * @param {number} length
      * @returns {[string , string]}
      */
-    public hideString (str: string, length: number): [string, string] {
-        const escapeRegExp: (s: string) => string = (s: string) =>
-            s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    public hideString(str: string, length: number): [string, string] {
+        const escapeRegExp: (s: string) => string = (s: string) => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
         const randomMerge: (s1: string, s2: string) => string = (s1: string, s2: string): string => {
             let i1: number = -1;
@@ -92,10 +91,7 @@ export class CryptUtils implements ICryptUtils {
             pool: RandomGenerator.randomGeneratorPool
         });
 
-        let randomStringDiff: string = randomString.replace(
-            new RegExp(`[${escapeRegExp(str)}]`, 'g'),
-            ''
-        );
+        let randomStringDiff: string = randomString.replace(new RegExp(`[${escapeRegExp(str)}]`, 'g'), '');
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
 
@@ -113,7 +109,7 @@ export class CryptUtils implements ICryptUtils {
      * @param {string} key
      * @returns {string}
      */
-    public rc4 (string: string, key: string): string {
+    public rc4(string: string, key: string): string {
         const s: number[] = [];
 
         let j: number = 0;

@@ -12,24 +12,18 @@ describe('DirectivePlacementTransformer', function () {
 
     describe('Variant #1: program scope', () => {
         describe('Variant #1: directive at the top of program scope', () => {
-            const directiveRegExp: RegExp = new RegExp(
-                '^\'use strict\';.*' +
-                getStringArrayRegExp(['test']).source
-            );
+            const directiveRegExp: RegExp = new RegExp("^'use strict';.*" + getStringArrayRegExp(['test']).source);
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/top-of-program-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive at the top of program scope', () => {
@@ -40,8 +34,7 @@ describe('DirectivePlacementTransformer', function () {
         describe('Variant #2: directive-like string literal at the middle of program scope', () => {
             const stringArrayStorageRegExp: RegExp = getStringArrayRegExp(['test', 'use\\\\x20strict']);
             const directiveRegExp: RegExp = new RegExp(
-                'var test *= *_0x([a-f0-9]){4}\\(0x0\\);.*' +
-                '_0x([a-f0-9]){4}\\(0x1\\);'
+                'var test *= *_0x([a-f0-9]){4}\\(0x0\\);.*' + '_0x([a-f0-9]){4}\\(0x1\\);'
             );
 
             let obfuscatedCode: string;
@@ -49,14 +42,11 @@ describe('DirectivePlacementTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/middle-of-program-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should add directive-like string literal to the string array', () => {
@@ -73,7 +63,7 @@ describe('DirectivePlacementTransformer', function () {
         describe('Variant #1: directive at the top of function declaration scope', () => {
             const directiveRegExp: RegExp = new RegExp(
                 'function test\\(\\) *{ *' +
-                    '\'use strict\'; *' +
+                    "'use strict'; *" +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4}; *' +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x0\\);'
             );
@@ -83,15 +73,12 @@ describe('DirectivePlacementTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/top-of-function-declaration-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive at the top of function declaration scope', () => {
@@ -112,28 +99,25 @@ describe('DirectivePlacementTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/middle-of-function-declaration-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive-like string literal at the middle of function declaration scope', () => {
                 assert.match(obfuscatedCode, directiveRegExp);
             });
-        })
+        });
     });
 
     describe('Variant #3: function expression scope', () => {
         describe('Variant #1: directive at the top of function expression scope', () => {
             const directiveRegExp: RegExp = new RegExp(
                 'var test *= *function *\\(\\) *{ *' +
-                    '\'use strict\'; *' +
+                    "'use strict'; *" +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4}; *' +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x0\\);'
             );
@@ -143,15 +127,12 @@ describe('DirectivePlacementTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/top-of-function-expression-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive at the top of function expression scope', () => {
@@ -172,28 +153,25 @@ describe('DirectivePlacementTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/middle-of-function-expression-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive-like string literal at the middle of function expression scope', () => {
                 assert.match(obfuscatedCode, directiveRegExp);
             });
-        })
+        });
     });
 
     describe('Variant #4: arrow function expression scope', () => {
         describe('Variant #1: directive at the top of arrow function expression scope', () => {
             const directiveRegExp: RegExp = new RegExp(
                 'var test *= *\\(\\) *=> *{ *' +
-                    '\'use strict\'; *' +
+                    "'use strict'; *" +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4}; *' +
                     'var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\\(0x0\\);'
             );
@@ -201,17 +179,16 @@ describe('DirectivePlacementTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/top-of-arrow-function-expression-scope.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/top-of-arrow-function-expression-scope.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive at the top of arrow function expression scope', () => {
@@ -230,22 +207,21 @@ describe('DirectivePlacementTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/middle-of-arrow-function-expression-scope.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/middle-of-arrow-function-expression-scope.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        stringArrayWrappersCount: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    stringArrayWrappersCount: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep directive-like string literal at the middle of arrow function expression scope', () => {
                 assert.match(obfuscatedCode, directiveRegExp);
             });
-        })
+        });
     });
 });

@@ -2,7 +2,6 @@ import { assert } from 'chai';
 
 import { BooleanSanitizer } from '../../../../src/cli/sanitizers/BooleanSanitizer';
 
-
 describe('BooleanSanitizer', () => {
     describe('Variant #1: input value `true`', () => {
         const inputValue: string = 'true';

@@ -9,5 +9,5 @@ export const ObfuscationTarget: Readonly<{
     Browser: 'browser',
     BrowserNoEval: 'browser-no-eval',
     Node: 'node',
-    ServiceWorker: 'service-worker',
+    ServiceWorker: 'service-worker'
 });

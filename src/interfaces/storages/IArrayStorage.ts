@@ -1,59 +1,59 @@
 import { IInitializable } from '../IInitializable';
 
-export interface IArrayStorage <V> extends IInitializable {
+export interface IArrayStorage<V> extends IInitializable {
     /**
      * @param {number} key
      * @returns {V | undefined}
      */
-    delete (key: number): V | undefined;
+    delete(key: number): V | undefined;
 
     /**
      * @param {number} key
      * @returns {V | undefined}
      */
-    get (key: number): V | undefined;
+    get(key: number): V | undefined;
 
     /**
      * @param {number} key
      * @returns {V}
      */
-    getOrThrow (key: number): V;
+    getOrThrow(key: number): V;
 
     /**
      * @param value
      * @returns number | null
      */
-    getKeyOf (value: V): number | null;
+    getKeyOf(value: V): number | null;
 
     /**
      * @returns number
      */
-    getLength (): number;
+    getLength(): number;
 
     /**
      * @returns {V[]}
      */
-    getStorage (): V[];
+    getStorage(): V[];
 
     /**
      * @returns string
      */
-    getStorageId (): string;
+    getStorageId(): string;
 
     /**
      * @param storage
      * @param mergeId
      */
-    mergeWith (storage: this, mergeId: boolean): void;
+    mergeWith(storage: this, mergeId: boolean): void;
 
     /**
      * @param {number} key
      * @param {V} value
      */
-    set (key: number, value: V): void;
+    set(key: number, value: V): void;
 
     /**
      * @returns string
      */
-    toString (): string;
+    toString(): string;
 }

@@ -13,14 +13,12 @@ describe('`domainLock` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLock: ['www.example.com'],
                             target: ObfuscationTarget.Browser
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation when obfuscation target is `browser`', () => {
@@ -32,14 +30,12 @@ describe('`domainLock` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLock: [],
                             target: ObfuscationTarget.Node
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation when obfuscation target is `node` and value is default', () => {
@@ -54,14 +50,12 @@ describe('`domainLock` validation', () => {
 
             describe('Variant #1: obfuscation target: `node`', () => {
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLock: ['www.example.com'],
                             target: ObfuscationTarget.Node
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation when obfuscation target is `node` and value is not default', () => {
@@ -71,14 +65,12 @@ describe('`domainLock` validation', () => {
 
             describe('Variant #1: obfuscation target: `service-worker`', () => {
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLock: ['www.example.com'],
                             target: ObfuscationTarget.ServiceWorker
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation when obfuscation target is `service-worker` and value is not default', () => {

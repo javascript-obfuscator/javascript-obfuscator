@@ -34,9 +34,7 @@ export class Logger implements ILogger {
     /**
      * @param {IOptions} options
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IOptions) options: IOptions) {
         this.options = options;
     }
 
@@ -46,11 +44,11 @@ export class Logger implements ILogger {
      * @param {string} loggingMessage
      * @param {string | number} value
      */
-    public static log (
+    public static log(
         loggingLevelColor: Chalk,
         loggingPrefix: LoggingPrefix,
         loggingMessage: string,
-        value?: string | number,
+        value?: string | number
     ): void {
         const processedMessage: string = loggingLevelColor(`\n${loggingPrefix} ${loggingMessage}`);
 
@@ -61,7 +59,7 @@ export class Logger implements ILogger {
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    public info (loggingMessage: LoggingMessage, value?: string | number): void {
+    public info(loggingMessage: LoggingMessage, value?: string | number): void {
         if (!this.options.log) {
             return;
         }
@@ -73,7 +71,7 @@ export class Logger implements ILogger {
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    public success (loggingMessage: LoggingMessage, value?: string | number): void {
+    public success(loggingMessage: LoggingMessage, value?: string | number): void {
         if (!this.options.log) {
             return;
         }
@@ -85,7 +83,7 @@ export class Logger implements ILogger {
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    public warn (loggingMessage: LoggingMessage, value?: string | number): void {
+    public warn(loggingMessage: LoggingMessage, value?: string | number): void {
         if (!this.options.log) {
             return;
         }

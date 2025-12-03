@@ -78,9 +78,12 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
         .whenTargetNamed(ObjectExpressionExtractor.BasePropertiesExtractor);
 
     // object expression extractor factory
-    bind<IObjectExpressionExtractor>(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
-        .toFactory<IObjectExpressionExtractor, [ObjectExpressionExtractor]>(InversifyContainerFacade
-            .getCacheFactory<ObjectExpressionExtractor, IObjectExpressionExtractor>(
-                ServiceIdentifiers.IObjectExpressionExtractor
-            ));
+    bind<IObjectExpressionExtractor>(ServiceIdentifiers.Factory__IObjectExpressionExtractor).toFactory<
+        IObjectExpressionExtractor,
+        [ObjectExpressionExtractor]
+    >(
+        InversifyContainerFacade.getCacheFactory<ObjectExpressionExtractor, IObjectExpressionExtractor>(
+            ServiceIdentifiers.IObjectExpressionExtractor
+        )
+    );
 });

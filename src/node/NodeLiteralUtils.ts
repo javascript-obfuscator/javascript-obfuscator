@@ -10,7 +10,7 @@ export class NodeLiteralUtils {
      * @param {Literal} literalNode
      * @returns {literalNode is TNumberLiteralNode}
      */
-    public static isNumberLiteralNode (literalNode: ESTree.Literal): literalNode is TNumberLiteralNode {
+    public static isNumberLiteralNode(literalNode: ESTree.Literal): literalNode is TNumberLiteralNode {
         return typeof literalNode.value === 'number';
     }
 
@@ -18,7 +18,7 @@ export class NodeLiteralUtils {
      * @param {Literal} literalNode
      * @returns {literalNode is TStringLiteralNode}
      */
-    public static isStringLiteralNode (literalNode: ESTree.Literal): literalNode is TStringLiteralNode {
+    public static isStringLiteralNode(literalNode: ESTree.Literal): literalNode is TStringLiteralNode {
         return typeof literalNode.value === 'string';
     }
 
@@ -27,7 +27,7 @@ export class NodeLiteralUtils {
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isProhibitedLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): boolean {
+    public static isProhibitedLiteralNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): boolean {
         if (NodeGuards.isPropertyNode(parentNode) && !parentNode.computed && parentNode.key === literalNode) {
             return true;
         }

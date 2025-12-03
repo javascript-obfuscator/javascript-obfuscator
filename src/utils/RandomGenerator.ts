@@ -41,7 +41,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @param {ISourceCode} sourceCode
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.ISourceCode) sourceCode: ISourceCode,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -50,21 +50,21 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     }
 
     @postConstruct()
-    public initialize (): void {
+    public initialize(): void {
         this.randomGenerator = new Chance(this.getRawSeed());
     }
 
     /**
      * @returns {number}
      */
-    public getMathRandom (): number {
+    public getMathRandom(): number {
         return this.getRandomInteger(0, 99999) / 100000;
     }
 
     /**
      * @returns {Chance.Chance}
      */
-    public getRandomGenerator (): Chance.Chance {
+    public getRandomGenerator(): Chance.Chance {
         return this.randomGenerator;
     }
 
@@ -73,7 +73,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @param {number} max
      * @returns {number}
      */
-    public getRandomInteger (min: number, max: number): number {
+    public getRandomInteger(min: number, max: number): number {
         return this.getRandomGenerator().integer({
             min: min,
             max: max
@@ -86,7 +86,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @param {number[]} valuesToExclude
      * @returns {number}
      */
-    public getRandomIntegerExcluding (min: number, max: number, valuesToExclude: number[]): number {
+    public getRandomIntegerExcluding(min: number, max: number, valuesToExclude: number[]): number {
         const valuesToPickArray: number[] = [];
 
         for (let value: number = min; value <= max; value++) {
@@ -105,14 +105,14 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @param {string} pool
      * @returns {string}
      */
-    public getRandomString (length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
+    public getRandomString(length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
         return this.getRandomGenerator().string({ length, pool });
     }
 
     /**
      * @returns {string}
      */
-    public getInputSeed (): string {
+    public getInputSeed(): string {
         return this.options.seed.toString();
     }
 
@@ -122,7 +122,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      *
      * @returns {number}
      */
-    public getRawSeed (): string {
+    public getRawSeed(): string {
         const inputSeed: string = this.getInputSeed();
         const inputSeedParts: string[] = `${inputSeed}`.split('|');
 

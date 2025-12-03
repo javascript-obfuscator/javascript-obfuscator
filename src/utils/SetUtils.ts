@@ -14,9 +14,7 @@ export class SetUtils implements ISetUtils {
     /**
      * @param {IArrayUtils} arrayUtils
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils) {
         this.arrayUtils = arrayUtils;
     }
 
@@ -24,7 +22,7 @@ export class SetUtils implements ISetUtils {
      * @param {Set<T>} set
      * @returns {T | undefined}
      */
-    public getLastElement <T> (set: Set<T>): T | undefined {
+    public getLastElement<T>(set: Set<T>): T | undefined {
         const array = [...set];
 
         return this.arrayUtils.getLastElement(array);

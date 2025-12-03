@@ -9,21 +9,19 @@ import { ITransformer } from '../interfaces/ITransformer';
 import { ITransformerNamesGroupsBuilder } from '../interfaces/utils/ITransformerNamesGroupsBuilder';
 
 @injectable()
-export abstract class AbstractTransformerNamesGroupsBuilder <
+export abstract class AbstractTransformerNamesGroupsBuilder<
     TTransformerName extends string,
     TTransformer extends ITransformer<TTransformerName>
-> implements ITransformerNamesGroupsBuilder <
-    TTransformerName,
-    TTransformer
-> {
+> implements ITransformerNamesGroupsBuilder<TTransformerName, TTransformer>
+{
     /**
      * @type {ILevelledTopologicalSorter<TTransformerName>}
      */
     private readonly levelledTopologicalSorter: ILevelledTopologicalSorter<TTransformerName>;
 
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.ILevelledTopologicalSorter)
-            levelledTopologicalSorter: ILevelledTopologicalSorter<TTransformerName>
+        levelledTopologicalSorter: ILevelledTopologicalSorter<TTransformerName>
     ) {
         this.levelledTopologicalSorter = levelledTopologicalSorter;
     }
@@ -51,7 +49,7 @@ export abstract class AbstractTransformerNamesGroupsBuilder <
      * @param {TDictionary<TTransformer>} normalizedTransformers
      * @returns {TTransformerName[][]}
      */
-    public build (normalizedTransformers: TDictionary<TTransformer>): TTransformerName[][] {
+    public build(normalizedTransformers: TDictionary<TTransformer>): TTransformerName[][] {
         const transformerNames: TTransformerName[] = <TTransformerName[]>Object.keys(normalizedTransformers);
         const relationEdges: TTransformersRelationEdge<TTransformerName>[] = this.buildTransformersRelationEdges(
             transformerNames,
@@ -70,7 +68,7 @@ export abstract class AbstractTransformerNamesGroupsBuilder <
      * @param {TDictionary<TTransformer>} normalizedTransformers
      * @returns {TTransformersRelationEdge<TTransformerName>[]}
      */
-    private buildTransformersRelationEdges (
+    private buildTransformersRelationEdges(
         transformerNames: TTransformerName[],
         normalizedTransformers: TDictionary<TTransformer>
     ): TTransformersRelationEdge<TTransformerName>[] {

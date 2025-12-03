@@ -18,11 +18,11 @@ import { NumberNumericalExpressionAnalyzer } from '../../../../src/analyzers/num
  */
 const numberNumericalExpressionDataToString = (data: TNumberNumericalExpressionData) =>
     data
-        .map((part: number | number[]) => Array.isArray(part) ? part.join('*') : part)
+        .map((part: number | number[]) => (Array.isArray(part) ? part.join('*') : part))
         .join('+')
         .replace(/\+-/g, '-');
 
-describe('NumberNumericalExpressionAnalyzer', function() {
+describe('NumberNumericalExpressionAnalyzer', function () {
     let numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer;
 
     this.timeout(10000);
@@ -31,8 +31,9 @@ describe('NumberNumericalExpressionAnalyzer', function() {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        numberNumericalExpressionAnalyzer = inversifyContainerFacade
-            .get<INumberNumericalExpressionAnalyzer>(ServiceIdentifiers.INumberNumericalExpressionAnalyzer);
+        numberNumericalExpressionAnalyzer = inversifyContainerFacade.get<INumberNumericalExpressionAnalyzer>(
+            ServiceIdentifiers.INumberNumericalExpressionAnalyzer
+        );
     });
 
     describe('analyze', () => {
@@ -192,10 +193,11 @@ describe('NumberNumericalExpressionAnalyzer', function() {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => numberNumericalExpressionAnalyzer.analyze(
-                    number,
-                    NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
-                );
+                testFunc = () =>
+                    numberNumericalExpressionAnalyzer.analyze(
+                        number,
+                        NumberNumericalExpressionAnalyzer.defaultAdditionalPartsCount
+                    );
             });
 
             it('should throw error', () => {

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -24,15 +24,13 @@ export class BlockStatementSimplifyTransformer extends AbstractStatementSimplify
     /**
      * @type {NodeTransformer[]}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.VariableDeclarationsMergeTransformer
-    ];
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.VariableDeclarationsMergeTransformer];
 
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -43,14 +41,11 @@ export class BlockStatementSimplifyTransformer extends AbstractStatementSimplify
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Simplifying:
                 return {
-                    leave: (
-                        node: ESTree.Node,
-                        parentNode: ESTree.Node | null
-                    ): ESTree.Node | undefined => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
@@ -67,10 +62,7 @@ export class BlockStatementSimplifyTransformer extends AbstractStatementSimplify
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (
-        statementNode: ESTree.Statement,
-        parentNode: ESTree.Node
-    ): ESTree.Node {
+    public transformNode(statementNode: ESTree.Statement, parentNode: ESTree.Node): ESTree.Node {
         const simplifyData: IStatementSimplifyData | null = this.getStatementSimplifyData(statementNode);
 
         if (!simplifyData) {

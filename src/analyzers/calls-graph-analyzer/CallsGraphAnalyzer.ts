@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -72,8 +72,9 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      */
     private readonly calleeDataExtractorFactory: TCalleeDataExtractorFactory;
 
-    public constructor (
-        @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorFactory: TCalleeDataExtractorFactory
+    public constructor(
+        @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor)
+        calleeDataExtractorFactory: TCalleeDataExtractorFactory
     ) {
         this.calleeDataExtractorFactory = calleeDataExtractorFactory;
     }
@@ -82,16 +83,14 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      * @param {number} blockScopeBodyLength
      * @returns {number}
      */
-    public static getLimitIndex (blockScopeBodyLength: number): number {
+    public static getLimitIndex(blockScopeBodyLength: number): number {
         const lastIndex: number = blockScopeBodyLength - 1;
         const limitThresholdActivationIndex: number = CallsGraphAnalyzer.limitThresholdActivationLength - 1;
 
         let limitIndex: number = lastIndex;
 
         if (lastIndex > limitThresholdActivationIndex) {
-            limitIndex = Math.round(
-                limitThresholdActivationIndex + (lastIndex * CallsGraphAnalyzer.limitThreshold)
-            );
+            limitIndex = Math.round(limitThresholdActivationIndex + lastIndex * CallsGraphAnalyzer.limitThreshold);
 
             if (limitIndex > lastIndex) {
                 limitIndex = lastIndex;
@@ -105,7 +104,7 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      * @param {Program} astTree
      * @returns {ICallsGraphData[]}
      */
-    public analyze (astTree: ESTree.Program): ICallsGraphData[] {
+    public analyze(astTree: ESTree.Program): ICallsGraphData[] {
         return this.analyzeRecursive(astTree.body);
     }
 
@@ -113,7 +112,7 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      * @param {NodeGuards[]} blockScopeBody
      * @returns {ICallsGraphData[]}
      */
-    private analyzeRecursive (blockScopeBody: ESTree.Node[]): ICallsGraphData[] {
+    private analyzeRecursive(blockScopeBody: ESTree.Node[]): ICallsGraphData[] {
         const limitIndex: number = CallsGraphAnalyzer.getLimitIndex(blockScopeBody.length);
         const callsGraphData: ICallsGraphData[] = [];
         const blockScopeBodyLength: number = blockScopeBody.length;
@@ -148,14 +147,16 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      * @param {NodeGuards[]} blockScopeBody
      * @param {CallExpression} callExpressionNode
      */
-    private analyzeCallExpressionNode (
+    private analyzeCallExpressionNode(
         callsGraphData: ICallsGraphData[],
         blockScopeBody: ESTree.Node[],
         callExpressionNode: ESTree.CallExpression
     ): void {
         CallsGraphAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractor) => {
-            const calleeData: ICalleeData | null = this.calleeDataExtractorFactory(calleeDataExtractorName)
-                .extract(blockScopeBody, callExpressionNode.callee);
+            const calleeData: ICalleeData | null = this.calleeDataExtractorFactory(calleeDataExtractorName).extract(
+                blockScopeBody,
+                callExpressionNode.callee
+            );
 
             if (!calleeData) {
                 return;

@@ -2,10 +2,10 @@ export interface ISourceCode {
     /**
      * @returns string
      */
-    getSourceCode (): string;
+    getSourceCode(): string;
 
     /**
      * @returns string
      */
-    getSourceMap (): string;
+    getSourceMap(): string;
 }

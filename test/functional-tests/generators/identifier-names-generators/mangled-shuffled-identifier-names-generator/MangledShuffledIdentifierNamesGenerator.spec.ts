@@ -12,9 +12,9 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
     describe('Variant #1: prevent name sequence mutation of base `mangled` generator', () => {
         const functionsRegExp: RegExp = new RegExp(
             'function foo *\\(a, *b\\) *{} *' +
-            'function foo *\\(a, *b\\) *{} *' +
-            'function foo *\\(a, *b\\) *{} *' +
-            'function foo *\\(a, *b\\) *{}'
+                'function foo *\\(a, *b\\) *{} *' +
+                'function foo *\\(a, *b\\) *{} *' +
+                'function foo *\\(a, *b\\) *{}'
         );
 
         let obfuscatedCode: string = '';
@@ -23,17 +23,15 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/prevent-name-sequence-mutation.js');
 
             for (let i = 0; i < 4; i++) {
-                const identifierNamesGenerator = i % 2 === 0
-                    ? IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                    : IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator;
+                const identifierNamesGenerator =
+                    i % 2 === 0
+                        ? IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        : IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator;
 
-                obfuscatedCode += JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode += JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator
+                }).getObfuscatedCode();
             }
         });
 

@@ -13,16 +13,14 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {((node: Node) => boolean)[]}
      */
-    private static readonly blackListGuards: ((node: ESTree.Node) => boolean)[] = [
-        NodeGuards.isDirectiveNode
-    ];
+    private static readonly blackListGuards: ((node: ESTree.Node) => boolean)[] = [NodeGuards.isDirectiveNode];
 
     /**
      * @type {number}
      */
     private readonly blackListGuardsLength: number;
 
-    public constructor () {
+    public constructor() {
         this.blackListGuardsLength = BlackListObfuscatingGuard.blackListGuards.length;
     }
 
@@ -30,7 +28,7 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
      * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): ObfuscatingGuardResult {
+    public check(node: ESTree.Node): ObfuscatingGuardResult {
         for (let i: number = 0; i < this.blackListGuardsLength; i++) {
             if (BlackListObfuscatingGuard.blackListGuards[i](node)) {
                 return ObfuscatingGuardResult.Ignore;

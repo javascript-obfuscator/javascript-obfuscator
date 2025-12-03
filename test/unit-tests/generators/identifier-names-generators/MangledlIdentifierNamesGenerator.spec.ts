@@ -14,8 +14,7 @@ import { MangledIdentifierNamesGenerator } from '../../../../src/generators/iden
 
 describe('MangledIdentifierNamesGenerator', () => {
     describe('generateNext', () => {
-        let identifierNamesGenerator: IIdentifierNamesGenerator,
-            mangledIdentifierName: string;
+        let identifierNamesGenerator: IIdentifierNamesGenerator, mangledIdentifierName: string;
 
         beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -105,8 +104,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierPosition1: number = 261;
             const expectedMangledIdentifierPosition2: number = 262;
 
-            let mangledIdentifierName1: string,
-                mangledIdentifierName2: string;
+            let mangledIdentifierName1: string, mangledIdentifierName2: string;
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
@@ -124,15 +122,14 @@ describe('MangledIdentifierNamesGenerator', () => {
                 assert.equal(mangledIdentifierName1, expectedMangledIdentifierName1);
             });
 
-            it('shouldn\'t return reserved mangled name', () => {
+            it("shouldn't return reserved mangled name", () => {
                 assert.equal(mangledIdentifierName2, expectedMangledIdentifierName2);
             });
         });
     });
 
     describe('generateForGlobalScope', () => {
-        let identifierNamesGenerator: IIdentifierNamesGenerator,
-            mangledIdentifierName: string;
+        let identifierNamesGenerator: IIdentifierNamesGenerator, mangledIdentifierName: string;
 
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -178,8 +175,8 @@ describe('MangledIdentifierNamesGenerator', () => {
         const mangledNames1: string[] = [];
         const mangledNames2: string[] = [];
 
-        const expectedMangledNames1: string[] = ['a', 'b', 'c']
-        const expectedMangledNames2: string[] = ['a', 'b']
+        const expectedMangledNames1: string[] = ['a', 'b', 'c'];
+        const expectedMangledNames2: string[] = ['a', 'b'];
 
         let identifierNamesGenerator: IIdentifierNamesGenerator;
 
@@ -204,11 +201,11 @@ describe('MangledIdentifierNamesGenerator', () => {
 
         it('should return valid mangled names for label 1', () => {
             assert.deepEqual(mangledNames1, expectedMangledNames1);
-        })
+        });
 
         it('should return valid mangled names for label 2', () => {
             assert.deepEqual(mangledNames2, expectedMangledNames2);
-        })
+        });
     });
 
     describe('isIncrementedMangledName', function () {
@@ -218,10 +215,11 @@ describe('MangledIdentifierNamesGenerator', () => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        const identifierNamesGenerator: IIdentifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
-            ServiceIdentifiers.IIdentifierNamesGenerator,
-            IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-        );
+        const identifierNamesGenerator: IIdentifierNamesGenerator =
+            inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            );
 
         let isSuccessComparison: boolean = true;
         let mangledName: string = '';
@@ -232,10 +230,14 @@ describe('MangledIdentifierNamesGenerator', () => {
             let resultReversed: boolean;
 
             mangledName = identifierNamesGenerator.generateNext();
-            resultNormal = (<MangledIdentifierNamesGenerator>identifierNamesGenerator)
-                .isIncrementedMangledName(mangledName, prevMangledName);
-            resultReversed = (<MangledIdentifierNamesGenerator>identifierNamesGenerator)
-                .isIncrementedMangledName(prevMangledName, mangledName);
+            resultNormal = (<MangledIdentifierNamesGenerator>identifierNamesGenerator).isIncrementedMangledName(
+                mangledName,
+                prevMangledName
+            );
+            resultReversed = (<MangledIdentifierNamesGenerator>identifierNamesGenerator).isIncrementedMangledName(
+                prevMangledName,
+                mangledName
+            );
 
             if (!resultNormal || resultReversed) {
                 isSuccessComparison = false;
@@ -322,7 +324,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', '', {} );
+                inversifyContainerFacade.load('', '', {});
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator

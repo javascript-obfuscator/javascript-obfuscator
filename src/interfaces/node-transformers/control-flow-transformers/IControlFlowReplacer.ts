@@ -9,15 +9,11 @@ export interface IControlFlowReplacer {
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    replace (
-        node: ESTree.Node,
-        parentNode: ESTree.Node,
-        controlFlowStorage: IControlFlowStorage
-    ): ESTree.Node;
+    replace(node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: IControlFlowStorage): ESTree.Node;
 
     /**
      * @param {TControlFlowStorage} controlFlowStorage
      * @returns {string}
      */
-    generateStorageKey (controlFlowStorage: IControlFlowStorage): string;
+    generateStorageKey(controlFlowStorage: IControlFlowStorage): string;
 }

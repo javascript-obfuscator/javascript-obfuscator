@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -55,11 +55,11 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-            stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
+        stringArrayIndexNodeFactory: TStringArrayIndexNodeFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
@@ -83,7 +83,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      * @param {IStringArrayScopeCallsWrapperData} stringArrayCallsWrapperData
      * @param {string | null} decodeKey
      */
-    public initialize (
+    public initialize(
         index: number,
         indexShiftAmount: number,
         stringArrayCallsWrapperData: IStringArrayScopeCallsWrapperData,
@@ -98,7 +98,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const resultIndex: number = this.indexShiftAmount + this.stringArrayCallsWrapperData.index + this.index;
 
         const indexNode: ESTree.Expression = this.getStringArrayIndexNode(resultIndex);
@@ -109,10 +109,10 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
         // filling call expression arguments with a fake arguments first
         const callExpressionArgs: ESTree.Expression[] = this.arrayUtils.fillWithRange(
             !this.stringArrayCallsWrapperData.parameterIndexesData
-                // root string array calls wrapper
-                ? AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
-                // scope string array calls wrapper
-                : this.options.stringArrayWrappersParametersMaxCount,
+                ? // root string array calls wrapper
+                  AbstractStringArrayCallNode.stringArrayRootCallsWrapperParametersCount
+                : // scope string array calls wrapper
+                  this.options.stringArrayWrappersParametersMaxCount,
             () => this.getFakeStringArrayIndexNode(resultIndex)
         );
 
@@ -152,7 +152,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      * @param {number} actualIndex
      * @returns {Expression}
      */
-    private getFakeStringArrayIndexNode (actualIndex: number): ESTree.Expression {
+    private getFakeStringArrayIndexNode(actualIndex: number): ESTree.Expression {
         return this.getStringArrayIndexNode(this.getFakeStringArrayIndex(actualIndex));
     }
 
@@ -160,7 +160,7 @@ export class StringArrayCallNode extends AbstractStringArrayCallNode {
      * @param {number} actualIndex
      * @returns {number}
      */
-    private getFakeStringArrayIndex (actualIndex: number): number {
+    private getFakeStringArrayIndex(actualIndex: number): number {
         const stringArrayStorageLength: number = this.stringArrayStorage.getLength();
 
         const fakeIndexOffset: number = stringArrayStorageLength / 2;

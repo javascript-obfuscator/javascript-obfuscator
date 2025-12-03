@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -31,7 +31,7 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -42,7 +42,7 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Simplifying:
                 return {
@@ -66,7 +66,7 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.VariableDeclaration | estraverse.VisitorOption}
      */
-    public transformNode (
+    public transformNode(
         variableDeclarationNode: ESTree.VariableDeclaration,
         parentNode: ESTree.Node
     ): ESTree.VariableDeclaration | estraverse.VisitorOption {
@@ -74,7 +74,8 @@ export class VariableDeclarationsMergeTransformer extends AbstractNodeTransforme
             return variableDeclarationNode;
         }
 
-        const prevStatement: TStatement | null = NodeStatementUtils.getPreviousSiblingStatement(variableDeclarationNode);
+        const prevStatement: TStatement | null =
+            NodeStatementUtils.getPreviousSiblingStatement(variableDeclarationNode);
 
         if (!prevStatement || !NodeGuards.isVariableDeclarationNode(prevStatement)) {
             return variableDeclarationNode;

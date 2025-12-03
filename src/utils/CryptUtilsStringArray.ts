@@ -18,9 +18,7 @@ export class CryptUtilsStringArray extends CryptUtils implements ICryptUtilsStri
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator) {
         super(randomGenerator);
     }
 
@@ -30,7 +28,7 @@ export class CryptUtilsStringArray extends CryptUtils implements ICryptUtilsStri
      * @param {string} string
      * @returns {string}
      */
-    public override btoa (string: string): string {
+    public override btoa(string: string): string {
         const output = super.btoa(string);
 
         return output.replace(/=+$/, '');

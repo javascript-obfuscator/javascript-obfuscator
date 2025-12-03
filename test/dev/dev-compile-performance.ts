@@ -7,9 +7,7 @@ import * as fs from 'fs';
 
     let start: any = new Date();
 
-    JavaScriptObfuscator.obfuscate(
-        fs.readFileSync('test/fixtures/compile-performance.js', 'utf8')
-    ).getObfuscatedCode();
+    JavaScriptObfuscator.obfuscate(fs.readFileSync('test/fixtures/compile-performance.js', 'utf8')).getObfuscatedCode();
 
     console.log(`Total time: ${<any>new Date() - start}`);
 })();

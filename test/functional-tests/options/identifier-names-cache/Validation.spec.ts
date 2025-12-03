@@ -11,9 +11,8 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
@@ -23,8 +22,7 @@ describe('`identifierNamesCache` validation', () => {
                                     bar: '_0x654321'
                                 }
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -36,9 +34,8 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
@@ -46,8 +43,7 @@ describe('`identifierNamesCache` validation', () => {
                                 },
                                 propertyIdentifiers: {}
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -59,16 +55,14 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {},
                                 propertyIdentifiers: {}
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -80,17 +74,15 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
                                     foo: '_0x123456'
                                 }
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -102,13 +94,11 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {}
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -120,13 +110,11 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: null
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -142,13 +130,11 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: <any>'cache'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {
@@ -160,19 +146,17 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
                                     foo: <any>1,
-                                    bar: <any>2,
+                                    bar: <any>2
                                 },
                                 propertyIdentifiers: {}
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {
@@ -184,22 +168,20 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
                                     foo: <any>1,
-                                    bar: <any>2,
+                                    bar: <any>2
                                 },
                                 propertyIdentifiers: {
                                     baz: <any>3,
-                                    bark: <any>4,
+                                    bark: <any>4
                                 }
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {
@@ -211,21 +193,19 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: {
                                     foo: <any>1,
-                                    bar: '_0x1234567',
+                                    bar: '_0x1234567'
                                 },
                                 propertyIdentifiers: {
                                     foo: '_0x123456'
                                 }
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {
@@ -237,16 +217,14 @@ describe('`identifierNamesCache` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesCache: {
                                 globalIdentifiers: <any>null,
                                 propertyIdentifiers: <any>null
                             }
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {

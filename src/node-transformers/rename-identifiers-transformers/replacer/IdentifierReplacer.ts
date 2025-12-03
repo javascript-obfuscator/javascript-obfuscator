@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -40,11 +40,11 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {IGlobalIdentifierNamesCacheStorage} identifierNamesCacheStorage
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
-            identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
+        identifierNamesCacheStorage: IGlobalIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;
@@ -59,7 +59,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {Node} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeGlobalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+    public storeGlobalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
         const identifierName: string = identifierNode.name;
 
         if (this.isReservedName(identifierName)) {
@@ -86,7 +86,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeLocalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+    public storeLocalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
         const identifierName: string = identifierNode.name;
 
         if (this.isReservedName(identifierName)) {
@@ -105,7 +105,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {Identifier}
      */
-    public replace (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
+    public replace(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
         const namesMap: Map<string, string> | null = this.blockScopesMap.get(lexicalScopeNode) ?? null;
 
         if (!namesMap) {
@@ -126,7 +126,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      *
      * @param {Identifier} identifierNode
      */
-    public preserveName (identifierNode: ESTree.Identifier): void {
+    public preserveName(identifierNode: ESTree.Identifier): void {
         this.identifierNamesGenerator.preserveName(identifierNode.name);
     }
 
@@ -136,7 +136,10 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public preserveNameForLexicalScope (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+    public preserveNameForLexicalScope(
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope
+    ): void {
         this.identifierNamesGenerator.preserveNameForLexicalScope(identifierNode.name, lexicalScopeNode);
     }
 
@@ -144,14 +147,13 @@ export class IdentifierReplacer implements IIdentifierReplacer {
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedName (name: string): boolean {
+    private isReservedName(name: string): boolean {
         if (!this.options.reservedNames.length) {
             return false;
         }
 
-        return this.options.reservedNames
-            .some((reservedName: string) => {
-                return new RegExp(reservedName, 'g').exec(name) !== null;
-            });
+        return this.options.reservedNames.some((reservedName: string) => {
+            return new RegExp(reservedName, 'g').exec(name) !== null;
+        });
     }
 }

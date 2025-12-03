@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -30,20 +30,15 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            controlFlowCustomNodeFactory,
-            identifierNamesGeneratorFactory,
-            randomGenerator,
-            options
-        );
+        super(controlFlowCustomNodeFactory, identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -53,7 +48,7 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public replace (
+    public replace(
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: IControlFlowStorage

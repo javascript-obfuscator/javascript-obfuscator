@@ -4,7 +4,7 @@
  * @param matchIndex
  * @return {string}
  */
-export function getRegExpMatch (str: string, regExp: RegExp, matchIndex: number = 0): string {
+export function getRegExpMatch(str: string, regExp: RegExp, matchIndex: number = 0): string {
     const match: RegExpMatchArray | null = str.match(regExp);
 
     if (!match) {

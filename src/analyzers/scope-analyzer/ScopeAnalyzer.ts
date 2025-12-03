@@ -1,4 +1,4 @@
-import { injectable, } from 'inversify';
+import { injectable } from 'inversify';
 
 import * as acorn from 'acorn';
 import * as eslintScope from 'eslint-scope';
@@ -28,10 +28,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     /**
      * @type {acorn.Options['sourceType'][]}
      */
-    private static readonly sourceTypes: acorn.Options['sourceType'][] = [
-        'script',
-        'module'
-    ];
+    private static readonly sourceTypes: acorn.Options['sourceType'][] = ['script', 'module'];
 
     /**
      * @type {number}
@@ -49,7 +46,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      *
      * @param {Node} astTree
      */
-    private static attachMissingRanges (astTree: ESTree.Node): void {
+    private static attachMissingRanges(astTree: ESTree.Node): void {
         estraverse.replace(astTree, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {
                 if (!node.range) {
@@ -68,14 +65,14 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isRootNode (node: ESTree.Node): boolean {
+    private static isRootNode(node: ESTree.Node): boolean {
         return NodeGuards.isProgramNode(node) || node.parentNode === node;
     }
 
     /**
      * @param {Program} astTree
      */
-    public analyze (astTree: ESTree.Node): void {
+    public analyze(astTree: ESTree.Node): void {
         const sourceTypeLength: number = ScopeAnalyzer.sourceTypes.length;
 
         ScopeAnalyzer.attachMissingRanges(astTree);
@@ -104,15 +101,12 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      * @param {Node} node
      * @returns {Scope}
      */
-    public acquireScope (node: ESTree.Node): eslintScope.Scope {
+    public acquireScope(node: ESTree.Node): eslintScope.Scope {
         if (!this.scopeManager) {
             throw new Error('Scope manager is not defined');
         }
 
-        const scope: eslintScope.Scope | null = this.scopeManager.acquire(
-            node,
-            ScopeAnalyzer.isRootNode(node)
-        );
+        const scope: eslintScope.Scope | null = this.scopeManager.acquire(node, ScopeAnalyzer.isRootNode(node));
 
         if (!scope) {
             throw new Error('Cannot acquire scope for node');
@@ -126,7 +120,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     /**
      * @param {Scope} scope
      */
-    private sanitizeScopes (scope: eslintScope.Scope): void {
+    private sanitizeScopes(scope: eslintScope.Scope): void {
         scope.childScopes.forEach((childScope: eslintScope.Scope) => {
             // fix of class scopes
             // trying to move class scope references to the parent scope
@@ -138,13 +132,15 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
                 // class name variable is always first
                 const classNameVariable: eslintScope.Variable = childScope.variables[0];
 
-                const upperVariable: eslintScope.Variable | undefined = childScope.upper.variables
-                    .find((variable: eslintScope.Variable) => {
-                        const isValidClassNameVariable: boolean = classNameVariable.defs
-                            .some((definition: eslintScope.Definition) => definition.type === 'ClassName');
+                const upperVariable: eslintScope.Variable | undefined = childScope.upper.variables.find(
+                    (variable: eslintScope.Variable) => {
+                        const isValidClassNameVariable: boolean = classNameVariable.defs.some(
+                            (definition: eslintScope.Definition) => definition.type === 'ClassName'
+                        );
 
                         return isValidClassNameVariable && variable.name === classNameVariable.name;
-                    });
+                    }
+                );
 
                 upperVariable?.references.push(...childScope.variables[0].references);
             }

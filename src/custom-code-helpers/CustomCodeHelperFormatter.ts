@@ -20,9 +20,9 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
      */
     private readonly prevailingKindOfVariables: ESTree.VariableDeclaration['kind'];
 
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
-            prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer
+        prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer
     ) {
         this.prevailingKindOfVariables = prevailingKindOfVariablesAnalyzer.getPrevailingKind();
     }
@@ -32,10 +32,7 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
      * @param {TMapping} mapping
      * @returns {string}
      */
-    public formatTemplate <TMapping extends TDictionary> (
-        template: string,
-        mapping: TMapping
-    ): string {
+    public formatTemplate<TMapping extends TDictionary>(template: string, mapping: TMapping): string {
         return format(template, mapping);
     }
 
@@ -43,7 +40,7 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
      * @param {TStatement[]} statements
      * @returns {TStatement[]}
      */
-    public formatStructure (statements: TStatement[]): TStatement[] {
+    public formatStructure(statements: TStatement[]): TStatement[] {
         for (const statement of statements) {
             estraverse.replace(statement, {
                 enter: (node: ESTree.Node): ESTree.Node | void => {

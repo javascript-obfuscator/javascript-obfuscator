@@ -11,13 +11,11 @@ describe('`domainLockRedirectUrl` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: 'https://example.com/path'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -29,13 +27,11 @@ describe('`domainLockRedirectUrl` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: 'example.com/path'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -47,13 +43,11 @@ describe('`domainLockRedirectUrl` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: '/path'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -65,13 +59,11 @@ describe('`domainLockRedirectUrl` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: 'about:blank'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should pass validation', () => {
@@ -86,13 +78,11 @@ describe('`domainLockRedirectUrl` validation', () => {
                 let testFunc: () => string;
 
                 beforeEach(() => {
-                    testFunc = () => JavaScriptObfuscator.obfuscate(
-                        '',
-                        {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: 'foo'
-                        }
-                    ).getObfuscatedCode();
+                        }).getObfuscatedCode();
                 });
 
                 it('should not pass validation', () => {

@@ -23,14 +23,11 @@ describe('StringArrayCodeHelper', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
             for (let i = 0; i < samplesCount; i++) {
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
 
                 if (obfuscatedCode.match(stringArrayAtFirstPositionRegExp)) {
                     stringArrayAtFirstPositionMatchesCount++;
@@ -51,22 +48,19 @@ describe('StringArrayCodeHelper', () => {
         });
     });
 
-    describe('`stringArray` option isn\'t set', () => {
+    describe("`stringArray` option isn't set", () => {
         let obfuscatedCode: string;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    stringArray: false
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                stringArray: false
+            }).getObfuscatedCode();
         });
 
-        it('shouldn\'t append code helper into the obfuscated code', () => {
+        it("shouldn't append code helper into the obfuscated code", () => {
             assert.notMatch(obfuscatedCode, stringArrayRegExp);
         });
     });

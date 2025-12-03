@@ -101,54 +101,71 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .whenTargetNamed(StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode);
 
     // control flow customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-        .toFactory<ICustomNode, [ControlFlowCustomNode]>(InversifyContainerFacade
-            .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
-                ServiceIdentifiers.Newable__ICustomNode,
-                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ICustomCodeHelperFormatter,
-                ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IOptions
-            ));
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode).toFactory<
+        ICustomNode,
+        [ControlFlowCustomNode]
+    >(
+        InversifyContainerFacade.getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
+            ServiceIdentifiers.Newable__ICustomNode,
+            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+            ServiceIdentifiers.ICustomCodeHelperFormatter,
+            ServiceIdentifiers.IRandomGenerator,
+            ServiceIdentifiers.IOptions
+        )
+    );
 
     // dead code injection customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
-        .toFactory<ICustomNode, [DeadCodeInjectionCustomNode]>(InversifyContainerFacade
-            .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
-                ServiceIdentifiers.Newable__ICustomNode,
-                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ICustomCodeHelperFormatter,
-                ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IOptions
-            ));
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode).toFactory<
+        ICustomNode,
+        [DeadCodeInjectionCustomNode]
+    >(
+        InversifyContainerFacade.getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
+            ServiceIdentifiers.Newable__ICustomNode,
+            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+            ServiceIdentifiers.ICustomCodeHelperFormatter,
+            ServiceIdentifiers.IRandomGenerator,
+            ServiceIdentifiers.IOptions
+        )
+    );
 
     // object expression keys transformer customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
-        .toFactory<ICustomNode, [ObjectExpressionKeysTransformerCustomNode]>(InversifyContainerFacade
-            .getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
-                ServiceIdentifiers.Newable__ICustomNode,
-                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ICustomCodeHelperFormatter,
-                ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IOptions
-            ));
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode).toFactory<
+        ICustomNode,
+        [ObjectExpressionKeysTransformerCustomNode]
+    >(
+        InversifyContainerFacade.getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
+            ServiceIdentifiers.Newable__ICustomNode,
+            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+            ServiceIdentifiers.ICustomCodeHelperFormatter,
+            ServiceIdentifiers.IRandomGenerator,
+            ServiceIdentifiers.IOptions
+        )
+    );
 
     // string array customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayCustomNode)
-        .toFactory<ICustomNode, [StringArrayCustomNode]>(InversifyContainerFacade
-            .getConstructorFactory<StringArrayCustomNode, ICustomNode>(
-                ServiceIdentifiers.Newable__ICustomNode,
-                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.Factory__IStringArrayIndexNode,
-                ServiceIdentifiers.ICustomCodeHelperFormatter,
-                ServiceIdentifiers.IStringArrayStorage,
-                ServiceIdentifiers.IArrayUtils,
-                ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IOptions
-            ));
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayCustomNode).toFactory<
+        ICustomNode,
+        [StringArrayCustomNode]
+    >(
+        InversifyContainerFacade.getConstructorFactory<StringArrayCustomNode, ICustomNode>(
+            ServiceIdentifiers.Newable__ICustomNode,
+            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+            ServiceIdentifiers.Factory__IStringArrayIndexNode,
+            ServiceIdentifiers.ICustomCodeHelperFormatter,
+            ServiceIdentifiers.IStringArrayStorage,
+            ServiceIdentifiers.IArrayUtils,
+            ServiceIdentifiers.IRandomGenerator,
+            ServiceIdentifiers.IOptions
+        )
+    );
 
     // string array index node factory
-    bind<IStringArrayIndexNode>(ServiceIdentifiers.Factory__IStringArrayIndexNode)
-        .toFactory<IStringArrayIndexNode, [StringArrayIndexNode]>(InversifyContainerFacade
-            .getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode));
+    bind<IStringArrayIndexNode>(ServiceIdentifiers.Factory__IStringArrayIndexNode).toFactory<
+        IStringArrayIndexNode,
+        [StringArrayIndexNode]
+    >(
+        InversifyContainerFacade.getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(
+            ServiceIdentifiers.IStringArrayIndexNode
+        )
+    );
 });

@@ -18,7 +18,10 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {string | number} nextItemInCallsChain
      * @returns {boolean}
      */
-    private static isValidTargetPropertyNode (propertyNode: ESTree.Property, nextItemInCallsChain: string | number): boolean {
+    private static isValidTargetPropertyNode(
+        propertyNode: ESTree.Property,
+        nextItemInCallsChain: string | number
+    ): boolean {
         if (!propertyNode.key) {
             return false;
         }
@@ -38,7 +41,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {MemberExpression} callee
      * @returns {ICalleeData}
      */
-    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData | null {
+    public extract(blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData | null {
         if (!NodeGuards.isMemberExpressionNode(callee)) {
             return null;
         }
@@ -49,7 +52,8 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
             return null;
         }
 
-        const functionExpressionName: string | number | null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
+        const functionExpressionName: string | number | null =
+            objectMembersCallsChain[objectMembersCallsChain.length - 1];
         const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
             NodeStatementUtils.getParentNodeWithStatements(blockScopeBody[0]),
             objectMembersCallsChain
@@ -74,7 +78,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {MemberExpression} memberExpression
      * @returns {TObjectMembersCallsChain}
      */
-    private createObjectMembersCallsChain (
+    private createObjectMembersCallsChain(
         currentChain: TObjectMembersCallsChain,
         memberExpression: ESTree.MemberExpression
     ): TObjectMembersCallsChain {
@@ -83,10 +87,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
             currentChain.unshift(memberExpression.property.name);
         } else if (
             NodeGuards.isLiteralNode(memberExpression.property) &&
-            (
-                typeof memberExpression.property.value === 'string' ||
-                typeof memberExpression.property.value === 'number'
-            )
+            (typeof memberExpression.property.value === 'string' || typeof memberExpression.property.value === 'number')
         ) {
             currentChain.unshift(memberExpression.property.value);
         } else {
@@ -108,7 +109,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {TObjectMembersCallsChain} objectMembersCallsChain
      * @returns {BlockStatement}
      */
-    private getCalleeBlockStatement (
+    private getCalleeBlockStatement(
         targetNode: ESTree.Node,
         objectMembersCallsChain: TObjectMembersCallsChain
     ): ESTree.BlockStatement | null {
@@ -144,7 +145,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {TObjectMembersCallsChain} objectMembersCallsChain
      * @returns {BlockStatement}
      */
-    private findCalleeBlockStatement (
+    private findCalleeBlockStatement(
         objectExpressionProperties: (ESTree.Property | ESTree.SpreadElement)[],
         objectMembersCallsChain: TObjectMembersCallsChain
     ): ESTree.BlockStatement | null {

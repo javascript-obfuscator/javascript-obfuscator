@@ -12,9 +12,7 @@ export const SourceMapFileNameRule: TOptionsNormalizerRule = (options: IOptions)
     let { sourceMapFileName }: { sourceMapFileName: string } = options;
 
     if (sourceMapFileName) {
-        sourceMapFileName = sourceMapFileName
-            .replace(/^\/+/, '')
-            .replace(/(?:\.js)?(?:\.map)?$/, '');
+        sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').replace(/(?:\.js)?(?:\.map)?$/, '');
 
         let sourceMapFileNameParts: string[] = sourceMapFileName.split(StringSeparator.Dot);
         const sourceMapFileNamePartsCount: number = sourceMapFileNameParts.length;

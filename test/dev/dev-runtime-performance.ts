@@ -3,7 +3,8 @@
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
-    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`
+    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+        `
         var start = new Date();
         var log = console.log;
         console.log = function () {};
@@ -73,7 +74,7 @@
         console.log(new Date() - start);
     `,
         {
-            disableConsoleOutput: false,
+            disableConsoleOutput: false
         }
     ).getObfuscatedCode();
 

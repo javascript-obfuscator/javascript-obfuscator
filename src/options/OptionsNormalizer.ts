@@ -43,14 +43,14 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         StringArrayRule,
         StringArrayCallsTransformThresholdRule,
         StringArrayEncodingRule,
-        StringArrayWrappersChainedCallsRule,
+        StringArrayWrappersChainedCallsRule
     ];
 
     /**
      * @param {IOptions} options
      * @returns {IOptions}
      */
-    public normalize (options: IOptions): IOptions {
+    public normalize(options: IOptions): IOptions {
         let normalizedOptions: IOptions = {
             ...options
         };

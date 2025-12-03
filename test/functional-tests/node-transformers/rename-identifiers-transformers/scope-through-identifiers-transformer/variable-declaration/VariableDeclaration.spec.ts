@@ -16,19 +16,16 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-with-declaration.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    renameGlobals: true,
-                    identifierNamesCache: {
-                        globalIdentifiers: {
-                            'foo': 'foo_from_cache'
-                        },
-                        propertyIdentifiers: {}
-                    }
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                renameGlobals: true,
+                identifierNamesCache: {
+                    globalIdentifiers: {
+                        foo: 'foo_from_cache'
+                    },
+                    propertyIdentifiers: {}
                 }
-            ).getObfuscatedCode();
+            }).getObfuscatedCode();
         });
 
         it('should skip transformation of variable declaration name', () => {
@@ -48,21 +45,20 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-global-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-global-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {
-                                    'foo': 'foo_from_cache'
-                                },
-                                propertyIdentifiers: {}
-                            }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: 'foo_from_cache'
+                            },
+                            propertyIdentifiers: {}
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('should transform variable reference name', () => {
@@ -76,19 +72,18 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-global-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-global-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {},
-                                propertyIdentifiers: {}
-                            }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('should not transform variable reference name', () => {
@@ -102,22 +97,21 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-global-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-global-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {
-                                    'foo': 'foo_from_cache'
-                                },
-                                propertyIdentifiers: {}
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: 'foo_from_cache'
                             },
-                            reservedNames: ['^foo$']
-                        }
-                    ).getObfuscatedCode();
+                            propertyIdentifiers: {}
+                        },
+                        reservedNames: ['^foo$']
+                    }).getObfuscatedCode();
                 });
 
                 it('should not transform variable reference name', () => {
@@ -133,21 +127,20 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-local-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-local-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {
-                                    'foo': 'foo_from_cache'
-                                },
-                                propertyIdentifiers: {}
-                            }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: 'foo_from_cache'
+                            },
+                            propertyIdentifiers: {}
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('should transform variable reference name', () => {
@@ -161,19 +154,18 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-local-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-local-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {},
-                                propertyIdentifiers: {}
-                            }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('should not transform variable reference name', () => {
@@ -187,22 +179,21 @@ describe('ScopeThroughIdentifiersTransformer VariableDeclaration identifiers', (
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-reference-without-declaration-local-scope.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/variable-reference-without-declaration-local-scope.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {
-                                    'foo': 'foo_from_cache'
-                                },
-                                propertyIdentifiers: {}
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {
+                                foo: 'foo_from_cache'
                             },
-                            reservedNames: ['^foo$']
-                        }
-                    ).getObfuscatedCode();
+                            propertyIdentifiers: {}
+                        },
+                        reservedNames: ['^foo$']
+                    }).getObfuscatedCode();
                 });
 
                 it('should not transform variable reference name', () => {

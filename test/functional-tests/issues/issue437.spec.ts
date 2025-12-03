@@ -13,13 +13,11 @@ describe('Issue #437', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/issue437.js');
 
-            testFunc = () => JavaScriptObfuscator.obfuscate(
-                code,
-                {
+            testFunc = () =>
+                JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     transformObjectKeys: true
-                }
-            ).getObfuscatedCode();
+                }).getObfuscatedCode();
         });
 
         it('does not break on obfuscating', () => {

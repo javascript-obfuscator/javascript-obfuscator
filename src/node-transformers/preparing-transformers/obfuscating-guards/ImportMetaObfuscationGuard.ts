@@ -14,10 +14,12 @@ export class ImportMetaObfuscationGuard implements IObfuscatingGuard {
      * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): ObfuscatingGuardResult {
+    public check(node: ESTree.Node): ObfuscatingGuardResult {
         const isMetaProperty = NodeGuards.isMetaPropertyNode(node);
         const isMetaPropertyParent = !!node?.parentNode && NodeGuards.isMetaPropertyNode(node.parentNode);
 
-        return isMetaProperty || isMetaPropertyParent ? ObfuscatingGuardResult.Ignore : ObfuscatingGuardResult.Transform;
+        return isMetaProperty || isMetaPropertyParent
+            ? ObfuscatingGuardResult.Ignore
+            : ObfuscatingGuardResult.Transform;
     }
 }

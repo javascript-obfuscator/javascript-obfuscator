@@ -6,7 +6,7 @@ class JavaScriptObfuscatorCLIFacade {
     /**
      * @param {string[]} argv
      */
-    public static obfuscate (argv: string[]): void {
+    public static obfuscate(argv: string[]): void {
         const javaScriptObfuscatorCLI: JavaScriptObfuscatorCLI = new JavaScriptObfuscatorCLI(argv);
 
         javaScriptObfuscatorCLI.initialize();

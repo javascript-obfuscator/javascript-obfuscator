@@ -23,10 +23,12 @@ describe('SourceCodeFileUtils', () => {
             describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName: string = 'test.js';
                 const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
-                const expectedFilesData: IFileData[] = [{
-                    content: fileContent,
-                    filePath: inputPath
-                }];
+                const expectedFilesData: IFileData[] = [
+                    {
+                        content: fileContent,
+                        filePath: inputPath
+                    }
+                ];
 
                 let filesData: IFileData[];
 
@@ -80,24 +82,23 @@ describe('SourceCodeFileUtils', () => {
             });
 
             describe('Variant #4: `exclude` option', () => {
-                describe('Variant #1: `inputPath` isn\'t excluded path', () => {
+                describe("Variant #1: `inputPath` isn't excluded path", () => {
                     const tmpFileName: string = 'test.js';
                     const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
-                    const expectedFilesData: IFileData[] = [{
-                        content: fileContent,
-                        filePath: inputPath
-                    }];
+                    const expectedFilesData: IFileData[] = [
+                        {
+                            content: fileContent,
+                            filePath: inputPath
+                        }
+                    ];
 
                     let filesData: IFileData[];
 
                     before(() => {
                         fs.writeFileSync(inputPath, fileContent);
-                        filesData = new SourceCodeFileUtils(
-                            inputPath,
-                            {
-                                exclude: [path.join('**', 'foo.js')]
-                            }
-                        ).readSourceCode();
+                        filesData = new SourceCodeFileUtils(inputPath, {
+                            exclude: [path.join('**', 'foo.js')]
+                        }).readSourceCode();
                     });
 
                     it('should return valid files data', () => {
@@ -118,12 +119,10 @@ describe('SourceCodeFileUtils', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeFileUtils(
-                                inputPath,
-                                {
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
                                     exclude: [path.join('**', tmpFileName)]
-                                }
-                            ).readSourceCode();
+                                }).readSourceCode();
                         });
 
                         it('should throw an error if `inputPath` is the excluded file path', () => {
@@ -143,12 +142,10 @@ describe('SourceCodeFileUtils', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeFileUtils(
-                                inputPath,
-                                {
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
                                     exclude: [tmpFileName]
-                                }
-                            ).readSourceCode();
+                                }).readSourceCode();
                         });
 
                         it('should throw an error if `inputPath` is the excluded file path', () => {
@@ -168,12 +165,10 @@ describe('SourceCodeFileUtils', () => {
 
                         before(() => {
                             fs.writeFileSync(inputPath, fileContent);
-                            testFunc = () => new SourceCodeFileUtils(
-                                inputPath,
-                                {
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
                                     exclude: [inputPath]
-                                }
-                            ).readSourceCode();
+                                }).readSourceCode();
                         });
 
                         it('should throw an error if `inputPath` is the excluded file path', () => {
@@ -306,7 +301,7 @@ describe('SourceCodeFileUtils', () => {
             });
 
             describe('Variant #4: `exclude` option', () => {
-                describe('Variant #1: `inputPath` isn\'t excluded path', () => {
+                describe("Variant #1: `inputPath` isn't excluded path", () => {
                     const tmpFileName1: string = 'foo.js';
                     const tmpFileName2: string = 'bar.js';
                     const tmpFileName3: string = 'baz.png';
@@ -334,12 +329,9 @@ describe('SourceCodeFileUtils', () => {
                         fs.writeFileSync(filePath2, fileContent);
                         fs.writeFileSync(filePath3, fileContent);
                         fs.writeFileSync(filePath4, fileContent);
-                        result = new SourceCodeFileUtils(
-                            tmpDirectoryPath,
-                            {
-                                exclude: ['**/hawk.js']
-                            }
-                        ).readSourceCode();
+                        result = new SourceCodeFileUtils(tmpDirectoryPath, {
+                            exclude: ['**/hawk.js']
+                        }).readSourceCode();
                     });
 
                     it('should return files data', () => {
@@ -383,15 +375,9 @@ describe('SourceCodeFileUtils', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeFileUtils(
-                                tmpDirectoryPath,
-                                {
-                                    exclude: [
-                                        `**/${tmpFileName2}`,
-                                        `**/${tmpFileName4}`
-                                    ]
-                                }
-                            ).readSourceCode();
+                            result = new SourceCodeFileUtils(tmpDirectoryPath, {
+                                exclude: [`**/${tmpFileName2}`, `**/${tmpFileName4}`]
+                            }).readSourceCode();
                         });
 
                         it('should return files data', () => {
@@ -434,15 +420,9 @@ describe('SourceCodeFileUtils', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeFileUtils(
-                                tmpDirectoryPath,
-                                {
-                                    exclude: [
-                                        tmpFileName2,
-                                        tmpFileName4
-                                    ]
-                                }
-                            ).readSourceCode();
+                            result = new SourceCodeFileUtils(tmpDirectoryPath, {
+                                exclude: [tmpFileName2, tmpFileName4]
+                            }).readSourceCode();
                         });
 
                         it('should return files data', () => {
@@ -485,15 +465,9 @@ describe('SourceCodeFileUtils', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            result = new SourceCodeFileUtils(
-                                tmpDirectoryPath,
-                                {
-                                    exclude: [
-                                        filePath2,
-                                        filePath4
-                                    ]
-                                }
-                            ).readSourceCode();
+                            result = new SourceCodeFileUtils(tmpDirectoryPath, {
+                                exclude: [filePath2, filePath4]
+                            }).readSourceCode();
                         });
 
                         it('should return files data', () => {
@@ -525,12 +499,10 @@ describe('SourceCodeFileUtils', () => {
                             fs.writeFileSync(filePath2, fileContent);
                             fs.writeFileSync(filePath3, fileContent);
                             fs.writeFileSync(filePath4, fileContent);
-                            testFunc = () => new SourceCodeFileUtils(
-                                tmpDirectoryPath,
-                                {
+                            testFunc = () =>
+                                new SourceCodeFileUtils(tmpDirectoryPath, {
                                     exclude: [tmpDirectoryPath]
-                                }
-                            ).readSourceCode();
+                                }).readSourceCode();
                         });
 
                         it('should return files data', () => {

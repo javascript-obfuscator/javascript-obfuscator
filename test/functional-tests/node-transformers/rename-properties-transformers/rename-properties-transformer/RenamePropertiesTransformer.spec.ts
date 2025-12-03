@@ -19,21 +19,17 @@ describe('RenamePropertiesTransformer', () => {
                     const property3RegExp: RegExp = /\['(_0x[a-f0-9]{4,6})']: *0x3/;
                     const property4RegExp: RegExp = /\[hawk]: *0x4/;
 
-
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/base.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should rename property', () => {
@@ -64,15 +60,12 @@ describe('RenamePropertiesTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/property-definition-1.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should rename property definition', () => {
@@ -100,21 +93,17 @@ describe('RenamePropertiesTransformer', () => {
                     const property3RegExp: RegExp = /\['c']: *0x3/;
                     const property4RegExp: RegExp = /\[hawk]: *0x4/;
 
-
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/base.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should rename property', () => {
@@ -145,15 +134,12 @@ describe('RenamePropertiesTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/property-definition-1.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should rename property definition', () => {
@@ -181,22 +167,18 @@ describe('RenamePropertiesTransformer', () => {
                     const property3RegExp: RegExp = /\['c']: *0x3/;
                     const property4RegExp: RegExp = /\[d]: *0x4/;
 
-
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/base.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                renameGlobals: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            renameGlobals: true
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should rename variable name', () => {
@@ -225,29 +207,28 @@ describe('RenamePropertiesTransformer', () => {
                 });
 
                 describe('Variant #4: properties rename of nested objects', () => {
-                    const regExp: RegExp = new RegExp('' +
-                        'const foo *= *{' +
-                            '\'a\': *{' +
-                                '\'b\': *0x1' +
+                    const regExp: RegExp = new RegExp(
+                        '' +
+                            'const foo *= *{' +
+                            "'a': *{" +
+                            "'b': *0x1" +
                             '}' +
-                        '};' +
-                        'const bar *= *foo\\[\'a\']\\[\'b\'];' +
-                    '');
+                            '};' +
+                            "const bar *= *foo\\['a']\\['b'];" +
+                            ''
+                    );
 
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/nested-objects.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename property', () => {
@@ -256,28 +237,27 @@ describe('RenamePropertiesTransformer', () => {
                 });
 
                 describe('Variant #5: properties rename of rest element', () => {
-                    const regExp: RegExp = new RegExp('' +
-                        'const foo *= *{' +
-                            '\'a\': *0x1' +
-                        '};' +
-                        'const \\{a: *bar} *= *foo;' +
-                        'const baz *= *bar;' +
-                    '');
+                    const regExp: RegExp = new RegExp(
+                        '' +
+                            'const foo *= *{' +
+                            "'a': *0x1" +
+                            '};' +
+                            'const \\{a: *bar} *= *foo;' +
+                            'const baz *= *bar;' +
+                            ''
+                    );
 
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/rest-element.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename property', () => {
@@ -286,30 +266,29 @@ describe('RenamePropertiesTransformer', () => {
                 });
 
                 describe('Variant #6: reserved dom properties', () => {
-                    const regExp: RegExp = new RegExp('' +
-                        'const foo *= *{' +
-                            '\'a\': *0x1,' +
-                            '\'join\': *0x2,' +
-                            '\'b\': *0x3,' +
-                            '\'c\': *0x4' +
-                        '};' +
-                        'const baz *= *foo\\[\'a\'] *\\+ *foo\\[\'join\'] *\\+ *foo\\[\'b\'] *\\+ *foo\\[\'c\'];' +
-                    '');
+                    const regExp: RegExp = new RegExp(
+                        '' +
+                            'const foo *= *{' +
+                            "'a': *0x1," +
+                            "'join': *0x2," +
+                            "'b': *0x3," +
+                            "'c': *0x4" +
+                            '};' +
+                            "const baz *= *foo\\['a'] *\\+ *foo\\['join'] *\\+ *foo\\['b'] *\\+ *foo\\['c'];" +
+                            ''
+                    );
 
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-properties.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename non-reserved properties', () => {
@@ -318,31 +297,30 @@ describe('RenamePropertiesTransformer', () => {
                 });
 
                 describe('Variant #7: reserved names properties', () => {
-                    const regExp: RegExp = new RegExp('' +
-                        'const foo *= *{' +
-                            '\'a\': *0x1,' +
-                            '\'join\': *0x2,' +
-                            '\'reserved\': *0x3,' +
-                            '\'private_\': *0x4' +
-                        '};' +
-                        'const baz *= *foo\\[\'a\'] *\\+ *foo\\[\'join\'] *\\+ *foo\\[\'reserved\'] *\\+ *foo\\[\'private_\'];' +
-                    '');
+                    const regExp: RegExp = new RegExp(
+                        '' +
+                            'const foo *= *{' +
+                            "'a': *0x1," +
+                            "'join': *0x2," +
+                            "'reserved': *0x3," +
+                            "'private_': *0x4" +
+                            '};' +
+                            "const baz *= *foo\\['a'] *\\+ *foo\\['join'] *\\+ *foo\\['reserved'] *\\+ *foo\\['private_'];" +
+                            ''
+                    );
 
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-properties.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                reservedNames: ['^reserved$', '_$']
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            reservedNames: ['^reserved$', '_$']
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename non-reserved properties', () => {
@@ -351,29 +329,28 @@ describe('RenamePropertiesTransformer', () => {
                 });
 
                 describe('Variant #8: class methods', () => {
-                    const regExp: RegExp = new RegExp('' +
-                        'class Foo *{' +
-                            '\\[\'a\'] *\\(\\) *{}' +
-                        '}' +
-                        'const foo *= *new Foo\\(\\);' +
-                        'foo\\[\'a\']\\(\\);' +
-                    '');
+                    const regExp: RegExp = new RegExp(
+                        '' +
+                            'class Foo *{' +
+                            "\\['a'] *\\(\\) *{}" +
+                            '}' +
+                            'const foo *= *new Foo\\(\\);' +
+                            "foo\\['a']\\(\\);" +
+                            ''
+                    );
 
                     let obfuscatedCode: string;
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/class-methods.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                reservedNames: ['^reserved$', '_$']
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            reservedNames: ['^reserved$', '_$']
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename class method name', () => {
@@ -384,9 +361,9 @@ describe('RenamePropertiesTransformer', () => {
                 describe('Variant #9: integration with `splitStrings` option', () => {
                     const propertyRegExp: RegExp = new RegExp(
                         'const foo *= *{' +
-                            '\'a\': *\'long\' *\\+ *\'Prop\' *\\+ *\'erty\' *\\+ *\'Valu\' *\\+ *\'e\'' +
-                        '};' +
-                        'foo\\[\'a\'];'
+                            "'a': *'long' *\\+ *'Prop' *\\+ *'erty' *\\+ *'Valu' *\\+ *'e'" +
+                            '};' +
+                            "foo\\['a'];"
                     );
 
                     let obfuscatedCode: string;
@@ -394,17 +371,14 @@ describe('RenamePropertiesTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/split-strings-integration.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                splitStrings: true,
-                                splitStringsChunkLength: 4
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            splitStrings: true,
+                            splitStringsChunkLength: 4
+                        }).getObfuscatedCode();
                     });
 
                     it('Should rename property before `splitStrings` option will applied', () => {
@@ -415,30 +389,29 @@ describe('RenamePropertiesTransformer', () => {
                 describe('Variant #10: integration with `controlFlowFlattening` option', () => {
                     const propertyRegExp: RegExp = new RegExp(
                         'const b *= *{ *' +
-                            '\'\\w{5}\' *: *\'a\' *' +
-                        '}; *' +
-                        'const c *= *{' +
-                            '\'a\': *0x1' +
-                        '};' +
-                        'c\\[b\\[\'\\w{5}\']];'
+                            "'\\w{5}' *: *'a' *" +
+                            '}; *' +
+                            'const c *= *{' +
+                            "'a': *0x1" +
+                            '};' +
+                            "c\\[b\\['\\w{5}']];"
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening-integration.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/control-flow-flattening-integration.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                controlFlowFlattening: true,
-                                controlFlowFlatteningThreshold: 1
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }).getObfuscatedCode();
                     });
 
                     it('Should correctly rename property when `controlFlowFlattening` option is enabled', () => {
@@ -448,27 +421,23 @@ describe('RenamePropertiesTransformer', () => {
 
                 describe('Variant #11: integration with `transformObjectKeys` option', () => {
                     const propertyRegExp: RegExp = new RegExp(
-                        'const b *= *{}; *' +
-                        'b\\[\'a\'] *= *0x1;' +
-                        'const foo *= *b;' +
-                        'foo\\[\'a\'];'
+                        'const b *= *{}; *' + "b\\['a'] *= *0x1;" + 'const foo *= *b;' + "foo\\['a'];"
                     );
 
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/transform-object-keys-integration.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/transform-object-keys-integration.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                                transformObjectKeys: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                            transformObjectKeys: true
+                        }).getObfuscatedCode();
                     });
 
                     it('Should correctly rename property when `transformObjectKeys` option is enabled', () => {
@@ -486,14 +455,11 @@ describe('RenamePropertiesTransformer', () => {
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/boolean-literal-node.js');
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameProperties: true,
-                                renamePropertiesMode: RenamePropertiesMode.Unsafe
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameProperties: true,
+                            renamePropertiesMode: RenamePropertiesMode.Unsafe
+                        }).getObfuscatedCode();
                     });
 
                     it('Match #1: should skip literal property with invalid type', () => {
@@ -510,16 +476,13 @@ describe('RenamePropertiesTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/duplicated-generated-names-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            renamePropertiesMode: RenamePropertiesMode.Unsafe,
-                            identifierNamesGenerator: 'mangled',
-                            reservedNames: ['^a$']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        renamePropertiesMode: RenamePropertiesMode.Unsafe,
+                        identifierNamesGenerator: 'mangled',
+                        reservedNames: ['^a$']
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should skip literal property with invalid type', () => {
@@ -530,43 +493,44 @@ describe('RenamePropertiesTransformer', () => {
 
         describe('Mode: `safe`', () => {
             describe('Variant #1: base properties rename', () => {
-                const declarationsRegExp: RegExp = new RegExp('' +
-                    'const object *= *{' +
-                        '\'foo\': *0x1, *' +
-                        '\'a\': *0x2 *' +
-                    '}; *' +
-                    'class Class *{ *' +
-                        '\\[\'baz\'] *= *0x1; *' +
-                        'static *\\[\'b\'] *= *0x2;*' +
-                        'static *\\[\'hawk\'] *\\(\\) *{} *' +
-                        'static *\\[\'c\'] *\\(\\) *{} *' +
-                    '}' +
-                '');
-                const referencesRegExp: RegExp = new RegExp('' +
-                    'console\\[\'log\']\\(' +
-                        'object\\[\'foo\'], *' +
-                        'object\\[\'a\'], *' +
-                        'Class\\[\'baz\'], *' +
-                        'Class\\[\'b\'], *' +
-                        'Class\\[\'hawk\'], *' +
-                        'Class\\[\'c\'] *' +
-                    '\\);' +
-                '');
+                const declarationsRegExp: RegExp = new RegExp(
+                    '' +
+                        'const object *= *{' +
+                        "'foo': *0x1, *" +
+                        "'a': *0x2 *" +
+                        '}; *' +
+                        'class Class *{ *' +
+                        "\\['baz'] *= *0x1; *" +
+                        "static *\\['b'] *= *0x2;*" +
+                        "static *\\['hawk'] *\\(\\) *{} *" +
+                        "static *\\['c'] *\\(\\) *{} *" +
+                        '}' +
+                        ''
+                );
+                const referencesRegExp: RegExp = new RegExp(
+                    '' +
+                        "console\\['log']\\(" +
+                        "object\\['foo'], *" +
+                        "object\\['a'], *" +
+                        "Class\\['baz'], *" +
+                        "Class\\['b'], *" +
+                        "Class\\['hawk'], *" +
+                        "Class\\['c'] *" +
+                        '\\);' +
+                        ''
+                );
 
                 let obfuscatedCode: string;
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/safe-mode.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            renamePropertiesMode: RenamePropertiesMode.Safe,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        renamePropertiesMode: RenamePropertiesMode.Safe,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }).getObfuscatedCode();
                 });
 
                 it('Should rename property declarations', () => {
@@ -586,16 +550,13 @@ describe('RenamePropertiesTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/duplicated-generated-names-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            renamePropertiesMode: RenamePropertiesMode.Safe,
-                            identifierNamesGenerator: 'mangled',
-                            reservedNames: ['^a$']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        renamePropertiesMode: RenamePropertiesMode.Safe,
+                        identifierNamesGenerator: 'mangled',
+                        reservedNames: ['^a$']
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should skip literal property with invalid type', () => {
@@ -615,17 +576,14 @@ describe('RenamePropertiesTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {},
-                                propertyIdentifiers: {}
-                            }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {}
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should rename property', () => {
@@ -651,20 +609,17 @@ describe('RenamePropertiesTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {},
-                                propertyIdentifiers: {
-                                    bar: 'bar_from_cache',
-                                    baz: 'baz_from_cache'
-                                }
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {
+                                bar: 'bar_from_cache',
+                                baz: 'baz_from_cache'
                             }
                         }
-                    ).getObfuscatedCode();
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should rename property based on the cache value', () => {
@@ -690,21 +645,18 @@ describe('RenamePropertiesTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/property-identifier-names-cache.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameProperties: true,
-                            identifierNamesCache: {
-                                globalIdentifiers: {},
-                                propertyIdentifiers: {
-                                    bar: 'bar_from_cache',
-                                    baz: 'baz_from_cache'
-                                }
-                            },
-                            reservedNames: ['^baz$']
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameProperties: true,
+                        identifierNamesCache: {
+                            globalIdentifiers: {},
+                            propertyIdentifiers: {
+                                bar: 'bar_from_cache',
+                                baz: 'baz_from_cache'
+                            }
+                        },
+                        reservedNames: ['^baz$']
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should rename property based on the cache value', () => {

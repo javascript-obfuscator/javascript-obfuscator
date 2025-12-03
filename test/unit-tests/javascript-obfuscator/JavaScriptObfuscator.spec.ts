@@ -21,24 +21,19 @@ describe('JavaScriptObfuscator', () => {
             describe('Variant #1: default behaviour', () => {
                 const regExp: RegExp = new RegExp(`sourceMappingURL=${sourceMapUrl}`);
 
-                let obfuscatedCode: string,
-                    sourceMapObject: any;
+                let obfuscatedCode: string, sourceMapObject: any;
 
                 before(() => {
                     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                    inversifyContainerFacade.load(
-                        '',
-                        '',
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            sourceMap: true,
-                            sourceMapFileName: sourceMapUrl
-                        }
+                    inversifyContainerFacade.load('', '', {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        sourceMap: true,
+                        sourceMapFileName: sourceMapUrl
+                    });
+                    javaScriptObfuscator = inversifyContainerFacade.get<IJavaScriptObfuscator>(
+                        ServiceIdentifiers.IJavaScriptObfuscator
                     );
-                    javaScriptObfuscator = inversifyContainerFacade
-                        .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
-
 
                     const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
@@ -59,25 +54,20 @@ describe('JavaScriptObfuscator', () => {
                 const sourceMapBaseUrl: string = 'http://localhost:9000';
                 const regExp: RegExp = new RegExp(`sourceMappingURL=${sourceMapBaseUrl}/${sourceMapUrl}$`);
 
-                let obfuscatedCode: string,
-                    sourceMapObject: any;
+                let obfuscatedCode: string, sourceMapObject: any;
 
                 before(() => {
                     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                    inversifyContainerFacade.load(
-                        '',
-                        '',
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            sourceMap: true,
-                            sourceMapBaseUrl: sourceMapBaseUrl,
-                            sourceMapFileName: sourceMapUrl
-                        }
+                    inversifyContainerFacade.load('', '', {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        sourceMap: true,
+                        sourceMapBaseUrl: sourceMapBaseUrl,
+                        sourceMapFileName: sourceMapUrl
+                    });
+                    javaScriptObfuscator = inversifyContainerFacade.get<IJavaScriptObfuscator>(
+                        ServiceIdentifiers.IJavaScriptObfuscator
                     );
-                    javaScriptObfuscator = inversifyContainerFacade
-                        .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
-
 
                     const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 

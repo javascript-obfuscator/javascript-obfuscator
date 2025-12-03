@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as eslintScope from 'eslint-scope';
@@ -27,10 +27,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
     /**
      * @type {string[]}
      */
-    private static readonly globalScopeNames: string[] = [
-        'global',
-        'module'
-    ];
+    private static readonly globalScopeNames: string[] = ['global', 'module'];
 
     /**
      * @type {IScopeAnalyzer}
@@ -40,9 +37,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
     /**
      * @param {IScopeAnalyzer} scopeAnalyzer
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IScopeAnalyzer) scopeAnalyzer: IScopeAnalyzer
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IScopeAnalyzer) scopeAnalyzer: IScopeAnalyzer) {
         this.scopeAnalyzer = scopeAnalyzer;
     }
 
@@ -51,7 +46,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
      * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    public traverseScopeIdentifiers (
+    public traverseScopeIdentifiers(
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
         callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
@@ -68,7 +63,7 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
      * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
      */
-    public traverseScopeThroughIdentifiers (
+    public traverseScopeThroughIdentifiers(
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
         callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
@@ -85,13 +80,15 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
      * @param {Scope} currentScope
      * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    private traverseScopeIdentifiersRecursive (
+    private traverseScopeIdentifiersRecursive(
         rootScope: eslintScope.Scope,
         currentScope: eslintScope.Scope,
         callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
     ): void {
         const variableScope: eslintScope.Scope = currentScope.variableScope;
-        const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
+        const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(
+            variableScope.block
+        )
             ? variableScope.block
             : null;
         const isGlobalDeclaration: boolean = ScopeIdentifiersTraverser.globalScopeNames.includes(variableScope.type);
@@ -105,13 +102,12 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
                 continue;
             }
 
-            const isBubblingDeclaration: boolean = variable
-                .identifiers
-                .some((identifier: ESTree.Node) =>
-                    identifier.parentNode
-                    && NodeGuards.isPropertyNode(identifier.parentNode)
-                    && identifier.parentNode.shorthand
-                );
+            const isBubblingDeclaration: boolean = variable.identifiers.some(
+                (identifier: ESTree.Node) =>
+                    identifier.parentNode &&
+                    NodeGuards.isPropertyNode(identifier.parentNode) &&
+                    identifier.parentNode.shorthand
+            );
 
             callback({
                 isGlobalDeclaration,
@@ -133,13 +129,15 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
      * @param {Scope} currentScope
      * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
      */
-    private traverseScopeThroughIdentifiersRecursive (
+    private traverseScopeThroughIdentifiersRecursive(
         rootScope: eslintScope.Scope,
         currentScope: eslintScope.Scope,
         callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
     ): void {
         const variableScope: eslintScope.Scope = currentScope.variableScope;
-        const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)
+        const variableLexicalScopeNode: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(
+            variableScope.block
+        )
             ? variableScope.block
             : null;
         const isGlobalDeclaration: boolean = ScopeIdentifiersTraverser.globalScopeNames.includes(variableScope.type);

@@ -10,7 +10,7 @@ export interface IScopeIdentifiersTraverser {
      * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
-    traverseScopeIdentifiers (
+    traverseScopeIdentifiers(
         programNode: ESTree.Program,
         parentNode: ESTree.Node | null,
         callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
@@ -21,10 +21,9 @@ export interface IScopeIdentifiersTraverser {
      * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
      */
-    traverseScopeThroughIdentifiers (
+    traverseScopeThroughIdentifiers(
         node: ESTree.Node,
         parentNode: ESTree.Node | null,
         callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
     ): void;
-
 }

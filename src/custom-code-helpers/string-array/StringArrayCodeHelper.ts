@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -40,9 +40,9 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -61,10 +61,7 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @param {IStringArrayStorage} stringArrayStorage
      * @param {string} stringArrayFunctionName
      */
-    public initialize (
-        stringArrayStorage: IStringArrayStorage,
-        stringArrayFunctionName: string
-    ): void {
+    public initialize(stringArrayStorage: IStringArrayStorage, stringArrayFunctionName: string): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayFunctionName = stringArrayFunctionName;
     }
@@ -73,14 +70,14 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         const stringArrayName: string = this.identifierNamesGenerator.generateNext();
 
         return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
@@ -93,9 +90,8 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @returns {string}
      */
-    private getEncodedStringArrayStorageItems (): string {
-        return Array
-            .from(this.stringArrayStorage.getStorage().values())
+    private getEncodedStringArrayStorageItems(): string {
+        return Array.from(this.stringArrayStorage.getStorage().values())
             .map((stringArrayStorageItemData: IStringArrayStorageItemData): string => {
                 const escapedEncodedValue: string = StringUtils.escapeJsString(stringArrayStorageItemData.encodedValue);
 

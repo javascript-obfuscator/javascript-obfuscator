@@ -24,7 +24,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
  * @param {string} documentTemplate
  * @returns {Function}
  */
-function getFunctionFromTemplate (
+function getFunctionFromTemplate(
     templateData: any,
     callsControllerFunctionName: string,
     documentTemplate: string
@@ -68,21 +68,21 @@ describe('DomainLockTemplate', () => {
         let root: any;
 
         before(() => {
-            const [
-                hiddenDomainsString,
-                domainsStringDiff
-            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+            const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                domainsString,
+                domainsString.length * 3
+            );
 
-            const [
-                hiddenDomainLockRedirectUrl,
-                domainLockRedirectUrlDiff
-            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+            const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                domainLockRedirectUrl,
+                domainLockRedirectUrl.length * 3
+            );
 
             root = {
                 document: {
                     domain: currentDomain,
-                    location: undefined,
-                },
+                    location: undefined
+                }
             };
 
             testFunc = getFunctionFromTemplate(
@@ -115,21 +115,21 @@ describe('DomainLockTemplate', () => {
         let root: any;
 
         before(() => {
-            const [
-                hiddenDomainsString,
-                domainsStringDiff
-            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+            const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                domainsString,
+                domainsString.length * 3
+            );
 
-            const [
-                hiddenDomainLockRedirectUrl,
-                domainLockRedirectUrlDiff
-            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+            const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                domainLockRedirectUrl,
+                domainLockRedirectUrl.length * 3
+            );
 
             root = {
                 document: {
                     domain: currentDomain,
-                    location: undefined,
-                },
+                    location: undefined
+                }
             };
 
             testFunc = getFunctionFromTemplate(
@@ -162,21 +162,21 @@ describe('DomainLockTemplate', () => {
         let root: any;
 
         before(() => {
-            const [
-                hiddenDomainsString,
-                domainsStringDiff
-            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+            const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                domainsString,
+                domainsString.length * 3
+            );
 
-            const [
-                hiddenDomainLockRedirectUrl,
-                domainLockRedirectUrlDiff
-            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+            const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                domainLockRedirectUrl,
+                domainLockRedirectUrl.length * 3
+            );
 
             root = {
                 document: {
                     domain: currentDomain,
-                    location: undefined,
-                },
+                    location: undefined
+                }
             };
 
             testFunc = getFunctionFromTemplate(
@@ -210,21 +210,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -257,21 +257,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -304,21 +304,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -351,21 +351,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -399,21 +399,21 @@ describe('DomainLockTemplate', () => {
         let root: any;
 
         before(() => {
-            const [
-                hiddenDomainsString,
-                domainsStringDiff
-            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+            const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                domainsString,
+                domainsString.length * 3
+            );
 
-            const [
-                hiddenDomainLockRedirectUrl,
-                domainLockRedirectUrlDiff
-            ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+            const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                domainLockRedirectUrl,
+                domainLockRedirectUrl.length * 3
+            );
 
             root = {
                 document: {
                     domain: currentDomain,
-                    location: undefined,
-                },
+                    location: undefined
+                }
             };
 
             testFunc = getFunctionFromTemplate(
@@ -437,7 +437,7 @@ describe('DomainLockTemplate', () => {
         });
     });
 
-    describe('Variant #6: current domain doesn\'t match with `domainsString`', () => {
+    describe("Variant #6: current domain doesn't match with `domainsString`", () => {
         describe('Variant #1', () => {
             const domainsString: string = ['www.example.com'].join(';');
             const domainLockRedirectUrl: string = 'about:blank';
@@ -447,21 +447,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -494,24 +494,25 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
-                testFunc = getFunctionFromTemplate({
+                testFunc = getFunctionFromTemplate(
+                    {
                         domainLockFunctionName: 'domainLockFunction',
                         domainsStringDiff,
                         domains: hiddenDomainsString,
@@ -540,21 +541,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -587,21 +588,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -634,21 +635,21 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentDomain,
-                        location: undefined,
-                    },
+                        location: undefined
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -683,22 +684,22 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         location: {
-                            hostname: currentHostName,
-                        },
-                    },
+                            hostname: currentHostName
+                        }
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -722,7 +723,7 @@ describe('DomainLockTemplate', () => {
             });
         });
 
-        describe('Variant #2: current location.hostname doesn\'t match with `domainsString`', () => {
+        describe("Variant #2: current location.hostname doesn't match with `domainsString`", () => {
             const domainsString: string = ['www.example.com'].join(';');
             const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.test.com';
@@ -731,22 +732,22 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         location: {
-                            hostname: currentHostName,
-                        },
-                    },
+                            hostname: currentHostName
+                        }
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -781,23 +782,23 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentHostName,
                         location: {
-                            hostname: currentHostName,
-                        },
-                    },
+                            hostname: currentHostName
+                        }
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -821,7 +822,7 @@ describe('DomainLockTemplate', () => {
             });
         });
 
-        describe('Variant #2: current domain doesn\'t match with `domainsString`', () => {
+        describe("Variant #2: current domain doesn't match with `domainsString`", () => {
             const domainsString: string = ['www.example.com'].join(';');
             const domainLockRedirectUrl: string = 'about:blank';
             const currentHostName: string = 'www.test.com';
@@ -830,23 +831,23 @@ describe('DomainLockTemplate', () => {
             let root: any;
 
             before(() => {
-                const [
-                    hiddenDomainsString,
-                    domainsStringDiff
-                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
 
-                const [
-                    hiddenDomainLockRedirectUrl,
-                    domainLockRedirectUrlDiff
-                ] = cryptUtils.hideString(domainLockRedirectUrl, domainLockRedirectUrl.length * 3);
+                const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                    domainLockRedirectUrl,
+                    domainLockRedirectUrl.length * 3
+                );
 
                 root = {
                     document: {
                         domain: currentHostName,
                         location: {
-                            hostname: currentHostName,
-                        },
-                    },
+                            hostname: currentHostName
+                        }
+                    }
                 };
 
                 testFunc = getFunctionFromTemplate(
@@ -885,15 +886,12 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['obfuscator.io'],
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['obfuscator.io'],
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -913,15 +911,12 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['obfuscator.io'],
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['obfuscator.io'],
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
@@ -941,15 +936,12 @@ describe('DomainLockTemplate', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        domainLock: ['obfuscator.io'],
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                );
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    domainLock: ['obfuscator.io'],
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                });
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });

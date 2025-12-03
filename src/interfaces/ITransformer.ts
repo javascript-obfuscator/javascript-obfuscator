@@ -1,4 +1,4 @@
-export interface ITransformer <TTransformerName extends string> {
+export interface ITransformer<TTransformerName extends string> {
     /**
      * @type {TTransformerName[] | undefined}
      */

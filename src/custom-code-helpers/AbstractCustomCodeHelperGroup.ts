@@ -31,16 +31,16 @@ export abstract class AbstractCustomCodeHelperGroup implements ICustomCodeHelper
     /**
      * @type {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
-    protected abstract customCodeHelpers: Map <CustomCodeHelper, ICustomCodeHelper>;
+    protected abstract customCodeHelpers: Map<CustomCodeHelper, ICustomCodeHelper>;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -52,7 +52,7 @@ export abstract class AbstractCustomCodeHelperGroup implements ICustomCodeHelper
     /**
      * @returns {Map<CustomCodeHelper, ICustomCodeHelper>}
      */
-    public getCustomCodeHelpers (): Map <CustomCodeHelper, ICustomCodeHelper> {
+    public getCustomCodeHelpers(): Map<CustomCodeHelper, ICustomCodeHelper> {
         return this.customCodeHelpers;
     }
 
@@ -60,7 +60,10 @@ export abstract class AbstractCustomCodeHelperGroup implements ICustomCodeHelper
      * @param {CustomCodeHelper} customCodeHelperName
      * @param {callback} callback
      */
-    protected appendCustomNodeIfExist (customCodeHelperName: CustomCodeHelper, callback: (customCodeHelper: ICustomCodeHelper) => void): void {
+    protected appendCustomNodeIfExist(
+        customCodeHelperName: CustomCodeHelper,
+        callback: (customCodeHelper: ICustomCodeHelper) => void
+    ): void {
         const customCodeHelper: ICustomCodeHelper | undefined = this.customCodeHelpers.get(customCodeHelperName);
 
         if (!customCodeHelper) {
@@ -75,9 +78,9 @@ export abstract class AbstractCustomCodeHelperGroup implements ICustomCodeHelper
      * @returns {number}
      */
 
-    protected getRandomCallsGraphIndex (callsGraphLength: number): number {
+    protected getRandomCallsGraphIndex(callsGraphLength: number): number {
         return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(callsGraphLength - 1)));
     }
 
-    public abstract initialize (): void;
+    public abstract initialize(): void;
 }

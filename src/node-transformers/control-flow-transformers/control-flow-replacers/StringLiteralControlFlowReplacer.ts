@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -34,20 +34,15 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            controlFlowCustomNodeFactory,
-            identifierNamesGeneratorFactory,
-            randomGenerator,
-            options
-        );
+        super(controlFlowCustomNodeFactory, identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -56,7 +51,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public replace (
+    public replace(
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
         controlFlowStorage: IControlFlowStorage
@@ -70,8 +65,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         }
 
         const replacerId: string = literalNode.value;
-        const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LiteralNode);
+        const literalCustomNode: ICustomNode<TInitialData<LiteralNode>> = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.LiteralNode
+        );
 
         literalCustomNode.initialize(literalNode);
 
@@ -90,10 +86,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
      * @param {string} storageKey
      * @returns {NodeGuards}
      */
-    protected getControlFlowStorageCallNode (
-        controlFlowStorageId: string,
-        storageKey: string
-    ): ESTree.Node {
+    protected getControlFlowStorageCallNode(controlFlowStorageId: string, storageKey: string): ESTree.Node {
         const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<StringLiteralControlFlowStorageCallNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
@@ -102,7 +95,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
+            throw new Error(
+                '`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node'
+            );
         }
 
         return statementNode.expression;

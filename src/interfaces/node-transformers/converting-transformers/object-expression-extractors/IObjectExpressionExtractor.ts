@@ -8,7 +8,7 @@ export interface IObjectExpressionExtractor {
      * @param {Statement} hostStatement
      * @returns {IObjectExpressionExtractorResult}
      */
-    extract (
+    extract(
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): IObjectExpressionExtractorResult;

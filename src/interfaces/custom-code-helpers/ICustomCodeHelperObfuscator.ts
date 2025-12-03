@@ -6,5 +6,5 @@ export interface ICustomCodeHelperObfuscator {
      * @param {TInputOptions} additionalOptions
      * @returns {string}
      */
-    obfuscateTemplate (template: string, additionalOptions?: TInputOptions): string;
+    obfuscateTemplate(template: string, additionalOptions?: TInputOptions): string;
 }

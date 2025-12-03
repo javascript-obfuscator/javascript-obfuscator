@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function StringArrayCallsWrapperTemplate (): string {
+export function StringArrayCallsWrapperTemplate(): string {
     return `
         function {stringArrayCallsWrapperName} (index, key) {
             index = index - {indexShiftAmount};

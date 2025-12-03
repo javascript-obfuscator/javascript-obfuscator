@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -39,9 +39,9 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -60,7 +60,7 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @param {NodeTransformationStage} nodeTransformationStage
      * @param {string} callsControllerFunctionName
      */
-    public initialize (nodeTransformationStage: NodeTransformationStage, callsControllerFunctionName: string): void {
+    public initialize(nodeTransformationStage: NodeTransformationStage, callsControllerFunctionName: string): void {
         this.nodeTransformationStage = nodeTransformationStage;
         this.callsControllerFunctionName = callsControllerFunctionName;
     }
@@ -69,14 +69,14 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
      * @param {string} codeHelperTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (codeHelperTemplate: string): TStatement[] {
+    protected getNodeStructure(codeHelperTemplate: string): TStatement[] {
         return NodeUtils.convertCodeToStructure(codeHelperTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected override getCodeHelperTemplate (): string {
+    protected override getCodeHelperTemplate(): string {
         if (this.nodeTransformationStage === NodeTransformationStage.Finalizing) {
             return this.customCodeHelperObfuscator.obfuscateTemplate(
                 this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate(), {

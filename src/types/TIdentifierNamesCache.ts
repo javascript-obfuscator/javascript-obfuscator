@@ -4,4 +4,3 @@ export type TIdentifierNamesCache = {
     globalIdentifiers?: TIdentifierNamesCacheDictionary;
     propertyIdentifiers?: TIdentifierNamesCacheDictionary;
 } | null;
-

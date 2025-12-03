@@ -18,12 +18,9 @@ describe('CommentsTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/no-preserved-words.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should remove comments without preserved words', () => {
@@ -39,12 +36,9 @@ describe('CommentsTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/preserved-words.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -60,12 +54,9 @@ describe('CommentsTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/combined-words-1.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -74,26 +65,25 @@ describe('CommentsTransformer', () => {
     });
 
     describe('Variant #4: comment with preserved and non-preserved words', () => {
-        const regExp: RegExp = new RegExp(``+
-            `^\\/\\*\\* *${lineSeparatorEscaped}` +
-            ` *\\* *@license *${lineSeparatorEscaped}` +
-            ` *\\* *test${lineSeparatorEscaped}` +
-            ` *\\*\\/${lineSeparatorEscaped}` +
-            `var test *= *0x1;` +
-            ` *\\/\\*\\* *@preserved *\\*\\/$` +
-        ``);
+        const regExp: RegExp = new RegExp(
+            `` +
+                `^\\/\\*\\* *${lineSeparatorEscaped}` +
+                ` *\\* *@license *${lineSeparatorEscaped}` +
+                ` *\\* *test${lineSeparatorEscaped}` +
+                ` *\\*\\/${lineSeparatorEscaped}` +
+                `var test *= *0x1;` +
+                ` *\\/\\*\\* *@preserved *\\*\\/$` +
+                ``
+        );
 
         let obfuscatedCode: string;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/combined-words-2.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -107,12 +97,9 @@ describe('CommentsTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/comments-only-1.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should remove comment without preserved words', () => {
@@ -128,12 +115,9 @@ describe('CommentsTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/comments-only-2.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -144,23 +128,21 @@ describe('CommentsTransformer', () => {
     describe('Variant #7: simple comment with preserved words and additional code helper is inserted', () => {
         describe('Variant #1: `stringArray` code helper', () => {
             const regExp: RegExp = new RegExp(
-                '^\\/\\/ *@license *test *comment *\\n*.*' +
-                getStringArrayRegExp(['abc']).source
+                '^\\/\\/ *@license *test *comment *\\n*.*' + getStringArrayRegExp(['abc']).source
             );
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/preserved-words-additional-code-helper-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/preserved-words-additional-code-helper-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should keep comments with preserved words and move heading comment to the top', () => {
@@ -171,22 +153,21 @@ describe('CommentsTransformer', () => {
         describe('Variant #2: `transformObjectKeys` code helper', () => {
             const regExp: RegExp = new RegExp(
                 '^\\/\\/ *@license *test *comment *\\n*var _0x([a-f0-9]){4,6} *= *{};\\n*' +
-                '_0x([a-f0-9]){4,6}\\[\'foo\'] *= *\'bar\';\\n*' +
-                'var test *= *_0x([a-f0-9]){4,6};$'
+                    "_0x([a-f0-9]){4,6}\\['foo'] *= *'bar';\\n*" +
+                    'var test *= *_0x([a-f0-9]){4,6};$'
             );
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/preserved-words-additional-code-helper-2.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/preserved-words-additional-code-helper-2.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    transformObjectKeys: true
+                }).getObfuscatedCode();
             });
 
             it('should keep comments with preserved words and move heading comment to the top', () => {

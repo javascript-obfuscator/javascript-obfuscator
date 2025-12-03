@@ -5,17 +5,17 @@ export interface ILogger {
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    info (loggingMessage: LoggingMessage, value?: string | number): void;
+    info(loggingMessage: LoggingMessage, value?: string | number): void;
 
     /**
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    success (loggingMessage: LoggingMessage, value?: string | number): void;
+    success(loggingMessage: LoggingMessage, value?: string | number): void;
 
     /**
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    warn (loggingMessage: LoggingMessage, value?: string | number): void;
+    warn(loggingMessage: LoggingMessage, value?: string | number): void;
 }

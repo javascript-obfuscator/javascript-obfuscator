@@ -1,4 +1,4 @@
-import { inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -28,7 +28,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRenamePropertiesReplacer) renamePropertiesReplacer: IRenamePropertiesReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -44,11 +44,8 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private static isValidPropertyNode<
-        TNode extends ESTree.Property
-            | ESTree.PropertyDefinition
-            | ESTree.MemberExpression
-            | ESTree.MethodDefinition
-        > (
+        TNode extends ESTree.Property | ESTree.PropertyDefinition | ESTree.MemberExpression | ESTree.MethodDefinition
+    >(
         propertyNode: TNode,
         propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier
     ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {
@@ -63,7 +60,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
                 return {
@@ -92,15 +89,14 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @param {Node} parentNode
      */
-    public prepareNode (
-        node: ESTree.Node,
-        parentNode: ESTree.Node
-    ): void {
-        if ((NodeGuards.isPropertyNode(parentNode) && parentNode.key === node)
-            || NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node
-            || NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node
-            || NodeGuards.isPropertyDefinitionNode(parentNode) && parentNode.key === node) {
-            NodeMetadata.set(node, {propertyKeyToRenameNode: true});
+    public prepareNode(node: ESTree.Node, parentNode: ESTree.Node): void {
+        if (
+            (NodeGuards.isPropertyNode(parentNode) && parentNode.key === node) ||
+            (NodeGuards.isMemberExpressionNode(parentNode) && parentNode.property === node) ||
+            (NodeGuards.isMethodDefinitionNode(parentNode) && parentNode.key === node) ||
+            (NodeGuards.isPropertyDefinitionNode(parentNode) && parentNode.key === node)
+        ) {
+            NodeMetadata.set(node, { propertyKeyToRenameNode: true });
 
             return;
         }
@@ -115,7 +111,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
         if (!NodeGuards.isIdentifierNode(node) && !NodeGuards.isLiteralNode(node)) {
             return node;
         }
@@ -125,10 +121,11 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
         }
 
         const isPropertyNode = NodeGuards.isPropertyNode(parentNode);
-        const isPropertyLikeNode = isPropertyNode
-            || NodeGuards.isPropertyDefinitionNode(parentNode)
-            || NodeGuards.isMemberExpressionNode(parentNode)
-            || NodeGuards.isMethodDefinitionNode(parentNode);
+        const isPropertyLikeNode =
+            isPropertyNode ||
+            NodeGuards.isPropertyDefinitionNode(parentNode) ||
+            NodeGuards.isMemberExpressionNode(parentNode) ||
+            NodeGuards.isMethodDefinitionNode(parentNode);
 
         if (isPropertyLikeNode && !RenamePropertiesTransformer.isValidPropertyNode(parentNode, node)) {
             return node;
@@ -145,10 +142,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @param {Node} parentNode
      */
-    private analyzeAutoExcludedPropertyNames (
-        node: ESTree.Node,
-        parentNode: ESTree.Node
-    ): void {
+    private analyzeAutoExcludedPropertyNames(node: ESTree.Node, parentNode: ESTree.Node): void {
         if (!NodeGuards.isLiteralNode(node) || !NodeLiteralUtils.isStringLiteralNode(node)) {
             return;
         }

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -86,7 +86,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {TCustomCodeHelperFactory} customCodeHelperFactory
      * @param {INumberNumericalExpressionAnalyzer} numberNumericalExpressionAnalyzer
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.INodeTransformersRunner) transformersRunner: INodeTransformersRunner,
@@ -94,7 +94,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.Factory__ICustomCodeHelper) customCodeHelperFactory: TCustomCodeHelperFactory,
         @inject(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
-            numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer
+        numberNumericalExpressionAnalyzer: INumberNumericalExpressionAnalyzer
     ) {
         super(randomGenerator, options);
 
@@ -112,15 +112,12 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {Program} programNode
      * @returns {boolean}
      */
-    private static isProgramNodeHasStringLiterals (programNode: ESTree.Program): boolean {
+    private static isProgramNodeHasStringLiterals(programNode: ESTree.Program): boolean {
         let hasStringLiterals: boolean = false;
 
         estraverse.traverse(programNode, {
             enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
-                if (
-                    NodeGuards.isLiteralNode(node)
-                    && NodeLiteralUtils.isStringLiteralNode(node)
-                ) {
+                if (NodeGuards.isLiteralNode(node) && NodeLiteralUtils.isStringLiteralNode(node)) {
                     hasStringLiterals = true;
 
                     return estraverse.VisitorOption.Break;
@@ -135,7 +132,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.stringArrayRotate) {
             return null;
         }
@@ -165,7 +162,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {Program} programNode
      * @returns {Node}
      */
-    public transformNode (programNode: ESTree.Program): ESTree.Node {
+    public transformNode(programNode: ESTree.Program): ESTree.Node {
         const stringArrayRotateFunctionNode: TStatement = this.getStringArrayRotateFunctionNode();
         const wrappedStringArrayRotateFunctionNode: ESTree.Program = NodeFactory.programNode([
             stringArrayRotateFunctionNode
@@ -193,10 +190,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
         // as ignored to prevent additional transformation of these nodes
         estraverse.traverse(wrappedStringArrayRotateFunctionNode, {
             enter: (node: ESTree.Node): void => {
-                if (
-                    !NodeGuards.isLiteralNode(node)
-                    || !NodeLiteralUtils.isStringLiteralNode(node)
-                ) {
+                if (!NodeGuards.isLiteralNode(node) || !NodeLiteralUtils.isStringLiteralNode(node)) {
                     return;
                 }
 
@@ -205,7 +199,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
                 if (this.isComparisonExpressionStringLiteralNode(node)) {
                     this.stringArrayStorageAnalyzer.addItemDataForLiteralNode(node);
                 } else {
-                    NodeMetadata.set(node, {ignoredNode: true});
+                    NodeMetadata.set(node, { ignoredNode: true });
                 }
             }
         });
@@ -218,7 +212,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
     /**
      * @returns {TStatement}
      */
-    private getStringArrayRotateFunctionNode (): TStatement {
+    private getStringArrayRotateFunctionNode(): TStatement {
         const comparisonValue: number = this.getComparisonValue();
         const comparisonExpressionNumberNumericalExpressionData: TNumberNumericalExpressionData =
             this.numberNumericalExpressionAnalyzer.analyze(
@@ -227,37 +221,36 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
             );
 
         let index: number = 1;
-        const comparisonExpressionNode: ESTree.Expression = NumericalExpressionDataToNodeConverter.convertIntegerNumberData(
-            comparisonExpressionNumberNumericalExpressionData,
-            ((number: number, isPositiveNumber) => {
-                const multipliedNumber: number = number * index;
-                const literalNode: ESTree.Literal = NodeFactory.literalNode(
-                    `${multipliedNumber}${this.randomGenerator.getRandomString(6)}`
-                );
-                const parseIntCallExpression: ESTree.CallExpression = NodeFactory.callExpressionNode(
-                    NodeFactory.identifierNode('parseInt'),
-                    [literalNode]
-                );
+        const comparisonExpressionNode: ESTree.Expression =
+            NumericalExpressionDataToNodeConverter.convertIntegerNumberData(
+                comparisonExpressionNumberNumericalExpressionData,
+                (number: number, isPositiveNumber) => {
+                    const multipliedNumber: number = number * index;
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode(
+                        `${multipliedNumber}${this.randomGenerator.getRandomString(6)}`
+                    );
+                    const parseIntCallExpression: ESTree.CallExpression = NodeFactory.callExpressionNode(
+                        NodeFactory.identifierNode('parseInt'),
+                        [literalNode]
+                    );
 
-                const binaryExpressionNode: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
-                    '/',
-                    isPositiveNumber
-                        ? parseIntCallExpression
-                        : NodeFactory.unaryExpressionNode(
-                            '-',
-                            parseIntCallExpression
-                        ),
-                    NodeFactory.literalNode(index, index.toString())
-                );
+                    const binaryExpressionNode: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
+                        '/',
+                        isPositiveNumber
+                            ? parseIntCallExpression
+                            : NodeFactory.unaryExpressionNode('-', parseIntCallExpression),
+                        NodeFactory.literalNode(index, index.toString())
+                    );
 
-                index++;
+                    index++;
 
-                return binaryExpressionNode;
-            })
-        );
+                    return binaryExpressionNode;
+                }
+            );
 
-        const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>> =
-            this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
+        const stringArrayRotateFunctionCodeHelper: ICustomCodeHelper<
+            TInitialData<StringArrayRotateFunctionCodeHelper>
+        > = this.customCodeHelperFactory(CustomCodeHelper.StringArrayRotateFunction);
 
         stringArrayRotateFunctionCodeHelper.initialize(
             this.stringArrayStorage.getStorageName(),
@@ -272,7 +265,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      * @param {TStringLiteralNode} stringLiteralNode
      * @returns {boolean}
      */
-    private isComparisonExpressionStringLiteralNode (stringLiteralNode: TStringLiteralNode): boolean {
+    private isComparisonExpressionStringLiteralNode(stringLiteralNode: TStringLiteralNode): boolean {
         return /\d/.test(stringLiteralNode.value);
     }
 
@@ -281,7 +274,7 @@ export class StringArrayRotateFunctionTransformer extends AbstractNodeTransforme
      *
      * @returns {number}
      */
-    private getComparisonValue (): number {
+    private getComparisonValue(): number {
         return this.randomGenerator.getRandomInteger(100000, 1_000_000);
     }
 }

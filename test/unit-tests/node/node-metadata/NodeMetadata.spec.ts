@@ -21,7 +21,7 @@ describe('NodeMetadata', () => {
             NodeMetadata.set(node, {
                 ignoredNode: true,
                 stringArrayCallLiteralNode: true
-            })
+            });
         });
 
         it('should set metadata to the node', () => {
@@ -32,17 +32,16 @@ describe('NodeMetadata', () => {
     describe('get', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Literal,
-            value: boolean | undefined;
+        let node: ESTree.Literal, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.literalNode('foo');
             node.metadata = {};
             node.metadata.stringArrayCallLiteralNode = true;
-            value = NodeMetadata.get<
-                ESTree.LiteralNodeMetadata,
+            value = NodeMetadata.get<ESTree.LiteralNodeMetadata, 'stringArrayCallLiteralNode'>(
+                node,
                 'stringArrayCallLiteralNode'
-            >(node, 'stringArrayCallLiteralNode');
+            );
         });
 
         it('should get metadata value of the node', () => {
@@ -53,8 +52,7 @@ describe('NodeMetadata', () => {
     describe('isEvalHostNode', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.FunctionExpression,
-            value: boolean | undefined;
+        let node: ESTree.FunctionExpression, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode([]));
@@ -71,8 +69,7 @@ describe('NodeMetadata', () => {
     describe('isForceTransformNode', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Identifier,
-            value: boolean | undefined;
+        let node: ESTree.Identifier, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.identifierNode('foo');
@@ -89,8 +86,7 @@ describe('NodeMetadata', () => {
     describe('isIgnoredNode', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Identifier,
-            value: boolean | undefined;
+        let node: ESTree.Identifier, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.identifierNode('foo');
@@ -107,8 +103,7 @@ describe('NodeMetadata', () => {
     describe('propertyKeyToRenameNode', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Identifier,
-            value: boolean | undefined;
+        let node: ESTree.Identifier, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.identifierNode('foo');
@@ -125,8 +120,7 @@ describe('NodeMetadata', () => {
     describe('isStringArrayCallLiteralNode', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Literal,
-            value: boolean | undefined;
+        let node: ESTree.Literal, value: boolean | undefined;
 
         before(() => {
             node = NodeFactory.literalNode('foo');

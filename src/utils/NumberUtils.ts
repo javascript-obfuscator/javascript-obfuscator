@@ -5,12 +5,10 @@ export class NumberUtils {
      * @param {number} number
      * @returns {string}
      */
-    public static toHex (number: number | bigint): string {
+    public static toHex(number: number | bigint): string {
         const radix: number = 16;
 
-        const basePart: string = typeof number === 'number'
-            ? number.toString(radix)
-            : `${number.toString(radix)}n`;
+        const basePart: string = typeof number === 'number' ? number.toString(radix) : `${number.toString(radix)}n`;
 
         return `${Utils.hexadecimalPrefix}${basePart}`;
     }
@@ -19,11 +17,9 @@ export class NumberUtils {
      * @param {number} number
      * @returns {[number, (number | null)]}
      */
-    public static extractIntegerAndDecimalParts (number: number): [number, number | null] {
+    public static extractIntegerAndDecimalParts(number: number): [number, number | null] {
         const integerPart: number = Math.trunc(number);
-        const decimalPart: number | null = number !== integerPart
-            ? number % 1
-            : null;
+        const decimalPart: number | null = number !== integerPart ? number % 1 : null;
 
         return [integerPart, decimalPart];
     }
@@ -32,17 +28,15 @@ export class NumberUtils {
      * @param {number} number
      * @returns {boolean}
      */
-    public static isCeil (number: number | bigint): boolean {
-        return typeof number === 'number'
-            ? number % 1 === 0
-            : true;
+    public static isCeil(number: number | bigint): boolean {
+        return typeof number === 'number' ? number % 1 === 0 : true;
     }
 
     /**
      * @param {number} number
      * @returns {boolean}
      */
-    public static isPositive (number: number): boolean {
+    public static isPositive(number: number): boolean {
         if (isNaN(number)) {
             throw new Error('Given value is NaN');
         }
@@ -66,7 +60,7 @@ export class NumberUtils {
      * @param {number} number
      * @returns {boolean}
      */
-    public static isUnsafeNumber (number: number): boolean {
+    public static isUnsafeNumber(number: number): boolean {
         if (isNaN(number)) {
             throw new Error('Given value is NaN');
         }
@@ -81,7 +75,7 @@ export class NumberUtils {
      * @param {number} number
      * @returns {number[]}
      */
-    public static getFactors (number: number): number[] {
+    public static getFactors(number: number): number[] {
         if (number === 0) {
             throw new Error('Invalid number. Allowed only non-zero number');
         }
@@ -99,13 +93,9 @@ export class NumberUtils {
         const isEven: boolean = number % 2 === 0;
         const incrementValue: number = isEven ? 1 : 2;
 
-        for (
-            let currentFactor = 1;
-            currentFactor <= root;
-            currentFactor += incrementValue
-        ) {
+        for (let currentFactor = 1; currentFactor <= root; currentFactor += incrementValue) {
             const compliment: number = number / currentFactor;
-            const check = (number - Math.floor(compliment) * currentFactor) !== 0;
+            const check = number - Math.floor(compliment) * currentFactor !== 0;
 
             if (check) {
                 continue;

@@ -5,9 +5,7 @@ import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator'
  * @returns {string}
  * @constructor
  */
-export function StringArrayRC4DecodeTemplate (
-    randomGenerator: IRandomGenerator
-): string {
+export function StringArrayRC4DecodeTemplate(randomGenerator: IRandomGenerator): string {
     const identifierLength: number = 6;
     const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
     const rc4Identifier: string = randomGenerator.getRandomString(identifierLength);

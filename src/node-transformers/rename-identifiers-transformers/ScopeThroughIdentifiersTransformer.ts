@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as eslintScope from 'eslint-scope';
@@ -39,7 +39,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IThroughIdentifierReplacer) throughIdentifierReplacer: IThroughIdentifierReplacer,
         @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -55,7 +55,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.RenameIdentifiers:
                 return {
@@ -76,20 +76,14 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
             programNode,
             parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
-                const {
-                    reference,
-                    variableLexicalScopeNode
-                } = data;
+                const { reference, variableLexicalScopeNode } = data;
 
-                this.transformScopeThroughIdentifiers(
-                    reference,
-                    variableLexicalScopeNode
-                );
+                this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
             }
         );
 
@@ -100,7 +94,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
      * @param {Reference} reference
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    protected transformScopeThroughIdentifiers (
+    protected transformScopeThroughIdentifiers(
         reference: eslintScope.Reference,
         lexicalScopeNode: TNodeWithLexicalScope
     ): void {
@@ -114,7 +108,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
     /**
      * @param {Variable} reference
      */
-    protected replaceIdentifierName (reference: eslintScope.Reference): void {
+    protected replaceIdentifierName(reference: eslintScope.Reference): void {
         const identifier: ESTree.Identifier = reference.identifier;
         const newIdentifier: ESTree.Identifier = this.throughIdentifierReplacer.replace(identifier);
 

@@ -58,9 +58,7 @@ describe('NodeLiteralUtils', () => {
                 let statementNode: ESTree.Statement;
 
                 before(() => {
-                    statementNode = NodeFactory.expressionStatementNode(
-                        literalNode
-                    );
+                    statementNode = NodeFactory.expressionStatementNode(literalNode);
 
                     literalNode.parentNode = statementNode;
                 });
@@ -77,10 +75,7 @@ describe('NodeLiteralUtils', () => {
                     let propertyNode: ESTree.Property;
 
                     before(() => {
-                        propertyNode = NodeFactory.propertyNode(
-                            literalNode,
-                            NodeFactory.literalNode(1)
-                        );
+                        propertyNode = NodeFactory.propertyNode(literalNode, NodeFactory.literalNode(1));
 
                         literalNode.parentNode = propertyNode;
                     });
@@ -96,11 +91,7 @@ describe('NodeLiteralUtils', () => {
                     let propertyNode: ESTree.Property;
 
                     before(() => {
-                        propertyNode = NodeFactory.propertyNode(
-                            literalNode,
-                            NodeFactory.literalNode(1),
-                            true
-                        );
+                        propertyNode = NodeFactory.propertyNode(literalNode, NodeFactory.literalNode(1), true);
 
                         literalNode.parentNode = propertyNode;
                     });
@@ -116,10 +107,7 @@ describe('NodeLiteralUtils', () => {
                     let propertyNode: ESTree.Property;
 
                     before(() => {
-                        propertyNode = NodeFactory.propertyNode(
-                            NodeFactory.literalNode(1),
-                            literalNode
-                        );
+                        propertyNode = NodeFactory.propertyNode(NodeFactory.literalNode(1), literalNode);
 
                         literalNode.parentNode = propertyNode;
                     });
@@ -137,16 +125,16 @@ describe('NodeLiteralUtils', () => {
                     let importDeclarationNode: ESTree.ImportDeclaration;
 
                     before(() => {
-                        importDeclarationNode = NodeFactory.importDeclarationNode(
-                            [],
-                            literalNode
-                        );
+                        importDeclarationNode = NodeFactory.importDeclarationNode([], literalNode);
 
                         literalNode.parentNode = importDeclarationNode;
                     });
 
                     it('should return false for import declaration literal node', () => {
-                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, importDeclarationNode), true);
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, importDeclarationNode),
+                            true
+                        );
                     });
                 });
             });
@@ -158,16 +146,16 @@ describe('NodeLiteralUtils', () => {
                     let exportNamedDeclarationNode: ESTree.ExportNamedDeclaration;
 
                     before(() => {
-                        exportNamedDeclarationNode = NodeFactory.exportNamedDeclarationNode(
-                            [],
-                            literalNode
-                        );
+                        exportNamedDeclarationNode = NodeFactory.exportNamedDeclarationNode([], literalNode);
 
                         literalNode.parentNode = exportNamedDeclarationNode;
                     });
 
                     it('should return false for export named declaration literal node', () => {
-                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportNamedDeclarationNode), true);
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportNamedDeclarationNode),
+                            true
+                        );
                     });
                 });
             });
@@ -179,16 +167,16 @@ describe('NodeLiteralUtils', () => {
                     let exportAllDeclarationNode: ESTree.ExportAllDeclaration;
 
                     before(() => {
-                        exportAllDeclarationNode = NodeFactory.exportAllDeclarationNode(
-                            literalNode,
-                            null
-                        );
+                        exportAllDeclarationNode = NodeFactory.exportAllDeclarationNode(literalNode, null);
 
                         literalNode.parentNode = exportAllDeclarationNode;
                     });
 
                     it('should return false for export all declaration literal node', () => {
-                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportAllDeclarationNode), true);
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, exportAllDeclarationNode),
+                            true
+                        );
                     });
                 });
             });
@@ -201,13 +189,9 @@ describe('NodeLiteralUtils', () => {
                 let statementNode: ESTree.Statement;
 
                 before(() => {
-                    statementNode = NodeFactory.expressionStatementNode(
-                        literalNode
-                    );
+                    statementNode = NodeFactory.expressionStatementNode(literalNode);
 
-                    const blockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
-                        statementNode
-                    ]);
+                    const blockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([statementNode]);
 
                     statementNode.parentNode = blockStatementNode;
                     literalNode.parentNode = statementNode;

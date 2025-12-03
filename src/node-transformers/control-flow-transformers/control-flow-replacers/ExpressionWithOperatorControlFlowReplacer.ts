@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -26,20 +26,15 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            controlFlowCustomNodeFactory,
-            identifierNamesGeneratorFactory,
-            randomGenerator,
-            options
-        );
+        super(controlFlowCustomNodeFactory, identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -49,21 +44,24 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
      * @param {Expression} rightExpression
      * @returns {NodeGuards}
      */
-    protected getControlFlowStorageCallNode (
+    protected getControlFlowStorageCallNode(
         controlFlowStorageId: string,
         storageKey: string,
         leftExpression: ESTree.Expression,
         rightExpression: ESTree.Expression
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<ExpressionWithOperatorControlFlowStorageCallNode>> =
-            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
+        const controlFlowStorageCallCustomNode: ICustomNode<
+            TInitialData<ExpressionWithOperatorControlFlowStorageCallNode>
+        > = this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, leftExpression, rightExpression);
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
+            throw new Error(
+                '`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node'
+            );
         }
 
         return statementNode.expression;

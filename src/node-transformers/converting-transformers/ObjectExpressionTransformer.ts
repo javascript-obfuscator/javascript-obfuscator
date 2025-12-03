@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -26,7 +26,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -37,7 +37,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -58,23 +58,22 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
-        objectExpressionNode.properties
-            .forEach((property: ESTree.Property | ESTree.SpreadElement) => {
-                if (!NodeGuards.isPropertyNode(property)) {
-                    return;
-                }
+    public transformNode(objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
+        objectExpressionNode.properties.forEach((property: ESTree.Property | ESTree.SpreadElement) => {
+            if (!NodeGuards.isPropertyNode(property)) {
+                return;
+            }
 
-                if (!property.key) {
-                    return;
-                }
+            if (!property.key) {
+                return;
+            }
 
-                if (property.computed) {
-                    this.transformComputedProperty(property);
-                } else {
-                    this.transformBaseProperty(property);
-                }
-            });
+            if (property.computed) {
+                this.transformComputedProperty(property);
+            } else {
+                this.transformBaseProperty(property);
+            }
+        });
 
         return objectExpressionNode;
     }
@@ -82,7 +81,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @param {Property} property
      */
-    private transformComputedProperty (property: ESTree.Property): void {
+    private transformComputedProperty(property: ESTree.Property): void {
         if (!NodeGuards.isLiteralNode(property.key) || !(typeof property.key.value === 'string')) {
             return;
         }
@@ -93,7 +92,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @param {Property} property
      */
-    private transformBaseProperty (property: ESTree.Property): void {
+    private transformBaseProperty(property: ESTree.Property): void {
         if (property.shorthand) {
             property.shorthand = false;
         }

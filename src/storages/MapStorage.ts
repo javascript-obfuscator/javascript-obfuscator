@@ -9,7 +9,7 @@ import { initializable } from '../decorators/Initializable';
 import { TDictionary } from '../types/TDictionary';
 
 @injectable()
-export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
+export abstract class MapStorage<K, V> implements IMapStorage<K, V> {
     /**
      * @type {string}
      */
@@ -20,7 +20,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @type {Map <K, V>}
      */
     @initializable()
-    protected storage!: Map <K, V>;
+    protected storage!: Map<K, V>;
 
     /**
      * @type {IOptions}
@@ -36,7 +36,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -45,8 +45,8 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     }
 
     @postConstruct()
-    public initialize (): void {
-        this.storage = new Map <K, V>();
+    public initialize(): void {
+        this.storage = new Map<K, V>();
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
@@ -54,7 +54,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {K} key
      * @returns {V | undefined}
      */
-    public get (key: K): V | undefined {
+    public get(key: K): V | undefined {
         return this.storage.get(key);
     }
 
@@ -62,7 +62,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {K} key
      * @returns {V}
      */
-    public getOrThrow (key: K): V {
+    public getOrThrow(key: K): V {
         const value: V | undefined = this.get(key);
 
         if (!value) {
@@ -76,7 +76,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {V} value
      * @returns {K | null}
      */
-    public getKeyOf (value: V): K | null {
+    public getKeyOf(value: V): K | null {
         for (const [key, storageValue] of this.storage) {
             if (value === storageValue) {
                 return key;
@@ -89,28 +89,28 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     /**
      * @returns {number}
      */
-    public getLength (): number {
+    public getLength(): number {
         return this.storage.size;
     }
 
     /**
      * @returns {Map<K, V>}
      */
-    public getStorage (): Map <K, V> {
+    public getStorage(): Map<K, V> {
         return this.storage;
     }
 
     /**
      * @returns {TDictionary<V>}
      */
-    public getStorageAsDictionary (): TDictionary<V> {
+    public getStorageAsDictionary(): TDictionary<V> {
         return Object.fromEntries(this.storage);
     }
 
     /**
      * @returns {string}
      */
-    public getStorageId (): string {
+    public getStorageId(): string {
         return this.storageId;
     }
 
@@ -118,7 +118,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {K} key
      * @returns {boolean}
      */
-    public has (key: K): boolean {
+    public has(key: K): boolean {
         return this.storage.has(key);
     }
 
@@ -126,8 +126,8 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {this} storage
      * @param {boolean} mergeId
      */
-    public mergeWith (storage: this, mergeId: boolean = false): void {
-        this.storage = new Map <K, V>([...this.storage, ...storage.getStorage()]);
+    public mergeWith(storage: this, mergeId: boolean = false): void {
+        this.storage = new Map<K, V>([...this.storage, ...storage.getStorage()]);
 
         if (mergeId) {
             this.storageId = storage.getStorageId();
@@ -138,7 +138,7 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
      * @param {K} key
      * @param {V} value
      */
-    public set (key: K, value: V): void {
+    public set(key: K, value: V): void {
         this.storage.set(key, value);
     }
 }

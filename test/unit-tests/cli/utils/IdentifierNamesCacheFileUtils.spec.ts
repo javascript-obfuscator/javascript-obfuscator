@@ -19,7 +19,7 @@ describe('IdentifierNamesCacheFileUtils', () => {
         propertyIdentifiers: {
             bar: '_0x654321'
         }
-    }
+    };
     const fileContent: string = JSON.stringify(expectedIdentifierNamesCache);
     const tmpDirectoryPath: string = path.join('test', 'tmp');
 

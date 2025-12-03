@@ -15,16 +15,16 @@ import { IsAllowedForObfuscationTargets } from './IsAllowedForObfuscationTargets
  */
 export const IsDomainLockRedirectUrl = (): PropertyDecorator => {
     return (target: any, key: string | symbol): void => {
-        ValidateIf(({domainLockRedirectUrl}: TInputOptions) => {
+        ValidateIf(({ domainLockRedirectUrl }: TInputOptions) => {
             return domainLockRedirectUrl !== DEFAULT_PRESET.domainLockRedirectUrl;
         })(target, key);
         IsUrl({
             require_protocol: false,
             require_host: false
         })(target, key);
-        IsAllowedForObfuscationTargets([
-            ObfuscationTarget.Browser,
-            ObfuscationTarget.BrowserNoEval,
-        ])(target, <keyof IOptions>key);
+        IsAllowedForObfuscationTargets([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval])(
+            target,
+            <keyof IOptions>key
+        );
     };
 };

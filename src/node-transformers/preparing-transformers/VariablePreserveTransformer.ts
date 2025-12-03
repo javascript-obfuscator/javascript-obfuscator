@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as ESTree from 'estree';
 import * as eslintScope from 'eslint-scope';
 
@@ -26,9 +26,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     /**
      * @type {NodeTransformer.ParentificationTransformer[]}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.ParentificationTransformer
-    ];
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.ParentificationTransformer];
 
     /**
      * @type {IIdentifierReplacer}
@@ -46,7 +44,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @param {IOptions} options
      * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IIdentifierReplacer) identifierReplacer: IIdentifierReplacer,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
@@ -64,7 +62,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
             case NodeTransformationStage.Converting:
@@ -87,7 +85,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeIdentifiers(
             programNode,
             parentNode,
@@ -100,13 +98,8 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     /**
      * @param {IScopeIdentifiersTraverserCallbackData} data
      */
-    private preserveScopeVariableIdentifiers (data: IScopeIdentifiersTraverserCallbackData): void {
-        const {
-            isGlobalDeclaration,
-            isBubblingDeclaration,
-            variable,
-            variableScope
-        } = data;
+    private preserveScopeVariableIdentifiers(data: IScopeIdentifiersTraverserCallbackData): void {
+        const { isGlobalDeclaration, isBubblingDeclaration, variable, variableScope } = data;
 
         for (const identifier of variable.identifiers) {
             if (isGlobalDeclaration || isBubblingDeclaration) {
@@ -120,7 +113,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     /**
      * @param {Identifier} identifierNode
      */
-    private preserveIdentifierNameForRootLexicalScope (identifierNode: ESTree.Identifier): void {
+    private preserveIdentifierNameForRootLexicalScope(identifierNode: ESTree.Identifier): void {
         this.identifierReplacer.preserveName(identifierNode);
     }
 
@@ -128,7 +121,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @param {Identifier} identifierNode
      * @param {Scope} variableScope
      */
-    private preserveIdentifierNameForLexicalScope (
+    private preserveIdentifierNameForLexicalScope(
         identifierNode: ESTree.Identifier,
         variableScope: eslintScope.Scope
     ): void {

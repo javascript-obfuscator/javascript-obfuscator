@@ -18,12 +18,9 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifier-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
                 it('should replace method definition node `key` property with square brackets literal', () => {
@@ -40,22 +37,19 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifier-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add method definition node `key` property to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayRegExp);
+                    assert.match(obfuscatedCode, stringArrayRegExp);
                 });
 
                 it('should replace method definition node `key` property with call to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayCallRegExp);
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
 
@@ -67,15 +61,12 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifier-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
-                it('shouldn\'t transform method definition node with `constructor` key', () => {
+                it("shouldn't transform method definition node with `constructor` key", () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -90,12 +81,9 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
                 it('should replace method definition node `key` property with square brackets literal', () => {
@@ -112,22 +100,19 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add method definition node `key` property to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayRegExp);
+                    assert.match(obfuscatedCode, stringArrayRegExp);
                 });
 
                 it('should replace method definition node `key` property with call to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayCallRegExp);
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
 
@@ -139,15 +124,12 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
-                it('shouldn\'t transform method definition node with `constructor` key', () => {
+                it("shouldn't transform method definition node with `constructor` key", () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -162,12 +144,9 @@ describe('ClassFieldTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/async-get-method.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('Match #1: should rename class declaration name', () => {
@@ -190,12 +169,9 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifier-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
                 it('should replace property definition node `key` property with square brackets literal', () => {
@@ -212,22 +188,19 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifier-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add property definition node `key` property to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayRegExp);
+                    assert.match(obfuscatedCode, stringArrayRegExp);
                 });
 
                 it('should replace property definition node `key` property with call to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayCallRegExp);
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
         });
@@ -241,12 +214,9 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }).getObfuscatedCode();
                 });
 
                 it('should replace property definition node `key` property with square brackets literal', () => {
@@ -263,22 +233,19 @@ describe('ClassFieldTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('should add property definition node `key` property to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayRegExp);
+                    assert.match(obfuscatedCode, stringArrayRegExp);
                 });
 
                 it('should replace property definition node `key` property with call to string array', () => {
-                    assert.match(obfuscatedCode,  stringArrayCallRegExp);
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
                 });
             });
         });
@@ -292,12 +259,9 @@ describe('ClassFieldTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/async-get-method.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('Match #1: should rename class declaration name', () => {

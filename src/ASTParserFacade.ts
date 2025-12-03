@@ -19,17 +19,14 @@ export class ASTParserFacade {
     /**
      * @type {acorn.Options['sourceType'][]}
      */
-    private static readonly sourceTypes: acorn.Options['sourceType'][] = [
-        'script',
-        'module'
-    ];
+    private static readonly sourceTypes: acorn.Options['sourceType'][] = ['script', 'module'];
 
     /**
      * @param {string} sourceCode
      * @param {Options} config
      * @returns {Program}
      */
-    public static parse (sourceCode: string, config: acorn.Options): ESTree.Program | never {
+    public static parse(sourceCode: string, config: acorn.Options): ESTree.Program | never {
         const sourceTypeLength: number = ASTParserFacade.sourceTypes.length;
 
         for (let i: number = 0; i < sourceTypeLength; i++) {
@@ -40,11 +37,7 @@ export class ASTParserFacade {
                     continue;
                 }
 
-                throw new Error(ASTParserFacade.processParsingError(
-                    sourceCode,
-                    error.message,
-                    error.loc
-                ));
+                throw new Error(ASTParserFacade.processParsingError(sourceCode, error.message, error.loc));
             }
         }
 
@@ -57,7 +50,7 @@ export class ASTParserFacade {
      * @param {acorn.Options["sourceType"]} sourceType
      * @returns {Program}
      */
-    private static parseType (
+    private static parseType(
         sourceCode: string,
         inputConfig: acorn.Options,
         sourceType: acorn.Options['sourceType']
@@ -70,8 +63,7 @@ export class ASTParserFacade {
             sourceType
         };
 
-        const program: acorn.Node & ESTree.Program = <acorn.Node & ESTree.Program>acorn
-            .parse(sourceCode, config);
+        const program: acorn.Node & ESTree.Program = <acorn.Node & ESTree.Program>acorn.parse(sourceCode, config);
 
         if (comments.length) {
             program.comments = comments;
@@ -86,7 +78,7 @@ export class ASTParserFacade {
      * @param {Position | null} position
      * @returns {never}
      */
-    private static processParsingError (
+    private static processParsingError(
         sourceCode: string,
         errorMessage: string,
         position: ESTree.Position | null
@@ -108,12 +100,10 @@ export class ASTParserFacade {
         const endErrorIndex: number = Math.min(errorLine.length, position.column + ASTParserFacade.nearestSymbolsCount);
 
         const formattedPointer: string = ASTParserFacade.colorError('>');
-        const formattedCodeSlice: string = `...${
-            errorLine.slice(startErrorIndex, endErrorIndex).replace(/^\s+/, '')
-        }...`;
+        const formattedCodeSlice: string = `...${errorLine
+            .slice(startErrorIndex, endErrorIndex)
+            .replace(/^\s+/, '')}...`;
 
-        throw new Error(
-            `ERROR at line ${position.line}: ${errorMessage}\n${formattedPointer} ${formattedCodeSlice}`
-        );
+        throw new Error(`ERROR at line ${position.line}: ${errorMessage}\n${formattedPointer} ${formattedCodeSlice}`);
     }
 }

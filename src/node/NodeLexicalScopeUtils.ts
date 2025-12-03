@@ -9,7 +9,7 @@ export class NodeLexicalScopeUtils {
      * @param {Node} node
      * @returns {TNodeWithLexicalScope}
      */
-    public static getLexicalScope (node: ESTree.Node): TNodeWithLexicalScope | undefined {
+    public static getLexicalScope(node: ESTree.Node): TNodeWithLexicalScope | undefined {
         return NodeLexicalScopeUtils.getLexicalScopesRecursive(node, 1)[0];
     }
 
@@ -17,7 +17,7 @@ export class NodeLexicalScopeUtils {
      * @param {Node} node
      * @returns {TNodeWithLexicalScope[]}
      */
-    public static getLexicalScopes (node: ESTree.Node): TNodeWithLexicalScope[] {
+    public static getLexicalScopes(node: ESTree.Node): TNodeWithLexicalScope[] {
         return NodeLexicalScopeUtils.getLexicalScopesRecursive(node);
     }
 
@@ -28,7 +28,7 @@ export class NodeLexicalScopeUtils {
      * @param {number} depth
      * @returns {TNodeWithLexicalScope[]}
      */
-    private static getLexicalScopesRecursive (
+    private static getLexicalScopesRecursive(
         node: ESTree.Node,
         maxSize: number = Infinity,
         nodesWithLexicalScope: TNodeWithLexicalScope[] = [],

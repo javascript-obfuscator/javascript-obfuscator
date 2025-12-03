@@ -14,8 +14,8 @@ import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { MapStorage } from '../../../src/storages/MapStorage';
 
-class ConcreteStorage <V> extends MapStorage <string, V> {
-    constructor () {
+class ConcreteStorage<V> extends MapStorage<string, V> {
+    constructor() {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
@@ -30,8 +30,8 @@ class ConcreteStorage <V> extends MapStorage <string, V> {
 /**
  * @returns {IMapStorage<string, V>}
  */
-const getStorageInstance = <V>(): IMapStorage <string, V> => {
-    const storage: IMapStorage <string, V> = new ConcreteStorage <V> ();
+const getStorageInstance = <V>(): IMapStorage<string, V> => {
+    const storage: IMapStorage<string, V> = new ConcreteStorage<V>();
 
     storage.initialize();
 
@@ -42,7 +42,7 @@ describe('MapStorage', () => {
     const storageKey: string = 'foo';
     const storageValue: string = 'bar';
 
-    let storage: IMapStorage <string, any>;
+    let storage: IMapStorage<string, any>;
 
     describe('initialize', () => {
         const expectedError: ErrorConstructor = Error;
@@ -54,7 +54,7 @@ describe('MapStorage', () => {
             testFunc = () => storage.set(storageKey, storageValue);
         });
 
-        it('should throws an error when storage isn\'t initialized', () => {
+        it("should throws an error when storage isn't initialized", () => {
             assert.throws(testFunc, expectedError);
         });
     });
@@ -62,7 +62,7 @@ describe('MapStorage', () => {
     describe('getStorage', () => {
         const expectedInstanceOf: MapConstructor = Map;
 
-        let mapStorage: Map <string, string>;
+        let mapStorage: Map<string, string>;
 
         before(() => {
             storage = getStorageInstance<string>();
@@ -93,7 +93,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('Variant #2: value isn\'t exist', () => {
+        describe("Variant #2: value isn't exist", () => {
             const expectedValue: undefined = undefined;
 
             let value: string;
@@ -128,7 +128,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('Variant #2: value isn\'t exist', () => {
+        describe("Variant #2: value isn't exist", () => {
             const expectedError: ErrorConstructor = Error;
 
             let testFunc: () => void;
@@ -205,7 +205,7 @@ describe('MapStorage', () => {
                 storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
-                key = storage.getKeyOf({...object});
+                key = storage.getKeyOf({ ...object });
             });
 
             it('should return `null` if objects in `set` and `get` are two different objects', () => {
@@ -251,7 +251,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('Variant #2: item isn\'t presenting in storage', () => {
+        describe("Variant #2: item isn't presenting in storage", () => {
             const expectedItemExistence: boolean = false;
 
             let itemExistence: boolean;
@@ -262,7 +262,7 @@ describe('MapStorage', () => {
                 itemExistence = storage.has(storageKey);
             });
 
-            it('should return `false` if item isn\'t presenting in storage', () => {
+            it("should return `false` if item isn't presenting in storage", () => {
                 assert.equal(itemExistence, expectedItemExistence);
             });
         });
@@ -298,7 +298,7 @@ describe('MapStorage', () => {
             storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
-            const secondStorage: IMapStorage <string, string> = getStorageInstance<string>();
+            const secondStorage: IMapStorage<string, string> = getStorageInstance<string>();
             secondStorage.set(secondStorageKey, secondStorageValue);
 
             storage.mergeWith(secondStorage, false);

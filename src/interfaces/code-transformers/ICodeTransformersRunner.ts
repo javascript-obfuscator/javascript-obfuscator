@@ -8,7 +8,7 @@ export interface ICodeTransformersRunner {
      * @param {CodeTransformationStage} codeTransformationStage
      * @returns {string}
      */
-    transform (
+    transform(
         code: string,
         codeTransformers: CodeTransformer[],
         codeTransformationStage: CodeTransformationStage

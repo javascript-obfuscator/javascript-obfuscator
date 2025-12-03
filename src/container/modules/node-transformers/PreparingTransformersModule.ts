@@ -14,9 +14,7 @@ import { CustomCodeHelpersTransformer } from '../../../node-transformers/prepari
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
 import { ForceTransformStringObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ForceTransformStringObfuscatingGuard';
 import { IgnoredImportObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/IgnoredImportObfuscatingGuard';
-import {
-  ImportMetaObfuscationGuard
-} from '../../../node-transformers/preparing-transformers/obfuscating-guards/ImportMetaObfuscationGuard';
+import { ImportMetaObfuscationGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ImportMetaObfuscationGuard';
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
@@ -81,9 +79,7 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
         .whenTargetNamed(ObfuscatingGuard.ReservedStringObfuscatingGuard);
 
     // obfuscating guards factory
-    bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard)
-        .toFactory<IObfuscatingGuard, [ObfuscatingGuard]>(InversifyContainerFacade
-            .getCacheFactory<ObfuscatingGuard, IObfuscatingGuard>(
-                ServiceIdentifiers.INodeGuard
-            ));
+    bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard).toFactory<IObfuscatingGuard, [ObfuscatingGuard]>(
+        InversifyContainerFacade.getCacheFactory<ObfuscatingGuard, IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
+    );
 });

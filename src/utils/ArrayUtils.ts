@@ -14,9 +14,7 @@ export class ArrayUtils implements IArrayUtils {
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator) {
         this.randomGenerator = randomGenerator;
     }
 
@@ -24,7 +22,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {number} length
      * @returns {number[]}
      */
-    public createWithRange (length: number): number[] {
+    public createWithRange(length: number): number[] {
         const range: number[] = [];
 
         for (let i: number = 0; i < length; i++) {
@@ -39,7 +37,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {(index: number) => TValue} valueFunction
      * @returns {TValue[]}
      */
-    public fillWithRange <TValue> (length: number, valueFunction: (index: number) => TValue): TValue[] {
+    public fillWithRange<TValue>(length: number, valueFunction: (index: number) => TValue): TValue[] {
         const range: TValue[] = [];
 
         for (let i: number = 0; i < length; i++) {
@@ -53,14 +51,14 @@ export class ArrayUtils implements IArrayUtils {
      * @param {T[]} array
      * @returns {T | null}
      */
-    public findMostOccurringElement <T extends string | number> (array: T[]): T | null {
+    public findMostOccurringElement<T extends string | number>(array: T[]): T | null {
         const arrayLength: number = array.length;
 
         if (!arrayLength) {
             return null;
         }
 
-        const elementsMap: Partial<{[key in T]: number}> = {};
+        const elementsMap: Partial<{ [key in T]: number }> = {};
 
         let mostOccurringElement: T = array[0];
         let mostOccurringElementCount: number = 1;
@@ -84,7 +82,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {T[]} array
      * @returns {T | undefined}
      */
-    public getLastElement <T> (array: T[]): T | undefined {
+    public getLastElement<T>(array: T[]): T | undefined {
         return this.getLastElementByIndex(array, 0);
     }
 
@@ -93,7 +91,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {number} index
      * @returns {T | undefined}
      */
-    public getLastElementByIndex <T> (array: T[], index: number): T | undefined {
+    public getLastElementByIndex<T>(array: T[], index: number): T | undefined {
         const arrayLength: number = array.length;
 
         return array[arrayLength - 1 - index] ?? undefined;
@@ -104,7 +102,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {number} times
      * @returns {T[]}
      */
-    public rotate <T> (array: T[], times: number): T[] {
+    public rotate<T>(array: T[], times: number): T[] {
         if (!array.length) {
             throw new ReferenceError('Cannot rotate empty array.');
         }
@@ -132,7 +130,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {T[]} array
      * @returns {T[]}
      */
-    public shuffle <T> (array: T[]): T[] {
+    public shuffle<T>(array: T[]): T[] {
         const shuffledArray: T[] = [...array];
 
         for (let i: number = shuffledArray.length; i; i--) {

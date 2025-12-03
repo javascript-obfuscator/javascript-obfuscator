@@ -12,24 +12,18 @@ describe('DebugProtectionFunctionIntervalTemplate', function () {
 
     describe('Variant #1 - `high-obfuscation` preset interval', () => {
         const debugProtectionIntervalRegExp: RegExp = new RegExp(
-            `${variableMatch}\\['setInterval'\\]\\( *` +
-                `${variableMatch}, *` +
-                '0xfa0 *' +
-            `\\);`
+            `${variableMatch}\\['setInterval'\\]\\( *` + `${variableMatch}, *` + '0xfa0 *' + `\\);`
         );
 
         let obfuscatedCode: string;
 
         beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
-                    debugProtectionInterval: HIGH_OBFUSCATION_PRESET.debugProtectionInterval
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                debugProtection: true,
+                debugProtectionInterval: HIGH_OBFUSCATION_PRESET.debugProtectionInterval
+            }).getObfuscatedCode();
 
             console.log(obfuscatedCode);
         });
@@ -41,24 +35,18 @@ describe('DebugProtectionFunctionIntervalTemplate', function () {
 
     describe('Variant #2 - custom interval', () => {
         const debugProtectionIntervalRegExp: RegExp = new RegExp(
-            `${variableMatch}\\['setInterval'\\]\\( *` +
-                `${variableMatch}, *` +
-                '0x64 *' +
-            `\\);`
+            `${variableMatch}\\['setInterval'\\]\\( *` + `${variableMatch}, *` + '0x64 *' + `\\);`
         );
 
         let obfuscatedCode: string;
 
         beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
-                    debugProtectionInterval: 100
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                debugProtection: true,
+                debugProtectionInterval: 100
+            }).getObfuscatedCode();
         });
 
         it('Should add debug protection interval code with default interval value', () => {
@@ -67,20 +55,17 @@ describe('DebugProtectionFunctionIntervalTemplate', function () {
     });
 
     describe('Variant #3 - no interval', () => {
-        const debugProtectionIntervalRegExp: RegExp = /setInterval/
+        const debugProtectionIntervalRegExp: RegExp = /setInterval/;
 
         let obfuscatedCode: string;
 
         beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
-                    debugProtectionInterval: 0
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                debugProtection: true,
+                debugProtectionInterval: 0
+            }).getObfuscatedCode();
         });
 
         it('Should not add debug protection interval code', () => {

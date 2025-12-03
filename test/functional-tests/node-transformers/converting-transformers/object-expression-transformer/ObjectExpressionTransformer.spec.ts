@@ -10,7 +10,7 @@ import { ObjectPatternPropertiesTransformer } from '../../../../../src/node-tran
 
 describe('ObjectExpressionTransformer', () => {
     describe('default behaviour', () => {
-        describe('Variant #1: `unicodeEscapeSequence` option is disabled\'', () => {
+        describe("Variant #1: `unicodeEscapeSequence` option is disabled'", () => {
             const regExp: RegExp = /var test *= *\{'foo':0x0\};/;
 
             let obfuscatedCode: string;
@@ -18,13 +18,10 @@ describe('ObjectExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        unicodeEscapeSequence: false
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }).getObfuscatedCode();
             });
 
             it('should replace object expression node `key` property with identifier value by property with literal value', () => {
@@ -40,13 +37,10 @@ describe('ObjectExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        unicodeEscapeSequence: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: true
+                }).getObfuscatedCode();
             });
 
             it('should replace object expression node `key` property with identifier value by property with encoded literal value', () => {
@@ -63,12 +57,9 @@ describe('ObjectExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/shorthand-object-expression.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('should correct convert shorthand ES6 object expression to non-shorthand object expression', () => {
@@ -85,12 +76,9 @@ describe('ObjectExpressionTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-identifier.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('should ignore computed property identifier', () => {
@@ -107,13 +95,10 @@ describe('ObjectExpressionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-literal.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            unicodeEscapeSequence: false
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        unicodeEscapeSequence: false
+                    }).getObfuscatedCode();
                 });
 
                 it('should ignore computed property literal value', () => {
@@ -129,13 +114,10 @@ describe('ObjectExpressionTransformer', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-literal.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            unicodeEscapeSequence: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        unicodeEscapeSequence: true
+                    }).getObfuscatedCode();
                 });
 
                 it('should encode computed property literal value', () => {
@@ -156,12 +138,9 @@ describe('ObjectExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-rest.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('Match #1: should transform object name', () => {
@@ -176,19 +155,17 @@ describe('ObjectExpressionTransformer', () => {
     describe('object spread', () => {
         const object1RegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{'foo': *0x1\};/;
         const object2RegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{'bar': *0x2\};/;
-        const objectSpreadRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{\.\.\._0x[a-f0-9]{4,6}, *\.\.\._0x[a-f0-9]{4,6}\};/;
+        const objectSpreadRegExp: RegExp =
+            /var _0x[a-f0-9]{4,6} *= *\{\.\.\._0x[a-f0-9]{4,6}, *\.\.\._0x[a-f0-9]{4,6}\};/;
 
         let obfuscatedCode: string;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-spread.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
         });
 
         it('Match #1: should transform object name', () => {
@@ -216,14 +193,11 @@ describe('ObjectExpressionTransformer', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-spread-unicode-escape-sequence.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    transformObjectKeys: true,
-                    unicodeEscapeSequence: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                transformObjectKeys: true,
+                unicodeEscapeSequence: true
+            }).getObfuscatedCode();
         });
 
         it('Match #1: should transform object declaration', () => {

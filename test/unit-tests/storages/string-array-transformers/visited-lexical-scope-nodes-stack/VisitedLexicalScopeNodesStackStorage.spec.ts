@@ -26,7 +26,9 @@ const getStorageInstance = (options: TInputOptions = {}): IVisitedLexicalScopeNo
         ...options
     });
 
-    const storage: IVisitedLexicalScopeNodesStackStorage = inversifyContainerFacade.get(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage);
+    const storage: IVisitedLexicalScopeNodesStackStorage = inversifyContainerFacade.get(
+        ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage
+    );
 
     storage.initialize();
 
@@ -36,22 +38,16 @@ const getStorageInstance = (options: TInputOptions = {}): IVisitedLexicalScopeNo
 describe('VisitedLexicalScopeNodesStackStorage', () => {
     describe('getLastElement', () => {
         const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('first')
-            )
+            NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
         ]);
         const secondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('second')
-            )
+            NodeFactory.expressionStatementNode(NodeFactory.literalNode('second'))
         ]);
-        const expectedLastElement: TNodeWithLexicalScopeStatements =  NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('last')
-            )
+        const expectedLastElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+            NodeFactory.expressionStatementNode(NodeFactory.literalNode('last'))
         ]);
 
-       let lastElement: TNodeWithLexicalScopeStatements | undefined;
+        let lastElement: TNodeWithLexicalScopeStatements | undefined;
 
         before(() => {
             const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
@@ -70,25 +66,20 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
     describe('getPenultimateElement', () => {
         describe('Variant #1: three array elements', () => {
             const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('first')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
             ]);
             const expectedSecondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('second')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('second'))
             ]);
-            const lastElement: TNodeWithLexicalScopeStatements =  NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('last')
-                )
+            const lastElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('last'))
             ]);
 
             let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
 
             before(() => {
-                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage =
+                    getStorageInstance();
 
                 visitedLexicalScopeNodesStackStorage.push(firstElement);
                 visitedLexicalScopeNodesStackStorage.push(expectedSecondElement);
@@ -104,15 +95,14 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
         describe('Variant #2: one array element', () => {
             const expectedPenultimateElement: undefined = undefined;
             const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('first')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
             ]);
 
             let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
 
             before(() => {
-                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage =
+                    getStorageInstance();
 
                 visitedLexicalScopeNodesStackStorage.push(firstElement);
                 penultimateElement = visitedLexicalScopeNodesStackStorage.getPenultimateElement();
@@ -129,7 +119,8 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
             let penultimateElement: TNodeWithLexicalScopeStatements | undefined;
 
             before(() => {
-                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage =
+                    getStorageInstance();
 
                 penultimateElement = visitedLexicalScopeNodesStackStorage.getPenultimateElement();
             });
@@ -142,19 +133,12 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
 
     describe('push', () => {
         const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('first')
-            )
+            NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
         ]);
         const secondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-            NodeFactory.expressionStatementNode(
-                NodeFactory.literalNode('second')
-            )
+            NodeFactory.expressionStatementNode(NodeFactory.literalNode('second'))
         ]);
-        const expectedStorage: TNodeWithLexicalScopeStatements[] = [
-            firstElement,
-            secondElement
-        ];
+        const expectedStorage: TNodeWithLexicalScopeStatements[] = [firstElement, secondElement];
 
         let storage: TNodeWithLexicalScopeStatements[];
 
@@ -174,25 +158,20 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
     describe('pop', () => {
         describe('Variant #1: few elements', () => {
             const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('first')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
             ]);
             const secondElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('second')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('second'))
             ]);
-            const expectedStorage: TNodeWithLexicalScopeStatements[] = [
-                firstElement
-            ];
+            const expectedStorage: TNodeWithLexicalScopeStatements[] = [firstElement];
             const expectedPoppedElement: TNodeWithLexicalScopeStatements = secondElement;
 
             let storage: TNodeWithLexicalScopeStatements[];
             let poppedElement: TNodeWithLexicalScopeStatements | undefined;
 
             before(() => {
-                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage =
+                    getStorageInstance();
 
                 visitedLexicalScopeNodesStackStorage.push(firstElement);
                 visitedLexicalScopeNodesStackStorage.push(secondElement);
@@ -212,9 +191,7 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
 
         describe('Variant #2: single element', () => {
             const firstElement: TNodeWithLexicalScopeStatements = NodeFactory.blockStatementNode([
-                NodeFactory.expressionStatementNode(
-                    NodeFactory.literalNode('first')
-                )
+                NodeFactory.expressionStatementNode(NodeFactory.literalNode('first'))
             ]);
             const expectedStorage: TNodeWithLexicalScopeStatements[] = [];
             const expectedPoppedElement: TNodeWithLexicalScopeStatements = firstElement;
@@ -223,7 +200,8 @@ describe('VisitedLexicalScopeNodesStackStorage', () => {
             let poppedElement: TNodeWithLexicalScopeStatements | undefined;
 
             before(() => {
-                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage = getStorageInstance();
+                const visitedLexicalScopeNodesStackStorage: IVisitedLexicalScopeNodesStackStorage =
+                    getStorageInstance();
 
                 visitedLexicalScopeNodesStackStorage.push(firstElement);
 

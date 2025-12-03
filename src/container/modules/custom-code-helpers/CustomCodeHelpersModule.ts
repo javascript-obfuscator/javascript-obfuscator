@@ -103,14 +103,20 @@ export const customCodeHelpersModule: interfaces.ContainerModule = new Container
         .whenTargetNamed(CustomCodeHelperGroup.StringArray);
 
     // customCodeHelper factory
-    bind<ICustomCodeHelper>(ServiceIdentifiers.Factory__ICustomCodeHelper)
-        .toFactory<ICustomCodeHelper, [CustomCodeHelper]>(InversifyContainerFacade
-            .getFactory<CustomCodeHelper, ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper));
+    bind<ICustomCodeHelper>(ServiceIdentifiers.Factory__ICustomCodeHelper).toFactory<
+        ICustomCodeHelper,
+        [CustomCodeHelper]
+    >(InversifyContainerFacade.getFactory<CustomCodeHelper, ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper));
 
     // customCodeHelperGroup factory
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.Factory__ICustomCodeHelperGroup)
-        .toFactory<ICustomCodeHelperGroup, [CustomCodeHelperGroup]>(InversifyContainerFacade
-            .getFactory<CustomCodeHelperGroup, ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup));
+    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.Factory__ICustomCodeHelperGroup).toFactory<
+        ICustomCodeHelperGroup,
+        [CustomCodeHelperGroup]
+    >(
+        InversifyContainerFacade.getFactory<CustomCodeHelperGroup, ICustomCodeHelperGroup>(
+            ServiceIdentifiers.ICustomCodeHelperGroup
+        )
+    );
 
     // custom code helper formatter
     bind<ICustomCodeHelperFormatter>(ServiceIdentifiers.ICustomCodeHelperFormatter)

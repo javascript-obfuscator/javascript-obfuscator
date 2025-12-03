@@ -25,11 +25,7 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
  * @return {TStatement[]}
  */
 const convertCodeToStructure: (fixturePath: string) => TStatement[] = (fixturePath) => {
-    return removeRangesFromStructure(
-        NodeUtils.convertCodeToStructure(
-            readFileAsString(`${__dirname}${fixturePath}`)
-        )
-    );
+    return removeRangesFromStructure(NodeUtils.convertCodeToStructure(readFileAsString(`${__dirname}${fixturePath}`)));
 };
 
 /**
@@ -42,9 +38,7 @@ const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) 
 
 describe('NodeAppender', () => {
     describe('append', () => {
-        let astTree: ESTree.Program,
-            expectedAstTree: ESTree.Program,
-            node: TStatement[];
+        let astTree: ESTree.Program, expectedAstTree: ESTree.Program, node: TStatement[];
 
         before(() => {
             node = convertCodeToStructure('/fixtures/simple-input.js');
@@ -73,8 +67,9 @@ describe('NodeAppender', () => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', '', {});
-            callsGraphAnalyzer = inversifyContainerFacade
-                .get<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer);
+            callsGraphAnalyzer = inversifyContainerFacade.get<ICallsGraphAnalyzer>(
+                ServiceIdentifiers.ICallsGraphAnalyzer
+            );
         });
 
         beforeEach(() => {
@@ -84,7 +79,9 @@ describe('NodeAppender', () => {
         describe('Variant #1: nested function calls', () => {
             beforeEach(() => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1.js');
-                expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js');
+                expectedAstTree = convertCodeToAst(
+                    '/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js'
+                );
 
                 callsGraphData = callsGraphAnalyzer.analyze(astTree);
                 NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node);
@@ -98,11 +95,12 @@ describe('NodeAppender', () => {
         describe('Variant #2: nested function calls', () => {
             beforeEach(() => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2.js');
-                expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js');
+                expectedAstTree = convertCodeToAst(
+                    '/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js'
+                );
 
                 callsGraphData = callsGraphAnalyzer.analyze(astTree);
                 NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node);
-
             });
 
             it('should append node into first and deepest function call in nested function calls', () => {
@@ -119,11 +117,12 @@ describe('NodeAppender', () => {
 
             describe('Variant #1: append by specific index in nested function calls', () => {
                 beforeEach(() => {
-                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js');
+                    expectedAstTree = convertCodeToAst(
+                        '/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js'
+                    );
 
                     callsGraphData = callsGraphAnalyzer.analyze(astTree);
                     NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node, 2);
-
                 });
 
                 it('should append node into deepest function call by specified index in nested function calls', () => {
@@ -133,11 +132,12 @@ describe('NodeAppender', () => {
 
             describe('Variant #2: append by specific index in nested function calls', () => {
                 beforeEach(() => {
-                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js');
+                    expectedAstTree = convertCodeToAst(
+                        '/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js'
+                    );
 
                     callsGraphData = callsGraphAnalyzer.analyze(astTree);
                     NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node, 1);
-
                 });
 
                 it('should append node into deepest function call by specified index in nested function calls', () => {
@@ -148,16 +148,12 @@ describe('NodeAppender', () => {
             describe('Variant #3: append by specific index in nested function calls', () => {
                 beforeEach(() => {
                     astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3.js');
-                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js');
-
-                    callsGraphData = callsGraphAnalyzer.analyze(astTree);
-                    NodeAppender.appendToOptimalBlockScope(
-                        callsGraphData,
-                        astTree,
-                        node,
-                        callsGraphData.length - 1
+                    expectedAstTree = convertCodeToAst(
+                        '/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js'
                     );
 
+                    callsGraphData = callsGraphAnalyzer.analyze(astTree);
+                    NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node, callsGraphData.length - 1);
                 });
 
                 it('should append node into deepest function call by specified index in nested function calls', () => {
@@ -214,9 +210,7 @@ describe('NodeAppender', () => {
     });
 
     describe('insertAtIndex', () => {
-        let astTree: ESTree.Program,
-            expectedAstTree: ESTree.Program,
-            node: TStatement[];
+        let astTree: ESTree.Program, expectedAstTree: ESTree.Program, node: TStatement[];
 
         before(() => {
             node = convertCodeToStructure('/fixtures/simple-input.js');
@@ -235,9 +229,7 @@ describe('NodeAppender', () => {
     });
 
     describe('prepend', () => {
-        let astTree: ESTree.Program,
-            expectedAstTree: ESTree.Program,
-            node: TStatement[];
+        let astTree: ESTree.Program, expectedAstTree: ESTree.Program, node: TStatement[];
 
         before(() => {
             node = convertCodeToStructure('/fixtures/simple-input.js');
@@ -257,8 +249,7 @@ describe('NodeAppender', () => {
 
     describe('remove', () => {
         describe('Variant #1: valid index', () => {
-            let astTree: ESTree.Program,
-                expectedAstTree: ESTree.Program;
+            let astTree: ESTree.Program, expectedAstTree: ESTree.Program;
 
             before(() => {
                 astTree = convertCodeToAst('/fixtures/remove-node/valid-index.js');
@@ -276,8 +267,7 @@ describe('NodeAppender', () => {
         });
 
         describe('Variant #2: invalid index', () => {
-            let astTree: ESTree.Program,
-                expectedAstTree: ESTree.Program;
+            let astTree: ESTree.Program, expectedAstTree: ESTree.Program;
 
             before(() => {
                 astTree = convertCodeToAst('/fixtures/remove-node/invalid-index.js');

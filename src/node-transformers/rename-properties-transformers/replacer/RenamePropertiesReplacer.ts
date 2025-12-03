@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -60,11 +60,11 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @param {IPropertyIdentifierNamesCacheStorage} propertyIdentifierNamesCacheStorage
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
-            propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
+        propertyIdentifierNamesCacheStorage: IPropertyIdentifierNamesCacheStorage,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
@@ -75,25 +75,21 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     /**
      * @param {string} propertyName
      */
-    public excludePropertyName (propertyName: string): void {
-       this.excludedPropertyNames.add(propertyName);
+    public excludePropertyName(propertyName: string): void {
+        this.excludedPropertyNames.add(propertyName);
     }
 
     /**
      * @param {ESTree.Identifier | ESTree.Literal} node
      * @returns {ESTree.Identifier | ESTree.Literal}
      */
-    public replace (node: ESTree.Identifier | ESTree.Literal): ESTree.Identifier | ESTree.Literal {
+    public replace(node: ESTree.Identifier | ESTree.Literal): ESTree.Identifier | ESTree.Literal {
         if (NodeGuards.isIdentifierNode(node)) {
-            return NodeFactory.identifierNode(
-                this.replacePropertyName(node.name)
-            );
+            return NodeFactory.identifierNode(this.replacePropertyName(node.name));
         }
 
         if (NodeGuards.isLiteralNode(node) && typeof node.value === 'string') {
-            return NodeFactory.literalNode(
-                this.replacePropertyName(node.value)
-            );
+            return NodeFactory.literalNode(this.replacePropertyName(node.value));
         }
 
         return node;
@@ -104,7 +100,7 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @returns {string}
      * @private
      */
-    private replacePropertyName (propertyName: string): string {
+    private replacePropertyName(propertyName: string): string {
         if (this.isReservedName(propertyName)) {
             this.identifierNamesGenerator.preserveName(propertyName);
 
@@ -112,12 +108,10 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
         }
 
         let renamedPropertyName: string | null = this.options.identifierNamesCache
-            ? this.propertyIdentifierNamesCacheStorage.get(propertyName) ?? null
+            ? (this.propertyIdentifierNamesCacheStorage.get(propertyName) ?? null)
             : null;
 
-        renamedPropertyName = renamedPropertyName
-            ?? this.propertyNamesMap.get(propertyName)
-            ?? null;
+        renamedPropertyName = renamedPropertyName ?? this.propertyNamesMap.get(propertyName) ?? null;
 
         if (renamedPropertyName !== null) {
             return renamedPropertyName;
@@ -137,17 +131,15 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedName (name: string): boolean {
-        return this.isExcludedName(name)
-            || this.isReservedOptionName(name)
-            || this.isReservedDomPropertyName(name);
+    private isReservedName(name: string): boolean {
+        return this.isExcludedName(name) || this.isReservedOptionName(name) || this.isReservedDomPropertyName(name);
     }
 
     /**
      * @param {string} name
      * @returns {boolean}
      */
-    private isExcludedName (name: string): boolean {
+    private isExcludedName(name: string): boolean {
         return this.excludedPropertyNames.has(name);
     }
 
@@ -155,22 +147,21 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedOptionName (name: string): boolean {
+    private isReservedOptionName(name: string): boolean {
         if (!this.options.reservedNames.length) {
             return false;
         }
 
-        return this.options.reservedNames
-            .some((reservedName: string) => {
-                return new RegExp(reservedName, 'g').exec(name) !== null;
-            });
+        return this.options.reservedNames.some((reservedName: string) => {
+            return new RegExp(reservedName, 'g').exec(name) !== null;
+        });
     }
 
     /**
      * @param {string} name
      * @returns {boolean}
      */
-    private isReservedDomPropertyName (name: string): boolean {
+    private isReservedDomPropertyName(name: string): boolean {
         return RenamePropertiesReplacer.reservedDomPropertiesList.has(name);
     }
 }

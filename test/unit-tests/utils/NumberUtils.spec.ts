@@ -334,7 +334,7 @@ describe('NumberUtils', function () {
         describe('Positive number', () => {
             describe('Variant #1: positive small safe integer', () => {
                 const number: number = 100;
-                const expectedResult: boolean = false
+                const expectedResult: boolean = false;
 
                 let result: boolean;
 
@@ -349,7 +349,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #2: positive big safe integer', () => {
                 const number: number = Number.MAX_SAFE_INTEGER;
-                const expectedResult: boolean = false
+                const expectedResult: boolean = false;
 
                 let result: boolean;
 
@@ -364,7 +364,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #3: positive unsafe integer', () => {
                 const number: number = Number.MAX_SAFE_INTEGER + 1;
-                const expectedResult: boolean = true
+                const expectedResult: boolean = true;
 
                 let result: boolean;
 
@@ -381,7 +381,7 @@ describe('NumberUtils', function () {
         describe('Negative number', () => {
             describe('Variant #1: negative small safe integer', () => {
                 const number: number = -100;
-                const expectedResult: boolean = false
+                const expectedResult: boolean = false;
 
                 let result: boolean;
 
@@ -396,7 +396,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #2: negative big safe integer', () => {
                 const number: number = Number.MIN_SAFE_INTEGER;
-                const expectedResult: boolean = false
+                const expectedResult: boolean = false;
 
                 let result: boolean;
 
@@ -411,7 +411,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #3: negative unsafe integer', () => {
                 const number: number = Number.MIN_SAFE_INTEGER - 1;
-                const expectedResult: boolean = true
+                const expectedResult: boolean = true;
 
                 let result: boolean;
 
@@ -444,10 +444,7 @@ describe('NumberUtils', function () {
         describe('Positive numbers', () => {
             describe('Variant #1: positive number `1`', () => {
                 const number: number = 1;
-                const expectedFactors: number[] = [
-                    -1,
-                    1
-                ];
+                const expectedFactors: number[] = [-1, 1];
 
                 let factors: number[];
 
@@ -462,12 +459,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #2: positive number `2`', () => {
                 const number: number = 2;
-                const expectedFactors: number[] = [
-                    -2,
-                    -1,
-                    1,
-                    2
-                ];
+                const expectedFactors: number[] = [-2, -1, 1, 2];
 
                 let factors: number[];
 
@@ -483,24 +475,7 @@ describe('NumberUtils', function () {
             describe('Variant #3: positive number `100`', () => {
                 const number: number = 100;
                 const expectedFactors: number[] = [
-                    -100,
-                    -50,
-                    -25,
-                    -20,
-                    -10,
-                    -5,
-                    -4,
-                    -2,
-                    -1,
-                    1,
-                    2,
-                    4,
-                    5,
-                    10,
-                    20,
-                    25,
-                    50,
-                    100
+                    -100, -50, -25, -20, -10, -5, -4, -2, -1, 1, 2, 4, 5, 10, 20, 25, 50, 100
                 ];
 
                 let factors: number[];
@@ -545,15 +520,12 @@ describe('NumberUtils', function () {
                     assert.deepEqual(factors, expectedFactors);
                 });
             });
-        })
+        });
 
         describe('Negative numbers', () => {
             describe('Variant #1: negative number `-1`', () => {
                 const number: number = -1;
-                const expectedFactors: number[] = [
-                    -1,
-                    1
-                ];
+                const expectedFactors: number[] = [-1, 1];
 
                 let factors: number[];
 
@@ -568,12 +540,7 @@ describe('NumberUtils', function () {
 
             describe('Variant #2: negative number `-2`', () => {
                 const number: number = -2;
-                const expectedFactors: number[] = [
-                    -2,
-                    -1,
-                    1,
-                    2
-                ];
+                const expectedFactors: number[] = [-2, -1, 1, 2];
 
                 let factors: number[];
 
@@ -589,24 +556,7 @@ describe('NumberUtils', function () {
             describe('Variant #3: negative number `-100`', () => {
                 const number: number = -100;
                 const expectedFactors: number[] = [
-                    -100,
-                    -50,
-                    -25,
-                    -20,
-                    -10,
-                    -5,
-                    -4,
-                    -2,
-                    -1,
-                    1,
-                    2,
-                    4,
-                    5,
-                    10,
-                    20,
-                    25,
-                    50,
-                    100
+                    -100, -50, -25, -20, -10, -5, -4, -2, -1, 1, 2, 4, 5, 10, 20, 25, 50, 100
                 ];
 
                 let factors: number[];
@@ -651,7 +601,7 @@ describe('NumberUtils', function () {
                     assert.deepEqual(factors, expectedFactors);
                 });
             });
-        })
+        });
 
         describe('zero number', () => {
             const number: number = 0;
@@ -665,6 +615,6 @@ describe('NumberUtils', function () {
             it('should throw an error', () => {
                 assert.throw(testFunc, Error);
             });
-        })
+        });
     });
 });

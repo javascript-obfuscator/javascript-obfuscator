@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -22,23 +22,19 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
      *
      * @type {NodeTransformer[]}
      */
-    public override readonly runAfter: NodeTransformer[] = [
-        NodeTransformer.NumberToNumericalExpressionTransformer
-    ];
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.NumberToNumericalExpressionTransformer];
 
     /**
      * @type {Map<ESTree.SimpleLiteral['value'] | ESTree.BigIntLiteral['value'], string>}
      */
-    private readonly numberLiteralCache: Map <
-        ESTree.SimpleLiteral['value'] | ESTree.BigIntLiteral['value'],
-        string
-    > = new Map();
+    private readonly numberLiteralCache: Map<ESTree.SimpleLiteral['value'] | ESTree.BigIntLiteral['value'], string> =
+        new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -49,7 +45,7 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -76,7 +72,7 @@ export class NumberLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (typeof literalNode.value !== 'number' && typeof literalNode.value !== 'bigint') {
             return literalNode;
         }

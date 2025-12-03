@@ -24,7 +24,7 @@ export abstract class AbstractStringArrayIndexNode implements IStringArrayIndexN
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -36,5 +36,5 @@ export abstract class AbstractStringArrayIndexNode implements IStringArrayIndexN
      * @param {number} index
      * @returns {Expression}
      */
-    public abstract getNode (index: number): ESTree.Expression;
+    public abstract getNode(index: number): ESTree.Expression;
 }

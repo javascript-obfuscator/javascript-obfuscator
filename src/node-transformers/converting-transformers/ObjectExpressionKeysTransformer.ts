@@ -42,9 +42,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
-            objectExpressionExtractorFactory: TObjectExpressionExtractorFactory,
+        objectExpressionExtractorFactory: TObjectExpressionExtractorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -59,33 +59,33 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Statement} objectExpressionHostStatement
      * @returns {boolean}
      */
-    private static isProhibitedObjectExpressionNode (
+    private static isProhibitedObjectExpressionNode(
         objectExpressionNode: ESTree.ObjectExpression,
         objectExpressionParentNode: ESTree.Node,
         objectExpressionHostStatement: ESTree.Statement
     ): boolean {
-        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
+        return (
+            ObjectExpressionKeysTransformer.isReferencedIdentifierName(
                 objectExpressionNode,
                 objectExpressionHostStatement
-            )
-            || ObjectExpressionKeysTransformer.isProhibitedArrowFunctionExpression(
+            ) ||
+            ObjectExpressionKeysTransformer.isProhibitedArrowFunctionExpression(
                 objectExpressionNode,
                 objectExpressionParentNode
-            )
-            || ObjectExpressionKeysTransformer.isObjectExpressionWithCallExpression(
-                objectExpressionNode,
-            )
-            || ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
+            ) ||
+            ObjectExpressionKeysTransformer.isObjectExpressionWithCallExpression(objectExpressionNode) ||
+            ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
                 objectExpressionNode,
                 objectExpressionHostStatement
-            );
+            )
+        );
     }
 
     /**
      * @param {Identifier | ThisExpression} node
      * @returns {string}
      */
-    private static getReferencedIdentifierName (node: ESTree.Identifier | ESTree.ThisExpression): string {
+    private static getReferencedIdentifierName(node: ESTree.Identifier | ESTree.ThisExpression): string {
         if (NodeGuards.isIdentifierNode(node)) {
             return node.name;
         } else {
@@ -98,9 +98,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Node} objectExpressionHostNode
      * @returns {boolean}
      */
-    private static isReferencedIdentifierName (
+    private static isReferencedIdentifierName(
         objectExpressionNode: ESTree.ObjectExpression,
-        objectExpressionHostNode: ESTree.Node,
+        objectExpressionHostNode: ESTree.Node
     ): boolean {
         const identifierNamesSet: Set<string> = new Set();
 
@@ -151,25 +151,27 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Node} objectExpressionNodeParentNode
      * @returns {boolean}
      */
-    private static isProhibitedArrowFunctionExpression (
+    private static isProhibitedArrowFunctionExpression(
         objectExpressionNode: ESTree.ObjectExpression,
         objectExpressionNodeParentNode: ESTree.Node
     ): boolean {
-        return NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode)
-            && objectExpressionNodeParentNode.body === objectExpressionNode;
+        return (
+            NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode) &&
+            objectExpressionNodeParentNode.body === objectExpressionNode
+        );
     }
 
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @returns {boolean}
      */
-    private static isObjectExpressionWithCallExpression (objectExpressionNode: ESTree.ObjectExpression): boolean {
+    private static isObjectExpressionWithCallExpression(objectExpressionNode: ESTree.ObjectExpression): boolean {
         let isCallExpressionLikeNodeFound: boolean = false;
 
         estraverse.traverse(objectExpressionNode, {
             enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                const isCallExpressionLikeNode = NodeGuards.isCallExpressionNode(node)
-                    || NodeGuards.isNewExpressionNode(node);
+                const isCallExpressionLikeNode =
+                    NodeGuards.isCallExpressionNode(node) || NodeGuards.isNewExpressionNode(node);
 
                 if (!isCallExpressionLikeNode) {
                     return;
@@ -189,23 +191,25 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Node} objectExpressionHostNode
      * @returns {boolean}
      */
-    private static isProhibitedSequenceExpression (
+    private static isProhibitedSequenceExpression(
         objectExpressionNode: ESTree.ObjectExpression,
-        objectExpressionHostNode: ESTree.Node,
+        objectExpressionHostNode: ESTree.Node
     ): boolean {
-        return NodeGuards.isExpressionStatementNode(objectExpressionHostNode)
-            && NodeGuards.isSequenceExpressionNode(objectExpressionHostNode.expression)
-            && objectExpressionHostNode.expression.expressions.some((expressionNode: ESTree.Expression) =>
-                NodeGuards.isCallExpressionNode(expressionNode)
-                && NodeGuards.isSuperNode(expressionNode.callee)
-            );
+        return (
+            NodeGuards.isExpressionStatementNode(objectExpressionHostNode) &&
+            NodeGuards.isSequenceExpressionNode(objectExpressionHostNode.expression) &&
+            objectExpressionHostNode.expression.expressions.some(
+                (expressionNode: ESTree.Expression) =>
+                    NodeGuards.isCallExpressionNode(expressionNode) && NodeGuards.isSuperNode(expressionNode.callee)
+            )
+        );
     }
 
     /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.transformObjectKeys) {
             return null;
         }
@@ -214,10 +218,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             case NodeTransformationStage.Converting:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (
-                            parentNode
-                            && NodeGuards.isObjectExpressionNode(node)
-                        ) {
+                        if (parentNode && NodeGuards.isObjectExpressionNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -245,18 +246,20 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         if (!objectExpressionNode.properties.length) {
             return objectExpressionNode;
         }
 
         const hostStatement: ESTree.Statement = NodeStatementUtils.getRootStatementOfNode(objectExpressionNode);
 
-        if (ObjectExpressionKeysTransformer.isProhibitedObjectExpressionNode(
-            objectExpressionNode,
-            parentNode,
-            hostStatement
-        )) {
+        if (
+            ObjectExpressionKeysTransformer.isProhibitedObjectExpressionNode(
+                objectExpressionNode,
+                parentNode,
+                hostStatement
+            )
+        ) {
             return objectExpressionNode;
         }
 
@@ -273,7 +276,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {Statement} hostStatement
      * @returns {Node}
      */
-    private applyObjectExpressionKeysExtractorsRecursive (
+    private applyObjectExpressionKeysExtractorsRecursive(
         objectExpressionExtractorNames: ObjectExpressionExtractor[],
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
@@ -290,8 +293,10 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             nodeToReplace,
             objectExpressionHostStatement: newObjectExpressionHostStatement,
             objectExpressionNode: newObjectExpressionNode
-        } = this.objectExpressionExtractorFactory(objectExpressionExtractor)
-            .extract(objectExpressionNode, hostStatement);
+        } = this.objectExpressionExtractorFactory(objectExpressionExtractor).extract(
+            objectExpressionNode,
+            hostStatement
+        );
 
         this.applyObjectExpressionKeysExtractorsRecursive(
             newObjectExpressionExtractorNames,

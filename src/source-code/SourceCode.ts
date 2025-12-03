@@ -15,7 +15,7 @@ export class SourceCode implements ISourceCode {
      * @param {string} sourceCode
      * @param {string} sourceMap
      */
-    public constructor (sourceCode: string, sourceMap: string) {
+    public constructor(sourceCode: string, sourceMap: string) {
         this.sourceCode = sourceCode;
         this.sourceMap = sourceMap;
     }
@@ -23,21 +23,21 @@ export class SourceCode implements ISourceCode {
     /**
      * @returns {string}
      */
-    public getSourceCode (): string {
+    public getSourceCode(): string {
         return this.sourceCode;
     }
 
     /**
      * @returns {string}
      */
-    public getSourceMap (): string {
+    public getSourceMap(): string {
         return this.sourceMap;
     }
 
     /**
      * @returns {string}
      */
-    public toString (): string {
+    public toString(): string {
         return this.sourceCode;
     }
 }

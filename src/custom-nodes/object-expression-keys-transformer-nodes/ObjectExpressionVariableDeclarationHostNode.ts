@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -32,26 +32,24 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            identifierNamesGeneratorFactory,
-            customCodeHelperFormatter,
-            randomGenerator,
-            options
-        );
+        super(identifierNamesGeneratorFactory, customCodeHelperFormatter, randomGenerator, options);
     }
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {(ESTree.Property | ESTree.SpreadElement)[]} properties
      */
-    public initialize (lexicalScopeNode: TNodeWithLexicalScope, properties: (ESTree.Property | ESTree.SpreadElement)[]): void {
+    public initialize(
+        lexicalScopeNode: TNodeWithLexicalScope,
+        properties: (ESTree.Property | ESTree.SpreadElement)[]
+    ): void {
         this.lexicalScopeNode = lexicalScopeNode;
         this.properties = properties;
     }
@@ -59,7 +57,7 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure(): TStatement[] {
         const variableDeclarationName: string = NodeGuards.isProgramNode(this.lexicalScopeNode)
             ? this.identifierNamesGenerator.generateForGlobalScope()
             : this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode);

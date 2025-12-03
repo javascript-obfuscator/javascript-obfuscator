@@ -30,23 +30,19 @@ describe('SelfDefendingTemplate', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...baseOptions,
-                    selfDefending: true,
-                    identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...baseOptions,
+                selfDefending: true,
+                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+            }).getObfuscatedCode();
+
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout).then((result: string | null) => {
+                if (!result) {
+                    return;
                 }
-            ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
-                .then((result: string | null) => {
-                    if (!result) {
-                        return;
-                    }
-
-                    evaluationResult = parseInt(result, 10);
-                });
+                evaluationResult = parseInt(result, 10);
+            });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -63,23 +59,19 @@ describe('SelfDefendingTemplate', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    baseOptions,
-                    selfDefending: true,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                baseOptions,
+                selfDefending: true,
+                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            }).getObfuscatedCode();
+
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout).then((result: string | null) => {
+                if (!result) {
+                    return;
                 }
-            ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
-                .then((result: string | null) => {
-                    if (!result) {
-                        return;
-                    }
-
-                    evaluationResult = parseInt(result, 10);
-                });
+                evaluationResult = parseInt(result, 10);
+            });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -96,24 +88,20 @@ describe('SelfDefendingTemplate', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    baseOptions,
-                    selfDefending: true,
-                    identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                    identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle']
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                baseOptions,
+                selfDefending: true,
+                identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle']
+            }).getObfuscatedCode();
+
+            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout).then((result: string | null) => {
+                if (!result) {
+                    return;
                 }
-            ).getObfuscatedCode();
 
-            return evaluateInWorker(obfuscatedCode, correctEvaluationTimeout)
-                .then((result: string | null) => {
-                    if (!result) {
-                        return;
-                    }
-
-                    evaluationResult = parseInt(result, 10);
-                });
+                evaluationResult = parseInt(result, 10);
+            });
         });
 
         it('should correctly evaluate code with enabled self defending', () => {
@@ -131,23 +119,19 @@ describe('SelfDefendingTemplate', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...baseOptions,
-                        selfDefending: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...baseOptions,
+                    selfDefending: true
+                }).getObfuscatedCode();
                 obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
 
-                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
-                    .then((result: string | null) => {
-                        if (!result) {
-                            return;
-                        }
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout).then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
 
-                        evaluationResult = parseInt(result, 10);
-                    });
+                    evaluationResult = parseInt(result, 10);
+                });
             });
 
             it('should enter code in infinity loop', () => {
@@ -164,23 +148,19 @@ describe('SelfDefendingTemplate', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...baseOptions,
-                        selfDefending: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...baseOptions,
+                    selfDefending: true
+                }).getObfuscatedCode();
                 obfuscatedCode = beautifyCode(obfuscatedCode, 'tab');
 
-                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
-                    .then((result: string | null) => {
-                        if (!result) {
-                            return;
-                        }
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout).then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
 
-                        evaluationResult = parseInt(result, 10);
-                    });
+                    evaluationResult = parseInt(result, 10);
+                });
             });
 
             it('should enter code in infinity loop', () => {
@@ -211,14 +191,13 @@ describe('SelfDefendingTemplate', function () {
                     }
                 ).getObfuscatedCode();
 
-                return evaluateInWorker(obfuscatedCode, evaluationTimeout)
-                    .then((result: string | null) => {
-                        if (!result) {
-                            return;
-                        }
+                return evaluateInWorker(obfuscatedCode, evaluationTimeout).then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
 
-                        evaluationResult = result;
-                    });
+                    evaluationResult = result;
+                });
             });
 
             it('should correctly evaluate code with enabled self defending', () => {
@@ -247,14 +226,13 @@ describe('SelfDefendingTemplate', function () {
                 ).getObfuscatedCode();
                 obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
 
-                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout)
-                    .then((result: string | null) => {
-                        if (!result) {
-                            return;
-                        }
+                return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout).then((result: string | null) => {
+                    if (!result) {
+                        return;
+                    }
 
-                        evaluationResult = result;
-                    });
+                    evaluationResult = result;
+                });
             });
 
             it('should enter code in infinity loop', () => {

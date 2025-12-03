@@ -15,7 +15,7 @@ import { DEFAULT_PRESET } from '../presets/Default';
  * @param {ValidationOptions} validationOptions
  * @returns {(options: IOptions, propertyName: keyof IOptions) => void}
  */
-export function IsAllowedForObfuscationTargets (
+export function IsAllowedForObfuscationTargets(
     obfuscationTargets: TTypeFromEnum<typeof ObfuscationTarget>[],
     validationOptions?: ValidationOptions
 ): (options: IOptions, propertyName: keyof IOptions) => void {
@@ -32,7 +32,7 @@ export function IsAllowedForObfuscationTargets (
                  * @param {ValidationArguments} validationArguments
                  * @returns {boolean}
                  */
-                validate (value: IOptions[keyof IOptions], validationArguments: ValidationArguments): boolean {
+                validate(value: IOptions[keyof IOptions], validationArguments: ValidationArguments): boolean {
                     const options: IOptions = <IOptions>validationArguments.object;
                     const defaultValue: IOptions[keyof IOptions] | undefined = DEFAULT_PRESET[propertyName];
                     const isDefaultValue: boolean = equal(value, defaultValue);
@@ -44,8 +44,10 @@ export function IsAllowedForObfuscationTargets (
                  * @param {ValidationArguments} validationArguments
                  * @returns {string}
                  */
-                defaultMessage (validationArguments: ValidationArguments): string {
-                    const requiredObfuscationTargetsString: string = obfuscationTargets.join(`${StringSeparator.Comma} `);
+                defaultMessage(validationArguments: ValidationArguments): string {
+                    const requiredObfuscationTargetsString: string = obfuscationTargets.join(
+                        `${StringSeparator.Comma} `
+                    );
 
                     return `This option allowed only for obfuscation targets: ${requiredObfuscationTargetsString}`;
                 }

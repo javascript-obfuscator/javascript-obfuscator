@@ -4,10 +4,7 @@ import { spawn, Thread, Worker } from 'threads';
  * @param {string} code
  * @returns {Promise<void>}
  */
-export function evaluateInWorker(
-    code: string,
-    waitTimeout: number
-): Promise<string | null> {
+export function evaluateInWorker(code: string, waitTimeout: number): Promise<string | null> {
     return new Promise(async (resolve, reject) => {
         const evaluationWorker = await spawn(new Worker('./workers/evaluation-worker'));
 

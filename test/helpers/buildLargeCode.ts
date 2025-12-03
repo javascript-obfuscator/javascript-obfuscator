@@ -1,4 +1,4 @@
-export function buildLargeCode (linesOfCode: number): string {
+export function buildLargeCode(linesOfCode: number): string {
     return new LargeCodeBuilder(linesOfCode).build();
 }
 
@@ -16,11 +16,11 @@ class LargeCodeBuilder {
     /**
      * @param {number} linesOfCode
      */
-    constructor (linesOfCode: number) {
+    constructor(linesOfCode: number) {
         this.linesOfCode = linesOfCode;
     }
 
-    public build (): string {
+    public build(): string {
         const lastLineIndex: number = this.linesOfCode - 1;
 
         let funcIndex: number = 0,
@@ -77,7 +77,7 @@ class LargeCodeBuilder {
      * @param {string} line
      * @returns {string}
      */
-    private addLine (line: string): void {
+    private addLine(line: string): void {
         this.code += `\n${line}`;
     }
 }

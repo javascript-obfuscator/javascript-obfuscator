@@ -22,19 +22,18 @@ describe('MangledIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-1.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'a',
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'a',
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate correct identifier for string array', () => {
@@ -56,20 +55,19 @@ describe('MangledIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-1.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-1.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'a',
-                            renameGlobals: true,
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'a',
+                        renameGlobals: true,
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate correct identifier for string array', () => {
@@ -94,19 +92,18 @@ describe('MangledIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-2.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-2.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'a',
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'a',
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate correct identifier name for string array', () => {
@@ -133,20 +130,19 @@ describe('MangledIdentifierNamesGenerator', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-name-conflict-2.js');
+                    const code: string = readFileAsString(
+                        __dirname + '/fixtures/string-array-storage-name-conflict-2.js'
+                    );
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            identifiersPrefix: 'a',
-                            renameGlobals: true,
-                            transformObjectKeys: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        identifiersPrefix: 'a',
+                        renameGlobals: true,
+                        transformObjectKeys: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate correct identifier name for string array', () => {
@@ -176,13 +172,10 @@ describe('MangledIdentifierNamesGenerator', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should keep identifier name for variable declaration', () => {
@@ -208,14 +201,11 @@ describe('MangledIdentifierNamesGenerator', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            renameGlobals: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        renameGlobals: true
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate valid identifier name for variable declaration', () => {
@@ -247,15 +237,12 @@ describe('MangledIdentifierNamesGenerator', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate valid identifier names for string array', () => {
@@ -289,16 +276,13 @@ describe('MangledIdentifierNamesGenerator', () => {
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-1.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            renameGlobals: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        renameGlobals: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate valid identifier names for string array', () => {
@@ -321,30 +305,29 @@ describe('MangledIdentifierNamesGenerator', () => {
 
         describe('Variant #3: Should generate different names set for different lexical scopes: nested functions', () => {
             describe('Variant #1: `renameGlobals` option is disabled', () => {
-                const regExp: RegExp = new RegExp(`` +
-                    `var foo *= *'abc'; *` +
-                    `function bar *\\(a, *b\\) *{` +
+                const regExp: RegExp = new RegExp(
+                    `` +
+                        `var foo *= *'abc'; *` +
+                        `function bar *\\(a, *b\\) *{` +
                         `function c *\\(e, *f\\) *{ *} *` +
                         `function d *\\(e, *f\\) *{ *} *` +
-                    `} *` +
-                    `function baz *\\(a, *b\\) *{` +
+                        `} *` +
+                        `function baz *\\(a, *b\\) *{` +
                         `function c *\\(e, *f\\) *{ *} *` +
                         `function d *\\(e, *f\\) *{ *} *` +
-                    `}` +
-                ``);
+                        `}` +
+                        ``
+                );
 
                 let obfuscatedCode: string;
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-2.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate valid identifier names', () => {
@@ -353,31 +336,30 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const regExp: RegExp = new RegExp(`` +
-                    `var a *= *'abc'; *` +
-                    `function b *\\(d, *e\\) *{` +
+                const regExp: RegExp = new RegExp(
+                    `` +
+                        `var a *= *'abc'; *` +
+                        `function b *\\(d, *e\\) *{` +
                         `function f *\\(h, *i\\) *{ *} *` +
                         `function g *\\(h, *i\\) *{ *} *` +
-                    `} *` +
-                    `function c *\\(d, *e\\) *{` +
+                        `} *` +
+                        `function c *\\(d, *e\\) *{` +
                         `function f *\\(h, *i\\) *{ *} *` +
                         `function g *\\(h, *i\\) *{ *} *` +
-                    `}` +
-                    ``);
+                        `}` +
+                        ``
+                );
 
                 let obfuscatedCode: string;
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/lexical-block-scope-identifiers-2.js');
 
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                            renameGlobals: true
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        renameGlobals: true
+                    }).getObfuscatedCode();
                 });
 
                 it('Match #1: should generate valid identifier names', () => {

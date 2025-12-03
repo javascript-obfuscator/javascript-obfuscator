@@ -27,15 +27,12 @@ describe('StringArrayRotateFunctionTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should correctly append code helper into the obfuscated code', () => {
@@ -43,24 +40,21 @@ describe('StringArrayRotateFunctionTransformer', function () {
             });
         });
 
-        describe('`stringArray` option isn\'t set', () => {
+        describe("`stringArray` option isn't set", () => {
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: false,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: false,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t append code helper into the obfuscated code', () => {
+            it("shouldn't append code helper into the obfuscated code", () => {
                 assert.notMatch(obfuscatedCode, regExp);
             });
         });
@@ -71,15 +65,12 @@ describe('StringArrayRotateFunctionTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 0.00001
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 0.00001
+                }).getObfuscatedCode();
             });
 
             it('should correctly append code helper into the obfuscated code', () => {
@@ -93,15 +84,12 @@ describe('StringArrayRotateFunctionTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 0
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 0
+                }).getObfuscatedCode();
             });
 
             it('should correctly append code helper into the obfuscated code', () => {
@@ -115,18 +103,15 @@ describe('StringArrayRotateFunctionTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-string-literals.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t append code helper into the obfuscated code', () => {
+            it("shouldn't append code helper into the obfuscated code", () => {
                 assert.notMatch(obfuscatedCode, regExp);
             });
         });
@@ -139,58 +124,51 @@ describe('StringArrayRotateFunctionTransformer', function () {
 
             let hasRuntimeErrors: boolean = false;
 
-            before(async() => {
+            before(async () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/code-evaluation.js');
 
                 const obfuscateFunc = () => {
-                    return JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            controlFlowFlattening: true,
-                            controlFlowFlatteningThreshold: 1,
-                            deadCodeInjection: true,
-                            deadCodeInjectionThreshold: 1,
-                            debugProtection: true,
-                            disableConsoleOutput: true,
-                            identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
-                            numbersToExpressions: true,
-                            simplify: true,
-                            renameProperties: true,
-                            stringArrayRotate: true,
-                            selfDefending: true,
-                            splitStrings: true,
-                            splitStringsChunkLength: 3,
-                            stringArray: true,
-                            stringArrayCallsTransform: true,
-                            stringArrayCallsTransformThreshold: 1,
-                            stringArrayEncoding: [
-                                StringArrayEncoding.None,
-                                StringArrayEncoding.Base64,
-                                StringArrayEncoding.Rc4
-                            ],
-                            stringArrayIndexesType: [
-                                StringArrayIndexesType.HexadecimalNumber,
-                                StringArrayIndexesType.HexadecimalNumericString
-                            ],
-                            stringArrayIndexShift: true,
-                            stringArrayWrappersChainedCalls: true,
-                            stringArrayWrappersCount: 5,
-                            stringArrayWrappersParametersMaxCount: 5,
-                            stringArrayWrappersType: StringArrayWrappersType.Function,
-                            stringArrayThreshold: 1,
-                            transformObjectKeys: true,
-                            unicodeEscapeSequence: true
-                        }
-                    ).getObfuscatedCode();
+                    return JavaScriptObfuscator.obfuscate(code, {
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        debugProtection: true,
+                        disableConsoleOutput: true,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator,
+                        numbersToExpressions: true,
+                        simplify: true,
+                        renameProperties: true,
+                        stringArrayRotate: true,
+                        selfDefending: true,
+                        splitStrings: true,
+                        splitStringsChunkLength: 3,
+                        stringArray: true,
+                        stringArrayCallsTransform: true,
+                        stringArrayCallsTransformThreshold: 1,
+                        stringArrayEncoding: [
+                            StringArrayEncoding.None,
+                            StringArrayEncoding.Base64,
+                            StringArrayEncoding.Rc4
+                        ],
+                        stringArrayIndexesType: [
+                            StringArrayIndexesType.HexadecimalNumber,
+                            StringArrayIndexesType.HexadecimalNumericString
+                        ],
+                        stringArrayIndexShift: true,
+                        stringArrayWrappersChainedCalls: true,
+                        stringArrayWrappersCount: 5,
+                        stringArrayWrappersParametersMaxCount: 5,
+                        stringArrayWrappersType: StringArrayWrappersType.Function,
+                        stringArrayThreshold: 1,
+                        transformObjectKeys: true,
+                        unicodeEscapeSequence: true
+                    }).getObfuscatedCode();
                 };
-
 
                 for (let i = 0; i < samplesCount; i++) {
                     try {
-                        const evaluationResult = await evaluateInWorker(
-                            obfuscateFunc(),
-                            evaluationTimeout
-                        );
+                        const evaluationResult = await evaluateInWorker(obfuscateFunc(), evaluationTimeout);
 
                         if (evaluationResult !== 'fooooooo') {
                             hasRuntimeErrors = true;
@@ -229,21 +207,18 @@ describe('StringArrayRotateFunctionTransformer', function () {
                 const code: string = readFileAsString(__dirname + '/fixtures/early-successful-comparison.js');
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            seed: i,
-                            stringArrayRotate: true,
-                            stringArrayShuffle: true,
-                            stringArray: true,
-                            stringArrayThreshold: 1
-                        }
-                    ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        seed: i,
+                        stringArrayRotate: true,
+                        stringArrayShuffle: true,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
 
                     try {
                         await evaluateInWorker(obfuscatedCode, evaluationTimeout);
                     } catch (error) {
-                        evaluationError = error
+                        evaluationError = error;
 
                         break;
                     }
@@ -257,7 +232,7 @@ describe('StringArrayRotateFunctionTransformer', function () {
             after(() => {
                 numberNumericalExpressionAnalyzerAnalyzeStub.restore();
                 stringArrayRotateFunctionTransformerGetComparisonValueStub.restore();
-            })
+            });
         });
     });
 });

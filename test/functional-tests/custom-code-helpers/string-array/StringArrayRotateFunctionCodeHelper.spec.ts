@@ -18,15 +18,12 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should correctly append code helper into the obfuscated code', () => {
@@ -34,24 +31,21 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
             });
         });
 
-        describe('`stringArray` option isn\'t set', () => {
+        describe("`stringArray` option isn't set", () => {
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: false,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: false,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t append code helper into the obfuscated code', () => {
+            it("shouldn't append code helper into the obfuscated code", () => {
                 assert.notMatch(obfuscatedCode, regExp);
             });
         });
@@ -59,22 +53,20 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
 
     describe('Comparison expression', () => {
         describe('Should add comparison expression to the code helper', () => {
-            const comparisonExpressionRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *-?parseInt\(_0x([a-f0-9]){4,6}\(0x.\)\)/;
+            const comparisonExpressionRegExp: RegExp =
+                /var _0x([a-f0-9]){4,6} *= *-?parseInt\(_0x([a-f0-9]){4,6}\(0x.\)\)/;
 
             let obfuscatedCode: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArrayRotate: true,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArrayRotate: true,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should add comparison expression to the code', () => {
@@ -92,16 +84,13 @@ describe('StringArrayRotateFunctionCodeHelper', () => {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                    stringArrayRotate: true,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                stringArrayRotate: true,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }).getObfuscatedCode();
         });
 
         it('should preserve string array name', () => {

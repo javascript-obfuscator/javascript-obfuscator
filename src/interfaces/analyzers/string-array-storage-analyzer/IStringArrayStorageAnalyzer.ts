@@ -9,22 +9,22 @@ export interface IStringArrayStorageAnalyzer extends IAnalyzer<[ESTree.Program],
     /**
      * @param {Program} astTree
      */
-    analyze (astTree: ESTree.Program): void;
+    analyze(astTree: ESTree.Program): void;
 
     /**
      * @param {Literal} literalNode
      * @param {Node} parentNode
      */
-    analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void;
+    analyzeLiteralNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): void;
 
     /**
      * @param {TStringLiteralNode} stringLiteralNode
      */
-    addItemDataForLiteralNode (stringLiteralNode: TStringLiteralNode): void;
+    addItemDataForLiteralNode(stringLiteralNode: TStringLiteralNode): void;
 
     /**
      * @param {Literal} literalNode
      * @returns {IStringArrayStorageItemData | undefined}
      */
-    getItemDataForLiteralNode (literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined;
+    getItemDataForLiteralNode(literalNode: ESTree.Literal): IStringArrayStorageItemData | undefined;
 }

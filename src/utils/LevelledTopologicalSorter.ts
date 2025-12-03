@@ -4,7 +4,7 @@ import { ILevelledTopologicalSorter } from '../interfaces/utils/ILevelledTopolog
 
 type TVisitMark = 'ok' | 'visiting';
 
-interface IVisitMarks <TValue extends string> {
+interface IVisitMarks<TValue extends string> {
     [key: string]: TVisitMark;
 }
 
@@ -12,7 +12,7 @@ interface IVisitMarks <TValue extends string> {
  * Port and rework of https://github.com/loveencounterflow/ltsort
  */
 @injectable()
-export class LevelledTopologicalSorter <TValue extends string = string> implements ILevelledTopologicalSorter<TValue> {
+export class LevelledTopologicalSorter<TValue extends string = string> implements ILevelledTopologicalSorter<TValue> {
     /**
      * @type {Map<TValue, TValue[]}
      */
@@ -23,10 +23,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue | null} consequent
      * @returns {this}
      */
-    public add (
-        precedent: TValue,
-        consequent: TValue | null = null
-    ): this {
+    public add(precedent: TValue, consequent: TValue | null = null): this {
         if (consequent !== null) {
             return this.link(precedent, consequent);
         }
@@ -39,7 +36,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      *
      * @returns {TValue[]}
      */
-    public sort (): TValue[] {
+    public sort(): TValue[] {
         const consequents: TValue[] = Array.from(this.graph.keys());
 
         const results: TValue[] = [];
@@ -59,7 +56,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     /**
      * @returns {TValue[][]}
      */
-    public sortByGroups (): TValue[][] {
+    public sortByGroups(): TValue[][] {
         this.sort();
 
         const resultItemsGroups: TValue[][] = [];
@@ -80,7 +77,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     /**
      * @param {TValue} consequent
      */
-    private delete (consequent: TValue): void {
+    private delete(consequent: TValue): void {
         const precedents: TValue[] = this.getPrecedents(consequent);
 
         if (precedents.length) {
@@ -107,7 +104,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     /**
      * @returns {TValue[]}
      */
-    private findRootNodes (): TValue[] {
+    private findRootNodes(): TValue[] {
         const consequents: TValue[] = Array.from(this.graph.keys());
         const rootNodes: TValue[] = [];
 
@@ -124,7 +121,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue} consequent
      * @returns {TValue[]}
      */
-    private getPrecedents (consequent: TValue): TValue[] {
+    private getPrecedents(consequent: TValue): TValue[] {
         const precedents: TValue[] | undefined = this.graph.get(consequent);
 
         if (!precedents) {
@@ -137,7 +134,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     /**
      * @returns {boolean}
      */
-    private hasNodes (): boolean {
+    private hasNodes(): boolean {
         return this.graph.size > 0;
     }
 
@@ -145,7 +142,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue} consequent
      * @returns {boolean}
      */
-    private hasPrecedents (consequent: TValue): boolean {
+    private hasPrecedents(consequent: TValue): boolean {
         return this.getPrecedents(consequent).length > 0;
     }
 
@@ -154,7 +151,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue} consequent
      * @returns {this}
      */
-    private link (precedent: TValue, consequent: TValue): this {
+    private link(precedent: TValue, consequent: TValue): this {
         this.register(precedent);
         this.register(consequent);
 
@@ -171,7 +168,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue} name
      * @returns {this}
      */
-    private register (name: TValue): this {
+    private register(name: TValue): this {
         if (!this.graph.has(name)) {
             this.graph.set(name, []);
         }
@@ -185,11 +182,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @param {TValue} name
      * @returns {null}
      */
-    private visit (
-        results: TValue[],
-        marks: IVisitMarks<TValue>,
-        name: TValue
-    ): void {
+    private visit(results: TValue[], marks: IVisitMarks<TValue>, name: TValue): void {
         const mark: TVisitMark = marks[name];
 
         if (mark === 'visiting') {

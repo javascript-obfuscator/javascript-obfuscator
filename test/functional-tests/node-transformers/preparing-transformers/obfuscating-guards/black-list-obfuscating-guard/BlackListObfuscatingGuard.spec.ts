@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('BlackListObfuscatingGuard', () => {
     describe('check', () => {
-        describe('`\'use strict\';` operator', () => {
+        describe("`'use strict';` operator", () => {
             const useStrictOperatorRegExp: RegExp = /'use *strict';/;
             const stringArrayLatinRegExp: RegExp = getStringArrayRegExp(['abc']);
             const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\(0x0\)/;
@@ -19,17 +19,14 @@ describe('BlackListObfuscatingGuard', () => {
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/use-strict-operator.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
-            it('match #1: shouldn\'t obfuscate `use strict` operator', () => {
+            it("match #1: shouldn't obfuscate `use strict` operator", () => {
                 assert.match(obfuscatedCode, useStrictOperatorRegExp);
             });
 

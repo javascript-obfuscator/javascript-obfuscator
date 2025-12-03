@@ -15,9 +15,7 @@ export const MEDIUM_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     splitStrings: true,
     splitStringsChunkLength: 10,
     stringArrayCallsTransformThreshold: 0.75,
-    stringArrayEncoding: [
-        StringArrayEncoding.Base64
-    ],
+    stringArrayEncoding: [StringArrayEncoding.Base64],
     stringArrayWrappersCount: 2,
     stringArrayWrappersParametersMaxCount: 4,
     stringArrayWrappersType: StringArrayWrappersType.Function,

@@ -16,19 +16,14 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
             const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
-            let obfuscatedCode: string,
-                classNameIdentifier: string,
-                classCallIdentifier: string;
+            let obfuscatedCode: string, classNameIdentifier: string, classCallIdentifier: string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
                 classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
                 classCallIdentifier = getRegExpMatch(obfuscatedCode, classCallIdentifierRegExp);
             });
@@ -47,21 +42,20 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/parent-block-scope-is-program-node.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET
+                        }).getObfuscatedCode();
                     });
 
-                    it('match #1: shouldn\'t transform class name', () => {
+                    it("match #1: shouldn't transform class name", () => {
                         assert.match(obfuscatedCode, classNameIdentifierRegExp);
                     });
 
-                    it('match #2: shouldn\'t transform class name', () => {
+                    it("match #2: shouldn't transform class name", () => {
                         assert.match(obfuscatedCode, classCallIdentifierRegExp);
                     });
                 });
@@ -75,26 +69,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let obfuscatedCode: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.Browser
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.Browser
+                            }).getObfuscatedCode();
                         });
 
-                        it('match #1: shouldn\'t transform class name', () => {
+                        it("match #1: shouldn't transform class name", () => {
                             assert.match(obfuscatedCode, classNameIdentifierRegExp);
                         });
 
-                        it('match #2: shouldn\'t transform class name reference outside of class', () => {
+                        it("match #2: shouldn't transform class name reference outside of class", () => {
                             assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
                         });
 
-                        it('match #3: shouldn\'t transform class name reference inside class', () => {
+                        it("match #3: shouldn't transform class name reference inside class", () => {
                             assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
                         });
                     });
@@ -110,19 +103,24 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.Browser
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.Browser
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -156,26 +154,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let obfuscatedCode: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.Node
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.Node
+                            }).getObfuscatedCode();
                         });
 
-                        it('match #1: shouldn\'t transform class name', () => {
+                        it("match #1: shouldn't transform class name", () => {
                             assert.match(obfuscatedCode, classNameIdentifierRegExp);
                         });
 
-                        it('match #2: shouldn\'t transform class name reference outside of class', () => {
+                        it("match #2: shouldn't transform class name reference outside of class", () => {
                             assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
                         });
 
-                        it('match #3: shouldn\'t transform class name reference inside class', () => {
+                        it("match #3: shouldn't transform class name reference inside class", () => {
                             assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
                         });
                     });
@@ -191,19 +188,24 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.Node
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.Node
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -237,26 +239,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let obfuscatedCode: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.ServiceWorker
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.ServiceWorker
+                            }).getObfuscatedCode();
                         });
 
-                        it('match #1: shouldn\'t transform class name', () => {
+                        it("match #1: shouldn't transform class name", () => {
                             assert.match(obfuscatedCode, classNameIdentifierRegExp);
                         });
 
-                        it('match #2: shouldn\'t transform class name reference outside of class', () => {
+                        it("match #2: shouldn't transform class name reference outside of class", () => {
                             assert.match(obfuscatedCode, outerClassNameReferenceRegExp);
                         });
 
-                        it('match #3: shouldn\'t transform class name reference inside class', () => {
+                        it("match #3: shouldn't transform class name reference inside class", () => {
                             assert.match(obfuscatedCode, innerClassNameReferenceRegExp);
                         });
                     });
@@ -272,19 +273,24 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    target: ObfuscationTarget.ServiceWorker
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                target: ObfuscationTarget.ServiceWorker
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -318,15 +324,14 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/parent-block-scope-is-program-node.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameGlobals: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true
+                        }).getObfuscatedCode();
                     });
 
                     it('match #1: should transform class name', () => {
@@ -345,15 +350,14 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/rename-globals-identifier-transformation.js');
+                        const code: string = readFileAsString(
+                            __dirname + '/fixtures/rename-globals-identifier-transformation.js'
+                        );
 
-                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                            code,
-                            {
-                                ...NO_ADDITIONAL_NODES_PRESET,
-                                renameGlobals: true
-                            }
-                        ).getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true
+                        }).getObfuscatedCode();
                     });
 
                     it('match #1: should transform identifier name inside class method', () => {
@@ -377,20 +381,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.Browser
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.Browser
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -425,20 +434,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.Browser
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.Browser
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -475,20 +489,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.Node
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.Node
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -523,20 +542,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.Node
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.Node
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -573,20 +597,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-global-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-global-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.ServiceWorker
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.ServiceWorker
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -621,20 +650,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                         let innerClassNameReferenceIdentifierName: string;
 
                         before(() => {
-                            const code: string = readFileAsString(__dirname + '/fixtures/class-name-references-function-scope.js');
+                            const code: string = readFileAsString(
+                                __dirname + '/fixtures/class-name-references-function-scope.js'
+                            );
 
-                            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                                code,
-                                {
-                                    ...NO_ADDITIONAL_NODES_PRESET,
-                                    renameGlobals: true,
-                                    target: ObfuscationTarget.ServiceWorker
-                                }
-                            ).getObfuscatedCode();
+                            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true,
+                                target: ObfuscationTarget.ServiceWorker
+                            }).getObfuscatedCode();
 
                             classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
-                            outerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, outerClassNameReferenceRegExp);
-                            innerClassNameReferenceIdentifierName = getRegExpMatch(obfuscatedCode, innerClassNameReferenceRegExp);
+                            outerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                outerClassNameReferenceRegExp
+                            );
+                            innerClassNameReferenceIdentifierName = getRegExpMatch(
+                                obfuscatedCode,
+                                innerClassNameReferenceRegExp
+                            );
                         });
 
                         it('match #1: should transform class name', () => {
@@ -661,7 +695,7 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             });
         });
 
-        describe('Variant #3: preserved identifier names shouldn\'t be used as identifier names', () => {
+        describe("Variant #3: preserved identifier names shouldn't be used as identifier names", () => {
             const classDeclarationRegExp: RegExp = /class *e *{/;
             const variableDeclarationsRegExp: RegExp = /let f, *g, *h, *i;/;
             const classReferenceRegExp: RegExp = /new e\(\);/;
@@ -669,26 +703,25 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-using-of-preserved-identifiers.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/prevent-using-of-preserved-identifiers.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                }).getObfuscatedCode();
             });
 
-            it('Match #1: shouldn\'t use preserved identifier name as class declaration name', () => {
+            it("Match #1: shouldn't use preserved identifier name as class declaration name", () => {
                 assert.match(obfuscatedCode, classDeclarationRegExp);
             });
 
-            it('Match #2: shouldn\'t use preserved identifier name as variable declarations', () => {
+            it("Match #2: shouldn't use preserved identifier name as variable declarations", () => {
                 assert.match(obfuscatedCode, variableDeclarationsRegExp);
             });
 
-            it('Match #3: shouldn\'t use preserved identifier name as class reference identifier', () => {
+            it("Match #3: shouldn't use preserved identifier name as class reference identifier", () => {
                 assert.match(obfuscatedCode, classReferenceRegExp);
             });
         });
@@ -701,16 +734,13 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
-            it('shouldn\'t transform identifiers in named export', () => {
+            it("shouldn't transform identifiers in named export", () => {
                 assert.match(obfuscatedCode, namedExportRegExp);
             });
         });
@@ -724,13 +754,10 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('Match #1: should transform identifiers in variable declaration', () => {
@@ -750,13 +777,10 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/default-export-inline.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('Match #1: should produce correct code', () => {
@@ -772,12 +796,9 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/super-class-expression-parenthesis.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
             });
 
             it('Match #1: should keep super class expression parenthesis', () => {

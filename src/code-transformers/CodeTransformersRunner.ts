@@ -31,14 +31,11 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
      * @param {TNodeTransformerFactory} codeTransformerFactory
      * @param {ITransformerNamesGroupsBuilder} codeTransformerNamesGroupsBuilder
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__ICodeTransformer)
-            codeTransformerFactory: TCodeTransformerFactory,
+        codeTransformerFactory: TCodeTransformerFactory,
         @inject(ServiceIdentifiers.ICodeTransformerNamesGroupsBuilder)
-            codeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<
-                CodeTransformer,
-                ICodeTransformer
-            >,
+        codeTransformerNamesGroupsBuilder: ITransformerNamesGroupsBuilder<CodeTransformer, ICodeTransformer>
     ) {
         this.codeTransformerFactory = codeTransformerFactory;
         this.codeTransformerNamesGroupsBuilder = codeTransformerNamesGroupsBuilder;
@@ -50,7 +47,7 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
      * @param {CodeTransformationStage} codeTransformationStage
      * @returns {string}
      */
-    public transform (
+    public transform(
         code: string,
         codeTransformerNames: CodeTransformer[],
         codeTransformationStage: CodeTransformationStage
@@ -59,8 +56,10 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
             return code;
         }
 
-        const normalizedCodeTransformers: TDictionary<ICodeTransformer> =
-            this.buildNormalizedCodeTransformers(codeTransformerNames, codeTransformationStage);
+        const normalizedCodeTransformers: TDictionary<ICodeTransformer> = this.buildNormalizedCodeTransformers(
+            codeTransformerNames,
+            codeTransformationStage
+        );
         const codeTransformerNamesGroups: CodeTransformer[][] =
             this.codeTransformerNamesGroupsBuilder.build(normalizedCodeTransformers);
 
@@ -80,21 +79,20 @@ export class CodeTransformersRunner implements ICodeTransformersRunner {
      * @param {NodeTransformationStage} codeTransformationStage
      * @returns {TDictionary<INodeTransformer>}
      */
-    private buildNormalizedCodeTransformers (
+    private buildNormalizedCodeTransformers(
         codeTransformerNames: CodeTransformer[],
         codeTransformationStage: CodeTransformationStage
     ): TDictionary<ICodeTransformer> {
-        return codeTransformerNames
-            .reduce<TDictionary<ICodeTransformer>>(
-                (acc: TDictionary<ICodeTransformer>, codeTransformerName: CodeTransformer) => {
-                    const codeTransformer: ICodeTransformer = this.codeTransformerFactory(codeTransformerName);
+        return codeTransformerNames.reduce<TDictionary<ICodeTransformer>>(
+            (acc: TDictionary<ICodeTransformer>, codeTransformerName: CodeTransformer) => {
+                const codeTransformer: ICodeTransformer = this.codeTransformerFactory(codeTransformerName);
 
-                    return {
-                        ...acc,
-                        [codeTransformerName]: codeTransformer
-                    };
-                },
-                {}
-            );
+                return {
+                    ...acc,
+                    [codeTransformerName]: codeTransformer
+                };
+            },
+            {}
+        );
     }
 }

@@ -24,7 +24,7 @@ export class IdentifierNamesCacheFileUtils {
     /**
      * @param {string} identifierNamesCachePath
      */
-    public constructor (identifierNamesCachePath: string | undefined) {
+    public constructor(identifierNamesCachePath: string | undefined) {
         this.identifierNamesCachePath = identifierNamesCachePath;
     }
 
@@ -32,10 +32,12 @@ export class IdentifierNamesCacheFileUtils {
      * @param {string} filePath
      * @returns {boolean}
      */
-    private static isValidFilePath (filePath: string): boolean {
+    private static isValidFilePath(filePath: string): boolean {
         try {
-            return fs.statSync(filePath).isFile()
-                && path.extname(filePath) === IdentifierNamesCacheFileUtils.identifierNamesCacheExtension;
+            return (
+                fs.statSync(filePath).isFile() &&
+                path.extname(filePath) === IdentifierNamesCacheFileUtils.identifierNamesCacheExtension
+            );
         } catch {
             return false;
         }
@@ -45,7 +47,7 @@ export class IdentifierNamesCacheFileUtils {
      * @param {string} filePath
      * @returns {IFileData}
      */
-    private static readFile (filePath: string): IFileData {
+    private static readFile(filePath: string): IFileData {
         return {
             filePath: path.normalize(filePath),
             content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding)
@@ -55,15 +57,17 @@ export class IdentifierNamesCacheFileUtils {
     /**
      * @returns {TIdentifierNamesCache | null}
      */
-    public readFile (): TIdentifierNamesCache | null {
+    public readFile(): TIdentifierNamesCache | null {
         if (!this.identifierNamesCachePath) {
             return null;
         }
 
         if (!IdentifierNamesCacheFileUtils.isValidFilePath(this.identifierNamesCachePath)) {
-            throw new ReferenceError(`Given identifier names cache path must be a valid ${
-                IdentifierNamesCacheFileUtils.identifierNamesCacheExtension
-            } file path`);
+            throw new ReferenceError(
+                `Given identifier names cache path must be a valid ${
+                    IdentifierNamesCacheFileUtils.identifierNamesCacheExtension
+                } file path`
+            );
         }
 
         const fileData: IFileData = IdentifierNamesCacheFileUtils.readFile(this.identifierNamesCachePath);
@@ -77,14 +81,16 @@ export class IdentifierNamesCacheFileUtils {
             // Already written identifier names cache file
             return JSON.parse(fileData.content);
         } catch {
-            throw new ReferenceError('Identifier names cache file must contains a json dictionary with identifier names');
+            throw new ReferenceError(
+                'Identifier names cache file must contains a json dictionary with identifier names'
+            );
         }
     }
 
     /**
      * @param {TIdentifierNamesCache} identifierNamesCache
      */
-    public writeFile (identifierNamesCache: TIdentifierNamesCache): void {
+    public writeFile(identifierNamesCache: TIdentifierNamesCache): void {
         if (!this.identifierNamesCachePath) {
             return;
         }

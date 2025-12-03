@@ -7,9 +7,11 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 
 import { DeadCodeInjectionTransformer } from '../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer';
 
-export const deadCodeInjectionTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // dead code injection
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(DeadCodeInjectionTransformer)
-        .whenTargetNamed(NodeTransformer.DeadCodeInjectionTransformer);
-});
+export const deadCodeInjectionTransformersModule: interfaces.ContainerModule = new ContainerModule(
+    (bind: interfaces.Bind) => {
+        // dead code injection
+        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+            .to(DeadCodeInjectionTransformer)
+            .whenTargetNamed(NodeTransformer.DeadCodeInjectionTransformer);
+    }
+);

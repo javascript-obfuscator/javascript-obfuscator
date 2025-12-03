@@ -29,7 +29,7 @@ export abstract class AbstractCodeTransformer implements ICodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -42,5 +42,5 @@ export abstract class AbstractCodeTransformer implements ICodeTransformer {
      * @param {CodeTransformationStage} codeTransformationStage
      * @returns {string}
      */
-    public abstract transformCode (code: string, codeTransformationStage: CodeTransformationStage): string;
+    public abstract transformCode(code: string, codeTransformationStage: CodeTransformationStage): string;
 }

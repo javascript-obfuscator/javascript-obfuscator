@@ -25,8 +25,8 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
  * @param name
  * @returns {ESTree.FunctionDeclaration|null}
  */
-function getFunctionDeclarationByName (astTree: ESTree.Node, name: string): ESTree.FunctionDeclaration|null {
-    let functionDeclarationNode: ESTree.FunctionDeclaration|null = null;
+function getFunctionDeclarationByName(astTree: ESTree.Node, name: string): ESTree.FunctionDeclaration | null {
+    let functionDeclarationNode: ESTree.FunctionDeclaration | null = null;
 
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
@@ -50,8 +50,8 @@ function getFunctionDeclarationByName (astTree: ESTree.Node, name: string): ESTr
  * @param name
  * @returns {ESTree.FunctionExpression|null}
  */
-function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTree.FunctionExpression|null {
-    let functionExpressionNode: ESTree.FunctionExpression|null = null;
+function getFunctionExpressionByName(astTree: ESTree.Node, name: string): ESTree.FunctionExpression | null {
+    let functionExpressionNode: ESTree.FunctionExpression | null = null;
 
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
@@ -77,8 +77,8 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
  * @param id
  * @returns {ESTree.FunctionExpression|null}
  */
-function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.FunctionExpression|null {
-    let functionExpressionNode: ESTree.FunctionExpression|null = null;
+function getFunctionExpressionById(astTree: ESTree.Node, id: string): ESTree.FunctionExpression | null {
+    let functionExpressionNode: ESTree.FunctionExpression | null = null;
 
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
@@ -104,9 +104,13 @@ function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.Fu
  * @param name
  * @returns {ESTree.FunctionExpression|null}
  */
-function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: string, name: string|number): ESTree.FunctionExpression|null {
-    let functionExpressionNode: ESTree.FunctionExpression|null = null,
-        targetObjectExpressionNode: ESTree.ObjectExpression|null = null;
+function getObjectFunctionExpressionByName(
+    astTree: ESTree.Node,
+    objectName: string,
+    name: string | number
+): ESTree.FunctionExpression | null {
+    let functionExpressionNode: ESTree.FunctionExpression | null = null,
+        targetObjectExpressionNode: ESTree.ObjectExpression | null = null;
 
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
@@ -133,10 +137,8 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
             if (
                 NodeGuards.isPropertyNode(node) &&
                 NodeGuards.isFunctionExpressionNode(node.value) &&
-                (
-                    (NodeGuards.isIdentifierNode(node.key) && node.key.name === name) ||
-                    (NodeGuards.isLiteralNode(node.key) && node.key.value === name)
-                )
+                ((NodeGuards.isIdentifierNode(node.key) && node.key.name === name) ||
+                    (NodeGuards.isLiteralNode(node.key) && node.key.value === name))
             ) {
                 functionExpressionNode = node.value;
 
@@ -158,16 +160,15 @@ describe('CallsGraphAnalyzer', () => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', '', {});
-            callsGraphAnalyzer = inversifyContainerFacade
-                .get<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer);
+            callsGraphAnalyzer = inversifyContainerFacade.get<ICallsGraphAnalyzer>(
+                ServiceIdentifiers.ICallsGraphAnalyzer
+            );
         });
 
         describe('Variant #1: basic-1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-1.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
@@ -186,20 +187,24 @@ describe('CallsGraphAnalyzer', () => {
                         callsGraph: [
                             {
                                 name: 'inner2',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner2')).body,
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner2'))
+                                    .body,
                                 callsGraph: [
                                     {
                                         name: 'inner3',
-                                        callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'inner3')).body,
+                                        callee: (<ESTree.FunctionExpression>(
+                                            getFunctionExpressionByName(astTree, 'inner3')
+                                        )).body,
                                         callsGraph: []
-                                    },
+                                    }
                                 ]
                             },
                             {
                                 name: 'inner1',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1'))
+                                    .body,
                                 callsGraph: []
-                            },
+                            }
                         ]
                     }
                 ];
@@ -215,9 +220,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #2: basic-2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-2.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
@@ -231,9 +234,10 @@ describe('CallsGraphAnalyzer', () => {
                         callsGraph: [
                             {
                                 name: 'inner1',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1'))
+                                    .body,
                                 callsGraph: []
-                            },
+                            }
                         ]
                     },
                     {
@@ -254,9 +258,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #3: deep conditions nesting', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
@@ -270,9 +272,10 @@ describe('CallsGraphAnalyzer', () => {
                         callsGraph: [
                             {
                                 name: 'inner1',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1'))
+                                    .body,
                                 callsGraph: []
-                            },
+                            }
                         ]
                     },
                     {
@@ -293,9 +296,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #4: call before declaration', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-before-declaration.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
@@ -316,50 +317,55 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #5: call expression of object member #1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
                         name: 'baz',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
+                        callee: (<ESTree.FunctionExpression>(
+                            getObjectFunctionExpressionByName(astTree, 'object1', 'baz')
+                        )).body,
                         callsGraph: []
                     },
                     {
                         name: 'baz',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
+                        callee: (<ESTree.FunctionExpression>(
+                            getObjectFunctionExpressionByName(astTree, 'object1', 'baz')
+                        )).body,
                         callsGraph: []
                     },
                     {
                         name: 'func',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'func')).body,
+                        callee: (<ESTree.FunctionExpression>(
+                            getObjectFunctionExpressionByName(astTree, 'object1', 'func')
+                        )).body,
                         callsGraph: []
                     },
                     {
                         name: 'bar',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
+                        callee: (<ESTree.FunctionExpression>(
+                            getObjectFunctionExpressionByName(astTree, 'object1', 'bar')
+                        )).body,
                         callsGraph: [
                             {
                                 name: 'inner1',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                                callsGraph: [
-
-                                ]
-                            },
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1'))
+                                    .body,
+                                callsGraph: []
+                            }
                         ]
                     },
                     {
                         name: 'bar',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar')).body,
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar'))
+                            .body,
                         callsGraph: [
                             {
                                 name: 'inner',
-                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                                callsGraph: [
-
-                                ]
-                            },
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner'))
+                                    .body,
+                                callsGraph: []
+                            }
                         ]
                     }
                 ];
@@ -375,21 +381,21 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #5: call expression of object member #2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
                         name: 'baz',
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz')).body,
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz'))
+                            .body,
                         callsGraph: []
                     },
                     {
                         name: 1,
-                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1)).body,
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1))
+                            .body,
                         callsGraph: []
-                    },
+                    }
                 ];
 
                 callsGraphData = callsGraphAnalyzer.analyze(astTree);
@@ -403,9 +409,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #6: no call expressions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-call-expressions.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [];
 
@@ -420,9 +424,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #7: only call expression', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/only-call-expression.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [];
 
@@ -437,27 +439,34 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #8: self-invoking functions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/self-invoking-functions.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {
                         name: null,
                         callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'foo')).body,
-                        callsGraph: [{
-                            name: null,
-                            callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
-                            callsGraph: [{
+                        callsGraph: [
+                            {
                                 name: null,
-                                callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz')).body,
-                                callsGraph: [{
-                                    name: 'inner',
-                                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                                    callsGraph: []
-                                }]
-                            }]
-                        }]
+                                callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
+                                callsGraph: [
+                                    {
+                                        name: null,
+                                        callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz'))
+                                            .body,
+                                        callsGraph: [
+                                            {
+                                                name: 'inner',
+                                                callee: (<ESTree.FunctionDeclaration>(
+                                                    getFunctionDeclarationByName(astTree, 'inner')
+                                                )).body,
+                                                callsGraph: []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ];
 
@@ -472,9 +481,7 @@ describe('CallsGraphAnalyzer', () => {
         describe('Variant #9: no recursion', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-recursion.js');
-                const astTree: TNodeWithStatements = NodeFactory.programNode(
-                    NodeUtils.convertCodeToStructure(code)
-                );
+                const astTree: TNodeWithStatements = NodeFactory.programNode(NodeUtils.convertCodeToStructure(code));
 
                 expectedCallsGraphData = [
                     {

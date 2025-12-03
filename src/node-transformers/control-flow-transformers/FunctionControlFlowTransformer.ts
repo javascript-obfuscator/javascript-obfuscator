@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -7,9 +7,7 @@ import * as ESTree from 'estree';
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
-import {
-    TControlFlowStorageFactoryCreator
-} from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
+import { TControlFlowStorageFactoryCreator } from '../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
@@ -20,17 +18,13 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
-import {
-    ControlFlowReplacer
-} from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
+import { ControlFlowReplacer } from '../../enums/node-transformers/control-flow-transformers/control-flow-replacers/ControlFlowReplacer';
 import { ControlFlowStorage } from '../../enums/storages/ControlFlowStorage';
 import { NodeType } from '../../enums/node/NodeType';
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import {
-    ControlFlowStorageNode
-} from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
+import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
@@ -52,7 +46,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map <string, ControlFlowReplacer>}
      */
-    protected readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
+    protected readonly controlFlowReplacersMap: Map<string, ControlFlowReplacer> = new Map([
         [NodeType.BinaryExpression, ControlFlowReplacer.BinaryExpressionControlFlowReplacer],
         [NodeType.CallExpression, ControlFlowReplacer.CallExpressionControlFlowReplacer],
         [NodeType.LogicalExpression, ControlFlowReplacer.LogicalExpressionControlFlowReplacer],
@@ -62,12 +56,13 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {WeakMap<TNodeWithStatements, IControlFlowStorage>}
      */
-    protected readonly controlFlowData: WeakMap <TNodeWithStatements, IControlFlowStorage> = new WeakMap();
+    protected readonly controlFlowData: WeakMap<TNodeWithStatements, IControlFlowStorage> = new WeakMap();
 
     /**
      * @type {WeakMap<TNodeWithStatements, VariableDeclaration>}
      */
-    protected readonly hostNodesWithControlFlowNode: WeakMap<TNodeWithStatements, ESTree.VariableDeclaration> = new WeakMap();
+    protected readonly hostNodesWithControlFlowNode: WeakMap<TNodeWithStatements, ESTree.VariableDeclaration> =
+        new WeakMap();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -96,19 +91,21 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
-            controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
+        controlFlowStorageFactoryCreator: TControlFlowStorageFactoryCreator,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
-            controlFlowReplacerFactory: TControlFlowReplacerFactory,
+        controlFlowReplacerFactory: TControlFlowReplacerFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.controlFlowStorageFactory = controlFlowStorageFactoryCreator(ControlFlowStorage.FunctionControlFlowStorage);
+        this.controlFlowStorageFactory = controlFlowStorageFactoryCreator(
+            ControlFlowStorage.FunctionControlFlowStorage
+        );
         this.controlFlowReplacerFactory = controlFlowReplacerFactory;
         this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
     }
@@ -117,7 +114,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         if (!this.options.controlFlowFlattening) {
             return null;
         }
@@ -145,7 +142,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Function}
      */
-    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
+    public transformNode(functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
         this.visitedFunctionNodes.add(functionNode);
 
         if (!NodeGuards.isBlockStatementNode(functionNode.body)) {
@@ -172,7 +169,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {BlockStatement} functionNode
      * @param {IControlFlowStorage} controlFlowStorage
      */
-    protected transformFunctionBody (functionNode: ESTree.Function, controlFlowStorage: IControlFlowStorage): void {
+    protected transformFunctionBody(functionNode: ESTree.Function, controlFlowStorage: IControlFlowStorage): void {
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node =>
                 this.transformFunctionBodyNode(node, parentNode, functionNode, controlFlowStorage)
@@ -186,22 +183,19 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {ESTraverse.VisitorOption | Node}
      */
-    protected transformFunctionBodyNode (
+    protected transformFunctionBodyNode(
         node: ESTree.Node,
         parentNode: ESTree.Node | null,
         functionNode: ESTree.Function,
         controlFlowStorage: IControlFlowStorage
     ): estraverse.VisitorOption | ESTree.Node {
-        const shouldSkipTraverse = !parentNode
-            || NodeMetadata.isIgnoredNode(node)
-            || this.isVisitedFunctionNode(node);
+        const shouldSkipTraverse = !parentNode || NodeMetadata.isIgnoredNode(node) || this.isVisitedFunctionNode(node);
 
         if (shouldSkipTraverse) {
             return estraverse.VisitorOption.Skip;
         }
 
-        const controlFlowReplacerName: ControlFlowReplacer | null = this.controlFlowReplacersMap.get(node.type)
-            ?? null;
+        const controlFlowReplacerName: ControlFlowReplacer | null = this.controlFlowReplacersMap.get(node.type) ?? null;
 
         if (!controlFlowReplacerName) {
             return node;
@@ -211,12 +205,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return node;
         }
 
-        const replacedNode: ESTree.Node = this.controlFlowReplacerFactory(controlFlowReplacerName)
-            .replace(
-                node,
-                parentNode,
-                controlFlowStorage
-            );
+        const replacedNode: ESTree.Node = this.controlFlowReplacerFactory(controlFlowReplacerName).replace(
+            node,
+            parentNode,
+            controlFlowStorage
+        );
 
         NodeUtils.parentizeNode(replacedNode, parentNode);
 
@@ -227,8 +220,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {BlockStatement} functionNodeBody
      * @returns {TNodeWithStatements}
      */
-    protected getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithStatements {
-        const blockScopesOfNode: TNodeWithStatements[] = NodeStatementUtils.getParentNodesWithStatements(functionNodeBody);
+    protected getHostNode(functionNodeBody: ESTree.BlockStatement): TNodeWithStatements {
+        const blockScopesOfNode: TNodeWithStatements[] =
+            NodeStatementUtils.getParentNodesWithStatements(functionNodeBody);
 
         if (blockScopesOfNode.length === 1) {
             return functionNodeBody;
@@ -251,7 +245,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithStatements} hostNode
      * @returns {TControlFlowStorage}
      */
-    protected getControlFlowStorage (hostNode: TNodeWithStatements): IControlFlowStorage {
+    protected getControlFlowStorage(hostNode: TNodeWithStatements): IControlFlowStorage {
         let controlFlowStorage: IControlFlowStorage;
 
         const hostControlFlowStorage: IControlFlowStorage | null = this.controlFlowData.get(hostNode) ?? null;
@@ -278,7 +272,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {VariableDeclaration}
      */
-    protected getControlFlowStorageNode (controlFlowStorage: IControlFlowStorage): ESTree.VariableDeclaration {
+    protected getControlFlowStorageNode(controlFlowStorage: IControlFlowStorage): ESTree.VariableDeclaration {
         const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
 
@@ -287,7 +281,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorageNode: ESTree.Node = controlFlowStorageCustomNode.getNode()[0];
 
         if (!NodeGuards.isVariableDeclarationNode(controlFlowStorageNode)) {
-            throw new Error('`controlFlowStorageNode` should contain `VariableDeclaration` node with control flow storage object');
+            throw new Error(
+                '`controlFlowStorageNode` should contain `VariableDeclaration` node with control flow storage object'
+            );
         }
 
         return controlFlowStorageNode;
@@ -297,7 +293,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithStatements} hostNode
      * @param {VariableDeclaration} controlFlowStorageNode
      */
-    protected appendControlFlowStorageNode (
+    protected appendControlFlowStorageNode(
         hostNode: TNodeWithStatements,
         controlFlowStorageNode: ESTree.VariableDeclaration
     ): void {
@@ -311,14 +307,14 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} node
      * @returns {boolean}
      */
-    protected isVisitedFunctionNode (node: ESTree.Node): boolean {
+    protected isVisitedFunctionNode(node: ESTree.Node): boolean {
         return NodeGuards.isFunctionNode(node) && this.visitedFunctionNodes.has(node);
     }
 
     /**
      * @returns {boolean}
      */
-    protected isAllowedTransformationByThreshold (): boolean {
+    protected isAllowedTransformationByThreshold(): boolean {
         return this.randomGenerator.getMathRandom() <= this.options.controlFlowFlatteningThreshold;
     }
 }

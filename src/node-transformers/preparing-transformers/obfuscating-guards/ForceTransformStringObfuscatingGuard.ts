@@ -21,9 +21,7 @@ export class ForceTransformStringObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @param {IOptions} options
      */
-    public constructor (
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
-    ) {
+    public constructor(@inject(ServiceIdentifiers.IOptions) options: IOptions) {
         this.options = options;
     }
 
@@ -31,11 +29,11 @@ export class ForceTransformStringObfuscatingGuard implements IObfuscatingGuard {
      * @param {Node} node
      * @returns {ObfuscatingGuardResult}
      */
-    public check (node: ESTree.Node): ObfuscatingGuardResult {
+    public check(node: ESTree.Node): ObfuscatingGuardResult {
         if (
-            this.options.forceTransformStrings.length
-            && NodeGuards.isLiteralNode(node)
-            && typeof node.value === 'string'
+            this.options.forceTransformStrings.length &&
+            NodeGuards.isLiteralNode(node) &&
+            typeof node.value === 'string'
         ) {
             return !this.isForceTransformString(node.value)
                 ? ObfuscatingGuardResult.Transform
@@ -49,10 +47,9 @@ export class ForceTransformStringObfuscatingGuard implements IObfuscatingGuard {
      * @param {string} value
      * @returns {boolean}
      */
-    private isForceTransformString (value: string): boolean {
-        return this.options.forceTransformStrings
-            .some((forceTransformString: string) => {
-                return new RegExp(forceTransformString, 'g').exec(value) !== null;
-            });
+    private isForceTransformString(value: string): boolean {
+        return this.options.forceTransformStrings.some((forceTransformString: string) => {
+            return new RegExp(forceTransformString, 'g').exec(value) !== null;
+        });
     }
 }

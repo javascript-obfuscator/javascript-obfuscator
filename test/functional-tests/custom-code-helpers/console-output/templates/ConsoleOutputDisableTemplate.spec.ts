@@ -48,7 +48,7 @@ const getPartialConsoleObjectGlobalVariableTemplate: () => string = () => `
  * @param {string} additionalCode
  * @returns {Function}
  */
-function getFunctionFromTemplate (
+function getFunctionFromTemplate(
     templateData: any,
     callsControllerFunctionName: string,
     consoleMethod: keyof Console,
@@ -102,7 +102,7 @@ describe('ConsoleOutputDisableTemplate', () => {
                         {
                             consoleLogDisableFunctionName,
                             callControllerFunctionName,
-                            globalVariableTemplate: GlobalVariableTemplate1(),
+                            globalVariableTemplate: GlobalVariableTemplate1()
                         },
                         callControllerFunctionName,
                         consoleMethodName
@@ -126,7 +126,7 @@ describe('ConsoleOutputDisableTemplate', () => {
                         {
                             consoleLogDisableFunctionName,
                             callControllerFunctionName,
-                            globalVariableTemplate: getPartialConsoleObjectGlobalVariableTemplate(),
+                            globalVariableTemplate: getPartialConsoleObjectGlobalVariableTemplate()
                         },
                         callControllerFunctionName,
                         consoleMethodName
@@ -150,7 +150,7 @@ describe('ConsoleOutputDisableTemplate', () => {
                         {
                             consoleLogDisableFunctionName,
                             callControllerFunctionName,
-                            globalVariableTemplate: getUndefinedConsoleObjectGlobalVariableTemplate(),
+                            globalVariableTemplate: getUndefinedConsoleObjectGlobalVariableTemplate()
                         },
                         callControllerFunctionName,
                         consoleMethodName
@@ -174,7 +174,7 @@ describe('ConsoleOutputDisableTemplate', () => {
                         {
                             consoleLogDisableFunctionName,
                             callControllerFunctionName,
-                            globalVariableTemplate: getWrongGlobalVariableTemplate(),
+                            globalVariableTemplate: getWrongGlobalVariableTemplate()
                         },
                         callControllerFunctionName,
                         consoleMethodName
@@ -196,16 +196,17 @@ describe('ConsoleOutputDisableTemplate', () => {
                 let testFunc: () => void;
 
                 beforeEach(() => {
-                    testFunc = () => getFunctionFromTemplate(
-                        {
-                            consoleLogDisableFunctionName,
+                    testFunc = () =>
+                        getFunctionFromTemplate(
+                            {
+                                consoleLogDisableFunctionName,
+                                callControllerFunctionName,
+                                globalVariableTemplate: GlobalVariableTemplate1()
+                            },
                             callControllerFunctionName,
-                            globalVariableTemplate: GlobalVariableTemplate1(),
-                        },
-                        callControllerFunctionName,
-                        consoleMethodName,
-                        `console.${consoleMethodName}.bind();`
-                    )();
+                            consoleMethodName,
+                            `console.${consoleMethodName}.bind();`
+                        )();
                 });
 
                 it(`should does not throw error during \`console.${consoleMethodName}.bind\` call`, () => {

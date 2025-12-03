@@ -10,7 +10,7 @@ export interface INodeTransformersRunner {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {T}
      */
-    transform <T extends ESTree.Node = ESTree.Program> (
+    transform<T extends ESTree.Node = ESTree.Program>(
         astTree: T,
         nodeTransformers: NodeTransformer[],
         nodeTransformationStage: NodeTransformationStage

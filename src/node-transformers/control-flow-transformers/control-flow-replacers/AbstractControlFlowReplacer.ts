@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -38,7 +38,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     /**
      * @type {Map<string, Map<string | number, string[]>>}
      */
-    protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string | number, string[]>> = new Map();
+    protected readonly replacerDataByControlFlowStorageId: Map<string, Map<string | number, string[]>> = new Map();
 
     /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
@@ -46,11 +46,11 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
-            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -67,7 +67,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {string}
      */
-    public generateStorageKey (controlFlowStorage: IControlFlowStorage): string {
+    public generateStorageKey(controlFlowStorage: IControlFlowStorage): string {
         const key: string = this.randomGenerator.getRandomString(5);
 
         if (controlFlowStorage.has(key)) {
@@ -84,19 +84,19 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param {number} usingExistingIdentifierChance
      * @returns {string}
      */
-    protected insertCustomNodeToControlFlowStorage (
+    protected insertCustomNodeToControlFlowStorage(
         customNode: ICustomNode,
         controlFlowStorage: IControlFlowStorage,
         replacerId: string | number,
         usingExistingIdentifierChance: number
     ): string {
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
-        const storageKeysById: Map<string | number, string[]> = this.replacerDataByControlFlowStorageId.get(controlFlowStorageId)
-            ?? new Map <string, string[]>();
+        const storageKeysById: Map<string | number, string[]> =
+            this.replacerDataByControlFlowStorageId.get(controlFlowStorageId) ?? new Map<string, string[]>();
         const storageKeysForCurrentId: string[] = storageKeysById.get(replacerId) ?? [];
 
-        const shouldPickFromStorageKeysById = this.randomGenerator.getMathRandom() < usingExistingIdentifierChance
-            && storageKeysForCurrentId.length;
+        const shouldPickFromStorageKeysById =
+            this.randomGenerator.getMathRandom() < usingExistingIdentifierChance && storageKeysForCurrentId.length;
 
         if (shouldPickFromStorageKeysById) {
             return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
@@ -119,7 +119,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param {IControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public abstract replace (
+    public abstract replace(
         node: ESTree.Node,
         parentNode: ESTree.Node,
         controlFlowStorage: IControlFlowStorage

@@ -9,13 +9,14 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { RenamePropertiesReplacer } from '../../../node-transformers/rename-properties-transformers/replacer/RenamePropertiesReplacer';
 import { RenamePropertiesTransformer } from '../../../node-transformers/rename-properties-transformers/RenamePropertiesTransformer';
 
-export const renamePropertiesTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // rename properties transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(RenamePropertiesTransformer)
-        .whenTargetNamed(NodeTransformer.RenamePropertiesTransformer);
+export const renamePropertiesTransformersModule: interfaces.ContainerModule = new ContainerModule(
+    (bind: interfaces.Bind) => {
+        // rename properties transformers
+        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+            .to(RenamePropertiesTransformer)
+            .whenTargetNamed(NodeTransformer.RenamePropertiesTransformer);
 
-    // rename properties obfuscating replacer
-    bind<IRenamePropertiesReplacer>(ServiceIdentifiers.IRenamePropertiesReplacer)
-        .to(RenamePropertiesReplacer);
-});
+        // rename properties obfuscating replacer
+        bind<IRenamePropertiesReplacer>(ServiceIdentifiers.IRenamePropertiesReplacer).to(RenamePropertiesReplacer);
+    }
+);

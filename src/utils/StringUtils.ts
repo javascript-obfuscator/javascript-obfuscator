@@ -5,7 +5,7 @@ export class StringUtils {
      * @param {string} string
      * @returns {string}
      */
-    public static escapeJsString (string: string): string {
+    public static escapeJsString(string: string): string {
         return jsStringEscape(string);
     }
 }

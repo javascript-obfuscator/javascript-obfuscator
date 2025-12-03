@@ -6,7 +6,7 @@
  * @param expectedResult
  * @returns {{areSuccessEvaluations: boolean, errorMessage?: string}}
  */
-export function checkCodeEvaluation (
+export function checkCodeEvaluation(
     codeGetterFunction: () => string,
     runsAmount: number,
     expectedResult?: any

@@ -17,15 +17,12 @@ describe('SelfDefendingCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        identifiersPrefix: 'foo',
-                        selfDefending: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    identifiersPrefix: 'foo',
+                    selfDefending: true
+                }).getObfuscatedCode();
             });
 
             it('should add prefix to the helper identifiers inside global scope', () => {
@@ -40,15 +37,12 @@ describe('SelfDefendingCodeHelper', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/append-inside-function-scope.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        identifiersPrefix: 'foo',
-                        selfDefending: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    identifiersPrefix: 'foo',
+                    selfDefending: true
+                }).getObfuscatedCode();
             });
 
             it('should not add prefix to the helper identifiers inside global scope', () => {

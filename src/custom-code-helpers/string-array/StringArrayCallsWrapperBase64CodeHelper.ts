@@ -1,4 +1,4 @@
-import { injectable, } from 'inversify';
+import { injectable } from 'inversify';
 
 import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
 import { StringArrayBase64DecodeTemplate } from './templates/string-array-calls-wrapper/StringArrayBase64DecodeTemplate';
@@ -10,7 +10,7 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
     /**
      * @returns {string}
      */
-    protected override getDecodeStringArrayTemplate (): string {
+    protected override getDecodeStringArrayTemplate(): string {
         const atobFunctionName: string = this.randomGenerator.getRandomString(6);
 
         const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(
@@ -22,15 +22,12 @@ export class StringArrayCallsWrapperBase64CodeHelper extends StringArrayCallsWra
 
         const selfDefendingCode: string = this.getSelfDefendingTemplate();
 
-        return this.customCodeHelperFormatter.formatTemplate(
-            StringArrayBase64DecodeTemplate(this.randomGenerator),
-            {
-                atobPolyfill,
-                atobFunctionName,
-                selfDefendingCode,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayFunctionName: this.stringArrayFunctionName
-            }
-        );
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayBase64DecodeTemplate(this.randomGenerator), {
+            atobPolyfill,
+            atobFunctionName,
+            selfDefendingCode,
+            stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+            stringArrayFunctionName: this.stringArrayFunctionName
+        });
     }
 }

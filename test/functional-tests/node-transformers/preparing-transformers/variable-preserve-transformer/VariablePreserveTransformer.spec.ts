@@ -21,17 +21,16 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-identifier-name-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/string-array-storage-identifier-name-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for string array storage', () => {
@@ -53,18 +52,17 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/string-array-storage-identifier-name-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/string-array-storage-identifier-name-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: true,
-                        stringArray: true,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: true,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for string array storage', () => {
@@ -85,16 +83,15 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/transform-object-keys-identifier-name-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/transform-object-keys-identifier-name-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    transformObjectKeys: true
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for `transformObjectKeys` identifier', () => {
@@ -113,17 +110,16 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/transform-object-keys-identifier-name-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/transform-object-keys-identifier-name-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: true,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: true,
+                    transformObjectKeys: true
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for `transformObjectKeys` identifier', () => {
@@ -146,14 +142,11 @@ describe('VariablePreserveTransformer', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/ignored-node-identifier-name-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for global identifier', () => {
@@ -176,16 +169,15 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/destructed-object-property-identifier-name-1.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/destructed-object-property-identifier-name-1.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: false
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: false
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for variable name', () => {
@@ -205,16 +197,15 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/destructed-object-property-identifier-name-2.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/destructed-object-property-identifier-name-2.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: true
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for variable declaration', () => {
@@ -238,16 +229,15 @@ describe('VariablePreserveTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/destructed-object-property-identifier-name-3.js');
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/destructed-object-property-identifier-name-3.js'
+                );
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: 'mangled',
-                        renameGlobals: false
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: 'mangled',
+                    renameGlobals: false
+                }).getObfuscatedCode();
             });
 
             it('should generate non-preserved name for variable declaration', () => {

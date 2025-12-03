@@ -17,13 +17,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         before(() => {
             for (let i = initialNumber; i < lastNumber; i++) {
                 const number: number = i;
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    `${number};`,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        numbersToExpressions: true
-                    }
-                ).getObfuscatedCode();
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    numbersToExpressions: true
+                }).getObfuscatedCode();
 
                 const result: number = eval(obfuscatedCode);
 
@@ -48,13 +45,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        `${number};`,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            numbersToExpressions: true
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }).getObfuscatedCode();
 
                     const result: number = eval(obfuscatedCode);
 
@@ -78,13 +72,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        `${number};`,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            numbersToExpressions: true
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }).getObfuscatedCode();
 
                     const result: number = eval(obfuscatedCode);
 
@@ -108,13 +99,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        `${number};`,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            numbersToExpressions: true
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }).getObfuscatedCode();
 
                     const result: number = eval(obfuscatedCode);
 
@@ -140,13 +128,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        `${number};`,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            numbersToExpressions: true
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }).getObfuscatedCode();
 
                     const result: number = eval(obfuscatedCode);
 
@@ -169,13 +154,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    `${number};`,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        numbersToExpressions: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(`${number};`, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    numbersToExpressions: true
+                }).getObfuscatedCode();
             });
 
             it('should not transform unsafe integer to expressions', () => {
@@ -191,13 +173,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                        `${number};`,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            numbersToExpressions: true
-                        }
-                    ).getObfuscatedCode();
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`${number};`, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        numbersToExpressions: true
+                    }).getObfuscatedCode();
 
                     const result: number = eval(obfuscatedCode);
 
@@ -220,13 +199,10 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    `${number};`,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        numbersToExpressions: true
-                    }
-                ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(`${number};`, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    numbersToExpressions: true
+                }).getObfuscatedCode();
             });
 
             it('should not transform unsafe integer to expressions', () => {
@@ -243,17 +219,14 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/non-computed-object-key.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    numbersToExpressions: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                numbersToExpressions: true
+            }).getObfuscatedCode();
         });
 
         it('should not replace non-computed object property literal with expression', () => {
-            assert.match(obfuscatedCode,  regExp);
+            assert.match(obfuscatedCode, regExp);
         });
     });
 
@@ -265,17 +238,14 @@ describe('NumbersToNumericalExpressionsTransformer', function () {
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/member-expression.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    numbersToExpressions: true
-                }
-            ).getObfuscatedCode();
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                numbersToExpressions: true
+            }).getObfuscatedCode();
         });
 
         it('should replace member expression with literal object with expression', () => {
-            assert.match(obfuscatedCode,  regExp);
+            assert.match(obfuscatedCode, regExp);
         });
     });
 });

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -60,10 +60,10 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
-            prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
+        prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customCodeHelperGroupStorage: TCustomCodeHelperGroupStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -79,7 +79,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
                 return {
@@ -110,7 +110,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    public prepareNode (node: ESTree.Program, parentNode: ESTree.Node | null): void {
+    public prepareNode(node: ESTree.Program, parentNode: ESTree.Node | null): void {
         this.callsGraphData = this.callsGraphAnalyzer.analyze(node);
         this.prevailingKindOfVariablesAnalyzer.analyze(node);
     }
@@ -120,7 +120,7 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Node | null} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Program, parentNode: ESTree.Node | null): ESTree.Node {
+    public transformNode(node: ESTree.Program, parentNode: ESTree.Node | null): ESTree.Node {
         return node;
     }
 
@@ -128,13 +128,11 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    private appendCustomNodesForPreparingStage (node: ESTree.Program, parentNode: ESTree.Node | null): void {
-        this.customCodeHelperGroupStorage
-            .getStorage()
-            .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
-                customCodeHelperGroup.initialize();
-                customCodeHelperGroup.appendOnPreparingStage?.(node, this.callsGraphData);
-            });
+    private appendCustomNodesForPreparingStage(node: ESTree.Program, parentNode: ESTree.Node | null): void {
+        this.customCodeHelperGroupStorage.getStorage().forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
+            customCodeHelperGroup.initialize();
+            customCodeHelperGroup.appendOnPreparingStage?.(node, this.callsGraphData);
+        });
     }
 
     /**
@@ -142,17 +140,15 @@ export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
      * @param {Program} node
      * @param {Node | null} parentNode
      */
-    private appendCustomNodesForStage (
+    private appendCustomNodesForStage(
         nodeTransformationStage: NodeTransformationStage,
         node: ESTree.Program,
         parentNode: ESTree.Node | null
     ): void {
-        this.customCodeHelperGroupStorage
-            .getStorage()
-            .forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
-                const methodName: TCustomCodeHelpersGroupAppendMethodName = `appendOn${nodeTransformationStage}Stage`;
+        this.customCodeHelperGroupStorage.getStorage().forEach((customCodeHelperGroup: ICustomCodeHelperGroup) => {
+            const methodName: TCustomCodeHelpersGroupAppendMethodName = `appendOn${nodeTransformationStage}Stage`;
 
-                customCodeHelperGroup[methodName]?.(node, this.callsGraphData);
-            });
+            customCodeHelperGroup[methodName]?.(node, this.callsGraphData);
+        });
     }
 }

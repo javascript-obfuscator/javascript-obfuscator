@@ -11,11 +11,8 @@ describe('obfuscatedCodeFileUtils', () => {
 
     describe('getOutputCodePath', () => {
         before(() => {
-            mkdirp.sync(path.join(tmpDirectoryPath, 'input', 'nested',));
-            fs.writeFileSync(
-                path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js'),
-                'var foo = 1;'
-            );
+            mkdirp.sync(path.join(tmpDirectoryPath, 'input', 'nested'));
+            fs.writeFileSync(path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js'), 'var foo = 1;');
         });
 
         describe('Variant #1: raw input path is a file path, raw output path is a file path', () => {
@@ -27,12 +24,9 @@ describe('obfuscatedCodeFileUtils', () => {
             let outputCodePath: string;
 
             before(() => {
-                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                    rawInputPath,
-                    {
-                        output: rawOutputPath
-                    }
-                );
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                    output: rawOutputPath
+                });
                 outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
@@ -50,12 +44,9 @@ describe('obfuscatedCodeFileUtils', () => {
             let outputCodePath: string;
 
             before(() => {
-                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                    rawInputPath,
-                    {
-                        output: rawOutputPath
-                    }
-                );
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                    output: rawOutputPath
+                });
                 outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
@@ -72,12 +63,9 @@ describe('obfuscatedCodeFileUtils', () => {
             let testFunc: () => string;
 
             before(() => {
-                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                    rawInputPath,
-                    {
-                        output: rawOutputPath
-                    }
-                );
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                    output: rawOutputPath
+                });
                 testFunc = () => obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
             });
 
@@ -91,21 +79,14 @@ describe('obfuscatedCodeFileUtils', () => {
                 const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
-                const expectedOutputCodePath: string = path.join(
-                    tmpDirectoryPath,
-                    'output',
-                    'test-input.js'
-                );
+                const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -118,21 +99,14 @@ describe('obfuscatedCodeFileUtils', () => {
                 const inputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join('.', tmpDirectoryPath, 'output');
-                const expectedOutputCodePath: string = path.join(
-                    tmpDirectoryPath,
-                    'output',
-                    'test-input.js'
-                );
+                const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -145,22 +119,14 @@ describe('obfuscatedCodeFileUtils', () => {
                 const inputPath: string = path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js');
                 const rawInputPath: string = path.join(tmpDirectoryPath, 'input');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
-                const expectedOutputCodePath: string = path.join(
-                    tmpDirectoryPath,
-                    'output',
-                    'nested',
-                    'test-input.js'
-                );
+                const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'nested', 'test-input.js');
 
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -184,12 +150,9 @@ describe('obfuscatedCodeFileUtils', () => {
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -202,21 +165,14 @@ describe('obfuscatedCodeFileUtils', () => {
                 const inputPath: string = path.join('test-input.js');
                 const rawInputPath: string = path.join('.');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
-                const expectedOutputCodePath: string = path.join(
-                    tmpDirectoryPath,
-                    'output',
-                    'test-input.js'
-                );
+                const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -229,21 +185,14 @@ describe('obfuscatedCodeFileUtils', () => {
                 const inputPath: string = path.join('test-input.js');
                 const rawInputPath: string = path.join('./');
                 const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
-                const expectedOutputCodePath: string = path.join(
-                    tmpDirectoryPath,
-                    'output',
-                    'test-input.js'
-                );
+                const expectedOutputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-input.js');
 
                 let outputCodePath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     outputCodePath = obfuscatedCodeFileUtils.getOutputCodePath(inputPath);
                 });
 
@@ -266,7 +215,13 @@ describe('obfuscatedCodeFileUtils', () => {
 
             describe('Variant #1: raw input absolute path is a directory path, raw output absolute path is a directory path', () => {
                 describe('Variant #1: base directory name', () => {
-                    const inputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js');
+                    const inputPath: string = path.join(
+                        baseDirnamePath,
+                        tmpDirectoryPath,
+                        'input',
+                        'nested',
+                        'test-input.js'
+                    );
                     const rawInputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'input');
                     const rawOutputPath: string = path.join(baseDirnamePath, tmpDirectoryPath, 'output');
                     const expectedOutputCodePath: string = path.join(
@@ -313,7 +268,11 @@ describe('obfuscatedCodeFileUtils', () => {
                         const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
                         const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
                         const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
-                        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js.map');
+                        const expectedOutputSourceMapPath: string = path.join(
+                            tmpDirectoryPath,
+                            'output',
+                            'test-output.js.map'
+                        );
 
                         let outputSourceMapPath: string;
 
@@ -336,7 +295,11 @@ describe('obfuscatedCodeFileUtils', () => {
                         const rawInputPath: string = path.join(tmpDirectoryPath, 'input.with.dot', 'test-input.js');
                         const rawOutputPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
                         const outputCodePath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
-                        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js.map');
+                        const expectedOutputSourceMapPath: string = path.join(
+                            tmpDirectoryPath,
+                            'output.with.dot',
+                            'test-output.js.map'
+                        );
 
                         let outputSourceMapPath: string;
 
@@ -373,7 +336,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                     output: rawOutputPath
                                 }
                             );
-                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                                outputCodePath,
+                                sourceMapFileName
+                            );
                         });
 
                         it('should return output path for source map', () => {
@@ -397,7 +363,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                     output: rawOutputPath
                                 }
                             );
-                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                                outputCodePath,
+                                sourceMapFileName
+                            );
                         });
 
                         it('should return output path for source map', () => {
@@ -421,7 +390,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                     output: rawOutputPath
                                 }
                             );
-                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                                outputCodePath,
+                                sourceMapFileName
+                            );
                         });
 
                         it('should return output path for source map', () => {
@@ -434,7 +406,12 @@ describe('obfuscatedCodeFileUtils', () => {
                         const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
                         const outputCodePath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');
                         const sourceMapFileName: string = path.join('parent', 'foo.js.map');
-                        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output', 'parent', 'foo.js.map');
+                        const expectedOutputSourceMapPath: string = path.join(
+                            tmpDirectoryPath,
+                            'output',
+                            'parent',
+                            'foo.js.map'
+                        );
 
                         let outputSourceMapPath: string;
 
@@ -445,7 +422,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                     output: rawOutputPath
                                 }
                             );
-                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                                outputCodePath,
+                                sourceMapFileName
+                            );
                         });
 
                         it('should return output path for source map', () => {
@@ -458,7 +438,12 @@ describe('obfuscatedCodeFileUtils', () => {
                         const rawOutputPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
                         const outputCodePath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'test-output.js');
                         const sourceMapFileName: string = path.join('parent', 'foo.js.map');
-                        const expectedOutputSourceMapPath: string = path.join(tmpDirectoryPath, 'output.with.dot', 'parent', 'foo.js.map');
+                        const expectedOutputSourceMapPath: string = path.join(
+                            tmpDirectoryPath,
+                            'output.with.dot',
+                            'parent',
+                            'foo.js.map'
+                        );
 
                         let outputSourceMapPath: string;
 
@@ -469,7 +454,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                     output: rawOutputPath
                                 }
                             );
-                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                            outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                                outputCodePath,
+                                sourceMapFileName
+                            );
                         });
 
                         it('should return output path for source map', () => {
@@ -541,7 +529,12 @@ describe('obfuscatedCodeFileUtils', () => {
                     const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const sourceMapFileName: string = path.join('foo');
-                    const expectedOutputSourceMapPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'foo.js.map');
+                    const expectedOutputSourceMapPath: string = path.join(
+                        'C:\\',
+                        tmpDirectoryPath,
+                        'output',
+                        'foo.js.map'
+                    );
 
                     let outputSourceMapPath: string;
 
@@ -552,7 +545,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                 output: rawOutputPath
                             }
                         );
-                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                            outputCodePath,
+                            sourceMapFileName
+                        );
                     });
 
                     it('should return output path for source map', () => {
@@ -565,7 +561,12 @@ describe('obfuscatedCodeFileUtils', () => {
                     const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const sourceMapFileName: string = path.join('foo.js.map');
-                    const expectedOutputSourceMapPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'foo.js.map');
+                    const expectedOutputSourceMapPath: string = path.join(
+                        'C:\\',
+                        tmpDirectoryPath,
+                        'output',
+                        'foo.js.map'
+                    );
 
                     let outputSourceMapPath: string;
 
@@ -576,7 +577,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                 output: rawOutputPath
                             }
                         );
-                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                            outputCodePath,
+                            sourceMapFileName
+                        );
                     });
 
                     it('should return output path for source map', () => {
@@ -589,7 +593,13 @@ describe('obfuscatedCodeFileUtils', () => {
                     const rawOutputPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const outputCodePath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'test-output.js');
                     const sourceMapFileName: string = path.join('C:\\', 'parent', 'foo.js.map');
-                    const expectedOutputSourceMapPath: string = path.join('C:\\', tmpDirectoryPath, 'output', 'parent', 'foo.js.map');
+                    const expectedOutputSourceMapPath: string = path.join(
+                        'C:\\',
+                        tmpDirectoryPath,
+                        'output',
+                        'parent',
+                        'foo.js.map'
+                    );
 
                     let outputSourceMapPath: string;
 
@@ -600,7 +610,10 @@ describe('obfuscatedCodeFileUtils', () => {
                                 output: rawOutputPath
                             }
                         );
-                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
+                        outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                            outputCodePath,
+                            sourceMapFileName
+                        );
                     });
 
                     it('should return output path for source map', () => {
@@ -619,12 +632,9 @@ describe('obfuscatedCodeFileUtils', () => {
                 let testFunc: () => string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
-                    );
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
                     testFunc = () => obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath);
                 });
 
@@ -643,13 +653,13 @@ describe('obfuscatedCodeFileUtils', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                        outputCodePath,
+                        sourceMapFileName
                     );
-                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -667,13 +677,13 @@ describe('obfuscatedCodeFileUtils', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                        outputCodePath,
+                        sourceMapFileName
                     );
-                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -691,13 +701,13 @@ describe('obfuscatedCodeFileUtils', () => {
                 let outputSourceMapPath: string;
 
                 before(() => {
-                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                        rawInputPath,
-                        {
-                            output: rawOutputPath
-                        }
+                    const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                        output: rawOutputPath
+                    });
+                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                        outputCodePath,
+                        sourceMapFileName
                     );
-                    outputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(outputCodePath, sourceMapFileName);
                 });
 
                 it('should return output path for source map', () => {
@@ -713,12 +723,9 @@ describe('obfuscatedCodeFileUtils', () => {
             let testFunc: () => string;
 
             before(() => {
-                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(
-                    rawInputPath,
-                    {
-                        output: rawOutputPath
-                    }
-                );
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                    output: rawOutputPath
+                });
                 testFunc = () => obfuscatedCodeFileUtils.getOutputSourceMapPath('', '');
             });
 

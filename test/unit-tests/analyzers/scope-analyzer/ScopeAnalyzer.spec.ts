@@ -19,8 +19,7 @@ describe('ScopeAnalyzer', () => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', '', {});
-        scopeAnalyzer = inversifyContainerFacade
-            .get<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer);
+        scopeAnalyzer = inversifyContainerFacade.get<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer);
     });
 
     describe('analyze', () => {
@@ -65,10 +64,7 @@ describe('ScopeAnalyzer', () => {
 
             beforeEach(() => {
                 const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
-                    NodeFactory.variableDeclaratorNode(
-                        NodeFactory.identifierNode('foo'),
-                        NodeFactory.literalNode(1)
-                    )
+                    NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), NodeFactory.literalNode(1))
                 ]);
                 const programNode: ESTree.Program = NodeFactory.programNode([variableDeclarationNode]);
 
@@ -112,10 +108,7 @@ describe('ScopeAnalyzer', () => {
 
             beforeEach(() => {
                 const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
-                    NodeFactory.variableDeclaratorNode(
-                        NodeFactory.identifierNode('foo'),
-                        NodeFactory.literalNode(1)
-                    )
+                    NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), NodeFactory.literalNode(1))
                 ]);
                 const programNode: ESTree.Program = NodeFactory.programNode([variableDeclarationNode]);
 
@@ -137,28 +130,17 @@ describe('ScopeAnalyzer', () => {
 
             beforeEach(() => {
                 const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
-                    NodeFactory.variableDeclaratorNode(
-                        NodeFactory.identifierNode('foo'),
-                        NodeFactory.literalNode(1)
-                    )
+                    NodeFactory.variableDeclaratorNode(NodeFactory.identifierNode('foo'), NodeFactory.literalNode(1))
                 ]);
                 const programNode: ESTree.Program = NodeFactory.programNode([
                     NodeFactory.ifStatementNode(
-                        NodeFactory.binaryExpressionNode(
-                            '+',
-                            NodeFactory.literalNode(1),
-                            NodeFactory.literalNode(2)
-                        ),
-                        NodeFactory.blockStatementNode([
-                            variableDeclarationNode
-                        ]),
+                        NodeFactory.binaryExpressionNode('+', NodeFactory.literalNode(1), NodeFactory.literalNode(2)),
+                        NodeFactory.blockStatementNode([variableDeclarationNode]),
                         NodeFactory.blockStatementNode([
                             NodeFactory.functionDeclarationNode(
                                 'bar',
                                 [],
-                                NodeFactory.blockStatementNode([
-                                    variableDeclarationNode
-                                ])
+                                NodeFactory.blockStatementNode([variableDeclarationNode])
                             )
                         ])
                     )

@@ -1,4 +1,4 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -24,7 +24,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    public constructor (
+    public constructor(
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -35,7 +35,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} node
      * @returns {boolean}
      */
-    private static isLiteralNodeWithStringValue (node: ESTree.Node | undefined): boolean {
+    private static isLiteralNodeWithStringValue(node: ESTree.Node | undefined): boolean {
         return !!node && NodeGuards.isLiteralNode(node) && typeof node.value === 'string';
     }
 
@@ -43,7 +43,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
-    public getVisitor (nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+    public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Converting:
                 return {
@@ -64,7 +64,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         if (NodeGuards.isTaggedTemplateExpressionNode(parentNode)) {
             return templateLiteralNode;
         }
@@ -77,7 +77,10 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {ESTree.Node} parentNode
      * @returns {ESTree.Expression}
      */
-    private transformTemplateLiteralNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Expression {
+    private transformTemplateLiteralNode(
+        templateLiteralNode: ESTree.TemplateLiteral,
+        parentNode: ESTree.Node
+    ): ESTree.Expression {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
 
         let nodes: ESTree.Expression[] = [];

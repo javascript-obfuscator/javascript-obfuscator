@@ -1,5 +1,9 @@
 Change Log
 
+v4.2.1
+---
+* Downgrade `multimatch` version to avoid esm errors
+
 v4.2.0
 ---
 * Dropped support of Node versions 17 and below

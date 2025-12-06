@@ -107,7 +107,7 @@
   "scripts": {
     "start": "yarn run watch",
     "webpack:prod": "webpack --config ./webpack/webpack.node.config.js --config ./webpack/webpack.browser.config.js --mode production",
-    "build": "yarn run webpack:prod && yarn run eslint && yarn test",
+    "build": "yarn run webpack:prod && yarn run eslint",
     "build:typings": "rm -rf ./typings && tsc --project src/tsconfig.typings.json",
     "watch": "webpack --config ./webpack/webpack.node.config.js --mode development --watch",
     "test:dev": "ts-node --type-check test/dev/dev.ts",

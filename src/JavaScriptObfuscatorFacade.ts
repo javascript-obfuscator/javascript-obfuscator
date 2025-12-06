@@ -5,7 +5,6 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import { TDictionary } from './types/TDictionary';
 import { TInputOptions } from './types/options/TInputOptions';
 import { TObfuscationResultsObject } from './types/TObfuscationResultsObject';
-import { TProObfuscationResultsObject } from './types/TProObfuscationResultsObject';
 import { TOptionsPreset } from './types/options/TOptionsPreset';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
@@ -122,62 +121,6 @@ class JavaScriptObfuscatorFacade {
 
         const client = new ProApiClient(proApiConfig);
         return client.obfuscate(sourceCode, inputOptions, onProgress);
-    }
-
-    /**
-     * Obfuscate multiple source files using the Pro API (obfuscator.io)
-     * This method requires a valid API token from obfuscator.io and only works with VM obfuscation.
-     *
-     * @param {TSourceCodesObject} sourceCodesObject - Object mapping file identifiers to source code
-     * @param {TInputOptions} inputOptions - Obfuscation options (must include vmObfuscation: true)
-     * @param {IProApiConfig} proApiConfig - Pro API configuration including API token
-     * @param {TProApiProgressCallback} onProgress - Optional callback for progress updates (streaming mode only)
-     * @returns {Promise<TProObfuscationResultsObject<TSourceCodesObject>>} - Promise resolving to map of obfuscation results
-     * @throws {ApiError} - If API returns an error or vmObfuscation is not enabled
-     */
-    public static async obfuscateProMultiple<TSourceCodesObject extends TDictionary<string>>(
-        sourceCodesObject: TSourceCodesObject,
-        inputOptions: TInputOptions = {},
-        proApiConfig: IProApiConfig,
-        onProgress?: TProApiProgressCallback
-    ): Promise<TProObfuscationResultsObject<TSourceCodesObject>> {
-        if (typeof sourceCodesObject !== 'object') {
-            throw new Error('Source codes object should be a plain object');
-        }
-
-        if (!inputOptions.vmObfuscation) {
-            throw new ApiError(
-                'obfuscateProMultiple method works only with VM obfuscation. Set vmObfuscation: true in options.',
-                400
-            );
-        }
-
-        const client = new ProApiClient(proApiConfig);
-        const results: TProObfuscationResultsObject<TSourceCodesObject> = {} as TProObfuscationResultsObject<TSourceCodesObject>;
-
-        const entries = Object.entries(sourceCodesObject);
-
-        for (let index = 0; index < entries.length; index++) {
-            const [sourceCodeIdentifier, sourceCode] = entries[index];
-
-            const identifiersPrefix: string = Utils.getIdentifiersPrefixForMultipleSources(
-                inputOptions.identifiersPrefix,
-                index
-            );
-
-            const sourceCodeOptions: TInputOptions = {
-                ...inputOptions,
-                identifiersPrefix
-            };
-
-            results[sourceCodeIdentifier as keyof TSourceCodesObject] = await client.obfuscate(
-                sourceCode,
-                sourceCodeOptions,
-                onProgress
-            );
-        }
-
-        return results;
     }
 }
 

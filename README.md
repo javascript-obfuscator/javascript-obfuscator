@@ -17,6 +17,7 @@ Huge thanks to all supporters!
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
 **Key features:**
+- VM obfuscation (via [JavaScript Obfuscator Pro](https://obfuscator.io/))
 - variables renaming
 - strings extraction and encryption
 - dead code injection
@@ -265,6 +266,12 @@ Returns an options object for the passed options preset name.
 
 The Pro API methods provide access to **VM-based bytecode obfuscation** through the [obfuscator.io](https://obfuscator.io) cloud service. VM obfuscation is the most advanced and secure form of code protection available, transforming your JavaScript functions into custom bytecode that runs on an embedded virtual machine.
 
+**Why VM Obfuscation?**
+- **Strongest protection**: Code is converted to bytecode that cannot be directly understood
+- **Anti-decompilation**: No standard JavaScript to reverse engineer
+- **Customizable VM**: Each obfuscation generates unique opcodes and VM structure
+- **Layered security**: Combine with other obfuscation options for defense in depth
+
 ### Getting an API Token
 
 To use Pro API methods, you need a valid API token from [obfuscator.io](https://obfuscator.io):
@@ -310,40 +317,6 @@ console.log(result.getObfuscatedCode());
 - `vmObfuscation` is not enabled in options
 - API token is invalid or expired
 - API request fails
-
-### `obfuscateProMultiple(sourceCodesObject, options, proApiConfig, onProgress?)` :new:
-
-**Async method** that obfuscates multiple files using the Pro API.
-
-```javascript
-const JavaScriptObfuscator = require('javascript-obfuscator');
-
-const results = await JavaScriptObfuscator.obfuscateProMultiple(
-    {
-        'file1.js': 'function foo() { return 1; }',
-        'file2.js': 'function bar() { return 2; }'
-    },
-    {
-        vmObfuscation: true,  // Required!
-        vmObfuscationThreshold: 1
-    },
-    {
-        apiToken: 'your_javascript_obfuscator_pro_api_token'
-    }
-);
-
-console.log(results['file1.js'].getObfuscatedCode());
-console.log(results['file2.js'].getObfuscatedCode());
-```
-
-**Parameters:**
-
-* `sourceCodesObject` (`Object`) – map of file identifiers to source code
-* `options` (`Object`) – obfuscation options. **Must include `vmObfuscation: true`**
-* `apiConfig` (`Object`) – Pro API configuration (same as `obfuscatePro`)
-* `onProgress` (`function`, optional) – callback for progress updates
-
-**Returns:** `Promise<Object>` – map of file identifiers to `ObfuscationResult` objects
 
 ### Pro API with Progress Updates
 
@@ -1764,6 +1737,111 @@ The performance will be at a relatively normal level
 ```
 
 <!-- ##options-end## -->
+
+## JavaScript Obfuscator Pro VM options
+
+### `vmObfuscation`
+Type: `boolean` Default: `false`
+
+Enables VM-based bytecode obfuscation. When enabled, JavaScript functions are compiled into custom bytecode that runs on an embedded virtual machine. This provides the highest level of protection as the original code logic is completely transformed.
+
+**Warning:** This significantly increases code size and may impact performance. Use `vmObfuscationThreshold` to control which root-level functions are transformed.
+
+### `vmObfuscationThreshold`
+Type: `number` Default: `1`
+
+The probability (from 0 to 1) that a function will be transformed to VM bytecode when `vmObfuscation` is enabled.
+
+- `0` - no functions will be transformed
+- `0.5` - 50% of functions will be transformed
+- `1` - all functions will be transformed
+
+### `vmTargetFunctions`
+Type: `string[]` Default: `[]`
+
+Array of root-level function names to target for VM obfuscation. When specified, only these functions will be transformed (subject to `vmObfuscationThreshold`). Empty array means all functions are candidates.
+
+### `vmExcludeFunctions`
+Type: `string[]` Default: `[]`
+
+Array of root-level function names to exclude from VM obfuscation. These functions will never be transformed regardless of other settings.
+
+### `vmOpcodeShuffle`
+Type: `boolean` Default: `false`
+
+Randomizes the opcode mapping for each obfuscation run. Makes static analysis more difficult as opcode meanings change between builds.
+
+### `vmBytecodeEncoding`
+Type: `boolean` Default: `false`
+
+Encodes the bytecode instructions using XOR encryption. The decoding key is derived at runtime, adding another layer of protection.
+
+### `vmBytecodeArrayEncoding`
+Type: `boolean` Default: `false`
+
+Applies additional encoding to the bytecode array, making it harder to identify bytecode patterns through static analysis.
+
+### `vmJumpsEncoding`
+Type: `boolean` Default: `false`
+
+Encodes jump targets and offsets in the bytecode. This obscures control flow and makes it harder to follow program execution.
+
+### `vmDecoyOpcodes`
+Type: `boolean` Default: `false`
+
+Inserts fake opcodes into the dispatcher that are never executed. Increases code complexity and confuses reverse engineering attempts.
+
+### `vmDeadCodeInjection`
+Type: `boolean` Default: `false`
+
+Injects dead code sequences into the VM bytecode. These sequences are valid but unreachable, adding noise to analysis.
+
+### `vmSplitDispatcher`
+Type: `boolean` Default: `false`
+
+Splits the VM dispatcher into multiple smaller dispatchers. Makes the execution flow harder to follow.
+
+### `vmMacroOps`
+Type: `boolean` Default: `false`
+
+Combines common instruction sequences into single macro opcodes. This creates unique instruction patterns that are harder to recognize.
+
+### `vmDebugProtection`
+Type: `boolean` Default: `false`
+
+Adds anti-debugging measures to the VM runtime. Detects debugger presence and alters behavior when debugging is detected.
+
+### `vmRuntimeOpcodeDerivation`
+Type: `boolean` Default: `false`
+
+Derives opcode values at runtime through mathematical operations rather than using static values. Makes static analysis significantly harder.
+
+### `vmStatefulOpcodes`
+Type: `boolean` Default: `false`
+
+Makes opcode interpretation depend on VM state. The same opcode can have different meanings based on execution history.
+
+### `vmStackEncoding`
+Type: `boolean` Default: `false`
+
+Encodes values pushed to and popped from the VM stack. Adds protection against memory inspection during execution.
+
+### `vmRandomizeKeys`
+Type: `boolean` Default: `false`
+
+Randomizes encryption keys and other constants used by the VM. Each build produces unique key values.
+
+### `vmIndirectDispatch`
+Type: `boolean` Default: `false`
+
+Uses indirect function calls for opcode dispatch instead of direct switch/case. Makes control flow analysis more difficult.
+
+### `vmBytecodeFormat`
+Type: `string` Default: `binary`
+
+Specifies the format used to embed bytecode in the output:
+- `binary` - Compact binary representation (smaller size)
+- `json` - JSON format (easier debugging, larger size)
 
 ## Frequently Asked Questions
 

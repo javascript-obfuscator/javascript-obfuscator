@@ -7,8 +7,6 @@ import { TOptionsPreset } from './src/types/options/TOptionsPreset';
 
 import { IObfuscationResult } from './src/interfaces/source-code/IObfuscationResult';
 import { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './src/interfaces/pro-api/IProApiClient';
-import { TProObfuscationResultsObject } from './src/types/TProObfuscationResultsObject';
-
 import { JavaScriptObfuscator, ApiError } from './src/JavaScriptObfuscatorFacade';
 
 export type ObfuscatorOptions = TInputOptions;
@@ -53,23 +51,6 @@ export declare function obfuscatePro (
     proApiConfig: IProApiConfig,
     onProgress?: TProApiProgressCallback
 ): Promise<ProObfuscationResult>;
-
-/**
- * Obfuscate multiple source files using the Pro API (obfuscator.io)
- * Requires a valid API token and vmObfuscation: true
- *
- * @param {TSourceCodesObject} sourceCodesObject - Object mapping file identifiers to source code
- * @param {ObfuscatorOptions} inputOptions - Obfuscation options (must include vmObfuscation: true)
- * @param {IProApiConfig} proApiConfig - Pro API configuration including API token
- * @param {TProApiProgressCallback} onProgress - Optional callback for progress updates
- * @returns {Promise<TProObfuscationResultsObject<TSourceCodesObject>>} - Promise resolving to map of results
- */
-export declare function obfuscateProMultiple <TSourceCodesObject extends TDictionary<string>> (
-    sourceCodesObject: TSourceCodesObject,
-    inputOptions: ObfuscatorOptions,
-    proApiConfig: IProApiConfig,
-    onProgress?: TProApiProgressCallback
-): Promise<TProObfuscationResultsObject<TSourceCodesObject>>;
 
 /**
  * @param {TOptionsPreset} optionsPreset

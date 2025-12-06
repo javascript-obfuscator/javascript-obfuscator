@@ -17,6 +17,7 @@ Huge thanks to all supporters!
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
 **Key features:**
+- VM obfuscation (via [JavaScript Obfuscator Pro](https://obfuscator.io/))
 - variables renaming
 - strings extraction and encryption
 - dead code injection
@@ -258,6 +259,103 @@ Returns a map object which keys are identifiers of source codes and values are `
 ### `getOptionsByPreset(optionsPreset)`
 
 Returns an options object for the passed options preset name.
+
+---
+
+## :shield: Pro API Methods (VM Obfuscation)
+
+The Pro API methods provide access to **VM-based bytecode obfuscation** through the [obfuscator.io](https://obfuscator.io) cloud service. VM obfuscation is the most advanced and secure form of code protection available, transforming your JavaScript functions into custom bytecode that runs on an embedded virtual machine.
+
+**Why VM Obfuscation?**
+- **Strongest protection**: Code is converted to bytecode that cannot be directly understood
+- **Anti-decompilation**: No standard JavaScript to reverse engineer
+- **Customizable VM**: Each obfuscation generates unique opcodes and VM structure
+- **Layered security**: Combine with other obfuscation options for defense in depth
+
+### Getting an API Token
+
+To use Pro API methods, you need a valid API token from [obfuscator.io](https://obfuscator.io):
+
+1. Create an account at [obfuscator.io](https://obfuscator.io)
+2. Subscribe to a Pro, Team, or Business plan that includes API access
+3. Generate your API token at [obfuscator.io/dashboard](https://obfuscator.io/dashboard)
+
+### `obfuscatePro(sourceCode, options, proApiConfig, onProgress?)` :new:
+
+**Async method** that obfuscates code using the Pro API with VM-based bytecode obfuscation.
+
+```javascript
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const result = await JavaScriptObfuscator.obfuscatePro(
+    `function hello() { console.log("Hello World"); }`,
+    {
+        vmObfuscation: true,  // Required!
+        vmObfuscationThreshold: 1,
+        compact: true
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token'
+    }
+);
+
+console.log(result.getObfuscatedCode());
+```
+
+**Parameters:**
+
+* `sourceCode` (`string`) – source code to obfuscate
+* `options` (`Object`) – obfuscation options. **Must include `vmObfuscation: true`**
+* `apiConfig` (`Object`) – Pro API configuration:
+  * `apiToken` (`string`, required) – your API token from obfuscator.io
+  * `timeout` (`number`, optional) – request timeout in ms (default: `300000` - 5 minutes)
+* `onProgress` (`function`, optional) – callback for progress updates during obfuscation
+
+**Returns:** `Promise<ObfuscationResult>`
+
+**Throws:** `ApiError` if:
+- `vmObfuscation` is not enabled in options
+- API token is invalid or expired
+- API request fails
+
+### Pro API with Progress Updates
+
+The API uses streaming mode to provide real-time progress updates during obfuscation:
+
+```javascript
+const result = await JavaScriptObfuscator.obfuscatePro(
+    sourceCode,
+    {
+        vmObfuscation: true,
+        vmObfuscationThreshold: 1
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token'
+    },
+    (message) => {
+        console.log('Progress:', message);
+        // Output: "Validating request...", "Authenticating...", "Obfuscating...", etc.
+    }
+);
+```
+
+### Error Handling
+
+```javascript
+const { ApiError } = require('javascript-obfuscator');
+
+try {
+    const result = await JavaScriptObfuscator.obfuscatePro(sourceCode, options, config);
+} catch (error) {
+    if (error instanceof ApiError) {
+        console.error(`API Error (${error.statusCode}): ${error.message}`);
+    } else {
+        throw error;
+    }
+}
+```
+
+---
 
 ## CLI usage
 
@@ -1639,6 +1737,111 @@ The performance will be at a relatively normal level
 ```
 
 <!-- ##options-end## -->
+
+## JavaScript Obfuscator Pro VM options
+
+### `vmObfuscation`
+Type: `boolean` Default: `false`
+
+Enables VM-based bytecode obfuscation. When enabled, JavaScript functions are compiled into custom bytecode that runs on an embedded virtual machine. This provides the highest level of protection as the original code logic is completely transformed.
+
+**Warning:** This significantly increases code size and may impact performance. Use `vmObfuscationThreshold` to control which root-level functions are transformed.
+
+### `vmObfuscationThreshold`
+Type: `number` Default: `1`
+
+The probability (from 0 to 1) that a function will be transformed to VM bytecode when `vmObfuscation` is enabled.
+
+- `0` - no functions will be transformed
+- `0.5` - 50% of functions will be transformed
+- `1` - all functions will be transformed
+
+### `vmTargetFunctions`
+Type: `string[]` Default: `[]`
+
+Array of root-level function names to target for VM obfuscation. When specified, only these functions will be transformed (subject to `vmObfuscationThreshold`). Empty array means all functions are candidates.
+
+### `vmExcludeFunctions`
+Type: `string[]` Default: `[]`
+
+Array of root-level function names to exclude from VM obfuscation. These functions will never be transformed regardless of other settings.
+
+### `vmOpcodeShuffle`
+Type: `boolean` Default: `false`
+
+Randomizes the opcode mapping for each obfuscation run. Makes static analysis more difficult as opcode meanings change between builds.
+
+### `vmBytecodeEncoding`
+Type: `boolean` Default: `false`
+
+Encodes the bytecode instructions using XOR encryption. The decoding key is derived at runtime, adding another layer of protection.
+
+### `vmBytecodeArrayEncoding`
+Type: `boolean` Default: `false`
+
+Applies additional encoding to the bytecode array, making it harder to identify bytecode patterns through static analysis.
+
+### `vmJumpsEncoding`
+Type: `boolean` Default: `false`
+
+Encodes jump targets and offsets in the bytecode. This obscures control flow and makes it harder to follow program execution.
+
+### `vmDecoyOpcodes`
+Type: `boolean` Default: `false`
+
+Inserts fake opcodes into the dispatcher that are never executed. Increases code complexity and confuses reverse engineering attempts.
+
+### `vmDeadCodeInjection`
+Type: `boolean` Default: `false`
+
+Injects dead code sequences into the VM bytecode. These sequences are valid but unreachable, adding noise to analysis.
+
+### `vmSplitDispatcher`
+Type: `boolean` Default: `false`
+
+Splits the VM dispatcher into multiple smaller dispatchers. Makes the execution flow harder to follow.
+
+### `vmMacroOps`
+Type: `boolean` Default: `false`
+
+Combines common instruction sequences into single macro opcodes. This creates unique instruction patterns that are harder to recognize.
+
+### `vmDebugProtection`
+Type: `boolean` Default: `false`
+
+Adds anti-debugging measures to the VM runtime. Detects debugger presence and alters behavior when debugging is detected.
+
+### `vmRuntimeOpcodeDerivation`
+Type: `boolean` Default: `false`
+
+Derives opcode values at runtime through mathematical operations rather than using static values. Makes static analysis significantly harder.
+
+### `vmStatefulOpcodes`
+Type: `boolean` Default: `false`
+
+Makes opcode interpretation depend on VM state. The same opcode can have different meanings based on execution history.
+
+### `vmStackEncoding`
+Type: `boolean` Default: `false`
+
+Encodes values pushed to and popped from the VM stack. Adds protection against memory inspection during execution.
+
+### `vmRandomizeKeys`
+Type: `boolean` Default: `false`
+
+Randomizes encryption keys and other constants used by the VM. Each build produces unique key values.
+
+### `vmIndirectDispatch`
+Type: `boolean` Default: `false`
+
+Uses indirect function calls for opcode dispatch instead of direct switch/case. Makes control flow analysis more difficult.
+
+### `vmBytecodeFormat`
+Type: `string` Default: `binary`
+
+Specifies the format used to embed bytecode in the output:
+- `binary` - Compact binary representation (smaller size)
+- `json` - JSON format (easier debugging, larger size)
 
 ## Frequently Asked Questions
 

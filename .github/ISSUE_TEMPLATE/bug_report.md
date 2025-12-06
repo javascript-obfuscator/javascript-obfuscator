@@ -24,7 +24,10 @@ assignees: ''
 1.
 2.
 3.
-4.
+
+## JavaScript Obfuscator Edition
+- JavaScript Obfuscator Open Source
+- JavaScript Obfuscator Pro via API or [http://obfuscator.io](http://obfuscator.io])
 
 ## Your Environment
 <!--- Include as many relevant details about the environment you experienced the bug in -->

@@ -271,7 +271,7 @@ module.exports = {
         'prefer-const': 'error',
         'prefer-object-spread': 'error',
         'prefer-template': 'error',
-        'quote-props': ['error', 'as-needed'],
+        'quote-props': ['off', 'as-needed'],
         'quotes': 'off',
         'radix': 'error',
         'space-before-function-paren': 'off',

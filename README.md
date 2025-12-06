@@ -259,6 +259,131 @@ Returns a map object which keys are identifiers of source codes and values are `
 
 Returns an options object for the passed options preset name.
 
+---
+
+## :shield: Pro API Methods (VM Obfuscation)
+
+The Pro API methods provide access to **VM-based bytecode obfuscation** through the [obfuscator.io](https://obfuscator.io) cloud service. VM obfuscation is the most advanced and secure form of code protection available, transforming your JavaScript functions into custom bytecode that runs on an embedded virtual machine.
+
+### Getting an API Token
+
+To use Pro API methods, you need a valid API token from [obfuscator.io](https://obfuscator.io):
+
+1. Create an account at [obfuscator.io](https://obfuscator.io)
+2. Subscribe to a Pro, Team, or Business plan that includes API access
+3. Generate your API token at [obfuscator.io/dashboard](https://obfuscator.io/dashboard)
+
+### `obfuscatePro(sourceCode, options, proApiConfig, onProgress?)` :new:
+
+**Async method** that obfuscates code using the Pro API with VM-based bytecode obfuscation.
+
+```javascript
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const result = await JavaScriptObfuscator.obfuscatePro(
+    `function hello() { console.log("Hello World"); }`,
+    {
+        vmObfuscation: true,  // Required!
+        vmObfuscationThreshold: 1,
+        compact: true
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token'
+    }
+);
+
+console.log(result.getObfuscatedCode());
+```
+
+**Parameters:**
+
+* `sourceCode` (`string`) – source code to obfuscate
+* `options` (`Object`) – obfuscation options. **Must include `vmObfuscation: true`**
+* `apiConfig` (`Object`) – Pro API configuration:
+  * `apiToken` (`string`, required) – your API token from obfuscator.io
+  * `timeout` (`number`, optional) – request timeout in ms (default: `300000` - 5 minutes)
+* `onProgress` (`function`, optional) – callback for progress updates during obfuscation
+
+**Returns:** `Promise<ObfuscationResult>`
+
+**Throws:** `ApiError` if:
+- `vmObfuscation` is not enabled in options
+- API token is invalid or expired
+- API request fails
+
+### `obfuscateProMultiple(sourceCodesObject, options, proApiConfig, onProgress?)` :new:
+
+**Async method** that obfuscates multiple files using the Pro API.
+
+```javascript
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const results = await JavaScriptObfuscator.obfuscateProMultiple(
+    {
+        'file1.js': 'function foo() { return 1; }',
+        'file2.js': 'function bar() { return 2; }'
+    },
+    {
+        vmObfuscation: true,  // Required!
+        vmObfuscationThreshold: 1
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token'
+    }
+);
+
+console.log(results['file1.js'].getObfuscatedCode());
+console.log(results['file2.js'].getObfuscatedCode());
+```
+
+**Parameters:**
+
+* `sourceCodesObject` (`Object`) – map of file identifiers to source code
+* `options` (`Object`) – obfuscation options. **Must include `vmObfuscation: true`**
+* `apiConfig` (`Object`) – Pro API configuration (same as `obfuscatePro`)
+* `onProgress` (`function`, optional) – callback for progress updates
+
+**Returns:** `Promise<Object>` – map of file identifiers to `ObfuscationResult` objects
+
+### Pro API with Progress Updates
+
+The API uses streaming mode to provide real-time progress updates during obfuscation:
+
+```javascript
+const result = await JavaScriptObfuscator.obfuscatePro(
+    sourceCode,
+    {
+        vmObfuscation: true,
+        vmObfuscationThreshold: 1
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token'
+    },
+    (message) => {
+        console.log('Progress:', message);
+        // Output: "Validating request...", "Authenticating...", "Obfuscating...", etc.
+    }
+);
+```
+
+### Error Handling
+
+```javascript
+const { ApiError } = require('javascript-obfuscator');
+
+try {
+    const result = await JavaScriptObfuscator.obfuscatePro(sourceCode, options, config);
+} catch (error) {
+    if (error instanceof ApiError) {
+        console.error(`API Error (${error.statusCode}): ${error.message}`);
+    } else {
+        throw error;
+    }
+}
+```
+
+---
+
 ## CLI usage
 
 See [CLI options](#cli-options).

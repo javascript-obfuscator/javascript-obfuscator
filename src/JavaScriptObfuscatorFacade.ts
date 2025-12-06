@@ -10,11 +10,7 @@ import { TOptionsPreset } from './types/options/TOptionsPreset';
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/source-code/IObfuscationResult';
-import {
-    IProApiConfig,
-    IProObfuscationResult,
-    TProApiProgressCallback
-} from './interfaces/pro-api/IProApiClient';
+import { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';
 import { ApiError } from './pro-api/ApiError';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
@@ -108,7 +104,7 @@ class JavaScriptObfuscatorFacade {
      */
     public static async obfuscatePro(
         sourceCode: string,
-        inputOptions: TInputOptions = {},
+        inputOptions: TInputOptions,
         proApiConfig: IProApiConfig,
         onProgress?: TProApiProgressCallback
     ): Promise<IProObfuscationResult> {
@@ -120,6 +116,7 @@ class JavaScriptObfuscatorFacade {
         }
 
         const client = new ProApiClient(proApiConfig);
+
         return client.obfuscate(sourceCode, inputOptions, onProgress);
     }
 }

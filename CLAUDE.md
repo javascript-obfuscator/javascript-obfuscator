@@ -4,7 +4,7 @@
 
 **JavaScript Obfuscator** is a powerful, enterprise-grade code obfuscation tool for JavaScript and Node.js applications. It transforms readable JavaScript code into a protected, difficult-to-understand format while maintaining full functionality. The project is widely used for protecting intellectual property and preventing reverse engineering.
 
-- **Version**: 4.1.1
+- **Version**: 5.0.0
 - **Author**: Timofey Kachalov (@sanex3339)
 - **License**: BSD-2-Clause
 - **Repository**: https://github.com/javascript-obfuscator/javascript-obfuscator
@@ -1423,7 +1423,6 @@ Use [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-co
 
 - **GitHub Issues**: Bug reports and feature requests
 - **GitHub Discussions**: Questions and general discussion
-- **OpenCollective**: Financial support and sponsorship
 - **GitHub Sponsors**: Direct sponsorship
 
 ## License

@@ -1,5 +1,9 @@
 Change Log
 
+v4.2.2
+---
+* Add JavaScript Obfuscator PRO advertisement message
+
 v4.2.1
 ---
 * Downgrade `multimatch` version to avoid esm errors

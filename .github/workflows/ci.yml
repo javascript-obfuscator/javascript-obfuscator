@@ -2,9 +2,9 @@ name: JavaScript Obfuscator CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, release-**]
   pull_request:
-    branches: [master]
+    branches: [master, release-**]
   schedule:
     - cron: '0 1 * * *'
 

@@ -1,5 +1,9 @@
 Change Log
 
+v5.0.1
+---
+* Add JavaScript Obfuscator PRO advertisement message
+
 v5.0.0
 ---
 * Add JavaScript Obfuscator PRO support via calling its API

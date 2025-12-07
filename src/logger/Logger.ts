@@ -90,4 +90,11 @@ export class Logger implements ILogger {
 
         Logger.log(Logger.colorWarn, LoggingPrefix.Base, loggingMessage, value);
     }
+
+    /**
+     * @param {LoggingMessage} loggingMessage
+     */
+    public advertise(loggingMessage: LoggingMessage): void {
+        Logger.log(Logger.colorInfo, LoggingPrefix.Base, loggingMessage);
+    }
 }

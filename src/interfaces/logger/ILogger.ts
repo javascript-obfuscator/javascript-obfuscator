@@ -18,4 +18,10 @@ export interface ILogger {
      * @param {string | number} value
      */
     warn(loggingMessage: LoggingMessage, value?: string | number): void;
+
+    /**
+     * @param {LoggingMessage} loggingMessage
+     * @param {string | number} value
+     */
+    advertise(loggingMessage: LoggingMessage): void;
 }

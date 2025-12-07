@@ -6,7 +6,6 @@
 
 #### You can support this project by donating:
 * (Github) https://github.com/sponsors/sanex3339
-* (OpenCollective) https://opencollective.com/javascript-obfuscator
 
 Huge thanks to all supporters!
 

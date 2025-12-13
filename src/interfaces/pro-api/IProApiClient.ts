@@ -43,7 +43,6 @@ export interface IProApiConfig {
 
     /**
      * Obfuscator version to use (e.g., '5.0.0-beta.20')
-     * Supported versions: 5.0.0-beta.0 through 5.0.0-beta.22
      * Defaults to latest version if not specified
      */
     version?: string;

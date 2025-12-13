@@ -336,8 +336,6 @@ const result = await JavaScriptObfuscator.obfuscatePro(
 );
 ```
 
-Supported versions: `5.0.0-beta.0` through `5.0.0-beta.22`. If not specified, the latest version is used.
-
 ### Pro API with Progress Updates
 
 The API uses streaming mode to provide real-time progress updates during obfuscation:

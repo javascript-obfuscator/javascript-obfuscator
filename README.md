@@ -308,6 +308,7 @@ console.log(result.getObfuscatedCode());
 * `apiConfig` (`Object`) – Pro API configuration:
   * `apiToken` (`string`, required) – your API token from obfuscator.io
   * `timeout` (`number`, optional) – request timeout in ms (default: `300000` - 5 minutes)
+  * `version` (`string`, optional) – JavaScript Obfuscator Pro version to use (e.g., `'5.0.0-beta.20'`). Defaults to latest version if not specified.
 * `onProgress` (`function`, optional) – callback for progress updates during obfuscation
 
 **Returns:** `Promise<ObfuscationResult>`
@@ -316,6 +317,24 @@ console.log(result.getObfuscatedCode());
 - `vmObfuscation` is not enabled in options
 - API token is invalid or expired
 - API request fails
+
+### Pro API with Specific Version
+
+You can specify which obfuscator version to use via the `version` option:
+
+```javascript
+const result = await JavaScriptObfuscator.obfuscatePro(
+    sourceCode,
+    {
+        vmObfuscation: true,
+        vmObfuscationThreshold: 1
+    },
+    {
+        apiToken: 'your_javascript_obfuscator_pro_api_token',
+        version: '5.0.0-beta.20'  // Use specific version
+    }
+);
+```
 
 ### Pro API with Progress Updates
 

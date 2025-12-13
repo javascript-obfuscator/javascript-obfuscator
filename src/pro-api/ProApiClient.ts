@@ -26,12 +26,14 @@ export class ProApiClient {
     private readonly config: {
         apiToken: string;
         timeout: number;
+        version?: string;
     };
 
     public constructor(config: IProApiConfig) {
         this.config = {
             apiToken: config.apiToken,
-            timeout: config.timeout ?? DEFAULT_TIMEOUT
+            timeout: config.timeout ?? DEFAULT_TIMEOUT,
+            version: config.version
         };
     }
 
@@ -73,8 +75,15 @@ export class ProApiClient {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
+        // Build URL with optional version parameter
+        let url = API_URL;
+
+        if (this.config.version) {
+            url = `${API_URL}?version=${encodeURIComponent(this.config.version)}`;
+        }
+
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers,
                 body,

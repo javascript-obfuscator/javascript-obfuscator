@@ -40,6 +40,13 @@ export interface IProApiConfig {
      * Request timeout in milliseconds (default: 300000 - 5 minutes)
      */
     timeout?: number;
+
+    /**
+     * Obfuscator version to use (e.g., '5.0.0-beta.20')
+     * Supported versions: 5.0.0-beta.0 through 5.0.0-beta.22
+     * Defaults to latest version if not specified
+     */
+    version?: string;
 }
 
 /**

@@ -1,5 +1,9 @@
 Change Log
 
+v5.1.0
+---
+* Add `version` parameter to the `apiConfig` to use different versions JavaScript Obfuscator Pro via API
+
 v5.0.1
 ---
 * Add JavaScript Obfuscator PRO advertisement message

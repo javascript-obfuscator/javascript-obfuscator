@@ -140,15 +140,16 @@ export class StringArrayScopeCallsWrapperTransformer extends AbstractNodeTransfo
             const { scopeCallsWrappersData } = stringArrayScopeCallsWrappersData;
             const scopeCallsWrappersDataLength: number = scopeCallsWrappersData.length;
 
+            const upperStringArrayCallsWrapperData = this.getUpperStringArrayCallsWrapperData(
+                stringArrayScopeCallsWrappersData
+            );
+
             /**
              * Iterates over each name of scope wrapper name
              * Reverse iteration appends wrappers at index `0` at the correct order
              */
             for (let i = scopeCallsWrappersDataLength - 1; i >= 0; i--) {
                 const stringArrayScopeCallsWrapperData = scopeCallsWrappersData[i];
-                const upperStringArrayCallsWrapperData = this.getUpperStringArrayCallsWrapperData(
-                    stringArrayScopeCallsWrappersData
-                );
 
                 this.getAndAppendStringArrayScopeCallsWrapperNode(
                     lexicalScopeBodyNode,

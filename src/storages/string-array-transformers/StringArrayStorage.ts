@@ -78,9 +78,9 @@ export class StringArrayStorage
     private readonly rc4Keys: string[];
 
     /**
-     * @type {Map<string, string[]>}
+     * @type {Map<string, Set<string>>}
      */
-    private readonly rc4EncodedValuesSourcesCache: Map<string, string[]> = new Map();
+    private readonly rc4EncodedValuesSourcesCache: Map<string, Set<string>> = new Map();
 
     /**
      * @type {number}
@@ -224,19 +224,13 @@ export class StringArrayStorage
         this.storage = new Map(
             this.arrayUtils
                 .shuffle(Array.from(this.storage.entries()))
-                .map<[`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]>(
-                    ([value, stringArrayStorageItemData], index: number) => {
-                        stringArrayStorageItemData.index = index;
+                .map<
+                    [`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]
+                >(([value, stringArrayStorageItemData], index: number) => {
+                    stringArrayStorageItemData.index = index;
 
-                        return [value, stringArrayStorageItemData];
-                    }
-                )
-                .sort(
-                    (
-                        [, stringArrayStorageItemDataA]: [string, IStringArrayStorageItemData],
-                        [, stringArrayStorageItemDataB]: [string, IStringArrayStorageItemData]
-                    ) => stringArrayStorageItemDataA.index - stringArrayStorageItemDataB.index
-                )
+                    return [value, stringArrayStorageItemData];
+                })
         );
     }
 
@@ -301,20 +295,20 @@ export class StringArrayStorage
                     this.cryptUtilsStringArray.rc4(value, decodeKey)
                 );
 
-                const encodedValueSources: string[] = this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? [];
-                let encodedValueSourcesLength: number = encodedValueSources.length;
+                const encodedValueSources: Set<string> =
+                    this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? new Set();
+                const encodedValueSourcesSize: number = encodedValueSources.size;
 
                 const shouldAddValueToSourcesCache: boolean =
-                    !encodedValueSourcesLength || !encodedValueSources.includes(value);
+                    !encodedValueSourcesSize || !encodedValueSources.has(value);
 
                 if (shouldAddValueToSourcesCache) {
-                    encodedValueSources.push(value);
-                    encodedValueSourcesLength++;
+                    encodedValueSources.add(value);
                 }
 
                 this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
 
-                if (encodedValueSourcesLength > 1) {
+                if (encodedValueSources.size > 1) {
                     return this.getEncodedValue(value);
                 }
 

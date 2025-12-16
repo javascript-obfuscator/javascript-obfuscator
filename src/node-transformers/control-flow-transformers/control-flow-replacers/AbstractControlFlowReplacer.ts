@@ -68,10 +68,10 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @returns {string}
      */
     public generateStorageKey(controlFlowStorage: IControlFlowStorage): string {
-        const key: string = this.randomGenerator.getRandomString(5);
+        let key: string = this.randomGenerator.getRandomString(5);
 
-        if (controlFlowStorage.has(key)) {
-            return this.generateStorageKey(controlFlowStorage);
+        while (controlFlowStorage.has(key)) {
+            key = this.randomGenerator.getRandomString(5);
         }
 
         return key;

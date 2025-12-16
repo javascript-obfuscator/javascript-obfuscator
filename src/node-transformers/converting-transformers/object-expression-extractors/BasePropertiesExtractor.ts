@@ -216,8 +216,10 @@ export class BasePropertiesExtractor implements IObjectExpressionExtractor {
         objectExpressionNode: ESTree.ObjectExpression,
         removablePropertyIds: number[]
     ): void {
+        const removablePropertyIdsSet: Set<number> = new Set(removablePropertyIds);
+
         objectExpressionNode.properties = objectExpressionNode.properties.filter(
-            (property: ESTree.Property | ESTree.SpreadElement, index: number) => !removablePropertyIds.includes(index)
+            (property: ESTree.Property | ESTree.SpreadElement, index: number) => !removablePropertyIdsSet.has(index)
         );
     }
 }

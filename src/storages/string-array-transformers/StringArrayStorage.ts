@@ -290,29 +290,36 @@ export class StringArrayStorage
              * if collision will happen, just try to encode value again
              */
             case StringArrayEncoding.Rc4: {
-                const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                const encodedValue: string = this.cryptUtilsStringArray.btoa(
-                    this.cryptUtilsStringArray.rc4(value, decodeKey)
-                );
+                const maxRetryAttempts: number = 50;
 
-                const encodedValueSources: Set<string> =
-                    this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? new Set();
-                const encodedValueSourcesSize: number = encodedValueSources.size;
+                for (let attempt: number = 0; attempt < maxRetryAttempts; attempt++) {
+                    const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
+                    const encodedValue: string = this.cryptUtilsStringArray.btoa(
+                        this.cryptUtilsStringArray.rc4(value, decodeKey)
+                    );
 
-                const shouldAddValueToSourcesCache: boolean =
-                    !encodedValueSourcesSize || !encodedValueSources.has(value);
+                    const encodedValueSources: Set<string> =
+                        this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? new Set();
 
-                if (shouldAddValueToSourcesCache) {
-                    encodedValueSources.add(value);
+                    const shouldAddValueToSourcesCache: boolean =
+                        encodedValueSources.size === 0 || !encodedValueSources.has(value);
+
+                    if (shouldAddValueToSourcesCache) {
+                        encodedValueSources.add(value);
+                    }
+
+                    this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
+
+                    if (encodedValueSources.size <= 1) {
+                        return { encodedValue, encoding, decodeKey };
+                    }
                 }
 
-                this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
-
-                if (encodedValueSources.size > 1) {
-                    return this.getEncodedValue(value);
-                }
-
-                return { encodedValue, encoding, decodeKey };
+                return {
+                    encodedValue: this.cryptUtilsStringArray.btoa(value),
+                    encoding: StringArrayEncoding.Base64,
+                    decodeKey: null
+                };
             }
 
             case StringArrayEncoding.Base64: {

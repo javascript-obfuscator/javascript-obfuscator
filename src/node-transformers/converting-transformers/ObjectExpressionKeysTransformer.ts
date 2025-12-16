@@ -54,6 +54,61 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * Combined prohibition check result
+     */
+    private static checkProhibitedPatterns(
+        objectExpressionNode: ESTree.ObjectExpression,
+        objectExpressionHostNode: ESTree.Node
+    ): { hasReferencedIdentifier: boolean; hasCallExpression: boolean } {
+        const identifierNamesSet: Set<string> = new Set();
+
+        let hasReferencedIdentifier: boolean = false;
+        let hasCallExpression: boolean = false;
+        let isInsideObjectExpression: boolean = false;
+
+        estraverse.traverse(objectExpressionHostNode, {
+            // eslint-disable-next-line complexity
+            enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                if (node === objectExpressionNode) {
+                    isInsideObjectExpression = true;
+                }
+
+                if (isInsideObjectExpression && !hasCallExpression) {
+                    if (NodeGuards.isCallExpressionNode(node) || NodeGuards.isNewExpressionNode(node)) {
+                        hasCallExpression = true;
+                    }
+                }
+
+                if (NodeGuards.isIdentifierNode(node) || NodeGuards.isThisExpressionNode(node)) {
+                    const identifierName: string = NodeGuards.isIdentifierNode(node)
+                        ? node.name
+                        : ObjectExpressionKeysTransformer.thisIdentifierName;
+
+                    if (!isInsideObjectExpression) {
+                        identifierNamesSet.add(identifierName);
+                    } else if (identifierNamesSet.has(identifierName)) {
+                        hasReferencedIdentifier = true;
+                    }
+                }
+
+                if (hasReferencedIdentifier && hasCallExpression) {
+                    return estraverse.VisitorOption.Break;
+                }
+            },
+            leave: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                if (node === objectExpressionNode) {
+                    isInsideObjectExpression = false;
+                    if (hasReferencedIdentifier || hasCallExpression) {
+                        return estraverse.VisitorOption.Break;
+                    }
+                }
+            }
+        });
+
+        return { hasReferencedIdentifier, hasCallExpression };
+    }
+
+    /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Node} objectExpressionParentNode
      * @param {Statement} objectExpressionHostStatement
@@ -64,86 +119,25 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         objectExpressionParentNode: ESTree.Node,
         objectExpressionHostStatement: ESTree.Statement
     ): boolean {
-        return (
-            ObjectExpressionKeysTransformer.isReferencedIdentifierName(
-                objectExpressionNode,
-                objectExpressionHostStatement
-            ) ||
+        if (
             ObjectExpressionKeysTransformer.isProhibitedArrowFunctionExpression(
                 objectExpressionNode,
                 objectExpressionParentNode
             ) ||
-            ObjectExpressionKeysTransformer.isObjectExpressionWithCallExpression(objectExpressionNode) ||
             ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
                 objectExpressionNode,
                 objectExpressionHostStatement
             )
-        );
-    }
-
-    /**
-     * @param {Identifier | ThisExpression} node
-     * @returns {string}
-     */
-    private static getReferencedIdentifierName(node: ESTree.Identifier | ESTree.ThisExpression): string {
-        if (NodeGuards.isIdentifierNode(node)) {
-            return node.name;
-        } else {
-            return ObjectExpressionKeysTransformer.thisIdentifierName;
+        ) {
+            return true;
         }
-    }
 
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} objectExpressionHostNode
-     * @returns {boolean}
-     */
-    private static isReferencedIdentifierName(
-        objectExpressionNode: ESTree.ObjectExpression,
-        objectExpressionHostNode: ESTree.Node
-    ): boolean {
-        const identifierNamesSet: Set<string> = new Set();
+        const { hasReferencedIdentifier, hasCallExpression } = ObjectExpressionKeysTransformer.checkProhibitedPatterns(
+            objectExpressionNode,
+            objectExpressionHostStatement
+        );
 
-        let isReferencedIdentifierName: boolean = false;
-        let isCurrentNode: boolean = false;
-
-        // should mark node as prohibited if identifier of node is referenced somewhere inside other nodes
-        estraverse.traverse(objectExpressionHostNode, {
-            enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                if (node === objectExpressionNode) {
-                    isCurrentNode = true;
-                }
-
-                if (!NodeGuards.isIdentifierNode(node) && !NodeGuards.isThisExpressionNode(node)) {
-                    return;
-                }
-
-                if (!isCurrentNode) {
-                    identifierNamesSet.add(ObjectExpressionKeysTransformer.getReferencedIdentifierName(node));
-
-                    return;
-                }
-
-                const hasReferencedIdentifierName: boolean = identifierNamesSet.has(
-                    ObjectExpressionKeysTransformer.getReferencedIdentifierName(node)
-                );
-
-                if (hasReferencedIdentifierName) {
-                    isReferencedIdentifierName = true;
-
-                    return estraverse.VisitorOption.Break;
-                }
-            },
-            leave: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                if (node === objectExpressionNode) {
-                    isCurrentNode = false;
-
-                    return estraverse.VisitorOption.Break;
-                }
-            }
-        });
-
-        return isReferencedIdentifierName;
+        return hasReferencedIdentifier || hasCallExpression;
     }
 
     /**
@@ -159,31 +153,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode) &&
             objectExpressionNodeParentNode.body === objectExpressionNode
         );
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @returns {boolean}
-     */
-    private static isObjectExpressionWithCallExpression(objectExpressionNode: ESTree.ObjectExpression): boolean {
-        let isCallExpressionLikeNodeFound: boolean = false;
-
-        estraverse.traverse(objectExpressionNode, {
-            enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                const isCallExpressionLikeNode =
-                    NodeGuards.isCallExpressionNode(node) || NodeGuards.isNewExpressionNode(node);
-
-                if (!isCallExpressionLikeNode) {
-                    return;
-                }
-
-                isCallExpressionLikeNodeFound = true;
-
-                return estraverse.VisitorOption.Break;
-            }
-        });
-
-        return isCallExpressionLikeNodeFound;
     }
 
     /**
@@ -263,31 +232,27 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        return this.applyObjectExpressionKeysExtractorsRecursive(
-            ObjectExpressionKeysTransformer.objectExpressionExtractorNames,
-            objectExpressionNode,
-            hostStatement
-        );
+        return this.applyObjectExpressionKeysExtractorsRecursive(objectExpressionNode, hostStatement, 0);
     }
 
     /**
-     * @param {ObjectExpressionExtractor[]} objectExpressionExtractorNames
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
+     * @param {number} extractorIndex
      * @returns {Node}
      */
     private applyObjectExpressionKeysExtractorsRecursive(
-        objectExpressionExtractorNames: ObjectExpressionExtractor[],
         objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
+        hostStatement: ESTree.Statement,
+        extractorIndex: number
     ): ESTree.Node {
-        const newObjectExpressionExtractorNames: ObjectExpressionExtractor[] = [...objectExpressionExtractorNames];
-        const objectExpressionExtractor: ObjectExpressionExtractor | undefined =
-            newObjectExpressionExtractorNames.shift();
+        const objectExpressionExtractorNames = ObjectExpressionKeysTransformer.objectExpressionExtractorNames;
 
-        if (!objectExpressionExtractor) {
+        if (extractorIndex >= objectExpressionExtractorNames.length) {
             return objectExpressionNode;
         }
+
+        const objectExpressionExtractor: ObjectExpressionExtractor = objectExpressionExtractorNames[extractorIndex];
 
         const {
             nodeToReplace,
@@ -299,9 +264,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         );
 
         this.applyObjectExpressionKeysExtractorsRecursive(
-            newObjectExpressionExtractorNames,
             newObjectExpressionNode,
-            newObjectExpressionHostStatement
+            newObjectExpressionHostStatement,
+            extractorIndex + 1
         );
 
         return nodeToReplace;

@@ -78,9 +78,9 @@ export class StringArrayStorage
     private readonly rc4Keys: string[];
 
     /**
-     * @type {Map<string, string[]>}
+     * @type {Map<string, Set<string>>}
      */
-    private readonly rc4EncodedValuesSourcesCache: Map<string, string[]> = new Map();
+    private readonly rc4EncodedValuesSourcesCache: Map<string, Set<string>> = new Map();
 
     /**
      * @type {number}
@@ -224,19 +224,13 @@ export class StringArrayStorage
         this.storage = new Map(
             this.arrayUtils
                 .shuffle(Array.from(this.storage.entries()))
-                .map<[`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]>(
-                    ([value, stringArrayStorageItemData], index: number) => {
-                        stringArrayStorageItemData.index = index;
+                .map<
+                    [`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData]
+                >(([value, stringArrayStorageItemData], index: number) => {
+                    stringArrayStorageItemData.index = index;
 
-                        return [value, stringArrayStorageItemData];
-                    }
-                )
-                .sort(
-                    (
-                        [, stringArrayStorageItemDataA]: [string, IStringArrayStorageItemData],
-                        [, stringArrayStorageItemDataB]: [string, IStringArrayStorageItemData]
-                    ) => stringArrayStorageItemDataA.index - stringArrayStorageItemDataB.index
-                )
+                    return [value, stringArrayStorageItemData];
+                })
         );
     }
 
@@ -296,29 +290,36 @@ export class StringArrayStorage
              * if collision will happen, just try to encode value again
              */
             case StringArrayEncoding.Rc4: {
-                const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                const encodedValue: string = this.cryptUtilsStringArray.btoa(
-                    this.cryptUtilsStringArray.rc4(value, decodeKey)
-                );
+                const maxRetryAttempts: number = 50;
 
-                const encodedValueSources: string[] = this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? [];
-                let encodedValueSourcesLength: number = encodedValueSources.length;
+                for (let attempt: number = 0; attempt < maxRetryAttempts; attempt++) {
+                    const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
+                    const encodedValue: string = this.cryptUtilsStringArray.btoa(
+                        this.cryptUtilsStringArray.rc4(value, decodeKey)
+                    );
 
-                const shouldAddValueToSourcesCache: boolean =
-                    !encodedValueSourcesLength || !encodedValueSources.includes(value);
+                    const encodedValueSources: Set<string> =
+                        this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? new Set();
 
-                if (shouldAddValueToSourcesCache) {
-                    encodedValueSources.push(value);
-                    encodedValueSourcesLength++;
+                    const shouldAddValueToSourcesCache: boolean =
+                        encodedValueSources.size === 0 || !encodedValueSources.has(value);
+
+                    if (shouldAddValueToSourcesCache) {
+                        encodedValueSources.add(value);
+                    }
+
+                    this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
+
+                    if (encodedValueSources.size <= 1) {
+                        return { encodedValue, encoding, decodeKey };
+                    }
                 }
 
-                this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
-
-                if (encodedValueSourcesLength > 1) {
-                    return this.getEncodedValue(value);
-                }
-
-                return { encodedValue, encoding, decodeKey };
+                return {
+                    encodedValue: this.cryptUtilsStringArray.btoa(value),
+                    encoding: StringArrayEncoding.Base64,
+                    decodeKey: null
+                };
             }
 
             case StringArrayEncoding.Base64: {

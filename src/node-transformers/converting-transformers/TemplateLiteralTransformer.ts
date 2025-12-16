@@ -83,53 +83,60 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     ): ESTree.Expression {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
 
-        let nodes: ESTree.Expression[] = [];
+        const nodes: ESTree.Expression[] = [];
 
-        templateLiteralNode.quasis.forEach((templateElement: ESTree.TemplateElement) => {
+        const quasis: ESTree.TemplateElement[] = templateLiteralNode.quasis;
+        const quasisLength: number = quasis.length;
+
+        for (let i: number = 0; i < quasisLength; i++) {
+            const templateElement: ESTree.TemplateElement = quasis[i];
+
             if (templateElement.value.cooked === undefined || templateElement.value.cooked === null) {
-                return;
+                continue;
             }
 
             nodes.push(NodeFactory.literalNode(templateElement.value.cooked));
 
-            const expression: ESTree.Expression | undefined = templateLiteralExpressions.shift();
+            const expression: ESTree.Expression | undefined = templateLiteralExpressions[i];
 
             if (!expression) {
-                return;
+                continue;
             }
 
             nodes.push(expression);
-        });
+        }
 
-        nodes = nodes.filter((node: ESTree.Literal | ESTree.Expression) => {
+        const filteredNodes: ESTree.Expression[] = nodes.filter((node: ESTree.Literal | ESTree.Expression) => {
             return !(NodeGuards.isLiteralNode(node) && node.value === '');
         });
 
         // since `+` is left-to-right associative
         // ensure the first node is a string if first/second isn't
         if (
-            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(nodes[0]) &&
-            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(nodes[1])
+            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(filteredNodes[0]) &&
+            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(filteredNodes[1])
         ) {
-            nodes.unshift(NodeFactory.literalNode(''));
+            filteredNodes.unshift(NodeFactory.literalNode(''));
         }
 
         let transformedNode: ESTree.Node;
 
-        if (nodes.length > 1) {
+        if (filteredNodes.length > 1) {
             let root: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
                 '+',
-                <ESTree.Literal>nodes.shift(),
-                <ESTree.Expression>nodes.shift()
+                <ESTree.Literal>filteredNodes[0],
+                filteredNodes[1]
             );
 
-            nodes.forEach((node: ESTree.Literal | ESTree.Expression) => {
-                root = NodeFactory.binaryExpressionNode('+', root, node);
-            });
+            // Start from index 2 since we already used 0 and 1
+            const filteredNodesLength: number = filteredNodes.length;
+            for (let i: number = 2; i < filteredNodesLength; i++) {
+                root = NodeFactory.binaryExpressionNode('+', root, filteredNodes[i]);
+            }
 
             transformedNode = root;
         } else {
-            transformedNode = nodes[0];
+            transformedNode = filteredNodes[0];
         }
 
         NodeUtils.parentizeAst(transformedNode);

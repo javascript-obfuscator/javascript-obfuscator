@@ -68,10 +68,10 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @returns {string}
      */
     public generateStorageKey(controlFlowStorage: IControlFlowStorage): string {
-        const key: string = this.randomGenerator.getRandomString(5);
+        let key: string = this.randomGenerator.getRandomString(5);
 
-        if (controlFlowStorage.has(key)) {
-            return this.generateStorageKey(controlFlowStorage);
+        while (controlFlowStorage.has(key)) {
+            key = this.randomGenerator.getRandomString(5);
         }
 
         return key;
@@ -91,9 +91,21 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         usingExistingIdentifierChance: number
     ): string {
         const controlFlowStorageId: string = controlFlowStorage.getStorageId();
-        const storageKeysById: Map<string | number, string[]> =
-            this.replacerDataByControlFlowStorageId.get(controlFlowStorageId) ?? new Map<string, string[]>();
-        const storageKeysForCurrentId: string[] = storageKeysById.get(replacerId) ?? [];
+
+        let storageKeysById: Map<string | number, string[]> | undefined =
+            this.replacerDataByControlFlowStorageId.get(controlFlowStorageId);
+
+        if (!storageKeysById) {
+            storageKeysById = new Map<string | number, string[]>();
+            this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
+        }
+
+        let storageKeysForCurrentId: string[] | undefined = storageKeysById.get(replacerId);
+
+        if (!storageKeysForCurrentId) {
+            storageKeysForCurrentId = [];
+            storageKeysById.set(replacerId, storageKeysForCurrentId);
+        }
 
         const shouldPickFromStorageKeysById =
             this.randomGenerator.getMathRandom() < usingExistingIdentifierChance && storageKeysForCurrentId.length;
@@ -105,8 +117,6 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         const storageKey: string = this.generateStorageKey(controlFlowStorage);
 
         storageKeysForCurrentId.push(storageKey);
-        storageKeysById.set(replacerId, storageKeysForCurrentId);
-        this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
         controlFlowStorage.set(storageKey, customNode);
 
         return storageKey;

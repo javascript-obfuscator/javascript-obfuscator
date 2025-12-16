@@ -20,6 +20,11 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
     private static readonly forceEscapeCharactersRegExp: RegExp = /[\x00-\x1F\x7F-\x9F'"\\\s]/;
 
     /**
+     * @type {RegExp}
+     */
+    private static readonly replaceRegExp: RegExp = /[\s\S]/g;
+
+    /**
      * @type {Map<string, string>}
      */
     private readonly stringsCache: Map<string, string> = new Map();
@@ -37,12 +42,11 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
         }
 
         const radix: number = 16;
-        const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
 
         let prefix: string;
         let template: string;
 
-        const result: string = string.replace(replaceRegExp, (character: string): string => {
+        const result: string = string.replace(EscapeSequenceEncoder.replaceRegExp, (character: string): string => {
             const shouldEncodeCharacter: boolean =
                 encodeAllSymbols || EscapeSequenceEncoder.forceEscapeCharactersRegExp.test(character);
 

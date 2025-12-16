@@ -328,17 +328,23 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
         const nextScopeCallsWrapperParameterIndexesData: IStringArrayScopeCallsWrapperParameterIndexesData | null =
             this.getStringArrayCallsWrapperParameterIndexesData();
 
-        stringArrayScopeCallsWrappersDataByEncoding[encoding] = {
-            encoding,
-            scopeCallsWrappersData: [
-                ...stringArrayScopeCallsWrappersData,
-                {
-                    name: nextScopeCallsWrapperName,
-                    index: nextScopeCallsWrapperShiftedIndex,
-                    parameterIndexesData: nextScopeCallsWrapperParameterIndexesData
-                }
-            ]
+        const newWrapperData: IStringArrayScopeCallsWrapperData = {
+            name: nextScopeCallsWrapperName,
+            index: nextScopeCallsWrapperShiftedIndex,
+            parameterIndexesData: nextScopeCallsWrapperParameterIndexesData
         };
+
+        let encodingData = stringArrayScopeCallsWrappersDataByEncoding[encoding];
+
+        if (!encodingData) {
+            encodingData = {
+                encoding,
+                scopeCallsWrappersData: [newWrapperData]
+            };
+            stringArrayScopeCallsWrappersDataByEncoding[encoding] = encodingData;
+        } else {
+            encodingData.scopeCallsWrappersData.push(newWrapperData);
+        }
 
         this.stringArrayScopeCallsWrappersDataStorage.set(
             currentLexicalScopeBodyNode,

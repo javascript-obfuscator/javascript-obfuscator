@@ -103,7 +103,9 @@ export class ArrayUtils implements IArrayUtils {
      * @returns {T[]}
      */
     public rotate<T>(array: T[], times: number): T[] {
-        if (!array.length) {
+        const arrayLength: number = array.length;
+
+        if (!arrayLength) {
             throw new ReferenceError('Cannot rotate empty array.');
         }
 
@@ -111,19 +113,16 @@ export class ArrayUtils implements IArrayUtils {
             return array;
         }
 
-        const newArray: T[] = array;
+        // Normalize rotation amount to avoid unnecessary full rotations
+        // O(N) algorithm using slice instead of O(N*R) with pop/unshift
+        const normalizedTimes: number = times % arrayLength;
 
-        let temp: T | undefined;
-
-        while (times--) {
-            temp = newArray.pop();
-
-            if (temp) {
-                newArray.unshift(temp);
-            }
+        if (normalizedTimes === 0) {
+            return [...array];
         }
 
-        return newArray;
+        // Right rotation: take last `normalizedTimes` elements and put them at the front
+        return [...array.slice(-normalizedTimes), ...array.slice(0, -normalizedTimes)];
     }
 
     /**

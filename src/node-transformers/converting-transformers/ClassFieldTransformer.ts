@@ -31,9 +31,9 @@ import { NodeGuards } from '../../node/NodeGuards';
 @injectable()
 export class ClassFieldTransformer extends AbstractNodeTransformer {
     /**
-     * @type {string[]}
+     * @type {string}
      */
-    private static readonly ignoredNames: string[] = ['constructor'];
+    private static readonly ignoredName: string = 'constructor';
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -98,7 +98,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Identifier
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
-        if (!ClassFieldTransformer.ignoredNames.includes(keyNode.name) && !classFieldNode.computed) {
+        if (keyNode.name !== ClassFieldTransformer.ignoredName && !classFieldNode.computed) {
             classFieldNode.computed = true;
             classFieldNode.key = NodeFactory.literalNode(keyNode.name);
         }
@@ -117,7 +117,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
         if (
             typeof keyNode.value === 'string' &&
-            !ClassFieldTransformer.ignoredNames.includes(keyNode.value) &&
+            keyNode.value !== ClassFieldTransformer.ignoredName &&
             !classFieldNode.computed
         ) {
             classFieldNode.computed = true;

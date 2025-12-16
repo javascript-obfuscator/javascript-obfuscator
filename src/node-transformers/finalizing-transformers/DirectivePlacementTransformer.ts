@@ -127,21 +127,9 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
             // append new directive node at the top of lexical scope statements
             NodeAppender.prepend(nodeWithLexicalScopeStatements, [newDirectiveNode]);
 
-            // remove found directive node
-            let isDirectiveNodeRemoved: boolean = false;
-            estraverse.replace(nodeWithLexicalScopeStatements, {
-                enter: (node: ESTree.Node): estraverse.VisitorOption | undefined => {
-                    if (isDirectiveNodeRemoved) {
-                        return estraverse.VisitorOption.Break;
-                    }
-
-                    if (node === directiveNode) {
-                        isDirectiveNodeRemoved = true;
-
-                        return estraverse.VisitorOption.Remove;
-                    }
-                }
-            });
+            nodeWithLexicalScopeStatements.body = nodeWithLexicalScopeStatements.body.filter(
+                (node) => node !== directiveNode
+            );
         }
 
         return nodeWithLexicalScopeStatements;

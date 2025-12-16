@@ -77,6 +77,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @returns {boolean}
      */
     private static canTransformBlockStatementNode(blockStatementNode: ESTree.BlockStatement): boolean {
+        if (blockStatementNode.body.length <= 4) {
+            return false;
+        }
+
         let canTransform: boolean = true;
 
         estraverse.traverse(blockStatementNode, {
@@ -90,10 +94,6 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
                 }
             }
         });
-
-        if (blockStatementNode.body.length <= 4) {
-            canTransform = false;
-        }
 
         return canTransform;
     }
@@ -138,8 +138,11 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
         const originalKeys: number[] = this.arrayUtils.createWithRange(blockStatementBody.length);
         const shuffledKeys: number[] = this.arrayUtils.shuffle(originalKeys);
-        const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) =>
-            shuffledKeys.indexOf(key)
+        const shuffledKeyToIndex: Map<number, number> = new Map(
+            shuffledKeys.map((key: number, index: number) => [key, index])
+        );
+        const originalKeysIndexesInShuffledArray: number[] = originalKeys.map(
+            (key: number) => shuffledKeyToIndex.get(key)!
         );
         const blockStatementControlFlowFlatteningCustomNode: ICustomNode<
             TInitialData<BlockStatementControlFlowFlatteningNode>

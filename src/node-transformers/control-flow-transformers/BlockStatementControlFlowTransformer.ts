@@ -77,7 +77,6 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @returns {boolean}
      */
     private static canTransformBlockStatementNode(blockStatementNode: ESTree.BlockStatement): boolean {
-        // Early short-circuit: check length first to avoid expensive traversal
         if (blockStatementNode.body.length <= 4) {
             return false;
         }

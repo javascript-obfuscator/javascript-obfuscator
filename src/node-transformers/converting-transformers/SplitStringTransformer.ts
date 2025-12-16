@@ -152,26 +152,25 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @returns {BinaryExpression}
      */
     private transformStringChunksToBinaryExpressionNode(chunks: string[]): ESTree.BinaryExpression {
-        const firstChunk: string | undefined = chunks.shift();
-        const secondChunk: string | undefined = chunks.shift();
+        const chunksLength: number = chunks.length;
 
-        if (!firstChunk || !secondChunk) {
+        if (chunksLength < 2) {
             throw new Error('First and second chunks values should not be empty');
         }
 
         const initialBinaryExpressionNode: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
             '+',
-            NodeFactory.literalNode(firstChunk),
-            NodeFactory.literalNode(secondChunk)
+            NodeFactory.literalNode(chunks[0]),
+            NodeFactory.literalNode(chunks[1])
         );
 
-        return chunks.reduce<ESTree.BinaryExpression>(
-            (binaryExpressionNode: ESTree.BinaryExpression, chunk: string) => {
-                const chunkLiteralNode: ESTree.Literal = NodeFactory.literalNode(chunk);
+        let result: ESTree.BinaryExpression = initialBinaryExpressionNode;
 
-                return NodeFactory.binaryExpressionNode('+', binaryExpressionNode, chunkLiteralNode);
-            },
-            initialBinaryExpressionNode
-        );
+        // Start from index 2 since we already used 0 and 1
+        for (let i: number = 2; i < chunksLength; i++) {
+            result = NodeFactory.binaryExpressionNode('+', result, NodeFactory.literalNode(chunks[i]));
+        }
+
+        return result;
     }
 }

@@ -17,9 +17,9 @@ Huge thanks to all supporters!
 
 ### :rocket: JavaScript Obfuscator Pro with VM Obfuscation is out!
 
-**[JavaScript Obfuscator Pro](https://obfuscator.io/)** now features **VM-based bytecode obfuscation** — the most advanced code protection available. Your JavaScript functions are transformed into custom bytecode running on an embedded virtual machine, making reverse engineering extremely difficult.
+**JavaScript Obfuscator Pro** features **VM-based bytecode obfuscation** — the most advanced code protection available. Your JavaScript functions are transformed into custom bytecode running on an embedded virtual machine, making reverse engineering extremely difficult.
 
-:star: **[Try it at obfuscator.io](https://obfuscator.io)** — user-friendly interface, cloud-based obfuscation, and Pro API access.
+[Try it at obfuscator.io](https://obfuscator.io)
 
 ---
 

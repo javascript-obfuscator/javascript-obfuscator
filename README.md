@@ -13,10 +13,20 @@ Huge thanks to all supporters!
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
+---
+
+### :rocket: JavaScript Obfuscator Pro with VM Obfuscation is out!
+
+**[JavaScript Obfuscator Pro](https://obfuscator.io/)** now features **VM-based bytecode obfuscation** — the most advanced code protection available. Your JavaScript functions are transformed into custom bytecode running on an embedded virtual machine, making reverse engineering extremely difficult.
+
+:star: **[Try it at obfuscator.io](https://obfuscator.io)** — user-friendly interface, cloud-based obfuscation, and Pro API access.
+
+---
+
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
 **Key features:**
-- VM obfuscation (via [JavaScript Obfuscator Pro](https://obfuscator.io/))
+- VM bytecode obfuscation (via [JavaScript Obfuscator Pro](https://obfuscator.io/))
 - variables renaming
 - strings extraction and encryption
 - dead code injection

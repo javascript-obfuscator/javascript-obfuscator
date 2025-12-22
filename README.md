@@ -1766,73 +1766,211 @@ The performance will be at a relatively normal level
 
 <!-- ##options-end## -->
 
-## JavaScript Obfuscator Pro VM options
+## JavaScript Obfuscator Pro Options
+
+> :warning: **The following VM obfuscation options are available only via the [JavaScript Obfuscator Pro API](https://obfuscator.io/).**
+>
+> To use these options, you need a Pro API token from [obfuscator.io](https://obfuscator.io) and must call the `obfuscatePro()` method instead of `obfuscate()`. See the [Pro API Methods](#shield-pro-api-methods-vm-obfuscation) section for details.
 
 ### `vmObfuscation`
 Type: `boolean` Default: `false`
 
 Enables VM-based bytecode obfuscation. When enabled, JavaScript functions are compiled into custom bytecode that runs on an embedded virtual machine. This provides the highest level of protection as the original code logic is completely transformed.
 
-**Warning:** This significantly increases code size and may impact performance. Use `vmObfuscationThreshold` to control which root-level functions are transformed.
+**Example:**
+Your readable code like `return qty * price` becomes a list of numbers like `[0x15,0x03,0x17,...]` that only the embedded VM interpreter can execute. The original logic is no longer visible as JavaScript.
 
 ### `vmObfuscationThreshold`
 Type: `number` Default: `1`
 
-The probability (from 0 to 1) that a function will be transformed to VM bytecode when `vmObfuscation` is enabled.
-
-- `0` - no functions will be transformed
-- `0.5` - 50% of functions will be transformed
-- `1` - all functions will be transformed
+Controls what percentage of your root-level functions get VM protection.
 
 ### `vmTargetFunctions`
 Type: `string[]` Default: `[]`
 
-Array of root-level function names to target for VM obfuscation. When specified, only these functions will be transformed (subject to `vmObfuscationThreshold`). Empty array means all functions are candidates.
+Specify exactly which root-level functions should get VM protection by name.
+
+**Example:**
+```javascript
+{
+    vmObfuscation: true,
+    vmTargetFunctions: ['someFunctionName']
+}
+```
+
+**Result:** Only these three functions get VM-protected. Everything else stays as regular (but still obfuscated) JavaScript. Perfect for protecting sensitive license checks or authentication logic while keeping the rest of your code lean.
 
 ### `vmExcludeFunctions`
 Type: `string[]` Default: `[]`
 
-Array of root-level function names to exclude from VM obfuscation. These functions will never be transformed regardless of other settings.
+Specify root-level functions that should never get VM protection. Takes precedence over other settings.
+
+**Example:**
+```javascript
+{
+    vmObfuscation: true,
+    vmExcludeFunctions: ['someFunctionName']
+}
+```
+
+**When to use:** Performance-critical root-level functions (animation loops, real-time data processing) can be excluded to avoid VM overhead while still protecting everything else.
+
+### `vmTargetFunctionsMode`
+Type: `string` Default: `root`
+
+Controls how functions/methods are selected for VM obfuscation.
+
+| Mode | Description                                                                                                                                                      |
+|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `root` | Default behavior. Only root-level functions are considered for VM obfuscation. Uses `vmTargetFunctions` allow-list and `vmExcludeFunctions` deny-list to filter. |
+| `comment` | Only functions/methods decorated with `/* javascript-obfuscator:vm */` comment are VM-obfuscated. Works with functions/methods at **any nesting level**.         |
+
+**Example - Comment mode:**
+```javascript
+// Source code
+function regularFunction() {
+    return 'not virtualized';
+}
+
+/* javascript-obfuscator:vm */
+function sensitiveFunction() {
+    return 'this will be VM-protected';
+}
+
+function outer() {
+    /* javascript-obfuscator:vm */
+    function nestedSensitive() {
+        return 'nested but still VM-protected';
+    }
+    return nestedSensitive();
+}
+```
+
+```javascript
+// Obfuscator options
+{
+    vmObfuscation: true,
+    vmTargetFunctionsMode: 'comment'
+}
+```
+
+**When to use:** When you need surgical control over exactly which functions get VM protection, especially nested functions that contain sensitive logic. Unlike `vmTargetFunctions` which only works with root-level named functions, comment mode lets you protect any function anywhere in your code.
+
+### `vmWrapTopLevelInitializers`
+Type: `boolean` Default: `false`
+
+Wraps some top-level variable initializers in IIFEs (Immediately Invoked Function Expressions) so they can be VM-obfuscated.
+
+**What it does:**
+Without this option, top-level constants and variables remain visible in the output:
+```javascript
+// Input
+const MY_STRING = "my-string";
+
+// Output (without vmWrapTopLevelInitializers)
+const MY_STRING = "my-string";  // String is visible!
+```
+
+With this option enabled, the initializer is wrapped in an IIFE that gets VM-obfuscated:
+```javascript
+// Input
+const MY_STRING = "my-string";
+
+// Output (with vmWrapTopLevelInitializers: true)
+const MY_STRING = (() => { return /* VM bytecode call */ })();  // String hidden in bytecode
+```
+
+**Note:** This option only works when `vmTargetFunctionsMode` is `'root'` (the default).
+
+### `vmDynamicOpcodes`
+Type: `boolean` Default: `false`
+
+Makes the VM interpreter smaller and unique for each build.
+
+**What it does:**
+1. **Filters unused instructions** - If your code doesn't use classes, class-related instructions are removed entirely
+2. **Randomizes structure** - The order of instruction handlers is shuffled each build
+
+As the result - smaller output and each build looks different.
 
 ### `vmOpcodeShuffle`
 Type: `boolean` Default: `false`
 
-Randomizes the opcode mapping for each obfuscation run. Makes static analysis more difficult as opcode meanings change between builds.
+Randomizes the numeric values assigned to each opcode. For example, the `LOAD` instruction might be `1` in one build and `47` in another.
 
 ### `vmBytecodeEncoding`
 Type: `boolean` Default: `false`
 
-Encodes the bytecode instructions using XOR encryption. The decoding key is derived at runtime, adding another layer of protection.
+Encodes each bytecode instruction. Instructions are decoded one at a time during execution.
 
 ### `vmBytecodeArrayEncoding`
 Type: `boolean` Default: `false`
 
-Applies additional encoding to the bytecode array, making it harder to identify bytecode patterns through static analysis.
+Encodes the entire bytecode array as a single block. The array is decoded once at startup before execution begins. Use together with `vmBytecodeEncoding` for two layers of protection.
 
 ### `vmJumpsEncoding`
 Type: `boolean` Default: `false`
 
-Encodes jump targets and offsets in the bytecode. This obscures control flow and makes it harder to follow program execution.
+Encodes jump targets in the bytecode. Jump offsets are calculated at runtime, hiding the control flow structure (`if`/`else`, loops, etc.) from static analysis.
 
 ### `vmDecoyOpcodes`
 Type: `boolean` Default: `false`
 
-Inserts fake opcodes into the dispatcher that are never executed. Increases code complexity and confuses reverse engineering attempts.
+Adds fake opcode handlers to the VM dispatcher that are never called. For example, if the VM uses 20 real opcodes, this might add 30 fake handlers, making the interpreter appear more complex than it really is.
 
 ### `vmDeadCodeInjection`
 Type: `boolean` Default: `false`
 
-Injects dead code sequences into the VM bytecode. These sequences are valid but unreachable, adding noise to analysis.
+Injects fake bytecode sequences that are never executed. These look like real instructions but are skipped during runtime, confusing analysis tools that process them.
 
 ### `vmSplitDispatcher`
 Type: `boolean` Default: `false`
 
-Splits the VM dispatcher into multiple smaller dispatchers. Makes the execution flow harder to follow.
+Splits the VM dispatcher into multiple smaller switch statements organized by opcode category, instead of one large monolithic switch. Each category (stack, arithmetic, control flow, etc.) gets its own switch, routed by if/else range checks.
+
+This option supports `vmDynamicOpcodes` in both modes: `true` (shuffle first, then split into groups) and `false`.
+
+> :warning: When `vmIndirectDispatch` is enabled, this option is ignored. Prefer `vmIndirectDispatch` as it provides better obfuscation with similar performance.
+
+### `vmIndirectDispatch`
+Type: `boolean` Default: `false`
+
+Uses compile-time generated handler functions for opcode dispatch instead of switch statements. Handlers are generated at compile-time with inlined opcode logic and shuffled positions.
+
+Instead of:
+```javascript
+switch(op) {
+    case 0: /* handle opcode 0 */ break;
+    case 1: /* handle opcode 1 */ break;
+}
+```
+
+It generates:
+```javascript
+var _hm = {0:42, 1:17, ...};  // opcode → handler index mapping
+var _h = [handler0, handler1, ...];  // shuffled handler array
+_h[_hm[op]](arg);  // single lookup + function call
+```
+
+This option supports `vmDynamicOpcodes` in both modes.
+
+> :warning: When enabled, this takes priority over `vmSplitDispatcher`. Both options cannot be active simultaneously.
+
+### `vmCompactDispatcher`
+Type: `boolean` Default: `false`
+
+Uses a single unified dispatcher (generator-based) for both sync and async/generator code execution. By default (`false`), the VM generates two separate dispatchers: a non-generator version for sync code (faster) and a generator version for async/generator code. When enabled, only the generator-based dispatcher is used for all execution.
+
+**Trade-offs:**
+- `false` (default): Larger code size due to dual dispatchers, but faster sync execution (no generator overhead)
+- `true`: Smaller code size with single dispatcher, but sync code has generator protocol overhead
+
+Use this when code size is more important than sync execution speed.
 
 ### `vmMacroOps`
 Type: `boolean` Default: `false`
 
-Combines common instruction sequences into single macro opcodes. This creates unique instruction patterns that are harder to recognize.
+Combines common instruction sequences into single "macro" opcodes. For example, `LOAD + ADD + STORE` might become a single `MACRO_ADD_TO_VAR` instruction. This breaks pattern recognition and can improve performance.
 
 ### `vmDebugProtection`
 Type: `boolean` Default: `false`
@@ -1842,34 +1980,33 @@ Adds anti-debugging measures to the VM runtime. Detects debugger presence and al
 ### `vmRuntimeOpcodeDerivation`
 Type: `boolean` Default: `false`
 
-Derives opcode values at runtime through mathematical operations rather than using static values. Makes static analysis significantly harder.
+Derives the opcode mapping table at runtime from a seed value instead of hardcoding it. The seed is stored in the bytecode and used to generate the opcode-to-handler mapping via Fisher-Yates shuffle during execution.
 
 ### `vmStatefulOpcodes`
 Type: `boolean` Default: `false`
 
-Makes opcode interpretation depend on VM state. The same opcode can have different meanings based on execution history.
+Makes opcode meanings depend on position in the bytecode. Each position has a different opcode-to-handler mapping derived from a seed, so the same opcode number performs different operations at different positions.
 
 ### `vmStackEncoding`
 Type: `boolean` Default: `false`
 
-Encodes values pushed to and popped from the VM stack. Adds protection against memory inspection during execution.
+Encrypts values on the VM stack during execution. Values are encoded when pushed and decoded when popped, so memory inspection shows encrypted data instead of actual values.
+
+This option heavily affects performance.
 
 ### `vmRandomizeKeys`
 Type: `boolean` Default: `false`
 
-Randomizes encryption keys and other constants used by the VM. Each build produces unique key values.
-
-### `vmIndirectDispatch`
-Type: `boolean` Default: `false`
-
-Uses indirect function calls for opcode dispatch instead of direct switch/case. Makes control flow analysis more difficult.
+Randomizes the property key names used in bytecode objects. Standard keys like `i` (instructions), `c` (constants) become random 2-character identifiers, making the bytecode structure different for each build.
 
 ### `vmBytecodeFormat`
 Type: `string` Default: `binary`
 
-Specifies the format used to embed bytecode in the output:
-- `binary` - Compact binary representation (smaller size)
-- `json` - JSON format (easier debugging, larger size)
+Controls how bytecode is stored in the output.
+
+**Options:**
+- `binary` - Compact binary format. Smaller size, recommended for production.
+- `json` - Human-readable JSON format. Larger size, useful for debugging.
 
 ## Frequently Asked Questions
 

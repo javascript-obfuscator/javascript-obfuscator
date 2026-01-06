@@ -1,5 +1,9 @@
 Change Log
 
+v5.2.0
+---
+* Skip obfuscation of `process.env.*`
+
 v5.1.0
 ---
 * Add `version` parameter to the `apiConfig` to use different versions JavaScript Obfuscator Pro via API

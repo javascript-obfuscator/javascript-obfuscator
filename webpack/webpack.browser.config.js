@@ -1,6 +1,7 @@
 'use strict';
 
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const packageJson = require('pjson');
 
 const WebpackUtils = require('./utils/WebpackUtils').WebpackUtils;
@@ -41,6 +42,18 @@ module.exports = {
             process: ['process']
         })
     ],
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: /^!/  // Keep comments starting with !
+                    }
+                }
+            })
+        ]
+    },
     output: {
         libraryTarget: 'umd',
         library: 'JavaScriptObfuscator',

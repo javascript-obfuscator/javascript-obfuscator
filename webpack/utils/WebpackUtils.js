@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const copyright = 'Copyright (C) 2016-2024 Timofey Kachalov <sanex3339@yandex.ru>';
+const copyright = 'Copyright (C) 2016-2026 Timofei Kachalov <support@obfuscator.io>';
 const sourceMapSupportRequire = 'require("source-map-support").install();';
 
 class WebpackUtils {

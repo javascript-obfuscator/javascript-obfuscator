@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -129,12 +129,9 @@
     "prepare": "husky install"
   },
   "author": {
-    "name": "Timofey Kachalov"
+    "name": "Timofei Kachalov"
   },
-  "contributors": [
-    "Timofey Kachalov (https://github.com/sanex3339)",
-    "Dmitry Zamotkin (https://github.com/zamotkin)"
-  ],
+  "contributors": ["Timofei Kachalov (https://github.com/sanex3339)", "Dmitry Zamotkin (https://github.com/zamotkin)"],
   "license": "BSD-2-Clause",
   "packageManager": "yarn@1.22.21+sha512.ca75da26c00327d26267ce33536e5790f18ebd53266796fbb664d2a4a5116308042dd8ee7003b276a20eace7d3c5561c3577bdd71bcb67071187af124779620a"
 }

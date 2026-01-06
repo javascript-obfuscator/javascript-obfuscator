@@ -14,3 +14,4 @@ npm-debug.log
 /test/benchmark/**/**
 *dockerfile
 /test*.js
+/reproductions

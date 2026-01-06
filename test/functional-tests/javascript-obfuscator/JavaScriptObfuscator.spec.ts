@@ -721,6 +721,24 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('process.env.* support', () => {
+            const regExp: RegExp = /console\['log']\(process\.env\.FOO\);/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/process-env.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
+            });
+
+            it('should not obfuscate `process.env.*`', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         /**
          * https://github.com/javascript-obfuscator/javascript-obfuscator/issues/710
          */

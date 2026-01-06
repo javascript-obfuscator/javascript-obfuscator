@@ -4,5 +4,6 @@ export enum ObfuscatingGuard {
     ForceTransformStringObfuscatingGuard = 'ForceTransformStringObfuscatingGuard',
     IgnoredImportObfuscatingGuard = 'IgnoredImportObfuscatingGuard',
     ImportMetaObfuscationGuard = 'ImportMetaObfuscationGuard',
+    ProcessEnvObfuscationGuard = 'ProcessEnvObfuscationGuard',
     ReservedStringObfuscatingGuard = 'ReservedStringObfuscatingGuard'
 }

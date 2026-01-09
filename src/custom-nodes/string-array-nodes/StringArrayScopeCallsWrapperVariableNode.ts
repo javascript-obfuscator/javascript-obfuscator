@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -18,6 +18,7 @@ import { AbstractStringArrayCallNode } from './AbstractStringArrayCallNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArrayCallNode {
     /**

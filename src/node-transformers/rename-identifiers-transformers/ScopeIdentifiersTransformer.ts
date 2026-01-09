@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as eslintScope from 'eslint-scope';
@@ -23,6 +23,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 /**
  * Replaces all replaceable identifiers in scope
  */
+@injectFromBase()
 @injectable()
 export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -16,6 +16,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
 
+@injectFromBase()
 @injectable()
 export class RenamePropertiesTransformer extends AbstractNodeTransformer {
     /**

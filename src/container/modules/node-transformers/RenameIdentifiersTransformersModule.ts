@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IIdentifierReplacer';
@@ -14,29 +14,29 @@ import { ScopeThroughIdentifiersTransformer } from '../../../node-transformers/r
 import { ThroughIdentifierReplacer } from '../../../node-transformers/rename-identifiers-transformers/through-replacer/ThroughIdentifierReplacer';
 import { IThroughIdentifierReplacer } from '../../../interfaces/node-transformers/rename-identifiers-transformers/replacer/IThroughIdentifierReplacer';
 
-export const renameIdentifiersTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const renameIdentifiersTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // rename identifiers transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(DeadCodeInjectionIdentifiersTransformer)
-            .whenTargetNamed(NodeTransformer.DeadCodeInjectionIdentifiersTransformer);
+            .whenNamed(NodeTransformer.DeadCodeInjectionIdentifiersTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(LabeledStatementTransformer)
-            .whenTargetNamed(NodeTransformer.LabeledStatementTransformer);
+            .whenNamed(NodeTransformer.LabeledStatementTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(ScopeIdentifiersTransformer)
-            .whenTargetNamed(NodeTransformer.ScopeIdentifiersTransformer);
+            .whenNamed(NodeTransformer.ScopeIdentifiersTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(ScopeThroughIdentifiersTransformer)
-            .whenTargetNamed(NodeTransformer.ScopeThroughIdentifiersTransformer);
+            .whenNamed(NodeTransformer.ScopeThroughIdentifiersTransformer);
 
         // identifier replacer
-        bind<IIdentifierReplacer>(ServiceIdentifiers.IIdentifierReplacer).to(IdentifierReplacer).inSingletonScope();
+        options.bind<IIdentifierReplacer>(ServiceIdentifiers.IIdentifierReplacer).to(IdentifierReplacer).inSingletonScope();
 
-        bind<IThroughIdentifierReplacer>(ServiceIdentifiers.IThroughIdentifierReplacer)
+        options.bind<IThroughIdentifierReplacer>(ServiceIdentifiers.IThroughIdentifierReplacer)
             .to(ThroughIdentifierReplacer)
             .inSingletonScope();
     }

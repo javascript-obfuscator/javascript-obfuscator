@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -14,6 +14,7 @@ import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeUtils } from '../../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class StringLiteralControlFlowStorageCallNode extends AbstractCustomNode {
     /**

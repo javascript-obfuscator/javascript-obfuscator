@@ -1,5 +1,5 @@
 import type { Expression } from 'estree';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -17,6 +17,7 @@ import { StringArrayRotateFunctionTemplate } from './templates/string-array-rota
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelper {
     /**

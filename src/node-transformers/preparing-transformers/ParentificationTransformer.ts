@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -15,6 +15,7 @@ import { NodeUtils } from '../../node/NodeUtils';
 /**
  * Adds `parentNode` properties to each node
  */
+@injectFromBase()
 @injectable()
 export class ParentificationTransformer extends AbstractNodeTransformer {
     /**

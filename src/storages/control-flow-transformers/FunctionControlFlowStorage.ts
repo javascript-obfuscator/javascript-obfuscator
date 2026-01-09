@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -11,6 +11,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { MapStorage } from '../MapStorage';
 
+@injectFromBase()
 @injectable()
 export class FunctionControlFlowStorage extends MapStorage<string, ICustomNode> implements IControlFlowStorage {
     /**

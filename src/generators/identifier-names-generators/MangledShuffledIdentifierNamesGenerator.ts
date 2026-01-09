@@ -1,4 +1,4 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable, injectFromBase, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
@@ -12,6 +12,7 @@ import { alphabetStringUppercase } from '../../constants/AlphabetStringUppercase
 
 import { MangledIdentifierNamesGenerator } from './MangledIdentifierNamesGenerator';
 
+@injectFromBase()
 @injectable()
 export class MangledShuffledIdentifierNamesGenerator extends MangledIdentifierNamesGenerator {
     /**

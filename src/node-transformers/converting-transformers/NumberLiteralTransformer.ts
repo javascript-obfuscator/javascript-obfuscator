@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -15,6 +15,7 @@ import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NumberUtils } from '../../utils/NumberUtils';
 
+@injectFromBase()
 @injectable()
 export class NumberLiteralTransformer extends AbstractNodeTransformer {
     /**

@@ -42,7 +42,7 @@
 - **Parser**: Acorn 8.8.2 (ES3-ES2020 support)
 - **Code Generator**: @javascript-obfuscator/escodegen 2.3.0
 - **AST Traversal**: @javascript-obfuscator/estraverse 5.4.0
-- **DI Framework**: InversifyJS 6.0.1
+- **DI Framework**: InversifyJS 7.10.8
 - **Testing**: Mocha 10.4.0 + Chai 4.3.7
 - **Build System**: Webpack 5.75.0
 
@@ -210,7 +210,7 @@ The obfuscation process follows a multi-stage pipeline defined in `JavaScriptObf
 
 ### Dependency Injection Architecture
 
-The project uses **InversifyJS** for dependency injection, providing:
+The project uses **InversifyJS v7** for dependency injection, providing:
 
 - **Modularity**: Clean separation of concerns
 - **Testability**: Easy mocking and testing
@@ -218,6 +218,13 @@ The project uses **InversifyJS** for dependency injection, providing:
 - **Scalability**: Easy addition of new transformers
 
 All components are registered in container modules located in `src/container/modules/`.
+
+**Key Changes in InversifyJS v7:**
+- Container modules now use `ContainerModuleLoadOptions` instead of separate `bind`, `unbind`, etc. parameters
+- `getNamed`, `getTagged`, etc. are replaced by `get(serviceId, { name: ... })` or `get(serviceId, { tag: ... })`
+- `load()` and `unload()` are now async, with `loadSync()` and `unloadSync()` alternatives for synchronous operations
+- Types like `Context`, `Newable`, `Factory` are now directly exported instead of through `interfaces` namespace
+- Custom metadata and middleware features have been removed
 
 ## Key Components Deep Dive
 

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 
 import * as ESTree from 'estree';
 
@@ -11,6 +11,7 @@ import { AbstractStringArrayIndexNode } from './AbstractStringArrayIndexNode';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NumberUtils } from '../../../utils/NumberUtils';
 
+@injectFromBase()
 @injectable()
 export class StringArrayHexadecimalNumericStringIndexNode extends AbstractStringArrayIndexNode {
     /**

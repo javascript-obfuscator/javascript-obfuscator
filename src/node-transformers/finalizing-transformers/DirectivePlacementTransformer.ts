@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -23,6 +23,7 @@ import { NodeUtils } from '../../node/NodeUtils';
  * It's easier to fix "use strict"; placement after obfuscation as a separate stage
  * than ignore this directive in other transformers like control flow and dead code injection transformers
  */
+@injectFromBase()
 @injectable()
 export class DirectivePlacementTransformer extends AbstractNodeTransformer {
     /**

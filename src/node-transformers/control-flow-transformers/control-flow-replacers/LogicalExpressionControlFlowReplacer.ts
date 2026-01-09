@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -19,6 +19,7 @@ import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flo
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperatorControlFlowReplacer {
     /**

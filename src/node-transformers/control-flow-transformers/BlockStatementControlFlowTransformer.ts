@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -22,6 +22,7 @@ import { BlockStatementControlFlowFlatteningNode } from '../../custom-nodes/cont
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
     /**

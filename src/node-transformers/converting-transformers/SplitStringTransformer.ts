@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -21,6 +21,7 @@ import { NodeUtils } from '../../node/NodeUtils';
 /**
  * Splits strings into parts
  */
+@injectFromBase()
 @injectable()
 export class SplitStringTransformer extends AbstractNodeTransformer {
     /**

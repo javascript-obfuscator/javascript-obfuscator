@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -17,6 +17,7 @@ import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCu
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 
+@injectFromBase()
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorControlFlowReplacer {
     /**

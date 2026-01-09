@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
@@ -10,23 +10,23 @@ import { ExpressionStatementsMergeTransformer } from '../../../node-transformers
 import { IfStatementSimplifyTransformer } from '../../../node-transformers/simplifying-transformers/IfStatementSimplifyTransformer';
 import { VariableDeclarationsMergeTransformer } from '../../../node-transformers/simplifying-transformers/VariableDeclarationsMergeTransformer';
 
-export const simplifyingTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const simplifyingTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // simplifying transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(BlockStatementSimplifyTransformer)
-            .whenTargetNamed(NodeTransformer.BlockStatementSimplifyTransformer);
+            .whenNamed(NodeTransformer.BlockStatementSimplifyTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(ExpressionStatementsMergeTransformer)
-            .whenTargetNamed(NodeTransformer.ExpressionStatementsMergeTransformer);
+            .whenNamed(NodeTransformer.ExpressionStatementsMergeTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(IfStatementSimplifyTransformer)
-            .whenTargetNamed(NodeTransformer.IfStatementSimplifyTransformer);
+            .whenNamed(NodeTransformer.IfStatementSimplifyTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(VariableDeclarationsMergeTransformer)
-            .whenTargetNamed(NodeTransformer.VariableDeclarationsMergeTransformer);
+            .whenNamed(NodeTransformer.VariableDeclarationsMergeTransformer);
     }
 );

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -26,6 +26,7 @@ import { NumericalExpressionDataToNodeConverter } from '../../node/NumericalExpr
  * on:
  *     var number = 50 + (100 * 2) - 127;
  */
+@injectFromBase()
 @injectable()
 export class NumberToNumericalExpressionTransformer extends AbstractNodeTransformer {
     /**

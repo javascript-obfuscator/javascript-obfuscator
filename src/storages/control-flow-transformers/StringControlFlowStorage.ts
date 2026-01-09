@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -8,6 +8,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { FunctionControlFlowStorage } from './FunctionControlFlowStorage';
 
+@injectFromBase()
 @injectable()
 export class StringControlFlowStorage extends FunctionControlFlowStorage {
     /**

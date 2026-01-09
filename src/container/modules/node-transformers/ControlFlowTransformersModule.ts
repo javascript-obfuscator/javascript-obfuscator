@@ -1,5 +1,5 @@
 import { InversifyContainerFacade } from '../../InversifyContainerFacade';
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
@@ -17,50 +17,59 @@ import { StringArrayCallControlFlowReplacer } from '../../../node-transformers/c
 import { StringArrayControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/StringArrayControlFlowTransformer';
 import { StringLiteralControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/StringLiteralControlFlowReplacer';
 
-export const controlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const controlFlowTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // control flow transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options
+            .bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(BlockStatementControlFlowTransformer)
-            .whenTargetNamed(NodeTransformer.BlockStatementControlFlowTransformer);
+            .whenNamed(NodeTransformer.BlockStatementControlFlowTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options
+            .bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(FunctionControlFlowTransformer)
-            .whenTargetNamed(NodeTransformer.FunctionControlFlowTransformer);
+            .whenNamed(NodeTransformer.FunctionControlFlowTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options
+            .bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(StringArrayControlFlowTransformer)
-            .whenTargetNamed(NodeTransformer.StringArrayControlFlowTransformer);
+            .whenNamed(NodeTransformer.StringArrayControlFlowTransformer);
 
         // control flow replacers
-        bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        options
+            .bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
             .to(BinaryExpressionControlFlowReplacer)
-            .whenTargetNamed(ControlFlowReplacer.BinaryExpressionControlFlowReplacer);
+            .whenNamed(ControlFlowReplacer.BinaryExpressionControlFlowReplacer);
 
-        bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        options
+            .bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
             .to(CallExpressionControlFlowReplacer)
-            .whenTargetNamed(ControlFlowReplacer.CallExpressionControlFlowReplacer);
+            .whenNamed(ControlFlowReplacer.CallExpressionControlFlowReplacer);
 
-        bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        options
+            .bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
             .to(LogicalExpressionControlFlowReplacer)
-            .whenTargetNamed(ControlFlowReplacer.LogicalExpressionControlFlowReplacer);
+            .whenNamed(ControlFlowReplacer.LogicalExpressionControlFlowReplacer);
 
-        bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        options
+            .bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
             .to(StringArrayCallControlFlowReplacer)
-            .whenTargetNamed(ControlFlowReplacer.StringArrayCallControlFlowReplacer);
+            .whenNamed(ControlFlowReplacer.StringArrayCallControlFlowReplacer);
 
-        bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        options
+            .bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
             .to(StringLiteralControlFlowReplacer)
-            .whenTargetNamed(ControlFlowReplacer.StringLiteralControlFlowReplacer);
+            .whenNamed(ControlFlowReplacer.StringLiteralControlFlowReplacer);
 
         // control flow replacer factory
-        bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer).toFactory<
-            IControlFlowReplacer,
-            [ControlFlowReplacer]
-        >(
-            InversifyContainerFacade.getCacheFactory<ControlFlowReplacer, IControlFlowReplacer>(
-                ServiceIdentifiers.IControlFlowReplacer
-            )
-        );
+        options
+            .bind<
+                Factory<IControlFlowReplacer, [ControlFlowReplacer]>
+            >(ServiceIdentifiers.Factory__IControlFlowReplacer)
+            .toFactory(
+                InversifyContainerFacade.getCacheFactory<ControlFlowReplacer, IControlFlowReplacer>(
+                    ServiceIdentifiers.IControlFlowReplacer
+                )
+            );
     }
 );

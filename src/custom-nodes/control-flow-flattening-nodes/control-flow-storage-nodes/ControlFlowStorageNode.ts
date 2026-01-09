@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -18,6 +18,7 @@ import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeGuards } from '../../../node/NodeGuards';
 
+@injectFromBase()
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
     /**

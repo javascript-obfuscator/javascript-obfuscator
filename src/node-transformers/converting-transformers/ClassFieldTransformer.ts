@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -28,6 +28,7 @@ import { NodeGuards } from '../../node/NodeGuards';
  *
  * Literal node will be obfuscated by LiteralTransformer
  */
+@injectFromBase()
 @injectable()
 export class ClassFieldTransformer extends AbstractNodeTransformer {
     /**

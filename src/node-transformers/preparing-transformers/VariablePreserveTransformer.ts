@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import * as ESTree from 'estree';
 import * as eslintScope from 'eslint-scope';
 
@@ -21,6 +21,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 /**
  * Preserve non-replaceable variables
  */
+@injectFromBase()
 @injectable()
 export class VariablePreserveTransformer extends AbstractNodeTransformer {
     /**

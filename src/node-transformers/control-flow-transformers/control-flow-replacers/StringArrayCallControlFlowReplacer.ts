@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -22,6 +22,7 @@ import { NodeMetadata } from '../../../node/NodeMetadata';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { LiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/LiteralNode';
 
+@injectFromBase()
 @injectable()
 export class StringArrayCallControlFlowReplacer extends AbstractControlFlowReplacer {
     /**

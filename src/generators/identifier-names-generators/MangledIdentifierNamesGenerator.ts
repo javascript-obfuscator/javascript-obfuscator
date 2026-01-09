@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
@@ -15,6 +15,7 @@ import { reservedIdentifierNames } from '../../constants/ReservedIdentifierNames
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
+@injectFromBase()
 @injectable()
 export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**

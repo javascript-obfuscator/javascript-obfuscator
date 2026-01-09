@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import type * as ESTree from 'estree';
@@ -15,6 +15,7 @@ import { initializable } from '../../decorators/Initializable';
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 
+@injectFromBase()
 @injectable()
 export class LiteralNode extends AbstractCustomNode {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -16,6 +16,7 @@ import { initializable } from '../../decorators/Initializable';
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
     /**

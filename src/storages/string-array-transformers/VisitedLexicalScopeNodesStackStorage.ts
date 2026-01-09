@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
@@ -10,6 +10,7 @@ import { IVisitedLexicalScopeNodesStackStorage } from '../../interfaces/storages
 
 import { ArrayStorage } from '../ArrayStorage';
 
+@injectFromBase()
 @injectable()
 export class VisitedLexicalScopeNodesStackStorage
     extends ArrayStorage<TNodeWithLexicalScopeStatements>

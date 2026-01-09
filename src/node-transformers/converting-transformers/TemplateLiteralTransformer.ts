@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -18,6 +18,7 @@ import { NodeUtils } from '../../node/NodeUtils';
  * Transform ES2015 template literals to ES5
  * Thanks to Babel for algorithm
  */
+@injectFromBase()
 @injectable()
 export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -22,6 +22,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 /**
  * Adds `ignoredNode` properties to each node
  */
+@injectFromBase()
 @injectable()
 export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
     /**

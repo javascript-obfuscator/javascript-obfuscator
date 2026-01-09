@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -23,6 +23,7 @@ import { DomainLockCodeHelper } from '../DomainLockCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
 
+@injectFromBase()
 @injectable()
 export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**

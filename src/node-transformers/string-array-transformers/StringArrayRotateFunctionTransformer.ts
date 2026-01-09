@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -33,6 +33,7 @@ import { NodeUtils } from '../../node/NodeUtils';
 import { NumericalExpressionDataToNodeConverter } from '../../node/NumericalExpressionDataToNodeConverter';
 import { StringArrayRotateFunctionCodeHelper } from '../../custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper';
 
+@injectFromBase()
 @injectable()
 export class StringArrayRotateFunctionTransformer extends AbstractNodeTransformer {
     /**

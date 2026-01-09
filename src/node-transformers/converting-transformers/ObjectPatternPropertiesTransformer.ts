@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -16,6 +16,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
@@ -10,6 +10,7 @@ import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGener
 import { NumberUtils } from '../../utils/NumberUtils';
 import { Utils } from '../../utils/Utils';
 
+@injectFromBase()
 @injectable()
 export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**

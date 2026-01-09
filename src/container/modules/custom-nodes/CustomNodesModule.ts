@@ -1,5 +1,5 @@
 import { InversifyContainerFacade } from '../../InversifyContainerFacade';
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, Newable, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -28,144 +28,159 @@ import { StringArrayScopeCallsWrapperVariableNode } from '../../../custom-nodes/
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { LiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/LiteralNode';
 
-export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const customNodesModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // control flow custom nodes
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(BinaryExpressionFunctionNode)
-        .whenTargetNamed(ControlFlowCustomNode.BinaryExpressionFunctionNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(BinaryExpressionFunctionNode)
+        .whenNamed(ControlFlowCustomNode.BinaryExpressionFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(BlockStatementControlFlowFlatteningNode)
-        .whenTargetNamed(ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(BlockStatementControlFlowFlatteningNode)
+        .whenNamed(ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(CallExpressionControlFlowStorageCallNode)
-        .whenTargetNamed(ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(CallExpressionControlFlowStorageCallNode)
+        .whenNamed(ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(CallExpressionFunctionNode)
-        .whenTargetNamed(ControlFlowCustomNode.CallExpressionFunctionNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(CallExpressionFunctionNode)
+        .whenNamed(ControlFlowCustomNode.CallExpressionFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(ControlFlowStorageNode)
-        .whenTargetNamed(ControlFlowCustomNode.ControlFlowStorageNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(ControlFlowStorageNode)
+        .whenNamed(ControlFlowCustomNode.ControlFlowStorageNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(ExpressionWithOperatorControlFlowStorageCallNode)
-        .whenTargetNamed(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(ExpressionWithOperatorControlFlowStorageCallNode)
+        .whenNamed(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(LiteralNode)
-        .whenTargetNamed(ControlFlowCustomNode.LiteralNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(LiteralNode)
+        .whenNamed(ControlFlowCustomNode.LiteralNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(LogicalExpressionFunctionNode)
-        .whenTargetNamed(ControlFlowCustomNode.LogicalExpressionFunctionNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(LogicalExpressionFunctionNode)
+        .whenNamed(ControlFlowCustomNode.LogicalExpressionFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringLiteralControlFlowStorageCallNode)
-        .whenTargetNamed(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(StringLiteralControlFlowStorageCallNode)
+        .whenNamed(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
     // dead code injection custom nodes
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(BlockStatementDeadCodeInjectionNode)
-        .whenTargetNamed(DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(BlockStatementDeadCodeInjectionNode)
+        .whenNamed(DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode);
 
     // object expression keys transformer nodes
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(ObjectExpressionVariableDeclarationHostNode)
-        .whenTargetNamed(ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(ObjectExpressionVariableDeclarationHostNode)
+        .whenNamed(ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode);
 
     // string array nodes
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayCallNode)
-        .whenTargetNamed(StringArrayCustomNode.StringArrayCallNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(StringArrayCallNode)
+        .whenNamed(StringArrayCustomNode.StringArrayCallNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayScopeCallsWrapperFunctionNode)
-        .whenTargetNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperFunctionNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(StringArrayScopeCallsWrapperFunctionNode)
+        .whenNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayScopeCallsWrapperVariableNode)
-        .whenTargetNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperVariableNode);
+    options
+        .bind<Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstantValue(StringArrayScopeCallsWrapperVariableNode)
+        .whenNamed(StringArrayCustomNode.StringArrayScopeCallsWrapperVariableNode);
 
     // string array index nodes
-    bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
+    options
+        .bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
         .to(StringArrayHexadecimalNumberIndexNode)
         .inSingletonScope()
-        .whenTargetNamed(StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode);
+        .whenNamed(StringArrayIndexNode.StringArrayHexadecimalNumberIndexNode);
 
-    bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
+    options
+        .bind<IStringArrayIndexNode>(ServiceIdentifiers.IStringArrayIndexNode)
         .to(StringArrayHexadecimalNumericStringIndexNode)
         .inSingletonScope()
-        .whenTargetNamed(StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode);
+        .whenNamed(StringArrayIndexNode.StringArrayHexadecimalNumericStringIndexNode);
 
     // control flow customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode).toFactory<
-        ICustomNode,
-        [ControlFlowCustomNode]
-    >(
-        InversifyContainerFacade.getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
-            ServiceIdentifiers.Newable__ICustomNode,
-            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-            ServiceIdentifiers.ICustomCodeHelperFormatter,
-            ServiceIdentifiers.IRandomGenerator,
-            ServiceIdentifiers.IOptions
-        )
-    );
+    options
+        .bind<Factory<ICustomNode, [ControlFlowCustomNode]>>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+        .toFactory(
+            InversifyContainerFacade.getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ICustomCodeHelperFormatter,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            )
+        );
 
     // dead code injection customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode).toFactory<
-        ICustomNode,
-        [DeadCodeInjectionCustomNode]
-    >(
-        InversifyContainerFacade.getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
-            ServiceIdentifiers.Newable__ICustomNode,
-            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-            ServiceIdentifiers.ICustomCodeHelperFormatter,
-            ServiceIdentifiers.IRandomGenerator,
-            ServiceIdentifiers.IOptions
-        )
-    );
+    options
+        .bind<
+            Factory<ICustomNode, [DeadCodeInjectionCustomNode]>
+        >(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
+        .toFactory(
+            InversifyContainerFacade.getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ICustomCodeHelperFormatter,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            )
+        );
 
     // object expression keys transformer customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode).toFactory<
-        ICustomNode,
-        [ObjectExpressionKeysTransformerCustomNode]
-    >(
-        InversifyContainerFacade.getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
-            ServiceIdentifiers.Newable__ICustomNode,
-            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-            ServiceIdentifiers.ICustomCodeHelperFormatter,
-            ServiceIdentifiers.IRandomGenerator,
-            ServiceIdentifiers.IOptions
-        )
-    );
+    options
+        .bind<
+            Factory<ICustomNode, [ObjectExpressionKeysTransformerCustomNode]>
+        >(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
+        .toFactory(
+            InversifyContainerFacade.getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ICustomCodeHelperFormatter,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            )
+        );
 
     // string array customNode constructor factory
-    bind<ICustomNode>(ServiceIdentifiers.Factory__IStringArrayCustomNode).toFactory<
-        ICustomNode,
-        [StringArrayCustomNode]
-    >(
-        InversifyContainerFacade.getConstructorFactory<StringArrayCustomNode, ICustomNode>(
-            ServiceIdentifiers.Newable__ICustomNode,
-            ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-            ServiceIdentifiers.Factory__IStringArrayIndexNode,
-            ServiceIdentifiers.ICustomCodeHelperFormatter,
-            ServiceIdentifiers.IStringArrayStorage,
-            ServiceIdentifiers.IArrayUtils,
-            ServiceIdentifiers.IRandomGenerator,
-            ServiceIdentifiers.IOptions
-        )
-    );
+    options
+        .bind<Factory<ICustomNode, [StringArrayCustomNode]>>(ServiceIdentifiers.Factory__IStringArrayCustomNode)
+        .toFactory(
+            InversifyContainerFacade.getConstructorFactory<StringArrayCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.Factory__IStringArrayIndexNode,
+                ServiceIdentifiers.ICustomCodeHelperFormatter,
+                ServiceIdentifiers.IStringArrayStorage,
+                ServiceIdentifiers.IArrayUtils,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            )
+        );
 
     // string array index node factory
-    bind<IStringArrayIndexNode>(ServiceIdentifiers.Factory__IStringArrayIndexNode).toFactory<
-        IStringArrayIndexNode,
-        [StringArrayIndexNode]
-    >(
-        InversifyContainerFacade.getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(
-            ServiceIdentifiers.IStringArrayIndexNode
-        )
-    );
+    options
+        .bind<Factory<IStringArrayIndexNode, [StringArrayIndexNode]>>(ServiceIdentifiers.Factory__IStringArrayIndexNode)
+        .toFactory(
+            InversifyContainerFacade.getCacheFactory<StringArrayIndexNode, IStringArrayIndexNode>(
+                ServiceIdentifiers.IStringArrayIndexNode
+            )
+        );
 });

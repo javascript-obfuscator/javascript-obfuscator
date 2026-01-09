@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -8,6 +8,7 @@ import { CodeTransformationStage } from '../../enums/code-transformers/CodeTrans
 
 import { AbstractCodeTransformer } from '../AbstractCodeTransformer';
 
+@injectFromBase()
 @injectable()
 export class HashbangOperatorTransformer extends AbstractCodeTransformer {
     /**

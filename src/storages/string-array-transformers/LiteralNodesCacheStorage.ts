@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -12,6 +12,7 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 
 import { MapStorage } from '../MapStorage';
 
+@injectFromBase()
 @injectable()
 export class LiteralNodesCacheStorage extends MapStorage<string, ESTree.Node> implements ILiteralNodesCacheStorage {
     /**

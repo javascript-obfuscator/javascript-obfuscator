@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -31,6 +31,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
+@injectFromBase()
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**

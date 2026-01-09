@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -7,8 +7,8 @@ import { IOptionsNormalizer } from '../../../interfaces/options/IOptionsNormaliz
 import { Options } from '../../../options/Options';
 import { OptionsNormalizer } from '../../../options/OptionsNormalizer';
 
-export const optionsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    bind<IOptions>(ServiceIdentifiers.IOptions).to(Options).inSingletonScope();
+export const optionsModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
+    options.bind<IOptions>(ServiceIdentifiers.IOptions).to(Options).inSingletonScope();
 
-    bind<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer).to(OptionsNormalizer).inSingletonScope();
+    options.bind<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer).to(OptionsNormalizer).inSingletonScope();
 });

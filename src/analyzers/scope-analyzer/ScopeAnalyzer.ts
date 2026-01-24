@@ -84,6 +84,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
                     sourceType: ScopeAnalyzer.sourceTypes[i]
                 });
 
+                // Fix Annex B function hoisting references
+                // eslint-scope doesn't implement Annex B semantics where function declarations
+                // in blocks also create a var-hoisted binding in the enclosing function scope
+                this.fixAnnexBFunctionHoisting();
+
                 return;
             } catch (error) {
                 if (i < sourceTypeLength - 1) {
@@ -118,6 +123,101 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     }
 
     /**
+     * Fix Annex B function hoisting references.
+     *
+     * In non-strict mode, function declarations in blocks have dual binding:
+     * 1. A block-scoped binding (handled by eslint-scope)
+     * 2. A var-hoisted binding in the enclosing function scope (NOT handled by eslint-scope)
+     *
+     * This method merges block-scoped function declarations into the enclosing
+     * function scope and links unresolved references.
+     */
+    private fixAnnexBFunctionHoisting(): void {
+        if (!this.scopeManager) {
+            return;
+        }
+
+        this.walkScopes(this.scopeManager.globalScope, (scope: eslintScope.Scope) => {
+            if (scope.type !== 'block' && scope.type !== 'switch') {
+                return;
+            }
+
+            // Skip strict mode scopes - Annex B doesn't apply
+            if (scope.isStrict) {
+                return;
+            }
+
+            const functionScope = scope.variableScope;
+
+            if (!functionScope) {
+                return;
+            }
+
+            for (let i = scope.variables.length - 1; i >= 0; i--) {
+                const variable = scope.variables[i];
+
+                const isFunctionDeclaration = variable.defs.some(
+                    (def) => def.type === 'FunctionName' && def.node?.type === 'FunctionDeclaration'
+                );
+
+                if (!isFunctionDeclaration) {
+                    continue;
+                }
+
+                // Find existing variable with the same name in function scope (shadowing case)
+                const outerVariable = functionScope.variables.find((v) => v.name === variable.name && v !== variable);
+
+                // Per Annex B.3.3, hoisting only applies if outer binding is var/function (not let/const)
+                const isOuterLetOrConst = outerVariable?.defs.some(
+                    (def) => def.type === 'Variable' && (def.parent?.kind === 'let' || def.parent?.kind === 'const')
+                );
+
+                // Skip Annex B hoisting if there's a let/const with the same name
+                if (isOuterLetOrConst) {
+                    continue;
+                }
+
+                const targetVariable = outerVariable ?? variable;
+
+                if (outerVariable) {
+                    // Merge inner function's identifiers and references into outer
+                    outerVariable.identifiers.push(...variable.identifiers);
+                    outerVariable.references.push(...variable.references);
+                } else {
+                    // Move variable to function scope so references can find it
+                    functionScope.variables.push(variable);
+                }
+
+                // Remove from block scope
+                scope.variables.splice(i, 1);
+
+                // Link "through" references with matching name to the target variable
+                this.linkThroughReferences(variable.name, functionScope, targetVariable);
+            }
+        });
+    }
+
+    /**
+     * Link unresolved "through" references to a variable.
+     *
+     * @param {string} name - The variable name to match
+     * @param {Scope} scope - The scope to start searching from
+     * @param {Variable} targetVariable - The variable to link references to
+     */
+    private linkThroughReferences(name: string, scope: eslintScope.Scope, targetVariable: eslintScope.Variable): void {
+        for (let i = scope.through.length - 1; i >= 0; i--) {
+            if (scope.through[i].identifier.name === name) {
+                targetVariable.references.push(scope.through[i]);
+                scope.through.splice(i, 1);
+            }
+        }
+
+        for (const childScope of scope.childScopes) {
+            this.linkThroughReferences(name, childScope, targetVariable);
+        }
+    }
+
+    /**
      * @param {Scope} scope
      */
     private sanitizeScopes(scope: eslintScope.Scope): void {
@@ -148,6 +248,20 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
 
         for (const childScope of scope.childScopes) {
             this.sanitizeScopes(childScope);
+        }
+    }
+
+    /**
+     * Walk through all scopes in the scope tree
+     *
+     * @param {Scope} scope - Starting scope
+     * @param {Function} callback - Function to call for each scope
+     */
+    private walkScopes(scope: eslintScope.Scope, callback: (scope: eslintScope.Scope) => void): void {
+        callback(scope);
+
+        for (const childScope of scope.childScopes) {
+            this.walkScopes(childScope, callback);
         }
     }
 }

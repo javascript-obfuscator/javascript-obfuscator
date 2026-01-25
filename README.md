@@ -1768,7 +1768,7 @@ The performance will be at a relatively normal level
 
 ## JavaScript Obfuscator Pro Options
 
-> :warning: **The following VM obfuscation options are available only via the [JavaScript Obfuscator Pro API](https://obfuscator.io/).**
+> :warning: **The following VM obfuscation/Pro options are available only via the [JavaScript Obfuscator Pro API](https://obfuscator.io/).**
 >
 > To use these options, you need a Pro API token from [obfuscator.io](https://obfuscator.io) and must call the `obfuscatePro()` method instead of `obfuscate()`. See the [Pro API Methods](#shield-pro-api-methods-vm-obfuscation) section for details.
 
@@ -2014,6 +2014,16 @@ Controls how bytecode is stored in the output.
 **Options:**
 - `binary` - Compact binary format. Smaller size, recommended for production.
 - `json` - Human-readable JSON format. Larger size, useful for debugging.
+
+### `strictMode`
+Type: `boolean | null` Default: `null`
+
+Allows to specify how the obfuscator should treat code regarding JavaScript strict mode.
+
+Available values:
+* `null` (default) - auto-detect strict mode from the code. If the code has explicit `'use strict'` directive, ES module syntax, or class methods, it's treated as strict mode. Otherwise, sloppy mode is assumed.
+* `true` - force strict mode treatment for all code, even without explicit `'use strict'` directive. Use this when your code will run in strict mode context (e.g., in ES modules, bundlers, or modern frameworks).
+* `false` - only explicit strict mode indicators (`'use strict'`, ES modules, class methods) are treated as strict. Parent scope inheritance still applies per JS spec.
 
 ## Frequently Asked Questions
 

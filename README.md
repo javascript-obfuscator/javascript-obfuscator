@@ -1785,6 +1785,13 @@ Type: `number` Default: `1`
 
 Controls what percentage of your root-level functions get VM protection.
 
+### `vmPreprocessIdentifiers`
+Type: `boolean` Default: `true`
+
+Renames all non-global identifiers to unique hexadecimal names before VM obfuscation. This eliminates variable shadowing that can cause scope resolution issues in the VM bytecode.
+
+**When to disable:** Only disable this if you encounter specific compatibility issues. The preprocessing step ensures correct variable resolution in complex nested scopes.
+
 ### `vmTargetFunctions`
 Type: `string[]` Default: `[]`
 

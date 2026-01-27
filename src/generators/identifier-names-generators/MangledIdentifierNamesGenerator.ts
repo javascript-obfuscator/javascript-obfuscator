@@ -96,22 +96,15 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {string}
      */
     public generateForGlobalScope(nameLength?: number): string {
-        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
+        return this.generateForGlobalScopeInternal((name) => this.isValidIdentifierName(name));
+    }
 
-        const identifierName: string = this.generateNewMangledName(
-            this.lastMangledName,
-            (newIdentifierName: string) => {
-                const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
-
-                return this.isValidIdentifierNameInAllScopes(identifierNameWithPrefix);
-            }
-        );
-        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
-
-        this.updatePreviousMangledName(identifierName);
-        this.preserveName(identifierNameWithPrefix);
-
-        return identifierNameWithPrefix;
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForGlobalScopeWithAllScopesValidation(nameLength?: number): string {
+        return this.generateForGlobalScopeInternal((name) => this.isValidIdentifierNameInAllScopes(name));
     }
 
     /**
@@ -297,6 +290,29 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         } while (!isValidIdentifierName);
 
         return identifierName;
+    }
+
+    /**
+     * @param {(name: string) => boolean} validationFn
+     * @returns {string}
+     */
+    private generateForGlobalScopeInternal(validationFn: (name: string) => boolean): string {
+        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
+
+        const identifierName: string = this.generateNewMangledName(
+            this.lastMangledName,
+            (newIdentifierName: string) => {
+                const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
+
+                return validationFn(identifierNameWithPrefix);
+            }
+        );
+        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
+
+        this.updatePreviousMangledName(identifierName);
+        this.preserveName(identifierNameWithPrefix);
+
+        return identifierNameWithPrefix;
     }
 
     /**

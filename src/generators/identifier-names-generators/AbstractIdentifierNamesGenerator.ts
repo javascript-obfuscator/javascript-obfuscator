@@ -151,6 +151,12 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     public abstract generateForGlobalScope(nameLength?: number): string;
 
     /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generateForGlobalScopeWithAllScopesValidation(nameLength?: number): string;
+
+    /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nameLength
      * @returns {string}

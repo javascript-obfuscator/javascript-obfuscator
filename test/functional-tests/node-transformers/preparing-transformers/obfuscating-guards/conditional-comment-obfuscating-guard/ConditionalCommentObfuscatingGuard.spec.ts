@@ -134,11 +134,11 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             const ignoredFunctionExpression1RegExp: RegExp = /var bar *= *function *\(a, *b, *c\) *{/;
             const ignoredFunctionExpression2RegExp: RegExp = /var baz *= *function *\(a, *b, *c\) *{/;
 
-            const obfuscatedFunctionCallRegExp: RegExp = /_0x([a-f0-9]){5,6}\( *\);/g;
+            const obfuscatedFunctionCallRegExp: RegExp = /_0x([a-f0-9]){5,6}\( *\)[,;]/g;
             const expectedObfuscatedFunctionCallsLength: number = 3;
 
-            const ignoredFunctionCall1RegExp: RegExp = /bar\( *\);/;
-            const ignoredFunctionCall2RegExp: RegExp = /baz\( *\);/;
+            const ignoredFunctionCall1RegExp: RegExp = /bar\( *\)[,;]/;
+            const ignoredFunctionCall2RegExp: RegExp = /baz\( *\)[,;]/;
 
             let obfuscatedCode: string,
                 obfuscatedFunctionExpressionMatchesLength: number,

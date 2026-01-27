@@ -101,6 +101,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {Node} targetNode
      * @returns {boolean}
      */
+    // eslint-disable-next-line complexity
     private static isProhibitedNodeInsideCollectedBlockStatement(targetNode: ESTree.Node): boolean {
         return (
             NodeGuards.isFunctionDeclarationNode(targetNode) || // can break code on strict mode

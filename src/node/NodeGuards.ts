@@ -334,6 +334,27 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isLoopStatementNode(
+        node: ESTree.Node
+    ): node is
+        | ESTree.ForStatement
+        | ESTree.ForInStatement
+        | ESTree.ForOfStatement
+        | ESTree.WhileStatement
+        | ESTree.DoWhileStatement {
+        return (
+            NodeGuards.isForStatementNode(node) ||
+            NodeGuards.isForInStatementNode(node) ||
+            NodeGuards.isForOfStatementNode(node) ||
+            NodeGuards.isWhileStatementNode(node) ||
+            NodeGuards.isDoWhileStatementNode(node)
+        );
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isMemberExpressionNode(node: ESTree.Node): node is ESTree.MemberExpression {
         return node.type === NodeType.MemberExpression;
     }

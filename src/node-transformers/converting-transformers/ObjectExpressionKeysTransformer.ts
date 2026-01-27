@@ -127,7 +127,8 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(
                 objectExpressionNode,
                 objectExpressionHostStatement
-            )
+            ) ||
+            ObjectExpressionKeysTransformer.isProhibitedLoopBody(objectExpressionNode)
         ) {
             return true;
         }
@@ -138,6 +139,39 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         );
 
         return hasReferencedIdentifier || hasCallExpression;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @returns {boolean}
+     */
+    private static isProhibitedLoopBody(objectExpressionNode: ESTree.ObjectExpression): boolean {
+        let currentNode: ESTree.Node | undefined = objectExpressionNode;
+
+        while (currentNode) {
+            const parentNode: ESTree.Node | undefined = currentNode.parentNode;
+
+            if (!parentNode) {
+                break;
+            }
+
+            const isNonBlockLoopBody: boolean =
+                NodeGuards.isLoopStatementNode(parentNode) &&
+                parentNode.body === currentNode &&
+                !NodeGuards.isBlockStatementNode(currentNode);
+
+            if (isNonBlockLoopBody) {
+                return true;
+            }
+
+            if (NodeGuards.isFunctionNode(parentNode)) {
+                break;
+            }
+
+            currentNode = parentNode;
+        }
+
+        return false;
     }
 
     /**

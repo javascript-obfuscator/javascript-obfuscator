@@ -5,6 +5,7 @@ v5.2.0
 * Skip obfuscation of `process.env.*`
 * Fixed `controlFlowFlattening` breaking short-circuit evaluation with spread operator and conditional objects. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1372
 * Fix Annex B function hoisting: block-scoped function declarations are now correctly linked to references outside the block in non-strict mode
+* Fixed `NodeUtils.cloneRecursive` corrupting `range` property when cloning AST nodes, causing scope analysis to incorrectly resolve destructuring default parameter references
 
 v5.1.0
 ---

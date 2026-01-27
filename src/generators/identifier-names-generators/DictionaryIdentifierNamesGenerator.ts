@@ -81,18 +81,14 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @returns {string}
      */
     public generateForGlobalScope(): string {
-        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
+        return this.generateForGlobalScopeInternal((name) => this.isValidIdentifierName(name));
+    }
 
-        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
-            const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
-
-            return this.isValidIdentifierNameInAllScopes(identifierNameWithPrefix);
-        });
-        const identifierNameWithPrefix = `${prefix}${identifierName}`;
-
-        this.preserveName(identifierNameWithPrefix);
-
-        return identifierNameWithPrefix;
+    /**
+     * @returns {string}
+     */
+    public generateForGlobalScopeWithAllScopesValidation(): string {
+        return this.generateForGlobalScopeInternal((name) => this.isValidIdentifierNameInAllScopes(name));
     }
 
     /**
@@ -119,6 +115,25 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      */
     public generateForLabel(label: string): string {
         return this.generateNewDictionaryName();
+    }
+
+    /**
+     * @param {(name: string) => boolean} validationFn
+     * @returns {string}
+     */
+    private generateForGlobalScopeInternal(validationFn: (name: string) => boolean): string {
+        const prefix: string = this.options.identifiersPrefix ? `${this.options.identifiersPrefix}` : '';
+
+        const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
+            const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
+
+            return validationFn(identifierNameWithPrefix);
+        });
+        const identifierNameWithPrefix = `${prefix}${identifierName}`;
+
+        this.preserveName(identifierNameWithPrefix);
+
+        return identifierNameWithPrefix;
     }
 
     /**

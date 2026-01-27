@@ -49,6 +49,18 @@ export interface IIdentifierNamesGenerator {
 
     /**
      * @param {string} identifierName
+     * @returns {boolean}
+     */
+    isValidIdentifierNameInAllScopes(identifierName: string): boolean;
+
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    generateForGlobalScopeWithAllScopesValidation(nameLength?: number): string;
+
+    /**
+     * @param {string} identifierName
      */
     preserveName(identifierName: string): void;
 

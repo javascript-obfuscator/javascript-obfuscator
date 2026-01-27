@@ -58,8 +58,10 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
      * @returns {TStatement[]}
      */
     protected getNodeStructure(): TStatement[] {
+        // Use generateForGlobalScopeWithAllScopesValidation when in global scope
+        // to avoid shadowing variables in inner lexical scopes
         const variableDeclarationName: string = NodeGuards.isProgramNode(this.lexicalScopeNode)
-            ? this.identifierNamesGenerator.generateForGlobalScope()
+            ? this.identifierNamesGenerator.generateForGlobalScopeWithAllScopesValidation()
             : this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode);
 
         const structure: TStatement = NodeFactory.variableDeclarationNode(

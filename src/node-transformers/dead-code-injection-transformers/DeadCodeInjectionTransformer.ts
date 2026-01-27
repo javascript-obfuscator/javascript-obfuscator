@@ -110,7 +110,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             NodeGuards.isYieldExpressionNode(targetNode) ||
             NodeGuards.isSuperNode(targetNode) ||
             (NodeGuards.isForOfStatementNode(targetNode) && targetNode.await) ||
-            NodeGuards.isPrivateIdentifierNode(targetNode)
+            NodeGuards.isPrivateIdentifierNode(targetNode) ||
+            // `arguments` is not allowed in class field initializers or static initialization blocks
+            (NodeGuards.isIdentifierNode(targetNode) && targetNode.name === 'arguments')
         );
     }
 

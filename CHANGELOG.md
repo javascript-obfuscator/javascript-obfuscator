@@ -1,5 +1,9 @@
 Change Log
 
+v5.2.1
+---
+* Fixed `transformObjectKeys` incorrectly hoisting object literal outside of loop when loop body is a single statement without braces, causing all iterations to share the same object reference. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1300
+
 v5.2.0
 ---
 * Skip obfuscation of `process.env.*`

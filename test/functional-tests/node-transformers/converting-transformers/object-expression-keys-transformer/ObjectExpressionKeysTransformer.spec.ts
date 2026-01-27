@@ -1092,13 +1092,13 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             describe('Variant #2: without block statement', () => {
+                // Object should NOT be transformed when inside loop without block statement
+                // to prevent all iterations sharing the same object reference (issue #1300)
                 const match: string =
                     `` +
                     `var ${variableMatch};` +
-                    `var ${variableMatch} *= *{};` +
-                    `${variableMatch}\\['bar'] *= *'bar';` +
                     `for *\\(var ${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *` +
-                    `${variableMatch} *= *${variableMatch};` +
+                    `${variableMatch} *= *\\{'bar': *'bar'\\};` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -1151,13 +1151,13 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             describe('Variant #2: without block statement', () => {
+                // Object should NOT be transformed when inside loop without block statement
+                // to prevent all iterations sharing the same object reference (issue #1300)
                 const match: string =
                     `` +
                     `var ${variableMatch} *= *{};` +
-                    `var ${variableMatch} *= *{};` +
-                    `${variableMatch}\\['bar'] *= *'bar';` +
                     `for *\\(var ${variableMatch} in *${variableMatch}\\) *` +
-                    `${variableMatch} *= *${variableMatch};` +
+                    `${variableMatch} *= *\\{'bar': *'bar'\\};` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -1210,13 +1210,13 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             describe('Variant #2: without block statement', () => {
+                // Object should NOT be transformed when inside loop without block statement
+                // to prevent all iterations sharing the same object reference (issue #1300)
                 const match: string =
                     `` +
                     `var ${variableMatch} *= *\\[];` +
-                    `var ${variableMatch} *= *{};` +
-                    `${variableMatch}\\['bar'] *= *'bar';` +
                     `for *\\(var ${variableMatch} of *${variableMatch}\\) *` +
-                    `${variableMatch} *= *${variableMatch};` +
+                    `${variableMatch} *= *\\{'bar': *'bar'\\};` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -1268,13 +1268,13 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             describe('Variant #2: without block statement', () => {
+                // Object should NOT be transformed when inside loop without block statement
+                // to prevent all iterations sharing the same object reference (issue #1300)
                 const match: string =
                     `` +
                     `var ${variableMatch};` +
-                    `var ${variableMatch} *= *{};` +
-                    `${variableMatch}\\['bar'] *= *'bar';` +
                     `while *\\(!!\\[]\\)` +
-                    `${variableMatch} *= *${variableMatch};` +
+                    `${variableMatch} *= *\\{'bar': *'bar'\\};` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
 

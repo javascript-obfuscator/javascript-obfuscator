@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
+import * as estraverse from '@javascript-obfuscator/estraverse';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -88,6 +89,10 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
         leftExpression: ESTree.Expression,
         rightExpression: ESTree.Expression
     ): boolean {
+        if (this.expressionContainsProhibitedNodes(rightExpression)) {
+            return true;
+        }
+
         return [leftExpression, rightExpression].some((expressionNode: ESTree.Node | ESTree.Expression): boolean => {
             let nodeForCheck: ESTree.Node | ESTree.Expression;
 
@@ -104,5 +109,31 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
                 !NodeGuards.isExpressionStatementNode(nodeForCheck)
             );
         });
+    }
+
+    /**
+     * @param {Expression} expression
+     * @returns {boolean}
+     */
+    private expressionContainsProhibitedNodes(expression: ESTree.Expression): boolean {
+        let hasProhibitedNode = false;
+
+        estraverse.traverse(expression, {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+                if (NodeGuards.isMemberExpressionNode(node) && node.computed) {
+                    hasProhibitedNode = true;
+
+                    return estraverse.VisitorOption.Break;
+                }
+
+                if (NodeGuards.isCallExpressionNode(node)) {
+                    hasProhibitedNode = true;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        return hasProhibitedNode;
     }
 }

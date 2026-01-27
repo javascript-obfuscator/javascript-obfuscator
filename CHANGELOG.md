@@ -3,6 +3,7 @@ Change Log
 v5.2.0
 ---
 * Skip obfuscation of `process.env.*`
+* Fixed `controlFlowFlattening` breaking short-circuit evaluation with spread operator and conditional objects. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1372
 
 v5.1.0
 ---

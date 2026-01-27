@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { evalLocal } from '../../../../helpers/evalLocal';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -139,6 +140,64 @@ describe('ObjectPatternPropertiesTransformer', () => {
 
             it('should transform object properties', () => {
                 assert.match(obfuscatedCode, regExp);
+            });
+        });
+    });
+
+    describe('Variant #3: destructuring default parameter with var shadowing', () => {
+        describe('Variant #1: destructuring default should reference outer var, not inner var', () => {
+            let code: string;
+            let obfuscatedCode: string;
+
+            before(() => {
+                code = readFileAsString(__dirname + '/fixtures/destructuring-default-outer-var.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
+            });
+
+            it('should correctly resolve destructuring default to outer variable', () => {
+                // Default parameter `a = x` should use outer 'x' value ('outer'),
+                // NOT the inner var x = 'inner' which is in the function body scope
+                assert.equal(evalLocal(code), 'outer');
+                assert.equal(evalLocal(obfuscatedCode), evalLocal(code));
+            });
+        });
+
+        describe('Variant #2: nested destructuring default should reference outer var', () => {
+            let code: string;
+            let obfuscatedCode: string;
+
+            before(() => {
+                code = readFileAsString(__dirname + '/fixtures/nested-destructuring-default-outer-var.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
+            });
+
+            it('should correctly resolve nested destructuring default to outer variable', () => {
+                assert.equal(evalLocal(code), 'outer');
+                assert.equal(evalLocal(obfuscatedCode), evalLocal(code));
+            });
+        });
+
+        describe('Variant #3: simple default param with var shadow', () => {
+            let code: string;
+            let obfuscatedCode: string;
+
+            before(() => {
+                code = readFileAsString(__dirname + '/fixtures/simple-default-param-outer-var.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }).getObfuscatedCode();
+            });
+
+            it('should correctly resolve default param to outer variable', () => {
+                assert.equal(evalLocal(code), 'outer');
+                assert.equal(evalLocal(obfuscatedCode), evalLocal(code));
             });
         });
     });

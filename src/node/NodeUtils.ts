@@ -122,6 +122,11 @@ export class NodeUtils {
             return node;
         }
 
+        // Handle primitives directly - don't try to clone them as objects
+        if (typeof node !== 'object') {
+            return node;
+        }
+
         const copy: Partial<T> = {};
         const nodeKeys: (keyof T)[] = <(keyof T)[]>Object.keys(node);
 

@@ -43,7 +43,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const baseIdentifierName: string = hexadecimalNumber.slice(0, baseNameLength);
         const identifierName: string = `_${baseIdentifierName}`;
 
-        if (!this.isValidIdentifierName(identifierName)) {
+        if (!this.isValidIdentifierNameInAllScopes(identifierName)) {
             return this.generateNext(nameLength);
         }
 

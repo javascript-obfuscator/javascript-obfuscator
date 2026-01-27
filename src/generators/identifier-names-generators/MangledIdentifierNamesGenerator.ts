@@ -103,7 +103,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             (newIdentifierName: string) => {
                 const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
 
-                return this.isValidIdentifierName(identifierNameWithPrefix);
+                return this.isValidIdentifierNameInAllScopes(identifierNameWithPrefix);
             }
         );
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;

@@ -32,6 +32,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly lexicalScopesPreservedNamesMap: WeakMap<TNodeWithLexicalScope, Set<string>> = new WeakMap();
 
     /**
+     * @type {Set<string>}
+     */
+    protected readonly allLexicalScopePreservedNames: Set<string> = new Set();
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -72,6 +77,8 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
         preservedNamesForLexicalScopeSet.add(name);
 
         this.lexicalScopesPreservedNamesMap.set(lexicalScopeNode, preservedNamesForLexicalScopeSet);
+
+        this.allLexicalScopePreservedNames.add(name);
     }
 
     /**
@@ -106,6 +113,23 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
         }
 
         return true;
+    }
+
+    /**
+     * Checks if the name is valid and not preserved in any scope (global or lexical).
+     * This is used for global scope name generation to avoid conflicts with
+     * variables in any lexical scope that might shadow the global variable.
+     *
+     * @param {string} name
+     * @returns {boolean}
+     */
+    public isValidIdentifierNameInAllScopes(name: string): boolean {
+        if (!this.isValidIdentifierName(name)) {
+            return false;
+        }
+
+        // Check if the name is preserved in any lexical scope
+        return !this.allLexicalScopePreservedNames.has(name);
     }
 
     /**

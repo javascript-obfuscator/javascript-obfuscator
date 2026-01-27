@@ -5,6 +5,7 @@ v5.2.1
 * Fixed `transformObjectKeys` incorrectly hoisting object literal outside of loop when loop body is a single statement without braces, causing all iterations to share the same object reference. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1300
 * Fixed parsing error when `await` is used as an identifier in non-async context. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1127
 * Fixed `deadCodeInjection` causing SyntaxError when `arguments` from collected block statements was injected into class field initializers or static initialization blocks. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1166
+* Fixed `transformObjectKeys` with `mangled` identifier generator causing variable shadowing when extracted object variable name matched an existing inner scope variable. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1232
 
 v5.2.0
 ---

@@ -86,7 +86,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const identifierName: string = this.generateNewDictionaryName((newIdentifierName: string) => {
             const identifierNameWithPrefix: string = `${prefix}${newIdentifierName}`;
 
-            return this.isValidIdentifierName(identifierNameWithPrefix);
+            return this.isValidIdentifierNameInAllScopes(identifierNameWithPrefix);
         });
         const identifierNameWithPrefix = `${prefix}${identifierName}`;
 

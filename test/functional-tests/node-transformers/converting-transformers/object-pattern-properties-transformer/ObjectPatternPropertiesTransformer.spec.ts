@@ -146,20 +146,12 @@ describe('ObjectPatternPropertiesTransformer', () => {
 
     describe('Variant #3: destructuring default parameter with var shadowing', () => {
         describe('Variant #1: destructuring default should reference outer var, not inner var', () => {
-            const code = `
-                (function() {
-                    var x = 'outer';
-                    function f({ a = x } = {}) {
-                        var x = 'inner';
-                        return a;
-                    }
-                    return f();
-                })();
-            `;
-
+            let code: string;
             let obfuscatedCode: string;
 
             before(() => {
+                code = readFileAsString(__dirname + '/fixtures/destructuring-default-outer-var.js');
+
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }).getObfuscatedCode();
@@ -174,20 +166,12 @@ describe('ObjectPatternPropertiesTransformer', () => {
         });
 
         describe('Variant #2: nested destructuring default should reference outer var', () => {
-            const code = `
-                (function() {
-                    var x = 'outer';
-                    function f({ a: { b = x } } = { a: {} }) {
-                        var x = 'inner';
-                        return b;
-                    }
-                    return f();
-                })();
-            `;
-
+            let code: string;
             let obfuscatedCode: string;
 
             before(() => {
+                code = readFileAsString(__dirname + '/fixtures/nested-destructuring-default-outer-var.js');
+
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }).getObfuscatedCode();
@@ -200,20 +184,12 @@ describe('ObjectPatternPropertiesTransformer', () => {
         });
 
         describe('Variant #3: simple default param with var shadow', () => {
-            const code = `
-                (function() {
-                    var x = 'outer';
-                    function f(a = x) {
-                        var x = 'inner';
-                        return a;
-                    }
-                    return f();
-                })();
-            `;
-
+            let code: string;
             let obfuscatedCode: string;
 
             before(() => {
+                code = readFileAsString(__dirname + '/fixtures/simple-default-param-outer-var.js');
+
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }).getObfuscatedCode();

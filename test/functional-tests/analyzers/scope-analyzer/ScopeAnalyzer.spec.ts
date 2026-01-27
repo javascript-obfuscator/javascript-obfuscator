@@ -82,19 +82,7 @@ describe('ScopeAnalyzer', () => {
                 let testFunc: () => void;
 
                 beforeEach(() => {
-                    const code: string = `
-                        'use strict';
-                        function test() {
-                            let foo;
-                            if (true) {
-                                function foo() { return 'inner'; }
-                                foo(); // This refers to block-scoped foo
-                            }
-                            // foo here is the outer let, which is undefined
-                            return typeof foo;
-                        }
-                        test();
-                    `;
+                    const code: string = readFileAsString(__dirname + '/fixtures/annex-b-strict-mode.js');
 
                     testFunc = () => {
                         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
@@ -114,17 +102,7 @@ describe('ScopeAnalyzer', () => {
                 let testFunc: () => void;
 
                 beforeEach(() => {
-                    const code: string = `
-                        function test() {
-                            let foo = 'outer';
-                            if (true) {
-                                function foo() { return 'inner'; }
-                                foo(); // block-scoped foo
-                            }
-                            return foo; // should be 'outer', not the function
-                        }
-                        test();
-                    `;
+                    const code: string = readFileAsString(__dirname + '/fixtures/annex-b-let-const-shadowing.js');
 
                     testFunc = () => {
                         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {

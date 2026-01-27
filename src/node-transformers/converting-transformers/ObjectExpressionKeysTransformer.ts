@@ -151,7 +151,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         while (currentNode) {
             const parentNode: ESTree.Node | undefined = currentNode.parentNode;
 
-            if (!parentNode) {
+            if (!parentNode || parentNode === currentNode) {
                 break;
             }
 
@@ -164,7 +164,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                 return true;
             }
 
-            if (NodeGuards.isFunctionNode(parentNode)) {
+            if (NodeGuards.isFunctionNode(parentNode) || NodeGuards.isProgramNode(parentNode)) {
                 break;
             }
 

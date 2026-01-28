@@ -21,10 +21,11 @@
   },
   "types": "typings/index.d.ts",
   "dependencies": {
-    "@javascript-obfuscator/escodegen": "2.3.1",
+    "@javascript-obfuscator/escodegen": "2.4.0",
     "@javascript-obfuscator/estraverse": "5.4.0",
     "@vercel/blob": ">=0.23.0",
     "acorn": "8.15.0",
+    "acorn-import-attributes": "^1.9.5",
     "assert": "2.1.0",
     "chalk": "4.1.2",
     "chance": "1.1.13",

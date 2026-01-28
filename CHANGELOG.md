@@ -2,6 +2,7 @@ Change Log
 
 v5.3.2
 ---
+* Add support for `import attributes`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1256
 * Replaced `mkdirp` dependency with native `fs.mkdirSync({ recursive: true })`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1275. Thank you https://github.com/roli-lpci!
 
 v5.3.1

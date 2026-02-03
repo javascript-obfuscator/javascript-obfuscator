@@ -20,6 +20,62 @@ describe('ProApiClient', () => {
         fetchStub.restore();
     });
 
+    describe('hasProFeatures', () => {
+        describe('Variant #1: vmObfuscation enabled', () => {
+            it('should return true when vmObfuscation is true', () => {
+                const result = ProApiClient.hasProFeatures({ vmObfuscation: true });
+
+                assert.isTrue(result);
+            });
+        });
+
+        describe('Variant #2: parseHtml enabled', () => {
+            it('should return true when parseHtml is true', () => {
+                const result = ProApiClient.hasProFeatures({ parseHtml: true });
+
+                assert.isTrue(result);
+            });
+        });
+
+        describe('Variant #3: both features enabled', () => {
+            it('should return true when both vmObfuscation and parseHtml are true', () => {
+                const result = ProApiClient.hasProFeatures({
+                    vmObfuscation: true,
+                    parseHtml: true
+                });
+
+                assert.isTrue(result);
+            });
+        });
+
+        describe('Variant #4: no Pro features enabled', () => {
+            it('should return false when neither vmObfuscation nor parseHtml is true', () => {
+                const result = ProApiClient.hasProFeatures({ compact: true });
+
+                assert.isFalse(result);
+            });
+        });
+
+        describe('Variant #5: features explicitly set to false', () => {
+            it('should return false when vmObfuscation and parseHtml are false', () => {
+                const result = ProApiClient.hasProFeatures({
+                    vmObfuscation: false,
+                    parseHtml: false
+                });
+
+                assert.isFalse(result);
+            });
+        });
+
+        describe('Variant #6: empty options', () => {
+            it('should return false for empty options', () => {
+                const result = ProApiClient.hasProFeatures({});
+
+                assert.isFalse(result);
+            });
+        });
+    });
+
     describe('constructor', () => {
         describe('Variant #1: basic configuration', () => {
             it('should create client with required apiToken', () => {
@@ -49,8 +105,8 @@ describe('ProApiClient', () => {
     });
 
     describe('obfuscate', () => {
-        describe('Variant #1: vmObfuscation validation', () => {
-            it('should throw ApiError when vmObfuscation is not enabled', async () => {
+        describe('Variant #1: Pro features validation', () => {
+            it('should throw ApiError when no Pro features are enabled', async () => {
                 const config: IProApiConfig = {
                     apiToken: 'test-token'
                 };
@@ -61,8 +117,25 @@ describe('ProApiClient', () => {
                     assert.fail('Should have thrown ApiError');
                 } catch (error) {
                     assert.instanceOf(error, ApiError);
-                    assert.include((error as ApiError).message, 'vmObfuscation');
+                    assert.include((error as ApiError).message, 'Pro');
                 }
+            });
+
+            it('should not throw when only parseHtml is enabled', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                const mockResponse = new Response(
+                    JSON.stringify({ type: 'result', code: 'obfuscated', sourceMap: '' }),
+                    { status: 200 }
+                );
+                fetchStub.resolves(mockResponse);
+
+                const result = await client.obfuscate('const a = 1;', { parseHtml: true });
+
+                assert.isDefined(result);
             });
         });
 
@@ -207,10 +280,9 @@ describe('ProApiClient', () => {
                 };
                 const client = new ProApiClient(config);
 
-                const mockResponse = new Response(
-                    JSON.stringify({ type: 'error', message: 'Invalid API token' }),
-                    { status: 401 }
-                );
+                const mockResponse = new Response(JSON.stringify({ type: 'error', message: 'Invalid API token' }), {
+                    status: 401
+                });
                 fetchStub.resolves(mockResponse);
 
                 try {
@@ -248,6 +320,103 @@ describe('ProApiClient', () => {
                 await client.obfuscate('const a = 1;', { vmObfuscation: true }, onProgress);
 
                 assert.deepEqual(progressMessages, ['Validating...', 'Obfuscating...']);
+            });
+        });
+
+        describe('Variant #10: client-side blob upload for large files', () => {
+            const UPLOAD_TOKEN_URL = 'https://obfuscator.io/api/v1/upload/token';
+            const BLOB_UPLOAD_THRESHOLD = 4.4 * 1024 * 1024;
+
+            it('should use direct upload for small files', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+                const smallCode = 'const a = 1;';
+
+                const mockResponse = new Response(
+                    JSON.stringify({ type: 'result', code: 'obfuscated', sourceMap: '' }),
+                    { status: 200 }
+                );
+                fetchStub.resolves(mockResponse);
+
+                await client.obfuscate(smallCode, { vmObfuscation: true });
+
+                assert.isTrue(fetchStub.calledOnce);
+                const calledUrl = fetchStub.firstCall.args[0];
+                assert.strictEqual(calledUrl, API_URL);
+            });
+
+            it('should request upload token for large files', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
+
+                // First call is to get upload token
+                const tokenResponse = new Response(JSON.stringify({ clientToken: 'mock-client-token' }), {
+                    status: 200
+                });
+
+                fetchStub.onFirstCall().resolves(tokenResponse);
+
+                try {
+                    await client.obfuscate(largeCode, { vmObfuscation: true });
+                } catch {
+                    // Will fail when trying to import @vercel/blob, but token request should succeed
+                }
+
+                // First call should be to upload token endpoint
+                const firstCallUrl = fetchStub.firstCall.args[0];
+                assert.strictEqual(firstCallUrl, UPLOAD_TOKEN_URL);
+
+                // Should include authorization header
+                const firstCallOptions = fetchStub.firstCall.args[1];
+                assert.include(firstCallOptions.headers['Authorization'], 'Bearer test-token');
+            });
+
+            it('should throw ApiError when token request fails', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
+
+                const tokenErrorResponse = new Response(JSON.stringify({ error: 'Invalid API key' }), { status: 401 });
+
+                fetchStub.resolves(tokenErrorResponse);
+
+                try {
+                    await client.obfuscate(largeCode, { vmObfuscation: true });
+                    assert.fail('Should have thrown ApiError');
+                } catch (error) {
+                    assert.instanceOf(error, ApiError);
+                    assert.include((error as ApiError).message, 'Invalid API key');
+                }
+            });
+
+            it('should throw ApiError when no client token is returned', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
+
+                const tokenResponse = new Response(JSON.stringify({}), { status: 200 });
+
+                fetchStub.resolves(tokenResponse);
+
+                try {
+                    await client.obfuscate(largeCode, { vmObfuscation: true });
+                    assert.fail('Should have thrown ApiError');
+                } catch (error) {
+                    assert.instanceOf(error, ApiError);
+                    assert.include((error as ApiError).message, 'No client token');
+                }
             });
         });
     });

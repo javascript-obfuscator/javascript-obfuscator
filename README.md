@@ -15,18 +15,20 @@ Huge thanks to all supporters!
 
 ---
 
-### :rocket: JavaScript Obfuscator Pro with VM Obfuscation is out!
+### :rocket: Obfuscator.io with VM Obfuscation is out!
 
-**JavaScript Obfuscator Pro** features **VM-based bytecode obfuscation** — the most advanced code protection available. Your JavaScript functions are transformed into custom bytecode running on an embedded virtual machine, making reverse engineering extremely difficult.
+**Obfuscator.io** features **VM-based bytecode obfuscation** — the most advanced code protection available. Your JavaScript functions are transformed into custom bytecode running on an embedded virtual machine, making reverse engineering extremely difficult.
 
 [Try it at obfuscator.io](https://obfuscator.io)
+
+This package provides access to Obfuscator.io Pro API via CLI and Node.js API.
 
 ---
 
 JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
 **Key features:**
-- VM bytecode obfuscation (via [JavaScript Obfuscator Pro](https://obfuscator.io/))
+- VM bytecode obfuscation (via [Obfuscator.io](https://obfuscator.io/))
 - variables renaming
 - strings extraction and encryption
 - dead code injection
@@ -314,17 +316,17 @@ console.log(result.getObfuscatedCode());
 **Parameters:**
 
 * `sourceCode` (`string`) – source code to obfuscate
-* `options` (`Object`) – obfuscation options. **Must include `vmObfuscation: true`**
+* `options` (`Object`) – obfuscation options. **Must include at least one Pro feature: `vmObfuscation: true` or `parseHtml: true`**
 * `apiConfig` (`Object`) – Pro API configuration:
   * `apiToken` (`string`, required) – your API token from obfuscator.io
   * `timeout` (`number`, optional) – request timeout in ms (default: `300000` - 5 minutes)
-  * `version` (`string`, optional) – JavaScript Obfuscator Pro version to use (e.g., `'5.0.0-beta.20'`). Defaults to latest version if not specified.
+  * `version` (`string`, optional) – Obfuscator.io version to use (e.g., `'5.0.3'`). Defaults to latest version if not specified.
 * `onProgress` (`function`, optional) – callback for progress updates during obfuscation
 
 **Returns:** `Promise<ObfuscationResult>`
 
 **Throws:** `ApiError` if:
-- `vmObfuscation` is not enabled in options
+- No Pro features (`vmObfuscation` or `parseHtml`) are enabled in options
 - API token is invalid or expired
 - API request fails
 
@@ -341,7 +343,7 @@ const result = await JavaScriptObfuscator.obfuscatePro(
     },
     {
         apiToken: 'your_javascript_obfuscator_pro_api_token',
-        version: '5.0.0-beta.20'  // Use specific version
+        version: '5.0.3'  // Use specific version
     }
 );
 ```
@@ -367,6 +369,28 @@ const result = await JavaScriptObfuscator.obfuscatePro(
 );
 ```
 
+### Checking for Pro Features
+
+Use `ProApiClient.hasProFeatures()` to check if options require the Pro API:
+
+```javascript
+const { ProApiClient } = require('javascript-obfuscator');
+
+const options = { vmObfuscation: true, compact: true };
+
+if (ProApiClient.hasProFeatures(options)) {
+    // Use obfuscatePro() - requires API token
+    const result = await JavaScriptObfuscator.obfuscatePro(sourceCode, options, { apiToken });
+} else {
+    // Use regular obfuscate() - no API token needed
+    const result = JavaScriptObfuscator.obfuscate(sourceCode, options);
+}
+```
+
+Pro features include:
+- `vmObfuscation: true` – VM-based bytecode obfuscation
+- `parseHtml: true` – HTML parsing with inline JavaScript obfuscation
+
 ### Error Handling
 
 ```javascript
@@ -382,6 +406,36 @@ try {
     }
 }
 ```
+
+### CLI Usage with Pro API
+
+You can also use Pro API features directly from the CLI by providing your API token:
+
+```sh
+javascript-obfuscator input.js --pro-api-token YOUR_API_TOKEN --vm-obfuscation true -o output.js
+```
+
+With a specific obfuscator version:
+
+```sh
+javascript-obfuscator input.js --pro-api-token YOUR_API_TOKEN --pro-api-version 5.0.3 --vm-obfuscation true -o output.js
+```
+
+**CLI Options:**
+- `--pro-api-token <string>` – Your API token from [obfuscator.io](https://obfuscator.io)
+- `--pro-api-version <string>` – Obfuscator.io version to use (optional, defaults to latest)
+
+The CLI automatically detects when Pro features (`vmObfuscation` or `parseHtml`) are enabled and routes the request through the Pro API.
+
+### Large File Uploads
+
+For files larger than ~4MB, the Pro API uses client-side uploads to Vercel Blob storage. To enable this feature, install the optional `@vercel/blob` package:
+
+```sh
+npm install @vercel/blob
+```
+
+Without this package, large file obfuscation will fail with an error message prompting you to install it.
 
 ---
 
@@ -583,6 +637,37 @@ Following options are available for the JS Obfuscator:
     --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
+    --pro-api-token <string>
+    --pro-api-version <string>
+    --vm-obfuscation <boolean>
+    --vm-obfuscation-threshold <number>
+    --vm-preprocess-identifiers <boolean>
+    --vm-dynamic-opcodes <boolean>
+    --vm-target-functions '<list>' (comma separated)
+    --vm-exclude-functions '<list>' (comma separated)
+    --vm-target-functions-mode <string> [root, comment]
+    --vm-wrap-top-level-initializers <boolean>
+    --vm-opcode-shuffle <boolean>
+    --vm-bytecode-encoding <boolean>
+    --vm-bytecode-array-encoding <boolean>
+    --vm-bytecode-array-encoding-key <string>
+    --vm-bytecode-array-encoding-key-getter <string>
+    --vm-instruction-shuffle <boolean>
+    --vm-jumps-encoding <boolean>
+    --vm-decoy-opcodes <boolean>
+    --vm-dead-code-injection <boolean>
+    --vm-split-dispatcher <boolean>
+    --vm-macro-ops <boolean>
+    --vm-debug-protection <boolean>
+    --vm-runtime-opcode-derivation <boolean>
+    --vm-stateful-opcodes <boolean>
+    --vm-stack-encoding <boolean>
+    --vm-randomize-keys <boolean>
+    --vm-indirect-dispatch <boolean>
+    --vm-compact-dispatcher <boolean>
+    --vm-bytecode-format <string> [binary, json]
+    --parse-html <boolean>
+    --strict-mode <boolean>
 ```
 
 <!-- ##options-start## -->
@@ -1766,9 +1851,9 @@ The performance will be at a relatively normal level
 
 <!-- ##options-end## -->
 
-## JavaScript Obfuscator Pro Options
+## Obfuscator.io Pro Options
 
-> :warning: **The following VM obfuscation/Pro options are available only via the [JavaScript Obfuscator Pro API](https://obfuscator.io/).**
+> :warning: **The following VM obfuscation/Pro options are available only via the [Obfuscator.io Pro API](https://obfuscator.io/).**
 >
 > To use these options, you need a Pro API token from [obfuscator.io](https://obfuscator.io) and must call the `obfuscatePro()` method instead of `obfuscate()`. See the [Pro API Methods](#shield-pro-api-methods-vm-obfuscation) section for details.
 
@@ -1784,6 +1869,8 @@ Your readable code like `return qty * price` becomes a list of numbers like `[0x
 Type: `number` Default: `1`
 
 Controls what percentage of your root-level functions get VM protection.
+
+> **Warning:** Values other than `1` may cause runtime bugs when VM-obfuscated and non-VM-obfuscated code share top-level variables. A value of `1` is strongly recommended. For selective function obfuscation, use `vmTargetFunctionsMode: 'comment'` with the `// javascript-obfuscator:vm` directive instead.
 
 ### `vmPreprocessIdentifiers`
 Type: `boolean` Default: `true`
@@ -1915,6 +2002,56 @@ Type: `boolean` Default: `false`
 
 Encodes the entire bytecode array as a single block. The array is decoded once at startup before execution begins. Use together with `vmBytecodeEncoding` for two layers of protection.
 
+### `vmBytecodeArrayEncodingKey`
+Type: `string` Default: `''`
+
+Custom encryption key for bytecode array encoding. When set, this key is used instead of the default environment-derived key. The key must be provided at runtime via `vmBytecodeArrayEncodingKeyGetter`.
+
+This option externalizes the encryption key - it's not embedded in the obfuscated code itself. While the key is still accessible at runtime (and thus not truly secret), this separation prevents static analysis tools from finding the key by examining the code alone.
+
+**Important:** The key must be available **synchronously** when the obfuscated code loads. Use synchronous storage like cookies, localStorage, sessionStorage, global variables, or DOM elements (e.g., server-injected meta tags). Async methods like `fetch()` cannot be used directly in the key getter expression.
+
+### `vmBytecodeArrayEncodingKeyGetter`
+Type: `string` Default: `''`
+
+**Synchronous** JavaScript expression that **returns** the encryption key at runtime. This expression is evaluated when the obfuscated code loads, and must return the same key that was provided in `vmBytecodeArrayEncodingKey`.
+
+**The obfuscated code will only work when the key getter returns exactly the same key that was used during obfuscation.** If the keys don't match, decryption will fail and the code will produce garbage or errors. If the key getter returns `undefined`, `null`, or an empty string, the code will throw an error: "VM decryption key not available".
+
+**Important:** The key should NOT be defined in the same JavaScript file/script as the obfuscated code. Doing so defeats the purpose of key externalization, as static analysis could still find the key. Store the key in a separate source: server-set cookies, localStorage populated by another script, server-injected HTML meta tags, or a global variable set by a different script that loads before the obfuscated code.
+
+Examples:
+```ts
+// From cookie
+vmBytecodeArrayEncodingKeyGetter: "document.cookie.match(/vmKey=([^;]+)/)?.[1]"
+
+// From localStorage
+vmBytecodeArrayEncodingKeyGetter: "localStorage.getItem('vmKey')"
+
+// From global variable
+vmBytecodeArrayEncodingKeyGetter: "window.__VM_KEY__"
+
+// From meta tag (server-injected)
+vmBytecodeArrayEncodingKeyGetter: "document.querySelector('meta[name=\"vm-key\"]').content"
+
+// From nested object
+vmBytecodeArrayEncodingKeyGetter: "window.config.encryption.key"
+```
+
+**Usage example:**
+```ts
+// Build time
+JavaScriptObfuscator.obfuscate(code, {
+    vmObfuscation: true,
+    vmBytecodeArrayEncoding: true,
+    vmBytecodeArrayEncodingKey: 'mySecretKey123',
+    vmBytecodeArrayEncodingKeyGetter: 'window.__VM_KEY__'
+});
+
+// Runtime - key must be set before obfuscated code runs
+window.__VM_KEY__ = 'mySecretKey123';
+```
+
 ### `vmJumpsEncoding`
 Type: `boolean` Default: `false`
 
@@ -2001,6 +2138,17 @@ Encrypts values on the VM stack during execution. Values are encoded when pushed
 
 This option heavily affects performance.
 
+### `vmInstructionShuffle`
+Type: `boolean` Default: `false`
+
+Randomizes the bytecode instruction layout per function. Each function can have a different instruction array format:
+- Layout 0: `[op, arg, op, arg, ...]` (interleaved - default)
+- Layout 1: `[arg, op, arg, op, ...]` (swapped interleaved)
+- Layout 2: `[op0, op1, ..., arg0, arg1, ...]` (opcodes first, then arguments)
+- Layout 3: `[arg0, arg1, ..., op0, op1, ...]` (arguments first, then opcodes)
+
+This makes pattern recognition across functions harder during analysis.
+
 ### `vmRandomizeKeys`
 Type: `boolean` Default: `false`
 
@@ -2024,6 +2172,62 @@ Available values:
 * `null` (default) - auto-detect strict mode from the code. If the code has explicit `'use strict'` directive, ES module syntax, or class methods, it's treated as strict mode. Otherwise, sloppy mode is assumed.
 * `true` - force strict mode treatment for all code, even without explicit `'use strict'` directive. Use this when your code will run in strict mode context (e.g., in ES modules, bundlers, or modern frameworks).
 * `false` - only explicit strict mode indicators (`'use strict'`, ES modules, class methods) are treated as strict. Parent scope inheritance still applies per JS spec.
+
+### `parseHtml`
+Type: `boolean` Default: `false`
+
+Enables obfuscation of JavaScript within HTML `<script>` tags.
+
+When enabled, the obfuscator will:
+- Auto-detect if input is HTML (by checking for `<!DOCTYPE`, `<html>`, `<head>`, `<body>`, or `<script>` tags)
+- Extract JavaScript from `<script>` tags marked with the `data-javascript-obfuscator` attribute
+- Obfuscate each marked script individually while preserving the HTML structure
+- Inject obfuscated code back into the original positions
+
+**Important:** Only scripts with the `data-javascript-obfuscator` attribute are obfuscated. Each marked script is obfuscated individually and independently. This means:
+- Code inside marked script tags **must be isolated** - it must NOT reference variables, functions, or classes defined in other marked script tags
+- Unmarked scripts can still access globals defined by marked scripts (via `var` declarations or explicit `globalThis` assignments)
+- This gives you explicit control over which scripts to protect
+
+**Obfuscated (must have `data-javascript-obfuscator` attribute):**
+- `<script data-javascript-obfuscator>` - regular scripts
+- `<script type="text/javascript" data-javascript-obfuscator>` - explicitly typed scripts
+- Scripts with any additional attributes (`id`, `class`, other `data-*`, etc.)
+
+**Skipped (left unchanged):**
+- Scripts without `data-javascript-obfuscator` attribute
+- `<script type="module">` - ES modules (even with the attribute)
+- `<script src="...">` - external scripts (even with the attribute)
+- Empty script tags
+
+**Note:** Source maps are not generated when `parseHtml` is enabled, as they would not map correctly to the HTML output.
+
+Example:
+```ts
+// input
+const html = `<!DOCTYPE html>
+<html>
+  <body>
+    <!-- This script will NOT be obfuscated -->
+    <script>
+      var helper = 'utility';
+    </script>
+    
+    <!-- This script WILL be obfuscated -->
+    <script data-javascript-obfuscator>
+      var greeting = 'Hello World';
+      console.log(greeting);
+    </script>
+  </body>
+</html>`;
+
+JavaScriptObfuscator.obfuscate(html, {
+    parseHtml: true,
+    stringArray: true
+});
+
+// output: HTML with only the marked script obfuscated
+```
 
 ## Frequently Asked Questions
 

@@ -1,3 +1,6 @@
 #!/usr/bin/env node
 
-require('../dist/index.cli').obfuscate(process.argv);
+require('../dist/index.cli').obfuscate(process.argv).catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+});

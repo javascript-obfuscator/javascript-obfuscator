@@ -1471,31 +1471,29 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
             });
 
-            describe('Variant #4: Pro API token without Pro features uses local obfuscation', () => {
-                it('should use local obfuscation when --pro-api-token is provided but no Pro features enabled', async () => {
-                    fetchStub = sinon.stub(global, 'fetch');
-
+            describe('Variant #4: Pro API token without Pro features throws error', () => {
+                it('should throw error when --pro-api-token is provided but no Pro features enabled', async () => {
                     const outputPath = path.join(outputDirName, 'local-output.js');
 
-                    await JavaScriptObfuscatorCLI.obfuscate([
-                        'node',
-                        'javascript-obfuscator',
-                        proApiFilePath,
-                        '--output',
-                        outputPath,
-                        '--pro-api-token',
-                        'test-token-123',
-                        '--compact',
-                        'true'
-                    ]);
-
-                    // Should NOT call fetch since no Pro features are enabled
-                    assert.isFalse(fetchStub.called, 'fetch should not be called without Pro features');
-
-                    // Should create output file using local obfuscation
-                    assert.isTrue(fs.existsSync(outputPath), 'output file should exist');
-
-                    fs.unlinkSync(outputPath);
+                    try {
+                        await JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            proApiFilePath,
+                            '--output',
+                            outputPath,
+                            '--pro-api-token',
+                            'test-token-123',
+                            '--compact',
+                            'true'
+                        ]);
+                        assert.fail('Expected error was not thrown');
+                    } catch (error) {
+                        assert.include(
+                            (error as Error).message,
+                            'Obfuscator.io Pro obfuscation works only when Pro features set.'
+                        );
+                    }
                 });
             });
         });

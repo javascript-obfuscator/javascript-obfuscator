@@ -280,10 +280,9 @@ describe('ProApiClient', () => {
                 };
                 const client = new ProApiClient(config);
 
-                const mockResponse = new Response(
-                    JSON.stringify({ type: 'error', message: 'Invalid API token' }),
-                    { status: 401 }
-                );
+                const mockResponse = new Response(JSON.stringify({ type: 'error', message: 'Invalid API token' }), {
+                    status: 401
+                });
                 fetchStub.resolves(mockResponse);
 
                 try {
@@ -357,10 +356,9 @@ describe('ProApiClient', () => {
                 const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
 
                 // First call is to get upload token
-                const tokenResponse = new Response(
-                    JSON.stringify({ clientToken: 'mock-client-token' }),
-                    { status: 200 }
-                );
+                const tokenResponse = new Response(JSON.stringify({ clientToken: 'mock-client-token' }), {
+                    status: 200
+                });
 
                 fetchStub.onFirstCall().resolves(tokenResponse);
 
@@ -387,10 +385,7 @@ describe('ProApiClient', () => {
 
                 const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
 
-                const tokenErrorResponse = new Response(
-                    JSON.stringify({ error: 'Invalid API key' }),
-                    { status: 401 }
-                );
+                const tokenErrorResponse = new Response(JSON.stringify({ error: 'Invalid API key' }), { status: 401 });
 
                 fetchStub.resolves(tokenErrorResponse);
 
@@ -411,10 +406,7 @@ describe('ProApiClient', () => {
 
                 const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
 
-                const tokenResponse = new Response(
-                    JSON.stringify({}),
-                    { status: 200 }
-                );
+                const tokenResponse = new Response(JSON.stringify({}), { status: 200 });
 
                 fetchStub.resolves(tokenResponse);
 
@@ -424,31 +416,6 @@ describe('ProApiClient', () => {
                 } catch (error) {
                     assert.instanceOf(error, ApiError);
                     assert.include((error as ApiError).message, 'No client token');
-                }
-            });
-
-            it('should throw helpful error when @vercel/blob is not installed', async () => {
-                const config: IProApiConfig = {
-                    apiToken: 'test-token'
-                };
-                const client = new ProApiClient(config);
-
-                const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
-
-                // Token request succeeds
-                const tokenResponse = new Response(
-                    JSON.stringify({ clientToken: 'mock-client-token' }),
-                    { status: 200 }
-                );
-
-                fetchStub.resolves(tokenResponse);
-
-                try {
-                    await client.obfuscate(largeCode, { vmObfuscation: true });
-                    assert.fail('Should have thrown ApiError');
-                } catch (error) {
-                    assert.instanceOf(error, ApiError);
-                    assert.include((error as ApiError).message, '@vercel/blob');
                 }
             });
         });

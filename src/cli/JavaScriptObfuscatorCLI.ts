@@ -456,10 +456,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Enables encrypted bytecode array with lazy decryption (Default: false)',
                 BooleanSanitizer
             )
-            .option(
-                '--vm-bytecode-array-encoding-key <string>',
-                'Custom static key for bytecode array encoding'
-            )
+            .option('--vm-bytecode-array-encoding-key <string>', 'Custom static key for bytecode array encoding')
             .option(
                 '--vm-bytecode-array-encoding-key-getter <string>',
                 'Custom key getter function code for bytecode array encoding'
@@ -607,7 +604,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         // Use Pro API if token is provided and Pro features are enabled
         const proApiToken = this.inputCLIOptions.proApiToken;
 
-        if (proApiToken && ProApiClient.hasProFeatures(options)) {
+        if (proApiToken) {
             await this.processSourceCodeWithProApi(sourceCode, outputCodePath, options, proApiToken);
 
             return;

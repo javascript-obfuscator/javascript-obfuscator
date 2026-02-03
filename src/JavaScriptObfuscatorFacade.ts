@@ -11,12 +11,10 @@ import { IInversifyContainerFacade } from './interfaces/container/IInversifyCont
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/source-code/IObfuscationResult';
 import { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';
-import { ApiError } from './pro-api/ApiError';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 import { Options } from './options/Options';
 import { Utils } from './utils/Utils';
-import { ProApiClient } from './pro-api/ProApiClient';
 
 class JavaScriptObfuscatorFacade {
     /**
@@ -94,6 +92,7 @@ class JavaScriptObfuscatorFacade {
     /**
      * Obfuscate code using the Pro API (obfuscator.io)
      * This method requires a valid API token from obfuscator.io and only works with VM obfuscation.
+     * Only available in Node.js environment.
      *
      * @param {string} sourceCode - Source code to obfuscate
      * @param {TInputOptions} inputOptions - Obfuscation options (must include vmObfuscation: true)
@@ -108,13 +107,13 @@ class JavaScriptObfuscatorFacade {
         proApiConfig: IProApiConfig,
         onProgress?: TProApiProgressCallback
     ): Promise<IProObfuscationResult> {
-        if (!inputOptions.vmObfuscation) {
-            throw new ApiError(
-                'obfuscatePro method works only with VM obfuscation. Set vmObfuscation: true in options.',
-                400
-            );
+        if (typeof window !== 'undefined') {
+            const { ApiError } = await import('./pro-api/ApiError');
+
+            throw new ApiError('obfuscatePro is only available in Node.js environment', 500);
         }
 
+        const { ProApiClient } = await import('./pro-api/ProApiClient');
         const client = new ProApiClient(proApiConfig);
 
         return client.obfuscate(sourceCode, inputOptions, onProgress);
@@ -123,4 +122,4 @@ class JavaScriptObfuscatorFacade {
 
 export { JavaScriptObfuscatorFacade as JavaScriptObfuscator };
 export { ApiError } from './pro-api/ApiError';
-export type { IProApiConfig, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';
+export type { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';

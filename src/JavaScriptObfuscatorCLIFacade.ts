@@ -10,7 +10,10 @@ class JavaScriptObfuscatorCLIFacade {
         const javaScriptObfuscatorCLI: JavaScriptObfuscatorCLI = new JavaScriptObfuscatorCLI(argv);
 
         javaScriptObfuscatorCLI.initialize();
-        javaScriptObfuscatorCLI.run();
+        javaScriptObfuscatorCLI.run().catch((error: Error) => {
+            console.error(error.message);
+            process.exit(1);
+        });
     }
 }
 

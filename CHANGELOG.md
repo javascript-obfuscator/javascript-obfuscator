@@ -1,5 +1,10 @@
 Change Log
 
+v5.3.0
+---
+* Add Pro API support to CLI
+* Add large files upload support to Pro API
+
 v5.2.1
 ---
 * Fixed `transformObjectKeys` incorrectly hoisting object literal outside of loop when loop body is a single statement without braces, causing all iterations to share the same object reference. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1300

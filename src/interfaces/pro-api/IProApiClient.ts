@@ -89,3 +89,11 @@ export interface IProApiStreamMessage {
     /** Total number of chunks (for 'chunk' type) */
     total?: number;
 }
+
+/**
+ * Response from the Blob upload endpoint
+ */
+export interface IProApiBlobUploadResponse {
+    blobUrl?: string;
+    error?: string;
+}

@@ -12,6 +12,7 @@ import { ISourceMap } from '../../../src/interfaces/source-code/ISourceMap';
 import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 
 import { JavaScriptObfuscatorCLI } from '../../../src/JavaScriptObfuscatorCLIFacade';
+import { ProApiClient } from '../../../src/pro-api/ProApiClient';
 import { parseSourceMapFromObfuscatedCode } from '../../helpers/parseSourceMapFromObfuscatedCode';
 
 describe('JavaScriptObfuscatorCLI', function (): void {
@@ -1345,6 +1346,163 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 after(() => {
                     consoleLogSpy.restore();
                 });
+            });
+        });
+
+        describe('`--pro-api-token` option', () => {
+            let fetchStub: sinon.SinonStub;
+            let proApiFilePath: string;
+
+            before(() => {
+                proApiFilePath = path.join(outputDirName, 'pro-api-test.js');
+                fs.writeFileSync(proApiFilePath, 'const test = 1;');
+            });
+
+            afterEach(() => {
+                if (fetchStub) {
+                    fetchStub.restore();
+                }
+            });
+
+            after(() => {
+                if (fs.existsSync(proApiFilePath)) {
+                    fs.unlinkSync(proApiFilePath);
+                }
+            });
+
+            describe('Variant #1: Pro API token with vmObfuscation', () => {
+                it('should use Pro API when --pro-api-token and --vm-obfuscation are provided', async () => {
+                    const mockResponse = {
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({ type: 'result', code: 'var obfuscated=1;', sourceMap: '' })
+                    } as Response;
+
+                    fetchStub = sinon.stub(global, 'fetch').resolves(mockResponse);
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        proApiFilePath,
+                        '--output',
+                        path.join(outputDirName, 'pro-api-output.js'),
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--vm-obfuscation',
+                        'true'
+                    ]);
+
+                    // Wait for async operations
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.isTrue(fetchStub.called, 'fetch should be called for Pro API');
+                    const calledUrl = fetchStub.firstCall?.args[0];
+                    assert.include(calledUrl, 'obfuscator.io/api/v1');
+                });
+            });
+
+            describe('Variant #2: Pro API token with parseHtml', () => {
+                it('should use Pro API when --pro-api-token and --parse-html are provided', async () => {
+                    const mockResponse = {
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({ type: 'result', code: 'var obfuscated=1;', sourceMap: '' })
+                    } as Response;
+
+                    fetchStub = sinon.stub(global, 'fetch').resolves(mockResponse);
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        proApiFilePath,
+                        '--output',
+                        path.join(outputDirName, 'pro-api-output2.js'),
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--parse-html',
+                        'true'
+                    ]);
+
+                    // Wait for async operations
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.isTrue(fetchStub.called, 'fetch should be called for Pro API');
+                });
+            });
+
+            describe('Variant #3: Pro API token with version', () => {
+                it('should pass version to Pro API URL when --pro-api-version is provided', async () => {
+                    const mockResponse = {
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({ type: 'result', code: 'var obfuscated=1;', sourceMap: '' })
+                    } as Response;
+
+                    fetchStub = sinon.stub(global, 'fetch').resolves(mockResponse);
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        proApiFilePath,
+                        '--output',
+                        path.join(outputDirName, 'pro-api-output3.js'),
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--pro-api-version',
+                        '5.0.0-beta.20',
+                        '--vm-obfuscation',
+                        'true'
+                    ]);
+
+                    // Wait for async operations
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.isTrue(fetchStub.called, 'fetch should be called for Pro API');
+                    const calledUrl = fetchStub.firstCall?.args[0];
+                    assert.include(calledUrl, 'version=5.0.0-beta.20');
+                });
+            });
+
+            describe('Variant #4: Pro API token without Pro features uses local obfuscation', () => {
+                it('should use local obfuscation when --pro-api-token is provided but no Pro features enabled', () => {
+                    fetchStub = sinon.stub(global, 'fetch');
+
+                    const outputPath = path.join(outputDirName, 'local-output.js');
+
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        proApiFilePath,
+                        '--output',
+                        outputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--compact',
+                        'true'
+                    ]);
+
+                    // Should NOT call fetch since no Pro features are enabled
+                    assert.isFalse(fetchStub.called, 'fetch should not be called without Pro features');
+
+                    // Should create output file using local obfuscation
+                    assert.isTrue(fs.existsSync(outputPath), 'output file should exist');
+
+                    fs.unlinkSync(outputPath);
+                });
+            });
+        });
+
+        describe('hasProFeatures static method', () => {
+            it('should return true for vmObfuscation', () => {
+                assert.isTrue(ProApiClient.hasProFeatures({ vmObfuscation: true }));
+            });
+
+            it('should return true for parseHtml', () => {
+                assert.isTrue(ProApiClient.hasProFeatures({ parseHtml: true }));
+            });
+
+            it('should return false for no Pro features', () => {
+                assert.isFalse(ProApiClient.hasProFeatures({ compact: true }));
             });
         });
 

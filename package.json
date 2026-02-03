@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "5.2.1",
+  "version": "5.3.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@javascript-obfuscator/escodegen": "2.3.1",
     "@javascript-obfuscator/estraverse": "5.4.0",
+    "@vercel/blob": ">=0.23.0",
     "acorn": "8.15.0",
     "assert": "2.1.0",
     "chalk": "4.1.2",

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -18,6 +18,7 @@ import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 
+@injectFromBase()
 @injectable()
 export abstract class ExpressionWithOperatorControlFlowReplacer extends AbstractControlFlowReplacer {
     /**

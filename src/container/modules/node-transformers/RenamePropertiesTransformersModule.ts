@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IRenamePropertiesReplacer } from '../../../interfaces/node-transformers/rename-properties-transformers/replacer/IRenamePropertiesReplacer';
@@ -9,14 +9,14 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { RenamePropertiesReplacer } from '../../../node-transformers/rename-properties-transformers/replacer/RenamePropertiesReplacer';
 import { RenamePropertiesTransformer } from '../../../node-transformers/rename-properties-transformers/RenamePropertiesTransformer';
 
-export const renamePropertiesTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const renamePropertiesTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // rename properties transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(RenamePropertiesTransformer)
-            .whenTargetNamed(NodeTransformer.RenamePropertiesTransformer);
+            .whenNamed(NodeTransformer.RenamePropertiesTransformer);
 
         // rename properties obfuscating replacer
-        bind<IRenamePropertiesReplacer>(ServiceIdentifiers.IRenamePropertiesReplacer).to(RenamePropertiesReplacer);
+        options.bind<IRenamePropertiesReplacer>(ServiceIdentifiers.IRenamePropertiesReplacer).to(RenamePropertiesReplacer);
     }
 );

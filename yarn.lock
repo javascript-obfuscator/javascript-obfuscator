@@ -260,23 +260,46 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.3.tgz#4a2868d75d6d6963e423bcf90b7fd1be343409d3"
   integrity sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==
 
-"@inversifyjs/common@1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@inversifyjs/common/-/common-1.3.3.tgz#c34bba10be8c511bf3cd25473bd32c2a08987111"
-  integrity sha512-ZH0wrgaJwIo3s9gMCDM2wZoxqrJ6gB97jWXncROfYdqZJv8f3EkqT57faZqN5OTeHWgtziQ6F6g3L8rCvGceCw==
+"@inversifyjs/common@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/common/-/common-1.5.2.tgz#6836287fef1c25dddbdf6af345a33a6d6caf6835"
+  integrity sha512-WlzR9xGadABS9gtgZQ+luoZ8V6qm4Ii6RQfcfC9Ho2SOlE6ZuemFo7PKJvKI0ikm8cmKbU8hw5UK6E4qovH21w==
 
-"@inversifyjs/core@1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@inversifyjs/core/-/core-1.3.4.tgz#17d2614ff48fc6e0db20c2fe3258c3d5bef9b5e0"
-  integrity sha512-gCCmA4BdbHEFwvVZ2elWgHuXZWk6AOu/1frxsS+2fWhjEk2c/IhtypLo5ytSUie1BCiT6i9qnEo4bruBomQsAA==
+"@inversifyjs/container@1.15.0":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/container/-/container-1.15.0.tgz#e92e2a881f5300f373a855fd74aa8280dc863825"
+  integrity sha512-U2xYsPrJTz5za2TExi5lg8qOWf8TEVBpN+pQM7B8BVA2rajtbRE9A66SLRHk8c1eGXmg+0K4Hdki6tWAsSQBUA==
   dependencies:
-    "@inversifyjs/common" "1.3.3"
-    "@inversifyjs/reflect-metadata-utils" "0.2.3"
+    "@inversifyjs/common" "1.5.2"
+    "@inversifyjs/core" "9.2.0"
+    "@inversifyjs/plugin" "0.2.0"
+    "@inversifyjs/reflect-metadata-utils" "1.4.1"
 
-"@inversifyjs/reflect-metadata-utils@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@inversifyjs/reflect-metadata-utils/-/reflect-metadata-utils-0.2.3.tgz#b17359fd4fdfc85726d3b1af7ad3647136950ea0"
-  integrity sha512-d3D0o9TeSlvaGM2I24wcNw/Aj3rc4OYvHXOKDC09YEph5fMMiKd6fq1VTQd9tOkDNWvVbw+cnt45Wy9P/t5Lvw==
+"@inversifyjs/core@9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/core/-/core-9.2.0.tgz#f587ccb917c82698ac0f9ceb2a544af42acff36f"
+  integrity sha512-Nm7BR6KmpgshIHpVQWuEDehqRVb6GBm8LFEuhc2s4kSZWrArZ15RmXQzROLk4m+hkj4kMXgvMm5Qbopot/D6Sg==
+  dependencies:
+    "@inversifyjs/common" "1.5.2"
+    "@inversifyjs/prototype-utils" "0.1.3"
+    "@inversifyjs/reflect-metadata-utils" "1.4.1"
+
+"@inversifyjs/plugin@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/plugin/-/plugin-0.2.0.tgz#03957c7d02803f32254a2ff2f8f8ffb05ec57eec"
+  integrity sha512-R/JAdkTSD819pV1zi0HP54mWHyX+H2m8SxldXRgPQarS3ySV4KPyRdosWcfB8Se0JJZWZLHYiUNiS6JvMWSPjw==
+
+"@inversifyjs/prototype-utils@0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/prototype-utils/-/prototype-utils-0.1.3.tgz#c720e7d2d847e4748534c5986b25e271186898d2"
+  integrity sha512-EzRamZzNgE9Sn3QtZ8NncNa2lpPMZfspqbK6BWFguWnOpK8ymp2TUuH46ruFHZhrHKnknPd7fG22ZV7iF517TQ==
+  dependencies:
+    "@inversifyjs/common" "1.5.2"
+
+"@inversifyjs/reflect-metadata-utils@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/reflect-metadata-utils/-/reflect-metadata-utils-1.4.1.tgz#6219df487e6aab1810a0feee4a625a0e11397340"
+  integrity sha512-Cp77C4d2wLaHXiUB7iH6Cxb7i1lD/YDuTIHLTDzKINqGSz0DCSoL/Dg2wVkW/6Qx03r/yQMLJ+32Agl32N2X8g==
 
 "@isaacs/balanced-match@^4.0.1":
   version "4.0.1"
@@ -3081,13 +3104,14 @@ interpret@^3.1.1:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-3.1.1.tgz#5be0ceed67ca79c6c4bc5cf0d7ee843dcea110c4"
   integrity sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==
 
-inversify@6.1.4:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-6.1.4.tgz#7dc288b190bc6c0e2081d7a003cbf6c4f94d946f"
-  integrity sha512-PbxrZH/gTa1fpPEEGAjJQzK8tKMIp5gRg6EFNJlCtzUcycuNdmhv3uk5P8Itm/RIjgHJO16oQRLo9IHzQN51bA==
+inversify@7.11.0:
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-7.11.0.tgz#571cede6346081b5af224eaea49bb97a91268f92"
+  integrity sha512-yZDprSSr8TyVeMGI/AOV4ws6gwjX22hj9Z8/oHAVpJORY6WRFTcUzhnZtibBUHEw2U8ArvHcR+i863DplQ3Cwg==
   dependencies:
-    "@inversifyjs/common" "1.3.3"
-    "@inversifyjs/core" "1.3.4"
+    "@inversifyjs/common" "1.5.2"
+    "@inversifyjs/container" "1.15.0"
+    "@inversifyjs/core" "9.2.0"
 
 is-arguments@^1.0.4:
   version "1.0.4"
@@ -4963,8 +4987,7 @@ string-template@1.0.0:
   resolved "https://registry.npmjs.org/string-template/-/string-template-1.0.0.tgz"
   integrity sha1-np8iM9wA8hhxjsN5oopWc+zKi5Y=
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.2.3:
-  name string-width-cjs
+"string-width-cjs@npm:string-width@^4.2.0":
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -4981,6 +5004,15 @@ string-width@^4.1.0, string-width@^4.2.0:
     emoji-regex "^8.0.0"
     is-fullwidth-code-point "^3.0.0"
     strip-ansi "^6.0.0"
+
+string-width@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
 
 string-width@^5.0.1, string-width@^5.1.2:
   version "5.1.2"
@@ -5062,7 +5094,7 @@ stringz@2.1.0:
   dependencies:
     char-regex "^1.0.2"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -5075,6 +5107,13 @@ strip-ansi@^6.0.0:
   integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
   dependencies:
     ansi-regex "^5.0.0"
+
+strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
   version "7.1.2"

@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
@@ -8,13 +8,13 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { DirectivePlacementTransformer } from '../../../node-transformers/finalizing-transformers/DirectivePlacementTransformer';
 import { EscapeSequenceTransformer } from '../../../node-transformers/finalizing-transformers/EscapeSequenceTransformer';
 
-export const finalizingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const finalizingTransformersModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // finalizing transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+    options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(DirectivePlacementTransformer)
-        .whenTargetNamed(NodeTransformer.DirectivePlacementTransformer);
+        .whenNamed(NodeTransformer.DirectivePlacementTransformer);
 
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+    options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(EscapeSequenceTransformer)
-        .whenTargetNamed(NodeTransformer.EscapeSequenceTransformer);
+        .whenNamed(NodeTransformer.EscapeSequenceTransformer);
 });

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -23,6 +23,7 @@ import { NodeGuards } from '../../node/NodeGuards';
 /**
  * Analyzing AST-tree and appending custom code helpers
  */
+@injectFromBase()
 @injectable()
 export class CustomCodeHelpersTransformer extends AbstractNodeTransformer {
     /**

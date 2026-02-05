@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -17,6 +17,7 @@ import { NodeFactory } from '../../node/NodeFactory';
 /**
  * Simplifies `Statement` node
  */
+@injectFromBase()
 @injectable()
 export abstract class AbstractStatementSimplifyTransformer extends AbstractNodeTransformer {
     /**

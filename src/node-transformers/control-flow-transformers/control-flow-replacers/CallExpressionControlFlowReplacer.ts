@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -20,6 +20,7 @@ import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-f
 import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/CallExpressionControlFlowStorageCallNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 
+@injectFromBase()
 @injectable()
 export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable, injectFromBase, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperGroupFactory } from '../../types/container/custom-code-helpers/TCustomCodeHelperGroupFactory';
@@ -11,6 +11,7 @@ import { CustomCodeHelperGroup } from '../../enums/custom-code-helpers/CustomCod
 
 import { MapStorage } from '../MapStorage';
 
+@injectFromBase()
 @injectable()
 export class CustomCodeHelperGroupStorage extends MapStorage<string, ICustomCodeHelperGroup> {
     /**

@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
@@ -7,11 +7,11 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 
 import { CommentsTransformer } from '../../../node-transformers/initializing-transformers/CommentsTransformer';
 
-export const initializingTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const initializingTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // preparing transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(CommentsTransformer)
-            .whenTargetNamed(NodeTransformer.CommentsTransformer);
+            .whenNamed(NodeTransformer.CommentsTransformer);
     }
 );

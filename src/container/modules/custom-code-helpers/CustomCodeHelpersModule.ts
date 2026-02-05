@@ -1,5 +1,5 @@
 import { InversifyContainerFacade } from '../../InversifyContainerFacade';
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
@@ -31,100 +31,123 @@ import { StringArrayCallsWrapperRc4CodeHelper } from '../../../custom-code-helpe
 import { StringArrayCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayCodeHelper';
 import { StringArrayRotateFunctionCodeHelper } from '../../../custom-code-helpers/string-array/StringArrayRotateFunctionCodeHelper';
 
-export const customCodeHelpersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const customCodeHelpersModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // custom code helpers
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(ConsoleOutputDisableCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.ConsoleOutputDisable);
+        .whenNamed(CustomCodeHelper.ConsoleOutputDisable);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(DebugProtectionFunctionCallCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.DebugProtectionFunctionCall);
+        .whenNamed(CustomCodeHelper.DebugProtectionFunctionCall);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(DebugProtectionFunctionIntervalCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.DebugProtectionFunctionInterval);
+        .whenNamed(CustomCodeHelper.DebugProtectionFunctionInterval);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(DebugProtectionFunctionCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.DebugProtectionFunction);
+        .whenNamed(CustomCodeHelper.DebugProtectionFunction);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(DomainLockCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.DomainLock);
+        .whenNamed(CustomCodeHelper.DomainLock);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(CallsControllerFunctionCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.CallsControllerFunction);
+        .whenNamed(CustomCodeHelper.CallsControllerFunction);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(SelfDefendingCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.SelfDefending);
+        .whenNamed(CustomCodeHelper.SelfDefending);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCallsWrapperCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapper);
+        .whenNamed(CustomCodeHelper.StringArrayCallsWrapper);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCallsWrapperBase64CodeHelper)
-        .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapperBase64);
+        .whenNamed(CustomCodeHelper.StringArrayCallsWrapperBase64);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCallsWrapperRc4CodeHelper)
-        .whenTargetNamed(CustomCodeHelper.StringArrayCallsWrapperRc4);
+        .whenNamed(CustomCodeHelper.StringArrayCallsWrapperRc4);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.StringArray);
+        .whenNamed(CustomCodeHelper.StringArray);
 
-    bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
+    options
+        .bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(StringArrayRotateFunctionCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.StringArrayRotateFunction);
+        .whenNamed(CustomCodeHelper.StringArrayRotateFunction);
 
     // code helper groups
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
+    options
+        .bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
         .to(ConsoleOutputCodeHelperGroup)
-        .whenTargetNamed(CustomCodeHelperGroup.ConsoleOutput);
+        .whenNamed(CustomCodeHelperGroup.ConsoleOutput);
 
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
+    options
+        .bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
         .to(DebugProtectionCodeHelperGroup)
-        .whenTargetNamed(CustomCodeHelperGroup.DebugProtection);
+        .whenNamed(CustomCodeHelperGroup.DebugProtection);
 
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
+    options
+        .bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
         .to(DomainLockCustomCodeHelperGroup)
-        .whenTargetNamed(CustomCodeHelperGroup.DomainLock);
+        .whenNamed(CustomCodeHelperGroup.DomainLock);
 
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
+    options
+        .bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
         .to(SelfDefendingCodeHelperGroup)
-        .whenTargetNamed(CustomCodeHelperGroup.SelfDefending);
+        .whenNamed(CustomCodeHelperGroup.SelfDefending);
 
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
+    options
+        .bind<ICustomCodeHelperGroup>(ServiceIdentifiers.ICustomCodeHelperGroup)
         .to(StringArrayCodeHelperGroup)
-        .whenTargetNamed(CustomCodeHelperGroup.StringArray);
+        .whenNamed(CustomCodeHelperGroup.StringArray);
 
     // customCodeHelper factory
-    bind<ICustomCodeHelper>(ServiceIdentifiers.Factory__ICustomCodeHelper).toFactory<
-        ICustomCodeHelper,
-        [CustomCodeHelper]
-    >(InversifyContainerFacade.getFactory<CustomCodeHelper, ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper));
+    options
+        .bind<Factory<ICustomCodeHelper, [CustomCodeHelper]>>(ServiceIdentifiers.Factory__ICustomCodeHelper)
+        .toFactory(
+            InversifyContainerFacade.getFactory<CustomCodeHelper, ICustomCodeHelper>(
+                ServiceIdentifiers.ICustomCodeHelper
+            )
+        );
 
     // customCodeHelperGroup factory
-    bind<ICustomCodeHelperGroup>(ServiceIdentifiers.Factory__ICustomCodeHelperGroup).toFactory<
-        ICustomCodeHelperGroup,
-        [CustomCodeHelperGroup]
-    >(
-        InversifyContainerFacade.getFactory<CustomCodeHelperGroup, ICustomCodeHelperGroup>(
-            ServiceIdentifiers.ICustomCodeHelperGroup
-        )
-    );
+    options
+        .bind<
+            Factory<ICustomCodeHelperGroup, [CustomCodeHelperGroup]>
+        >(ServiceIdentifiers.Factory__ICustomCodeHelperGroup)
+        .toFactory(
+            InversifyContainerFacade.getFactory<CustomCodeHelperGroup, ICustomCodeHelperGroup>(
+                ServiceIdentifiers.ICustomCodeHelperGroup
+            )
+        );
 
     // custom code helper formatter
-    bind<ICustomCodeHelperFormatter>(ServiceIdentifiers.ICustomCodeHelperFormatter)
+    options
+        .bind<ICustomCodeHelperFormatter>(ServiceIdentifiers.ICustomCodeHelperFormatter)
         .to(CustomCodeHelperFormatter)
         .inSingletonScope();
 
     // custom code helper obfuscator
-    bind<ICustomCodeHelperObfuscator>(ServiceIdentifiers.ICustomCodeHelperObfuscator)
+    options
+        .bind<ICustomCodeHelperObfuscator>(ServiceIdentifiers.ICustomCodeHelperObfuscator)
         .to(CustomCodeHelperObfuscator)
         .inSingletonScope();
 });

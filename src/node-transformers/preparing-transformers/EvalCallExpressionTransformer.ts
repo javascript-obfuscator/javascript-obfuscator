@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -17,6 +17,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringUtils } from '../../utils/StringUtils';
 
+@injectFromBase()
 @injectable()
 export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
     /**

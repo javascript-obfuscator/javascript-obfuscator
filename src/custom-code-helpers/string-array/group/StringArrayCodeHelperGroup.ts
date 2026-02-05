@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -24,6 +24,7 @@ import { NodeAppender } from '../../../node/NodeAppender';
 import { StringArrayCallsWrapperCodeHelper } from '../StringArrayCallsWrapperCodeHelper';
 import { StringArrayCodeHelper } from '../StringArrayCodeHelper';
 
+@injectFromBase()
 @injectable()
 export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**

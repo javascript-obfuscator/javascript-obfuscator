@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -14,6 +14,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { NodeGuards } from '../../node/NodeGuards';
 
+@injectFromBase()
 @injectable()
 export class CommentsTransformer extends AbstractNodeTransformer {
     /**

@@ -1,4 +1,4 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable, injectFromBase, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -7,6 +7,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { MapStorage } from '../MapStorage';
 
+@injectFromBase()
 @injectable()
 export class PropertyIdentifierNamesCacheStorage
     extends MapStorage<string, string>

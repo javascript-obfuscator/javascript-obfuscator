@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import { injectable, injectFromBase } from 'inversify';
 
 import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
 import { Rc4Template } from './templates/string-array-calls-wrapper/Rc4Template';
@@ -6,6 +6,7 @@ import { StringArrayRC4DecodeTemplate } from './templates/string-array-calls-wra
 
 import { StringArrayCallsWrapperCodeHelper } from './StringArrayCallsWrapperCodeHelper';
 
+@injectFromBase()
 @injectable()
 export class StringArrayCallsWrapperRc4CodeHelper extends StringArrayCallsWrapperCodeHelper {
     /**

@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
@@ -24,7 +23,7 @@ describe('IdentifierNamesCacheFileUtils', () => {
     const tmpDirectoryPath: string = path.join('test', 'tmp');
 
     before(() => {
-        mkdirp.sync(tmpDirectoryPath);
+        fs.mkdirSync(tmpDirectoryPath, { recursive: true });
     });
 
     describe('readFile', () => {

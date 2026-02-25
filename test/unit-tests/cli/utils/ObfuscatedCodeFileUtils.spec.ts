@@ -1,6 +1,5 @@
 import { assert } from 'chai';
 import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
@@ -11,7 +10,7 @@ describe('obfuscatedCodeFileUtils', () => {
 
     describe('getOutputCodePath', () => {
         before(() => {
-            mkdirp.sync(path.join(tmpDirectoryPath, 'input', 'nested'));
+            fs.mkdirSync(path.join(tmpDirectoryPath, 'input', 'nested'), { recursive: true });
             fs.writeFileSync(path.join(tmpDirectoryPath, 'input', 'nested', 'test-input.js'), 'var foo = 1;');
         });
 
@@ -206,7 +205,7 @@ describe('obfuscatedCodeFileUtils', () => {
             const baseDirnamePath: string = __dirname;
 
             before(() => {
-                mkdirp.sync(path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested'));
+                fs.mkdirSync(path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested'), { recursive: true });
                 fs.writeFileSync(
                     path.join(baseDirnamePath, tmpDirectoryPath, 'input', 'nested', 'test-input.js'),
                     'var foo = 1;'

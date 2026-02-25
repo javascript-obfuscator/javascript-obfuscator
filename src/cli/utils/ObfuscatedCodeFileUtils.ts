@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 
 import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
@@ -135,7 +134,7 @@ export class ObfuscatedCodeFileUtils {
      * @param {string} data
      */
     public writeFile(outputPath: string, data: string): void {
-        mkdirp.sync(path.dirname(outputPath));
+        fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
         fs.writeFileSync(outputPath, data, {
             encoding: JavaScriptObfuscatorCLI.encoding

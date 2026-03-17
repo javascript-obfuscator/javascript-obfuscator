@@ -15,6 +15,8 @@ export enum NodeTransformer {
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     IfStatementSimplifyTransformer = 'IfStatementSimplifyTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
+    ApiCallsObfuscationTransformer = 'ApiCallsObfuscationTransformer',
+    BuiltinsObfuscationTransformer = 'BuiltinsObfuscationTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
     MetadataTransformer = 'MetadataTransformer',
     NumberLiteralTransformer = 'NumberLiteralTransformer',

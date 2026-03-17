@@ -248,6 +248,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option('--log <boolean>', 'Enables logging of the information to the console', BooleanSanitizer)
             .option('--numbers-to-expressions <boolean>', 'Enables numbers conversion to expressions', BooleanSanitizer)
             .option(
+                '--obfuscate-api-calls <boolean>',
+                'Enables obfuscation of API method calls (document.getElementById, window.addEventListener, fetch, etc.)',
+                BooleanSanitizer
+            )
+            .option(
+                '--obfuscate-builtins <boolean>',
+                'Enables obfuscation of built-in JavaScript objects and functions (console, Math, Object, Array, etc.)',
+                BooleanSanitizer
+            )
+            .option(
                 '--options-preset <string>',
                 'Allows to set options preset. ' +
                     `Values: ${CLIUtils.stringifyOptionAvailableValues(OptionsPreset)}. ` +

@@ -211,6 +211,18 @@ export class Options implements IOptions {
     public readonly numbersToExpressions!: boolean;
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly obfuscateApiCalls!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly obfuscateBuiltins!: boolean;
+
+    /**
      * @type {TOptionsPreset}
      */
     @IsIn([

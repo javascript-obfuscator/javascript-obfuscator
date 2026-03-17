@@ -31,6 +31,8 @@ export interface IOptions {
     readonly inputFileName: string;
     readonly log: boolean;
     readonly numbersToExpressions: boolean;
+    readonly obfuscateApiCalls: boolean;
+    readonly obfuscateBuiltins: boolean;
     readonly optionsPreset: TOptionsPreset;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;

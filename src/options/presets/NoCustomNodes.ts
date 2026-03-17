@@ -29,6 +29,8 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    obfuscateApiCalls: false,
+    obfuscateBuiltins: false,
     renameGlobals: false,
     renameProperties: false,
     renamePropertiesMode: RenamePropertiesMode.Safe,

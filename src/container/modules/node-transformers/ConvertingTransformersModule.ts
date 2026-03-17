@@ -8,8 +8,10 @@ import { IObjectExpressionExtractor } from '../../../interfaces/node-transformer
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 import { ObjectExpressionExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
+import { ApiCallsObfuscationTransformer } from '../../../node-transformers/converting-transformers/ApiCallsObfuscationTransformer';
 import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
 import { BooleanLiteralTransformer } from '../../../node-transformers/converting-transformers/BooleanLiteralTransformer';
+import { BuiltinsObfuscationTransformer } from '../../../node-transformers/converting-transformers/BuiltinsObfuscationTransformer';
 import { ExportSpecifierTransformer } from '../../../node-transformers/converting-transformers/ExportSpecifierTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { ClassFieldTransformer } from '../../../node-transformers/converting-transformers/ClassFieldTransformer';
@@ -24,6 +26,14 @@ import { TemplateLiteralTransformer } from '../../../node-transformers/convertin
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ApiCallsObfuscationTransformer)
+        .whenTargetNamed(NodeTransformer.ApiCallsObfuscationTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(BuiltinsObfuscationTransformer)
+        .whenTargetNamed(NodeTransformer.BuiltinsObfuscationTransformer);
+
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BooleanLiteralTransformer)
         .whenTargetNamed(NodeTransformer.BooleanLiteralTransformer);

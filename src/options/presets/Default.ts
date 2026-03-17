@@ -32,6 +32,8 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    obfuscateApiCalls: false,
+    obfuscateBuiltins: false,
     optionsPreset: OptionsPreset.Default,
     renameGlobals: false,
     renameProperties: false,

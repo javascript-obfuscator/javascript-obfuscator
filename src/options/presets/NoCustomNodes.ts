@@ -1,6 +1,7 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscateApiCallsMode } from '../../enums/node-transformers/converting-transformers/ObfuscateApiCallsMode';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
@@ -30,6 +31,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     log: false,
     numbersToExpressions: false,
     obfuscateApiCalls: false,
+    obfuscateApiCallsMode: ObfuscateApiCallsMode.CallsOnly,
     obfuscateBuiltins: false,
     renameGlobals: false,
     renameProperties: false,

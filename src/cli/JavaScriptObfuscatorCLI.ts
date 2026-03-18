@@ -253,6 +253,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
+                '--obfuscate-api-calls-mode <string>',
+                'Sets obfuscate API calls mode. ' +
+                    'Values: calls-only, all-access. ' +
+                    'Default: calls-only'
+            )
+            .option(
                 '--obfuscate-builtins <boolean>',
                 'Enables obfuscation of built-in JavaScript objects and functions (console, Math, Object, Array, etc.)',
                 BooleanSanitizer

@@ -8,6 +8,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { ObfuscateApiCallsMode } from '../../enums/node-transformers/converting-transformers/ObfuscateApiCallsMode';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -50,8 +51,19 @@ export class ApiCallsObfuscationTransformer extends AbstractNodeTransformer {
 
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && NodeGuards.isCallExpressionNode(node)) {
-                            return this.transformNode(node, parentNode);
+                        if (!parentNode) {
+                            return;
+                        }
+
+                        if (NodeGuards.isCallExpressionNode(node)) {
+                            return this.transformCallExpressionNode(node, parentNode);
+                        }
+
+                        if (
+                            this.options.obfuscateApiCallsMode === ObfuscateApiCallsMode.AllAccess
+                            && NodeGuards.isMemberExpressionNode(node)
+                        ) {
+                            return this.transformMemberExpressionNode(node, parentNode);
                         }
                     }
                 };
@@ -59,6 +71,23 @@ export class ApiCallsObfuscationTransformer extends AbstractNodeTransformer {
             default:
                 return null;
         }
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {Node}
+     */
+    public transformNode(node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+        if (NodeGuards.isCallExpressionNode(node)) {
+            return this.transformCallExpressionNode(node, parentNode);
+        }
+
+        if (NodeGuards.isMemberExpressionNode(node)) {
+            return this.transformMemberExpressionNode(node, parentNode);
+        }
+
+        return node;
     }
 
     /**
@@ -71,23 +100,22 @@ export class ApiCallsObfuscationTransformer extends AbstractNodeTransformer {
      * on:
      *     globalThis['document']['getElementById']('test')
      *
-     * Note: MemberExpressionTransformer handles .method -> ['method'] conversion.
-     * This transformer handles the object (document/window/etc.) -> globalThis['object'] part.
-     *
      * @param {CallExpression} callExpressionNode
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode(callExpressionNode: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
+    private transformCallExpressionNode(
+        callExpressionNode: ESTree.CallExpression,
+        parentNode: ESTree.Node
+    ): ESTree.Node {
         if (NodeMetadata.isIgnoredNode(callExpressionNode)) {
             return callExpressionNode;
         }
 
         const callee: ESTree.Expression | ESTree.Super = callExpressionNode.callee;
 
-        // Only transform member expression calls: obj.method()
+        // Handle standalone API function calls like fetch(), setTimeout()
         if (!NodeGuards.isMemberExpressionNode(callee)) {
-            // Handle standalone API function calls like fetch(), setTimeout()
             if (NodeGuards.isIdentifierNode(callee) && this.apiObjectNames.has(callee.name)) {
                 if (!this.isReservedName(callee.name)) {
                     callExpressionNode.callee = NodeFactory.memberExpressionNode(
@@ -128,6 +156,66 @@ export class ApiCallsObfuscationTransformer extends AbstractNodeTransformer {
         );
 
         return callExpressionNode;
+    }
+
+    /**
+     * Transforms non-call MemberExpression nodes where the object is an API identifier.
+     * Only active when obfuscateApiCallsMode is 'all-access'.
+     *
+     * replaces:
+     *     document.body
+     *     document['body']
+     *     navigator.userAgent
+     *
+     * on:
+     *     globalThis['document'].body
+     *     globalThis['document']['body']
+     *     globalThis['navigator'].userAgent
+     *
+     * @param {MemberExpression} memberExpressionNode
+     * @param {Node} parentNode
+     * @returns {Node}
+     */
+    private transformMemberExpressionNode(
+        memberExpressionNode: ESTree.MemberExpression,
+        parentNode: ESTree.Node
+    ): ESTree.Node {
+        if (NodeMetadata.isIgnoredNode(memberExpressionNode)) {
+            return memberExpressionNode;
+        }
+
+        const objectNode: ESTree.Expression | ESTree.Super = memberExpressionNode.object;
+
+        if (!NodeGuards.isIdentifierNode(objectNode)) {
+            return memberExpressionNode;
+        }
+
+        if (!this.apiObjectNames.has(objectNode.name)) {
+            return memberExpressionNode;
+        }
+
+        if (this.isReservedName(objectNode.name)) {
+            return memberExpressionNode;
+        }
+
+        if (NodeMetadata.isIgnoredNode(objectNode)) {
+            return memberExpressionNode;
+        }
+
+        // Skip if this MemberExpression is the callee of a CallExpression
+        // (already handled by transformCallExpressionNode)
+        if (NodeGuards.isCallExpressionNode(parentNode) && parentNode.callee === memberExpressionNode) {
+            return memberExpressionNode;
+        }
+
+        // Replace object reference: document -> globalThis['document']
+        memberExpressionNode.object = NodeFactory.memberExpressionNode(
+            NodeFactory.identifierNode('globalThis'),
+            NodeFactory.literalNode(objectNode.name),
+            true
+        );
+
+        return memberExpressionNode;
     }
 
     /**

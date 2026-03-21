@@ -1,5 +1,9 @@
 Change Log
 
+v5.3.1
+---
+* Fixed class expression name references inside class body being incorrectly resolved to an import binding with the same name, causing broken code at runtime. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1386
+
 v5.3.0
 ---
 * Add Pro API support to CLI

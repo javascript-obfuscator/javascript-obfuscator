@@ -6,6 +6,7 @@ import { evalLocal } from '../../../helpers/evalLocal';
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 describe('ScopeAnalyzer', () => {
     describe('analyze', () => {
@@ -119,6 +120,65 @@ describe('ScopeAnalyzer', () => {
                 it('should not hoist when let/const shadows the function name', () => {
                     assert.doesNotThrow(testFunc);
                 });
+            });
+        });
+
+        describe('Variant #3: class expression name shadowing import binding', () => {
+            const samplesCount: number = 50;
+
+            let obfuscatedCode: string;
+            let importBindingName: string | null;
+            let classExpressionName: string | null;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/class-expression-name-shadowing-import.js'
+                );
+
+                importBindingName = null;
+                classExpressionName = null;
+
+                for (let i = 0; i < samplesCount; i++) {
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        compact: false,
+                        stringArray: false,
+                        seed: i
+                    }).getObfuscatedCode();
+
+                    const importMatch = obfuscatedCode.match(/import\s*\{\s*i\s+as\s+(\w+)\s*\}/);
+                    const classMatch = obfuscatedCode.match(/=\s*class\s+(\w+)\s*\{/);
+
+                    if (importMatch && classMatch) {
+                        importBindingName = importMatch[1];
+                        classExpressionName = classMatch[1];
+
+                        if (importBindingName !== classExpressionName) {
+                            break;
+                        }
+                    }
+                }
+            });
+
+            it('should not rename class expression self-references to the import binding', () => {
+                assert.isNotNull(importBindingName, 'should find import binding name');
+                assert.isNotNull(classExpressionName, 'should find class expression name');
+
+                const getInstanceMatch = obfuscatedCode.match(/getInstance[^}]*\{([^}]*)\}/s);
+                assert.isNotNull(getInstanceMatch, 'should find getInstance body');
+
+                const getInstanceBody: string = getInstanceMatch![1];
+
+                assert.include(
+                    getInstanceBody,
+                    `new ${classExpressionName!}()`,
+                    'new <class>() inside getInstance should reference the class expression name'
+                );
+                assert.notInclude(
+                    getInstanceBody,
+                    `new ${importBindingName!}()`,
+                    'new <import>() inside getInstance should NOT reference the import binding'
+                );
             });
         });
     });

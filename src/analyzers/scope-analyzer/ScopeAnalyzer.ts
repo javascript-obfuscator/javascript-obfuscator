@@ -238,7 +238,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
                             (definition: eslintScope.Definition) => definition.type === 'ClassName'
                         );
 
-                        return isValidClassNameVariable && variable.name === classNameVariable.name;
+                        const isImportBinding: boolean = variable.defs.some(
+                            (definition: eslintScope.Definition) => definition.type === 'ImportBinding'
+                        );
+
+                        return isValidClassNameVariable && variable.name === classNameVariable.name && !isImportBinding;
                     }
                 );
 

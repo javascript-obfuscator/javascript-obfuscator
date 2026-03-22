@@ -201,4 +201,71 @@ describe('ObjectPatternPropertiesTransformer', () => {
             });
         });
     });
+
+    /**
+     * https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1141
+     */
+    describe('Variant #4: class static block', () => {
+        describe('Variant #1: destructuring declaration', () => {
+            let testFunc: () => void;
+
+            before(() => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/static-block-destructuring-declaration.js'
+                );
+
+                testFunc = () => {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: false,
+                        seed: 1
+                    }).getObfuscatedCode();
+
+                    const result = eval(obfuscatedCode);
+
+                    if (result !== 42) {
+                        throw new Error(
+                            `Expected 42, got ${result}. ` +
+                            `Destructuring declaration not renamed correctly in static block.`
+                        );
+                    }
+                };
+            });
+
+            it('should correctly rename destructuring declaration in class static block', () => {
+                assert.doesNotThrow(testFunc);
+            });
+        });
+
+        describe('Variant #2: destructuring assignment', () => {
+            let testFunc: () => void;
+
+            before(() => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/static-block-destructuring-assignment.js'
+                );
+
+                testFunc = () => {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: false,
+                        seed: 1
+                    }).getObfuscatedCode();
+
+                    const result = eval(obfuscatedCode);
+
+                    if (result !== 42) {
+                        throw new Error(
+                            `Expected 42, got ${result}. ` +
+                            `Destructuring assignment not renamed correctly in static block.`
+                        );
+                    }
+                };
+            });
+
+            it('should correctly rename destructuring assignment in class static block', () => {
+                assert.doesNotThrow(testFunc);
+            });
+        });
+    });
 });

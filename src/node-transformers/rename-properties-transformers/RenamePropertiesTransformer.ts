@@ -48,7 +48,7 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
     >(
         propertyNode: TNode,
         propertyKeyNode: ESTree.Expression | ESTree.PrivateIdentifier
-    ): propertyKeyNode is ESTree.Identifier | ESTree.Literal {
+    ): propertyKeyNode is ESTree.Identifier | ESTree.Literal | ESTree.PrivateIdentifier {
         if (NodeGuards.isIdentifierNode(propertyKeyNode) && propertyNode.computed) {
             return false;
         }
@@ -111,8 +111,13 @@ export class RenamePropertiesTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {Node}
      */
+    // eslint-disable-next-line complexity
     public transformNode(node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
-        if (!NodeGuards.isIdentifierNode(node) && !NodeGuards.isLiteralNode(node)) {
+        if (
+            !NodeGuards.isIdentifierNode(node) &&
+            !NodeGuards.isLiteralNode(node) &&
+            !NodeGuards.isPrivateIdentifierNode(node)
+        ) {
             return node;
         }
 

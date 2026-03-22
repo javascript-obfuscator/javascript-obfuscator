@@ -3,6 +3,7 @@ Change Log
 v5.4.0
 ---
 * Add support for `import attributes`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1256
+* Add `renameProperties` support for private class fields and methods (`#foo`, `#bar()`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1220
 * Fixed `reservedNames` not preserving class method and property names when `stringArray` or `deadCodeInjection` is enabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1279
 * Fixed infinite loop / stack overflow when `reservedNames` patterns match all generated identifier names. Now throws a descriptive error instead. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1382
 * Fixed `transformObjectKeys` changing evaluation order when object expression is inside a sequence expression with preceding side effects (e.g. `return aux(ys), { min }`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1246

@@ -80,10 +80,14 @@ export class RenamePropertiesReplacer implements IRenamePropertiesReplacer {
     }
 
     /**
-     * @param {ESTree.Identifier | ESTree.Literal} node
-     * @returns {ESTree.Identifier | ESTree.Literal}
+     * @param {ESTree.Identifier | ESTree.Literal | ESTree.PrivateIdentifier} node
+     * @returns {ESTree.Identifier | ESTree.Literal | ESTree.PrivateIdentifier}
      */
-    public replace(node: ESTree.Identifier | ESTree.Literal): ESTree.Identifier | ESTree.Literal {
+    public replace(node: ESTree.Identifier | ESTree.Literal | ESTree.PrivateIdentifier): ESTree.Identifier | ESTree.Literal | ESTree.PrivateIdentifier {
+        if (NodeGuards.isPrivateIdentifierNode(node)) {
+            return NodeFactory.privateIdentifierNode(this.replacePropertyName(node.name));
+        }
+
         if (NodeGuards.isIdentifierNode(node)) {
             return NodeFactory.identifierNode(this.replacePropertyName(node.name));
         }

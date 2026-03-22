@@ -49,7 +49,9 @@ export class NodeMetadata {
      * @param {Identifier | Literal} node
      * @returns {boolean}
      */
-    public static isPropertyKeyToRenameNode(node: ESTree.Identifier | ESTree.Literal): boolean {
+    public static isPropertyKeyToRenameNode(
+        node: ESTree.Identifier | ESTree.PrivateIdentifier | ESTree.Literal
+    ): boolean {
         return (
             NodeMetadata.get<ESTree.IdentifierNodeMetadata | ESTree.LiteralNodeMetadata, 'propertyKeyToRenameNode'>(
                 node,

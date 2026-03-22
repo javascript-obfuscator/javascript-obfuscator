@@ -374,6 +374,18 @@ export class NodeFactory {
     }
 
     /**
+     * @param {string} name
+     * @returns {PrivateIdentifier}
+     */
+    public static privateIdentifierNode(name: string): ESTree.PrivateIdentifier {
+        return {
+            type: NodeType.PrivateIdentifier,
+            name,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {(ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier)[]} specifiers
      * @param {Literal} source
      * @returns {ImportDeclaration}

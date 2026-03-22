@@ -283,10 +283,13 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         let identifierName: string = previousMangledName;
         let isValidIdentifierName: boolean;
+        let attempts: number = 0;
 
         do {
+            this.checkGenerationAttempts(attempts);
             identifierName = generateNewMangledName(identifierName);
             isValidIdentifierName = validationFunction?.(identifierName) ?? this.isValidIdentifierName(identifierName);
+            attempts++;
         } while (!isValidIdentifierName);
 
         return identifierName;

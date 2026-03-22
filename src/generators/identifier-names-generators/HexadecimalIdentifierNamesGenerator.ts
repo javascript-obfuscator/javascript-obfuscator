@@ -87,9 +87,16 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     /**
      * @param {number} nameLength
      * @param {(name: string) => boolean} validationFn
+     * @param {number} attempts
      * @returns {string}
      */
-    private generateNextName(nameLength: number | undefined, validationFn: (name: string) => boolean): string {
+    private generateNextName(
+        nameLength: number | undefined,
+        validationFn: (name: string) => boolean,
+        attempts: number = 0
+    ): string {
+        this.checkGenerationAttempts(attempts);
+
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
@@ -101,7 +108,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const identifierName: string = `_${baseIdentifierName}`;
 
         if (!validationFn(identifierName)) {
-            return this.generateNextName(nameLength, validationFn);
+            return this.generateNextName(nameLength, validationFn, attempts + 1);
         }
 
         this.preserveName(identifierName);

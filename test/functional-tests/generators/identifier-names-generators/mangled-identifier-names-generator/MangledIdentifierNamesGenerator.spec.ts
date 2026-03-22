@@ -368,4 +368,23 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
     });
+
+    describe('`reservedNames` that match all generated names', () => {
+        let testFunc: () => void;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/reserved-names-match-all.js');
+
+            testFunc = () =>
+                JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                    reservedNames: ['^(?!renameMeOnly$)']
+                });
+        });
+
+        it('should throw an error when all generated names match reservedNames', () => {
+            assert.throws(testFunc, 'Unable to generate a valid identifier name');
+        });
+    });
 });

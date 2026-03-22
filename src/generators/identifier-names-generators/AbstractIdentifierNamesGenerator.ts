@@ -22,6 +22,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @type {number}
+     */
+    private static readonly maxGenerationAttempts: number = 1000;
+
+    /**
      * @type {Set<string>}
      */
     protected readonly preservedNamesSet: Set<string> = new Set();
@@ -130,6 +135,19 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
 
         // Check if the name is preserved in any lexical scope
         return !this.allLexicalScopePreservedNames.has(name);
+    }
+
+    /**
+     * @param {number} attempts
+     */
+    protected checkGenerationAttempts(attempts: number): void {
+        if (attempts > AbstractIdentifierNamesGenerator.maxGenerationAttempts) {
+            throw new Error(
+                'Unable to generate a valid identifier name. '
+                + 'This is likely caused by `reservedNames` patterns that match all generated names. '
+                + 'Please check your `reservedNames` option.'
+            );
+        }
     }
 
     /**

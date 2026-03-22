@@ -217,4 +217,26 @@ describe('MangledShuffledIdentifierNamesGenerator', () => {
             });
         });
     });
+
+    describe('`reservedNames` that match all generated names', () => {
+        let testFunc: () => void;
+
+        beforeEach(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load('', '', {
+                reservedNames: ['^(?!renameMeOnly$)']
+            });
+            const identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledShuffledIdentifierNamesGenerator
+            );
+
+            testFunc = () => identifierNamesGenerator.generateNext();
+        });
+
+        it('should throw an error when all generated names match reservedNames', () => {
+            assert.throws(testFunc, 'Unable to generate a valid identifier name');
+        });
+    });
 });

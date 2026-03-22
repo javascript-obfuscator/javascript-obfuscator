@@ -14,7 +14,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     /**
      * @type {number}
      */
-    private static readonly maxGenerationAttempts: number = 1000;
+    private static readonly maxGenerationAttempts: number = 10000;
 
     /**
      * @type {IOptions}

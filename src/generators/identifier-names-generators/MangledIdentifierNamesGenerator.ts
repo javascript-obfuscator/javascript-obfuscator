@@ -282,14 +282,25 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         };
 
         let identifierName: string = previousMangledName;
-        let isValidIdentifierName: boolean;
-        let attempts: number = 0;
+        let isValidIdentifierName: boolean = false;
+        let reservedNameAttempts: number = 0;
 
         do {
-            this.checkGenerationAttempts(attempts);
             identifierName = generateNewMangledName(identifierName);
+
+            if (
+                this.preservedNamesSet.has(identifierName) ||
+                MangledIdentifierNamesGenerator.reservedNamesSet.has(identifierName)
+            ) {
+                continue;
+            }
+
             isValidIdentifierName = validationFunction?.(identifierName) ?? this.isValidIdentifierName(identifierName);
-            attempts++;
+
+            if (!isValidIdentifierName) {
+                this.checkGenerationAttempts(reservedNameAttempts);
+                reservedNameAttempts++;
+            }
         } while (!isValidIdentifierName);
 
         return identifierName;

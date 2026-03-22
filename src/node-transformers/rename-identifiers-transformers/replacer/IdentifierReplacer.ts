@@ -53,6 +53,21 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     }
 
     /**
+     * @param {string} name
+     * @param {string} reservedNames
+     * @returns {boolean}
+     */
+    public static isReservedName(name: string, reservedNames: string[]): boolean {
+        if (!reservedNames.length) {
+            return false;
+        }
+
+        return reservedNames.some((reservedName: string) => {
+            return new RegExp(reservedName, 'g').exec(name) !== null;
+        });
+    }
+
+    /**
      * Store identifier node `name` of global identifiers as key in map with random name as value.
      * Reserved name will be ignored.
      *
@@ -62,7 +77,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     public storeGlobalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
         const identifierName: string = identifierNode.name;
 
-        if (this.isReservedName(identifierName)) {
+        if (IdentifierReplacer.isReservedName(identifierName, this.options.reservedNames)) {
             return;
         }
 
@@ -89,7 +104,7 @@ export class IdentifierReplacer implements IIdentifierReplacer {
     public storeLocalName(identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
         const identifierName: string = identifierNode.name;
 
-        if (this.isReservedName(identifierName)) {
+        if (IdentifierReplacer.isReservedName(identifierName, this.options.reservedNames)) {
             return;
         }
 
@@ -141,19 +156,5 @@ export class IdentifierReplacer implements IIdentifierReplacer {
         lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         this.identifierNamesGenerator.preserveNameForLexicalScope(identifierNode.name, lexicalScopeNode);
-    }
-
-    /**
-     * @param {string} name
-     * @returns {boolean}
-     */
-    private isReservedName(name: string): boolean {
-        if (!this.options.reservedNames.length) {
-            return false;
-        }
-
-        return this.options.reservedNames.some((reservedName: string) => {
-            return new RegExp(reservedName, 'g').exec(name) !== null;
-        });
     }
 }

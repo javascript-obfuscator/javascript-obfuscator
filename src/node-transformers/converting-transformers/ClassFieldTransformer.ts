@@ -12,6 +12,7 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { IdentifierReplacer } from '../rename-identifiers-transformers/replacer/IdentifierReplacer';
 
 /**
  * replaces:
@@ -90,6 +91,18 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {string} name
+     * @returns {boolean}
+     */
+    private isIgnoredName(name: string): boolean {
+        if (name === ClassFieldTransformer.ignoredName) {
+            return true;
+        }
+
+        return IdentifierReplacer.isReservedName(name, this.options.reservedNames);
+    }
+
+    /**
      * @param {MethodDefinition | PropertyDefinition} classFieldNode
      * @param {Identifier} keyNode
      * @returns {MethodDefinition | PropertyDefinition}
@@ -98,7 +111,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Identifier
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
-        if (keyNode.name !== ClassFieldTransformer.ignoredName && !classFieldNode.computed) {
+        if (!this.isIgnoredName(keyNode.name) && !classFieldNode.computed) {
             classFieldNode.computed = true;
             classFieldNode.key = NodeFactory.literalNode(keyNode.name);
         }
@@ -115,11 +128,7 @@ export class ClassFieldTransformer extends AbstractNodeTransformer {
         classFieldNode: ESTree.MethodDefinition | ESTree.PropertyDefinition,
         keyNode: ESTree.Literal
     ): ESTree.MethodDefinition | ESTree.PropertyDefinition {
-        if (
-            typeof keyNode.value === 'string' &&
-            keyNode.value !== ClassFieldTransformer.ignoredName &&
-            !classFieldNode.computed
-        ) {
+        if (typeof keyNode.value === 'string' && !this.isIgnoredName(keyNode.value) && !classFieldNode.computed) {
             classFieldNode.computed = true;
         }
 

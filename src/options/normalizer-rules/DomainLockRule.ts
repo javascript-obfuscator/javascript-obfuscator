@@ -13,7 +13,7 @@ export const DomainLockRule: TOptionsNormalizerRule = (options: IOptions): IOpti
         const normalizedDomains: string[] = [];
 
         for (const domain of options.domainLock) {
-            normalizedDomains.push(Utils.extractDomainFrom(domain));
+            normalizedDomains.push(Utils.extractDomainFrom(domain).toLowerCase());
         }
 
         options = {

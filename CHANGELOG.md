@@ -10,6 +10,7 @@ v5.4.0
 * Fixed destructuring patterns inside class static blocks not being renamed when `renameGlobals` is disabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1141
 * Fixed CLI `--options-preset` not applying preset values for options not explicitly set via command line (e.g. `splitStrings` from `high-obfuscation` preset was ignored). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1236
 * Replaced `mkdirp` dependency with native `fs.mkdirSync({ recursive: true })`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1275. Thank you https://github.com/roli-lpci!
+* Updated reserved DOM properties list, fixing `renameProperties` breaking modern built-in methods like `Array.prototype.at()`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1066
 * Replaced `conf` dependency with custom implementation using `env-paths` and native `fs`
 
 v5.3.1

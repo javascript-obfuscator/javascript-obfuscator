@@ -302,7 +302,6 @@ const result = await JavaScriptObfuscator.obfuscatePro(
     `function hello() { console.log("Hello World"); }`,
     {
         vmObfuscation: true,  // Required!
-        vmObfuscationThreshold: 1,
         compact: true
     },
     {
@@ -338,8 +337,7 @@ You can specify which obfuscator version to use via the `version` option:
 const result = await JavaScriptObfuscator.obfuscatePro(
     sourceCode,
     {
-        vmObfuscation: true,
-        vmObfuscationThreshold: 1
+        vmObfuscation: true
     },
     {
         apiToken: 'your_javascript_obfuscator_pro_api_token',
@@ -356,8 +354,7 @@ The API uses streaming mode to provide real-time progress updates during obfusca
 const result = await JavaScriptObfuscator.obfuscatePro(
     sourceCode,
     {
-        vmObfuscation: true,
-        vmObfuscationThreshold: 1
+        vmObfuscation: true
     },
     {
         apiToken: 'your_javascript_obfuscator_pro_api_token'
@@ -1865,20 +1862,6 @@ Enables VM-based bytecode obfuscation. When enabled, JavaScript functions are co
 **Example:**
 Your readable code like `return qty * price` becomes a list of numbers like `[0x15,0x03,0x17,...]` that only the embedded VM interpreter can execute. The original logic is no longer visible as JavaScript.
 
-### `vmObfuscationThreshold`
-Type: `number` Default: `1`
-
-Controls what percentage of your root-level functions get VM protection.
-
-> **Warning:** Values other than `1` may cause runtime bugs when VM-obfuscated and non-VM-obfuscated code share top-level variables. A value of `1` is strongly recommended. For selective function obfuscation, use `vmTargetFunctionsMode: 'comment'` with the `// javascript-obfuscator:vm` directive instead.
-
-### `vmPreprocessIdentifiers`
-Type: `boolean` Default: `true`
-
-Renames all non-global identifiers to unique hexadecimal names before VM obfuscation. This eliminates variable shadowing that can cause scope resolution issues in the VM bytecode.
-
-**When to disable:** Only disable this if you encounter specific compatibility issues. The preprocessing step ensures correct variable resolution in complex nested scopes.
-
 ### `vmTargetFunctions`
 Type: `string[]` Default: `[]`
 
@@ -1987,11 +1970,6 @@ Makes the VM interpreter smaller and unique for each build.
 
 As the result - smaller output and each build looks different.
 
-### `vmOpcodeShuffle`
-Type: `boolean` Default: `false`
-
-Randomizes the numeric values assigned to each opcode. For example, the `LOAD` instruction might be `1` in one build and `47` in another.
-
 ### `vmBytecodeEncoding`
 Type: `boolean` Default: `false`
 
@@ -2067,39 +2045,6 @@ Type: `boolean` Default: `false`
 
 Injects fake bytecode sequences that are never executed. These look like real instructions but are skipped during runtime, confusing analysis tools that process them.
 
-### `vmSplitDispatcher`
-Type: `boolean` Default: `false`
-
-Splits the VM dispatcher into multiple smaller switch statements organized by opcode category, instead of one large monolithic switch. Each category (stack, arithmetic, control flow, etc.) gets its own switch, routed by if/else range checks.
-
-This option supports `vmDynamicOpcodes` in both modes: `true` (shuffle first, then split into groups) and `false`.
-
-> :warning: When `vmIndirectDispatch` is enabled, this option is ignored. Prefer `vmIndirectDispatch` as it provides better obfuscation with similar performance.
-
-### `vmIndirectDispatch`
-Type: `boolean` Default: `false`
-
-Uses compile-time generated handler functions for opcode dispatch instead of switch statements. Handlers are generated at compile-time with inlined opcode logic and shuffled positions.
-
-Instead of:
-```javascript
-switch(op) {
-    case 0: /* handle opcode 0 */ break;
-    case 1: /* handle opcode 1 */ break;
-}
-```
-
-It generates:
-```javascript
-var _hm = {0:42, 1:17, ...};  // opcode → handler index mapping
-var _h = [handler0, handler1, ...];  // shuffled handler array
-_h[_hm[op]](arg);  // single lookup + function call
-```
-
-This option supports `vmDynamicOpcodes` in both modes.
-
-> :warning: When enabled, this takes priority over `vmSplitDispatcher`. Both options cannot be active simultaneously.
-
 ### `vmCompactDispatcher`
 Type: `boolean` Default: `false`
 
@@ -2121,11 +2066,6 @@ Type: `boolean` Default: `false`
 
 Adds anti-debugging measures to the VM runtime. Detects debugger presence and alters behavior when debugging is detected.
 
-### `vmRuntimeOpcodeDerivation`
-Type: `boolean` Default: `false`
-
-Derives the opcode mapping table at runtime from a seed value instead of hardcoding it. The seed is stored in the bytecode and used to generate the opcode-to-handler mapping via Fisher-Yates shuffle during execution.
-
 ### `vmStatefulOpcodes`
 Type: `boolean` Default: `false`
 
@@ -2137,31 +2077,6 @@ Type: `boolean` Default: `false`
 Encrypts values on the VM stack during execution. Values are encoded when pushed and decoded when popped, so memory inspection shows encrypted data instead of actual values.
 
 This option heavily affects performance.
-
-### `vmInstructionShuffle`
-Type: `boolean` Default: `false`
-
-Randomizes the bytecode instruction layout per function. Each function can have a different instruction array format:
-- Layout 0: `[op, arg, op, arg, ...]` (interleaved - default)
-- Layout 1: `[arg, op, arg, op, ...]` (swapped interleaved)
-- Layout 2: `[op0, op1, ..., arg0, arg1, ...]` (opcodes first, then arguments)
-- Layout 3: `[arg0, arg1, ..., op0, op1, ...]` (arguments first, then opcodes)
-
-This makes pattern recognition across functions harder during analysis.
-
-### `vmRandomizeKeys`
-Type: `boolean` Default: `false`
-
-Randomizes the property key names used in bytecode objects. Standard keys like `i` (instructions), `c` (constants) become random 2-character identifiers, making the bytecode structure different for each build.
-
-### `vmBytecodeFormat`
-Type: `string` Default: `binary`
-
-Controls how bytecode is stored in the output.
-
-**Options:**
-- `binary` - Compact binary format. Smaller size, recommended for production.
-- `json` - Human-readable JSON format. Larger size, useful for debugging.
 
 ### `strictMode`
 Type: `boolean | null` Default: `null`

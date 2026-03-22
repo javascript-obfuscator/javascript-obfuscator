@@ -87,5 +87,79 @@ describe('ASTParserFacade', () => {
                 });
             });
         });
+
+        describe('Import attributes', () => {
+            describe('Variant #1: import with "with" syntax', () => {
+                const sourceCode: string = `import config from "./config.json" with { type: "json" };`;
+
+                let astTree: any;
+
+                before(() => {
+                    astTree = ASTParserFacade.parse(sourceCode, { ecmaVersion });
+                });
+
+                it('should parse import with "with" syntax without error', () => {
+                    assert.exists(astTree);
+                    assert.equal(astTree.type, 'Program');
+                    assert.equal(astTree.body[0].type, 'ImportDeclaration');
+                });
+
+                it('should preserve import attributes in AST', () => {
+                    const importDecl = astTree.body[0];
+                    assert.exists(importDecl.attributes);
+                    assert.isArray(importDecl.attributes);
+                    assert.equal(importDecl.attributes.length, 1);
+                    assert.equal(importDecl.attributes[0].key.name, 'type');
+                    assert.equal(importDecl.attributes[0].value.value, 'json');
+                });
+            });
+
+            describe('Variant #2: import with "assert" syntax (deprecated)', () => {
+                const sourceCode: string = `import config from "./config.json" assert { type: "json" };`;
+
+                let astTree: any;
+
+                before(() => {
+                    astTree = ASTParserFacade.parse(sourceCode, { ecmaVersion });
+                });
+
+                it('should parse import with "assert" syntax without error', () => {
+                    assert.exists(astTree);
+                    assert.equal(astTree.type, 'Program');
+                    assert.equal(astTree.body[0].type, 'ImportDeclaration');
+                });
+            });
+
+            describe('Variant #3: export with "with" syntax', () => {
+                const sourceCode: string = `export { default as config } from "./config.json" with { type: "json" };`;
+
+                let astTree: any;
+
+                before(() => {
+                    astTree = ASTParserFacade.parse(sourceCode, { ecmaVersion });
+                });
+
+                it('should parse export with "with" syntax without error', () => {
+                    assert.exists(astTree);
+                    assert.equal(astTree.type, 'Program');
+                    assert.equal(astTree.body[0].type, 'ExportNamedDeclaration');
+                });
+            });
+
+            describe('Variant #4: dynamic import with "with" syntax', () => {
+                const sourceCode: string = `const config = await import("./config.json", { with: { type: "json" } });`;
+
+                let astTree: any;
+
+                before(() => {
+                    astTree = ASTParserFacade.parse(sourceCode, { ecmaVersion });
+                });
+
+                it('should parse dynamic import with "with" syntax without error', () => {
+                    assert.exists(astTree);
+                    assert.equal(astTree.type, 'Program');
+                });
+            });
+        });
     });
 });

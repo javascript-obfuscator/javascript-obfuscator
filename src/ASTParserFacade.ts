@@ -1,6 +1,9 @@
 import * as acorn from 'acorn';
 import * as ESTree from 'estree';
 import chalk, { Chalk } from 'chalk';
+import { importAttributesOrAssertions } from 'acorn-import-attributes';
+
+const AcornParser = acorn.Parser.extend(importAttributesOrAssertions);
 
 /**
  * Facade over AST parser `acorn`
@@ -67,7 +70,7 @@ export class ASTParserFacade {
             sourceType
         };
 
-        const program: acorn.Node & ESTree.Program = <acorn.Node & ESTree.Program>acorn.parse(sourceCode, config);
+        const program: acorn.Node & ESTree.Program = <acorn.Node & ESTree.Program>AcornParser.parse(sourceCode, config);
 
         if (comments.length) {
             program.comments = comments;

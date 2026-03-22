@@ -1,3 +1,10 @@
+import { Utils } from './Utils';
+
+interface IConfigData {
+    adDisplayCount?: number;
+    adFirstDisplayTime?: number;
+}
+
 /**
  * Utility class for managing PRO advertisement display
  * - Limits display to first N times
@@ -9,16 +16,6 @@ export class AdvertisementUtils {
      * Maximum number of times to show the advertisement
      */
     private static readonly maxDisplayCount: number = 5;
-
-    /**
-     * Storage key for the display count
-     */
-    private static readonly storageKey: string = 'adDisplayCount';
-
-    /**
-     * Storage key for the timestamp of first display
-     */
-    private static readonly timestampKey: string = 'adFirstDisplayTime';
 
     /**
      * Reset period in milliseconds (3 days)
@@ -53,9 +50,14 @@ export class AdvertisementUtils {
     ];
 
     /**
-     * Cached conf instance
+     * Config directory name for env-paths
      */
-    private static config: any = null;
+    private static readonly projectName: string = 'javascript-obfuscator';
+
+    /**
+     * Cached config file path
+     */
+    private static configPath: string | null = null;
 
     /**
      * Check if running in a CI environment
@@ -98,36 +100,27 @@ export class AdvertisementUtils {
             return false;
         }
 
-        // Initialize config if needed
-        const config = this.getConfig();
-
-        if (!config) {
-            return false;
-        }
-
-        // Check if reset period has passed (3 days)
-        const firstDisplayTime = this.getFirstDisplayTime(config);
+        const data = this.readConfig();
         const now = Date.now();
 
-        if (firstDisplayTime && now - firstDisplayTime >= this.resetPeriodMs) {
-            // Reset counter after 3 days
-            this.resetDisplayData(config);
+        // Check if reset period has passed (3 days)
+        if (data.adFirstDisplayTime && now - data.adFirstDisplayTime >= this.resetPeriodMs) {
+            data.adDisplayCount = 0;
+            data.adFirstDisplayTime = undefined;
         }
 
-        // Check display count
-        const count = this.getDisplayCount(config);
+        const count = data.adDisplayCount ?? 0;
 
         if (count >= this.maxDisplayCount) {
             return false;
         }
 
-        // Set first display time if not set
-        if (!firstDisplayTime || now - firstDisplayTime >= this.resetPeriodMs) {
-            this.setFirstDisplayTime(config, now);
+        if (!data.adFirstDisplayTime) {
+            data.adFirstDisplayTime = now;
         }
 
-        // Increment count for next time
-        this.setDisplayCount(config, count + 1);
+        data.adDisplayCount = count + 1;
+        this.writeConfig(data);
 
         return true;
     }
@@ -140,87 +133,44 @@ export class AdvertisementUtils {
     }
 
     /**
-     * Get or create conf instance
+     * Get the config file path
      */
-    private static getConfig(): any {
-        if (this.config) {
-            return this.config;
+    private static getConfigPath(): string {
+        if (!this.configPath) {
+            const envPaths = Utils.nodeRequire('env-paths').default;
+            const fs = Utils.nodeRequire('fs');
+            const path = Utils.nodeRequire('path');
+            const configDir: string = envPaths(this.projectName).config;
+
+            fs.mkdirSync(configDir, { recursive: true });
+            this.configPath = path.join(configDir, 'config.json');
         }
 
-        if (typeof window === 'undefined') {
-            try {
-                // Dynamic import to avoid bundling in browser
-                // eslint-disable-next-line no-eval
-                const Conf = eval('require')('conf').default;
-
-                this.config = new Conf({
-                    projectName: 'javascript-obfuscator'
-                });
-
-                return this.config;
-            } catch {
-                return null;
-            }
-        }
-
-        return null;
+        return this.configPath!;
     }
 
     /**
-     * Get current display count from config
+     * Read config data from disk
      */
-    private static getDisplayCount(config: any): number {
+    private static readConfig(): IConfigData {
         try {
-            const count = config.get(this.storageKey, 0);
+            const fs = Utils.nodeRequire('fs');
+            const raw = fs.readFileSync(this.getConfigPath(), 'utf8');
 
-            return typeof count === 'number' ? count : 0;
+            return JSON.parse(raw);
         } catch {
-            return 0;
+            return {};
         }
     }
 
     /**
-     * Set display count in config
+     * Write config data to disk
      */
-    private static setDisplayCount(config: any, count: number): void {
+    private static writeConfig(data: IConfigData): void {
         try {
-            config.set(this.storageKey, count);
-        } catch {
-            // Ignore errors
-        }
-    }
+            const fs = Utils.nodeRequire('fs');
 
-    /**
-     * Get first display timestamp from config
-     */
-    private static getFirstDisplayTime(config: any): number | null {
-        try {
-            const timestamp = config.get(this.timestampKey, null);
-
-            return typeof timestamp === 'number' ? timestamp : null;
-        } catch {
-            return null;
-        }
-    }
-
-    /**
-     * Set first display timestamp in config
-     */
-    private static setFirstDisplayTime(config: any, timestamp: number): void {
-        try {
-            config.set(this.timestampKey, timestamp);
-        } catch {
-            // Ignore errors
-        }
-    }
-
-    /**
-     * Reset display data (count and timestamp)
-     */
-    private static resetDisplayData(config: any): void {
-        try {
-            config.delete(this.storageKey);
-            config.delete(this.timestampKey);
+            fs.writeFileSync(this.getConfigPath(), JSON.stringify(data));
         } catch {
             // Ignore errors
         }

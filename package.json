@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -21,7 +21,7 @@
   },
   "types": "typings/index.d.ts",
   "dependencies": {
-    "@javascript-obfuscator/escodegen": "2.4.0",
+    "@javascript-obfuscator/escodegen": "2.4.1",
     "@javascript-obfuscator/estraverse": "5.4.0",
     "@vercel/blob": ">=0.23.0",
     "acorn": "8.15.0",

@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 import * as sinon from 'sinon';
@@ -32,7 +31,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
     describe('run', () => {
         before(async () => {
-            mkdirp.sync(outputDirName);
+            fs.mkdirSync(outputDirName, { recursive: true });
         });
 
         describe('Variant #1: obfuscation of single file', () => {

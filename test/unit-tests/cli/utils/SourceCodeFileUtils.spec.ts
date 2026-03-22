@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
@@ -15,7 +14,7 @@ describe('SourceCodeFileUtils', () => {
     const tmpDirectoryPath: string = path.join('test', 'tmp');
 
     before(() => {
-        mkdirp.sync(tmpDirectoryPath);
+        fs.mkdirSync(tmpDirectoryPath, { recursive: true });
     });
 
     describe('readSourceCode', () => {
@@ -277,8 +276,8 @@ describe('SourceCodeFileUtils', () => {
                 let result: IFileData[];
 
                 before(() => {
-                    mkdirp.sync(parentDirectoryPath1);
-                    mkdirp.sync(parentDirectoryPath2);
+                    fs.mkdirSync(parentDirectoryPath1, { recursive: true });
+                    fs.mkdirSync(parentDirectoryPath2, { recursive: true });
                     fs.writeFileSync(filePath1, fileContent);
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
@@ -534,7 +533,7 @@ describe('SourceCodeFileUtils', () => {
                 let result: IFileData[];
 
                 before(() => {
-                    mkdirp.sync(tmpDirectoryWithDotPath);
+                    fs.mkdirSync(tmpDirectoryWithDotPath, { recursive: true });
                     fs.writeFileSync(filePath, fileContent);
                     result = new SourceCodeFileUtils(tmpDirectoryWithDotPath, {}).readSourceCode();
                 });

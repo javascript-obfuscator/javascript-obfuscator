@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -41,7 +41,6 @@
     "multimatch": "5.0.0",
     "process": "0.11.10",
     "reflect-metadata": "0.2.2",
-    "source-map-support": "0.5.21",
     "string-template": "1.0.0",
     "stringz": "2.1.0",
     "tslib": "2.8.1"
@@ -85,11 +84,13 @@
     "js-beautify": "1.15.4",
     "mocha": "11.7.4",
     "nyc": "17.1.0",
+    "parse5": "^8.0.0",
     "pjson": "1.0.9",
     "prettier": "3.6.2",
     "rimraf": "6.0.1",
     "sinon": "19.0.2",
     "source-map-resolve": "0.6.0",
+    "source-map-support": "0.5.21",
     "terser": "5.44.0",
     "threads": "1.7.0",
     "ts-loader": "9.5.4",
@@ -131,7 +132,10 @@
   "author": {
     "name": "Timofei Kachalov"
   },
-  "contributors": ["Timofei Kachalov (https://github.com/sanex3339)", "Dmitry Zamotkin (https://github.com/zamotkin)"],
+  "contributors": [
+    "Timofei Kachalov (https://github.com/sanex3339)",
+    "Dmitry Zamotkin (https://github.com/zamotkin)"
+  ],
   "license": "BSD-2-Clause",
   "packageManager": "yarn@1.22.21+sha512.ca75da26c00327d26267ce33536e5790f18ebd53266796fbb664d2a4a5116308042dd8ee7003b276a20eace7d3c5561c3577bdd71bcb67071187af124779620a"
 }

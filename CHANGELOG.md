@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.1
+---
+* Removed `source-map-support` runtime dependency. Use `node --enable-source-maps` instead. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1149
+
 v5.4.0
 ---
 * Add support for `import attributes`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1256

@@ -3,6 +3,7 @@ Change Log
 v5.4.0
 ---
 * Add support for `import attributes`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1256
+* Add `renameProperties` support for private class fields and methods (`#foo`, `#bar()`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1220
 * Fixed `reservedNames` not preserving class method and property names when `stringArray` or `deadCodeInjection` is enabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1279
 * Replaced `mkdirp` dependency with native `fs.mkdirSync({ recursive: true })`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1275. Thank you https://github.com/roli-lpci!
 * Replaced `conf` dependency with custom implementation using `env-paths` and native `fs`

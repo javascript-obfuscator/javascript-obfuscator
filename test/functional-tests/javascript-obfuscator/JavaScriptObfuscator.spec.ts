@@ -910,9 +910,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('Private identifiers support', () => {
-            const regExp: RegExp = new RegExp(
-                'class Foo *{ *' + '#bar *= *0x1; *' + "\\['method'] *\\(\\) *{ *" + 'this\.#bar *= *0x2;' + '} *' + '}'
-            );
+            const variableMatch: string = '_0x([a-f0-9]){4,6}';
 
             let obfuscatedCode: string;
 
@@ -925,8 +923,20 @@ describe('JavaScriptObfuscator', () => {
                 }).getObfuscatedCode();
             });
 
-            it('should support private identifiers', () => {
-                assert.match(obfuscatedCode, regExp);
+            it('should rename private field', () => {
+                assert.match(obfuscatedCode, new RegExp(`#${variableMatch} *= *0x1`));
+            });
+
+            it('should rename private field access', () => {
+                assert.match(obfuscatedCode, new RegExp(`this\\.#${variableMatch} *= *0x2`));
+            });
+
+            it('should rename private method declaration', () => {
+                assert.match(obfuscatedCode, new RegExp(`#${variableMatch}\\(\\) *\\{`));
+            });
+
+            it('should rename private method call', () => {
+                assert.match(obfuscatedCode, new RegExp(`this\\.#${variableMatch}\\(\\)`));
             });
         });
 

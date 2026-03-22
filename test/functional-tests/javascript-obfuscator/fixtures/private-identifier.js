@@ -4,4 +4,13 @@ class Foo {
     method() {
         this.#bar = 2;
     }
+
+    #privateMethod() {
+        return this.#bar;
+    }
+
+    run() {
+        this.method();
+        return this.#privateMethod();
+    }
 }

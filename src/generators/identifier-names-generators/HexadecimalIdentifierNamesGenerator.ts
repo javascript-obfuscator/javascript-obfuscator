@@ -92,23 +92,26 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      */
     private generateNextName(
         nameLength: number | undefined,
-        validationFn: (name: string) => boolean,
-        attempts: number = 0
+        validationFn: (name: string) => boolean
     ): string {
-        this.checkGenerationAttempts(attempts);
-
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
-        const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
-        const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
         const prefixLength: number = Utils.hexadecimalPrefix.length;
         const baseNameLength: number =
             (nameLength ?? HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength) + prefixLength;
-        const baseIdentifierName: string = hexadecimalNumber.slice(0, baseNameLength);
-        const identifierName: string = `_${baseIdentifierName}`;
 
-        if (!validationFn(identifierName)) {
-            return this.generateNextName(nameLength, validationFn, attempts + 1);
+        let identifierName: string = '';
+        let isValid: boolean = false;
+
+        for (let attempts: number = 0; !isValid; attempts++) {
+            this.checkGenerationAttempts(attempts);
+
+            const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
+            const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
+            const baseIdentifierName: string = hexadecimalNumber.slice(0, baseNameLength);
+
+            identifierName = `_${baseIdentifierName}`;
+            isValid = validationFn(identifierName);
         }
 
         this.preserveName(identifierName);

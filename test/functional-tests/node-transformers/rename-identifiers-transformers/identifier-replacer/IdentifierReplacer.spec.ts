@@ -25,7 +25,7 @@ describe('IdentifierReplacer', () => {
             });
         });
 
-        describe('Variant #1: ignore global reserved names', () => {
+        describe('Variant #2: ignore global reserved names', () => {
             let obfuscatedCode: string;
 
             before(() => {

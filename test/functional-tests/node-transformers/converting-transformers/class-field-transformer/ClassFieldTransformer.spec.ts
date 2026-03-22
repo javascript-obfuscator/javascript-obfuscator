@@ -273,4 +273,31 @@ describe('ClassFieldTransformer', () => {
             });
         });
     });
+
+    describe('Variant #3: class method not obfuscated if option `reservedNames` is set', () => {
+        const samplesCount: number = 100;
+
+        let obfuscations: string[];
+
+        beforeEach(() => {
+            obfuscations = [];
+            const code: string = readFileAsString(__dirname + '/fixtures/class-with-function.js');
+
+            for (let i = 0; i < samplesCount; i++) {
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                    controlFlowFlattening: true,
+                    deadCodeInjection: true,
+                    reservedNames: ['bar']
+                }).getObfuscatedCode();
+
+                obfuscations.push(obfuscatedCode);
+            }
+        });
+
+        it('class should always have `bar` method not obfuscated', () => {
+            for (const codeAsString of obfuscations) {
+                assert.match(codeAsString, /\bbar\s*\(/);
+            }
+        });
+    });
 });

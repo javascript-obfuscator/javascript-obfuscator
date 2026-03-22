@@ -31,7 +31,7 @@
     "chance": "1.1.13",
     "class-validator": "0.14.3",
     "commander": "12.1.0",
-    "conf": "15.0.2",
+    "env-paths": "4.0.0",
     "eslint-scope": "8.4.0",
     "eslint-visitor-keys": "4.2.1",
     "fast-deep-equal": "3.1.3",

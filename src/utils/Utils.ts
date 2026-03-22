@@ -10,6 +10,13 @@ export class Utils {
     public static readonly hexadecimalPrefix: string = '0x';
 
     /**
+     * Dynamic require that bypasses webpack bundling.
+     * Use for Node.js-only modules that should not be included in the browser build.
+     */
+    // eslint-disable-next-line no-eval
+    public static readonly nodeRequire: NodeRequire = eval('require');
+
+    /**
      * @param {string} version
      * @param {string} buildTimestamp
      * @returns {string}

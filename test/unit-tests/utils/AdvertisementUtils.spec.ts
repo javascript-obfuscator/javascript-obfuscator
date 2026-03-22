@@ -1,8 +1,37 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { assert } from 'chai';
 
 import { AdvertisementUtils } from '../../../src/utils/AdvertisementUtils';
+import { Utils } from '../../../src/utils/Utils';
+
+const envPaths = Utils.nodeRequire('env-paths').default;
 
 describe('AdvertisementUtils', () => {
+    const configPath = path.join(envPaths('javascript-obfuscator').config, 'config.json');
+
+    function readConfig(): any {
+        try {
+            return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        } catch {
+            return {};
+        }
+    }
+
+    function writeConfig(data: any): void {
+        fs.mkdirSync(path.dirname(configPath), { recursive: true });
+        fs.writeFileSync(configPath, JSON.stringify(data));
+    }
+
+    function deleteConfig(): void {
+        try {
+            fs.unlinkSync(configPath);
+        } catch {
+            // Ignore
+        }
+    }
+
     describe('isCI', () => {
         const originalEnv = { ...process.env };
 
@@ -105,22 +134,10 @@ describe('AdvertisementUtils', () => {
         });
 
         describe('Variant #3: display counter and reset', () => {
-            let config: any;
-
-            before(() => {
-                // Get config instance using eval('require') - same as AdvertisementUtils
-                // conf is an ES Module, so we need to access .default
-                // eslint-disable-next-line no-eval
-                const Conf = eval('require')('conf').default;
-                config = new Conf({ projectName: 'javascript-obfuscator' });
-            });
-
             beforeEach(() => {
-                // Clear ad-related config before each test
-                config.delete('adDisplayCount');
-                config.delete('adFirstDisplayTime');
-                // Reset cached config in AdvertisementUtils
-                (AdvertisementUtils as any).config = null;
+                deleteConfig();
+                // Reset cached config path
+                (AdvertisementUtils as any).configPath = null;
                 // Ensure TTY and non-CI environment
                 process.stdout.isTTY = true;
                 delete process.env.CI;
@@ -130,10 +147,8 @@ describe('AdvertisementUtils', () => {
             });
 
             afterEach(() => {
-                // Clean up
-                config.delete('adDisplayCount');
-                config.delete('adFirstDisplayTime');
-                (AdvertisementUtils as any).config = null;
+                deleteConfig();
+                (AdvertisementUtils as any).configPath = null;
             });
 
             it('should return true for first 5 calls', () => {
@@ -154,13 +169,13 @@ describe('AdvertisementUtils', () => {
 
             it('should increment counter on each call', () => {
                 AdvertisementUtils.shouldShowAdvertisement();
-                assert.strictEqual(config.get('adDisplayCount'), 1);
+                assert.strictEqual(readConfig().adDisplayCount, 1);
 
                 AdvertisementUtils.shouldShowAdvertisement();
-                assert.strictEqual(config.get('adDisplayCount'), 2);
+                assert.strictEqual(readConfig().adDisplayCount, 2);
 
                 AdvertisementUtils.shouldShowAdvertisement();
-                assert.strictEqual(config.get('adDisplayCount'), 3);
+                assert.strictEqual(readConfig().adDisplayCount, 3);
             });
 
             it('should set first display timestamp on first call', () => {
@@ -168,7 +183,7 @@ describe('AdvertisementUtils', () => {
                 AdvertisementUtils.shouldShowAdvertisement();
                 const afterTime = Date.now();
 
-                const timestamp = config.get('adFirstDisplayTime');
+                const timestamp = readConfig().adFirstDisplayTime;
                 assert.isNumber(timestamp);
                 assert.isAtLeast(timestamp, beforeTime);
                 assert.isAtMost(timestamp, afterTime);
@@ -183,14 +198,14 @@ describe('AdvertisementUtils', () => {
 
                 // Simulate 3 days passing by setting old timestamp
                 const threeDaysAgo = Date.now() - 3 * 24 * 60 * 60 * 1000 - 1000;
-                config.set('adFirstDisplayTime', threeDaysAgo);
-                // Reset cached config
-                (AdvertisementUtils as any).config = null;
+                const data = readConfig();
+                data.adFirstDisplayTime = threeDaysAgo;
+                writeConfig(data);
 
                 // Should return true again after reset
                 assert.isTrue(AdvertisementUtils.shouldShowAdvertisement());
                 // Counter should be reset to 1
-                assert.strictEqual(config.get('adDisplayCount'), 1);
+                assert.strictEqual(readConfig().adDisplayCount, 1);
             });
 
             it('should not reset counter before 3 days', () => {
@@ -201,9 +216,9 @@ describe('AdvertisementUtils', () => {
 
                 // Simulate 2 days passing (less than 3 days)
                 const twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
-                config.set('adFirstDisplayTime', twoDaysAgo);
-                // Reset cached config
-                (AdvertisementUtils as any).config = null;
+                const data = readConfig();
+                data.adFirstDisplayTime = twoDaysAgo;
+                writeConfig(data);
 
                 // Should still return false
                 assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());

@@ -12,9 +12,12 @@ export class Utils {
     /**
      * Dynamic require that bypasses webpack bundling.
      * Use for Node.js-only modules that should not be included in the browser build.
+     * Lazy-evaluated to avoid ReferenceError in browser environments.
      */
     // eslint-disable-next-line no-eval
-    public static readonly nodeRequire: NodeRequire = eval('require');
+    public static get nodeRequire(): NodeRequire {
+        return eval('require');
+    }
 
     /**
      * @param {string} version

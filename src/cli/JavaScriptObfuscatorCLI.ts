@@ -4,6 +4,7 @@ import * as path from 'path';
 
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
+import { TOptionsPreset } from '../types/options/TOptionsPreset';
 
 import { IFileData } from '../interfaces/cli/IFileData';
 import { IInitializable } from '../interfaces/IInitializable';
@@ -24,11 +25,10 @@ import { StringArrayEncoding } from '../enums/node-transformers/string-array-tra
 import { StringArrayIndexesType } from '../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 import { StringArrayWrappersType } from '../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
-import { DEFAULT_PRESET } from '../options/presets/Default';
-
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 
+import { Options } from '../options/Options';
 import { CLIUtils } from './utils/CLIUtils';
 import { IdentifierNamesCacheFileUtils } from './utils/IdentifierNamesCacheFileUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
@@ -112,30 +112,44 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
     /**
      * @param {TInputCLIOptions} inputOptions
+     * @param {commander.Command} command
      * @returns {TInputOptions}
      */
-    private static buildOptions(inputOptions: TInputCLIOptions): TInputOptions {
-        const inputCLIOptions: TInputOptions = JavaScriptObfuscatorCLI.filterOptions(inputOptions);
+    private static buildOptions(inputOptions: TInputCLIOptions, command: commander.Command): TInputOptions {
+        const inputCLIOptions: TInputOptions = JavaScriptObfuscatorCLI.filterOptions(inputOptions, command);
         const configFilePath: string | undefined = inputOptions.config;
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
 
+        const presetName: TOptionsPreset =
+            inputCLIOptions.optionsPreset ?? configFileOptions.optionsPreset ?? OptionsPreset.Default;
+        const presetOptions: TInputOptions = Options.getOptionsByPreset(presetName);
+
         return {
-            ...DEFAULT_PRESET,
+            ...presetOptions,
             ...configFileOptions,
             ...inputCLIOptions
         };
     }
 
     /**
+     * Filters out options that were not explicitly set by the user.
+     * Commander.js sets default values for all options, which would
+     * override preset values. Only user-provided options should be kept.
+     *
      * @param {TObject} options
+     * @param {commander.Command} command
      * @returns {TInputOptions}
      */
-    private static filterOptions(options: TInputCLIOptions): TInputOptions {
+    private static filterOptions(options: TInputCLIOptions, command: commander.Command): TInputOptions {
         const filteredOptions: TInputOptions = {};
 
         Object.keys(options).forEach((option: keyof TInputCLIOptions) => {
             if (options[option] === undefined) {
+                return;
+            }
+
+            if (command.getOptionValueSource(String(option)) === 'default') {
                 return;
             }
 
@@ -152,7 +166,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         this.configureHelp();
 
         this.inputPath = path.normalize(this.commands.args[0] || '');
-        this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts());
+        this.inputCLIOptions = JavaScriptObfuscatorCLI.buildOptions(this.commands.opts(), this.commands);
         this.sourceCodeFileUtils = new SourceCodeFileUtils(this.inputPath, this.inputCLIOptions);
         this.obfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(this.inputPath, this.inputCLIOptions);
         this.identifierNamesCacheFileUtils = new IdentifierNamesCacheFileUtils(

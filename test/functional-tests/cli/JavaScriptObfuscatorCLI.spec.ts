@@ -1511,6 +1511,51 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
         });
 
+        /**
+         * https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1236
+         */
+        describe('`--options-preset` should apply preset options that are not explicitly set via CLI', () => {
+            const longStringFixturePath: string = path.join(fixturesDirName, 'sample-long-string.js');
+
+            let obfuscatedCode: string;
+
+            before(async () => {
+                await JavaScriptObfuscatorCLI.obfuscate([
+                    'node',
+                    'javascript-obfuscator',
+                    longStringFixturePath,
+                    '--output',
+                    outputFilePath,
+                    '--options-preset',
+                    'medium-obfuscation',
+                    '--string-array',
+                    'false',
+                    '--dead-code-injection',
+                    'false',
+                    '--control-flow-flattening',
+                    'false',
+                    '--self-defending',
+                    'false',
+                    '--debug-protection',
+                    'false',
+                    '--disable-console-output',
+                    'false',
+                    '--seed',
+                    '1'
+                ]);
+
+                obfuscatedCode = fs.readFileSync(outputFilePath, 'utf8');
+            });
+
+            it('should apply `splitStrings` from preset without explicit `--split-strings` flag', () => {
+                assert.match(obfuscatedCode, /'.+'\s*\+\s*'.+'\s*\+\s*'.+'/);
+            });
+
+            after(() => {
+                fs.unlinkSync(outputFilePath);
+            });
+        });
+
         after(() => {
             rimraf.sync(outputDirName);
         });

@@ -67,8 +67,9 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
 
         if (!this.options.renameGlobals) {
             const lexicalScope: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(propertyNode);
+            const isInsideStaticBlock: boolean = this.isInsideStaticBlock(propertyNode);
             const shouldNotTransformGlobalPropertyNode: boolean =
-                !!lexicalScope && NodeGuards.isProgramNode(lexicalScope);
+                !!lexicalScope && NodeGuards.isProgramNode(lexicalScope) && !isInsideStaticBlock;
 
             if (shouldNotTransformGlobalPropertyNode) {
                 return propertyNode;
@@ -81,5 +82,27 @@ export class ObjectPatternPropertiesTransformer extends AbstractNodeTransformer 
         NodeUtils.parentizeNode(propertyNode.value, propertyNode);
 
         return propertyNode;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private isInsideStaticBlock(node: ESTree.Node): boolean {
+        let currentNode: ESTree.Node | undefined = node;
+
+        while (currentNode) {
+            if (NodeGuards.isStaticBlockNode(currentNode)) {
+                return true;
+            }
+
+            if (NodeGuards.isFunctionNode(currentNode) || NodeGuards.isProgramNode(currentNode)) {
+                return false;
+            }
+
+            currentNode = currentNode.parentNode;
+        }
+
+        return false;
     }
 }

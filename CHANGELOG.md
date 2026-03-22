@@ -7,6 +7,7 @@ v5.4.0
 * Fixed `reservedNames` not preserving class method and property names when `stringArray` or `deadCodeInjection` is enabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1279
 * Fixed infinite loop / stack overflow when `reservedNames` patterns match all generated identifier names. Now throws a descriptive error instead. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1382
 * Fixed `transformObjectKeys` changing evaluation order when object expression is inside a sequence expression with preceding side effects (e.g. `return aux(ys), { min }`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1246
+* Fixed destructuring patterns inside class static blocks not being renamed when `renameGlobals` is disabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1141
 * Fixed CLI `--options-preset` not applying preset values for options not explicitly set via command line (e.g. `splitStrings` from `high-obfuscation` preset was ignored). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1236
 * Replaced `mkdirp` dependency with native `fs.mkdirSync({ recursive: true })`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1275. Thank you https://github.com/roli-lpci!
 * Replaced `conf` dependency with custom implementation using `env-paths` and native `fs`

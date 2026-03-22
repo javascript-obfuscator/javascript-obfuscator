@@ -805,5 +805,6 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                 assert.match(obfuscatedCode, defaultExportRegExp);
             });
         });
+
     });
 });

@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.1
+---
+* Fixed missing space between keywords (`return`, `throw`, `typeof`) and Unicode surrogate pair identifiers in compact mode. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1112
+
 v5.4.0
 ---
 * Add support for `import attributes`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1256

@@ -47,7 +47,20 @@ jobs:
       - run: yarn run test:mocha-coverage
       - run: yarn run test:mocha-coverage:report
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: './coverage/lcov.info'
+          parallel: true
+          flag-name: node-${{ matrix.node-version }}-${{ matrix.os }}
+
+  coveralls-finish:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true

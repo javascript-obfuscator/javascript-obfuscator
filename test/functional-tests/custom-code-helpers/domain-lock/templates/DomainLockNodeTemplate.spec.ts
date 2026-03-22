@@ -955,4 +955,60 @@ describe('DomainLockTemplate', () => {
             });
         });
     });
+
+    describe('Variant #10: domain with hyphen', () => {
+        const samplesCount: number = 50;
+        const domainsString: string = ['my-website.com'].join(';');
+        const domainLockRedirectUrl: string = 'about:blank';
+        const currentDomain: string = 'my-website.com';
+
+        let testFunc: () => void;
+
+        before(() => {
+            testFunc = () => {
+                for (let i = 0; i < samplesCount; i++) {
+                    const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                        domainsString,
+                        domainsString.length * 3
+                    );
+
+                    const [hiddenDomainLockRedirectUrl, domainLockRedirectUrlDiff] = cryptUtils.hideString(
+                        domainLockRedirectUrl,
+                        domainLockRedirectUrl.length * 3
+                    );
+
+                    const root: any = {
+                        document: {
+                            domain: currentDomain,
+                            location: undefined
+                        }
+                    };
+
+                    const fn = getFunctionFromTemplate(
+                        {
+                            domainLockFunctionName: 'domainLockFunction',
+                            domainsStringDiff,
+                            domains: hiddenDomainsString,
+                            domainLockRedirectUrlDiff: domainLockRedirectUrlDiff,
+                            hiddenDomainLockRedirectUrl: hiddenDomainLockRedirectUrl,
+                            globalVariableTemplate: '',
+                            singleCallControllerFunctionName
+                        },
+                        singleCallControllerFunctionName,
+                        thatThisTemplate
+                    );
+
+                    fn.apply(root);
+
+                    if (root.document.location !== undefined) {
+                        throw new Error(`Domain lock redirected for matching hyphenated domain (iteration ${i})`);
+                    }
+                }
+            };
+        });
+
+        it('should correctly match domain containing hyphens', () => {
+            assert.doesNotThrow(testFunc);
+        });
+    });
 });

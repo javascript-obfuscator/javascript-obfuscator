@@ -2,7 +2,8 @@ Change Log
 
 v5.4.1
 ---
-* Removed `source-map-support` runtime dependency. Use `node --enable-source-maps` instead. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1149
+* Fixed missing space between keywords (`return`, `throw`, `typeof`) and Unicode surrogate pair identifiers in compact mode. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1112
+* * Removed `source-map-support` runtime dependency. Use `node --enable-source-maps` instead. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1149
 
 v5.4.0
 ---

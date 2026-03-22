@@ -1,5 +1,9 @@
 Change Log
 
+v5.3.2
+---
+* Replaced `mkdirp` dependency with native `fs.mkdirSync({ recursive: true })`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1275. Thank you https://github.com/roli-lpci!
+
 v5.3.1
 ---
 * Fixed class expression name references inside class body being incorrectly resolved to an import binding with the same name, causing broken code at runtime. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1386

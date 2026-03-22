@@ -48,8 +48,7 @@ module.exports = {
         new webpack.BannerPlugin(
             {
                 banner: WebpackUtils.getBannerText(
-                    WebpackUtils.getLicenseText(),
-                    WebpackUtils.getSourceMapSupportImport()
+                    WebpackUtils.getLicenseText()
                 ),
                 raw: true,
                 entryOnly: false

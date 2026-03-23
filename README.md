@@ -51,6 +51,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 * Malta: [malta-js-obfuscator](https://github.com/fedeghe/malta-js-obfuscator)
 * Netlify plugin: [netlify-plugin-js-obfuscator](https://www.npmjs.com/package/netlify-plugin-js-obfuscator)
 * Snowpack plugin: [snowpack-javascript-obfuscator](https://www.npmjs.com/package/snowpack-javascript-obfuscator)
+* Vite plugin: [vite-plugin-bundle-obfuscator](https://github.com/z0ffy/vite-plugin-bundle-obfuscator)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_shield)

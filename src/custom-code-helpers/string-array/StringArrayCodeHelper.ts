@@ -18,6 +18,8 @@ import { StringArrayTemplate } from './templates/string-array/StringArrayTemplat
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringUtils } from '../../utils/StringUtils';
+import { AtobTemplate } from './templates/string-array-calls-wrapper/AtobTemplate';
+import { ICryptUtilsStringArray } from '../../interfaces/utils/ICryptUtilsStringArray';
 
 @injectable()
 export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
@@ -32,6 +34,8 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      */
     @initializable()
     private stringArrayFunctionName!: string;
+    private readonly cryptUtilsStringArray: ICryptUtilsStringArray;
+    private prefixes: string[];
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -39,6 +43,7 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @param {ICustomCodeHelperObfuscator} customCodeHelperObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param cryptUtilsStringArray
      */
     public constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
@@ -46,7 +51,8 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
         @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.ICustomCodeHelperObfuscator) customCodeHelperObfuscator: ICustomCodeHelperObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.ICryptUtilsStringArray) cryptUtilsStringArray: ICryptUtilsStringArray
     ) {
         super(
             identifierNamesGeneratorFactory,
@@ -55,6 +61,9 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
             randomGenerator,
             options
         );
+
+        this.cryptUtilsStringArray = cryptUtilsStringArray;
+        this.prefixes = [];
     }
 
     /**
@@ -64,6 +73,12 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
     public initialize(stringArrayStorage: IStringArrayStorage, stringArrayFunctionName: string): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayFunctionName = stringArrayFunctionName;
+        this.prefixes = [
+            this.generatePNGPrefix(),
+            this.generateJPGPrefix(),
+            this.generateWEBPPrefix(),
+            this.generateSVGPrefix()
+        ];
     }
 
     /**
@@ -78,25 +93,108 @@ export class StringArrayCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected override getCodeHelperTemplate(): string {
-        const stringArrayName: string = this.identifierNamesGenerator.generateNext();
+        const imageClassName: string = this.identifierNamesGenerator.generateNext();
+        const paramWidthName: string = this.identifierNamesGenerator.generateNext();
+        const paramHeightName: string = this.identifierNamesGenerator.generateNext();
+        const imageInstanceName: string = this.identifierNamesGenerator.generateNext();
 
-        return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(), {
+        const atobFunctionName: string = this.identifierNamesGenerator.generateNext();
+        const atobFunctionTemplate: string = this.identifierNamesGenerator.generateNext();
+
+        const atobPolyfill: string = this.customCodeHelperFormatter.formatTemplate(
+            AtobTemplate(this.options.selfDefending),
+            {
+                atobFunctionName
+            }
+        );
+
+        const imagePrefix: string = this.randomGenerator.getRandomGenerator().pickone(this.prefixes);
+        const payload = this.cryptUtilsStringArray.btoa(this.getStringArrayStorageItemsJSON());
+        const imageSrc: string = `'${StringUtils.escapeJsString(imagePrefix + payload)}'`;
+        const prefixLengthAkaWidth = imagePrefix.length;
+        const dummyHeight = Math.floor(
+            prefixLengthAkaWidth *
+                this.randomGenerator.getRandomGenerator().pickone([16 / 9, 9 / 16, 1, 3 / 4, 4 / 3, 1])
+        );
+
+        return this.customCodeHelperFormatter.formatTemplate(StringArrayTemplate(this.options.selfDefending), {
+            imageClassName: imageClassName,
+            paramWidthName: paramWidthName,
+            paramHeightName: paramHeightName,
+            imageInstanceName: imageInstanceName,
+
             stringArrayFunctionName: this.stringArrayFunctionName,
-            stringArrayName: stringArrayName,
-            stringArrayStorageItems: this.getEncodedStringArrayStorageItems()
+
+            atobPolyfill: atobPolyfill,
+            atobFunctionName: atobFunctionName,
+            atobFunctionTemplate: atobFunctionTemplate,
+            imageSrc: imageSrc,
+            imageWidth: prefixLengthAkaWidth,
+            imageHeight: dummyHeight
         });
     }
 
     /**
      * @returns {string}
      */
-    private getEncodedStringArrayStorageItems(): string {
-        return Array.from(this.stringArrayStorage.getStorage().values())
-            .map((stringArrayStorageItemData: IStringArrayStorageItemData): string => {
-                const escapedEncodedValue: string = StringUtils.escapeJsString(stringArrayStorageItemData.encodedValue);
+    private getStringArrayStorageItemsJSON(): string {
+        return JSON.stringify(
+            Array.from(this.stringArrayStorage.getStorage().values()).map(
+                (stringArrayStorageItemData: IStringArrayStorageItemData): string =>
+                    stringArrayStorageItemData.encodedValue
+            )
+        ).toString();
+    }
 
-                return `'${escapedEncodedValue}'`;
-            })
-            .toString();
+    private generatePNGPrefix(): string {
+        let imagePrefix: string = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA';
+        const iterations: number = this.randomGenerator.getRandomInteger(4, 8);
+        for (let i: number = 0; i < iterations; i++) {
+            imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(4, 8));
+            imagePrefix += 'A'.repeat(this.randomGenerator.getRandomInteger(2, 8));
+        }
+        imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(4, 64));
+        imagePrefix += 'A'.repeat(16 * this.randomGenerator.getRandomInteger(0, 1));
+        imagePrefix += this.randomGenerator.getRandomString(32 - (imagePrefix.length % 16));
+
+        return imagePrefix;
+    }
+
+    private generateJPGPrefix(): string {
+        let imagePrefix: string = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAk';
+        const iterations: number = this.randomGenerator.getRandomInteger(4, 8);
+        for (let i: number = 0; i < iterations; i++) {
+            imagePrefix += this.randomGenerator.getRandomString(4 * this.randomGenerator.getRandomInteger(4, 8));
+            imagePrefix += '/';
+        }
+        imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(4, 64));
+        imagePrefix += 'A'.repeat(16 * this.randomGenerator.getRandomInteger(0, 1));
+        imagePrefix += this.randomGenerator.getRandomString(32 - (imagePrefix.length % 16));
+
+        return imagePrefix;
+    }
+
+    private generateWEBPPrefix(): string {
+        const randomThreeLetters = this.randomGenerator.getRandomString(3);
+        let imagePrefix: string = `data:image/webp;base64,UklGR${randomThreeLetters}AABXRUJQVlA4`;
+        const iterations: number = this.randomGenerator.getRandomInteger(4, 8);
+        for (let i: number = 0; i < iterations; i++) {
+            imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(8, 24));
+            imagePrefix += '/'.repeat(this.randomGenerator.getRandomInteger(1, 2));
+        }
+        imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(4, 64));
+        imagePrefix += 'A'.repeat(16 * this.randomGenerator.getRandomInteger(0, 1));
+        imagePrefix += this.randomGenerator.getRandomString(32 - (imagePrefix.length % 16));
+
+        return imagePrefix;
+    }
+
+    private generateSVGPrefix(): string {
+        let imagePrefix: string = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI';
+        imagePrefix += this.randomGenerator.getRandomString(this.randomGenerator.getRandomInteger(64, 256));
+        imagePrefix += 'A'.repeat(16 * this.randomGenerator.getRandomInteger(0, 1));
+        imagePrefix += this.randomGenerator.getRandomString(32 - (imagePrefix.length % 16));
+
+        return imagePrefix;
     }
 }

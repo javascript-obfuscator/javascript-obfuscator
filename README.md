@@ -1871,8 +1871,8 @@ Specify exactly which root-level functions should get VM protection by name.
 **Example:**
 ```javascript
 {
-    vmObfuscation: true,
-    vmTargetFunctions: ['someFunctionName']
+  vmObfuscation: true,
+  vmTargetFunctions: ['someFunctionName']
 }
 ```
 
@@ -1886,8 +1886,8 @@ Specify root-level functions that should never get VM protection. Takes preceden
 **Example:**
 ```javascript
 {
-    vmObfuscation: true,
-    vmExcludeFunctions: ['someFunctionName']
+  vmObfuscation: true,
+  vmExcludeFunctions: ['someFunctionName']
 }
 ```
 
@@ -1907,28 +1907,28 @@ Controls how functions/methods are selected for VM obfuscation.
 ```javascript
 // Source code
 function regularFunction() {
-    return 'not virtualized';
+  return 'not virtualized';
 }
 
 /* javascript-obfuscator:vm */
 function sensitiveFunction() {
-    return 'this will be VM-protected';
+  return 'this will be VM-protected';
 }
 
 function outer() {
-    /* javascript-obfuscator:vm */
-    function nestedSensitive() {
-        return 'nested but still VM-protected';
-    }
-    return nestedSensitive();
+  /* javascript-obfuscator:vm */
+  function nestedSensitive() {
+    return 'nested but still VM-protected';
+  }
+  return nestedSensitive();
 }
 ```
 
 ```javascript
 // Obfuscator options
 {
-    vmObfuscation: true,
-    vmTargetFunctionsMode: 'comment'
+  vmObfuscation: true,
+  vmTargetFunctionsMode: 'comment'
 }
 ```
 
@@ -2021,10 +2021,10 @@ vmBytecodeArrayEncodingKeyGetter: "window.config.encryption.key"
 ```ts
 // Build time
 JavaScriptObfuscator.obfuscate(code, {
-    vmObfuscation: true,
-    vmBytecodeArrayEncoding: true,
-    vmBytecodeArrayEncodingKey: 'mySecretKey123',
-    vmBytecodeArrayEncodingKeyGetter: 'window.__VM_KEY__'
+  vmObfuscation: true,
+  vmBytecodeArrayEncoding: true,
+  vmBytecodeArrayEncodingKey: 'mySecretKey123',
+  vmBytecodeArrayEncodingKeyGetter: 'window.__VM_KEY__'
 });
 
 // Runtime - key must be set before obfuscated code runs
@@ -2046,17 +2046,6 @@ Type: `boolean` Default: `false`
 
 Injects fake bytecode sequences that are never executed. These look like real instructions but are skipped during runtime, confusing analysis tools that process them.
 
-### `vmCompactDispatcher`
-Type: `boolean` Default: `false`
-
-Uses a single unified dispatcher (generator-based) for both sync and async/generator code execution. By default (`false`), the VM generates two separate dispatchers: a non-generator version for sync code (faster) and a generator version for async/generator code. When enabled, only the generator-based dispatcher is used for all execution.
-
-**Trade-offs:**
-- `false` (default): Larger code size due to dual dispatchers, but faster sync execution (no generator overhead)
-- `true`: Smaller code size with single dispatcher, but sync code has generator protocol overhead
-
-Use this when code size is more important than sync execution speed.
-
 ### `vmMacroOps`
 Type: `boolean` Default: `false`
 
@@ -2065,7 +2054,16 @@ Combines common instruction sequences into single "macro" opcodes. For example, 
 ### `vmDebugProtection`
 Type: `boolean` Default: `false`
 
-Adds anti-debugging measures to the VM runtime. Detects debugger presence and alters behavior when debugging is detected.
+Adds multi-layered anti-debugging, anti-analysis, and anti-LLM defenses to the VM runtime. For best results, allow `unsafe-eval` in your Content Security Policy. Works best with `browser`/`browser-no-eval` targets.
+
+### `vmSelfDefending`
+Type: `boolean` Default: `false`
+
+Adds multi-layered tamper detection, anti-hooking, and anti-reverse-engineering protection to the VM runtime.
+
+> :warning: This option force-enables [`vmBytecodeArrayEncoding`](#vmbytecodeArrayEncoding).
+
+Strongly recommended to use together with [`vmDebugProtection`](#vmDebugProtection), [`vmBytecodeArrayEncodingKey`](#vmbytecodeArrayEncodingKey), and [`vmBytecodeArrayEncodingKeyGetter`](#vmbytecodeArrayEncodingKeyGetter).
 
 ### `vmStatefulOpcodes`
 Type: `boolean` Default: `false`
@@ -2078,6 +2076,26 @@ Type: `boolean` Default: `false`
 Encrypts values on the VM stack during execution. Values are encoded when pushed and decoded when popped, so memory inspection shows encrypted data instead of actual values.
 
 This option heavily affects performance.
+
+### `vmCompactDispatcher`
+Type: `boolean` Default: `false`
+
+Uses a single VM executor instead of dual executors (sync + generator). Reduces obfuscated code size but adds ~20% performance overhead on recursion-heavy code.
+
+- `false` (default): dual executors — optimal performance, larger output
+- `true`: single executor — smaller output, slightly slower
+
+### `vmStringArrayBytecodeOnly`
+Type: `boolean` Default: `false`
+
+When enabled, the string array will **only** extract strings from bytecode data — no other strings in the code are transformed. This force-enables `stringArray` even if it's not explicitly set.
+
+**Why use this:** Extracting all VM runtime strings to a string array is slow. This option targets only bytecode content for string array extraction, improving performance while still protecting bytecode constants.
+
+- When `vmBytecodeArrayEncoding: false` — strings inside bytecode constant pools (`c` arrays) are extracted
+- When `vmBytecodeArrayEncoding: true` — top-level base64 encoded bytecode strings are extracted
+- `stringArrayThreshold` still controls what percentage of those bytecode strings are extracted
+
 
 ### `strictMode`
 Type: `boolean | null` Default: `null`

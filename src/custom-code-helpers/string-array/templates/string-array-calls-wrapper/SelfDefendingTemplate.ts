@@ -57,6 +57,8 @@ export function SelfDefendingTemplate(
             return ${rc4BytesIdentifier}(this.${statesIdentifier}[0]);
         };
 
-        new StatesClass({stringArrayCallsWrapperName}).${checkStateIdentifier}();
+        if (('' + function(){return 0;}).indexOf('\\n') === -1) {
+            new StatesClass({stringArrayCallsWrapperName}).${checkStateIdentifier}();
+        }
     `;
 }

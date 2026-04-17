@@ -332,9 +332,9 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
                         decodedValue = Function(`
                             ${stringArrayTemplate}
-                        
+
                             ${stringArrayCallsWrapperTemplate}
-                            
+
                             return ${stringArrayCallsWrapperName}(${index});
                         `)();
                     });
@@ -379,14 +379,126 @@ describe('StringArrayCallsWrapperTemplate', () => {
 
                         decodedValue = Function(`
                             ${stringArrayTemplate}
-                        
+
                             ${stringArrayCallsWrapperTemplate}
-                            
+
                             return ${stringArrayCallsWrapperName}(${index});
                         `)();
                     });
 
                     it('should return invalid decoded value', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
+                });
+            });
+
+            describe('Variant #3: correct code evaluation when engine reformats Function.prototype.toString', () => {
+                const origToString = Function.prototype.toString;
+
+                afterEach(() => {
+                    Function.prototype.toString = origToString;
+                });
+
+                describe('Variant #1: long decoded string', () => {
+                    const index: string = '0x0';
+
+                    const indexShiftAmount: number = 0;
+
+                    const expectedDecodedValue: string = 'test1test1';
+
+                    let decodedValue: string;
+
+                    before(() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('test1test1')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
+                        const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                            decodeCodeHelperTemplate: atobDecodeTemplate,
+                            indexShiftAmount,
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName,
+                            stringArrayFunctionName
+                        });
+
+                        // Simulate Bun/JSC: Function.prototype.toString adds newlines
+                        Function.prototype.toString = function () {
+                            return origToString.call(this).replace('){', '){\n');
+                        };
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+
+                            ${stringArrayCallsWrapperTemplate}
+
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should correctly return decoded value when engine reformats toString', () => {
+                        assert.deepEqual(decodedValue, expectedDecodedValue);
+                    });
+                });
+
+                describe('Variant #2: 3-characters decoded string', () => {
+                    const index: string = '0x0';
+
+                    const indexShiftAmount: number = 0;
+
+                    const expectedDecodedValue: string = 'foo';
+
+                    let decodedValue: string;
+
+                    before(() => {
+                        const stringArrayTemplate = format(StringArrayTemplate(), {
+                            stringArrayName,
+                            stringArrayFunctionName,
+                            stringArrayStorageItems: `'${cryptUtilsSwappedAlphabet.btoa('foo')}'`
+                        });
+                        const atobPolyfill = format(AtobTemplate(selfDefendingEnabled), {
+                            atobFunctionName
+                        });
+                        const atobDecodeTemplate: string = format(StringArrayBase64DecodeTemplate(randomGenerator), {
+                            atobPolyfill,
+                            atobFunctionName,
+                            selfDefendingCode: '',
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName
+                        });
+                        const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
+                            decodeCodeHelperTemplate: atobDecodeTemplate,
+                            indexShiftAmount,
+                            stringArrayCacheName,
+                            stringArrayCallsWrapperName,
+                            stringArrayFunctionName
+                        });
+
+                        // Simulate Bun/JSC: Function.prototype.toString adds newlines
+                        Function.prototype.toString = function () {
+                            return origToString.call(this).replace('){', '){\n');
+                        };
+
+                        decodedValue = Function(`
+                            ${stringArrayTemplate}
+
+                            ${stringArrayCallsWrapperTemplate}
+
+                            return ${stringArrayCallsWrapperName}(${index});
+                        `)();
+                    });
+
+                    it('should correctly return decoded value when engine reformats toString', () => {
                         assert.deepEqual(decodedValue, expectedDecodedValue);
                     });
                 });

@@ -12,8 +12,15 @@ export function AtobTemplate(selfDefending: boolean): string {
 
             let output = '';
             let tempEncodedString = '';
-            ${selfDefending ? 'let func = output + {atobFunctionName};' : ''}
-            
+            ${
+                selfDefending
+                    ? `
+                        let func = output + {atobFunctionName}; 
+                        let __ = ('' + function(){return 0;}).indexOf('\\n') !== -1;
+                    `
+                    : ''
+            }
+
             for (
                 let bc = 0, bs, buffer, idx = 0;
                 buffer = input.charAt(idx++);
@@ -21,7 +28,13 @@ export function AtobTemplate(selfDefending: boolean): string {
                     ? output += ${((): string => {
                         const basePart: string = 'String.fromCharCode(255 & bs >> (-2 * bc & 6))';
 
-                        return selfDefending ? `((func.charCodeAt(idx + 10) - 10 !== 0) ? ${basePart} : bc)` : basePart;
+                        return selfDefending
+                            ? `
+                                ((__ || func.charCodeAt(idx + 10) - 10 !== 0) 
+                                    ? ${basePart} 
+                                    : bc)
+                            `
+                            : basePart;
                     })()}
                     : 0
             ) {

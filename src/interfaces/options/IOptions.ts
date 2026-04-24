@@ -3,6 +3,7 @@ import { TOptionsPreset } from '../../types/options/TOptionsPreset';
 import { TStringArrayIndexesType } from '../../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../../types/options/TStringArrayWrappersType';
+import { TObfuscateApiCallsMode } from '../../types/options/TObfuscateApiCallsMode';
 import { TRenamePropertiesMode } from '../../types/options/TRenamePropertiesMode';
 import { TTypeFromEnum } from '../../types/utils/TTypeFromEnum';
 
@@ -31,6 +32,9 @@ export interface IOptions {
     readonly inputFileName: string;
     readonly log: boolean;
     readonly numbersToExpressions: boolean;
+    readonly obfuscateApiCalls: boolean;
+    readonly obfuscateApiCallsMode: TObfuscateApiCallsMode;
+    readonly obfuscateBuiltins: boolean;
     readonly optionsPreset: TOptionsPreset;
     readonly renameGlobals: boolean;
     readonly renameProperties: boolean;

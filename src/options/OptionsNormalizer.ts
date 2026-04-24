@@ -12,6 +12,7 @@ import { DomainLockRedirectUrlRule } from './normalizer-rules/DomainLockRedirect
 import { DomainLockRule } from './normalizer-rules/DomainLockRule';
 import { IdentifierNamesCacheRule } from './normalizer-rules/IdentifierNamesCacheRule';
 import { InputFileNameRule } from './normalizer-rules/InputFileNameRule';
+import { ObfuscateApiCallsModeRule } from './normalizer-rules/ObfuscateApiCallsModeRule';
 import { SeedRule } from './normalizer-rules/SeedRule';
 import { SelfDefendingRule } from './normalizer-rules/SelfDefendingRule';
 import { SourceMapBaseUrlRule } from './normalizer-rules/SourceMapBaseUrlRule';
@@ -35,6 +36,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         DomainLockRule,
         IdentifierNamesCacheRule,
         InputFileNameRule,
+        ObfuscateApiCallsModeRule,
         SeedRule,
         SelfDefendingRule,
         SourceMapBaseUrlRule,

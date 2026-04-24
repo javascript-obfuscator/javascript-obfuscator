@@ -1,6 +1,7 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscateApiCallsMode } from '../../enums/node-transformers/converting-transformers/ObfuscateApiCallsMode';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { OptionsPreset } from '../../enums/options/presets/OptionsPreset';
 import { RenamePropertiesMode } from '../../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
@@ -32,6 +33,9 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     inputFileName: '',
     log: false,
     numbersToExpressions: false,
+    obfuscateApiCalls: false,
+    obfuscateApiCallsMode: ObfuscateApiCallsMode.CallsOnly,
+    obfuscateBuiltins: false,
     optionsPreset: OptionsPreset.Default,
     renameGlobals: false,
     renameProperties: false,

@@ -62,6 +62,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {NodeTransformer[]}
      */
     private static readonly nodeTransformersList: NodeTransformer[] = [
+        NodeTransformer.ApiCallsObfuscationTransformer,
+        NodeTransformer.BuiltinsObfuscationTransformer,
         NodeTransformer.BooleanLiteralTransformer,
         NodeTransformer.BlockStatementControlFlowTransformer,
         NodeTransformer.BlockStatementSimplifyTransformer,

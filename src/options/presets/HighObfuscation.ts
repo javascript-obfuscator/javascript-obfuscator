@@ -7,6 +7,7 @@ import { MEDIUM_OBFUSCATION_PRESET } from './MediumObfuscation';
 
 export const HIGH_OBFUSCATION_PRESET: TInputOptions = Object.freeze({
     ...MEDIUM_OBFUSCATION_PRESET,
+    obfuscateBuiltins: true,
     controlFlowFlatteningThreshold: 1,
     deadCodeInjectionThreshold: 1,
     debugProtection: true,

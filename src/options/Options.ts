@@ -25,12 +25,14 @@ import { TRenamePropertiesMode } from '../types/options/TRenamePropertiesMode';
 import { TStringArrayIndexesType } from '../types/options/TStringArrayIndexesType';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 import { TStringArrayWrappersType } from '../types/options/TStringArrayWrappersType';
+import { TObfuscateApiCallsMode } from '../types/options/TObfuscateApiCallsMode';
 import { TTypeFromEnum } from '../types/utils/TTypeFromEnum';
 
 import { IOptions } from '../interfaces/options/IOptions';
 import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
 
 import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscateApiCallsMode } from '../enums/node-transformers/converting-transformers/ObfuscateApiCallsMode';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { OptionsPreset } from '../enums/options/presets/OptionsPreset';
 import { RenamePropertiesMode } from '../enums/node-transformers/rename-properties-transformers/RenamePropertiesMode';
@@ -209,6 +211,24 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly numbersToExpressions!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly obfuscateApiCalls!: boolean;
+
+    /**
+     * @type {ObfuscateApiCallsMode}
+     */
+    @IsIn([ObfuscateApiCallsMode.CallsOnly, ObfuscateApiCallsMode.AllAccess])
+    public readonly obfuscateApiCallsMode!: TObfuscateApiCallsMode;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly obfuscateBuiltins!: boolean;
 
     /**
      * @type {TOptionsPreset}

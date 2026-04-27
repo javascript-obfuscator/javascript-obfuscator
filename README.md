@@ -4,14 +4,31 @@
   Author: Timofei Kachalov
   -->
 
-#### You can support this project by donating:
-* (Github) https://github.com/sponsors/sanex3339
-
-Huge thanks to all supporters!
-
 # JavaScript obfuscator
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
+
+---
+
+### Do you use JavaScript Obfuscator at your company?
+
+JavaScript Obfuscator has reached over **1 million npm downloads per week**. I am currently preparing an **EB-1 immigration case** and collecting independent evidence of the project’s real-world professional usage and impact.
+
+If you use JavaScript Obfuscator in a company project — especially at a well-known company, large organization, or widely used product — I would be very grateful if you could contact me.
+
+Helpful evidence may include a brief confirmation or, ideally, a 1–2 page reference letter describing:
+
+- how your team or company used JavaScript Obfuscator;
+- why you chose it;
+- what problem it helped solve;
+- whether it was used in production or an important internal workflow;
+- your role and how you are familiar with the usage.
+
+I can provide a simple draft/template to make this easy.
+
+Please contact me at: **referenceletter@obfuscator.io**
+
+Thank you for supporting the project.
 
 ---
 

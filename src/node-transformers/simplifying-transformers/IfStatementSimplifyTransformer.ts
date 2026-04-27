@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -18,6 +18,7 @@ import { NodeUtils } from '../../node/NodeUtils';
 /**
  * Simplifies `IfStatement` node
  */
+@injectFromBase()
 @injectable()
 export class IfStatementSimplifyTransformer extends AbstractStatementSimplifyTransformer {
     /**

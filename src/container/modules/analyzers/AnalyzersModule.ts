@@ -1,5 +1,5 @@
 import { InversifyContainerFacade } from '../../InversifyContainerFacade';
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICalleeDataExtractor } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeDataExtractor';
@@ -19,48 +19,53 @@ import { PrevailingKindOfVariablesAnalyzer } from '../../../analyzers/prevailing
 import { ScopeAnalyzer } from '../../../analyzers/scope-analyzer/ScopeAnalyzer';
 import { StringArrayStorageAnalyzer } from '../../../analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer';
 
-export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const analyzersModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // calls graph analyzer
-    bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer).to(CallsGraphAnalyzer).inSingletonScope();
+    options.bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer).to(CallsGraphAnalyzer).inSingletonScope();
 
     // number numerical expression analyzer
-    bind<INumberNumericalExpressionAnalyzer>(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
+    options
+        .bind<INumberNumericalExpressionAnalyzer>(ServiceIdentifiers.INumberNumericalExpressionAnalyzer)
         .to(NumberNumericalExpressionAnalyzer)
         .inSingletonScope();
 
     // prevailing kind of variables analyzer
-    bind<IPrevailingKindOfVariablesAnalyzer>(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
+    options
+        .bind<IPrevailingKindOfVariablesAnalyzer>(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
         .to(PrevailingKindOfVariablesAnalyzer)
         .inSingletonScope();
 
     // scope analyzer
-    bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer).to(ScopeAnalyzer).inSingletonScope();
+    options.bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer).to(ScopeAnalyzer).inSingletonScope();
 
     // string array storage analyzer
-    bind<IStringArrayStorageAnalyzer>(ServiceIdentifiers.IStringArrayStorageAnalyzer)
+    options
+        .bind<IStringArrayStorageAnalyzer>(ServiceIdentifiers.IStringArrayStorageAnalyzer)
         .to(StringArrayStorageAnalyzer)
         .inSingletonScope();
 
     // callee data extractors
-    bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
+    options
+        .bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(FunctionDeclarationCalleeDataExtractor)
-        .whenTargetNamed(CalleeDataExtractor.FunctionDeclarationCalleeDataExtractor);
+        .whenNamed(CalleeDataExtractor.FunctionDeclarationCalleeDataExtractor);
 
-    bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
+    options
+        .bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(FunctionExpressionCalleeDataExtractor)
-        .whenTargetNamed(CalleeDataExtractor.FunctionExpressionCalleeDataExtractor);
+        .whenNamed(CalleeDataExtractor.FunctionExpressionCalleeDataExtractor);
 
-    bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
+    options
+        .bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(ObjectExpressionCalleeDataExtractor)
-        .whenTargetNamed(CalleeDataExtractor.ObjectExpressionCalleeDataExtractor);
+        .whenNamed(CalleeDataExtractor.ObjectExpressionCalleeDataExtractor);
 
     // callee data extractor factory
-    bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor).toFactory<
-        ICalleeDataExtractor,
-        [CalleeDataExtractor]
-    >(
-        InversifyContainerFacade.getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(
-            ServiceIdentifiers.ICalleeDataExtractor
-        )
-    );
+    options
+        .bind<Factory<ICalleeDataExtractor, [CalleeDataExtractor]>>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
+        .toFactory(
+            InversifyContainerFacade.getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(
+                ServiceIdentifiers.ICalleeDataExtractor
+            )
+        );
 });

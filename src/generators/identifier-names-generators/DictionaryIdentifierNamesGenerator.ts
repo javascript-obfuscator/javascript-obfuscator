@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
@@ -9,6 +9,7 @@ import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGener
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
+@injectFromBase()
 @injectable()
 export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**

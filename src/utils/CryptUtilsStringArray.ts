@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { ICryptUtilsStringArray } from '../interfaces/utils/ICryptUtilsStringArray';
@@ -8,6 +8,7 @@ import { base64alphabetSwapped } from '../constants/Base64AlphabetSwapped';
 
 import { CryptUtils } from './CryptUtils';
 
+@injectFromBase()
 @injectable()
 export class CryptUtilsStringArray extends CryptUtils implements ICryptUtilsStringArray {
     /**

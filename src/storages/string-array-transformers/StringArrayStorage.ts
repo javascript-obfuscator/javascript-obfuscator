@@ -1,4 +1,4 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable, injectFromBase, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
@@ -17,6 +17,7 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 
 import { MapStorage } from '../MapStorage';
 
+@injectFromBase()
 @injectable()
 export class StringArrayStorage
     extends MapStorage<`${string}-${TStringArrayEncoding}`, IStringArrayStorageItemData>

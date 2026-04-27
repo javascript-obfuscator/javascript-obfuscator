@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -17,6 +17,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 
+@injectFromBase()
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**

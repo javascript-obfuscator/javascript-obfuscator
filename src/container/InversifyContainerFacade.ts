@@ -1,4 +1,4 @@
-import { Container, interfaces } from 'inversify';
+import { Container, ResolutionContext, ServiceIdentifier, Factory } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
@@ -42,9 +42,9 @@ import { SourceCode } from '../source-code/SourceCode';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
-     * @type {interfaces.Container}
+     * @type {Container}
      */
-    private readonly container: interfaces.Container;
+    private readonly container: Container;
 
     public constructor() {
         this.container = new Container();
@@ -55,11 +55,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @returns {U}
      */
     public static getFactory<T extends string, U>(
-        serviceIdentifier: interfaces.ServiceIdentifier<U>
-    ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): ((bindingName: T) => U) => {
+        serviceIdentifier: ServiceIdentifier<U>
+    ): (context: ResolutionContext) => (bindingName: T) => U {
+        return (context: ResolutionContext): ((bindingName: T) => U) => {
             return (bindingName: T): U => {
-                return context.container.getNamed<U>(serviceIdentifier, bindingName);
+                return context.get<U>(serviceIdentifier, { name: bindingName });
             };
         };
     }
@@ -69,9 +69,9 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @returns {U}
      */
     public static getCacheFactory<T extends string, U>(
-        serviceIdentifier: interfaces.ServiceIdentifier<U>
-    ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): ((bindingName: T) => U) => {
+        serviceIdentifier: ServiceIdentifier<U>
+    ): (context: ResolutionContext) => (bindingName: T) => U {
+        return (context: ResolutionContext): ((bindingName: T) => U) => {
             const cache: Map<T, U> = new Map();
 
             return (bindingName: T): U => {
@@ -79,7 +79,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
                     return <U>cache.get(bindingName);
                 }
 
-                const object: U = context.container.getNamed<U>(serviceIdentifier, bindingName);
+                const object: U = context.get<U>(serviceIdentifier, { name: bindingName });
 
                 cache.set(bindingName, object);
 
@@ -91,24 +91,21 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
      * @param {interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>} serviceIdentifier
      * @param {interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>} dependencies
-     * @returns {(context: interfaces.Context) => (bindingName: T) => U}
+     * @returns {(context: ResolutionContext) => (bindingName: T) => U}
      */
     public static getConstructorFactory<T extends string, U>(
-        serviceIdentifier: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
-        ...dependencies: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>[]
-    ): (context: interfaces.Context) => (bindingName: T) => U {
-        return (context: interfaces.Context): ((bindingName: T) => U) => {
+        serviceIdentifier: ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
+        ...dependencies: ServiceIdentifier<TConstructor<Record<string, any>[], U>>[]
+    ): (context: ResolutionContext) => (bindingName: T) => U {
+        return (context: ResolutionContext): ((bindingName: T) => U) => {
             const cache: Map<T, TConstructor<Record<string, any>[], U>> = new Map();
             const cachedDependencies: Record<string, any>[] = [];
 
             return (bindingName: T): U => {
                 dependencies.forEach(
-                    (
-                        dependency: interfaces.ServiceIdentifier<TConstructor<Record<string, any>[], U>>,
-                        index: number
-                    ) => {
+                    (dependency: ServiceIdentifier<TConstructor<Record<string, any>[], U>>, index: number) => {
                         if (!cachedDependencies[index]) {
-                            cachedDependencies[index] = context.container.get(dependency);
+                            cachedDependencies[index] = context.get(dependency);
                         }
                     }
                 );
@@ -117,10 +114,9 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
                     return new (<TConstructor<Record<string, any>[], U>>cache.get(bindingName))(...cachedDependencies);
                 }
 
-                const constructor = context.container.getNamed<TConstructor<Record<string, any>[], U>>(
-                    serviceIdentifier,
-                    bindingName
-                );
+                const constructor = context.get<TConstructor<Record<string, any>[], U>>(serviceIdentifier, {
+                    name: bindingName
+                });
 
                 cache.set(bindingName, constructor);
 
@@ -130,20 +126,20 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
+     * @param {ServiceIdentifier<T>} serviceIdentifier
      * @returns {T}
      */
-    public get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
+    public get<T>(serviceIdentifier: ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
     }
 
     /**
-     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
+     * @param {ServiceIdentifier<T>} serviceIdentifier
      * @param {string | number | symbol} named
      * @returns {T}
      */
-    public getNamed<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
-        return this.container.getNamed<T>(serviceIdentifier, named);
+    public getNamed<T>(serviceIdentifier: ServiceIdentifier<T>, named: string | number | symbol): T {
+        return this.container.get<T>(serviceIdentifier, { name: named });
     }
 
     /**
@@ -182,10 +178,10 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult).to(ObfuscationResult);
 
         this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
-            .toFactory<IObfuscationResult, [string, string]>((context: interfaces.Context) => {
+            .bind<Factory<IObfuscationResult, [string, string]>>(ServiceIdentifiers.Factory__IObfuscationResult)
+            .toFactory((context: ResolutionContext) => {
                 return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscationResult => {
-                    const obfuscationResult: IObfuscationResult = context.container.get<IObfuscationResult>(
+                    const obfuscationResult: IObfuscationResult = context.get<IObfuscationResult>(
                         ServiceIdentifiers.IObfuscationResult
                     );
 
@@ -196,29 +192,29 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             });
 
         // modules
-        this.container.load(analyzersModule);
-        this.container.load(codeTransformersModule);
-        this.container.load(controlFlowTransformersModule);
-        this.container.load(convertingTransformersModule);
-        this.container.load(customCodeHelpersModule);
-        this.container.load(customNodesModule);
-        this.container.load(deadCodeInjectionTransformersModule);
-        this.container.load(finalizingTransformersModule);
-        this.container.load(generatorsModule);
-        this.container.load(initializingTransformersModule);
-        this.container.load(nodeModule);
-        this.container.load(nodeTransformersModule);
-        this.container.load(optionsModule);
-        this.container.load(preparingTransformersModule);
-        this.container.load(renameIdentifiersTransformersModule);
-        this.container.load(renamePropertiesTransformersModule);
-        this.container.load(simplifyingTransformersModule);
-        this.container.load(storagesModule);
-        this.container.load(stringArrayTransformersModule);
-        this.container.load(utilsModule);
+        this.container.loadSync(analyzersModule);
+        this.container.loadSync(codeTransformersModule);
+        this.container.loadSync(controlFlowTransformersModule);
+        this.container.loadSync(convertingTransformersModule);
+        this.container.loadSync(customCodeHelpersModule);
+        this.container.loadSync(customNodesModule);
+        this.container.loadSync(deadCodeInjectionTransformersModule);
+        this.container.loadSync(finalizingTransformersModule);
+        this.container.loadSync(generatorsModule);
+        this.container.loadSync(initializingTransformersModule);
+        this.container.loadSync(nodeModule);
+        this.container.loadSync(nodeTransformersModule);
+        this.container.loadSync(optionsModule);
+        this.container.loadSync(preparingTransformersModule);
+        this.container.loadSync(renameIdentifiersTransformersModule);
+        this.container.loadSync(renamePropertiesTransformersModule);
+        this.container.loadSync(simplifyingTransformersModule);
+        this.container.loadSync(storagesModule);
+        this.container.loadSync(stringArrayTransformersModule);
+        this.container.loadSync(utilsModule);
     }
 
     public unload(): void {
-        this.container.unbindAll();
+        this.container.unbindAllSync();
     }
 }

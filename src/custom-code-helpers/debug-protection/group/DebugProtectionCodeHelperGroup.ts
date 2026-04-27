@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
@@ -26,6 +26,7 @@ import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
 
+@injectFromBase()
 @injectable()
 export class DebugProtectionCodeHelperGroup extends AbstractCustomCodeHelperGroup {
     /**

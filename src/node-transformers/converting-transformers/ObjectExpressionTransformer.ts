@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -20,6 +20,7 @@ import { NodeGuards } from '../../node/NodeGuards';
  * on:
  *     var object = { 'PSEUDO': 1 };
  */
+@injectFromBase()
 @injectable()
 export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**

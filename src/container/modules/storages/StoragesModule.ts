@@ -1,8 +1,6 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, ResolutionContext, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { TControlFlowStorageFactory } from '../../../types/container/node-transformers/TControlFlowStorageFactory';
-import { TControlFlowStorageFactoryCreator } from '../../../types/container/node-transformers/TControlFlowStorageFactoryCreator';
 import { TCustomCodeHelperGroupStorage } from '../../../types/storages/TCustomCodeHelperGroupStorage';
 
 import { IControlFlowStorage } from '../../../interfaces/storages/control-flow-transformers/IControlFlowStorage';
@@ -25,50 +23,59 @@ import { StringControlFlowStorage } from '../../../storages/control-flow-transfo
 import { StringArrayStorage } from '../../../storages/string-array-transformers/StringArrayStorage';
 import { VisitedLexicalScopeNodesStackStorage } from '../../../storages/string-array-transformers/VisitedLexicalScopeNodesStackStorage';
 
-export const storagesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const storagesModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // storages
-    bind<TCustomCodeHelperGroupStorage>(ServiceIdentifiers.TCustomNodeGroupStorage)
+    options
+        .bind<TCustomCodeHelperGroupStorage>(ServiceIdentifiers.TCustomNodeGroupStorage)
         .to(CustomCodeHelperGroupStorage)
         .inSingletonScope();
 
-    bind<IControlFlowStorage>(ServiceIdentifiers.IControlFlowStorage)
+    options
+        .bind<IControlFlowStorage>(ServiceIdentifiers.IControlFlowStorage)
         .to(FunctionControlFlowStorage)
-        .whenTargetNamed(ControlFlowStorage.FunctionControlFlowStorage);
+        .whenNamed(ControlFlowStorage.FunctionControlFlowStorage);
 
-    bind<IGlobalIdentifierNamesCacheStorage>(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
+    options
+        .bind<IGlobalIdentifierNamesCacheStorage>(ServiceIdentifiers.IGlobalIdentifierNamesCacheStorage)
         .to(GlobalIdentifierNamesCacheStorage)
         .inSingletonScope();
 
-    bind<ILiteralNodesCacheStorage>(ServiceIdentifiers.ILiteralNodesCacheStorage)
+    options
+        .bind<ILiteralNodesCacheStorage>(ServiceIdentifiers.ILiteralNodesCacheStorage)
         .to(LiteralNodesCacheStorage)
         .inSingletonScope();
 
-    bind<IPropertyIdentifierNamesCacheStorage>(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
+    options
+        .bind<IPropertyIdentifierNamesCacheStorage>(ServiceIdentifiers.IPropertyIdentifierNamesCacheStorage)
         .to(PropertyIdentifierNamesCacheStorage)
         .inSingletonScope();
 
-    bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage).to(StringArrayStorage).inSingletonScope();
+    options.bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage).to(StringArrayStorage).inSingletonScope();
 
-    bind<IStringArrayScopeCallsWrappersDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrappersDataStorage)
+    options
+        .bind<IStringArrayScopeCallsWrappersDataStorage>(ServiceIdentifiers.IStringArrayScopeCallsWrappersDataStorage)
         .to(StringArrayScopeCallsWrappersDataStorage)
         .inSingletonScope();
 
-    bind<IControlFlowStorage>(ServiceIdentifiers.IControlFlowStorage)
+    options
+        .bind<IControlFlowStorage>(ServiceIdentifiers.IControlFlowStorage)
         .to(StringControlFlowStorage)
-        .whenTargetNamed(ControlFlowStorage.StringControlFlowStorage);
+        .whenNamed(ControlFlowStorage.StringControlFlowStorage);
 
-    bind<IVisitedLexicalScopeNodesStackStorage>(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)
+    options
+        .bind<IVisitedLexicalScopeNodesStackStorage>(ServiceIdentifiers.IVisitedLexicalScopeNodesStackStorage)
         .to(VisitedLexicalScopeNodesStackStorage)
         .inSingletonScope();
 
     // controlFlowStorage factory
-    bind<IControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage).toFactory(
-        (context: interfaces.Context): TControlFlowStorageFactoryCreator =>
-            (controlFlowStorageName: ControlFlowStorage): TControlFlowStorageFactory =>
-            (): IControlFlowStorage =>
-                context.container.getNamed<IControlFlowStorage>(
-                    ServiceIdentifiers.IControlFlowStorage,
-                    controlFlowStorageName
-                )
-    );
+    options
+        .bind<Factory<() => IControlFlowStorage, [ControlFlowStorage]>>(ServiceIdentifiers.Factory__TControlFlowStorage)
+        .toFactory(
+            (context: ResolutionContext) =>
+                (controlFlowStorageName: ControlFlowStorage): (() => IControlFlowStorage) =>
+                () =>
+                    context.get<IControlFlowStorage>(ServiceIdentifiers.IControlFlowStorage, {
+                        name: controlFlowStorageName
+                    })
+        );
 });

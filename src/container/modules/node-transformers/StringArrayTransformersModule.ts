@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
@@ -9,19 +9,19 @@ import { StringArrayRotateFunctionTransformer } from '../../../node-transformers
 import { StringArrayScopeCallsWrapperTransformer } from '../../../node-transformers/string-array-transformers/StringArrayScopeCallsWrapperTransformer';
 import { StringArrayTransformer } from '../../../node-transformers/string-array-transformers/StringArrayTransformer';
 
-export const stringArrayTransformersModule: interfaces.ContainerModule = new ContainerModule(
-    (bind: interfaces.Bind) => {
+export const stringArrayTransformersModule: ContainerModule = new ContainerModule(
+    (options: ContainerModuleLoadOptions) => {
         // strings transformers
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(StringArrayRotateFunctionTransformer)
-            .whenTargetNamed(NodeTransformer.StringArrayRotateFunctionTransformer);
+            .whenNamed(NodeTransformer.StringArrayRotateFunctionTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(StringArrayScopeCallsWrapperTransformer)
-            .whenTargetNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);
+            .whenNamed(NodeTransformer.StringArrayScopeCallsWrapperTransformer);
 
-        bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        options.bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
             .to(StringArrayTransformer)
-            .whenTargetNamed(NodeTransformer.StringArrayTransformer);
+            .whenNamed(NodeTransformer.StringArrayTransformer);
     }
 );

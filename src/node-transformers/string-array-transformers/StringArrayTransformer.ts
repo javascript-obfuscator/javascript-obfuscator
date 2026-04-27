@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -36,6 +36,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringArrayCallNode } from '../../custom-nodes/string-array-nodes/StringArrayCallNode';
 
+@injectFromBase()
 @injectable()
 export class StringArrayTransformer extends AbstractNodeTransformer {
     /**

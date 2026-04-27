@@ -1,5 +1,5 @@
 import { InversifyContainerFacade } from '../../InversifyContainerFacade';
-import { ContainerModule, interfaces } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions, Factory } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
@@ -9,16 +9,21 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 
 import { NodeTransformerNamesGroupsBuilder } from '../../../node-transformers/NodeTransformerNamesGroupsBuilder';
 
-export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const nodeTransformersModule: ContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     // node transformers factory
-    bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer).toFactory<INodeTransformer, [NodeTransformer]>(
-        InversifyContainerFacade.getCacheFactory<NodeTransformer, INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-    );
+    options
+        .bind<Factory<INodeTransformer, [NodeTransformer]>>(ServiceIdentifiers.Factory__INodeTransformer)
+        .toFactory(
+            InversifyContainerFacade.getCacheFactory<NodeTransformer, INodeTransformer>(
+                ServiceIdentifiers.INodeTransformer
+            )
+        );
 
     // node transformer names groups builder
-    bind<ITransformerNamesGroupsBuilder<NodeTransformer, INodeTransformer>>(
-        ServiceIdentifiers.INodeTransformerNamesGroupsBuilder
-    )
+    options
+        .bind<
+            ITransformerNamesGroupsBuilder<NodeTransformer, INodeTransformer>
+        >(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)
         .to(NodeTransformerNamesGroupsBuilder)
         .inSingletonScope();
 });

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TNodeWithLexicalScopeStatements } from '../../types/node/TNodeWithLexicalScopeStatements';
@@ -10,6 +10,7 @@ import { IStringArrayScopeCallsWrappersDataStorage } from '../../interfaces/stor
 
 import { WeakMapStorage } from '../WeakMapStorage';
 
+@injectFromBase()
 @injectable()
 export class StringArrayScopeCallsWrappersDataStorage
     extends WeakMapStorage<TNodeWithLexicalScopeStatements, TStringArrayScopeCallsWrappersDataByEncoding>

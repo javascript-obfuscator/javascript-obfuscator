@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import { injectable, injectFromBase } from 'inversify';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
@@ -9,6 +9,7 @@ import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
+@injectFromBase()
 @injectable()
 export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**

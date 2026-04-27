@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -25,6 +25,7 @@ import { NodeStatementUtils } from '../../node/NodeStatementUtils';
  *     var foo = 1,
  *         bar = 2;
  */
+@injectFromBase()
 @injectable()
 export class VariableDeclarationsMergeTransformer extends AbstractNodeTransformer {
     /**

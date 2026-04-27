@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from '@javascript-obfuscator/estraverse';
@@ -33,6 +33,7 @@ import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
  *     }
  *
  */
+@injectFromBase()
 @injectable()
 export class LabeledStatementTransformer extends AbstractNodeTransformer {
     /**

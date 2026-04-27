@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, injectFromBase } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -21,6 +21,7 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 
+@injectFromBase()
 @injectable()
 export abstract class AbstractStringArrayCallNode extends AbstractCustomNode {
     /**

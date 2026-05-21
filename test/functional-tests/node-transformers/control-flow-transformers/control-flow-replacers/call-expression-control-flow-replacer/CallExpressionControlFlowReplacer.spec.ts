@@ -248,5 +248,33 @@ describe('CallExpressionControlFlowReplacer', function () {
                 assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
             });
         });
+
+        describe('Variant #8 - optional `?.()` call must not reuse a non-optional wrapper (issue #1408)', () => {
+            const samplesCount: number = 200;
+
+            it('should preserve the `?.` short-circuit on every obfuscation when an optional call and a non-optional call share the same arity', () => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/issue-1408-mixed-optional-and-plain-calls.js'
+                );
+
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }).getObfuscatedCode();
+
+                    const result: unknown = eval(obfuscatedCode);
+
+                    assert.strictEqual(
+                        result,
+                        'ok',
+                        `iteration ${i}: optional ?.() call lost its short-circuit (obfuscated code threw or returned wrong value)`
+                    );
+                }
+            });
+        });
     });
 });

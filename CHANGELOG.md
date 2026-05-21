@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.3
+---
+* Fixed `controlFlowFlattening` occasionally dropping the `?.` short-circuit on `foo?.(arg)` calls, causing `TypeError: <X> is not a function`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1408
+
 v5.4.2
 ---
 * Fixed obfuscated code hanging in Bun when `selfDefending` is enabled. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1404

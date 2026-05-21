@@ -64,7 +64,11 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const isChainExpressionParent = NodeGuards.isChainExpressionNode(parentNode);
 
-        const replacerId: number = callExpressionNode.arguments.length;
+        // Bucket reuse-eligible wrappers by both arg count AND optional-ness, so an
+        // optional `foo?.(arg)` call never reuses the wrapper of a non-optional `bar(arg)`
+        // that happens to share `arguments.length` — which would drop the `?.` short-circuit
+        // and crash on undefined callees (issue #1408).
+        const replacerId: string = `${callExpressionNode.arguments.length}-${isChainExpressionParent ? 'optional' : 'standard'}`;
         const callExpressionFunctionCustomNode: ICustomNode<TInitialData<CallExpressionFunctionNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionFunctionNode);
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;

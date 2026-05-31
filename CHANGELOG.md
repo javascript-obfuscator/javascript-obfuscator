@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.4
+---
+* Fixed `Invalid regular expression` error when obfuscating code that uses ES2025 RegExp pattern modifiers (e.g. `/(?i:abc)/`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1410
+
 v5.4.3
 ---
 * Fixed `controlFlowFlattening` occasionally dropping the `?.` short-circuit on `foo?.(arg)` calls, causing `TypeError: <X> is not a function`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1408

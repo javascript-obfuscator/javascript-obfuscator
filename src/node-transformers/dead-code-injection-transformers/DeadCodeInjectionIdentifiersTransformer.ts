@@ -62,7 +62,7 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
-                            return this.transformNode(node, parentNode);
+                            return this.transformNode(node);
                         }
                     }
                 };
@@ -74,13 +74,11 @@ export class DeadCodeInjectionIdentifiersTransformer extends AbstractNodeTransfo
 
     /**
      * @param {VariableDeclaration} programNode
-     * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
             programNode,
-            parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
                 const { reference, variableLexicalScopeNode } = data;
 

@@ -14,4 +14,10 @@ export interface IScopeAnalyzer extends IAnalyzer<[ESTree.Node], void> {
      * @returns {Scope}
      */
     acquireScope(node: ESTree.Node): eslintScope.Scope;
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    isAnalyzed(node: ESTree.Node): boolean;
 }

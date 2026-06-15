@@ -41,6 +41,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     private scopeManager: eslintScope.ScopeManager | null = null;
 
     /**
+     * @type {eslintScope.ScopeManager | null}
+     */
+    private sanitizedScopeManager: eslintScope.ScopeManager | null = null;
+
+    /**
      * `eslint-scope` reads `ranges` property of a nodes
      * Should attach that property to the some custom nodes
      *
@@ -74,6 +79,9 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      */
     public analyze(astTree: ESTree.Node): void {
         const sourceTypeLength: number = ScopeAnalyzer.sourceTypes.length;
+
+        this.scopeManager = null;
+        this.sanitizedScopeManager = null;
 
         ScopeAnalyzer.attachMissingRanges(astTree);
 
@@ -117,9 +125,23 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             throw new Error('Cannot acquire scope for node');
         }
 
-        this.sanitizeScopes(scope);
+        if (this.sanitizedScopeManager !== this.scopeManager) {
+            this.sanitizeScopes(scope);
+            this.sanitizedScopeManager = this.scopeManager;
+        }
 
         return scope;
+    }
+
+    /**
+     * Checks whether a scope for the given node is already available in the current
+     * scope manager (i.e. `analyze` has been run for the tree this node belongs to).
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public isAnalyzed(node: ESTree.Node): boolean {
+        return !!this.scopeManager?.acquire(node, ScopeAnalyzer.isRootNode(node));
     }
 
     /**

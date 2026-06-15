@@ -43,34 +43,28 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
 
     /**
      * @param {Program} programNode
-     * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
      */
     public traverseScopeIdentifiers(
         programNode: ESTree.Program,
-        parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
+        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>,
+        analyzeScope: boolean = true
     ): void {
-        this.scopeAnalyzer.analyze(programNode);
-
-        const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
+        const globalScope: eslintScope.Scope = this.acquireGlobalScope(programNode, analyzeScope);
 
         this.traverseScopeIdentifiersRecursive(globalScope, globalScope, callback);
     }
 
     /**
      * @param {Program} programNode
-     * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
      */
     public traverseScopeThroughIdentifiers(
         programNode: ESTree.Program,
-        parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
+        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>,
+        analyzeScope: boolean = true
     ): void {
-        this.scopeAnalyzer.analyze(programNode);
-
-        const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
+        const globalScope: eslintScope.Scope = this.acquireGlobalScope(programNode, analyzeScope);
 
         this.traverseScopeThroughIdentifiersRecursive(globalScope, globalScope, callback);
     }
@@ -157,5 +151,18 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
         for (const childScope of currentScope.childScopes) {
             this.traverseScopeThroughIdentifiersRecursive(rootScope, childScope, callback);
         }
+    }
+
+    /**
+     * @param {Program} programNode
+     * @param {boolean} analyzeScope
+     * @returns {Scope}
+     */
+    private acquireGlobalScope(programNode: ESTree.Program, analyzeScope: boolean): eslintScope.Scope {
+        if (analyzeScope || !this.scopeAnalyzer.isAnalyzed(programNode)) {
+            this.scopeAnalyzer.analyze(programNode);
+        }
+
+        return this.scopeAnalyzer.acquireScope(programNode);
     }
 }

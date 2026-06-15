@@ -15,6 +15,7 @@ import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IS
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -26,6 +27,16 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 @injectFromBase()
 @injectable()
 export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.VariablePreserveTransformer];
+
+    /**
+     * @type {boolean}
+     */
+    public override readonly runOnProgramNodeOnly: boolean = true;
+
     /**
      * @type {IIdentifierReplacer}
      */
@@ -70,7 +81,7 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
-                            return this.transformNode(node, parentNode);
+                            return this.transformNode(node);
                         }
                     }
                 };
@@ -82,13 +93,11 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {VariableDeclaration} programNode
-     * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeIdentifiers(
             programNode,
-            parentNode,
             (data: IScopeIdentifiersTraverserCallbackData) => {
                 const { isGlobalDeclaration, variable, variableLexicalScopeNode } = data;
 
@@ -105,7 +114,8 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
                 }
 
                 this.transformScopeVariableIdentifiers(variable, variableLexicalScopeNode, isGlobalDeclaration);
-            }
+            },
+            false
         );
 
         return programNode;

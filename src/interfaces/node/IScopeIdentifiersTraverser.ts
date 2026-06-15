@@ -7,23 +7,23 @@ import { IScopeThroughIdentifiersTraverserCallbackData } from './IScopeThroughId
 export interface IScopeIdentifiersTraverser {
     /**
      * @param {Program} programNode
-     * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>} callback
+     * @param {boolean} analyzeScope
      */
     traverseScopeIdentifiers(
         programNode: ESTree.Program,
-        parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>
+        callback: TScopeIdentifiersTraverserCallback<IScopeIdentifiersTraverserCallbackData>,
+        analyzeScope?: boolean
     ): void;
 
     /**
      * @param {Node} node
-     * @param {Node | null} parentNode
      * @param {TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>} callback
+     * @param {boolean} analyzeScope
      */
     traverseScopeThroughIdentifiers(
         node: ESTree.Node,
-        parentNode: ESTree.Node | null,
-        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>
+        callback: TScopeIdentifiersTraverserCallback<IScopeThroughIdentifiersTraverserCallbackData>,
+        analyzeScope?: boolean
     ): void;
 }

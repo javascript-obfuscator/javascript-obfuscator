@@ -46,4 +46,22 @@ describe('BooleanLiteralTransformer', () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
+
+    describe('boolean literal as a class super class', () => {
+        const regExp: RegExp = /^class Foo extends true *{}$/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/super-class-value.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                ...NO_ADDITIONAL_NODES_PRESET
+            }).getObfuscatedCode();
+        });
+
+        it('should not transform a boolean literal used as a class heritage to avoid a `SyntaxError`', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
 });

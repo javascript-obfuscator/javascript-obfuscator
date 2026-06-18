@@ -66,6 +66,15 @@ export class BooleanLiteralTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
+        /**
+         * A class heritage (`extends`) must be a `LeftHandSideExpression`, so replacing a
+         * boolean literal there with a unary expression (`class Foo extends ![] {}`) would
+         * produce a `SyntaxError`. Keep the original literal in that position.
+         */
+        if ('superClass' in parentNode && parentNode.superClass === literalNode) {
+            return literalNode;
+        }
+
         const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
 
         const unaryExpressionNode: ESTree.UnaryExpression = literalValue

@@ -5,11 +5,14 @@ import { IStringArrayStorageItemData } from './IStringArrayStorageItem';
 
 export interface ILiteralNodesCacheStorage extends IMapStorage<string, ESTree.Node> {
     /**
-     * @param {string} literalValue
+     * @param {Literal} literalNode
      * @param {IStringArrayStorageItemData | undefined} stringArrayStorageItemData
      * @returns {string}
      */
-    buildKey(literalValue: string, stringArrayStorageItemData: IStringArrayStorageItemData | undefined): string;
+    buildKey(
+        literalNode: ESTree.Literal,
+        stringArrayStorageItemData: IStringArrayStorageItemData | undefined
+    ): string;
 
     /**
      * @param {string} key

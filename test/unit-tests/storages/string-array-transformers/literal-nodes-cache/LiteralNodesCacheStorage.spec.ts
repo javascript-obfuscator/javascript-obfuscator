@@ -39,24 +39,45 @@ const getStorageInstance = (options: TInputOptions = {}): ILiteralNodesCacheStor
 
 describe('LiteralNodesCacheStorage', () => {
     describe('buildKey', () => {
-        const expectedCacheKey: string = 'foo-true';
+        describe('Variant #1: base', () => {
+            const expectedCacheKey: string = "foo-'foo'-true";
 
-        let cacheKey: string;
+            let cacheKey: string;
 
-        before(() => {
-            const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance();
+            before(() => {
+                const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance();
 
-            cacheKey = literalNodesCacheStorage.buildKey('foo', {
-                index: 1,
-                value: '_0x123abc',
-                encoding: StringArrayEncoding.Rc4,
-                encodedValue: 'encoded_value',
-                decodeKey: 'key'
+                cacheKey = literalNodesCacheStorage.buildKey(NodeFactory.literalNode('foo'), {
+                    index: 1,
+                    value: '_0x123abc',
+                    encoding: StringArrayEncoding.Rc4,
+                    encodedValue: 'encoded_value',
+                    decodeKey: 'key'
+                });
+            });
+
+            it('should build a key for the storage', () => {
+                assert.equal(cacheKey, expectedCacheKey);
             });
         });
 
-        it('should build a key for the storage', () => {
-            assert.equal(cacheKey, expectedCacheKey);
+        describe('Variant #2: literals with the same value but different `raw` representation', () => {
+            let firstCacheKey: string;
+            let secondCacheKey: string;
+
+            before(() => {
+                const literalNodesCacheStorage: ILiteralNodesCacheStorage = getStorageInstance();
+
+                firstCacheKey = literalNodesCacheStorage.buildKey(
+                    NodeFactory.literalNode('😃', '"\\ud83d\\ude03"'),
+                    undefined
+                );
+                secondCacheKey = literalNodesCacheStorage.buildKey(NodeFactory.literalNode('😃', '"😃"'), undefined);
+            });
+
+            it('should build different keys for literals with a different `raw` representation', () => {
+                assert.notEqual(firstCacheKey, secondCacheKey);
+            });
         });
     });
 

@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.6
+---
+* Fixed unicode (`\uXXXX`, `\u{XXXX}`) and hex (`\xXX`) escape sequences of string literals being un-escaped into their literal characters during obfuscation. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/345
+
 v5.4.5
 ---
 * Fixed `controlFlowFlattening` intermittently dropping arguments of a spread call (e.g. `foo(...args)`) when it reused a control flow wrapper of a same-arity plain call. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1423

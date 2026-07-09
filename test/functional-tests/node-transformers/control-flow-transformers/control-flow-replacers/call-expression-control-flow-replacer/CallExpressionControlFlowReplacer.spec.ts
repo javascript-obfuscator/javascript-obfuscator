@@ -276,5 +276,32 @@ describe('CallExpressionControlFlowReplacer', function () {
                 }
             });
         });
+
+        describe('Variant #9 - spread call must not reuse a plain wrapper of the same arity (issue #1423)', () => {
+            const samplesCount: number = 200;
+
+            it('should forward every spread-expanded argument on every obfuscation when a spread call and a plain call share the same arity', () => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/issue-1423-spread-and-plain-calls.js'
+                );
+
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        identifierNamesGenerator: 'mangled'
+                    }).getObfuscatedCode();
+
+                    const result: unknown = eval(obfuscatedCode);
+
+                    assert.strictEqual(
+                        result,
+                        'ok',
+                        `iteration ${i}: spread call reused a plain wrapper and dropped arguments (obfuscated code returned wrong value)`
+                    );
+                }
+            });
+        });
     });
 });

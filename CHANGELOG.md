@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.5
+---
+* Fixed `SyntaxError` when obfuscating a class that extends a boolean literal (e.g. `class C extends true {}`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1131
+
 v5.4.4
 ---
 * Fixed `Invalid regular expression` error when obfuscating code that uses ES2025 RegExp pattern modifiers (e.g. `/(?i:abc)/`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1410

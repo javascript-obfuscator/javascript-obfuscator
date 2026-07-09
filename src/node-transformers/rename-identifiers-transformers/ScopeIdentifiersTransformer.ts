@@ -32,9 +32,9 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     private readonly identifierReplacer: IIdentifierReplacer;
 
     /**
-     * @type {WeakMap<TNodeWithLexicalScope, boolean>}
+     * @type {WeakMap<TNodeWithLexicalScope, Set<string> | false>}
      */
-    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: WeakMap<TNodeWithLexicalScope, boolean> =
+    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: WeakMap<TNodeWithLexicalScope, Set<string> | false> =
         new WeakMap();
 
     /**
@@ -336,14 +336,6 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
         identifierNode: ESTree.Identifier,
         lexicalScopeNode: TNodeWithLexicalScope
     ): boolean {
-        let isLexicalScopeHasObjectPatternWithoutDeclaration: boolean | undefined =
-            this.lexicalScopesWithObjectPatternWithoutDeclarationMap.get(lexicalScopeNode);
-
-        // lexical scope was traversed before and object pattern without declaration was not found
-        if (isLexicalScopeHasObjectPatternWithoutDeclaration === false) {
-            return false;
-        }
-
         const hasVarDefinitions: boolean = variable.defs.some(
             (definition: eslintScope.Definition) => (<any>definition).kind === 'var'
         );
@@ -352,42 +344,40 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
             return false;
         }
 
-        let isProhibitedVariableDeclaration: boolean = false;
+        let prohibitedVariableNames: Set<string> | false | undefined =
+            this.lexicalScopesWithObjectPatternWithoutDeclarationMap.get(lexicalScopeNode);
 
-        estraverse.traverse(lexicalScopeNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
-                if (
-                    NodeGuards.isObjectPatternNode(node) &&
-                    parentNode &&
-                    NodeGuards.isAssignmentExpressionNode(parentNode)
-                ) {
-                    isLexicalScopeHasObjectPatternWithoutDeclaration = true;
+        if (prohibitedVariableNames === undefined) {
+            const foundVariableNames: Set<string> = new Set();
 
-                    const properties: (ESTree.Property | ESTree.RestElement)[] = node.properties;
+            estraverse.traverse(lexicalScopeNode, {
+                enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
+                    if (
+                        NodeGuards.isObjectPatternNode(node) &&
+                        parentNode &&
+                        NodeGuards.isAssignmentExpressionNode(parentNode)
+                    ) {
+                        const properties: (ESTree.Property | ESTree.RestElement)[] = node.properties;
 
-                    for (const property of properties) {
-                        isProhibitedVariableDeclaration =
-                            NodeGuards.isPropertyNode(property) &&
-                            !property.computed &&
-                            property.shorthand &&
-                            NodeGuards.isIdentifierNode(property.key) &&
-                            identifierNode.name === property.key.name;
-
-                        if (!isProhibitedVariableDeclaration) {
-                            continue;
+                        for (const property of properties) {
+                            if (
+                                NodeGuards.isPropertyNode(property) &&
+                                !property.computed &&
+                                property.shorthand &&
+                                NodeGuards.isIdentifierNode(property.key)
+                            ) {
+                                foundVariableNames.add(property.key.name);
+                            }
                         }
-
-                        return estraverse.VisitorOption.Break;
                     }
                 }
-            }
-        });
+            });
 
-        this.lexicalScopesWithObjectPatternWithoutDeclarationMap.set(
-            lexicalScopeNode,
-            isLexicalScopeHasObjectPatternWithoutDeclaration ?? false
-        );
+            prohibitedVariableNames = foundVariableNames.size ? foundVariableNames : false;
 
-        return isProhibitedVariableDeclaration;
+            this.lexicalScopesWithObjectPatternWithoutDeclarationMap.set(lexicalScopeNode, prohibitedVariableNames);
+        }
+
+        return prohibitedVariableNames !== false && prohibitedVariableNames.has(identifierNode.name);
     }
 }

@@ -6,6 +6,10 @@
 export function SelfDefendingTemplate (): string {
     return `
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
+            if ({selfDefendingFunctionName}.bind().toString().indexOf('\\n') !== -1) {
+                return;
+            }
+
             return {selfDefendingFunctionName}
                 .toString()
                 .search('(((.+)+)+)+$')
@@ -13,7 +17,7 @@ export function SelfDefendingTemplate (): string {
                 .constructor({selfDefendingFunctionName})
                 .search('(((.+)+)+)+$');
         });
-        
+
         {selfDefendingFunctionName}();
     `;
 }

@@ -4,6 +4,7 @@ v5.4.5
 ---
 * Fixed `controlFlowFlattening` intermittently dropping arguments of a spread call (e.g. `foo(...args)`) when it reused a control flow wrapper of a same-arity plain call. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1423
 * Fixed `selfDefending` making obfuscated code run several times slower on Bun/JavaScriptCore. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1421
+* Fixed dropped parentheses around an `in` operator inside an arrow body in a `for`-init, producing unparsable output. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1419
 
 v5.4.4
 ---

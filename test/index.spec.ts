@@ -149,6 +149,7 @@ import './functional-tests/storages/string-array-transformers/string-array-stora
  * Performance tests
  */
 import './performance-tests/JavaScriptObfuscatorPerformance.spec';
+import './performance-tests/SelfDefendingRuntimePerformance.spec';
 
 /**
  * Runtime tests

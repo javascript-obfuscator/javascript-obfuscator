@@ -240,4 +240,43 @@ describe('SelfDefendingTemplate', function () {
             });
         });
     });
+
+    describe('Variant #6: engines that re-serialize `toString` skip the beautifier trap (issue #1421)', () => {
+        const reserializingEngineSimulation: string =
+            '(function () {' +
+                'var nativeBind = Function.prototype.bind;' +
+                'Function.prototype.bind = function () {' +
+                    'var boundFunction = nativeBind.apply(this, arguments);' +
+                    'boundFunction.toString = function () { return "function () {\\n [native code]\\n}"; };' +
+                    'return boundFunction;' +
+                '};' +
+            '})();\n';
+
+        const expectedEvaluationResult: number = 1;
+
+        let evaluationResult: number = 0;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+
+            let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                ...baseOptions,
+                selfDefending: true
+            }).getObfuscatedCode();
+            obfuscatedCode = beautifyCode(obfuscatedCode, 'space');
+            obfuscatedCode = `${reserializingEngineSimulation}${obfuscatedCode}`;
+
+            return evaluateInWorker(obfuscatedCode, redosEvaluationTimeout).then((result: string | null) => {
+                if (!result) {
+                    return;
+                }
+
+                evaluationResult = parseInt(result, 10);
+            });
+        });
+
+        it('should not enter code in infinity loop and evaluate correctly', () => {
+            assert.equal(evaluationResult, expectedEvaluationResult);
+        });
+    });
 });

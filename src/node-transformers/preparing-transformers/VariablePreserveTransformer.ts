@@ -30,6 +30,11 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     public override readonly runAfter: NodeTransformer[] = [NodeTransformer.ParentificationTransformer];
 
     /**
+     * @type {boolean}
+     */
+    public override readonly runOnProgramNodeOnly: boolean = true;
+
+    /**
      * @type {IIdentifierReplacer}
      */
     private readonly identifierReplacer: IIdentifierReplacer;
@@ -64,17 +69,21 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor(nodeTransformationStage: NodeTransformationStage): IVisitor | null {
+        const visitor: IVisitor = {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
+                if (parentNode && NodeGuards.isProgramNode(node)) {
+                    return this.transformNode(node);
+                }
+            }
+        };
+
         switch (nodeTransformationStage) {
             case NodeTransformationStage.Preparing:
-            case NodeTransformationStage.Converting:
             case NodeTransformationStage.RenameIdentifiers:
-                return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
-                        if (parentNode && NodeGuards.isProgramNode(node)) {
-                            return this.transformNode(node, parentNode);
-                        }
-                    }
-                };
+                return visitor;
+
+            case NodeTransformationStage.Converting:
+                return this.shouldPreserveConvertingStageIdentifiers() ? visitor : null;
 
             default:
                 return null;
@@ -83,13 +92,11 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {VariableDeclaration} programNode
-     * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeIdentifiers(
             programNode,
-            parentNode,
             this.preserveScopeVariableIdentifiers
         );
 
@@ -135,5 +142,17 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
         }
 
         this.identifierReplacer.preserveNameForLexicalScope(identifierNode, lexicalScopeNode);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    private shouldPreserveConvertingStageIdentifiers(): boolean {
+        return (
+            this.options.controlFlowFlattening ||
+            this.options.deadCodeInjection ||
+            this.options.stringArray ||
+            this.options.transformObjectKeys
+        );
     }
 }

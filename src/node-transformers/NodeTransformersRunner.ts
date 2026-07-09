@@ -23,6 +23,12 @@ import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 import { NodeGuards } from '../node/NodeGuards';
 import { NodeMetadata } from '../node/NodeMetadata';
 
+interface IVisitorsData {
+    enterVisitors: IVisitor[];
+    leaveVisitors: IVisitor[];
+    runOnProgramNodeOnly: boolean;
+}
+
 @injectable()
 export class NodeTransformersRunner implements INodeTransformersRunner {
     /**
@@ -75,27 +81,20 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
             this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
 
         for (const nodeTransformerNamesGroup of nodeTransformerNamesGroups) {
-            const enterVisitors: IVisitor[] = [];
-            const leaveVisitors: IVisitor[] = [];
-
-            for (const nodeTransformerName of nodeTransformerNamesGroup) {
-                const nodeTransformer: INodeTransformer = normalizedNodeTransformers[nodeTransformerName];
-                const visitor: IVisitor | null = nodeTransformer.getVisitor(nodeTransformationStage);
-
-                if (!visitor) {
-                    continue;
-                }
-
-                if (visitor.enter) {
-                    enterVisitors.push({ enter: visitor.enter });
-                }
-
-                if (visitor.leave) {
-                    leaveVisitors.push({ leave: visitor.leave });
-                }
-            }
+            const visitorsData: IVisitorsData = this.buildVisitorsData(
+                nodeTransformerNamesGroup,
+                normalizedNodeTransformers,
+                nodeTransformationStage
+            );
+            const { enterVisitors, leaveVisitors } = visitorsData;
 
             if (!enterVisitors.length && !leaveVisitors.length) {
+                continue;
+            }
+
+            if (this.canRunOnProgramNodeOnly(visitorsData, astTree)) {
+                astTree = this.runOnProgramNodeOnly(astTree, enterVisitors);
+
                 continue;
             }
 
@@ -106,6 +105,72 @@ export class NodeTransformersRunner implements INodeTransformersRunner {
         }
 
         return astTree;
+    }
+
+    /**
+     * @param {NodeTransformer[]} nodeTransformerNamesGroup
+     * @param {TDictionary<INodeTransformer>} normalizedNodeTransformers
+     * @param {NodeTransformationStage} nodeTransformationStage
+     * @returns {IVisitorsData}
+     */
+    private buildVisitorsData(
+        nodeTransformerNamesGroup: NodeTransformer[],
+        normalizedNodeTransformers: TDictionary<INodeTransformer>,
+        nodeTransformationStage: NodeTransformationStage
+    ): IVisitorsData {
+        const enterVisitors: IVisitor[] = [];
+        const leaveVisitors: IVisitor[] = [];
+        let runOnProgramNodeOnly: boolean = true;
+
+        for (const nodeTransformerName of nodeTransformerNamesGroup) {
+            const nodeTransformer: INodeTransformer = normalizedNodeTransformers[nodeTransformerName];
+            const visitor: IVisitor | null = nodeTransformer.getVisitor(nodeTransformationStage);
+
+            if (!visitor) {
+                continue;
+            }
+
+            if (!nodeTransformer.runOnProgramNodeOnly) {
+                runOnProgramNodeOnly = false;
+            }
+
+            if (visitor.enter) {
+                enterVisitors.push({ enter: visitor.enter });
+            }
+
+            if (visitor.leave) {
+                leaveVisitors.push({ leave: visitor.leave });
+            }
+        }
+
+        return { enterVisitors, leaveVisitors, runOnProgramNodeOnly };
+    }
+
+    /**
+     * @param {IVisitorsData} visitorsData
+     * @param {Node} astTree
+     * @returns {boolean}
+     */
+    private canRunOnProgramNodeOnly(visitorsData: IVisitorsData, astTree: ESTree.Node): boolean {
+        return (
+            visitorsData.runOnProgramNodeOnly &&
+            !visitorsData.leaveVisitors.length &&
+            NodeGuards.isProgramNode(astTree)
+        );
+    }
+
+    /**
+     * @param {T} astTree
+     * @param {IVisitor[]} enterVisitors
+     * @returns {T}
+     */
+    private runOnProgramNodeOnly<T extends ESTree.Node>(astTree: T, enterVisitors: IVisitor[]): T {
+        const visitorResult: TVisitorResult = this.mergeVisitorsForDirection(
+            enterVisitors,
+            VisitorDirection.Enter
+        )(astTree, astTree.parentNode ?? null);
+
+        return visitorResult && NodeGuards.isNode(visitorResult) ? <T>visitorResult : astTree;
     }
 
     /**

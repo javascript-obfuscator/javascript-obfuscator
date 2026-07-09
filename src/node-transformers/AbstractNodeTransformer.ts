@@ -20,6 +20,11 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     public readonly runAfter: NodeTransformer[] | undefined;
 
     /**
+     * @type {boolean}
+     */
+    public readonly runOnProgramNodeOnly: boolean | undefined;
+
+    /**
      * @type {IOptions}
      */
     protected readonly options: IOptions;

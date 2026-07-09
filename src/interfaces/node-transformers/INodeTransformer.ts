@@ -9,6 +9,11 @@ import { NodeTransformationStage } from '../../enums/node-transformers/NodeTrans
 
 export interface INodeTransformer extends ITransformer<NodeTransformer> {
     /**
+     * @type {boolean}
+     */
+    runOnProgramNodeOnly?: boolean;
+
+    /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */

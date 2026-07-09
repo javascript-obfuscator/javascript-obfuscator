@@ -14,6 +14,7 @@ import { IThroughIdentifierReplacer } from '../../interfaces/node-transformers/r
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformationStage } from '../../enums/node-transformers/NodeTransformationStage';
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -24,6 +25,16 @@ import { NodeGuards } from '../../node/NodeGuards';
 @injectFromBase()
 @injectable()
 export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public override readonly runAfter: NodeTransformer[] = [NodeTransformer.ScopeIdentifiersTransformer];
+
+    /**
+     * @type {boolean}
+     */
+    public override readonly runOnProgramNodeOnly: boolean = true;
+
     /**
      * @type {IScopeIdentifiersTraverser}
      */
@@ -62,7 +73,7 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
-                            return this.transformNode(node, parentNode);
+                            return this.transformNode(node);
                         }
                     }
                 };
@@ -74,18 +85,17 @@ export class ScopeThroughIdentifiersTransformer extends AbstractNodeTransformer 
 
     /**
      * @param {VariableDeclaration} programNode
-     * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode(programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode(programNode: ESTree.Program): ESTree.Node {
         this.scopeIdentifiersTraverser.traverseScopeThroughIdentifiers(
             programNode,
-            parentNode,
             (data: IScopeThroughIdentifiersTraverserCallbackData) => {
                 const { reference, variableLexicalScopeNode } = data;
 
                 this.transformScopeThroughIdentifiers(reference, variableLexicalScopeNode);
-            }
+            },
+            false
         );
 
         return programNode;

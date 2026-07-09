@@ -64,14 +64,27 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const isChainExpressionParent = NodeGuards.isChainExpressionNode(parentNode);
 
-        // Bucket reuse-eligible wrappers by both arg count AND optional-ness, so an
-        // optional `foo?.(arg)` call never reuses the wrapper of a non-optional `bar(arg)`
-        // that happens to share `arguments.length` — which would drop the `?.` short-circuit
-        // and crash on undefined callees (issue #1408).
-        const replacerId: string = `${callExpressionNode.arguments.length}-${isChainExpressionParent ? 'optional' : 'standard'}`;
+        const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
+
+        // Bucket reuse-eligible wrappers by the exact argument *shape* (which positions are
+        // spread vs. plain) AND optional-ness — not just `arguments.length`.
+        //
+        // A spread call like `foo(...args)` has the same `arguments.length` as a plain
+        // `bar(arg)`, but the generated wrapper differs: `(callee, ...p1) => callee(...p1)`
+        // vs `(callee, p1) => callee(p1)`. Reusing a plain wrapper for a spread call collapses
+        // the spread to its first element and silently drops the remaining arguments (issue #1423).
+        //
+        // Encoding the per-argument shape also preserves the optional-ness bucketing that keeps
+        // an optional `foo?.(arg)` call from reusing a non-optional `bar(arg)` wrapper, which
+        // would drop the `?.` short-circuit and crash on undefined callees (issue #1408).
+        const argumentsShape: string = expressionArguments
+            .map((argument: ESTree.Expression | ESTree.SpreadElement): string =>
+                NodeGuards.isSpreadElementNode(argument) ? 's' : 'p'
+            )
+            .join('');
+        const replacerId: string = `${argumentsShape}-${isChainExpressionParent ? 'optional' : 'standard'}`;
         const callExpressionFunctionCustomNode: ICustomNode<TInitialData<CallExpressionFunctionNode>> =
             this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionFunctionNode);
-        const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
         callExpressionFunctionCustomNode.initialize(expressionArguments, isChainExpressionParent);
 

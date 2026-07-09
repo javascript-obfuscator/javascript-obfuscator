@@ -27,12 +27,17 @@ export class LiteralNodesCacheStorage extends MapStorage<string, ESTree.Node> im
     }
 
     /**
-     * @param {string} literalValue
+     * @param {Literal} literalNode
      * @param {IStringArrayStorageItemData | undefined} stringArrayStorageItemData
      * @returns {string}
      */
-    public buildKey(literalValue: string, stringArrayStorageItemData: IStringArrayStorageItemData | undefined): string {
-        return `${literalValue}-${Boolean(stringArrayStorageItemData)}`;
+    public buildKey(
+        literalNode: ESTree.Literal,
+        stringArrayStorageItemData: IStringArrayStorageItemData | undefined
+    ): string {
+        // `raw` value is a part of the key to keep literals that share the same decoded value but
+        // have a different source representation (e.g. `'😃'` and `'😃'`) separate
+        return `${String(literalNode.value)}-${String(literalNode.raw)}-${Boolean(stringArrayStorageItemData)}`;
     }
 
     /**

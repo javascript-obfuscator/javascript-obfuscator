@@ -184,11 +184,9 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
-
         const stringArrayStorageItemData: IStringArrayStorageItemData | undefined =
             this.stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode);
-        const cacheKey: string = this.literalNodesCacheStorage.buildKey(literalValue, stringArrayStorageItemData);
+        const cacheKey: string = this.literalNodesCacheStorage.buildKey(literalNode, stringArrayStorageItemData);
         const useCachedValue: boolean = this.literalNodesCacheStorage.shouldUseCachedValue(
             cacheKey,
             stringArrayStorageItemData

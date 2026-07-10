@@ -715,6 +715,49 @@ describe('obfuscatedCodeFileUtils', () => {
             });
         });
 
+        // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/817
+        describe('Variant #2: input path is a directory', () => {
+            const rawInputPath: string = path.join(tmpDirectoryPath, 'sm-input');
+            const rawOutputPath: string = path.join(tmpDirectoryPath, 'output');
+            const sourceMapFileName: string = 'map';
+
+            let firstOutputSourceMapPath: string;
+            let secondOutputSourceMapPath: string;
+
+            before(() => {
+                fs.mkdirSync(rawInputPath, { recursive: true });
+
+                const obfuscatedCodeFileUtils: ObfuscatedCodeFileUtils = new ObfuscatedCodeFileUtils(rawInputPath, {
+                    output: rawOutputPath
+                });
+
+                firstOutputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                    path.join(rawOutputPath, 'foo.js'),
+                    sourceMapFileName
+                );
+                secondOutputSourceMapPath = obfuscatedCodeFileUtils.getOutputSourceMapPath(
+                    path.join(rawOutputPath, 'bar.js'),
+                    sourceMapFileName
+                );
+            });
+
+            after(() => {
+                rimraf.sync(rawInputPath);
+            });
+
+            it('match #1: should prefix the source map file name with the output code file name', () => {
+                assert.equal(firstOutputSourceMapPath, path.join(rawOutputPath, 'foo-map.js.map'));
+            });
+
+            it('match #2: should prefix the source map file name with the output code file name', () => {
+                assert.equal(secondOutputSourceMapPath, path.join(rawOutputPath, 'bar-map.js.map'));
+            });
+
+            it('should produce a unique source map path per file', () => {
+                assert.notEqual(firstOutputSourceMapPath, secondOutputSourceMapPath);
+            });
+        });
+
         describe('Variant #3: empty paths', () => {
             const rawInputPath: string = path.join(tmpDirectoryPath, 'input', 'test-input.js');
             const rawOutputPath: string = path.join(tmpDirectoryPath, 'output', 'test-output.js');

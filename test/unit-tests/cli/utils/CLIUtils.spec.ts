@@ -106,6 +106,27 @@ describe('CLIUtils', () => {
                 assert.throws(testFunc, /Cannot open config file/);
             });
         });
+
+        // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1101
+        describe('Variant #4: config file with invalid content', () => {
+            const configDirName: string = 'test/fixtures';
+            const configFileName: string = 'invalid-config.json';
+            const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => CLIUtils.getUserConfig(configFilePath);
+            });
+
+            it('should throw an error that includes the config file path', () => {
+                assert.throws(testFunc, /Cannot open config file with path/);
+            });
+
+            it('should surface the underlying reason instead of masking it', () => {
+                assert.throws(testFunc, /Reason:.*JSON/);
+            });
+        });
     });
 
     describe('stringifyOptionAvailableValues', () => {

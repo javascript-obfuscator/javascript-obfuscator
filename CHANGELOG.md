@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.7
+---
+* Fixed `URIError: URI malformed` crash when `stringArray` with `base64`/`rc4` encoding processed a string literal containing lone surrogate code units (e.g. `"[^\uD800-\uDFFF]"`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1431
+
 v5.4.6
 ---
 * Fixed unicode (`\uXXXX`, `\u{XXXX}`) and hex (`\xXX`) escape sequences of string literals being un-escaped into their literal characters during obfuscation. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/345

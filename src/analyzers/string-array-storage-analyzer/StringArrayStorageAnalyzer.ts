@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from '@javascript-obfuscator/estraverse';
 import * as ESTree from 'estree';
 
+import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 import { TStringLiteralNode } from '../../types/node/TStringLiteralNode';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -11,6 +12,8 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-transformers/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-transformers/IStringArrayStorageItem';
+
+import { StringArrayEncoding } from '../../enums/node-transformers/string-array-transformers/StringArrayEncoding';
 
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
@@ -25,6 +28,14 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @type {number}
      */
     private static readonly minimumLengthForStringArray: number = 3;
+
+    /**
+     * Matches a lone (unpaired) surrogate code unit. Because of the `u` flag, valid surrogate pairs are
+     * iterated as a single code point outside the `\uD800-\uDFFF` range, so only unpaired surrogates match.
+     *
+     * @type {RegExp}
+     */
+    private static readonly loneSurrogateRegExp: RegExp = /[\uD800-\uDFFF]/u;
 
     /**
      * @type {IOptions}
@@ -128,6 +139,14 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @returns {boolean}
      */
     private shouldAddValueToStringArray(literalNode: TStringLiteralNode): boolean {
+        // `base64` and `rc4` encodings rely on `encodeURIComponent`/`decodeURIComponent`, which cannot
+        // represent lone (unpaired) surrogate code units. Keeping such values inline avoids a
+        // `URIError: URI malformed` crash while still producing valid obfuscated code.
+        // Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1431
+        if (this.isProhibitedStringArrayValue(literalNode.value)) {
+            return false;
+        }
+
         const isForceTransformNode: boolean = NodeMetadata.isForceTransformNode(literalNode);
 
         if (isForceTransformNode) {
@@ -139,5 +158,18 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
             !!this.options.stringArrayThreshold &&
             this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold
         );
+    }
+
+    /**
+     * @param {string} value
+     * @returns {boolean}
+     */
+    private isProhibitedStringArrayValue(value: string): boolean {
+        const hasUnicodeEncoding: boolean = this.options.stringArrayEncoding.some(
+            (encoding: TStringArrayEncoding): boolean =>
+                encoding === StringArrayEncoding.Base64 || encoding === StringArrayEncoding.Rc4
+        );
+
+        return hasUnicodeEncoding && StringArrayStorageAnalyzer.loneSurrogateRegExp.test(value);
     }
 }

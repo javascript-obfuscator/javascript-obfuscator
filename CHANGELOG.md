@@ -4,6 +4,7 @@ v5.4.7
 ---
 * Fixed `sourceMapFileName` ending in `.js.map` (e.g. `foo.min.js.map`) being mangled in the emitted `//# sourceMappingURL=` comment. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1312
 * Fixed `URIError: URI malformed` crash when `stringArray` with `base64`/`rc4` encoding processed a string literal containing lone surrogate code units (e.g. `"[^\uD800-\uDFFF]"`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1431
+* Bumped the production `brace-expansion` transitive dependency to a patched version, resolving `CVE-2026-25547`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1405
 
 v5.4.6
 ---

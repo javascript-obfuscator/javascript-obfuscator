@@ -88,6 +88,8 @@ export class ObfuscatedCodeFileUtils {
             throw new Error('Output code path is empty');
         }
 
+        sourceMapFileName = this.getUniqueSourceMapFileName(outputCodePath, sourceMapFileName);
+
         let normalizedOutputCodePath: string = path.normalize(outputCodePath);
         let parsedOutputCodePath: path.ParsedPath = path.parse(normalizedOutputCodePath);
 
@@ -139,5 +141,38 @@ export class ObfuscatedCodeFileUtils {
         fs.writeFileSync(outputPath, data, {
             encoding: JavaScriptObfuscatorCLI.encoding
         });
+    }
+
+    /**
+     * For directory obfuscation a single `sourceMapFileName` would be shared by every file and the
+     * source maps would overwrite each other, so it is prefixed with the output code file name to
+     * keep each source map unique.
+     * https://github.com/javascript-obfuscator/javascript-obfuscator/issues/817
+     *
+     * @param {string} outputCodePath
+     * @param {string} sourceMapFileName
+     * @returns {string}
+     */
+    private getUniqueSourceMapFileName(outputCodePath: string, sourceMapFileName: string): string {
+        if (!sourceMapFileName || !this.isDirectoryInputPath()) {
+            return sourceMapFileName;
+        }
+
+        const outputCodeName: string = path.parse(outputCodePath).name;
+        const parsedSourceMapFileName: path.ParsedPath = path.parse(sourceMapFileName);
+
+        // keep any leading directory part of `sourceMapFileName`, prefix only its file name
+        return path.join(parsedSourceMapFileName.dir, `${outputCodeName}-${parsedSourceMapFileName.base}`);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    private isDirectoryInputPath(): boolean {
+        try {
+            return fs.lstatSync(this.inputPath).isDirectory();
+        } catch {
+            return false;
+        }
     }
 }

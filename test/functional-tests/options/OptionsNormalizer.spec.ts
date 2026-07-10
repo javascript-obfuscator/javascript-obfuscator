@@ -700,6 +700,48 @@ describe('OptionsNormalizer', () => {
                     assert.deepEqual(optionsPreset, expectedOptionsPreset);
                 });
             });
+
+            // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1312
+            describe('Full `.js.map` file name is preserved as-is', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.min.js.map'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.min.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1312
+            describe('Full `.js.map` file name with leading slashes', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: '//outputSourceMapName.min.js.map'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.min.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
         });
 
         describe('splitStringsChunkLengthRule', () => {

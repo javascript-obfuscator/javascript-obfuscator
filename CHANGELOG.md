@@ -1,5 +1,9 @@
 Change Log
 
+v5.4.7
+---
+* Fixed `sourceMapFileName` ending in `.js.map` (e.g. `foo.min.js.map`) being mangled in the emitted `//# sourceMappingURL=` comment. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1312
+
 v5.4.6
 ---
 * Fixed unicode (`\uXXXX`, `\u{XXXX}`) and hex (`\xXX`) escape sequences of string literals being un-escaped into their literal characters during obfuscation. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/345

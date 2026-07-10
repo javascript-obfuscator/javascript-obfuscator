@@ -100,6 +100,9 @@
     "webpack-cli": "6.0.1",
     "webpack-node-externals": "3.0.0"
   },
+  "resolutions": {
+    "multimatch/minimatch/brace-expansion": "^1.1.12"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/javascript-obfuscator/javascript-obfuscator.git"

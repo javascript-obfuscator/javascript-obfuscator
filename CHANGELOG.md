@@ -2,6 +2,7 @@ Change Log
 
 v5.4.7
 ---
+* Bumped the production `brace-expansion` transitive dependency to a patched version, resolving `CVE-2026-25547`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1405
 * Fixed `URIError: URI malformed` crash when `stringArray` with `base64`/`rc4` encoding processed a string literal containing lone surrogate code units (e.g. `"[^\uD800-\uDFFF]"`). Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1431
 
 v5.4.6

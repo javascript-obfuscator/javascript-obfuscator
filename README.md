@@ -73,6 +73,7 @@ The example of obfuscated code: [github.com](https://github.com/javascript-obfus
 #### Plugins:
 * Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
 * Webpack loader: [obfuscator-loader](https://github.com/javascript-obfuscator/obfuscator-loader)
+* Esbuild plugin: [esbuild-javascript-obfuscator](https://www.npmjs.com/package/esbuild-javascript-obfuscator)
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
 * Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)

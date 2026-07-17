@@ -325,7 +325,9 @@ describe('ProApiClient', () => {
 
         describe('Variant #10: client-side blob upload for large files', () => {
             const UPLOAD_TOKEN_URL = 'https://obfuscator.io/api/v1/upload/token';
-            const BLOB_UPLOAD_THRESHOLD = 4.4 * 1024 * 1024;
+            // Matches the server's inline cap: 4,400,000 bytes, just under
+            // Vercel's 4.5 MB (decimal) request body limit
+            const BLOB_UPLOAD_THRESHOLD = 4_400_000;
 
             it('should use direct upload for small files', async () => {
                 const config: IProApiConfig = {
@@ -375,6 +377,63 @@ describe('ProApiClient', () => {
                 // Should include authorization header
                 const firstCallOptions = fetchStub.firstCall.args[1];
                 assert.include(firstCallOptions.headers['Authorization'], 'Bearer test-token');
+            });
+
+            it('should upload the raw source (not the JSON body) for large code', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                const largeCode = 'a'.repeat(BLOB_UPLOAD_THRESHOLD + 1000);
+
+                const tokenResponse = new Response(JSON.stringify({ clientToken: 'mock-client-token' }), {
+                    status: 200
+                });
+
+                fetchStub.onFirstCall().resolves(tokenResponse);
+
+                try {
+                    await client.obfuscate(largeCode, { vmObfuscation: true });
+                } catch {
+                    // The blob PUT against the mock token fails; the token
+                    // request that reveals the chosen format has already run.
+                }
+
+                // Raw format uploads the source file itself
+                const tokenRequestBody = JSON.parse(fetchStub.firstCall.args[1].body);
+                assert.strictEqual(tokenRequestBody.pathname, 'obfuscate-source.js');
+            });
+
+            it('should fall back to the legacy JSON-body format when options are oversized', async () => {
+                const config: IProApiConfig = {
+                    apiToken: 'test-token'
+                };
+                const client = new ProApiClient(config);
+
+                // Small code, but options too large to travel inline in the
+                // raw-format follow-up request
+                const oversizedOptions = {
+                    vmObfuscation: true,
+                    reservedStrings: ['x'.repeat(BLOB_UPLOAD_THRESHOLD + 1000)]
+                };
+
+                const tokenResponse = new Response(JSON.stringify({ clientToken: 'mock-client-token' }), {
+                    status: 200
+                });
+
+                fetchStub.onFirstCall().resolves(tokenResponse);
+
+                try {
+                    await client.obfuscate('const a = 1;', oversizedOptions);
+                } catch {
+                    // The blob PUT against the mock token fails; the token
+                    // request that reveals the chosen format has already run.
+                }
+
+                // Legacy format uploads the whole JSON request body
+                const tokenRequestBody = JSON.parse(fetchStub.firstCall.args[1].body);
+                assert.strictEqual(tokenRequestBody.pathname, 'obfuscate-request.json');
             });
 
             it('should throw ApiError when token request fails', async () => {

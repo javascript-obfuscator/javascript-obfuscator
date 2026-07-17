@@ -29,10 +29,15 @@ export class ProApiClient {
     private static readonly defaultTimeout = 300000;
 
     /**
-     * Threshold for using blob upload (4.4MB)
-     * Vercel has a ~4.5MB body limit
+     * Threshold for using blob upload. Matches the server's inline cap,
+     * just under Vercel's 4.5MB (decimal) body limit.
      */
-    private static readonly blobUploadThreshold = 4.4 * 1024 * 1024;
+    private static readonly blobUploadThreshold = 4_400_000;
+
+    /**
+     * Headroom for the blob URL and JSON envelope in the follow-up request
+     */
+    private static readonly followUpBodyHeadroom = 512;
 
     private readonly config: {
         apiToken: string;
@@ -80,7 +85,7 @@ export class ProApiClient {
         const bodySize = Buffer.byteLength(requestBody, 'utf8');
 
         if (bodySize > ProApiClient.blobUploadThreshold) {
-            return this.obfuscateWithBlobUpload(requestBody, onProgress);
+            return this.obfuscateWithBlobUpload(sourceCode, options, requestBody, onProgress);
         }
 
         return this.obfuscateDirect(requestBody, onProgress);
@@ -134,15 +139,32 @@ export class ProApiClient {
     }
 
     /**
-     * Obfuscation with blob upload for large files
+     * Obfuscation with blob upload for large files (Team/Business plans).
+     * Uploads the raw source (`blobFormat: 'raw'`); falls back to the
+     * legacy whole-JSON-body format when options are too large to travel
+     * inline.
      */
     private async obfuscateWithBlobUpload(
-        requestBody: string,
+        sourceCode: string,
+        options: TInputOptions,
+        legacyRequestBody: string,
         onProgress?: TProApiProgressCallback
     ): Promise<IProObfuscationResult> {
         onProgress?.('Uploading large file...');
 
-        const blobUrl = await this.uploadToBlob(requestBody);
+        const followUpSize =
+            Buffer.byteLength(JSON.stringify({ blobUrl: '', blobFormat: 'raw', options }), 'utf8') +
+            ProApiClient.followUpBodyHeadroom;
+        const useRawFormat = followUpSize <= ProApiClient.blobUploadThreshold;
+
+        // `text/plain`: the API rejects executable script MIME types
+        const blobUrl = useRawFormat
+            ? await this.uploadToBlob('obfuscate-source.js', sourceCode, 'text/plain')
+            : await this.uploadToBlob('obfuscate-request.json', legacyRequestBody, 'application/json');
+
+        const followUpBody = useRawFormat
+            ? JSON.stringify({ blobUrl, blobFormat: 'raw', options })
+            : JSON.stringify({ blobUrl });
 
         onProgress?.('File uploaded, starting obfuscation...');
 
@@ -168,7 +190,7 @@ export class ProApiClient {
             const response = await fetch(url, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ blobUrl }),
+                body: followUpBody,
                 signal: controller.signal
             });
 
@@ -187,16 +209,14 @@ export class ProApiClient {
     }
 
     /**
-     * Upload request body to blob storage using client-side upload
+     * Upload content to blob storage using client-side upload
      */
-    private async uploadToBlob(requestBody: string): Promise<string> {
-        const pathname = 'obfuscate-request.json';
-
+    private async uploadToBlob(pathname: string, content: string, contentType: string): Promise<string> {
         // Step 1: Get client upload token from server (server adds random suffix)
         const clientToken = await this.getUploadToken(pathname);
 
         // Step 2: Upload directly to Vercel Blob using the client token
-        return this.uploadWithClientToken(clientToken, pathname, requestBody);
+        return this.uploadWithClientToken(clientToken, pathname, content, contentType);
     }
 
     /**
@@ -258,16 +278,22 @@ export class ProApiClient {
     /**
      * Upload file directly to Vercel Blob using client token
      */
-    private async uploadWithClientToken(clientToken: string, pathname: string, requestBody: string): Promise<string> {
+    private async uploadWithClientToken(
+        clientToken: string,
+        pathname: string,
+        content: string,
+        contentType: string
+    ): Promise<string> {
         const blobClient = await import('@vercel/blob/client');
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes for upload
 
         try {
-            const blob = await blobClient.put(pathname, requestBody, {
+            const blob = await blobClient.put(pathname, content, {
                 access: 'public',
-                token: clientToken
+                token: clientToken,
+                contentType
             });
 
             clearTimeout(timeoutId);

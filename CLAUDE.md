@@ -475,15 +475,23 @@ The project includes a browser build at `dist/index.browser.js` that can be used
 ```bash
 # Production build
 npm run build
+# or
+yarn run build
 
 # Development watch mode
 npm run watch
+# or
+yarn run watch
 
 # Build TypeScript typings
 npm run build:typings
+# or
+yarn run build:typings
 
 # Linting
 npm run eslint
+# or
+yarn run eslint
 ```
 
 ## Testing
@@ -1184,24 +1192,32 @@ The project uses **Husky** for git hooks:
 1. **Use watch mode during development**:
    ```bash
    npm run watch
+   # or
+   yarn run watch
    ```
    This rebuilds automatically when you save files.
 
 2. **Run specific tests during development**:
    ```bash
    npm run test:dev
+   # or
+   yarn run test:dev
    ```
    Faster than full test suite.
 
 3. **Check linting before committing**:
    ```bash
    npm run eslint
+   # or
+   yarn run eslint
    ```
    Fix issues before the pre-commit hook runs.
 
 4. **Test memory usage**:
    ```bash
    npm run test:mocha-memory-performance
+   # or
+   yarn run test:mocha-memory-performance
    ```
    Ensure your changes don't cause memory issues.
 
@@ -1209,6 +1225,9 @@ The project uses **Husky** for git hooks:
    ```bash
    npm run test:mocha-coverage
    npm run test:mocha-coverage:report
+   # or
+   yarn run test:mocha-coverage
+   yarn run test:mocha-coverage:report
    ```
    Check test coverage in the generated `coverage/` directory.
 

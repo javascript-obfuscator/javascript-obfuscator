@@ -48,7 +48,8 @@ export class CustomCodeHelperObfuscator implements ICustomCodeHelperObfuscator {
             numbersToExpressions: this.options.numbersToExpressions,
             simplify: this.options.simplify,
             seed: this.randomGenerator.getRawSeed(),
-            ...additionalOptions
+            ...additionalOptions,
+            advertisement: false
         }).getObfuscatedCode();
     }
 }

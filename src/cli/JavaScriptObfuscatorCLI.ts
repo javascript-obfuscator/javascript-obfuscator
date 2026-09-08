@@ -193,6 +193,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .usage('<inputPath> [options]')
             .version(Utils.buildVersionMessage(process.env.VERSION, process.env.BUILD_TIMESTAMP), '-v, --version')
             .option('-o, --output <path>', 'Output path for obfuscated code')
+            .option(
+                '--advertisement <boolean>',
+                'Allows to control the JavaScript Obfuscator Pro advertisement message shown in the console',
+                BooleanSanitizer
+            )
             .option('--compact <boolean>', 'Disable one line output code compacting', BooleanSanitizer)
             .option('--config <boolean>', 'Name of js / json config file')
             .option('--control-flow-flattening <boolean>', 'Enables control flow flattening', BooleanSanitizer)

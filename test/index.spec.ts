@@ -90,6 +90,7 @@ import './functional-tests/issues/issue424.spec';
 import './functional-tests/issues/issue437.spec';
 import './functional-tests/issues/issue1419.spec';
 import './functional-tests/issues/issue1437.spec';
+import './functional-tests/issues/issue1448.spec';
 import './functional-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './functional-tests/node-transformers/control-flow-transformers/block-statement-control-flow-transformer/BlockStatementControlFlowTransformer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/BinaryExpressionControlFlowReplacer.spec';

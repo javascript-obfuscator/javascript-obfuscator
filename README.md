@@ -555,6 +555,7 @@ Following options are available for the JS Obfuscator:
 
 ```javascript
 {
+    advertisement: true,
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
@@ -618,6 +619,7 @@ Following options are available for the JS Obfuscator:
 
     -o, --output
 
+    --advertisement <boolean>
     --compact <boolean>
     --config <string>
     --control-flow-flattening <boolean>
@@ -714,6 +716,13 @@ Following options are available for the JS Obfuscator:
 ```
 
 <!-- ##options-start## -->
+
+### `advertisement`
+Type: `boolean` Default: `true`
+
+Allows to control the display of the JavaScript Obfuscator Pro advertisement message in the console.
+
+The message is only shown when using the Node.js CLI in an interactive (TTY) terminal, is never shown in CI environments or in the browser, and is limited to a few displays. Set this option to `false` to disable the advertisement message completely.
 
 ### `compact`
 Type: `boolean` Default: `true`

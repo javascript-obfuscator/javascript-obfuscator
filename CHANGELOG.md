@@ -1,5 +1,9 @@
 Change Log
 
+v5.7.0
+---
+* **New option:** `advertisement` allows to control the display of the JavaScript Obfuscator Pro advertisement message in the console. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1448
+
 v5.6.0
 ---
 * Pro API: `obfuscatePro` now fall back to the basic local obfuscation API when no Pro feature (`vmObfuscation` or `parseHtml`) is enabled, instead of throwing an `ApiError`

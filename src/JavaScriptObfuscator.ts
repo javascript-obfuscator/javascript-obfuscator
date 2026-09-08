@@ -158,7 +158,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {IObfuscationResult}
      */
     public obfuscate(sourceCode: string): IObfuscationResult {
-        if (AdvertisementUtils.shouldShowAdvertisement()) {
+        if (AdvertisementUtils.shouldShowAdvertisement(this.options.advertisement)) {
             this.logger.advertise(LoggingMessage.JavaScriptObfuscatorProAdFirstPart);
             this.logger.advertise(LoggingMessage.JavaScriptObfuscatorProAdSecondPart);
         }

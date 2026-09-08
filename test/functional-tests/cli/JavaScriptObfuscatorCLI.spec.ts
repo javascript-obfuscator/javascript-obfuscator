@@ -10,6 +10,7 @@ import { ISourceMap } from '../../../src/interfaces/source-code/ISourceMap';
 
 import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 
+import { AdvertisementUtils } from '../../../src/utils/AdvertisementUtils';
 import { JavaScriptObfuscatorCLI } from '../../../src/JavaScriptObfuscatorCLIFacade';
 import { ProApiClient } from '../../../src/pro-api/ProApiClient';
 import { parseSourceMapFromObfuscatedCode } from '../../helpers/parseSourceMapFromObfuscatedCode';
@@ -1352,6 +1353,97 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
                 after(() => {
                     consoleLogSpy.restore();
+                });
+            });
+        });
+
+        describe('`--advertisement` option', () => {
+            const advertisementText: string = 'JavaScript Obfuscator Pro';
+
+            let shouldShowAdvertisementStub: sinon.SinonStub,
+                consoleLogStub: sinon.SinonStub;
+
+            const isAdvertisementLogged = (): boolean =>
+                consoleLogStub
+                    .getCalls()
+                    .some((call) =>
+                        call.args.some((arg) => typeof arg === 'string' && arg.includes(advertisementText))
+                    );
+
+            beforeEach(() => {
+                shouldShowAdvertisementStub = sinon
+                    .stub(AdvertisementUtils, 'shouldShowAdvertisement')
+                    .callsFake((advertisement: boolean): boolean => advertisement);
+                consoleLogStub = sinon.stub(console, 'log');
+            });
+
+            afterEach(() => {
+                shouldShowAdvertisementStub.restore();
+                consoleLogStub.restore();
+                rimraf.sync(outputFilePath);
+            });
+
+            describe('Variant #1: `--advertisement` option is not set (enabled by default)', () => {
+                let isAdvertisementShown: boolean;
+
+                beforeEach(async () => {
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath
+                    ]);
+
+                    isAdvertisementShown = isAdvertisementLogged();
+                });
+
+                it('should show the advertisement message', () => {
+                    assert.isTrue(isAdvertisementShown);
+                });
+            });
+
+            describe('Variant #2: `--advertisement` option is set to `true`', () => {
+                let isAdvertisementShown: boolean;
+
+                beforeEach(async () => {
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--advertisement',
+                        'true'
+                    ]);
+
+                    isAdvertisementShown = isAdvertisementLogged();
+                });
+
+                it('should show the advertisement message', () => {
+                    assert.isTrue(isAdvertisementShown);
+                });
+            });
+
+            describe('Variant #3: `--advertisement` option is set to `false`', () => {
+                let isAdvertisementShown: boolean;
+
+                beforeEach(async () => {
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--advertisement',
+                        'false'
+                    ]);
+
+                    isAdvertisementShown = isAdvertisementLogged();
+                });
+
+                it('should not show the advertisement message', () => {
+                    assert.isFalse(isAdvertisementShown);
                 });
             });
         });

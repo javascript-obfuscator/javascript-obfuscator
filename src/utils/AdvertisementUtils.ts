@@ -84,8 +84,14 @@ export class AdvertisementUtils {
      * Also increments the display count if returning true
      *
      * In browser environments, always returns false
+     *
+     * @param {boolean} advertisement value of the `advertisement` option
      */
-    public static shouldShowAdvertisement(): boolean {
+    public static shouldShowAdvertisement(advertisement: boolean): boolean {
+        if (!advertisement) {
+            return false;
+        }
+
         // Don't show in browser - only Node.js CLI
         if (!this.isNodeEnvironment()) {
             return false;

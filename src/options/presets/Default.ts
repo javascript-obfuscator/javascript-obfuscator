@@ -11,6 +11,7 @@ import { StringArrayEncoding } from '../../enums/node-transformers/string-array-
 import { StringArrayWrappersType } from '../../enums/node-transformers/string-array-transformers/StringArrayWrappersType';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
+    advertisement: true,
     compact: true,
     config: '',
     controlFlowFlattening: false,

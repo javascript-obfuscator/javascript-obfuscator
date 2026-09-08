@@ -121,7 +121,7 @@ describe('AdvertisementUtils', () => {
                 process.stdout.isTTY = false;
                 // Clear CI env vars
                 delete process.env.CI;
-                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(true));
             });
         });
 
@@ -129,7 +129,7 @@ describe('AdvertisementUtils', () => {
             it('should return false in CI environment', () => {
                 process.stdout.isTTY = true;
                 process.env.CI = 'true';
-                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(true));
             });
         });
 
@@ -153,34 +153,34 @@ describe('AdvertisementUtils', () => {
 
             it('should return true for first 5 calls', () => {
                 for (let i = 0; i < 5; i++) {
-                    assert.isTrue(AdvertisementUtils.shouldShowAdvertisement(), `Call ${i + 1} should return true`);
+                    assert.isTrue(AdvertisementUtils.shouldShowAdvertisement(true), `Call ${i + 1} should return true`);
                 }
             });
 
             it('should return false after 5 calls', () => {
                 // Exhaust the counter
                 for (let i = 0; i < 5; i++) {
-                    AdvertisementUtils.shouldShowAdvertisement();
+                    AdvertisementUtils.shouldShowAdvertisement(true);
                 }
 
                 // 6th call should return false
-                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(true));
             });
 
             it('should increment counter on each call', () => {
-                AdvertisementUtils.shouldShowAdvertisement();
+                AdvertisementUtils.shouldShowAdvertisement(true);
                 assert.strictEqual(readConfig().adDisplayCount, 1);
 
-                AdvertisementUtils.shouldShowAdvertisement();
+                AdvertisementUtils.shouldShowAdvertisement(true);
                 assert.strictEqual(readConfig().adDisplayCount, 2);
 
-                AdvertisementUtils.shouldShowAdvertisement();
+                AdvertisementUtils.shouldShowAdvertisement(true);
                 assert.strictEqual(readConfig().adDisplayCount, 3);
             });
 
             it('should set first display timestamp on first call', () => {
                 const beforeTime = Date.now();
-                AdvertisementUtils.shouldShowAdvertisement();
+                AdvertisementUtils.shouldShowAdvertisement(true);
                 const afterTime = Date.now();
 
                 const timestamp = readConfig().adFirstDisplayTime;
@@ -192,9 +192,9 @@ describe('AdvertisementUtils', () => {
             it('should reset counter after 3 days', () => {
                 // Exhaust counter
                 for (let i = 0; i < 5; i++) {
-                    AdvertisementUtils.shouldShowAdvertisement();
+                    AdvertisementUtils.shouldShowAdvertisement(true);
                 }
-                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(true));
 
                 // Simulate 3 days passing by setting old timestamp
                 const threeDaysAgo = Date.now() - 3 * 24 * 60 * 60 * 1000 - 1000;
@@ -203,7 +203,7 @@ describe('AdvertisementUtils', () => {
                 writeConfig(data);
 
                 // Should return true again after reset
-                assert.isTrue(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isTrue(AdvertisementUtils.shouldShowAdvertisement(true));
                 // Counter should be reset to 1
                 assert.strictEqual(readConfig().adDisplayCount, 1);
             });
@@ -211,7 +211,7 @@ describe('AdvertisementUtils', () => {
             it('should not reset counter before 3 days', () => {
                 // Exhaust counter
                 for (let i = 0; i < 5; i++) {
-                    AdvertisementUtils.shouldShowAdvertisement();
+                    AdvertisementUtils.shouldShowAdvertisement(true);
                 }
 
                 // Simulate 2 days passing (less than 3 days)
@@ -221,7 +221,34 @@ describe('AdvertisementUtils', () => {
                 writeConfig(data);
 
                 // Should still return false
-                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement());
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(true));
+            });
+        });
+
+        describe('Variant #4: `advertisement` option is disabled', () => {
+            beforeEach(() => {
+                deleteConfig();
+                (AdvertisementUtils as any).configPath = null;
+                // Ensure conditions that would otherwise show the advertisement
+                process.stdout.isTTY = true;
+                delete process.env.CI;
+                delete process.env.GITHUB_ACTIONS;
+                delete process.env.TRAVIS;
+                delete process.env.GITLAB_CI;
+            });
+
+            afterEach(() => {
+                deleteConfig();
+                (AdvertisementUtils as any).configPath = null;
+            });
+
+            it('should return false when `advertisement` is `false`, even if all other conditions are met', () => {
+                assert.isFalse(AdvertisementUtils.shouldShowAdvertisement(false));
+            });
+
+            it('should not touch the display counter when `advertisement` is `false`', () => {
+                AdvertisementUtils.shouldShowAdvertisement(false);
+                assert.isUndefined(readConfig().adDisplayCount);
             });
         });
     });

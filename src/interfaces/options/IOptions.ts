@@ -12,6 +12,7 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 import { SourceMapSourcesMode } from '../../enums/source-map/SourceMapSourcesMode';
 
 export interface IOptions {
+    readonly advertisement: boolean;
     readonly compact: boolean;
     readonly controlFlowFlattening: boolean;
     readonly controlFlowFlatteningThreshold: number;

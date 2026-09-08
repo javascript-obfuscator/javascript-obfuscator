@@ -10,6 +10,7 @@ import { StringArrayWrappersType } from '../../enums/node-transformers/string-ar
 import { StringArrayIndexesType } from '../../enums/node-transformers/string-array-transformers/StringArrayIndexesType';
 
 export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
+    advertisement: true,
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0,

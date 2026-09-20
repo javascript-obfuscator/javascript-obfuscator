@@ -13,6 +13,7 @@ import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 import { AdvertisementUtils } from '../../../src/utils/AdvertisementUtils';
 import { JavaScriptObfuscatorCLI } from '../../../src/JavaScriptObfuscatorCLIFacade';
 import { ProApiClient } from '../../../src/pro-api/ProApiClient';
+import { ApiError } from '../../../src/pro-api/ApiError';
 import { parseSourceMapFromObfuscatedCode } from '../../helpers/parseSourceMapFromObfuscatedCode';
 
 describe('JavaScriptObfuscatorCLI', function (): void {
@@ -1587,6 +1588,232 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     if (fs.existsSync(outputPath)) {
                         fs.unlinkSync(outputPath);
                     }
+                });
+            });
+        });
+
+        describe('`--pro-api-token` with a preset the local obfuscator cannot expand', () => {
+            const PRESETS_URL = 'https://obfuscator.io/api/v1/presets/';
+            const OBFUSCATE_URL = 'https://obfuscator.io/api/v1/obfuscate';
+
+            let fetchStub: sinon.SinonStub;
+            let presetFilePath: string;
+            let presetDirPath: string;
+            let configFilePath: string;
+
+            /**
+             * Answers the presets endpoint with a saved preset (or 404) and the
+             * obfuscate endpoint with a fixed result; returns the request log.
+             */
+            const stubEndpoints = (presetOptions: object | null) => {
+                const calls: { url: string; options: object | undefined }[] = [];
+
+                fetchStub = sinon.stub(global, 'fetch').callsFake(async (url: unknown, init?: RequestInit) => {
+                    const body = typeof init?.body === 'string' ? JSON.parse(init.body) : undefined;
+
+                    calls.push({ url: String(url), options: body?.options });
+
+                    if (String(url).startsWith(PRESETS_URL)) {
+                        return {
+                            ok: presetOptions !== null,
+                            status: presetOptions !== null ? 200 : 404,
+                            text: async () =>
+                                JSON.stringify(
+                                    presetOptions !== null
+                                        ? { alias: 'production', name: 'Production', description: null, options: presetOptions, updatedAt: '' }
+                                        : { error: 'Preset not found' }
+                                )
+                        } as Response;
+                    }
+
+                    return {
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({ type: 'result', code: 'var obfuscated=1;', sourceMap: '' })
+                    } as Response;
+                });
+
+                return calls;
+            };
+
+            before(() => {
+                presetFilePath = path.join(outputDirName, 'preset-test.js');
+                fs.writeFileSync(presetFilePath, 'function f() { const a = 1; return a; }');
+
+                presetDirPath = path.join(outputDirName, 'preset-dir');
+                fs.mkdirSync(presetDirPath, { recursive: true });
+                fs.writeFileSync(path.join(presetDirPath, 'one.js'), 'const one = 1;');
+                fs.writeFileSync(path.join(presetDirPath, 'two.js'), 'const two = 2;');
+
+                configFilePath = path.join(outputDirName, 'preset-config.json');
+                fs.writeFileSync(configFilePath, JSON.stringify({ optionsPreset: 'vm-default', target: 'browser' }));
+            });
+
+            afterEach(() => {
+                if (fetchStub) {
+                    fetchStub.restore();
+                }
+            });
+
+            after(() => {
+                fs.rmSync(presetFilePath, { force: true });
+                fs.rmSync(presetDirPath, { recursive: true, force: true });
+                fs.rmSync(configFilePath, { force: true });
+            });
+
+            describe('Variant #1: custom preset alias', () => {
+                it('should fetch the preset and obfuscate through the Pro API with its options', async () => {
+                    const outputPath = path.join(outputDirName, 'preset-output1.js');
+                    const calls = stubEndpoints({ vmObfuscation: true, optionsPreset: 'vm-default', compact: false });
+
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        presetFilePath,
+                        '--output',
+                        outputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--options-preset',
+                        'production',
+                        '--compact',
+                        'true'
+                    ]);
+
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.deepEqual(
+                        calls.map((call) => call.url),
+                        [`${PRESETS_URL}production`, OBFUSCATE_URL]
+                    );
+                    // Preset as the base, the CLI flag on top, the alias itself gone.
+                    const sent = calls[1].options as Record<string, unknown>;
+                    assert.strictEqual(sent.vmObfuscation, true);
+                    assert.strictEqual(sent.optionsPreset, 'vm-default');
+                    assert.strictEqual(sent.compact, true);
+                    assert.strictEqual(fs.readFileSync(outputPath, 'utf8'), 'var obfuscated=1;');
+
+                    fs.rmSync(outputPath, { force: true });
+                });
+            });
+
+            describe('Variant #2: VM preset name from a config file', () => {
+                it('should send the name to the Pro API instead of failing to expand it locally', async () => {
+                    const outputPath = path.join(outputDirName, 'preset-output2.js');
+                    const calls = stubEndpoints(null);
+
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        presetFilePath,
+                        '--output',
+                        outputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--config',
+                        configFilePath
+                    ]);
+
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.deepEqual(
+                        calls.map((call) => call.url),
+                        [OBFUSCATE_URL]
+                    );
+                    const sent = calls[0].options as Record<string, unknown>;
+                    assert.strictEqual(sent.optionsPreset, 'vm-default');
+                    assert.strictEqual(sent.target, 'browser');
+
+                    fs.rmSync(outputPath, { force: true });
+                });
+            });
+
+            describe('Variant #3: custom preset without Pro features', () => {
+                it('should obfuscate locally with the fetched options', async () => {
+                    const outputPath = path.join(outputDirName, 'preset-output3.js');
+                    const calls = stubEndpoints({ compact: false, optionsPreset: 'default' });
+
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        presetFilePath,
+                        '--output',
+                        outputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--options-preset',
+                        'production'
+                    ]);
+
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    assert.deepEqual(
+                        calls.map((call) => call.url),
+                        [`${PRESETS_URL}production`]
+                    );
+                    // Non-compact local output: the function body spans lines.
+                    assert.include(fs.readFileSync(outputPath, 'utf8'), '\n');
+
+                    fs.rmSync(outputPath, { force: true });
+                });
+            });
+
+            describe('Variant #4: directory input', () => {
+                it('should fetch the preset once for the whole run', async () => {
+                    const outputPath = path.join(outputDirName, 'preset-dir-output');
+                    const calls = stubEndpoints({ vmObfuscation: true });
+
+                    await JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        presetDirPath,
+                        '--output',
+                        outputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--options-preset',
+                        'production'
+                    ]);
+
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    const presetCalls = calls.filter((call) => call.url.startsWith(PRESETS_URL));
+                    const obfuscateCalls = calls.filter((call) => call.url === OBFUSCATE_URL);
+
+                    assert.lengthOf(presetCalls, 1);
+                    assert.lengthOf(obfuscateCalls, 2);
+
+                    fs.rmSync(outputPath, { recursive: true, force: true });
+                });
+            });
+
+            describe('Variant #5: unknown custom preset', () => {
+                it('should fail with the 404 message', async () => {
+                    const outputPath = path.join(outputDirName, 'preset-output5.js');
+
+                    stubEndpoints(null);
+
+                    let error: Error | undefined;
+
+                    try {
+                        await JavaScriptObfuscatorCLI.obfuscate([
+                            'node',
+                            'javascript-obfuscator',
+                            presetFilePath,
+                            '--output',
+                            outputPath,
+                            '--pro-api-token',
+                            'test-token-123',
+                            '--options-preset',
+                            'prodction'
+                        ]);
+                    } catch (caught) {
+                        error = caught as Error;
+                    }
+
+                    assert.instanceOf(error, ApiError);
+                    assert.include(error!.message, 'prodction');
+                    assert.isFalse(fs.existsSync(outputPath));
                 });
             });
         });

@@ -115,13 +115,14 @@ class JavaScriptObfuscatorFacade {
 
         const { ProApiClient } = await import('./pro-api/ProApiClient');
 
-        if (!ProApiClient.hasProFeatures(inputOptions)) {
-            return JavaScriptObfuscatorFacade.obfuscate(sourceCode, inputOptions);
+        const client = new ProApiClient(proApiConfig);
+        const options: TInputOptions = await client.resolveOptions(inputOptions);
+
+        if (!ProApiClient.hasProFeatures(options)) {
+            return JavaScriptObfuscatorFacade.obfuscate(sourceCode, options);
         }
 
-        const client = new ProApiClient(proApiConfig);
-
-        return client.obfuscate(sourceCode, inputOptions, onProgress);
+        return client.obfuscate(sourceCode, options, onProgress);
     }
 }
 

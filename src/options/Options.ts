@@ -471,13 +471,27 @@ export class Options implements IOptions {
      * @param {TOptionsPreset} optionsPreset
      * @returns {TInputOptions}
      */
-    public static getOptionsByPreset(optionsPreset: TOptionsPreset): TInputOptions {
-        const options: TInputOptions | null = Options.optionPresetsMap.get(optionsPreset) ?? null;
+    public static getOptionsByPreset(optionsPreset: string): TInputOptions {
+        const options: TInputOptions | null = Options.optionPresetsMap.get(<TOptionsPreset>optionsPreset) ?? null;
 
         if (!options) {
-            throw new Error(`Options for preset name \`${optionsPreset}\` are not found`);
+            throw new Error(
+                `Options for preset name \`${optionsPreset}\` are not found. ` +
+                    'VM presets and custom preset aliases are resolved by the Pro API: ' +
+                    'use `obfuscatePro()` or the `--pro-api-token` CLI option.'
+            );
         }
 
         return options;
+    }
+
+    /**
+     * Whether a preset name is one this package can expand without the Pro API.
+     *
+     * @param {string | undefined} optionsPreset
+     * @returns {boolean}
+     */
+    public static isLocalPreset(optionsPreset: string | undefined): boolean {
+        return optionsPreset !== undefined && Options.optionPresetsMap.has(<TOptionsPreset>optionsPreset);
     }
 }

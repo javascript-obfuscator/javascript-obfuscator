@@ -420,6 +420,29 @@ if (ProApiClient.hasProFeatures(options)) {
 Pro features include:
 - `vmObfuscation: true` – VM-based bytecode obfuscation
 - `parseHtml: true` – HTML parsing with inline JavaScript obfuscation
+- `optionsPreset` set to a VM preset (`vm-default`, ...) or to a [custom preset](#custom-presets) alias – only the Pro API can resolve these
+
+### Custom Presets :new:
+
+Save a configuration in the [obfuscator.io](https://obfuscator.io) dashboard as a custom preset and give it an **API alias** in the save dialog. Set `optionsPreset` to that alias and `obfuscatePro()` fetches the preset's options before obfuscating, so the configuration lives in the dashboard and changes there apply to the next build:
+
+```javascript
+const result = await JavaScriptObfuscator.obfuscatePro(
+    sourceCode,
+    { optionsPreset: 'production' },
+    { apiToken: 'YOUR_API_TOKEN' }
+);
+```
+
+The preset's options are the base and any other option you pass overrides them, the same way built-in presets are merged. A custom preset with no Pro feature enabled is obfuscated locally with its options. A team service key resolves the team owner's presets; a member's personal key resolves their own presets plus the ones shared with the team.
+
+An alias that does not exist for your account throws an `ApiError` with `statusCode` 404. Without an API token (`obfuscate()`), only the built-in presets are available.
+
+The same works from the CLI:
+
+```sh
+javascript-obfuscator input.js --pro-api-token YOUR_API_TOKEN --options-preset production -o output.js
+```
 
 ### Error Handling
 
@@ -455,7 +478,7 @@ javascript-obfuscator input.js --pro-api-token YOUR_API_TOKEN --pro-api-version 
 - `--pro-api-token <string>` – Your API token from [obfuscator.io](https://obfuscator.io)
 - `--pro-api-version <string>` – Obfuscator.io version to use (optional, defaults to latest)
 
-The CLI automatically detects when Pro features (`vmObfuscation` or `parseHtml`) are enabled and routes the request through the Pro API.
+The CLI automatically detects when Pro features (`vmObfuscation`, `parseHtml`, or an `optionsPreset` naming a VM preset or a [custom preset](#custom-presets)) are enabled and routes the request through the Pro API.
 
 ### Large File Uploads
 
@@ -1140,6 +1163,10 @@ Available values:
 * `low-obfuscation`;
 * `medium-obfuscation`;
 * `high-obfuscation`.
+
+With `obfuscatePro()` or `--pro-api-token` the following are also accepted and resolved by the Pro API:
+* the VM presets: `vm-low-obfuscation`, `vm-default`, `vm-medium-obfuscation`, `vm-high-obfuscation`, `vm-ultra-high-obfuscation`, `vm-anti-llm`;
+* the alias of a [custom preset](#custom-presets) saved in the [obfuscator.io](https://obfuscator.io) dashboard.
 
 All addition options will be merged with selected options preset.
 

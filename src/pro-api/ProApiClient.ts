@@ -2,11 +2,14 @@ import { TInputOptions } from '../types/options/TInputOptions';
 import {
     IProApiConfig,
     IProApiStreamMessage,
+    IProCustomPreset,
     IProObfuscationResult,
     TProApiProgressCallback
 } from '../interfaces/pro-api/IProApiClient';
 import { ApiError } from './ApiError';
 import { ProApiObfuscationResult } from './ProApiObfuscationResult';
+import { ProOptionsPreset } from './enums/ProOptionsPreset';
+import { Options } from '../options/Options';
 
 /**
  * Pro API Client
@@ -22,6 +25,10 @@ export class ProApiClient {
     private static readonly apiUrl = `${ProApiClient.apiHost}/api/v1/obfuscate`;
 
     private static readonly uploadTokenUrl = `${ProApiClient.apiHost}/api/v1/upload/token`;
+
+    private static readonly presetsUrl = `${ProApiClient.apiHost}/api/v1/presets`;
+
+    private static readonly builtInPresets: ReadonlySet<string> = new Set(Object.values(ProOptionsPreset));
 
     /**
      * Default timeout (5 minutes)
@@ -45,6 +52,8 @@ export class ProApiClient {
         version?: string;
     };
 
+    private readonly presetRequests: Map<string, Promise<IProCustomPreset | null>> = new Map();
+
     public constructor(config: IProApiConfig) {
         this.config = {
             apiToken: config.apiToken,
@@ -55,10 +64,65 @@ export class ProApiClient {
 
     /**
      * Check if any Pro features are enabled in the options.
-     * Pro features require the Pro API for cloud-based obfuscation.
+     * Pro features require the Pro API for cloud-based obfuscation. A preset
+     * name the local obfuscator cannot expand (a VM preset, or a custom
+     * preset alias) counts too: only the Pro API can resolve it.
      */
     public static hasProFeatures(options: TInputOptions): boolean {
-        return options.vmObfuscation === true || options.parseHtml === true;
+        return (
+            options.vmObfuscation === true ||
+            options.parseHtml === true ||
+            (typeof options.optionsPreset === 'string' && !Options.isLocalPreset(options.optionsPreset))
+        );
+    }
+
+    /**
+     * Whether an `optionsPreset` value is one the obfuscator itself
+     * understands. Anything else names a custom preset saved in the dashboard.
+     */
+    public static isBuiltInPreset(optionsPreset: string | undefined): boolean {
+        return optionsPreset !== undefined && ProApiClient.builtInPresets.has(optionsPreset);
+    }
+
+    /**
+     * Fetch a custom preset by its alias, or null when the caller has no
+     * preset with that alias.
+     * @param alias - The alias set in the dashboard's save dialog
+     */
+    public async fetchPreset(alias: string): Promise<IProCustomPreset | null> {
+        let request = this.presetRequests.get(alias);
+
+        if (!request) {
+            request = this.requestPreset(alias);
+            this.presetRequests.set(alias, request);
+        }
+
+        return request;
+    }
+
+    /**
+     * Options with a custom `optionsPreset` expanded: the preset's saved
+     * options become the base and the caller's other options override them,
+     * the same base-then-overrides order the obfuscator applies to a built-in
+     * preset. A built-in `optionsPreset` (or none) is returned untouched, with
+     * no request made.
+     * @param options - Obfuscation options, possibly naming a custom preset
+     * @throws {ApiError} 404 when the alias names no preset of the caller's
+     */
+    public async resolveOptions(options: TInputOptions): Promise<TInputOptions> {
+        const { optionsPreset, ...rest } = options;
+
+        if (typeof optionsPreset !== 'string' || ProApiClient.isBuiltInPreset(optionsPreset)) {
+            return options;
+        }
+
+        const preset = await this.fetchPreset(optionsPreset);
+
+        if (!preset) {
+            throw new ApiError(`Custom preset "${optionsPreset}" not found`, 404);
+        }
+
+        return { ...preset.options, ...rest };
     }
 
     /**
@@ -269,6 +333,60 @@ export class ProApiClient {
 
             if (error instanceof Error && error.name === 'AbortError') {
                 throw new ApiError('Token request timeout', 408);
+            }
+
+            throw error;
+        }
+    }
+
+    /**
+     * GET /api/v1/presets/{alias}. Same shape as getUploadToken: JSON body,
+     * `{ error }` on failure, the request timeout mapped to 408.
+     */
+    private async requestPreset(alias: string): Promise<IProCustomPreset | null> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+
+        try {
+            const response = await fetch(`${ProApiClient.presetsUrl}/${encodeURIComponent(alias)}`, {
+                method: 'GET',
+                headers: {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'Authorization': `Bearer ${this.config.apiToken}`
+                },
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (response.status === 404) {
+                return null;
+            }
+
+            const responseText = await response.text();
+
+            let data: (IProCustomPreset & { error?: string }) | { error?: string };
+
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                throw new ApiError(responseText || 'Failed to fetch preset', response.status);
+            }
+
+            if (!response.ok) {
+                throw new ApiError(data.error ?? 'Failed to fetch preset', response.status);
+            }
+
+            return <IProCustomPreset>data;
+        } catch (error) {
+            clearTimeout(timeoutId);
+
+            if (error instanceof ApiError) {
+                throw error;
+            }
+
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new ApiError('Preset request timeout', 408);
             }
 
             throw error;

@@ -1,5 +1,10 @@
 Change Log
 
+v5.8.0
+---
+* Pro API: added support for custom presets. `optionsPreset` accepts the alias of a custom preset saved in the obfuscator.io dashboard; `obfuscatePro()` and the CLI (`--pro-api-token`) fetch it and merge its options
+* CLI: `--options-preset` with a VM preset name (e.g. `vm-default`) no longer fails locally when `--pro-api-token` is set; the name is passed to the Pro API
+
 v5.7.0
 ---
 * **New option:** `advertisement` allows to control the display of the JavaScript Obfuscator Pro advertisement message in the console. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1448

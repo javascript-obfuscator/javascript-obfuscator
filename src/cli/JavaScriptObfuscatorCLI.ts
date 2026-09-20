@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
-import { TOptionsPreset } from '../types/options/TOptionsPreset';
 
 import { IFileData } from '../interfaces/cli/IFileData';
 import { IInitializable } from '../interfaces/IInitializable';
@@ -93,6 +92,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private obfuscatedCodeFileUtils!: ObfuscatedCodeFileUtils;
 
     /**
+     * @type {ProApiClient | undefined}
+     */
+    private proApiClient?: ProApiClient;
+
+    /**
      * @type {string[]}
      */
     private readonly arguments: string[];
@@ -121,9 +125,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
 
-        const presetName: TOptionsPreset =
+        const presetName: string =
             inputCLIOptions.optionsPreset ?? configFileOptions.optionsPreset ?? OptionsPreset.Default;
-        const presetOptions: TInputOptions = Options.getOptionsByPreset(presetName);
+        const presetOptions: TInputOptions = Options.isLocalPreset(presetName)
+            ? Options.getOptionsByPreset(presetName)
+            : { optionsPreset: presetName };
 
         return {
             ...presetOptions,
@@ -275,7 +281,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--options-preset <string>',
                 'Allows to set options preset. ' +
-                    `Values: ${CLIUtils.stringifyOptionAvailableValues(OptionsPreset)}. ` +
+                    `Values: ${CLIUtils.stringifyOptionAvailableValues(OptionsPreset)}, ` +
+                    'a Pro VM preset (e.g. vm-default) or the alias of a custom preset saved at obfuscator.io ' +
+                    '(both require --pro-api-token). ' +
                     `Default: ${OptionsPreset.Default}`
             )
             .option(
@@ -665,7 +673,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         outputCodePath: string,
         sourceCodeIndex: number | null
     ): Promise<void> {
-        const options: TInputOptions = {
+        let options: TInputOptions = {
             ...this.inputCLIOptions,
             identifierNamesCache: this.identifierNamesCacheFileUtils.readFile(),
             inputFileName: path.basename(inputCodePath),
@@ -680,9 +688,20 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const proApiToken = this.inputCLIOptions.proApiToken;
 
         if (proApiToken && ProApiClient.hasProFeatures(options)) {
-            await this.processSourceCodeWithProApi(sourceCode, outputCodePath, options, proApiToken);
+            const client: ProApiClient = this.getProApiClient(proApiToken);
 
-            return;
+            options = await client.resolveOptions(options);
+
+            if (ProApiClient.hasProFeatures(options)) {
+                await this.processSourceCodeWithProApi({
+                    sourceCode: sourceCode,
+                    outputCodePath: outputCodePath,
+                    options: options,
+                    client: client
+                });
+
+                return;
+            }
         }
 
         if (options.sourceMap) {
@@ -693,21 +712,38 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     }
 
     /**
-     * Process source code using Pro API (cloud-based VM obfuscation)
+     * @param {string} apiToken
+     * @return {ProApiClient}
+     * @private
+     */
+    private getProApiClient(apiToken: string): ProApiClient {
+        if (!this.proApiClient) {
+            this.proApiClient = new ProApiClient({
+                apiToken,
+                version: this.inputCLIOptions.proApiVersion
+            });
+        }
+
+        return this.proApiClient;
+    }
+
+    /**
+     * @param {{sourceCode: string, outputCodePath: string, options: TInputOptions, client: ProApiClient}} param0
+     * @private
      */
     private async processSourceCodeWithProApi(
-        sourceCode: string,
-        outputCodePath: string,
-        options: TInputOptions,
-        apiToken: string
+        {
+            sourceCode,
+            outputCodePath,
+            options,
+            client
+        }: {
+            sourceCode: string;
+            outputCodePath: string;
+            options: TInputOptions;
+            client: ProApiClient;
+        }
     ): Promise<void> {
-        const proApiVersion = this.inputCLIOptions.proApiVersion;
-
-        const client = new ProApiClient({
-            apiToken,
-            version: proApiVersion
-        });
-
         const result: IProObfuscationResult = await client.obfuscate(sourceCode, options, (message: string) => {
             Logger.log(Logger.colorInfo, LoggingPrefix.CLI, message);
         });

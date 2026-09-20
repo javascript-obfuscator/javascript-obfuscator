@@ -1951,8 +1951,8 @@ Specify exactly which root-level functions should get VM protection by name.
 **Example:**
 ```javascript
 {
-  vmObfuscation: true,
-  vmTargetFunctions: ['someFunctionName']
+    vmObfuscation: true,
+    vmTargetFunctions: ['someFunctionName']
 }
 ```
 
@@ -1966,8 +1966,8 @@ Specify root-level functions that should never get VM protection. Takes preceden
 **Example:**
 ```javascript
 {
-  vmObfuscation: true,
-  vmExcludeFunctions: ['someFunctionName']
+    vmObfuscation: true,
+    vmExcludeFunctions: ['someFunctionName']
 }
 ```
 
@@ -1987,28 +1987,28 @@ Controls how functions/methods are selected for VM obfuscation.
 ```javascript
 // Source code
 function regularFunction() {
-  return 'not virtualized';
+    return 'not virtualized';
 }
 
 /* javascript-obfuscator:vm */
 function sensitiveFunction() {
-  return 'this will be VM-protected';
+    return 'this will be VM-protected';
 }
 
 function outer() {
-  /* javascript-obfuscator:vm */
-  function nestedSensitive() {
-    return 'nested but still VM-protected';
-  }
-  return nestedSensitive();
+    /* javascript-obfuscator:vm */
+    function nestedSensitive() {
+        return 'nested but still VM-protected';
+    }
+    return nestedSensitive();
 }
 ```
 
 ```javascript
 // Obfuscator options
 {
-  vmObfuscation: true,
-  vmTargetFunctionsMode: 'comment'
+    vmObfuscation: true,
+    vmTargetFunctionsMode: 'comment'
 }
 ```
 
@@ -2069,6 +2069,8 @@ const MY_STRING = (() => { return /* VM bytecode call */ })();  // String hidden
 
 **Note:** This option only works when `vmTargetFunctionsMode` is `'root'` (the default).
 
+**Warnings:** Whenever a top-level initializer ends up in plain JavaScript under VM obfuscation, a `VMTopLevelInitializerNotVirtualized` warning listing the affected variable names is reported. That covers: this option being disabled, initializers this option had to skip (each with the reason — e.g. the initializer references a sibling declarator or contains top-level await), and `vmAsyncExecutor` mode where the synchronous wrappers can't be virtualized at all.
+
 ### `vmDynamicOpcodes`
 Type: `boolean` Default: `false`
 
@@ -2083,7 +2085,7 @@ As the result - smaller output and each build looks different.
 ### `vmBytecodeEncoding`
 Type: `boolean` Default: `false`
 
-Encodes each bytecode instruction. Instructions are decoded one at a time during execution.
+Encodes each bytecode instruction (decoded one at a time during execution) and masks the string constants stored in the bytecode pool, so plaintext strings do not sit in the compiled bytecode.
 
 ### `vmBytecodeArrayEncoding`
 Type: `boolean` Default: `false`
@@ -2102,11 +2104,15 @@ This option externalizes the encryption key - it's not embedded in the obfuscate
 ### `vmBytecodeArrayEncodingKeyGetter`
 Type: `string` Default: `''`
 
-**Synchronous** JavaScript expression that **returns** the encryption key at runtime. This expression is evaluated when the obfuscated code loads, and must return the same key that was provided in `vmBytecodeArrayEncodingKey`.
+**Synchronous** JavaScript expression that **returns** the encryption key at runtime. This expression is evaluated when the obfuscated code loads, and must return the same key that was provided in `vmBytecodeArrayEncodingKey`. To resolve the key **asynchronously** (a `Promise`), enable [`vmAsyncExecutor`](#vmasyncexecutor).
 
-**The obfuscated code will only work when the key getter returns exactly the same key that was used during obfuscation.** If the keys don't match, decryption will fail and the code will produce garbage or errors. If the key getter returns `undefined`, `null`, or an empty string, the code will throw an error: "VM decryption key not available".
+> **Note:** a Promise-returning getter requires `vmAsyncExecutor`. This can't be checked at build time, so a Promise getter with `vmAsyncExecutor` **off** fails at runtime — the decoder receives the Promise instead of the key.
 
-**Important:** The key should NOT be defined in the same JavaScript file/script as the obfuscated code. Doing so defeats the purpose of key externalization, as static analysis could still find the key. Store the key in a separate source: server-set cookies, localStorage populated by another script, server-injected HTML meta tags, or a global variable set by a different script that loads before the obfuscated code.
+**The obfuscated code will only work when the key getter returns exactly the same key that was used during obfuscation.** If the keys don't match — or the getter returns `undefined`, `null`, or an empty string — decryption produces a wrong keystream and the code fails at runtime with garbage output or an ordinary runtime error. There is deliberately no distinct, key-specific error message, so a failed key is indistinguishable from any other runtime fault.
+
+**Important:** Keep the key out of the same file/script as the obfuscated code — inlining it there lets even a purely **static** scan of the bundle recover it. Store it in a separate source instead: server-set cookies, `localStorage` populated by another script, a server-injected HTML meta tag, a global set by a different script, or (with [`vmAsyncExecutor`](#vmasyncexecutor)) fetched from your backend at runtime.
+
+When the key is fetched from your backend (via [`vmAsyncExecutor`](#vmasyncexecutor)), add session- or origin-based checks on that endpoint: return the correct key to real users (valid session, expected `Origin`/`Referer`) and a garbage key to suspicious requests (e.g. a `localhost`/unexpected origin, no session). Real users run normally; a copy running outside your environment gets a key that decrypts to nothing. The exact logic depends on your site.
 
 Examples:
 ```ts
@@ -2124,16 +2130,19 @@ vmBytecodeArrayEncodingKeyGetter: "document.querySelector('meta[name=\"vm-key\"]
 
 // From nested object
 vmBytecodeArrayEncodingKeyGetter: "window.config.encryption.key"
+
+// From backend, async (requires vmAsyncExecutor)
+vmBytecodeArrayEncodingKeyGetter: 'fetch("/vm-key").then((res) => res.text())'
 ```
 
 **Usage example:**
 ```ts
 // Build time
 JavaScriptObfuscator.obfuscate(code, {
-  vmObfuscation: true,
-  vmBytecodeArrayEncoding: true,
-  vmBytecodeArrayEncodingKey: 'mySecretKey123',
-  vmBytecodeArrayEncodingKeyGetter: 'window.__VM_KEY__'
+    vmObfuscation: true,
+    vmBytecodeArrayEncoding: true,
+    vmBytecodeArrayEncodingKey: 'mySecretKey123',
+    vmBytecodeArrayEncodingKeyGetter: 'window.__VM_KEY__'
 });
 
 // Runtime - key must be set before obfuscated code runs
@@ -2183,25 +2192,36 @@ Type: `boolean` Default: `false`
 
 Encodes jump targets in the bytecode. Jump offsets are calculated at runtime, hiding the control flow structure (`if`/`else`, loops, etc.) from static analysis.
 
-### `vmDecoyOpcodes`
-Type: `boolean` Default: `false`
-
-Adds fake opcode handlers to the VM dispatcher that are never called. For example, if the VM uses 20 real opcodes, this might add 30 fake handlers, making the interpreter appear more complex than it really is.
-
-### `vmDeadCodeInjection`
-Type: `boolean` Default: `false`
-
-Injects fake bytecode sequences that are never executed. These look like real instructions but are skipped during runtime, confusing analysis tools that process them.
-
 ### `vmMacroOps`
 Type: `boolean` Default: `false`
 
-Combines common instruction sequences into single "macro" opcodes. For example, `LOAD + ADD + STORE` might become a single `MACRO_ADD_TO_VAR` instruction. This breaks pattern recognition and can improve performance.
+Combines common instruction sequences into single "macro" opcodes. For example, `LOAD_ARG + PUSH_CONST + SUB` can become `MACRO_SUB_ARG_CONST`, reducing interpreter dispatches. This works with both the default stack VM and `vmRegisterBased: true`; enable `vmMacroOps: true` explicitly in either mode.
 
 ### `vmDebugProtection`
-Type: `boolean` Default: `false`
+Type: `boolean | object` Default: `false`
 
-Adds multi-layered anti-debugging, anti-analysis, and anti-LLM defenses to the VM runtime. For best results, allow `unsafe-eval` in your Content Security Policy. Works best with `browser`/`browser-no-eval` targets.
+Adds multi-layered anti-debugging, anti-analysis, and anti-LLM defenses to the VM runtime. Works best with `browser`/`browser-no-eval` targets.
+
+Pass `true` to enable it, or `false` to disable it. Pass an object to enable it while turning off a specific defense:
+
+```js
+{
+    vmDebugProtection: {
+        // most defenses are always on; but CDP/devtools detection is disabled
+        inspectorDetection: false
+    }
+}
+```
+
+> :warning: **The object is not a menu of defenses to switch on.** When debug protection is enabled, the great majority of its defenses are **always active and cannot be turned off**. The sub-options below expose only the small number of defenses that some consumers may deliberately need to relax (for example, because a false positive would break a legitimate workflow) — every other defense stays on regardless.
+
+| Sub-option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `inspectorDetection` | `boolean` | `true` | Detect and react to an attached CDP (Chrome DevTools Protocol) inspector — both the CDP `Runtime` domain being enabled (`Runtime.enable`) and an active debugger (the CDP `Debugger` domain, e.g. breakpoints or the developer-tools Sources panel). **Opening the browser's developer tools enables those domains, so an open inspector is detected and reacted to.** Keeping it enabled is recommended; set it to `false` only if your users legitimately open developer tools. |
+
+> :bulb: The object form is available through the API
+
+> :warning: **Automation frameworks.** With `inspectorDetection` on (the default), driving the protected page with a CDP-based tool (Puppeteer, Playwright, Selenium/ChromeDriver) is detected as an attached inspector. If you run automated tests against protected code, build those with `vmDebugProtection: { inspectorDetection: false }`.
 
 ### `vmSelfDefending`
 Type: `boolean` Default: `false`
@@ -2210,12 +2230,21 @@ Adds multi-layered tamper detection, anti-hooking, and anti-reverse-engineering 
 
 > :warning: This option force-enables [`vmBytecodeArrayEncoding`](#vmbytecodeArrayEncoding).
 
+> :warning: **Sensitive environment detection.** This option binds the obfuscated code to its target runtime environment and uses advanced browser fingerprinting to detect automation tools. Code protected with this option **will intentionally break** when run in:
+> - Headless browsers (headless Chrome/Chromium, PhantomJS)
+> - Browser automation tools (Puppeteer, Playwright, Cypress, Selenium/ChromeDriver, Nightmare)
+> - Node.js (when `target` is set to `browser`)
+> - jsdom or similar server-side DOM emulations
+> - Environments where native browser builtins have been hooked or replaced
+>
+> The code **will work correctly** in regular browsers (Chrome, Firefox, Safari, Edge), including when loaded inside iframes, browser extensions (content scripts), and Web Workers. If you need to run automated tests against protected code, disable `vmSelfDefending` for test builds — this option is designed to prevent automated analysis and **cannot be safely used with any automation framework**.
+
 Strongly recommended to use together with [`vmDebugProtection`](#vmDebugProtection), [`vmBytecodeArrayEncodingKey`](#vmbytecodeArrayEncodingKey), and [`vmBytecodeArrayEncodingKeyGetter`](#vmbytecodeArrayEncodingKeyGetter).
 
 ### `vmDefenseHook`
-Type: `{ name: string, aliases?: object }` Default: `''`
+Type: `{ name: string, aliases?: object } | null` Default: `null`
 
-`vmDefenseHook` takes an object with two keys: **`name`** (required) and **`aliases`** (optional).
+`vmDefenseHook` is `null` (disabled) or an object with two keys: **`name`** (required) and **`aliases`** (optional).
 
 `name` is a **global function your host page defines** that a VM defense (`vmDebugProtection` / `vmSelfDefending`) calls with a signal object when it detects a hostile signal — a debugger or inspector, a headless / automation browser, an AI-coding-agent process, a disallowed domain, and so on. Use it to report the event to your backend (e.g. `navigator.sendBeacon`). The hook is a **pure telemetry sink**: its return value is ignored, and a missing or throwing hook is a silent no-op that can never disable a defense. To change what a defense *does* on detection, use [`vmDefenseReaction`](#vmdefensereaction).
 
@@ -2275,8 +2304,6 @@ vmDefenseHook: {
 
 This is fingerprint avoidance, not secrecy — the mapping can still be inferred by repeated testing — so its only benefit is not exposing stable, self-explanatory names. Unset entries keep their default names.
 
-> A bare string (`vmDefenseHook: '__vmDetection'`) is accepted as shorthand for `{ name: '__vmDetection' }` but is **deprecated** — prefer the object form.
-
 ### `vmDefenseReaction`
 Type: `object` Default: `{ automation: 'break', debugger: 'decoy', sandbox: 'decoy', domain: 'break', tamper: 'break', integrity: 'break' }`
 
@@ -2311,17 +2338,33 @@ vmDefenseReaction: { automation: 'none', domain: 'break' }   // tolerate automat
 ### `browserEnvironment`
 Type: `object` Default: `{}`
 
-Declares facts about the environment your production build is served in, so the protected code can bind itself to them. Only takes effect together with [`vmSelfDefending`](#vmselfdefending), and only for `browser` / `browser-no-eval` / `service-worker` targets — it is rejected for `node`, `userscript`, and `bytenode`.
+Declares facts about the environment your production build runs in, so the protected code can bind to, react to, or tolerate them. Available only for `browser` / `browser-no-eval` / `service-worker` targets — it is rejected for `node`, `userscript`, and `bytenode`. Each field takes effect together with a specific protection, noted below.
 
-Currently one field:
+Fields:
 
-- **`transport`** — the scheme your production serves the bundle over: `'http'` or `'https'`. With `'https'`, the build ties its integrity to being served over HTTPS, so a copy an analyst lifts and serves over plain HTTP (a common local reverse-engineering setup) will not run correctly. `'http'` or an unset field adds no binding.
+- **`transport`** — the scheme your production serves the bundle over: `'http'` or `'https'`. With `'https'`, the build ties its integrity to being served over HTTPS, so a copy an analyst lifts and serves over plain HTTP (a common local reverse-engineering setup) will not run correctly. `'http'` or an unset field adds no binding. Takes effect with [`vmSelfDefending`](#vmselfdefending).
 
 ```js
 browserEnvironment: { transport: 'https' }
 ```
 
-> :warning: A build declared `transport: 'https'` runs correctly **only** where it is actually served over `https:`. Every other scheme corrupts it, so declare it only when every context that loads your production build is HTTPS. That excludes: plain `http://` (including `http://localhost` in development), `file://` (Electron / Cordova / packaged apps), and `blob:` / `about:` embeddings (a bundle running inside an `about:blank` or `srcdoc` iframe). A client-side HTTP→HTTPS redirect still renders the HTTP page first, so the bundle must not run before the redirect completes.
+- **`hosting`** — where your production bundle is served from: `'remote'` or `'local'`. With `'remote'`, the build ties its integrity to being served from a remote host, so a copy an analyst lifts and runs in their own local setup is treated as a runtime-environment mismatch and the automation defenses react (see [`vmDebugProtection`](#vmdebugprotection) and [`vmDefenseReaction`](#vmdefensereaction)). `'local'` or an unset field adds no binding. Takes effect with `vmDebugProtection`, on `browser` / `browser-no-eval` only.
+
+```js
+browserEnvironment: { transport: 'https', hosting: 'remote' }
+```
+
+- **`hookedBuiltins`** — set to `true` to declare that the runtime your production build runs in legitimately replaces native builtins with JavaScript wrappers: the app's own anti-tamper, the host page, or other browser extensions sharing the same realm. [`vmSelfDefending`](#vmselfdefending) normally treats a replaced native builtin as tampering and stops the build from running; with this set, it tolerates such an environment and the code runs. `false` or an unset field keeps the strict behavior. Takes effect with [`vmSelfDefending`](#vmselfdefending).
+
+```js
+browserEnvironment: { hookedBuiltins: true }
+```
+
+This option relaxes nativity checks only; clean-realm validation and required builtin behavior remain enforced.
+
+> :warning: `hookedBuiltins` deliberately relaxes tamper detection: once it is set, an analyst who wraps those same builtins to inspect your code is no longer stopped either. The VM virtualization, anti-debugging, and integrity protections are unaffected. Enable it only when your production runtime is known to hook builtins and that weaker guarantee is acceptable.
+
+> :warning: The `transport` and `hosting` fields bind the protected build to the environment you declare. The same build loaded in any environment that does not match — including transiently, before it reaches its final one — will not run correctly, by design. Declare a field only when every context that loads your production build matches it, and keep these declarations off the builds you use for local development, testing, and CI.
 
 ### `vmStatefulOpcodes`
 Type: `boolean` Default: `false`
@@ -2380,7 +2423,6 @@ When enabled, the string array will **only** extract strings from bytecode data 
 - When `vmBytecodeArrayEncoding: true` — top-level base64 encoded bytecode strings are extracted
 - `stringArrayThreshold` still controls what percentage of those bytecode strings are extracted
 
-
 ### `vmDomainLock`
 Type: `string[]` Default: `[]`
 
@@ -2399,81 +2441,6 @@ Type: `string` Default: `about:blank`
 ##### :warning: This option does not work with `target: 'node'`, `target: 'service-worker'` or `target: 'bytenode'`
 
 Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by [`vmDomainLock`](#vmdomainlock).
-
-### `strictMode`
-Type: `boolean | null` Default: `null`
-
-Allows to specify how the obfuscator should treat code regarding JavaScript strict mode.
-
-Available values:
-* `null` (default) - auto-detect strict mode from the code. If the code has explicit `'use strict'` directive, ES module syntax, or class methods, it's treated as strict mode. Otherwise, sloppy mode is assumed.
-* `true` - force strict mode treatment for all code, even without explicit `'use strict'` directive. Use this when your code will run in strict mode context (e.g., in ES modules, bundlers, or modern frameworks).
-* `false` - only explicit strict mode indicators (`'use strict'`, ES modules, class methods) are treated as strict. Parent scope inheritance still applies per JS spec.
-
-### `parseHtml`
-Type: `boolean` Default: `false`
-
-Enables obfuscation of JavaScript within HTML `<script>` tags.
-
-When enabled, the obfuscator will:
-- Auto-detect if input is HTML (by checking for `<!DOCTYPE`, `<html>`, `<head>`, `<body>`, or `<script>` tags)
-- Extract JavaScript from `<script>` tags marked with the `data-javascript-obfuscator` attribute
-- Obfuscate each marked script individually while preserving the HTML structure
-- Inject obfuscated code back into the original positions
-
-**Important:** Only scripts with the `data-javascript-obfuscator` attribute are obfuscated. Each marked script is obfuscated individually and independently. This means:
-- Code inside marked script tags **must be isolated** - it must NOT reference variables, functions, or classes defined in other marked script tags
-- Unmarked scripts can still access globals defined by marked scripts (via `var` declarations or explicit `globalThis` assignments)
-- This gives you explicit control over which scripts to protect
-
-**Obfuscated (must have `data-javascript-obfuscator` attribute):**
-- `<script data-javascript-obfuscator>` - regular scripts
-- `<script type="text/javascript" data-javascript-obfuscator>` - explicitly typed scripts
-- Scripts with any additional attributes (`id`, `class`, other `data-*`, etc.)
-
-**Skipped (left unchanged):**
-- Scripts without `data-javascript-obfuscator` attribute
-- `<script type="module">` - ES modules (even with the attribute)
-- `<script src="...">` - external scripts (even with the attribute)
-- Empty script tags
-
-**Note:** Source maps are not generated when `parseHtml` is enabled, as they would not map correctly to the HTML output.
-
-Example:
-```ts
-// input
-const html = `<!DOCTYPE html>
-<html>
-  <body>
-    <!-- This script will NOT be obfuscated -->
-    <script>
-      var helper = 'utility';
-    </script>
-    
-    <!-- This script WILL be obfuscated -->
-    <script data-javascript-obfuscator>
-      var greeting = 'Hello World';
-      console.log(greeting);
-    </script>
-  </body>
-</html>`;
-
-JavaScriptObfuscator.obfuscate(html, {
-    parseHtml: true,
-    stringArray: true
-});
-
-// output: HTML with only the marked script obfuscated
-```
-
-### `randomIdentifiersPrefix`
-Type: `boolean` Default: `false`
-
-Appends a seeded random prefix (6 alphanumeric characters) to all global identifiers. Use this option to avoid collisions between separately obfuscated bundles that are loaded into the same global scope — it removes the need to pick a unique `identifiersPrefix` per bundle manually.
-
-- The random value is derived from the `seed` option and the source code hash, so reproducible builds with the same seed produce the same prefix.
-- When combined with `identifiersPrefix`, the random characters are appended to the user-provided prefix (e.g. `myApp` + random `aBc123` → `myAppaBc123`).
-- When combined with `vmObfuscation`, the random value replaces the default `vm` prefix — randomness already guarantees uniqueness.
 
 ## Frequently Asked Questions
 

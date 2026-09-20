@@ -5,6 +5,7 @@ import { assert } from 'chai';
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
 import { TDictionary } from '../../../../src/types/TDictionary';
+import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 
 import { IGlobalIdentifierNamesCacheStorage } from '../../../../src/interfaces/storages/identifier-names-cache/IGlobalIdentifierNamesCacheStorage';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
@@ -19,7 +20,7 @@ import { InversifyContainerFacade } from '../../../../src/container/InversifyCon
 /**
  * @returns {IGlobalIdentifierNamesCacheStorage}
  */
-const getStorageInstance = <V>(options: Partial<IOptions> = DEFAULT_PRESET): IGlobalIdentifierNamesCacheStorage => {
+const getStorageInstance = <V>(options: TInputOptions = DEFAULT_PRESET): IGlobalIdentifierNamesCacheStorage => {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
     inversifyContainerFacade.load('', '', {});
 

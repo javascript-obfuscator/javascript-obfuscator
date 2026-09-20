@@ -76,6 +76,229 @@ describe('ProApiClient', () => {
         });
     });
 
+    describe('isBuiltInPreset', () => {
+        describe('Variant #1: OSS preset names', () => {
+            it('should return true for the presets the local obfuscator knows', () => {
+                assert.isTrue(ProApiClient.isBuiltInPreset('default'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('low-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('medium-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('high-obfuscation'));
+            });
+        });
+
+        describe('Variant #2: VM preset names', () => {
+            it('should return true for the presets only the Pro API knows', () => {
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-low-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-default'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-medium-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-high-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-ultra-high-obfuscation'));
+                assert.isTrue(ProApiClient.isBuiltInPreset('vm-anti-llm'));
+            });
+        });
+
+        describe('Variant #3: anything else', () => {
+            it('should return false for a custom alias', () => {
+                assert.isFalse(ProApiClient.isBuiltInPreset('production'));
+            });
+
+            it('should return false when no preset is set', () => {
+                assert.isFalse(ProApiClient.isBuiltInPreset(undefined));
+            });
+        });
+    });
+
+    describe('fetchPreset', () => {
+        const PRESETS_URL = 'https://obfuscator.io/api/v1/presets';
+
+        const preset = {
+            alias: 'production',
+            name: 'Production',
+            description: null,
+            options: { vmObfuscation: true, optionsPreset: 'vm-default', compact: false },
+            updatedAt: '2026-09-20T12:00:00.000Z'
+        };
+
+        const jsonResponse = (body: object, status: number): Response =>
+            ({
+                ok: status >= 200 && status < 300,
+                status,
+                text: async () => JSON.stringify(body)
+            }) as Response;
+
+        describe('Variant #1: request shape', () => {
+            it('should GET the alias with the Bearer token', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse(preset, 200));
+
+                await client.fetchPreset('production');
+
+                assert.isTrue(fetchStub.calledOnce);
+                assert.strictEqual(fetchStub.firstCall.args[0], `${PRESETS_URL}/production`);
+                assert.strictEqual(fetchStub.firstCall.args[1].method, 'GET');
+                assert.strictEqual(fetchStub.firstCall.args[1].headers['Authorization'], 'Bearer test-token');
+            });
+
+            it('should encode the alias in the URL', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse(preset, 200));
+
+                await client.fetchPreset('prod build');
+
+                assert.strictEqual(fetchStub.firstCall.args[0], `${PRESETS_URL}/prod%20build`);
+            });
+        });
+
+        describe('Variant #2: found', () => {
+            it('should return the preset', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse(preset, 200));
+
+                const result = await client.fetchPreset('production');
+
+                assert.deepEqual(result, preset);
+            });
+        });
+
+        describe('Variant #3: not found', () => {
+            it('should return null on 404', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse({ error: 'Preset not found' }, 404));
+
+                const result = await client.fetchPreset('production');
+
+                assert.isNull(result);
+            });
+        });
+
+        describe('Variant #4: other errors', () => {
+            it('should throw ApiError carrying the API message and status', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse({ error: 'Invalid or expired API key' }, 401));
+
+                let error: ApiError | undefined;
+
+                try {
+                    await client.fetchPreset('production');
+                } catch (caught) {
+                    error = caught as ApiError;
+                }
+
+                assert.instanceOf(error, ApiError);
+                assert.strictEqual(error!.message, 'Invalid or expired API key');
+                assert.strictEqual(error!.statusCode, 401);
+            });
+        });
+
+        describe('Variant #5: memoisation', () => {
+            it('should request each alias once per client', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse(preset, 200));
+
+                await client.fetchPreset('production');
+                await client.fetchPreset('production');
+
+                assert.isTrue(fetchStub.calledOnce);
+            });
+        });
+    });
+
+    describe('resolveOptions', () => {
+        const preset = {
+            alias: 'production',
+            name: 'Production',
+            description: null,
+            options: { vmObfuscation: true, optionsPreset: 'vm-default', compact: false, selfDefending: true },
+            updatedAt: '2026-09-20T12:00:00.000Z'
+        };
+
+        const jsonResponse = (body: object, status: number): Response =>
+            ({
+                ok: status >= 200 && status < 300,
+                status,
+                text: async () => JSON.stringify(body)
+            }) as Response;
+
+        describe('Variant #1: no preset', () => {
+            it('should return the options untouched without a request', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+                const options = { vmObfuscation: true, compact: true };
+
+                const result = await client.resolveOptions(options);
+
+                assert.deepEqual(result, options);
+                assert.isFalse(fetchStub.called);
+            });
+        });
+
+        describe('Variant #2: built-in preset', () => {
+            it('should return the options untouched without a request', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+                const options = { optionsPreset: 'vm-default', vmObfuscation: true };
+
+                const result = await client.resolveOptions(options);
+
+                assert.deepEqual(result, options);
+                assert.isFalse(fetchStub.called);
+            });
+        });
+
+        describe('Variant #3: custom preset', () => {
+            it('should use the preset as the base and the caller options as overrides', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse(preset, 200));
+
+                const result = await client.resolveOptions({ optionsPreset: 'production', compact: true });
+
+                assert.deepEqual(result, {
+                    // From the preset: its own built-in preset and VM flag survive.
+                    vmObfuscation: true,
+                    optionsPreset: 'vm-default',
+                    selfDefending: true,
+                    // From the caller: overrides the preset's `compact: false`.
+                    compact: true
+                });
+            });
+
+            it('should drop the alias when the preset carries no optionsPreset of its own', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse({ ...preset, options: { vmObfuscation: true } }, 200));
+
+                const result = await client.resolveOptions({ optionsPreset: 'production' });
+
+                assert.deepEqual(result, { vmObfuscation: true });
+            });
+        });
+
+        describe('Variant #4: unknown custom preset', () => {
+            it('should throw ApiError 404 naming the alias', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(jsonResponse({ error: 'Preset not found' }, 404));
+
+                let error: ApiError | undefined;
+
+                try {
+                    await client.resolveOptions({ optionsPreset: 'prodction' });
+                } catch (caught) {
+                    error = caught as ApiError;
+                }
+
+                assert.instanceOf(error, ApiError);
+                assert.strictEqual(error!.statusCode, 404);
+                assert.include(error!.message, 'prodction');
+            });
+        });
+    });
+
     describe('constructor', () => {
         describe('Variant #1: basic configuration', () => {
             it('should create client with required apiToken', () => {

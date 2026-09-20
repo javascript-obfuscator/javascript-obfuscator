@@ -1,3 +1,4 @@
+import { TInputOptions } from '../../types/options/TInputOptions';
 import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
 
 /**
@@ -49,6 +50,18 @@ export interface IProApiConfig {
 }
 
 /**
+ * A custom preset saved in the obfuscator.io dashboard, as returned by
+ * `GET /api/v1/presets/{alias}`
+ */
+export interface IProCustomPreset {
+    alias: string;
+    name: string;
+    description: string | null;
+    options: TInputOptions;
+    updatedAt: string;
+}
+
+/**
  * Progress callback for streaming responses
  */
 export type TProApiProgressCallback = (message: string) => void;
@@ -88,12 +101,4 @@ export interface IProApiStreamMessage {
 
     /** Total number of chunks (for 'chunk' type) */
     total?: number;
-}
-
-/**
- * Response from the Blob upload endpoint
- */
-export interface IProApiBlobUploadResponse {
-    blobUrl?: string;
-    error?: string;
 }

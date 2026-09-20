@@ -93,6 +93,119 @@ describe('JavaScriptObfuscator.obfuscatePro', () => {
         });
     });
 
+    describe('custom presets', () => {
+        const PRESETS_URL = 'https://obfuscator.io/api/v1/presets/';
+
+        /**
+         * Two endpoints answer in these tests: the presets endpoint with the
+         * saved preset, the obfuscate endpoint with an NDJSON result. The
+         * obfuscate request body is captured so the merged options can be
+         * asserted.
+         */
+        const mockPresetAndObfuscate = (presetOptions: object | null, obfuscatedCode: string) => {
+            const obfuscateBodies: string[] = [];
+
+            fetchStub = sinon.stub(global, 'fetch').callsFake(async (url: unknown, init?: RequestInit) => {
+                if (String(url).startsWith(PRESETS_URL)) {
+                    return {
+                        ok: presetOptions !== null,
+                        status: presetOptions !== null ? 200 : 404,
+                        text: async () =>
+                            JSON.stringify(
+                                presetOptions !== null
+                                    ? {
+                                          alias: 'production',
+                                          name: 'Production',
+                                          description: null,
+                                          options: presetOptions,
+                                          updatedAt: '2026-09-20T12:00:00.000Z'
+                                      }
+                                    : { error: 'Preset not found' }
+                            )
+                    } as Response;
+                }
+
+                obfuscateBodies.push(String(init?.body));
+
+                return {
+                    ok: true,
+                    status: 200,
+                    text: async () => createNdjsonResponse([{ type: 'result', code: obfuscatedCode, sourceMap: '' }])
+                } as Response;
+            });
+
+            return obfuscateBodies;
+        };
+
+        it('should fetch a custom preset and obfuscate through the Pro API with its options', async () => {
+            const obfuscateBodies = mockPresetAndObfuscate(
+                { vmObfuscation: true, optionsPreset: 'vm-default', compact: false },
+                'var _0x1234 = 1;'
+            );
+
+            // No Pro feature in the caller's options: the preset supplies it.
+            const result = await JavaScriptObfuscator.obfuscatePro(
+                'const a = 1;',
+                { optionsPreset: 'production', compact: true },
+                { apiToken: 'test-token' }
+            );
+
+            assert.equal(result.getObfuscatedCode(), 'var _0x1234 = 1;');
+            assert.equal(obfuscateBodies.length, 1);
+            assert.deepEqual(JSON.parse(obfuscateBodies[0]).options, {
+                vmObfuscation: true,
+                optionsPreset: 'vm-default',
+                compact: true
+            });
+        });
+
+        it('should obfuscate locally when the custom preset enables no Pro feature', async () => {
+            const obfuscateBodies = mockPresetAndObfuscate({ compact: false, optionsPreset: 'default' }, 'unused');
+
+            const result = await JavaScriptObfuscator.obfuscatePro(
+                'function f() { const a = 1; return a; }',
+                { optionsPreset: 'production' },
+                { apiToken: 'test-token' }
+            );
+
+            assert.equal(obfuscateBodies.length, 0);
+            // Local output honours the preset's `compact: false`: the function
+            // body is printed on its own lines.
+            assert.include(result.getObfuscatedCode(), '\n');
+        });
+
+        it('should send a VM preset name to the Pro API without expanding it locally', async () => {
+            const obfuscateBodies = mockPresetAndObfuscate(null, 'var _0x1234 = 1;');
+
+            const result = await JavaScriptObfuscator.obfuscatePro(
+                'const a = 1;',
+                { optionsPreset: 'vm-default' },
+                { apiToken: 'test-token' }
+            );
+
+            assert.equal(result.getObfuscatedCode(), 'var _0x1234 = 1;');
+            assert.equal(obfuscateBodies.length, 1);
+            assert.deepEqual(JSON.parse(obfuscateBodies[0]).options, { optionsPreset: 'vm-default' });
+        });
+
+        it('should throw ApiError 404 for an unknown custom preset', async () => {
+            mockPresetAndObfuscate(null, 'unused');
+
+            try {
+                await JavaScriptObfuscator.obfuscatePro(
+                    'const a = 1;',
+                    { optionsPreset: 'prodction' },
+                    { apiToken: 'test-token' }
+                );
+                assert.fail('Should have thrown');
+            } catch (error) {
+                assert.instanceOf(error, ApiError);
+                assert.equal((error as ApiError).statusCode, 404);
+                assert.include((error as ApiError).message, 'prodction');
+            }
+        });
+    });
+
     describe('streaming response - direct result', () => {
         it('should handle direct result response', async () => {
             const obfuscatedCode = 'var _0x1234 = function() { return 1; };';

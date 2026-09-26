@@ -1708,7 +1708,7 @@ test();
 ```
     
 ### `stringArrayThreshold`
-Type: `number` Default: `0.8` Min: `0` Max: `1`
+Type: `number` Default: `0.75` Min: `0` Max: `1`
 
 ##### :warning: [`stringArray`](#stringarray) option must be enabled
 

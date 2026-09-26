@@ -2019,11 +2019,9 @@ Type: `boolean` Default: `false`
 
 Controls what VM obfuscation does with a function that contains a direct `eval`, `new Function(...)`, or `Function(...)` call.
 
-By default, such a function (and every function defined inside it) is skipped from VM bytecoding and a `VMDynamicCodeSkipped` warning is reported on `result.getWarnings()`. This is because the runtime-built source may reference identifiers from the surrounding scope chain — identifiers that the obfuscator has renamed.
+By default, such a function (and every function defined inside it) is skipped from VM bytecoding. This is because the runtime-built source may reference identifiers from the surrounding scope chain — identifiers that the obfuscator has renamed.
 
-When set to `true`, the function is bytecoded anyway and the `VMDynamicCodeSkipped` warning is no longer emitted.
-
-The separate `DynamicCodeRenameRisk` warning continues to fire regardless of this option, because the rename risk it describes is independent of the VM skip — turning this option on does not make the underlying pattern any safer.
+When set to `true`, the function is bytecoded anyway. This does not make the underlying pattern any safer: the runtime-built code can still break if it references renamed identifiers.
 
 ```javascript
 // Source code

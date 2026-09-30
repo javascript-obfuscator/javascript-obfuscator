@@ -90,7 +90,10 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
         leftExpression: ESTree.Expression,
         rightExpression: ESTree.Expression
     ): boolean {
-        if (this.expressionContainsProhibitedNodes(rightExpression)) {
+        if (
+            this.expressionContainsProhibitedNodes(rightExpression) ||
+            !this.isSafeToEvaluateEagerly(rightExpression)
+        ) {
             return true;
         }
 
@@ -110,6 +113,22 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
                 !NodeGuards.isExpressionStatementNode(nodeForCheck)
             );
         });
+    }
+
+    /**
+     * The right operand becomes an argument of the control flow storage call and is always evaluated,
+     * so short-circuit evaluation is lost. Only literals are safe to evaluate eagerly: identifiers may throw
+     * (temporal dead zone, undeclared globals) and object expressions may throw or have side effects
+     *
+     * @param {Expression} expression
+     * @returns {boolean}
+     */
+    private isSafeToEvaluateEagerly(expression: ESTree.Expression): boolean {
+        const nodeForCheck: ESTree.Node = NodeGuards.isUnaryExpressionNode(expression)
+            ? NodeUtils.getUnaryExpressionArgumentNode(expression)
+            : expression;
+
+        return NodeGuards.isLiteralNode(nodeForCheck);
     }
 
     /**

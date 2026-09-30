@@ -1,5 +1,9 @@
 Change Log
 
+v5.8.1
+---
+* Fixed `transformObjectKeys` making default parameter objects shared across calls. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1455
+
 v5.8.0
 ---
 * Pro API: added support for custom presets. `optionsPreset` accepts the alias of a custom preset saved in the obfuscator.io dashboard; `obfuscatePro()` and the CLI (`--pro-api-token`) fetch it and merge its options

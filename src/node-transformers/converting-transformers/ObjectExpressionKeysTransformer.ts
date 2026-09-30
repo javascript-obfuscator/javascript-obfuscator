@@ -111,19 +111,17 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} objectExpressionParentNode
      * @param {Statement} objectExpressionHostStatement
      * @returns {boolean}
      */
     private static isProhibitedObjectExpressionNode(
         objectExpressionNode: ESTree.ObjectExpression,
-        objectExpressionParentNode: ESTree.Node,
         objectExpressionHostStatement: ESTree.Statement
     ): boolean {
         if (
-            ObjectExpressionKeysTransformer.isProhibitedArrowFunctionExpression(
+            ObjectExpressionKeysTransformer.isProhibitedEvaluationBoundary(
                 objectExpressionNode,
-                objectExpressionParentNode
+                objectExpressionHostStatement
             ) ||
             ObjectExpressionKeysTransformer.isProhibitedSequenceExpression(objectExpressionNode) ||
             ObjectExpressionKeysTransformer.isProhibitedLoopBody(objectExpressionNode)
@@ -174,17 +172,28 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} objectExpressionNodeParentNode
+     * @param {Statement} objectExpressionHostStatement
      * @returns {boolean}
      */
-    private static isProhibitedArrowFunctionExpression(
+    private static isProhibitedEvaluationBoundary(
         objectExpressionNode: ESTree.ObjectExpression,
-        objectExpressionNodeParentNode: ESTree.Node
+        objectExpressionHostStatement: ESTree.Statement
     ): boolean {
-        return (
-            NodeGuards.isArrowFunctionExpressionNode(objectExpressionNodeParentNode) &&
-            objectExpressionNodeParentNode.body === objectExpressionNode
-        );
+        let currentNode: ESTree.Node | undefined = objectExpressionNode.parentNode;
+
+        while (currentNode) {
+            if (NodeGuards.isFunctionNode(currentNode) || NodeGuards.isPropertyDefinitionNode(currentNode)) {
+                return true;
+            }
+
+            if (currentNode === objectExpressionHostStatement) {
+                break;
+            }
+
+            currentNode = currentNode.parentNode;
+        }
+
+        return false;
     }
 
     /**
@@ -307,11 +316,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         const hostStatement: ESTree.Statement = NodeStatementUtils.getRootStatementOfNode(objectExpressionNode);
 
         if (
-            ObjectExpressionKeysTransformer.isProhibitedObjectExpressionNode(
-                objectExpressionNode,
-                parentNode,
-                hostStatement
-            )
+            ObjectExpressionKeysTransformer.isProhibitedObjectExpressionNode(objectExpressionNode, hostStatement)
         ) {
             return objectExpressionNode;
         }

@@ -478,9 +478,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: base', () => {
                 const match: string =
                     `` +
-                    `var ${variableMatch} *= *{};` +
-                    `${variableMatch}\\['value'] *= *0x1;` +
-                    `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
+                    `^function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *{'value' *: *0x1}\\) *{ *}` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -495,16 +493,14 @@ describe('ObjectExpressionKeysTransformer', () => {
                     }).getObfuscatedCode();
                 });
 
-                it('shouldn ignore default parameter object if it references other parameter', () => {
+                it('shouldn ignore default parameter object', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
 
-            describe('Variant #2: mangled name of object host node', () => {
-                const match1: string =
-                    `` + `var a *= *{};` + `a\\['bar'] *= *0x1;` + `function foo *\\(c *= *a\\) *{ *}` + ``;
-                const match2: string =
-                    `` + `var b *= *{};` + `b\\['bark'] *= *0x1;` + `function baz *\\(c *= *b\\) *{ *}` + ``;
+            describe('Variant #2: mangled identifier names', () => {
+                const match1: string = `` + `^function foo *\\(a *= *{'bar' *: *0x1}\\) *{ *}` + ``;
+                const match2: string = `` + `function baz *\\(a *= *{'bark' *: *0x1}\\) *{ *}$` + ``;
                 const regExp1: RegExp = new RegExp(match1);
                 const regExp2: RegExp = new RegExp(match2);
 
@@ -522,11 +518,11 @@ describe('ObjectExpressionKeysTransformer', () => {
                     }).getObfuscatedCode();
                 });
 
-                it('Match #1: shouldn generate correct name for object host node', () => {
+                it('Match #1: shouldn ignore default parameter object', () => {
                     assert.match(obfuscatedCode, regExp1);
                 });
 
-                it('Match #2: shouldn generate correct name for object host node', () => {
+                it('Match #2: shouldn ignore default parameter object', () => {
                     assert.match(obfuscatedCode, regExp2);
                 });
             });

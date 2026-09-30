@@ -99,7 +99,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
 
         describe('Variant #3 - single logical expression with unary expression', () => {
             const controlFlowStorageCallRegExp: RegExp = new RegExp(
-                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(!${variableMatch}, *!${variableMatch}\\);`
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}'\\]\\(!${variableMatch}, *!!\\[\\]\\);`
             );
 
             let obfuscatedCode: string;
@@ -137,6 +137,52 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             });
 
             it("shouldn't replace prohibited expression nodes", () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1456
+        describe('prohibited nodes Variant #2: identifier as right operand', () => {
+            const regExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *!${variableMatch} *&& *!${variableMatch};`
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prohibited-nodes-identifier.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
+            });
+
+            it("shouldn't replace logical expression with identifier as right operand", () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1456
+        describe('prohibited nodes Variant #3: object expression as right operand', () => {
+            const regExp: RegExp = new RegExp(
+                `var ${variableMatch} *= *${variableMatch} *&& *{'foo': *${variableMatch}};`
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prohibited-nodes-object-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }).getObfuscatedCode();
+            });
+
+            it("shouldn't replace logical expression with object expression as right operand", () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });

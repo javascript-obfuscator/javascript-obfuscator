@@ -3,6 +3,7 @@ Change Log
 v5.8.1
 ---
 * Fixed `transformObjectKeys` making default parameter objects shared across calls. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1455
+* Fixed `controlFlowFlattening` breaking short-circuit evaluation of `&&`, `||` and `??`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1456
 
 v5.8.0
 ---

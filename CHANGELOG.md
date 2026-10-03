@@ -1,5 +1,9 @@
 Change Log
 
+v5.8.2
+---
+* The Node `dist` bundle is no longer minified, so uncaught errors print a readable stack frame instead of the whole bundle.
+
 v5.8.1
 ---
 * Fixed `transformObjectKeys` making default parameter objects shared across calls. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1455

@@ -4,6 +4,7 @@ import {
     IProApiStreamMessage,
     IProCustomPreset,
     IProObfuscationResult,
+    IProQuota,
     TProApiProgressCallback
 } from '../interfaces/pro-api/IProApiClient';
 import { ApiError } from './ApiError';
@@ -27,6 +28,8 @@ export class ProApiClient {
     private static readonly uploadTokenUrl = `${ProApiClient.apiHost}/api/v1/upload/token`;
 
     private static readonly presetsUrl = `${ProApiClient.apiHost}/api/v1/presets`;
+
+    private static readonly quotaUrl = `${ProApiClient.apiHost}/api/v1/quota`;
 
     private static readonly builtInPresets: ReadonlySet<string> = new Set(Object.values(ProOptionsPreset));
 
@@ -98,6 +101,52 @@ export class ProApiClient {
         }
 
         return request;
+    }
+
+    public async getQuota(): Promise<IProQuota> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+
+        try {
+            const response = await fetch(ProApiClient.quotaUrl, {
+                method: 'GET',
+                headers: {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'Authorization': `Bearer ${this.config.apiToken}`
+                },
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            const responseText = await response.text();
+
+            let data: { quota?: IProQuota; error?: string };
+
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                throw new ApiError(responseText || 'Failed to fetch quota', response.status);
+            }
+
+            if (!response.ok || !data.quota) {
+                throw new ApiError(data.error ?? 'Failed to fetch quota', response.status);
+            }
+
+            return data.quota;
+        } catch (error) {
+            clearTimeout(timeoutId);
+
+            if (error instanceof ApiError) {
+                throw error;
+            }
+
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new ApiError('Quota request timeout', 408);
+            }
+
+            throw error;
+        }
     }
 
     /**
@@ -470,7 +519,12 @@ export class ProApiClient {
         const errorMessage = messages.find((message) => message.type === 'error');
 
         if (errorMessage) {
-            throw new ApiError(errorMessage.message ?? 'Unknown API error', response.status);
+            throw new ApiError(
+                errorMessage.message ?? 'Unknown API error',
+                response.status,
+                undefined,
+                errorMessage.errorCode
+            );
         }
 
         const result = this.reassembleChunkedResponse(messages);

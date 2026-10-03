@@ -62,6 +62,25 @@ export interface IProCustomPreset {
 }
 
 /**
+ * One usage window of the API key's plan
+ */
+export interface IProQuotaWindow {
+    usedBytes: number;
+    limitBytes: number;
+    resetsAt: string;
+}
+
+/**
+ * Usage left on the API key's plan, as returned by `GET /api/v1/quota`
+ */
+export interface IProQuota {
+    remainingBytes: number | null;
+    minBytesPerBuild: number;
+    daily: IProQuotaWindow | null;
+    monthly: IProQuotaWindow | null;
+}
+
+/**
  * Progress callback for streaming responses
  */
 export type TProApiProgressCallback = (message: string) => void;
@@ -83,6 +102,9 @@ export interface IProApiStreamMessage {
 
     /** Progress or error message text */
     message?: string;
+
+    /** Machine-readable cause of an 'error' message, e.g. 'dailyLimit' */
+    errorCode?: string;
 
     /** Obfuscated code (for 'result' type) */
     code?: string;

@@ -6,7 +6,13 @@ import { TObfuscationResultsObject } from './src/types/TObfuscationResultsObject
 import { TOptionsPreset } from './src/types/options/TOptionsPreset';
 
 import { IObfuscationResult } from './src/interfaces/source-code/IObfuscationResult';
-import { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './src/interfaces/pro-api/IProApiClient';
+import {
+    IProApiConfig,
+    IProObfuscationResult,
+    IProQuota,
+    IProQuotaWindow,
+    TProApiProgressCallback
+} from './src/interfaces/pro-api/IProApiClient';
 import { JavaScriptObfuscator, ApiError } from './src/JavaScriptObfuscatorFacade';
 
 export type ObfuscatorOptions = TInputOptions;
@@ -15,7 +21,7 @@ export interface ObfuscationResult extends IObfuscationResult {}
 
 export interface ProObfuscationResult extends IProObfuscationResult {}
 
-export type { IProApiConfig, TProApiProgressCallback };
+export type { IProApiConfig, IProQuota, IProQuotaWindow, TProApiProgressCallback };
 export { ApiError };
 
 /**
@@ -51,6 +57,12 @@ export declare function obfuscatePro (
     proApiConfig: IProApiConfig,
     onProgress?: TProApiProgressCallback
 ): Promise<ProObfuscationResult>;
+
+/**
+ * @param {IProApiConfig} proApiConfig
+ * @returns {Promise<IProQuota>}
+ */
+export declare function getProQuota (proApiConfig: IProApiConfig): Promise<IProQuota>;
 
 /**
  * @param {TOptionsPreset} optionsPreset

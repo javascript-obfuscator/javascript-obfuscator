@@ -444,6 +444,34 @@ The same works from the CLI:
 javascript-obfuscator input.js --pro-api-token YOUR_API_TOKEN --options-preset production -o output.js
 ```
 
+### `getProQuota(proApiConfig)` :new:
+
+**Async method** that returns the usage left on your plan, so a build can check that a set of files fits before it starts instead of failing partway:
+
+```javascript
+const quota = await JavaScriptObfuscator.getProQuota({ apiToken: 'YOUR_API_TOKEN' });
+
+// A build counts the UTF-8 size of its source, and at least `minBytesPerBuild`
+const cost = files.reduce(
+    (sum, source) => sum + Math.max(Buffer.byteLength(source, 'utf8'), quota.minBytesPerBuild),
+    0
+);
+
+if (quota.remainingBytes !== null && cost > quota.remainingBytes) {
+    console.log(`Not enough quota; the daily limit resets at ${quota.daily?.resetsAt}`);
+}
+```
+
+**Returns:** `Promise<IProQuota>`:
+
+* `remainingBytes` (`number | null`) – bytes you can still use now, the smaller of what is left today and this month; `null` when your plan has no limit
+* `minBytesPerBuild` (`number`) – the least a single build counts
+* `daily`, `monthly` (`{ usedBytes, limitBytes, resetsAt } | null`) – usage and limit of each window; `resetsAt` is when the window starts over (ISO 8601, UTC); `null` when your plan has no such limit
+
+The size of the output does not count, and a build that ends in an error does not count. On a team, a member's key reports the team's shared monthly usage beside the member's own daily usage, and a team service key reports the team owner's.
+
+**Throws:** `ApiError` with the HTTP `statusCode` if the API token is invalid, the plan has no API access, or the request fails.
+
 ### Error Handling
 
 ```javascript
@@ -454,6 +482,23 @@ try {
 } catch (error) {
     if (error instanceof ApiError) {
         console.error(`API Error (${error.statusCode}): ${error.message}`);
+    } else {
+        throw error;
+    }
+}
+```
+
+A build refused for quota sets `error.code` to `dailyLimit` or `monthlyLimit` (or `usageCheckFailed` when usage could not be checked). Use it with `getProQuota()` to schedule a retry:
+
+```javascript
+try {
+    await JavaScriptObfuscator.obfuscatePro(sourceCode, options, config);
+} catch (error) {
+    if (error instanceof ApiError && (error.code === 'dailyLimit' || error.code === 'monthlyLimit')) {
+        const quota = await JavaScriptObfuscator.getProQuota(config);
+        const window = error.code === 'dailyLimit' ? quota.daily : quota.monthly;
+
+        scheduleRetry(window.resetsAt);
     } else {
         throw error;
     }

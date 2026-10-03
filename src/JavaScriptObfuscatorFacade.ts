@@ -10,7 +10,12 @@ import { TOptionsPreset } from './types/options/TOptionsPreset';
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/source-code/IObfuscationResult';
-import { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';
+import {
+    IProApiConfig,
+    IProObfuscationResult,
+    IProQuota,
+    TProApiProgressCallback
+} from './interfaces/pro-api/IProApiClient';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 import { Options } from './options/Options';
@@ -124,8 +129,31 @@ class JavaScriptObfuscatorFacade {
 
         return client.obfuscate(sourceCode, options, onProgress);
     }
+
+    /**
+     * @param {IProApiConfig} proApiConfig
+     * @returns {Promise<IProQuota>}
+     * @throws {ApiError}
+     */
+    public static async getProQuota(proApiConfig: IProApiConfig): Promise<IProQuota> {
+        if (typeof window !== 'undefined') {
+            const { ApiError } = await import('./pro-api/ApiError');
+
+            throw new ApiError('getProQuota is only available in Node.js environment', 500);
+        }
+
+        const { ProApiClient } = await import('./pro-api/ProApiClient');
+
+        return new ProApiClient(proApiConfig).getQuota();
+    }
 }
 
 export { JavaScriptObfuscatorFacade as JavaScriptObfuscator };
 export { ApiError } from './pro-api/ApiError';
-export type { IProApiConfig, IProObfuscationResult, TProApiProgressCallback } from './interfaces/pro-api/IProApiClient';
+export type {
+    IProApiConfig,
+    IProObfuscationResult,
+    IProQuota,
+    IProQuotaWindow,
+    TProApiProgressCallback
+} from './interfaces/pro-api/IProApiClient';

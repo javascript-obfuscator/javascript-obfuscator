@@ -1,7 +1,9 @@
 Change Log
 
-v5.8.2
+v5.9.0
 ---
+* Pro API: added `getProQuota()`, which returns the usage left on the API key's plan.
+* Pro API: `ApiError` now carries `code`, the machine-readable cause sent by the API; a build refused for quota has `code` `dailyLimit` or `monthlyLimit`
 * The Node `dist` bundle is no longer minified, so uncaught errors print a readable stack frame instead of the whole bundle.
 
 v5.8.1

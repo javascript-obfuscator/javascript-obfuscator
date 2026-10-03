@@ -458,7 +458,7 @@ const cost = files.reduce(
 );
 
 if (quota.remainingBytes !== null && cost > quota.remainingBytes) {
-    console.log(`Not enough quota; the daily limit resets at ${quota.daily?.resetsAt}`);
+    console.log(`This build needs ${cost} bytes; ${quota.remainingBytes} are left`);
 }
 ```
 
@@ -470,7 +470,7 @@ if (quota.remainingBytes !== null && cost > quota.remainingBytes) {
 
 The size of the output does not count, and a build that ends in an error does not count. On a team, a member's key reports the team's shared monthly usage beside the member's own daily usage, and a team service key reports the team owner's.
 
-**Throws:** `ApiError` with the HTTP `statusCode` if the API token is invalid, the plan has no API access, or the request fails.
+**Throws:** `ApiError` with the HTTP `statusCode` if the API returns an error (for example an invalid API token or a plan without API access), or with `statusCode` 408 if the request times out.
 
 ### Error Handling
 

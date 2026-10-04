@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import * as sinon from 'sinon';
 
 import { ApiError } from '../../../src/pro-api/ApiError';
+import { IProQuota } from '../../../src/interfaces/pro-api/IProApiClient';
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 describe('JavaScriptObfuscator.obfuscatePro', () => {
@@ -353,6 +354,49 @@ describe('JavaScriptObfuscator.obfuscatePro', () => {
             }
         });
 
+        it('should expose the error code of a build refused for quota', async () => {
+            const responseBody = createNdjsonResponse([
+                { type: 'progress', message: 'Checking subscription...' },
+                {
+                    type: 'error',
+                    message: 'Daily limit of 30.0 MB reached. Please try again tomorrow.',
+                    errorCode: 'dailyLimit',
+                    errorParams: { limit: '30.0 MB' }
+                }
+            ]);
+
+            mockFetch(responseBody);
+
+            try {
+                await JavaScriptObfuscator.obfuscatePro(
+                    'const a = 1;',
+                    { vmObfuscation: true },
+                    { apiToken: 'test-token' }
+                );
+                assert.fail('Should have thrown an error');
+            } catch (error) {
+                assert.instanceOf(error, ApiError);
+                assert.equal((error as ApiError).code, 'dailyLimit');
+                assert.equal((error as ApiError).message, 'Daily limit of 30.0 MB reached. Please try again tomorrow.');
+            }
+        });
+
+        it('should leave the error code undefined when the API sends none', async () => {
+            mockFetch(createNdjsonResponse([{ type: 'error', message: 'Invalid API token' }]), 401);
+
+            try {
+                await JavaScriptObfuscator.obfuscatePro(
+                    'const a = 1;',
+                    { vmObfuscation: true },
+                    { apiToken: 'test-token' }
+                );
+                assert.fail('Should have thrown an error');
+            } catch (error) {
+                assert.instanceOf(error, ApiError);
+                assert.isUndefined((error as ApiError).code);
+            }
+        });
+
         it('should throw ApiError when no result is received', async () => {
             const responseBody = createNdjsonResponse([{ type: 'progress', message: 'Processing...' }]);
 
@@ -534,6 +578,108 @@ describe('JavaScriptObfuscator.obfuscatePro', () => {
     });
 });
 
+describe('JavaScriptObfuscator.getProQuota', () => {
+    let fetchStub: sinon.SinonStub;
+
+    const quota: IProQuota = {
+        remainingBytes: 1048576,
+        minBytesPerBuild: 102400,
+        daily: { usedBytes: 30408704, limitBytes: 31457280, resetsAt: '2026-10-05T00:00:00.000Z' },
+        monthly: { usedBytes: 72351744, limitBytes: 104857600, resetsAt: '2026-10-17T00:00:00.000Z' }
+    };
+
+    const mockJsonFetch = (body: string, statusCode: number = 200): void => {
+        fetchStub = sinon.stub(global, 'fetch').callsFake(async () => {
+            return {
+                ok: statusCode >= 200 && statusCode < 300,
+                status: statusCode,
+                text: async () => body
+            } as Response;
+        });
+    };
+
+    afterEach(() => {
+        if (fetchStub) {
+            fetchStub.restore();
+        }
+    });
+
+    it('should return the quota of the API key', async () => {
+        mockJsonFetch(JSON.stringify({ quota }));
+
+        assert.deepEqual(await JavaScriptObfuscator.getProQuota({ apiToken: 'test-token' }), quota);
+    });
+
+    it('should send a GET request with the API key to the quota endpoint', async () => {
+        mockJsonFetch(JSON.stringify({ quota }));
+
+        await JavaScriptObfuscator.getProQuota({ apiToken: 'test-token' });
+
+        const [url, init] = fetchStub.firstCall.args as [string, RequestInit];
+
+        assert.match(url, /\/api\/v1\/quota$/);
+        assert.equal(init.method, 'GET');
+        assert.equal((init.headers as Record<string, string>).Authorization, 'Bearer test-token');
+    });
+
+    it('should throw ApiError with the HTTP status and the server message', async () => {
+        mockJsonFetch(JSON.stringify({ error: 'Invalid or expired API key' }), 401);
+
+        try {
+            await JavaScriptObfuscator.getProQuota({ apiToken: 'invalid-token' });
+            assert.fail('Should have thrown an error');
+        } catch (error) {
+            assert.instanceOf(error, ApiError);
+            assert.equal((error as ApiError).statusCode, 401);
+            assert.equal((error as ApiError).message, 'Invalid or expired API key');
+        }
+    });
+
+    it('should throw ApiError with the body of a response that is not JSON', async () => {
+        mockJsonFetch('Bad Gateway', 502);
+
+        try {
+            await JavaScriptObfuscator.getProQuota({ apiToken: 'test-token' });
+            assert.fail('Should have thrown an error');
+        } catch (error) {
+            assert.instanceOf(error, ApiError);
+            assert.equal((error as ApiError).statusCode, 502);
+            assert.equal((error as ApiError).message, 'Bad Gateway');
+        }
+    });
+
+    it('should handle timeout', async () => {
+        fetchStub = sinon.stub(global, 'fetch').callsFake(async () => {
+            const error = new Error('The operation was aborted');
+            error.name = 'AbortError';
+            throw error;
+        });
+
+        try {
+            await JavaScriptObfuscator.getProQuota({ apiToken: 'test-token', timeout: 1 });
+            assert.fail('Should have thrown an error');
+        } catch (error) {
+            assert.instanceOf(error, ApiError);
+            assert.equal((error as ApiError).statusCode, 408);
+            assert.include((error as ApiError).message, 'timeout');
+        }
+    });
+
+    it('should throw in a browser environment', async () => {
+        (global as any).window = {};
+
+        try {
+            await JavaScriptObfuscator.getProQuota({ apiToken: 'test-token' });
+            assert.fail('Should have thrown an error');
+        } catch (error) {
+            assert.instanceOf(error, ApiError);
+            assert.include((error as Error).message, 'Node.js');
+        } finally {
+            delete (global as any).window;
+        }
+    });
+});
+
 describe('Browser environment', () => {
     it('should throw error when called in browser environment', async () => {
         // Simulate browser environment
@@ -573,5 +719,12 @@ describe('ApiError', () => {
         assert.equal(error.message, 'Test error');
         assert.equal(error.statusCode, 400);
         assert.isUndefined(error.response);
+        assert.isUndefined(error.code);
+    });
+
+    it('should carry an error code', () => {
+        const error = new ApiError('Monthly limit of 100.0 MB reached.', 200, undefined, 'monthlyLimit');
+
+        assert.equal(error.code, 'monthlyLimit');
     });
 });

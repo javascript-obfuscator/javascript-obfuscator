@@ -3,6 +3,7 @@ Change Log
 v5.9.1
 ---
 * Fixed `splitStrings`/`stringArray` breaking a quoted `constructor` class key. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1464
+* Fixed identifiers inside functions nested in class field initializers being neither renamed nor preserved. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1462
 
 v5.9.0
 ---

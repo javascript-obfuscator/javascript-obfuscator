@@ -87,30 +87,28 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
             : null;
         const isGlobalDeclaration: boolean = ScopeIdentifiersTraverser.globalScopeNames.includes(variableScope.type);
 
-        if (!variableLexicalScopeNode) {
-            return;
-        }
+        if (variableLexicalScopeNode) {
+            for (const variable of currentScope.variables) {
+                if (variable.name === ScopeIdentifiersTraverser.argumentsVariableName) {
+                    continue;
+                }
 
-        for (const variable of currentScope.variables) {
-            if (variable.name === ScopeIdentifiersTraverser.argumentsVariableName) {
-                continue;
+                const isBubblingDeclaration: boolean = variable.identifiers.some(
+                    (identifier: ESTree.Node) =>
+                        identifier.parentNode &&
+                        NodeGuards.isPropertyNode(identifier.parentNode) &&
+                        identifier.parentNode.shorthand
+                );
+
+                callback({
+                    isGlobalDeclaration,
+                    isBubblingDeclaration,
+                    rootScope,
+                    variable,
+                    variableScope,
+                    variableLexicalScopeNode
+                });
             }
-
-            const isBubblingDeclaration: boolean = variable.identifiers.some(
-                (identifier: ESTree.Node) =>
-                    identifier.parentNode &&
-                    NodeGuards.isPropertyNode(identifier.parentNode) &&
-                    identifier.parentNode.shorthand
-            );
-
-            callback({
-                isGlobalDeclaration,
-                isBubblingDeclaration,
-                rootScope,
-                variable,
-                variableScope,
-                variableLexicalScopeNode
-            });
         }
 
         for (const childScope of currentScope.childScopes) {
@@ -136,16 +134,14 @@ export class ScopeIdentifiersTraverser implements IScopeIdentifiersTraverser {
             : null;
         const isGlobalDeclaration: boolean = ScopeIdentifiersTraverser.globalScopeNames.includes(variableScope.type);
 
-        if (!variableLexicalScopeNode) {
-            return;
-        }
-
-        for (const reference of currentScope.through) {
-            callback({
-                isGlobalDeclaration,
-                reference,
-                variableLexicalScopeNode
-            });
+        if (variableLexicalScopeNode) {
+            for (const reference of currentScope.through) {
+                callback({
+                    isGlobalDeclaration,
+                    reference,
+                    variableLexicalScopeNode
+                });
+            }
         }
 
         for (const childScope of currentScope.childScopes) {

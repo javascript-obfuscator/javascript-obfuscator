@@ -3,6 +3,7 @@ Change Log
 v5.9.1
 ---
 * Fixed `splitStrings`/`stringArray` breaking a quoted `constructor` class key. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1464
+* Fixed identifiers inside functions nested in class field initializers being neither renamed nor preserved. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1462
 
 v5.9.0
 ---
@@ -12,8 +13,8 @@ v5.9.0
 
 v5.8.1
 ---
-* Fixed `transformObjectKeys` making default parameter objects shared across calls. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1455
-* Fixed `controlFlowFlattening` breaking short-circuit evaluation of `&&`, `||` and `??`. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1456
+* Fixed `transformObjectKeys` making default parameter objects shared across calls. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1455
+* Fixed `controlFlowFlattening` breaking short-circuit evaluation of `&&`, `||` and `??`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1456
 
 v5.8.0
 ---
@@ -22,7 +23,7 @@ v5.8.0
 
 v5.7.0
 ---
-* **New option:** `advertisement` allows to control the display of the JavaScript Obfuscator Pro advertisement message in the console. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1448
+* **New option:** `advertisement` allows to control the display of the JavaScript Obfuscator Pro advertisement message in the console. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1448
 
 v5.6.0
 ---

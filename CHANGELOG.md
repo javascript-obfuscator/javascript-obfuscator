@@ -1,5 +1,9 @@
 Change Log
 
+v5.9.1
+---
+* Fixed `splitStrings`/`stringArray` breaking a quoted `constructor` class key. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1464
+
 v5.9.0
 ---
 * Pro API: added `getProQuota()`, which returns the usage left on the API key's plan.

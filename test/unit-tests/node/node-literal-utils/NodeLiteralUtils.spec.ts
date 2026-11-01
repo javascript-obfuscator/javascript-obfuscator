@@ -180,6 +180,109 @@ describe('NodeLiteralUtils', () => {
                     });
                 });
             });
+
+            describe('Variant #6: method definition node', () => {
+                describe('Variant #1: method definition key literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let methodDefinitionNode: ESTree.MethodDefinition;
+
+                    before(() => {
+                        methodDefinitionNode = {
+                            type: 'MethodDefinition',
+                            key: literalNode,
+                            value: NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
+                            kind: 'method',
+                            computed: false,
+                            static: false
+                        };
+
+                        literalNode.parentNode = methodDefinitionNode;
+                    });
+
+                    it('should return true for method definition key literal node', () => {
+                        assert.equal(NodeLiteralUtils.isProhibitedLiteralNode(literalNode, methodDefinitionNode), true);
+                    });
+                });
+
+                describe('Variant #2: computed method definition key literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let methodDefinitionNode: ESTree.MethodDefinition;
+
+                    before(() => {
+                        methodDefinitionNode = {
+                            type: 'MethodDefinition',
+                            key: literalNode,
+                            value: NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
+                            kind: 'method',
+                            computed: true,
+                            static: false
+                        };
+
+                        literalNode.parentNode = methodDefinitionNode;
+                    });
+
+                    it('should return false for computed method definition key literal node', () => {
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, methodDefinitionNode),
+                            false
+                        );
+                    });
+                });
+            });
+
+            describe('Variant #7: property definition node', () => {
+                describe('Variant #1: property definition key literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let propertyDefinitionNode: ESTree.PropertyDefinition;
+
+                    before(() => {
+                        propertyDefinitionNode = {
+                            type: 'PropertyDefinition',
+                            key: literalNode,
+                            value: NodeFactory.literalNode(1),
+                            computed: false,
+                            static: false
+                        };
+
+                        literalNode.parentNode = propertyDefinitionNode;
+                    });
+
+                    it('should return true for property definition key literal node', () => {
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, propertyDefinitionNode),
+                            true
+                        );
+                    });
+                });
+
+                describe('Variant #2: computed property definition key literal node', () => {
+                    const literalNode: ESTree.Literal = NodeFactory.literalNode('foo');
+
+                    let propertyDefinitionNode: ESTree.PropertyDefinition;
+
+                    before(() => {
+                        propertyDefinitionNode = {
+                            type: 'PropertyDefinition',
+                            key: literalNode,
+                            value: NodeFactory.literalNode(1),
+                            computed: true,
+                            static: false
+                        };
+
+                        literalNode.parentNode = propertyDefinitionNode;
+                    });
+
+                    it('should return false for computed property definition key literal node', () => {
+                        assert.equal(
+                            NodeLiteralUtils.isProhibitedLiteralNode(literalNode, propertyDefinitionNode),
+                            false
+                        );
+                    });
+                });
+            });
         });
 
         describe('Number literal node', () => {

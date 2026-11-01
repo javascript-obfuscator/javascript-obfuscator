@@ -28,7 +28,13 @@ export class NodeLiteralUtils {
      * @returns {boolean}
      */
     public static isProhibitedLiteralNode(literalNode: ESTree.Literal, parentNode: ESTree.Node): boolean {
-        if (NodeGuards.isPropertyNode(parentNode) && !parentNode.computed && parentNode.key === literalNode) {
+        if (
+            (NodeGuards.isPropertyNode(parentNode) ||
+                NodeGuards.isMethodDefinitionNode(parentNode) ||
+                NodeGuards.isPropertyDefinitionNode(parentNode)) &&
+            !parentNode.computed &&
+            parentNode.key === literalNode
+        ) {
             return true;
         }
 

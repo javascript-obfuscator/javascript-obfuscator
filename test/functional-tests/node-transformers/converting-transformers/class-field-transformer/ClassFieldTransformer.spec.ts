@@ -92,8 +92,8 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'constructor', 'bar']);
-                const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x2\)\]\(\)\{\}/;
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'bar']);
+                const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x1\)\]\(\)\{\}/;
 
                 let obfuscatedCode: string;
 
@@ -131,6 +131,56 @@ describe('ClassFieldTransformer', () => {
 
                 it("shouldn't transform method definition node with `constructor` key", () => {
                     assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('Variant #4: `constructor` key with `splitStrings` option', () => {
+                const constructorRegExp: RegExp = /'constructor'\(\)\{\}/;
+                const barRegExp: RegExp = /\['ba'\+'r'\]\(\)\{\}/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 2
+                    }).getObfuscatedCode();
+                });
+
+                it("shouldn't split method definition node with `constructor` key", () => {
+                    assert.match(obfuscatedCode, constructorRegExp);
+                });
+
+                it('should still split other literal keys into a computed key', () => {
+                    assert.match(obfuscatedCode, barRegExp);
+                });
+            });
+
+            describe('Variant #5: `constructor` key with `stringArray` option', () => {
+                const constructorRegExp: RegExp = /'constructor'\(\)\{\}/;
+                const barRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x1\)\]\(\)\{\}/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/literal-key.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }).getObfuscatedCode();
+                });
+
+                it("shouldn't add method definition node with `constructor` key to string array", () => {
+                    assert.match(obfuscatedCode, constructorRegExp);
+                });
+
+                it('should still move other literal keys to the string array as a computed key', () => {
+                    assert.match(obfuscatedCode, barRegExp);
                 });
             });
         });
@@ -225,7 +275,7 @@ describe('ClassFieldTransformer', () => {
             });
 
             describe('Variant #2: `stringArray` option is enabled', () => {
-                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'constructor', 'bar']);
+                const stringArrayRegExp: RegExp = getStringArrayRegExp(['property', 'bar']);
                 const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\(0x0\)\] *= *0x1;/;
 
                 let obfuscatedCode: string;

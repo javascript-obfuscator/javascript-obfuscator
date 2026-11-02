@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",
@@ -38,7 +38,7 @@
     "inversify": "7.11.0",
     "js-string-escape": "1.0.1",
     "md5": "2.3.0",
-    "multimatch": "5.0.0",
+    "minimatch": "11.0.4",
     "process": "0.11.10",
     "reflect-metadata": "0.2.2",
     "string-template": "1.0.0",
@@ -58,7 +58,6 @@
     "@types/js-string-escape": "1.0.3",
     "@types/md5": "2.3.6",
     "@types/mocha": "10.0.10",
-    "@types/multimatch": "4.0.0",
     "@types/node": "22.10.2",
     "@types/rimraf": "3.0.2",
     "@types/sinon": "17.0.4",
@@ -100,9 +99,6 @@
     "webpack": "5.102.1",
     "webpack-cli": "6.0.1",
     "webpack-node-externals": "3.0.0"
-  },
-  "resolutions": {
-    "multimatch/minimatch/brace-expansion": "^1.1.12"
   },
   "repository": {
     "type": "git",

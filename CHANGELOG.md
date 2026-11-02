@@ -1,5 +1,10 @@
 Change Log
 
+v5.10.0
+---
+* Replaced `multimatch` with `minimatch@11` for the CLI `--exclude` option, resolving the `minimatch` denial of service advisory `GHSA-g3hv-75wg-m249`
+* Require Node.js 20 or newer, as `minimatch@11` does
+
 v5.9.1
 ---
 * Fixed `splitStrings`/`stringArray` breaking a quoted `constructor` class key. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1464

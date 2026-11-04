@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import multimatch from 'multimatch';
+import { minimatch, MinimatchOptions } from 'minimatch';
 
 import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
 
@@ -39,12 +39,39 @@ export class SourceCodeFileUtils {
         }
 
         const fileName: string = path.basename(filePath);
-        const isExcludedFilePathByGlobPattern: boolean = !!multimatch([filePath], excludePatterns).length;
+        const isExcludedFilePathByGlobPattern: boolean = SourceCodeFileUtils.isMatchedByGlobPatterns(
+            filePath,
+            excludePatterns
+        );
         const isExcludedFilePathByInclusion: boolean = excludePatterns.some(
             (excludePattern: string) => filePath.includes(excludePattern) || fileName.includes(excludePattern)
         );
 
         return isExcludedFilePathByInclusion || isExcludedFilePathByGlobPattern;
+    }
+
+    /**
+     * Patterns are applied in order: a matching pattern includes the path,
+     * a matching `!`-prefixed pattern removes it again
+     *
+     * @param {string} filePath
+     * @param {string[]} globPatterns
+     * @returns {boolean}
+     */
+    private static isMatchedByGlobPatterns(filePath: string, globPatterns: string[]): boolean {
+        // keeps `\` in patterns as a path separator on Windows
+        const minimatchOptions: MinimatchOptions = { windowsPathsNoEscape: path.sep === '\\' };
+
+        return globPatterns.reduce((isMatched: boolean, globPattern: string) => {
+            const isNegatedPattern: boolean = globPattern.startsWith('!');
+            const pattern: string = isNegatedPattern ? globPattern.slice(1) : globPattern;
+
+            if (!minimatch(filePath, pattern, minimatchOptions)) {
+                return isMatched;
+            }
+
+            return !isNegatedPattern;
+        }, false);
     }
 
     /**

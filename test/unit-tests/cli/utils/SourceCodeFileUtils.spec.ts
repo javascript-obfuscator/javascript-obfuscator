@@ -178,6 +178,103 @@ describe('SourceCodeFileUtils', () => {
                             fs.unlinkSync(inputPath);
                         });
                     });
+
+                    describe('Variant #4: exclude by `glob` pattern without globstar', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
+                                    exclude: ['test/tmp/*.js']
+                                }).readSourceCode();
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+
+                    describe('Variant #5: negated `glob` pattern does not match `inputPath`', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
+                                    exclude: ['**/*.js', '!**/foo.js']
+                                }).readSourceCode();
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+
+                    describe('Variant #6: negated `glob` pattern precedes the matching pattern', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () =>
+                                new SourceCodeFileUtils(inputPath, {
+                                    exclude: [`!**/${tmpFileName}`, '**/*.js']
+                                }).readSourceCode();
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+                });
+
+                describe('Variant #3: `inputPath` is re-included by negated `glob` pattern', () => {
+                    const tmpFileName: string = 'test.js';
+                    const inputPath: string = path.join(tmpDirectoryPath, tmpFileName);
+                    const expectedFilesData: IFileData[] = [
+                        {
+                            content: fileContent,
+                            filePath: inputPath
+                        }
+                    ];
+
+                    let filesData: IFileData[];
+
+                    before(() => {
+                        fs.writeFileSync(inputPath, fileContent);
+                        filesData = new SourceCodeFileUtils(inputPath, {
+                            exclude: ['**/*.js', `!**/${tmpFileName}`]
+                        }).readSourceCode();
+                    });
+
+                    it('should return valid files data', () => {
+                        assert.deepEqual(filesData, expectedFilesData);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(inputPath);
+                    });
                 });
             });
         });

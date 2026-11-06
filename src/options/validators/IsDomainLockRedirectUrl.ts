@@ -16,7 +16,7 @@ import { IsAllowedForObfuscationTargets } from './IsAllowedForObfuscationTargets
 export const IsDomainLockRedirectUrl = (): PropertyDecorator => {
     return (target: any, key: string | symbol): void => {
         ValidateIf(({ domainLockRedirectUrl }: TInputOptions) => {
-            return domainLockRedirectUrl !== DEFAULT_PRESET.domainLockRedirectUrl;
+            return domainLockRedirectUrl !== DEFAULT_PRESET.domainLockRedirectUrl && domainLockRedirectUrl !== '';
         })(target, key);
         IsUrl({
             require_protocol: false,

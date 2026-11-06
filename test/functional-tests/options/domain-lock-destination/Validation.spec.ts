@@ -70,6 +70,23 @@ describe('`domainLockRedirectUrl` validation', () => {
                     assert.doesNotThrow(testFunc);
                 });
             });
+
+            describe('Variant #5: empty string', () => {
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            domainLock: ['example.com'],
+                            domainLockRedirectUrl: ''
+                        }).getObfuscatedCode();
+                });
+
+                it('should pass validation', () => {
+                    assert.doesNotThrow(testFunc);
+                });
+            });
         });
 
         describe('Variant #2: negative validation', () => {

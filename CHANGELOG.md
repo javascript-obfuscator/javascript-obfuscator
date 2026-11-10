@@ -1,5 +1,9 @@
 Change Log
 
+v5.10.1
+---
+* Fixed `controlFlowFlattening` dropping the `?.` short-circuit on an optional call in the middle of a chain (`foo?.(x).bar()`), causing `TypeError: <X> is not a function`. Follow-up to https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1408
+
 v5.10.0
 ---
 * Replaced `multimatch` with `minimatch@11` for the CLI `--exclude` option, resolving the `minimatch` denial of service advisory `GHSA-g3hv-75wg-m249`

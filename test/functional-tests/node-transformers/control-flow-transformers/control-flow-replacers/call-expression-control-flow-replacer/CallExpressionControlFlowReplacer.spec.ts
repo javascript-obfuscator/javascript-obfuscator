@@ -303,5 +303,33 @@ describe('CallExpressionControlFlowReplacer', function () {
                 }
             });
         });
+
+        describe('Variant #10 - optional call in the middle of a chain', () => {
+            const samplesCount: number = 50;
+
+            it('should keep the `?.` short-circuit when an optional call is followed by a member access', () => {
+                const code: string = readFileAsString(
+                    __dirname + '/fixtures/optional-call-in-the-middle-of-a-chain.js'
+                );
+
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(code, {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }).getObfuscatedCode();
+
+                    const result: unknown = eval(obfuscatedCode);
+
+                    assert.strictEqual(
+                        result,
+                        'ok',
+                        `iteration ${i}: optional ?.() call in the middle of a chain lost its short-circuit`
+                    );
+                }
+            });
+        });
     });
 });

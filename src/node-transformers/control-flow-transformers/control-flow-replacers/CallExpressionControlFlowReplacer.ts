@@ -64,6 +64,16 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const isChainExpressionParent = NodeGuards.isChainExpressionNode(parentNode);
 
+        // An optional call that is not the last element of the chain cannot be hoisted into a
+        // wrapper: `foo?.(x).bar()` short-circuits the whole chain, while the wrapper would only
+        // guard the call and return `undefined` to `.bar()`. Skipping the flattening keeps the
+        // semantics (follow-up to issue #1408).
+        const isOptionalCall: boolean = 'optional' in callExpressionNode && callExpressionNode.optional;
+
+        if (isOptionalCall && !isChainExpressionParent) {
+            return callExpressionNode;
+        }
+
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
         // Bucket reuse-eligible wrappers by the exact argument *shape* (which positions are

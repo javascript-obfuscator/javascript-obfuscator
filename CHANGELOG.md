@@ -8,6 +8,7 @@ v5.10.1
 * Fixed `selfDefending`, `disableConsoleOutput`, `debugProtection` and `domainLock` code helpers being placed before the `'use strict'` directive, which disabled strict mode. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1475
 * Fixed `numbersToExpressions` producing invalid code for non-computed numeric keys of class members. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1476
 * Template literals are now transformed into `String.prototype.concat` calls instead of `+` concatenation, so substitutions are converted to strings with `toString` instead of `valueOf`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1477
+* Fixed `controlFlowFlattening` dropping the `?.` short-circuit on an optional call in the middle of a chain (`foo?.(x).bar()`), causing `TypeError: <X> is not a function`. Follow-up to https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1408
 
 v5.10.0
 ---

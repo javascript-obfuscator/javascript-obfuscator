@@ -453,7 +453,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
-                `var foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
+                `var foo *= *''\\['concat']\\(_0x[a-f0-9]{4,6}\\);` +
                 ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -2290,7 +2290,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `` +
                     `var ${variableMatch} *= *{` +
                     `'foo': *'bar',` +
-                    `'baz': *'call' *\\+ *${variableMatch}\\(\\)` +
+                    `'baz': *'call'\\['concat']\\(${variableMatch}\\(\\)\\)` +
                     `}` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
@@ -2399,7 +2399,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `` +
                     `var ${variableMatch} *= *{` +
                     `'foo': *'bar',` +
-                    `'baz': *'call' *\\+ *new ${variableMatch}\\(\\)` +
+                    `'baz': *'call'\\['concat']\\(new ${variableMatch}\\(\\)\\)` +
                     `}` +
                     ``;
                 const regExp: RegExp = new RegExp(match);

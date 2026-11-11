@@ -48,9 +48,7 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
                         return;
                     }
 
-                    if (this.prevailingKindOfVariables === 'var') {
-                        node.kind = 'var';
-                    }
+                    node.kind = this.formatVariableDeclarationKind(node.kind);
 
                     return node;
                 }
@@ -58,5 +56,13 @@ export class CustomCodeHelperFormatter implements ICustomCodeHelperFormatter {
         }
 
         return statements;
+    }
+
+    /**
+     * @param {VariableDeclaration['kind']} kind
+     * @returns {VariableDeclaration['kind']}
+     */
+    public formatVariableDeclarationKind(kind: ESTree.VariableDeclaration['kind']): ESTree.VariableDeclaration['kind'] {
+        return this.prevailingKindOfVariables === 'var' ? 'var' : kind;
     }
 }

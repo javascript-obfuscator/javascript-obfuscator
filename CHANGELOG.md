@@ -1,5 +1,9 @@
 Change Log
 
+v5.11.0
+---
+* Pro API: added `identifierNamesCache` support. The CLI's `--identifier-names-cache-path` now works with `--pro-api-token`, and `getIdentifierNamesCache()` on an `obfuscatePro()` result returns the cache
+
 v5.10.0
 ---
 * Replaced `multimatch` with `minimatch@11` for the CLI `--exclude` option, resolving the `minimatch` denial of service advisory `GHSA-g3hv-75wg-m249`

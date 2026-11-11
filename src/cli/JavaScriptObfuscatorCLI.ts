@@ -240,7 +240,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--domain-lock-redirect-url <string>',
-                "Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by --domain-lock"
+                "Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by --domain-lock. " +
+                    'Pass an empty string to throw an error instead of redirecting'
             )
             .option(
                 '--exclude <list> (comma separated, without whitespaces)',

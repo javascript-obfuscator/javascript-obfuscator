@@ -1027,7 +1027,7 @@ Type: `string[]` Default: `[]`
 
 Allows to run the obfuscated source code only on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
 
-If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainLockRedirectUrl`](#domainlockredirecturl) option URL.
+If the source code isn't run on the domains specified by this option, the browser will be redirected to a passed to the [`domainLockRedirectUrl`](#domainlockredirecturl) option URL. If `domainLockRedirectUrl` is set to an empty string, execution of the obfuscated code is interrupted instead of redirecting.
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on the root domain including any sub-domains (`example.com`, `sub.example.com`), use `.example.com`.
@@ -1038,6 +1038,8 @@ Type: `string` Default: `about:blank`
 ##### :warning: This option does not work with `target: 'node'`
 
 Allows the browser to be redirected to a passed URL if the source code isn't run on the domains specified by [`domainLock`](#domainlock)
+
+If set to an empty string, the browser is not redirected. Instead, execution of the obfuscated code is interrupted when the domain check fails.
 
 ### `exclude`
 Type: `string[]` Default: `[]`

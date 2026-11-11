@@ -1,7 +1,15 @@
 /**
+ * @param {boolean} domainLockRedirectUrlIsEmpty
  * @returns {string}
  */
-export function DomainLockTemplate (): string {
+export function DomainLockTemplate (domainLockRedirectUrlIsEmpty: boolean): string {
+    const domainLockRedirectUrlBlock: string = domainLockRedirectUrlIsEmpty
+        ? 'throw new Error();'
+        : `const regExp2 = new RegExp("[{domainLockRedirectUrlDiff}]", "g");
+                const domainLockRedirectUrl = "{hiddenDomainLockRedirectUrl}".replace(regExp2, "");
+
+                that[document][location] = domainLockRedirectUrl;`;
+
     return `
         const {domainLockFunctionName} = {callControllerFunctionName}(this, function () {
             
@@ -107,10 +115,7 @@ export function DomainLockTemplate (): string {
             }
 
             if (!ok) {
-                const regExp2 = new RegExp("[{domainLockRedirectUrlDiff}]", "g");
-                const domainLockRedirectUrl = "{hiddenDomainLockRedirectUrl}".replace(regExp2, "");
-
-                that[document][location] = domainLockRedirectUrl;
+                ${domainLockRedirectUrlBlock}
             }
         });
 

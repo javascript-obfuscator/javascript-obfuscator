@@ -27,9 +27,10 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 function getFunctionFromTemplate(
     templateData: any,
     callsControllerFunctionName: string,
-    documentTemplate: string
+    documentTemplate: string,
+    domainLockRedirectUrlIsEmpty: boolean = false
 ): Function {
-    const domainLockTemplate: string = format(DomainLockTemplate(), templateData);
+    const domainLockTemplate: string = format(DomainLockTemplate(domainLockRedirectUrlIsEmpty), templateData);
 
     return Function(`
         ${documentTemplate}
@@ -1009,6 +1010,92 @@ describe('DomainLockTemplate', () => {
 
         it('should correctly match domain containing hyphens', () => {
             assert.doesNotThrow(testFunc);
+        });
+    });
+
+    describe('Variant #11: empty `domainLockRedirectUrl`', () => {
+        const domainsString: string = ['www.example.com'].join(';');
+
+        describe('Variant #1: current domain matches with `domainsString`', () => {
+            const currentDomain: string = 'www.example.com';
+
+            let testFunc: Function;
+            let root: any;
+
+            before(() => {
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
+
+                root = {
+                    document: {
+                        domain: currentDomain,
+                        location: undefined
+                    }
+                };
+
+                testFunc = getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        domainsStringDiff,
+                        domains: hiddenDomainsString,
+                        domainLockRedirectUrlDiff: '',
+                        hiddenDomainLockRedirectUrl: '',
+                        globalVariableTemplate: '',
+                        singleCallControllerFunctionName
+                    },
+                    singleCallControllerFunctionName,
+                    thatThisTemplate,
+                    true
+                );
+            });
+
+            it('should not throw and should not change document.location', () => {
+                assert.doesNotThrow(() => testFunc.apply(root));
+                assert.isUndefined(root.document.location);
+            });
+        });
+
+        describe("Variant #2: current domain doesn't match with `domainsString`", () => {
+            const currentDomain: string = 'www.test.com';
+
+            let testFunc: Function;
+            let root: any;
+
+            before(() => {
+                const [hiddenDomainsString, domainsStringDiff] = cryptUtils.hideString(
+                    domainsString,
+                    domainsString.length * 3
+                );
+
+                root = {
+                    document: {
+                        domain: currentDomain,
+                        location: undefined
+                    }
+                };
+
+                testFunc = getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        domainsStringDiff,
+                        domains: hiddenDomainsString,
+                        domainLockRedirectUrlDiff: '',
+                        hiddenDomainLockRedirectUrl: '',
+                        globalVariableTemplate: '',
+                        singleCallControllerFunctionName
+                    },
+                    singleCallControllerFunctionName,
+                    thatThisTemplate,
+                    true
+                );
+            });
+
+            it('should throw and should not change document.location', () => {
+                assert.throws(() => testFunc.apply(root));
+                assert.isUndefined(root.document.location);
+            });
         });
     });
 });

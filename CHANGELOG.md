@@ -1,5 +1,9 @@
 Change Log
 
+v5.11.0
+---
+* `domainLockRedirectUrl` now accepts an empty string to stop execution without redirecting when the domain check fails. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1217
+
 v5.10.0
 ---
 * Replaced `multimatch` with `minimatch@11` for the CLI `--exclude` option, resolving the `minimatch` denial of service advisory `GHSA-g3hv-75wg-m249`

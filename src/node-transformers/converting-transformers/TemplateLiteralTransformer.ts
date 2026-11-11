@@ -41,6 +41,43 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * Unlike `+`, that converts substitutions with the `default` hint of `ToPrimitive` and prefers `valueOf`,
+     * `String.prototype.concat` converts them with `ToString`, as template literals do.
+     *
+     * Each `concat` call gets at most one non-literal substitution, so each substitution is converted
+     * before the next one is evaluated, as in template literals.
+     *
+     * @param {Expression[]} nodes
+     * @returns {CallExpression}
+     */
+    private static buildConcatCallExpressionNode(nodes: ESTree.Expression[]): ESTree.CallExpression {
+        let callExpressionNode: ESTree.CallExpression | null = null;
+        let callExpressionHasNonLiteralArgument: boolean = false;
+
+        const nodesLength: number = nodes.length;
+
+        for (let i: number = 1; i < nodesLength; i++) {
+            const node: ESTree.Expression = nodes[i];
+            const isLiteralNode: boolean = NodeGuards.isLiteralNode(node);
+
+            if (callExpressionNode && (isLiteralNode || !callExpressionHasNonLiteralArgument)) {
+                callExpressionNode.arguments.push(node);
+                callExpressionHasNonLiteralArgument = callExpressionHasNonLiteralArgument || !isLiteralNode;
+
+                continue;
+            }
+
+            callExpressionNode = NodeFactory.callExpressionNode(
+                NodeFactory.memberExpressionNode(callExpressionNode ?? nodes[0], NodeFactory.identifierNode('concat')),
+                [node]
+            );
+            callExpressionHasNonLiteralArgument = !isLiteralNode;
+        }
+
+        return <ESTree.CallExpression>callExpressionNode;
+    }
+
+    /**
      * @param {NodeTransformationStage} nodeTransformationStage
      * @returns {IVisitor | null}
      */
@@ -111,34 +148,15 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             return !(NodeGuards.isLiteralNode(node) && node.value === '');
         });
 
-        // since `+` is left-to-right associative
-        // ensure the first node is a string if first/second isn't
-        if (
-            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(filteredNodes[0]) &&
-            !TemplateLiteralTransformer.isLiteralNodeWithStringValue(filteredNodes[1])
-        ) {
+        // ensure the first node is a string, so `concat` can be called on it
+        if (!TemplateLiteralTransformer.isLiteralNodeWithStringValue(filteredNodes[0])) {
             filteredNodes.unshift(NodeFactory.literalNode(''));
         }
 
-        let transformedNode: ESTree.Node;
-
-        if (filteredNodes.length > 1) {
-            let root: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
-                '+',
-                <ESTree.Literal>filteredNodes[0],
-                filteredNodes[1]
-            );
-
-            // Start from index 2 since we already used 0 and 1
-            const filteredNodesLength: number = filteredNodes.length;
-            for (let i: number = 2; i < filteredNodesLength; i++) {
-                root = NodeFactory.binaryExpressionNode('+', root, filteredNodes[i]);
-            }
-
-            transformedNode = root;
-        } else {
-            transformedNode = filteredNodes[0];
-        }
+        const transformedNode: ESTree.Expression =
+            filteredNodes.length > 1
+                ? TemplateLiteralTransformer.buildConcatCallExpressionNode(filteredNodes)
+                : filteredNodes[0];
 
         NodeUtils.parentizeAst(transformedNode);
         NodeUtils.parentizeNode(transformedNode, parentNode);

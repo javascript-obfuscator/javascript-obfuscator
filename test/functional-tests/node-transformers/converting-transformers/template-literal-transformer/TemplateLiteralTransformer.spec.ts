@@ -18,7 +18,7 @@ describe('TemplateLiteralTransformer', () => {
                 unicodeEscapeSequence: false
             }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode, /^var test *= *'abc\\x20' *\+ *foo;$/);
+            assert.match(obfuscatedCode, /^var test *= *'abc\\x20'\['concat']\(foo\);$/);
         });
     });
 
@@ -96,7 +96,7 @@ describe('TemplateLiteralTransformer', () => {
                 unicodeEscapeSequence: false
             }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode, /^var test *= *'' *\+ *foo;$/);
+            assert.match(obfuscatedCode, /^var test *= *''\['concat']\(foo\);$/);
         });
     });
 
@@ -122,7 +122,10 @@ describe('TemplateLiteralTransformer', () => {
                 unicodeEscapeSequence: false
             }).getObfuscatedCode();
 
-            assert.match(obfuscatedCode, /^var test *= *0x1 *\+ *0x1 *\+ *'\\x20abc\\x20' *\+ *\(0x1 *\+ *0x1\);$/);
+            assert.match(
+                obfuscatedCode,
+                /^var test *= *''\['concat']\(0x1 *\+ *0x1, *'\\x20abc\\x20'\)\['concat']\(0x1 *\+ *0x1\);$/
+            );
         });
     });
 
@@ -157,7 +160,7 @@ describe('TemplateLiteralTransformer', () => {
             `` +
             `var _0x[a-f0-9]{4,6} *= *{};` +
             `_0x[a-f0-9]{4,6}\\['foo'] *= *'bar';` +
-            `var foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
+            `var foo *= *''\\['concat']\\(_0x[a-f0-9]{4,6}\\);` +
             ``;
         const regExp: RegExp = new RegExp(match);
 

@@ -94,7 +94,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                         )
                     )
                 ],
-                'const'
+                this.customCodeHelperFormatter.formatVariableDeclarationKind('const')
             ),
             NodeFactory.variableDeclarationNode(
                 [
@@ -103,7 +103,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                         NodeFactory.literalNode(0)
                     )
                 ],
-                'let'
+                this.customCodeHelperFormatter.formatVariableDeclarationKind('let')
             ),
             NodeFactory.whileStatementNode(
                 NodeFactory.literalNode(true),

@@ -1,5 +1,14 @@
 Change Log
 
+v5.10.1
+---
+* Fixed `controlFlowFlattening` changing `let` and `const` declarations into `var` inside functions passed as call arguments or used as operands, when `var` is the prevailing kind of variables. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1471
+* Fixed `controlFlowFlattening` turning a `#x in obj` private brand check into invalid code. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1472
+* Fixed an escaped `'use\x20strict'` directive being emitted as an actual `'use strict'` directive. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1474
+* Fixed `selfDefending`, `disableConsoleOutput`, `debugProtection` and `domainLock` code helpers being placed before the `'use strict'` directive, which disabled strict mode. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1475
+* Fixed `numbersToExpressions` producing invalid code for non-computed numeric keys of class members. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1476
+* Template literals are now transformed into `String.prototype.concat` calls instead of `+` concatenation, so substitutions are converted to strings with `toString` instead of `valueOf`. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1477
+
 v5.10.0
 ---
 * Replaced `multimatch` with `minimatch@11` for the CLI `--exclude` option, resolving the `minimatch` denial of service advisory `GHSA-g3hv-75wg-m249`

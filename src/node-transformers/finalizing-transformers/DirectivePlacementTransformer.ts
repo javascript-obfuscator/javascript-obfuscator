@@ -22,6 +22,10 @@ import { NodeUtils } from '../../node/NodeUtils';
 /**
  * It's easier to fix "use strict"; placement after obfuscation as a separate stage
  * than ignore this directive in other transformers like control flow and dead code injection transformers
+ *
+ * Directives are collected after custom code helpers are appended at the preparing stage,
+ * so they are looked up across the whole scope body rather than at its top.
+ * It's safe, because the parser marks as directives only statements of the directive prologue
  */
 @injectFromBase()
 @injectable()
@@ -32,11 +36,11 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
     public override readonly runAfter: NodeTransformer[] = [NodeTransformer.CustomCodeHelpersTransformer];
 
     /**
-     * @type {WeakMap<TNodeWithLexicalScope, Directive>}
+     * @type {WeakMap<TNodeWithLexicalScope, Directive[]>}
      */
-    private readonly lexicalScopeDirectives: WeakMap<TNodeWithLexicalScope, ESTree.Directive> = new WeakMap<
+    private readonly lexicalScopeDirectives: WeakMap<TNodeWithLexicalScope, ESTree.Directive[]> = new WeakMap<
         TNodeWithLexicalScope,
-        ESTree.Directive
+        ESTree.Directive[]
     >();
 
     /**
@@ -98,10 +102,16 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
             return nodeWithLexicalScopeStatements;
         }
 
-        const firstStatementNode = nodeWithLexicalScopeStatements.body[0] ?? null;
+        const directiveNodes: ESTree.Directive[] = [];
 
-        if (firstStatementNode && NodeGuards.isDirectiveNode(firstStatementNode)) {
-            this.lexicalScopeDirectives.set(parentNode, firstStatementNode);
+        for (const statementNode of nodeWithLexicalScopeStatements.body) {
+            if (NodeGuards.isDirectiveNode(statementNode)) {
+                directiveNodes.push(statementNode);
+            }
+        }
+
+        if (directiveNodes.length) {
+            this.lexicalScopeDirectives.set(parentNode, directiveNodes);
         }
 
         return nodeWithLexicalScopeStatements;
@@ -120,17 +130,27 @@ export class DirectivePlacementTransformer extends AbstractNodeTransformer {
             return nodeWithLexicalScopeStatements;
         }
 
-        const directiveNode: ESTree.Directive | undefined = this.lexicalScopeDirectives.get(parentNode);
+        const directiveNodes: ESTree.Directive[] | undefined = this.lexicalScopeDirectives.get(parentNode);
 
-        if (directiveNode) {
-            const newDirectiveNode: ESTree.Directive = NodeUtils.clone(directiveNode);
+        if (directiveNodes) {
+            const newDirectiveNodes: ESTree.Directive[] = directiveNodes.map((directiveNode: ESTree.Directive) => {
+                const newDirectiveNode: ESTree.Directive = NodeUtils.clone(directiveNode);
 
-            // append new directive node at the top of lexical scope statements
-            NodeAppender.prepend(nodeWithLexicalScopeStatements, [newDirectiveNode]);
+                // the code generator prints the cooked value of a literal,
+                // so `'use\x20strict'` would become an actual `'use strict'` directive
+                if (newDirectiveNode.expression.raw !== undefined) {
+                    NodeUtils.addXVerbatimPropertyTo(newDirectiveNode.expression);
+                }
+
+                return newDirectiveNode;
+            });
 
             nodeWithLexicalScopeStatements.body = nodeWithLexicalScopeStatements.body.filter(
-                (node) => node !== directiveNode
+                (node: ESTree.Statement | ESTree.ModuleDeclaration) =>
+                    !directiveNodes.includes(<ESTree.Directive>node)
             );
+
+            NodeAppender.prepend(nodeWithLexicalScopeStatements, newDirectiveNodes);
         }
 
         return nodeWithLexicalScopeStatements;

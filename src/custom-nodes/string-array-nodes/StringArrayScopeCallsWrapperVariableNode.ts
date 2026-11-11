@@ -87,7 +87,7 @@ export class StringArrayScopeCallsWrapperVariableNode extends AbstractStringArra
                     NodeFactory.identifierNode(this.stringArrayCallsWrapperData.name)
                 )
             ],
-            'const'
+            this.customCodeHelperFormatter.formatVariableDeclarationKind('const')
         );
 
         NodeUtils.parentizeAst(structure);

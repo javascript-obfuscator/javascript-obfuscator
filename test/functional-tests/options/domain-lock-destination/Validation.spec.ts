@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
+import { ObfuscationTarget } from '../../../../src/enums/ObfuscationTarget';
+
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 describe('`domainLockRedirectUrl` validation', () => {
@@ -99,6 +101,24 @@ describe('`domainLockRedirectUrl` validation', () => {
                         JavaScriptObfuscator.obfuscate('', {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             domainLockRedirectUrl: 'foo'
+                        }).getObfuscatedCode();
+                });
+
+                it('should not pass validation', () => {
+                    assert.throws(testFunc, expectedError);
+                });
+            });
+
+            describe('Variant #2: empty string with `node` obfuscation target', () => {
+                const expectedError: string = 'This option allowed only for obfuscation targets';
+                let testFunc: () => string;
+
+                beforeEach(() => {
+                    testFunc = () =>
+                        JavaScriptObfuscator.obfuscate('', {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            domainLockRedirectUrl: '',
+                            target: ObfuscationTarget.Node
                         }).getObfuscatedCode();
                 });
 

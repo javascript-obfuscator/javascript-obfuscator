@@ -88,6 +88,14 @@ export class NumberToNumericalExpressionTransformer extends AbstractNodeTransfor
             return literalNode;
         }
 
+        if (
+            (NodeGuards.isMethodDefinitionNode(parentNode) || NodeGuards.isPropertyDefinitionNode(parentNode)) &&
+            !parentNode.computed &&
+            parentNode.key === literalNode
+        ) {
+            return literalNode;
+        }
+
         const baseNumber: number = literalNode.value;
         const [integerPart, decimalPart] = NumberUtils.extractIntegerAndDecimalParts(baseNumber);
         const integerNumberNumericalExpressionData: TNumberNumericalExpressionData =

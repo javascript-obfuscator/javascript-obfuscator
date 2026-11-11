@@ -63,7 +63,10 @@ export abstract class AbstractCustomNode<TInitialData extends unknown[] = unknow
      */
     public getNode(): TStatement[] {
         if (!this.cachedNode) {
-            this.cachedNode = this.customCodeHelperFormatter.formatStructure(this.getNodeStructure());
+            // The structure isn't formatted with `formatStructure` as a whole, because custom nodes may embed nodes
+            // of the original code, and their variable declarations must keep their kind.
+            // Custom nodes set the kind of their own variable declarations with `formatVariableDeclarationKind`.
+            this.cachedNode = this.getNodeStructure();
         }
 
         return this.cachedNode;

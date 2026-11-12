@@ -1590,6 +1590,87 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     }
                 });
             });
+
+            describe('Variant #5: `--identifier-names-cache-path` option', () => {
+                const identifierNamesCachePath: string = path.join(
+                    outputDirName,
+                    'pro-api-identifier-names-cache.json'
+                );
+                const proApiOutputPath: string = path.join(outputDirName, 'pro-api-output5.js');
+
+                const obfuscateWithProApiAndCache = (): Promise<void> =>
+                    JavaScriptObfuscatorCLI.obfuscate([
+                        'node',
+                        'javascript-obfuscator',
+                        proApiFilePath,
+                        '--output',
+                        proApiOutputPath,
+                        '--pro-api-token',
+                        'test-token-123',
+                        '--vm-obfuscation',
+                        'true',
+                        '--rename-globals',
+                        'true',
+                        '--identifier-names-cache-path',
+                        identifierNamesCachePath
+                    ]);
+
+                afterEach(() => {
+                    [identifierNamesCachePath, proApiOutputPath].forEach((filePath: string) => {
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                        }
+                    });
+                });
+
+                it('should send the cache file contents and write the cache returned by the API', async () => {
+                    const identifierNamesCacheFromFile = {
+                        globalIdentifiers: { fromPreviousFile: '_0x4d5e6f' },
+                        propertyIdentifiers: {}
+                    };
+                    const identifierNamesCacheFromApi = {
+                        globalIdentifiers: { fromPreviousFile: '_0x4d5e6f', test: '_0x1a2b3c' },
+                        propertyIdentifiers: {}
+                    };
+
+                    fs.writeFileSync(identifierNamesCachePath, JSON.stringify(identifierNamesCacheFromFile));
+
+                    fetchStub = sinon.stub(global, 'fetch').resolves({
+                        ok: true,
+                        status: 200,
+                        text: async () =>
+                            JSON.stringify({
+                                type: 'result',
+                                code: 'var obfuscated=1;',
+                                identifierNamesCache: identifierNamesCacheFromApi
+                            })
+                    } as Response);
+
+                    await obfuscateWithProApiAndCache();
+
+                    const sentOptions = JSON.parse(fetchStub.firstCall.args[1].body).options;
+
+                    assert.deepEqual(sentOptions.identifierNamesCache, identifierNamesCacheFromFile);
+                    assert.deepEqual(
+                        JSON.parse(fs.readFileSync(identifierNamesCachePath, 'utf8')),
+                        identifierNamesCacheFromApi
+                    );
+                });
+
+                it('should leave the cache file unchanged when the API returns no cache', async () => {
+                    fs.writeFileSync(identifierNamesCachePath, '');
+
+                    fetchStub = sinon.stub(global, 'fetch').resolves({
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({ type: 'result', code: 'var obfuscated=1;' })
+                    } as Response);
+
+                    await obfuscateWithProApiAndCache();
+
+                    assert.strictEqual(fs.readFileSync(identifierNamesCachePath, 'utf8'), '');
+                });
+            });
         });
 
         describe('`--pro-api-token` with a preset the local obfuscator cannot expand', () => {

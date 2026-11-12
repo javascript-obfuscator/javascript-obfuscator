@@ -546,7 +546,65 @@ describe('ProApiClient', () => {
             });
         });
 
-        describe('Variant #10: client-side blob upload for large files', () => {
+        describe('Variant #10: identifier names cache', () => {
+            const identifierNamesCacheFromApi = {
+                globalIdentifiers: { sharedHelper: '_0x1a2b3c' },
+                propertyIdentifiers: {}
+            };
+
+            it('should return the identifier names cache from a `result` message', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(
+                    new Response(
+                        JSON.stringify({
+                            type: 'result',
+                            code: 'var a=1;',
+                            identifierNamesCache: identifierNamesCacheFromApi
+                        }),
+                        { status: 200 }
+                    )
+                );
+
+                const result = await client.obfuscate('const a = 1;', {
+                    vmObfuscation: true,
+                    identifierNamesCache: {}
+                });
+
+                assert.deepEqual(result.getIdentifierNamesCache(), identifierNamesCacheFromApi);
+            });
+
+            it('should return the identifier names cache from a `chunk_end` message', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                const chunks = [
+                    JSON.stringify({ type: 'chunk', field: 'code', data: 'var a', index: 0, total: 2 }),
+                    JSON.stringify({ type: 'chunk', field: 'code', data: '=1;', index: 1, total: 2 }),
+                    JSON.stringify({ type: 'chunk_end', identifierNamesCache: identifierNamesCacheFromApi })
+                ].join('\n');
+
+                fetchStub.resolves(new Response(chunks, { status: 200 }));
+
+                const result = await client.obfuscate('const a = 1;', {
+                    vmObfuscation: true,
+                    identifierNamesCache: {}
+                });
+
+                assert.deepEqual(result.getIdentifierNamesCache(), identifierNamesCacheFromApi);
+            });
+
+            it('should return null when the API sends no identifier names cache', async () => {
+                const client = new ProApiClient({ apiToken: 'test-token' });
+
+                fetchStub.resolves(new Response(JSON.stringify({ type: 'result', code: 'var a=1;' }), { status: 200 }));
+
+                const result = await client.obfuscate('const a = 1;', { vmObfuscation: true });
+
+                assert.isNull(result.getIdentifierNamesCache());
+            });
+        });
+
+        describe('Variant #11: client-side blob upload for large files', () => {
             const UPLOAD_TOKEN_URL = 'https://obfuscator.io/api/v1/upload/token';
             // Matches the server's inline cap: 4,400,000 bytes, just under
             // Vercel's 4.5 MB (decimal) request body limit

@@ -76,7 +76,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
                     NodeFactory.objectExpressionNode(propertyNodes)
                 )
             ],
-            'const'
+            this.customCodeHelperFormatter.formatVariableDeclarationKind('const')
         );
 
         return [structure];

@@ -1,3 +1,5 @@
+import * as ESTree from 'estree';
+
 import { TDictionary } from '../../types/TDictionary';
 import { TStatement } from '../../types/node/TStatement';
 
@@ -14,4 +16,10 @@ export interface ICustomCodeHelperFormatter {
      * @returns {TStatement[]}
      */
     formatStructure(structure: TStatement[]): TStatement[];
+
+    /**
+     * @param {VariableDeclaration['kind']} kind
+     * @returns {VariableDeclaration['kind']}
+     */
+    formatVariableDeclarationKind(kind: ESTree.VariableDeclaration['kind']): ESTree.VariableDeclaration['kind'];
 }

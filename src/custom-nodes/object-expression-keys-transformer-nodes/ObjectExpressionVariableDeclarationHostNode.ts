@@ -72,7 +72,7 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
                     NodeFactory.objectExpressionNode(this.properties)
                 )
             ],
-            'const'
+            this.customCodeHelperFormatter.formatVariableDeclarationKind('const')
         );
 
         return [structure];

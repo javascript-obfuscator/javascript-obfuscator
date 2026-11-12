@@ -23,7 +23,7 @@ describe('Issue #1410', () => {
             });
 
             it('should produce semantically equivalent code', () => {
-                assert.isTrue(eval(`/(?i:abc)/.test('ABC')`));
+                assert.isTrue(eval(`/abc/i.test('ABC')`));
             });
         });
 

@@ -217,6 +217,12 @@ export class Options implements IOptions {
     public readonly numbersToExpressions!: boolean;
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly numbersToHexadecimal!: boolean;
+
+    /**
      * @type {TOptionsPreset}
      */
     @IsIn([

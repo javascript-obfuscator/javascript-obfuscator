@@ -4,6 +4,7 @@ import {
     IProApiStreamMessage,
     IProCustomPreset,
     IProObfuscationResult,
+    IProObfuscationResultInit,
     IProQuota,
     TProApiProgressCallback
 } from '../interfaces/pro-api/IProApiClient';
@@ -533,7 +534,7 @@ export class ProApiClient {
             throw new ApiError('No result received from API', 500);
         }
 
-        return new ProApiObfuscationResult(result.code, result.sourceMap || '');
+        return new ProApiObfuscationResult(result);
     }
 
     /**
@@ -541,10 +542,10 @@ export class ProApiClient {
      * Handles both chunked format (chunk/chunk_end) and direct result format
      */
     // eslint-disable-next-line complexity
-    private reassembleChunkedResponse(messages: IProApiStreamMessage[]): { code: string; sourceMap: string } {
+    private reassembleChunkedResponse(messages: IProApiStreamMessage[]): IProObfuscationResultInit {
         const codeChunks: string[] = [];
         const sourceMapChunks: string[] = [];
-        let result = { code: '', sourceMap: '' };
+        let result: IProObfuscationResultInit = { code: '', sourceMap: '', identifierNamesCache: null };
 
         for (const message of messages) {
             switch (message.type) {
@@ -564,13 +565,15 @@ export class ProApiClient {
                 case 'chunk_end':
                     result.code = codeChunks.join('');
                     result.sourceMap = (sourceMapChunks.join('') || message.sourceMap) ?? '';
+                    result.identifierNamesCache = message.identifierNamesCache ?? null;
 
                     break;
 
                 case 'result':
                     result = {
                         code: message.code ?? '',
-                        sourceMap: message.sourceMap ?? ''
+                        sourceMap: message.sourceMap ?? '',
+                        identifierNamesCache: message.identifierNamesCache ?? null
                     };
 
                     break;

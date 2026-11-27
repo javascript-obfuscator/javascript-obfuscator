@@ -1,5 +1,5 @@
 import { TIdentifierNamesCache } from '../types/TIdentifierNamesCache';
-import { IProObfuscationResult } from '../interfaces/pro-api/IProApiClient';
+import { IProObfuscationResult, IProObfuscationResultInit } from '../interfaces/pro-api/IProApiClient';
 
 /**
  * Pro API Obfuscation Result
@@ -8,10 +8,12 @@ import { IProObfuscationResult } from '../interfaces/pro-api/IProApiClient';
 export class ProApiObfuscationResult implements IProObfuscationResult {
     private readonly obfuscatedCode: string;
     private readonly sourceMapValue: string;
+    private readonly identifierNamesCache: TIdentifierNamesCache;
 
-    public constructor(code: string, sourceMap: string = '') {
+    public constructor({ code, sourceMap = '', identifierNamesCache = null }: IProObfuscationResultInit) {
         this.obfuscatedCode = code;
         this.sourceMapValue = sourceMap;
+        this.identifierNamesCache = identifierNamesCache;
     }
 
     public getObfuscatedCode(): string {
@@ -23,7 +25,7 @@ export class ProApiObfuscationResult implements IProObfuscationResult {
     }
 
     public getIdentifierNamesCache(): TIdentifierNamesCache {
-        return null;
+        return this.identifierNamesCache;
     }
 
     public toString(): string {

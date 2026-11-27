@@ -1,6 +1,12 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 import { TIdentifierNamesCache } from '../../types/TIdentifierNamesCache';
 
+export interface IProObfuscationResultInit {
+    code: string;
+    sourceMap?: string;
+    identifierNamesCache?: TIdentifierNamesCache;
+}
+
 /**
  * Simplified obfuscation result for Pro API responses
  * Does not extend IInitializable since results come from the API
@@ -111,6 +117,9 @@ export interface IProApiStreamMessage {
 
     /** Source map (for 'result' or 'chunk_end' type) */
     sourceMap?: string;
+
+    /** Identifier names cache, when the request sent one (for 'result' or 'chunk_end' type) */
+    identifierNamesCache?: TIdentifierNamesCache;
 
     /** Field name for chunk: 'code' or 'sourceMap' (for 'chunk' type) */
     field?: 'code' | 'sourceMap';

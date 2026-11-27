@@ -2,6 +2,7 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
+import { TIdentifierNamesCache } from '../types/TIdentifierNamesCache';
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
 
@@ -749,6 +750,13 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         });
 
         this.obfuscatedCodeFileUtils.writeFile(outputCodePath, result.getObfuscatedCode());
+
+        const identifierNamesCache: TIdentifierNamesCache = result.getIdentifierNamesCache();
+
+        // Writing `null` would turn the cache off for the next file
+        if (identifierNamesCache) {
+            this.identifierNamesCacheFileUtils.writeFile(identifierNamesCache);
+        }
 
         // Write source map if enabled and available
         if (options.sourceMap && result.getSourceMap()) {

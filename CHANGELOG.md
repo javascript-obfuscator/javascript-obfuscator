@@ -1,5 +1,9 @@
 Change Log
 
+v5.11.0
+---
+* Pro API: added `identifierNamesCache` support. The CLI's `--identifier-names-cache-path` now works with `--pro-api-token`, and `getIdentifierNamesCache()` on an `obfuscatePro()` result returns the cache
+
 v5.10.1
 ---
 * Fixed `controlFlowFlattening` changing `let` and `const` declarations into `var` inside functions passed as call arguments or used as operands, when `var` is the prevailing kind of variables. Fixes https://github.com/javascript-obfuscator/javascript-obfuscator/issues/1471

@@ -354,7 +354,7 @@ console.log(result.getObfuscatedCode());
   * `version` (`string`, optional) – Obfuscator.io version to use (e.g., `'5.0.3'`). Defaults to latest version if not specified.
 * `onProgress` (`function`, optional) – callback for progress updates during obfuscation
 
-**Returns:** `Promise<ObfuscationResult>`
+**Returns:** `Promise<ObfuscationResult>` with the same `getObfuscatedCode()`, `getSourceMap()` and `getIdentifierNamesCache()` methods as [`obfuscate`](#obfuscatesourcecode-options)
 
 > **Note:** When no Pro feature (`vmObfuscation` or `parseHtml`) is enabled, the Pro API is not needed, so `obfuscatePro` falls back to the basic (local) obfuscation API and no API request is made.
 

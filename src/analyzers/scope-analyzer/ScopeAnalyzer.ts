@@ -21,7 +21,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
         childVisitorKeys: VisitorKeys;
     } = {
         ecmaVersion,
-        childVisitorKeys: KEYS,
+        childVisitorKeys: ScopeAnalyzer.getChildVisitorKeys(),
         optimistic: true
     };
 
@@ -44,6 +44,44 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      * @type {eslintScope.ScopeManager | null}
      */
     private sanitizedScopeManager: eslintScope.ScopeManager | null = null;
+
+    /**
+     * `esrecurse` copies its default visitor keys and `childVisitorKeys` into a new object
+     * for each visitor that `eslint-scope` creates. Only the keys that differ from the defaults
+     * are passed, if `esrecurse` merges them to the same visitor keys as `KEYS`.
+     *
+     * @returns {VisitorKeys}
+     */
+    private static getChildVisitorKeys(): VisitorKeys {
+        const PatternVisitor: (new (options: object) => Record<string, VisitorKeys | undefined>) | undefined = (<
+            Record<string, new (options: object) => Record<string, VisitorKeys | undefined>>
+        >(<unknown>eslintScope)).PatternVisitor;
+
+        if (!PatternVisitor) {
+            return KEYS;
+        }
+
+        const defaultVisitorKeys: VisitorKeys = new PatternVisitor({}).__childVisitorKeys ?? {};
+        const childVisitorKeys: Record<string, readonly string[]> = {};
+
+        for (const nodeType of Object.keys(KEYS)) {
+            if (String(defaultVisitorKeys[nodeType]) !== String(KEYS[nodeType])) {
+                childVisitorKeys[nodeType] = KEYS[nodeType];
+            }
+        }
+
+        const mergedVisitorKeys: VisitorKeys = new PatternVisitor({ childVisitorKeys }).__childVisitorKeys ?? {};
+        const expectedVisitorKeys: VisitorKeys =
+            new PatternVisitor({ childVisitorKeys: KEYS }).__childVisitorKeys ?? {};
+        const nodeTypes: string[] = Object.keys(expectedVisitorKeys);
+        const isSameVisitorKeys: boolean =
+            nodeTypes.length === Object.keys(mergedVisitorKeys).length &&
+            nodeTypes.every(
+                (nodeType: string) => String(mergedVisitorKeys[nodeType]) === String(expectedVisitorKeys[nodeType])
+            );
+
+        return isSameVisitorKeys ? childVisitorKeys : KEYS;
+    }
 
     /**
      * `eslint-scope` reads `ranges` property of a nodes
